@@ -1,0 +1,238 @@
+object TStyleContainer
+  object TLayout
+    StyleName = 'TEditstyle1'
+    Align = Center
+    Size.Width = 336.000000000000000000
+    Size.Height = 32.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    FixedHeight = 32
+    object TActiveStyleObject
+      StyleName = 'background'
+      Align = Contents
+      SourceLookup = 'tEdit2.png'
+      Size.Width = 336.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      ActiveTrigger = Focused
+      ActiveLink = <
+        item
+          CapInsets.Left = 4.000000000000000000
+          CapInsets.Right = 4.000000000000000000
+          SourceRect.Right = 128.000000000000000000
+          SourceRect.Bottom = 64.000000000000000000
+        end>
+      SourceLink = <
+        item
+          CapInsets.Left = 4.000000000000000000
+          CapInsets.Right = 4.000000000000000000
+          SourceRect.Right = 128.000000000000000000
+          SourceRect.Bottom = 64.000000000000000000
+        end>
+      TouchAnimation.Link = <>
+      object TImage
+        StyleName = 'tEdit2.png'
+        MultiResBitmap.LoadSize = 2
+        MultiResBitmap = <
+          item
+            Width = 128
+            Height = 64
+            PNG = {
+              89504E470D0A1A0A0000000D4948445200000080000000400806000000D2D67F
+              7F000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+              008149444154785EEDDD410E80201003C0C5FFFF59D120811798D8990BDCDB10
+              6E6D6757C43AC649280508A700E11420DCF6096CDDB8F2636BE6F305107E8E2D
+              EBB50D64913D00000000000000000000000000000000000000000000007CC468
+              40AE3BFB67324609F2BC99CFCD2025C8B1666D3A369CDDC0700A104E01C22940
+              B4AA0B6F512FF6460F21570000000049454E44AE426082}
+          end>
+        Align = Center
+        Visible = False
+      end
+    end
+    object TLayout
+      StyleName = 'content'
+      Align = Client
+      Locked = True
+      Margins.Left = 2.000000000000000000
+      Margins.Top = 2.000000000000000000
+      Margins.Right = 2.000000000000000000
+      Margins.Bottom = 2.000000000000000000
+      Size.Width = 280.000000000000000000
+      Size.Height = 28.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object TLayout
+      StyleName = 'buttons'
+      Align = Right
+      Locked = True
+      Margins.Top = 2.000000000000000000
+      Margins.Right = 2.000000000000000000
+      Margins.Bottom = 2.000000000000000000
+      Position.X = 284.000000000000000000
+      Position.Y = 2.000000000000000000
+      Size.Width = 50.000000000000000000
+      Size.Height = 28.000000000000000000
+      Size.PlatformDefault = False
+    end
+    object TColorObject
+      StyleName = 'caretcolor'
+      Color = xFF222222
+    end
+    object TBrushObject
+      StyleName = 'foreground'
+      Brush.Color = xFF222222
+    end
+    object TBrushObject
+      StyleName = 'selection'
+      Brush.Color = x7F33B5E5
+    end
+    object TFontObject
+      StyleName = 'font'
+      Font.Size = 18.000000000000000000
+    end
+    object TSelectionPoint
+      StyleName = 'leftselectionpoint'
+      GripSize = 3.000000000000000000
+      GripCenter.X = 14.000000000000000000
+      GripCenter.Y = -22.000000000000000000
+      Size.Width = 24.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'Editstyleleftselectionpointstyle1'
+      TouchTargetExpansion.Left = 28.000000000000000000
+      TouchTargetExpansion.Right = -28.000000000000000000
+    end
+    object TSelectionPoint
+      StyleName = 'rightselectionpoint'
+      GripSize = 3.000000000000000000
+      GripCenter.Y = -44.000000000000000000
+      Size.Width = 24.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'Editstylerightselectionpointstyle1'
+    end
+    object TLabel
+      StyleName = 'prompt'
+      Locked = True
+      Opacity = 0.500000000000000000
+      StyleLookup = 'EditstyleLabelStyle1'
+      Visible = False
+    end
+  end
+  object TLayout
+    StyleName = 'Editstyleleftselectionpointstyle1'
+    Align = Center
+    Size.Width = 336.000000000000000000
+    Size.Height = 32.000000000000000000
+    Size.PlatformDefault = False
+    Visible = False
+    TabOrder = 1
+    FixedWidth = 24
+    FixedHeight = 24
+    object TStyleObject
+      StyleName = 'background'
+      SourceLookup = 'AndroidL Lightstyle.png'
+      Position.X = -24.000000000000000000
+      Size.Width = 24.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      WrapMode = Center
+      SourceLink = <
+        item
+          SourceRect.Left = 9.000000000000000000
+          SourceRect.Top = 106.000000000000000000
+          SourceRect.Right = 33.000000000000000000
+          SourceRect.Bottom = 130.000000000000000000
+        end
+        item
+          Scale = 1.500000000000000000
+          SourceRect.Left = 12.000000000000000000
+          SourceRect.Top = 144.000000000000000000
+          SourceRect.Right = 48.000000000000000000
+          SourceRect.Bottom = 180.000000000000000000
+        end
+        item
+          Scale = 2.000000000000000000
+          SourceRect.Left = 14.000000000000000000
+          SourceRect.Top = 201.000000000000000000
+          SourceRect.Right = 66.000000000000000000
+          SourceRect.Bottom = 253.000000000000000000
+        end
+        item
+          Scale = 3.000000000000000000
+          SourceRect.Left = 20.000000000000000000
+          SourceRect.Top = 294.000000000000000000
+          SourceRect.Right = 92.000000000000000000
+          SourceRect.Bottom = 366.000000000000000000
+        end>
+    end
+  end
+  object TLayout
+    StyleName = 'Editstylerightselectionpointstyle1'
+    Align = Center
+    Size.Width = 336.000000000000000000
+    Size.Height = 32.000000000000000000
+    Size.PlatformDefault = False
+    Visible = False
+    TabOrder = 2
+    FixedWidth = 24
+    FixedHeight = 24
+    object TStyleObject
+      StyleName = 'background'
+      SourceLookup = 'AndroidL Lightstyle.png'
+      Size.Width = 24.000000000000000000
+      Size.Height = 24.000000000000000000
+      Size.PlatformDefault = False
+      WrapMode = Center
+      SourceLink = <
+        item
+          SourceRect.Left = 63.000000000000000000
+          SourceRect.Top = 106.000000000000000000
+          SourceRect.Right = 87.000000000000000000
+          SourceRect.Bottom = 130.000000000000000000
+        end
+        item
+          Scale = 1.500000000000000000
+          SourceRect.Left = 94.000000000000000000
+          SourceRect.Top = 144.000000000000000000
+          SourceRect.Right = 130.000000000000000000
+          SourceRect.Bottom = 180.000000000000000000
+        end
+        item
+          Scale = 2.000000000000000000
+          SourceRect.Left = 118.000000000000000000
+          SourceRect.Top = 201.000000000000000000
+          SourceRect.Right = 170.000000000000000000
+          SourceRect.Bottom = 253.000000000000000000
+        end
+        item
+          Scale = 3.000000000000000000
+          SourceRect.Left = 189.000000000000000000
+          SourceRect.Top = 295.000000000000000000
+          SourceRect.Right = 261.000000000000000000
+          SourceRect.Bottom = 367.000000000000000000
+        end>
+    end
+  end
+  object TLayout
+    StyleName = 'EditstyleLabelStyle1'
+    Align = Center
+    Size.Width = 336.000000000000000000
+    Size.Height = 32.000000000000000000
+    Size.PlatformDefault = False
+    Visible = False
+    TabOrder = 3
+    object TText
+      StyleName = 'text'
+      Align = Client
+      Locked = True
+      HitTest = False
+      Size.Width = 336.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 18.000000000000000000
+      TextSettings.FontColor = xFF222222
+    end
+  end
+end

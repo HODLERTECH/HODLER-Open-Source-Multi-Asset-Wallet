@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- BEGIN_INCLUDE(manifest) -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:androidprv="http://schemas.android.com/apk/prv/res/android"
+        package="%package%"
+        coreApp="true"
+        android:sharedUserId="android.uid.system">
+
+    <!-- This is the platform API where NativeActivity was introduced. -->
+    <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="23" />
+       <uses-permission android:name="android.permission.WRITE_MEDIA_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+    <uses-permission android:name="android.permission.DEVICE_POWER" />
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.HARDWARE_TEST" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.MASTER_CLEAR" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="com.google.android.googleapps.permission.GOOGLE_AUTH" />
+    <uses-permission android:name="android.permission.ACCESS_DOWNLOAD_MANAGER" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIMAX_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIMAX_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="com.android.certinstaller.INSTALL_AS_USER" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.TETHER_PRIVILEGED" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CLEAR_APP_USER_DATA" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.MODIFY_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.WRITE_APN_SETTINGS"/>
+    <uses-permission android:name="android.permission.ACCESS_CHECKIN_PROPERTIES"/>
+    <uses-permission android:name="android.permission.READ_USER_DICTIONARY"/>
+    <uses-permission android:name="android.permission.WRITE_USER_DICTIONARY"/>
+    <uses-permission android:name="android.permission.FORCE_STOP_PACKAGES"/>
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"/>
+    <uses-permission android:name="android.permission.BATTERY_STATS"/>
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="com.android.launcher.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.MOVE_PACKAGE" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.BACKUP" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.STATUS_BAR" />
+    <uses-permission android:name="android.permission.MANAGE_USB" />
+    <uses-permission android:name="android.permission.SET_POINTER_SPEED" />
+    <uses-permission android:name="android.permission.SET_KEYBOARD_LAYOUT" />
+    <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
+    <uses-permission android:name="android.permission.COPY_PROTECTED_DATA" />
+    <uses-permission android:name="android.permission.MANAGE_USERS" />
+    <uses-permission android:name="android.permission.MANAGE_PROFILE_AND_DEVICE_OWNERS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" /> 
+    <uses-permission android:name="android.permission.CONFIGURE_WIFI_DISPLAY" />
+    <uses-permission android:name="android.permission.CONFIGURE_DISPLAY_COLOR_MODE" />
+    <uses-permission android:name="android.permission.SET_TIME" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.REBOOT" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.MANAGE_DEVICE_ADMINS" />
+    <uses-permission android:name="android.permission.READ_SEARCH_INDEXABLES" />
+    <uses-permission android:name="android.permission.OEM_UNLOCK_STATE" />
+    <uses-permission android:name="android.permission.OVERRIDE_WIFI_CONFIG" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="android.permission.MANAGE_FINGERPRINT" />
+    <uses-permission android:name="android.permission.USER_ACTIVITY" />
+    <uses-permission android:name="android.permission.CHANGE_APP_IDLE_STATE" />
+    <uses-permission android:name="android.permission.PEERS_MAC_ADDRESS"/>
+    <uses-permission android:name="android.permission.MANAGE_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.DELETE_PACKAGES"/>
+    <uses-permission android:name="android.permission.HIDE_NON_SYSTEM_OVERLAY_WINDOWS" />
+
+    <uses-permission android:name="cyanogenmod.permission.PROTECTED_APP" />
+    <uses-permission android:name="cyanogenmod.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="cyanogenmod.permission.MANAGE_REMOTE_PREFERENCES" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-feature android:glEsVersion="0x00020000" android:required="True"/>
+    <application android:persistent="%persistent%" 
+        android:restoreAnyVersion="%restoreAnyVersion%" 
+        android:label="%label%" 
+        android:debuggable="%debuggable%" 
+        android:largeHeap="%largeHeap%"
+        android:icon="%icon%"
+        android:theme="%theme%"
+        android:hardwareAccelerated="%hardwareAccelerated%">
+
+<%application-meta-data%>
+		<%services%>
+        <!-- Our activity is a subclass of the built-in NativeActivity framework class.
+             This will take care of integrating with our NDK code. -->
+        <activity android:name="com.embarcadero.firemonkey.FMXNativeActivity"
+                android:label="%activityLabel%"
+                android:configChanges="orientation|keyboard|keyboardHidden|screenSize"
+                android:launchMode="singleTask">
+				<!--<activity android:name="tech.hodler.additional.NativeActivity"
+          android:configChanges="orientation|keyboard" /> -->
+		
+
+
+            <!-- Tell NativeActivity the name of our .so -->
+            <meta-data android:name="android.app.lib_name"
+                android:value="%libNameValue%" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.MONKEY"/>
+            </intent-filter>
+        </activity>
+		
+		<!--<activity android:name="com.lamerman.FileDialog"
+          android:configChanges="orientation|keyboard" />-->
+        <%activity%>
+        <%receivers%>
+    </application>
+</manifest>
+<!-- END_INCLUDE(manifest) -->
