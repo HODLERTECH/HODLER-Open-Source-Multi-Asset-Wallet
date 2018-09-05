@@ -315,8 +315,8 @@ function inputType(input: TBitcoinOutput): integer;
 const
   HODLER_URL = 'https://hodler1.nq.pl/';
   HODLER_ETH = 'https://hodler2.nq.pl/';
-  API_PUB = 'baece2aebf652fdef7382224e8647edae13f4fbecbc6e2b3fe4925bd1c565974';
-  API_PRIV = '34b48e7ec272b6d506cb977fd62c71deb45c06f3d8e2d08081deead6a32c4420';
+  API_PUB = '';
+  API_PRIV = '';
 
 var
   TCAIterations: integer;
