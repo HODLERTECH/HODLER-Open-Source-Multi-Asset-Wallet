@@ -192,38 +192,47 @@ type
 type
   TKeccakMaxDigest = packed array [0 .. 63] of System.UInt8;
   { Keccak-512 digest }
-  {$IFDEF ANDROID}
+{$IFDEF ANDROID}
+
 type
   JFileProvider = interface;
 
   JFileProviderClass = interface(JContentProviderClass)
     ['{33A87969-5731-4791-90F6-3AD22F2BB822}']
-    {class} function getUriForFile(context: JContext; authority: JString; _file: JFile): Jnet_Uri; cdecl;
-    {class} function init: JFileProvider; cdecl;
+    { class } function getUriForFile(context: JContext; authority: JString;
+      _file: JFile): Jnet_Uri; cdecl;
+    { class } function init: JFileProvider; cdecl;
   end;
 
   [JavaSignature('android/support/v4/content/FileProvider')]
   JFileProvider = interface(JContentProvider)
     ['{12F5DD38-A3CE-4D2E-9F68-24933C9D221B}']
     procedure attachInfo(context: JContext; info: JProviderInfo); cdecl;
-    function delete(uri: Jnet_Uri; selection: JString; selectionArgs: TJavaObjectArray<JString>): Integer; cdecl;
+    function delete(uri: Jnet_Uri; selection: JString;
+      selectionArgs: TJavaObjectArray<JString>): integer; cdecl;
     function getType(uri: Jnet_Uri): JString; cdecl;
     function insert(uri: Jnet_Uri; values: JContentValues): Jnet_Uri; cdecl;
     function onCreate: Boolean; cdecl;
-    function openFile(uri: Jnet_Uri; mode: JString): JParcelFileDescriptor; cdecl;
-    function query(uri: Jnet_Uri; projection: TJavaObjectArray<JString>; selection: JString; selectionArgs: TJavaObjectArray<JString>;
+    function openFile(uri: Jnet_Uri; mode: JString)
+      : JParcelFileDescriptor; cdecl;
+    function query(uri: Jnet_Uri; projection: TJavaObjectArray<JString>;
+      selection: JString; selectionArgs: TJavaObjectArray<JString>;
       sortOrder: JString): JCursor; cdecl;
-    function update(uri: Jnet_Uri; values: JContentValues; selection: JString; selectionArgs: TJavaObjectArray<JString>): Integer; cdecl;
+    function update(uri: Jnet_Uri; values: JContentValues; selection: JString;
+      selectionArgs: TJavaObjectArray<JString>): integer; cdecl;
   end;
-  TJFileProvider = class(TJavaGenericImport<JFileProviderClass, JFileProvider>) end;
-  {$ENDIF}
-function isP2PKH(netbyte: AnsiString; coinid: integer): boolean;
-function isSegwitAddress(address: AnsiString): boolean;
+
+  TJFileProvider = class(TJavaGenericImport<JFileProviderClass, JFileProvider>)
+  end;
+{$ENDIF}
+
+function isP2PKH(netbyte: AnsiString; coinid: integer): Boolean;
+function isSegwitAddress(address: AnsiString): Boolean;
 function decodeAddressInfo(address: AnsiString; coinid: integer): TAddressInfo;
 function getHighestBlockNumber(T: Token): System.uint64;
 function toMnemonic(hex: AnsiString): AnsiString;
 function BIntTo256Hex(data: BigInteger; Padding: integer): AnsiString;
-function isEthereum(): boolean;
+function isEthereum(): Boolean;
 procedure refreshWalletDat();
 function inttoeth(data: System.uint64): AnsiString; overload;
 function inttoeth(data: BigInteger): AnsiString; overload;
@@ -249,7 +258,7 @@ function GetStrHashSHA256(Str: AnsiString): AnsiString;
 function hash160FromHex(H: AnsiString): AnsiString;
 function TCA(dane: AnsiString): AnsiString;
 function AES256CBCEncrypt(tcaKey, data: AnsiString): AnsiString;
-function isWalletDatExists: boolean;
+function isWalletDatExists: Boolean;
 procedure wipeAnsiString(var toWipe: AnsiString);
 function reverseHexOrder(s: AnsiString): AnsiString;
 function priv256forHD(coin, x, y: integer; MasterSeed: AnsiString): AnsiString;
@@ -260,7 +269,7 @@ function satToBtc(num: BigInteger; decimals: integer): AnsiString; overload;
 function getStringFromImage(img: TBitmap): AnsiString;
 function findAddress(Str: AnsiString): AnsiString;
 function SplitString(Str: AnsiString; separator: AnsiChar = ' '): TStringList;
-function IsHex(s: string): boolean;
+function IsHex(s: string): Boolean;
 function keccak256String(s: AnsiString): AnsiString;
 function keccak256Hex(s: AnsiString): AnsiString;
 procedure createAddWalletView();
@@ -281,7 +290,7 @@ function fromMnemonic(input: AnsiString): integer; overload;
 function fromMnemonic(input: TStringList): AnsiString; overload;
 function BitmapDataToScaledBitmap(data: TBitmapData; scale: integer): TBitmap;
 function parseQRCode(Str: AnsiString): TStringList;
-function isBech32Address(Str: AnsiString): boolean;
+function isBech32Address(Str: AnsiString): Boolean;
 procedure createHistoryList(wallet: cryptoCurrency);
 procedure RefreshGlobalFiat();
 procedure Vibrate(ms: int64);
@@ -301,13 +310,13 @@ function CreateNewAccount(name, pass, seed: AnsiString): Account;
 procedure AddAccountToFile(ac: Account);
 
 Procedure CreateNewAccountAndSave(name, pass, seed: AnsiString;
-  userSaveSeed: boolean);
+  userSaveSeed: Boolean);
 
 procedure CreatePanel(crypto: cryptoCurrency);
 
 procedure creatImportPrivKeyCoinList();
 function getETHValidAddress(address: AnsiString): AnsiString;
-function isValidETHAddress(address: AnsiString): boolean;
+function isValidETHAddress(address: AnsiString): Boolean;
 
 function inputType(input: TBitcoinOutput): integer;
 // procedure refresh
@@ -320,13 +329,13 @@ const
 
 var
   TCAIterations: integer;
-  userSavedSeed: boolean;
-  saveSeedInfoShowed: boolean = false;
+  userSavedSeed: Boolean;
+  saveSeedInfoShowed: Boolean = false;
   test: AnsiString;
   globalFiat: single;
   lastChose: integer;
   lastView: TTabItem;
-  isTokenDataInUse: boolean = false;
+  isTokenDataInUse: Boolean = false;
 
   i: integer;
 
@@ -342,7 +351,7 @@ var
 
   /// ////////////////////////////////////////////////////////////////
 
-function isValidETHAddress(address: AnsiString): boolean;
+function isValidETHAddress(address: AnsiString): Boolean;
 begin
   result := address = getETHValidAddress(address);
 end;
@@ -382,7 +391,7 @@ begin
 end;
 
 Procedure CreateNewAccountAndSave(name, pass, seed: AnsiString;
-  userSaveSeed: boolean);
+  userSaveSeed: Boolean);
 var
   thr: TThread;
 begin
@@ -672,13 +681,13 @@ begin
   ts.free;
 end;
 
-function isP2PKH(netbyte: AnsiString; coinid: integer): boolean;
+function isP2PKH(netbyte: AnsiString; coinid: integer): Boolean;
 begin
   result := availablecoin[coinid].p2pk = netbyte;
 
 end;
 
-function isSegwitAddress(address: AnsiString): boolean;
+function isSegwitAddress(address: AnsiString): Boolean;
 begin
   result := ((AnsiLeftStr(address, 3) = 'bc1') or
     (AnsiLeftStr(address, 3) = 'ltc1')) and (length(address) > 39);
@@ -733,7 +742,7 @@ var
   intent: JIntent;
   mimetypeStr: JString;
   fileUri: JParcelable;
-  javafile:JFile;
+  javafile: JFile;
 {$ELSE}
   saveDialog: TSaveDialog;
 {$ENDIF}
@@ -741,17 +750,15 @@ begin
 {$IFDEF ANDROID}
   mimetypeStr := TJMimeTypeMap.JavaClass.getSingleton.getMimeTypeFromExtension
     (StringToJString(StringReplace(TPath.GetExtension(path), '.', '', [])));
-   javafile:=TJFile.JavaClass.init(StringToJString(path));
+  javafile := TJFile.JavaClass.init(StringToJString(path));
   intent := TJIntent.Create();
 
   intent.setFlags(TJIntent.JavaClass.FLAG_GRANT_READ_URI_PERMISSION);
   intent.SetAction(TJIntent.JavaClass.ACTION_SEND);
   intent.setType(mimetypeStr);
-
-//  fileUri := JParcelable(TJnet_Uri.JavaClass.fromFile
-//    (TJFile.JavaClass.init(StringToJString(path))));
-fileUri:=JParcelable(TJFileProvider.JavaClass.getUriForFile(
-TAndroidHelper.Context,StringToJString('tech.hodler.core.fileProvider'),javafile));
+  fileUri := JParcelable(TJFileProvider.JavaClass.getUriForFile
+    (TAndroidHelper.context, StringToJString('tech.hodler.core.fileProvider'),
+    javafile));
   intent.putExtra(TJIntent.JavaClass.EXTRA_STREAM, fileUri);
 
   SharedActivity.startActivity(TJIntent.JavaClass.createChooser(intent,
@@ -1080,7 +1087,7 @@ begin
 
 end;
 
-function isBech32Address(Str: AnsiString): boolean;
+function isBech32Address(Str: AnsiString): Boolean;
 var
   prefix: AnsiString;
   i: integer;
@@ -1511,7 +1518,7 @@ begin
   result := BigIntegerToFloatStr(wi.confirmed, availablecoin[wi.coin].decimals);
 end;
 
-function isEthereum: boolean;
+function isEthereum: Boolean;
 begin
 
   result := CurrentCoin.coin = 4;
@@ -1567,7 +1574,7 @@ var
   // temp : AnsiString;
   i: integer;
   separator: Char;
-  flag: boolean;
+  flag: Boolean;
   counter: integer;
 begin
   flag := false;
@@ -1610,7 +1617,7 @@ var
   // len : integer;
   temp: BigInteger;
   Str: AnsiString;
-  minus: boolean;
+  minus: Boolean;
 begin
   if precision = -1 then
     precision := decimals;
@@ -1945,7 +1952,7 @@ begin
     result := result + IntToHex(bb[i], 2);
 end;
 
-function IsHex(s: string): boolean;
+function IsHex(s: string): Boolean;
 var
   i: integer;
 begin
@@ -1982,7 +1989,7 @@ begin
 
   init(K256State, 256);
 
-  Update(K256State, buf, (length(s)) * 8);
+  update(K256State, buf, (length(s)) * 8);
   Final(K256State, @K256Dig);
   result := TStateToHEX(K256Dig);
 
@@ -2011,7 +2018,7 @@ begin
 
   init(K256State, 256);
 
-  Update(K256State, buf, (length(bb)) * 8);
+  update(K256State, buf, (length(bb)) * 8);
   Final(K256State, @K256Dig);
   result := TStateToHEX(K256Dig);
 
@@ -2210,7 +2217,7 @@ begin
   end;
 end;
 
-function isWalletDatExists: boolean;
+function isWalletDatExists: Boolean;
 var
   WDPath: AnsiString;
 begin
@@ -2290,7 +2297,7 @@ begin
   bb := hexatotbytes(H);
   HashSHA := THashSHA2.Create;
   HashSHA.Reset;
-  HashSHA.Update(bb, (length(H) div 2));
+  HashSHA.update(bb, (length(H) div 2));
   result := HashSHA.HashAsString;
 
 end;
