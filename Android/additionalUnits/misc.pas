@@ -1,4 +1,4 @@
-﻿{$A8,B-,C+,D+,E-,F-,G+,H+,I+,J-,K-,L+,M-,N-,O+,P+,Q-,R-,S-,T-,U-,V+,W-,X+,Y+,Z1}
+{$A8,B-,C+,D+,E-,F-,G+,H+,I+,J-,K-,L+,M-,N-,O+,P+,Q-,R-,S-,T-,U-,V+,W-,X+,Y+,Z1}
 {$MINSTACKSIZE $00004000}
 {$MAXSTACKSIZE $00100000}
 {$IMAGEBASE $00400000}
@@ -192,7 +192,31 @@ type
 type
   TKeccakMaxDigest = packed array [0 .. 63] of System.UInt8;
   { Keccak-512 digest }
+  {$IFDEF ANDROID}
+type
+  JFileProvider = interface;
 
+  JFileProviderClass = interface(JContentProviderClass)
+    ['{33A87969-5731-4791-90F6-3AD22F2BB822}']
+    {class} function getUriForFile(context: JContext; authority: JString; _file: JFile): Jnet_Uri; cdecl;
+    {class} function init: JFileProvider; cdecl;
+  end;
+
+  [JavaSignature('android/support/v4/content/FileProvider')]
+  JFileProvider = interface(JContentProvider)
+    ['{12F5DD38-A3CE-4D2E-9F68-24933C9D221B}']
+    procedure attachInfo(context: JContext; info: JProviderInfo); cdecl;
+    function delete(uri: Jnet_Uri; selection: JString; selectionArgs: TJavaObjectArray<JString>): Integer; cdecl;
+    function getType(uri: Jnet_Uri): JString; cdecl;
+    function insert(uri: Jnet_Uri; values: JContentValues): Jnet_Uri; cdecl;
+    function onCreate: Boolean; cdecl;
+    function openFile(uri: Jnet_Uri; mode: JString): JParcelFileDescriptor; cdecl;
+    function query(uri: Jnet_Uri; projection: TJavaObjectArray<JString>; selection: JString; selectionArgs: TJavaObjectArray<JString>;
+      sortOrder: JString): JCursor; cdecl;
+    function update(uri: Jnet_Uri; values: JContentValues; selection: JString; selectionArgs: TJavaObjectArray<JString>): Integer; cdecl;
+  end;
+  TJFileProvider = class(TJavaGenericImport<JFileProviderClass, JFileProvider>) end;
+  {$ENDIF}
 function isP2PKH(netbyte: AnsiString; coinid: integer): boolean;
 function isSegwitAddress(address: AnsiString): boolean;
 function decodeAddressInfo(address: AnsiString; coinid: integer): TAddressInfo;
@@ -291,8 +315,8 @@ function inputType(input: TBitcoinOutput): integer;
 const
   HODLER_URL = 'https://hodler1.nq.pl/';
   HODLER_ETH = 'https://hodler2.nq.pl/';
-  API_PUB = '';
-  API_PRIV = '';
+  API_PUB = 'baece2aebf652fdef7382224e8647edae13f4fbecbc6e2b3fe4925bd1c565974';
+  API_PRIV = '34b48e7ec272b6d506cb977fd62c71deb45c06f3d8e2d08081deead6a32c4420';
 
 var
   TCAIterations: integer;
@@ -709,6 +733,7 @@ var
   intent: JIntent;
   mimetypeStr: JString;
   fileUri: JParcelable;
+  javafile:JFile;
 {$ELSE}
   saveDialog: TSaveDialog;
 {$ENDIF}
@@ -716,14 +741,17 @@ begin
 {$IFDEF ANDROID}
   mimetypeStr := TJMimeTypeMap.JavaClass.getSingleton.getMimeTypeFromExtension
     (StringToJString(StringReplace(TPath.GetExtension(path), '.', '', [])));
-
+   javafile:=TJFile.JavaClass.init(StringToJString(path));
   intent := TJIntent.Create();
+
+  intent.setFlags(TJIntent.JavaClass.FLAG_GRANT_READ_URI_PERMISSION);
   intent.SetAction(TJIntent.JavaClass.ACTION_SEND);
   intent.setType(mimetypeStr);
 
-  fileUri := JParcelable(TJnet_Uri.JavaClass.fromFile
-    (TJFile.JavaClass.init(StringToJString(path))));
-
+//  fileUri := JParcelable(TJnet_Uri.JavaClass.fromFile
+//    (TJFile.JavaClass.init(StringToJString(path))));
+fileUri:=JParcelable(TJFileProvider.JavaClass.getUriForFile(
+TAndroidHelper.Context,StringToJString('tech.hodler.core.fileProvider'),javafile));
   intent.putExtra(TJIntent.JavaClass.EXTRA_STREAM, fileUri);
 
   SharedActivity.startActivity(TJIntent.JavaClass.createChooser(intent,
