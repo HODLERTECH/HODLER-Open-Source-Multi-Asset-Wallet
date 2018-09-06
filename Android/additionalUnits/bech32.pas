@@ -459,7 +459,7 @@ var
   rev: Integer;
   hrp: String;
 begin
-  Result.hrp := '';
+  Result.hrp := 'FAIL';
   Result.values := [];
 
   lower := False;
