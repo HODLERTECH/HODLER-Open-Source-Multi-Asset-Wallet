@@ -1,4 +1,4 @@
-﻿{ *****************************
+{ *****************************
   License GPL
 
   Initial Authors
@@ -529,6 +529,8 @@ type
     Layout36: TLayout;
     SystemTimer: TTimer;
     updateBtn: TButton;
+    SearchTokenButton: TButton;
+    FindERC20autoButton: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -699,6 +701,8 @@ type
     procedure Button11Click(Sender: TObject);
     procedure SystemTimerTimer(Sender: TObject);
     procedure updateBtnClick(Sender: TObject);
+    procedure SearchTokenButtonClick(Sender: TObject);
+    procedure FindERC20autoButtonClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -943,6 +947,13 @@ end;
 procedure TfrmHome.FilePanelClick(Sender: TObject; const Point: TPointF);
 begin
   FilePanelClick(Sender);
+end;
+
+procedure TfrmHome.FindERC20autoButtonClick(Sender: TObject);
+begin
+  SearchTokens(walletAddressForNewToken);
+
+  switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
 end;
 
 procedure TfrmHome.DirectoryPanelClick(Sender: TObject);
@@ -1512,120 +1523,23 @@ end;
 
 
   end; }
+procedure TfrmHome.SearchTokenButtonClick(Sender: TObject);
+begin
+  if ((CurrentCoin.coin <> 4) or (CurrentCryptoCurrency is Token)) then
+  begin
+
+    showmessage('SearchTokenButton shouldnt be visible here');
+    exit;
+
+  end;
+
+  SearchTokens(CurrentCoin.addr);
+end;
+
 procedure TfrmHome.SelectFileInBackupFileList(Sender: TObject);
 begin
   RFFPathEdit.Text := TfmxObject(Sender).TagString;
   switchTab(PageControl, HSBPassword);
-end;
-
-procedure TfrmHome.RestoreFromFileButtonClick(Sender: TObject);
-begin
-
-  clearVertScrollBox(BackupFileListVertScrollBox);
-{$IFDEF ANDROID}
-  requestForPermission('android.permission.READ_EXTERNAL_STORAGE');
-  requestForPermission('android.permission.WRITE_EXTERNAL_STORAGE');
-
-  TThread.CreateAnonymousThread(
-    procedure
-    var
-      i: Integer;
-    begin
-
-      for i := 0 to 5 * 30 do
-      begin
-        if (TAndroidHelper.Context.checkCallingOrSelfPermission
-          (StringToJString('android.permission.READ_EXTERNAL_STORAGE')) = -1) or
-          (TAndroidHelper.Context.checkCallingOrSelfPermission
-          (StringToJString('android.permission.WRITE_EXTERNAL_STORAGE')) = -1)
-        then
-        begin
-          sleep(200);
-        end
-        else
-        begin
-{$ENDIF}
-          TThread.CreateAnonymousThread(
-            procedure
-            var
-              strArr: TStringDynArray;
-              Button: TButton;
-
-            begin
-
-              TThread.Synchronize(nil,
-                procedure
-                begin
-                  LoadBackupFileAniIndicator.Visible := true;
-                  LoadBackupFileAniIndicator.Enabled := true;
-                end);
-
-{$IFDEF ANDROID}
-              strArr := TDirectory.GetFiles(TDirectory.GetParent
-                (System.IOUtils.TPath.GetSharedDownloadsPath()), '*.hsb.zip',
-                TSearchOption.SoAllDirectories);
-{$ELSE}
-              strArr := TDirectory.GetFiles('C:\', '*.hsb.zip',
-                TSearchOption.SoAllDirectories);
-{$ENDIF}
-              TThread.Synchronize(nil,
-                procedure
-                var
-                  i: Integer;
-                begin
-
-                  for i := 0 to length(strArr) - 1 do
-                  begin
-                    // if containsText ( strArr[i] , 'hsb' ) then
-                    // begin
-                    Button := TButton.Create(BackupFileListVertScrollBox);
-                    Button.Visible := true;
-                    Button.Align := TAlignLayout.Top;
-                    Button.Height := 48;
-                    if LeftStr(strArr[i],
-                      length(TDirectory.GetParent(System.IOUtils.TPath.
-                      GetSharedDownloadsPath()))) = TDirectory.GetParent
-                      (System.IOUtils.TPath.GetSharedDownloadsPath()) then
-                      Button.Text := RightStr(strArr[i],
-                        length(strArr[i]) -
-                        length(TDirectory.GetParent(System.IOUtils.TPath.
-                        GetSharedDownloadsPath())))
-                    else
-                      Button.Text := strArr[i];
-                    Button.TagString := strArr[i];
-                    Button.Parent := BackupFileListVertScrollBox;
-                    Button.OnClick := SelectFileInBackupFileList;
-                    // end;
-                  end;
-
-                  LoadBackupFileAniIndicator.Visible := false;
-                  LoadBackupFileAniIndicator.Enabled := false;
-
-                end);
-
-            end).Start;
-{$IFDEF ANDROID}
-          TThread.Synchronize(nil,
-            procedure
-            begin
-
-              RFFPathEdit.Text := System.IOUtils.TPath.GetDownloadsPath();
-              switchTab(PageControl, RestoreFromFileTabitem);
-
-            end);
-{$ELSE}
-          RFFPathEdit.Text := 'C:\';
-
-          switchTab(PageControl, RestoreFromFileTabitem);
-
-{$ENDIF}
-{$IFDEF ANDROID}
-          break;
-        end;
-      end;
-
-    end).Start;
-{$ENDIF}
 end;
 
 procedure TfrmHome.RestoreFromFileConfirmButtonClick(Sender: TObject);
@@ -1686,7 +1600,6 @@ begin
   ac.free;
 
   LoadCurrentAccount(RestoreFromFileAccountNameEdit.Text);
-
   FormShow(nil);
 
 end;
@@ -2040,7 +1953,7 @@ end;
 
 procedure TfrmHome.TrySendTX(Sender: TObject);
 var
-  MasterSeed, tced, Address: AnsiString;
+  MasterSeed, tced, Address, CashAddr: AnsiString;
 var
   amount, fee, tempFee: BigInteger;
 begin
@@ -2112,3160 +2025,3542 @@ begin
   end;
 
   Address := WVsendTO.Text;
+
   if (CurrentCryptoCurrency is TwalletInfo) and
     (TwalletInfo(CurrentCryptoCurrency).coin = 3) then
   begin
-    if LeftStr(Address, 12) = 'bitcoincash:' then
+    CashAddr := StringReplace(LowerCase(Address), 'bitcoincash:', '',
+      [rfReplaceAll]);
+    if (LeftStr(CashAddr, 1) = 'q') or (LeftStr(CashAddr, 1) = 'p') then
     begin
-      Address := BCHCashAddrToLegacyAddr(Address);
-    end
-    else
-    begin
-      Address := BCHCashAddrToLegacyAddr(Address);
-    end;
-
-  end;
-
-  // ShowMessage(amount.ToString+' '+tempfee.ToString);
-  popupWindowOK.Create(
-    procedure
-    begin
-      TThread.CreateAnonymousThread(
-        procedure
+      try
+        Address := BCHCashAddrToLegacyAddr(Address);
+      except
+        on E: Exception do
         begin
-          TThread.Synchronize(nil,
-            procedure
-            begin
+          showmessage('Wrong bech32 address');
+          exit;
+        end;
+      end
+    end;
+  end;
+    popupWindowOK.Create(
+      procedure
+      begin
+        TThread.CreateAnonymousThread(
+          procedure
+          begin
+            TThread.Synchronize(nil,
+              procedure
+              begin
 
-              switchTab(PageControl,
-                TTabItem(frmHome.FindComponent('dashbrd')));
+                switchTab(PageControl,
+                  TTabItem(frmHome.FindComponent('dashbrd')));
 
-            end);
-        end).Start;
-    end, sendCoinsTO(CurrentCoin, Address, amount, fee, MasterSeed,
-    AvailableCoin[CurrentCoin.coin].name));
+              end);
+          end).Start;
+      end, sendCoinsTO(CurrentCoin, Address, amount, fee, MasterSeed,
+      AvailableCoin[CurrentCoin.coin].name));
 
-end;
+  end;
 
-procedure TfrmHome.updateBtnClick(Sender: TObject);
-begin
-{$IFDEF ANDROID}
-  executeAndroid('am start -a org.lineageos.updater');
-{$ENDIF}
-end;
-
-procedure TfrmHome.USDtoCoin(Sender: TObject);
-begin
-  if WVRealCurrency.IsFocused then
+  procedure TfrmHome.updateBtnClick(Sender: TObject);
   begin
-    if WVRealCurrency.Text = '' then
+{$IFDEF ANDROID}
+    executeAndroid('am start -a org.lineageos.updater');
+{$ENDIF}
+  end;
+
+  procedure TfrmHome.USDtoCoin(Sender: TObject);
+  begin
+    if WVRealCurrency.IsFocused then
     begin
-      wvAmount.Text := BigIntegertoFloatStr(0, CurrentCryptoCurrency.decimals);
-    end
-    else
-    begin
-      wvAmount.Text :=
-        floatToStrF((strToFloatDef(WVRealCurrency.Text, 0) /
-        CurrencyConverter.calculate(CurrentCryptoCurrency.rate)), ffFixed, 20,
-        CurrentCryptoCurrency.decimals);
-      SendAllFundsSwitch.IsChecked := false;
+      if WVRealCurrency.Text = '' then
+      begin
+        wvAmount.Text := BigIntegertoFloatStr(0,
+          CurrentCryptoCurrency.decimals);
+      end
+      else
+      begin
+        wvAmount.Text :=
+          floatToStrF((strToFloatDef(WVRealCurrency.Text, 0) /
+          CurrencyConverter.calculate(CurrentCryptoCurrency.rate)), ffFixed, 20,
+          CurrentCryptoCurrency.decimals);
+        SendAllFundsSwitch.IsChecked := false;
+      end;
+
+      FeeFromAmountSwitch.Enabled := true;
     end;
 
-    FeeFromAmountSwitch.Enabled := true;
   end;
 
-end;
+  procedure TfrmHome.wvAmountChange(Sender: TObject);
+  var
+    i: Single;
+  begin
+    case length(wvAmount.Text) of
+      0 .. 8:
+        i := 24;
+      9 .. 14:
+        i := 20;
+      15 .. 20:
+        i := 16;
+      21 .. 25:
+        i := 10;
+    else
+      i := 0;
 
-procedure TfrmHome.wvAmountChange(Sender: TObject);
-var
-  i: Single;
-begin
-  case length(wvAmount.Text) of
-    0 .. 8:
-      i := 24;
-    9 .. 14:
-      i := 20;
-    15 .. 20:
-      i := 16;
-    21 .. 25:
-      i := 10;
-  else
-    i := 0;
+    end;
 
+    wvAmount.TextSettings.Font.Size := i;
+    wvAmount.Text := StringReplace(wvAmount.Text, ',', '.', [rfReplaceAll]);
   end;
 
-  wvAmount.TextSettings.Font.Size := i;
-  wvAmount.Text := StringReplace(wvAmount.Text, ',', '.', [rfReplaceAll]);
-end;
+  procedure TfrmHome.wvAmountClick(Sender: TObject);
+  begin
+    if strToFloatDef(wvAmount.Text, 0) = 0 then
+      wvAmount.Text := '';
 
-procedure TfrmHome.wvAmountClick(Sender: TObject);
-begin
-  if strToFloatDef(wvAmount.Text, 0) = 0 then
-    wvAmount.Text := '';
+    // refreshKeyBoard(sender);
+  end;
 
-  // refreshKeyBoard(sender);
-end;
-
-procedure TfrmHome.wvAmountExit(Sender: TObject);
-begin
-  if wvAmount.Text = '' then
-    wvAmount.Text := BigIntegertoFloatStr(0, CurrentCoin.decimals);
-end;
-
-procedure TfrmHome.wvAmountTyping(Sender: TObject);
-begin
-  wvAmountChange(Sender);
-end;
-
-procedure TfrmHome.CoinToUSD(Sender: TObject);
-begin
-  if wvAmount.IsFocused then
+  procedure TfrmHome.wvAmountExit(Sender: TObject);
   begin
     if wvAmount.Text = '' then
+      wvAmount.Text := BigIntegertoFloatStr(0, CurrentCoin.decimals);
+  end;
+
+  procedure TfrmHome.wvAmountTyping(Sender: TObject);
+  begin
+    wvAmountChange(Sender);
+  end;
+
+  procedure TfrmHome.CoinToUSD(Sender: TObject);
+  begin
+    if wvAmount.IsFocused then
     begin
-      WVRealCurrency.Text := '0.00';
+      if wvAmount.Text = '' then
+      begin
+        WVRealCurrency.Text := '0.00';
+      end
+      else
+      begin
+        WVRealCurrency.Text :=
+          floatToStrF(CurrencyConverter.calculate(strToFloatDef(wvAmount.Text,
+          0)) * (CurrentCryptoCurrency.rate), ffFixed, 18, 2);
+        SendAllFundsSwitch.IsChecked := false;
+      end;
+
+      FeeFromAmountSwitch.Enabled := true;
+    end;
+
+  end;
+
+  procedure TfrmHome.ConfirmNewAccountButtonClick(Sender: TObject);
+  var
+    str: AnsiString;
+    newAcc: Account;
+  begin
+
+    pass.Text := '';
+    retypePass.Text := '';
+    btnCreateWallet.Text := dictionary['OpenNewWallet'];
+    procCreateWallet := btnGenSeedClick;
+    switchTab(PageControl, createPassword);
+
+  end;
+
+  procedure TfrmHome.CopyToClipboard(Sender: TObject;
+  const EventInfo: TGestureEventInfo; var Handled: Boolean);
+  var
+{$IFDEF ANDROID}
+    Vibrator: JVibrator;
+{$ENDIF}
+    svc: IFMXExtendedClipboardService;
+  begin
+    // showmessage('debug');
+    if TPlatformServices.Current.SupportsPlatformService
+      (IFMXClipboardService, svc) then
+    begin
+
+      if Sender is TEdit then
+      begin
+
+        if svc.GetClipboard().ToString() <> removeSpace(TEdit(Sender).Text) then
+        begin
+
+          svc.setClipboard(removeSpace(TEdit(Sender).Text));
+          popupWindow.Create(removeSpace(TEdit(Sender).Text) + ' ' +
+            dictionary['CopiedToClipboard']);
+{$IFDEF ANDROID}
+          Vibrator := TJvibrator.Wrap
+            ((SharedActivityContext.getSystemService
+            (TJContext.JavaClass.VIBRATOR_SERVICE) as ILocalObject)
+            .GetObjectID());
+          Vibrator.vibrate(200);
+
+{$ENDIF}
+        end;
+      end;
+
+    end;
+
+  end;
+
+  procedure TfrmHome.CreateBackupButtonClick(Sender: TObject);
+  begin
+    switchTab(PageControl, BackupTabItem);
+  end;
+
+  procedure TfrmHome.CurrencyBoxChange(Sender: TObject);
+  begin
+    CurrencyConverter.setCurrency(CurrencyBox.Items[CurrencyBox.ItemIndex]);
+    refreshCurrencyValue();
+
+    if CurrencyBox.IsFocused then
+      refreshWalletDat();
+  end;
+
+  // button SKIP on screen with field to repeat seed
+  procedure TfrmHome.btnSkipClick(Sender: TObject);
+  begin
+    userSavedSeed := true;
+    refreshWalletDat();
+
+    switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
+  end;
+
+  procedure TfrmHome.btnSMVCancelClick(Sender: TObject);
+  begin
+    switchTab(PageControl, lastView);
+    // PageControl.ActiveTab := lastView;
+  end;
+
+  // button in warning window
+  procedure TfrmHome.btnSMVNoClick(Sender: TObject);
+  begin
+    switchTab(PageControl, lastView);
+    // PageControl.ActiveTab := lastView;
+    lastChose := 0;
+  end;
+
+  // button in warning window
+  procedure TfrmHome.btnSMVYesClick(Sender: TObject);
+  begin
+    switchTab(PageControl, lastView);
+    // PageControl.ActiveTab := lastView;
+    lastChose := 1;
+  end;
+
+  { procedure TfrmHome.decriptOKforNewWallet(Sender: TObject);
+    var
+    MasterSeed, tced: AnsiString;
+    walletInfo: TWalletInfo;
+    begin
+    tced := TCA(passwordForDecrypt.Text);
+    MasterSeed := SpeckDecrypt(tced, encryptedSeed);
+    if not isHex(MasterSeed) then
+    begin
+    DecryptSeedMessage.Text := 'Failed to decrypt master seed';
+    exit;
+    end;
+
+    walletInfo := coindata.createCoin(newcoinID, countWalletBy(newcoinID), 0,
+    MasterSeed);
+
+    clearVertScrollBox(frmHome.WalletList);
+    insertToWd(walletInfo);
+
+    repaintWalletList;
+
+    FormShow(nil);
+
+    end; }
+  { procedure TfrmHome.WVTokenChoseInWallet(Sender: TObject; const Point: TPointF);
+    var
+    id: Integer;
+    begin
+
+
+    FeeFromAmountLayout.Visible := false;
+
+    id := TComponent(Sender).Tag;
+    currentToken := id - 10000;
+    CurrentCryptoCurrency := myTokens[currentToken];
+
+    isTokenTransfer := true;
+    currentWallet := getwalletId(myTokens[id - 10000].addr); // WARNING
+    frmHome.wvAddress.Text := myWallets[currentWallet].addr;
+
+    createHistoryList(myTokens[currentToken]);
+
+    wvFee.Text := myWallets[currentWallet].efee[0];
+    if wvFee.Text = '' then
+    wvFee.Text := '0';
+
+    lblFeeHeader.Text := dictionary['GasPriceWEI'] + ': ';
+    lblFee.Text := wvFee.Text + '  = ' +
+    floatToStrF(CurrencyConverter.calculate(strToFloat(wvFee.Text) * 66666 *
+    myWallets[getwalletId(myTokens[currentToken].addr)].rate /
+    (1000000.0 * 1000000.0 * 1000000.0)), ffFixed, 18, 2) + ' ' +
+    CurrencyConverter.symbol;
+
+    lbBalance.Text := BigIntegerBeautifulStr(myTokens[id - 10000].confirmed,
+    myTokens[id - 10000].decimals);
+    lbBalanceLong.Text := BigIntegertoFloatStr(myTokens[id - 10000].confirmed,
+    myTokens[id - 10000].decimals);
+
+    wvAmount.Text := BigIntegertoFloatStr(0, myTokens[currentToken].decimals);
+    WVRealCurrency.Text := '0.00';
+
+    ReceiveValue.Text := BigIntegertoFloatStr(0, myTokens[currentToken].decimals);
+    ReceiveAmountRealCurrency.Text := '0.00';
+
+    wvGFX.Bitmap := myTokens[id - 10000].getIcon;
+    ShortcutValetInfoImage.Bitmap := myTokens[id - 10000].getIcon;
+
+    // TopInfoConfirmed.Text := 'Available ' + myTokens[id - 10000].shortcut +
+    // ' balance: ';
+    TopInfoConfirmedValue.Text := ' ' + BigIntegertoFloatStr
+    (myTokens[currentToken].confirmed, myTokens[currentToken].decimals);
+
+    // topInfoUnconfirmed.Text := 'Confirming balance: ';
+    TopInfoUnconfirmedValue.Text := ' ' + BigIntegertoFloatStr
+    (myTokens[currentToken].unconfirmed, myTokens[currentToken].decimals);
+
+    lblCoinShort.Text := myTokens[currentToken].shortcut + '   ';
+    lblReceiveCoinShort.Text := myTokens[currentToken].shortcut + '   ';
+
+    receiveAddress.Text := myWallets[currentWallet].addr;
+
+    QRChangeTimerTimer(nil);
+
+    WVTabControl.ActiveTab := WVBalance;
+
+    lblFiat.Text := floatToStrF(CurrentCryptoCurrency.getFiat(), ffFixed, 15, 2);
+
+    WVsendTO.Text := '';
+    lblBlockInfo.Visible := false;
+    FeeSpin.Visible := false;
+
+    SendAllFundsSwitch.IsChecked := false;
+    FeeFromAmountSwitch.IsChecked := false;
+
+    AddressTypelayout.Visible := false;
+    BCHAddressesLayout.Visible := false;
+
+    switchTab(PageControl, walletView);
+    end; }
+
+  procedure TfrmHome.OpenWalletView(Sender: TObject; const Point: TPointF);
+  var
+    wd: TwalletInfo;
+  begin
+
+    CurrentCryptoCurrency := CryptoCurrency(TfmxObject(Sender).TagObject);
+
+    isTokenTransfer := CurrentCryptoCurrency is Token;
+
+    if isTokenTransfer then
+    begin
+      for wd in CurrentAccount.myCoins do
+        if wd.addr = CurrentCryptoCurrency.addr then
+        begin
+          CurrentCoin := wd;
+          break;
+        end;
+    end
+    else
+      CurrentCoin := TwalletInfo(CurrentCryptoCurrency);
+
+    createHistoryList(CurrentCryptoCurrency);
+
+    frmHome.wvAddress.Text := CurrentCryptoCurrency.addr;
+
+    FeeFromAmountLayout.Visible := not isTokenTransfer;
+
+    WVTabControl.ActiveTab := WVBalance;
+
+    if isEthereum or isTokenTransfer then
+    begin
+
+      lblBlockInfo.Visible := false;
+      FeeSpin.Visible := false;
+      FeeSpin.Opacity := 0;
+      FeeSpin.Enabled := false;
+
     end
     else
     begin
-      WVRealCurrency.Text :=
-        floatToStrF(CurrencyConverter.calculate(strToFloatDef(wvAmount.Text, 0))
-        * (CurrentCryptoCurrency.rate), ffFixed, 18, 2);
-      SendAllFundsSwitch.IsChecked := false;
+
+      lblBlockInfo.Visible := true;
+      FeeSpin.Visible := true;
+      FeeSpin.Enabled := true;
+      FeeSpin.Opacity := 1;
+
     end;
 
-    FeeFromAmountSwitch.Enabled := true;
-  end;
+    lbBalance.Text := BigIntegerBeautifulStr(CurrentCryptoCurrency.confirmed,
+      CurrentCryptoCurrency.decimals);
 
-end;
+    lbBalanceLong.Text := BigIntegertoFloatStr(CurrentCryptoCurrency.confirmed,
+      CurrentCryptoCurrency.decimals);
 
-procedure TfrmHome.ConfirmNewAccountButtonClick(Sender: TObject);
-var
-  str: AnsiString;
-  newAcc: Account;
-begin
+    // POLE Z KWOTA DO WYSLANIA
+    wvAmount.Text := BigIntegertoFloatStr(0, CurrentCryptoCurrency.decimals);
 
-  pass.Text := '';
-  retypePass.Text := '';
-  btnCreateWallet.Text := dictionary['OpenNewWallet'];
-  procCreateWallet := btnGenSeedClick;
-  switchTab(PageControl, createPassword);
+    lblFiat.Text := floatToStrF(CurrentCryptoCurrency.getFiat(),
+      ffFixed, 15, 2);
 
-end;
+    if isEthereum or isTokenTransfer then
+    begin
+      lblFeeHeader.Text := dictionary['GasPriceWEI'] + ':';
+      lblFee.Text := '';
+      wvFee.Text := CurrentCoin.efee[0];
 
-procedure TfrmHome.CopyToClipboard(Sender: TObject;
-const EventInfo: TGestureEventInfo; var Handled: Boolean);
-var
-{$IFDEF ANDROID}
-  Vibrator: JVibrator;
-{$ENDIF}
-  svc: IFMXExtendedClipboardService;
-begin
-  // showmessage('debug');
-  if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, svc)
-  then
-  begin
+      if isTokenTransfer then
+      begin
+        lblFee.Text := wvFee.Text + '  = ' +
+          floatToStrF(CurrencyConverter.calculate(strToFloatDef(wvFee.Text,
+          0) * 66666 * CurrentCryptoCurrency.rate / (1000000.0 * 1000000.0 *
+          1000000.0)), ffFixed, 18, 2) + ' ' + CurrencyConverter.symbol;
+      end;
 
-    if Sender is TEdit then
+    end
+    else
+    begin
+      lblFeeHeader.Text := dictionary['TransactionFee'] + ':';
+      lblFee.Text := '0.00 ' + CurrentCryptoCurrency.shortcut;
+      wvFee.Text := CurrentCoin.efee[round(FeeSpin.Value) - 1];
+    end;
+    if wvFee.Text = '' then
+      wvFee.Text := '0';
+
+    ReceiveValue.Text := BigIntegertoFloatStr(0,
+      CurrentCryptoCurrency.decimals);
+
+    ReceiveAmountRealCurrency.Text := '0.00';
+
+    WVRealCurrency.Text := floatToStrF(strToFloatDef(wvAmount.Text, 0) *
+      CurrentCryptoCurrency.rate, ffFixed, 15, 2);
+
+    ShortcutValetInfoImage.Bitmap := CurrentCryptoCurrency.getIcon();
+
+    wvGFX.Bitmap := CurrentCryptoCurrency.getIcon();
+
+    TopInfoConfirmedValue.Text := ' ' + BigIntegertoFloatStr
+      (CurrentCryptoCurrency.confirmed, CurrentCryptoCurrency.decimals);
+
+    TopInfoUnconfirmedValue.Text := ' ' + BigIntegertoFloatStr
+      (CurrentCryptoCurrency.unconfirmed, CurrentCryptoCurrency.decimals);
+
+    lblCoinShort.Text := CurrentCryptoCurrency.shortcut + '   ';
+
+    lblReceiveCoinShort.Text := CurrentCryptoCurrency.shortcut + '   ';
+
+    QRChangeTimerTimer(nil);
+
+    receiveAddress.Text := cutEveryNChar(4, CurrentCryptoCurrency.addr);
+
+    lblFiat.Text := floatToStrF(CurrentCryptoCurrency.getFiat(),
+      ffFixed, 15, 2);
+
+    WVsendTO.Text := '';
+
+    SendAllFundsSwitch.IsChecked := false;
+    FeeFromAmountSwitch.IsChecked := false;
+
+    if CurrentCryptoCurrency is TwalletInfo then
     begin
 
-      if svc.GetClipboard().ToString() <> removeSpace(TEdit(Sender).Text) then
-      begin
+      if (TwalletInfo(CurrentCryptoCurrency).coin = 0) then
+        AddressTypelayout.Visible := true
+      else
+        AddressTypelayout.Visible := false;
 
-        svc.setClipboard(removeSpace(TEdit(Sender).Text));
-        popupWindow.Create(removeSpace(TEdit(Sender).Text) + ' ' + dictionary
-          ['CopiedToClipboard']);
-{$IFDEF ANDROID}
-        Vibrator := TJvibrator.Wrap
-          ((SharedActivityContext.getSystemService
-          (TJContext.JavaClass.VIBRATOR_SERVICE) as ILocalObject)
-          .GetObjectID());
-        Vibrator.vibrate(200);
+      if (TwalletInfo(CurrentCryptoCurrency).X = -1) and
+        (TwalletInfo(CurrentCryptoCurrency).Y = -1) and
+        (TwalletInfo(CurrentCryptoCurrency).isCompressed = false) then
+        AddressTypelayout.Visible := false;
 
-{$ENDIF}
-      end;
+      if TwalletInfo(CurrentCryptoCurrency).coin = 3 then
+        BCHAddressesLayout.Visible := true
+      else
+        BCHAddressesLayout.Visible := false;
+
+    end
+    else
+    begin
+      AddressTypelayout.Visible := false;
+      BCHAddressesLayout.Visible := false;
     end;
+if (CurrentCryptoCurrency is TWalletInfo) and (TWalletInfo(CurrentCryptoCurrency).coin = 4) then
+      SearchTokenButton.Visible := true
+    else
+      SearchTokenButton.Visible := false;
+    switchTab(PageControl, walletView);
 
   end;
 
-end;
-
-procedure TfrmHome.CreateBackupButtonClick(Sender: TObject);
-begin
-  switchTab(PageControl, BackupTabItem);
-end;
-
-procedure TfrmHome.CurrencyBoxChange(Sender: TObject);
-begin
-  CurrencyConverter.setCurrency(CurrencyBox.Items[CurrencyBox.ItemIndex]);
-  refreshCurrencyValue();
-
-  if CurrencyBox.IsFocused then
-    refreshWalletDat();
-end;
-
-// button SKIP on screen with field to repeat seed
-procedure TfrmHome.btnSkipClick(Sender: TObject);
-begin
-  userSavedSeed := true;
-  refreshWalletDat();
-
-  switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
-end;
-
-procedure TfrmHome.btnSMVCancelClick(Sender: TObject);
-begin
-  switchTab(PageControl, lastView);
-  // PageControl.ActiveTab := lastView;
-end;
-
-// button in warning window
-procedure TfrmHome.btnSMVNoClick(Sender: TObject);
-begin
-  switchTab(PageControl, lastView);
-  // PageControl.ActiveTab := lastView;
-  lastChose := 0;
-end;
-
-// button in warning window
-procedure TfrmHome.btnSMVYesClick(Sender: TObject);
-begin
-  switchTab(PageControl, lastView);
-  // PageControl.ActiveTab := lastView;
-  lastChose := 1;
-end;
-
-{ procedure TfrmHome.decriptOKforNewWallet(Sender: TObject);
-  var
-  MasterSeed, tced: AnsiString;
-  walletInfo: TWalletInfo;
+  procedure TfrmHome.OpenWalletView(Sender: TObject);
   begin
-  tced := TCA(passwordForDecrypt.Text);
-  MasterSeed := SpeckDecrypt(tced, encryptedSeed);
-  if not isHex(MasterSeed) then
-  begin
-  DecryptSeedMessage.Text := 'Failed to decrypt master seed';
-  exit;
+    OpenWalletView(Sender, TPoint.Zero);
   end;
 
-  walletInfo := coindata.createCoin(newcoinID, countWalletBy(newcoinID), 0,
-  MasterSeed);
-
-  clearVertScrollBox(frmHome.WalletList);
-  insertToWd(walletInfo);
-
-  repaintWalletList;
-
-  FormShow(nil);
-
-  end; }
-{ procedure TfrmHome.WVTokenChoseInWallet(Sender: TObject; const Point: TPointF);
-  var
-  id: Integer;
-  begin
+  (* procedure TfrmHome.switchView(Sender: TObject; const Point: TPointF);
+    begin
 
 
-  FeeFromAmountLayout.Visible := false;
+    // BitmapListAnimation1.Start;
 
-  id := TComponent(Sender).Tag;
-  currentToken := id - 10000;
-  CurrentCryptoCurrency := myTokens[currentToken];
+    FeeFromAmountLayout.Visible := true;
 
-  isTokenTransfer := true;
-  currentWallet := getwalletId(myTokens[id - 10000].addr); // WARNING
-  frmHome.wvAddress.Text := myWallets[currentWallet].addr;
+    isTokenTransfer := false;
+    currentWallet := TComponent(Sender).Tag;
+    CurrentCryptoCurrency := myWallets[currentWallet];
 
-  createHistoryList(myTokens[currentToken]);
+    frmHome.wvAddress.Text := myWallets[currentWallet].addr;
+    WVTabControl.ActiveTab := WVBalance;
+    createHistoryList(myWallets[currentWallet]);
+    // lbBalance.Text := BigIntegerBeautifulStr(myWallets[currentWallet].confirmed , availableCoin[myWallets[currentWallet].coin].decimals);
+    // lbBalanceLong.Text := BigIntegerToFloatStr(myWallets[currentWallet].confirmed , availableCoin[myWallets[currentWallet].coin].decimals);
 
-  wvFee.Text := myWallets[currentWallet].efee[0];
-  if wvFee.Text = '' then
-  wvFee.Text := '0';
+    // showmessage(inttoStr(currentWallet)+'  '+inttoStr(myWallets[currentWallet].coin));
 
-  lblFeeHeader.Text := dictionary['GasPriceWEI'] + ': ';
-  lblFee.Text := wvFee.Text + '  = ' +
-  floatToStrF(CurrencyConverter.calculate(strToFloat(wvFee.Text) * 66666 *
-  myWallets[getwalletId(myTokens[currentToken].addr)].rate /
-  (1000000.0 * 1000000.0 * 1000000.0)), ffFixed, 18, 2) + ' ' +
-  CurrencyConverter.symbol;
-
-  lbBalance.Text := BigIntegerBeautifulStr(myTokens[id - 10000].confirmed,
-  myTokens[id - 10000].decimals);
-  lbBalanceLong.Text := BigIntegertoFloatStr(myTokens[id - 10000].confirmed,
-  myTokens[id - 10000].decimals);
-
-  wvAmount.Text := BigIntegertoFloatStr(0, myTokens[currentToken].decimals);
-  WVRealCurrency.Text := '0.00';
-
-  ReceiveValue.Text := BigIntegertoFloatStr(0, myTokens[currentToken].decimals);
-  ReceiveAmountRealCurrency.Text := '0.00';
-
-  wvGFX.Bitmap := myTokens[id - 10000].getIcon;
-  ShortcutValetInfoImage.Bitmap := myTokens[id - 10000].getIcon;
-
-  // TopInfoConfirmed.Text := 'Available ' + myTokens[id - 10000].shortcut +
-  // ' balance: ';
-  TopInfoConfirmedValue.Text := ' ' + BigIntegertoFloatStr
-  (myTokens[currentToken].confirmed, myTokens[currentToken].decimals);
-
-  // topInfoUnconfirmed.Text := 'Confirming balance: ';
-  TopInfoUnconfirmedValue.Text := ' ' + BigIntegertoFloatStr
-  (myTokens[currentToken].unconfirmed, myTokens[currentToken].decimals);
-
-  lblCoinShort.Text := myTokens[currentToken].shortcut + '   ';
-  lblReceiveCoinShort.Text := myTokens[currentToken].shortcut + '   ';
-
-  receiveAddress.Text := myWallets[currentWallet].addr;
-
-  QRChangeTimerTimer(nil);
-
-  WVTabControl.ActiveTab := WVBalance;
-
-  lblFiat.Text := floatToStrF(CurrentCryptoCurrency.getFiat(), ffFixed, 15, 2);
-
-  WVsendTO.Text := '';
-  lblBlockInfo.Visible := false;
-  FeeSpin.Visible := false;
-
-  SendAllFundsSwitch.IsChecked := false;
-  FeeFromAmountSwitch.IsChecked := false;
-
-  AddressTypelayout.Visible := false;
-  BCHAddressesLayout.Visible := false;
-
-  switchTab(PageControl, walletView);
-  end; }
-
-procedure TfrmHome.OpenWalletView(Sender: TObject; const Point: TPointF);
-var
-  wd: TwalletInfo;
-begin
-
-  CurrentCryptoCurrency := CryptoCurrency(TfmxObject(Sender).TagObject);
-
-  isTokenTransfer := CurrentCryptoCurrency is Token;
-
-  if isTokenTransfer then
-  begin
-    for wd in CurrentAccount.myCoins do
-      if wd.addr = CurrentCryptoCurrency.addr then
-      begin
-        CurrentCoin := wd;
-        break;
-      end;
-  end
-  else
-    CurrentCoin := TwalletInfo(CurrentCryptoCurrency);
-
-  createHistoryList(CurrentCryptoCurrency);
-
-  frmHome.wvAddress.Text := CurrentCryptoCurrency.addr;
-
-  FeeFromAmountLayout.Visible := not isTokenTransfer;
-
-  WVTabControl.ActiveTab := WVBalance;
-
-  if isEthereum or isTokenTransfer then
-  begin
-
+    if isEthereum then
+    begin
     lblBlockInfo.Visible := false;
     FeeSpin.Visible := false;
     FeeSpin.Opacity := 0;
     FeeSpin.Enabled := false;
 
-  end
-  else
-  begin
+    // to są napisy w zakladce HISTORY
+    lbBalance.Text := BigIntegerBeautifulStr(myWallets[currentWallet].confirmed,
+    availableCoin[myWallets[currentWallet].coin].decimals);
 
+    { BigIntegerBeautifulStr(myWallets[currentWallet].confirmed
+    - StrToInt64Def(myWallets[currentWallet].efee[0], 0),
+    availableCoin[myWallets[currentWallet].coin].decimals); }
+
+    lbBalanceLong.Text := BigIntegertoFloatStr
+    (myWallets[currentWallet].confirmed,
+    availableCoin[myWallets[currentWallet].coin].decimals);
+    { BigIntegerToFloatStr(//(0 , availableCoin[myWallets[currentWallet].coin].decimals);{
+    max(0 , (myWallets[currentWallet].confirmed -
+    bigInteger(StrToInt64Def(myWallets[currentWallet].efee[0], 0))) ),
+    availableCoin[myWallets[currentWallet].coin].decimals); }
+    end
+    else
+    begin
     lblBlockInfo.Visible := true;
     FeeSpin.Visible := true;
     FeeSpin.Enabled := true;
     FeeSpin.Opacity := 1;
 
-  end;
+    lbBalance.Text := BigIntegerBeautifulStr(myWallets[currentWallet].confirmed,
+    availableCoin[myWallets[currentWallet].coin].decimals); // -
+    // StrfloatToBigInteger( myWallets[currentWallet].efee[round(FeeSpin.Value) - 1] ,
+    // availableCoin[myWallets[currentWallet].coin].decimals)
+    { - round(StrToFloatDef(myWallets[currentWallet].efee[round(FeeSpin.Value) -
+    1], 0.0) * (Math.power(10,availableCoin[myWallets[currentWallet].coin].decimals))), }
+    // ,availableCoin[myWallets[currentWallet].coin].decimals);
 
-  lbBalance.Text := BigIntegerBeautifulStr(CurrentCryptoCurrency.confirmed,
-    CurrentCryptoCurrency.decimals);
-
-  lbBalanceLong.Text := BigIntegertoFloatStr(CurrentCryptoCurrency.confirmed,
-    CurrentCryptoCurrency.decimals);
-
-  // POLE Z KWOTA DO WYSLANIA
-  wvAmount.Text := BigIntegertoFloatStr(0, CurrentCryptoCurrency.decimals);
-
-  lblFiat.Text := floatToStrF(CurrentCryptoCurrency.getFiat(), ffFixed, 15, 2);
-
-  if isEthereum or isTokenTransfer then
-  begin
-    lblFeeHeader.Text := dictionary['GasPriceWEI'] + ':';
-    lblFee.Text := '';
-    wvFee.Text := CurrentCoin.efee[0];
-
+    lbBalanceLong.Text := BigIntegertoFloatStr
+    (myWallets[currentWallet].confirmed,
+    availableCoin[myWallets[currentWallet].coin].decimals); { -
+    StrfloatToBigInteger( myWallets[currentWallet].efee[round(FeeSpin.Value) - 1] ,
+    availableCoin[myWallets[currentWallet].coin].decimals)
+    {- round(StrToFloatDef(myWallets[currentWallet].efee[round(FeeSpin.Value) -
+    1], 0.0) * (Math.power(10,availableCoin[myWallets[currentWallet].coin].decimals))), }
+    // ,availableCoin[myWallets[currentWallet].coin].decimals);
+    end;
     if isTokenTransfer then
     begin
-      lblFee.Text := wvFee.Text + '  = ' +
-        floatToStrF(CurrencyConverter.calculate(strToFloatDef(wvFee.Text,
-        0) * 66666 * CurrentCryptoCurrency.rate / (1000000.0 * 1000000.0 *
-        1000000.0)), ffFixed, 18, 2) + ' ' + CurrencyConverter.symbol;
+    lblBlockInfo.Visible := false;
+    FeeSpin.Visible := false;
     end;
+    // POLE Z KWOTA DO WYSLANIA
+    wvAmount.Text := BigIntegertoFloatStr(0, myWallets[currentWallet].decimals);
 
-  end
-  else
-  begin
+    lblFiat.Text := myWallets[currentWallet].fiat;
+
+    if isEthereum then
+    begin
+    lblFeeHeader.Text := dictionary['GasPriceWEI'] + ':';
+    lblFee.Text := '';
+    wvFee.Text := myWallets[currentWallet].efee[0];
+    end
+    else
+    begin
     lblFeeHeader.Text := dictionary['TransactionFee'] + ':';
-    lblFee.Text := '0.00 ' + CurrentCryptoCurrency.shortcut;
-    wvFee.Text := CurrentCoin.efee[round(FeeSpin.Value) - 1];
-  end;
-  if wvFee.Text = '' then
+    lblFee.Text := '0.00 ' + availableCoin
+    [myWallets[currentWallet].coin].shortcut;
+    wvFee.Text := myWallets[currentWallet].efee[round(FeeSpin.Value) - 1];
+    end;
+    if wvFee.Text = '' then
     wvFee.Text := '0';
 
-  ReceiveValue.Text := BigIntegertoFloatStr(0, CurrentCryptoCurrency.decimals);
+    ReceiveValue.Text := BigIntegertoFloatStr(0,
+    myWallets[currentWallet].decimals);
+    ReceiveAmountRealCurrency.Text := '0.00';
 
-  ReceiveAmountRealCurrency.Text := '0.00';
+    WVRealCurrency.Text := floatToStrF(strToFloatDef(wvAmount.Text, 0) *
+    myWallets[currentWallet].rate, ffFixed, 15, 2);
 
-  WVRealCurrency.Text := floatToStrF(strToFloatDef(wvAmount.Text, 0) *
-    CurrentCryptoCurrency.rate, ffFixed, 15, 2);
+    ShortcutValetInfoImage.Bitmap := getCoinIcon(myWallets[currentWallet].coin);
 
-  ShortcutValetInfoImage.Bitmap := CurrentCryptoCurrency.getIcon();
+    wvGFX.Bitmap := getCoinIcon(myWallets[currentWallet].coin);
 
-  wvGFX.Bitmap := CurrentCryptoCurrency.getIcon();
+    // TopInfoConfirmed.Text := 'Available ' + availableCoin
+    // [myWallets[currentWallet].coin].shortcut + ' balance: ';
+    TopInfoConfirmedValue.Text := ' ' + getConfirmedAsString
+    (myWallets[currentWallet]);
 
-  TopInfoConfirmedValue.Text := ' ' + BigIntegertoFloatStr
-    (CurrentCryptoCurrency.confirmed, CurrentCryptoCurrency.decimals);
+    // topInfoUnconfirmed.Text := 'Confirming balance: ';
+    TopInfoUnconfirmedValue.Text := ' ' + BigIntegertoFloatStr
+    (myWallets[currentWallet].unconfirmed,
+    availableCoin[myWallets[currentWallet].coin].decimals);
 
-  TopInfoUnconfirmedValue.Text := ' ' + BigIntegertoFloatStr
-    (CurrentCryptoCurrency.unconfirmed, CurrentCryptoCurrency.decimals);
+    lblCoinShort.Text := availableCoin[myWallets[currentWallet].coin]
+    .shortcut + '   ';
 
-  lblCoinShort.Text := CurrentCryptoCurrency.shortcut + '   ';
+    lblReceiveCoinShort.Text := availableCoin[myWallets[currentWallet].coin]
+    .shortcut + '   ';
 
-  lblReceiveCoinShort.Text := CurrentCryptoCurrency.shortcut + '   ';
+    QRChangeTimerTimer(nil);
 
-  QRChangeTimerTimer(nil);
+    receiveAddress.Text := cutEveryNChar(4, myWallets[currentWallet].addr);
 
-  receiveAddress.Text := cutEveryNChar(4, CurrentCryptoCurrency.addr);
+    lblFiat.Text := floatToStrF(CurrentCryptoCurrency.getFiat(), ffFixed, 15, 2);
 
-  lblFiat.Text := floatToStrF(CurrentCryptoCurrency.getFiat(), ffFixed, 15, 2);
+    WVsendTO.Text := '';
 
-  WVsendTO.Text := '';
+    SendAllFundsSwitch.IsChecked := false;
+    FeeFromAmountSwitch.IsChecked := false;
 
-  SendAllFundsSwitch.IsChecked := false;
-  FeeFromAmountSwitch.IsChecked := false;
-
-  if CurrentCryptoCurrency is TwalletInfo then
-  begin
-
-    if (TwalletInfo(CurrentCryptoCurrency).coin = 0) then
-      AddressTypelayout.Visible := true
+    if TwalletInfo(CurrentCryptoCurrency).coin = 0 then
+    AddressTypelayout.Visible := true
     else
-      AddressTypelayout.Visible := false;
-
-    if (TwalletInfo(CurrentCryptoCurrency).X = -1) and
-      (TwalletInfo(CurrentCryptoCurrency).Y = -1) and
-      (TwalletInfo(CurrentCryptoCurrency).isCompressed = false) then
-      AddressTypelayout.Visible := false;
+    AddressTypelayout.Visible := false;
 
     if TwalletInfo(CurrentCryptoCurrency).coin = 3 then
-      BCHAddressesLayout.Visible := true
+    BCHAddressesLayout.Visible := true
     else
-      BCHAddressesLayout.Visible := false;
-
-  end
-  else
-  begin
-    AddressTypelayout.Visible := false;
     BCHAddressesLayout.Visible := false;
-  end;
 
-  switchTab(PageControl, walletView);
+    switchTab(PageControl, walletView);
 
-end;
-
-procedure TfrmHome.OpenWalletView(Sender: TObject);
-begin
-  OpenWalletView(Sender, TPoint.Zero);
-end;
-
-(* procedure TfrmHome.switchView(Sender: TObject; const Point: TPointF);
-  begin
-
-
-  // BitmapListAnimation1.Start;
-
-  FeeFromAmountLayout.Visible := true;
-
-  isTokenTransfer := false;
-  currentWallet := TComponent(Sender).Tag;
-  CurrentCryptoCurrency := myWallets[currentWallet];
-
-  frmHome.wvAddress.Text := myWallets[currentWallet].addr;
-  WVTabControl.ActiveTab := WVBalance;
-  createHistoryList(myWallets[currentWallet]);
-  // lbBalance.Text := BigIntegerBeautifulStr(myWallets[currentWallet].confirmed , availableCoin[myWallets[currentWallet].coin].decimals);
-  // lbBalanceLong.Text := BigIntegerToFloatStr(myWallets[currentWallet].confirmed , availableCoin[myWallets[currentWallet].coin].decimals);
-
-  // showmessage(inttoStr(currentWallet)+'  '+inttoStr(myWallets[currentWallet].coin));
-
-  if isEthereum then
-  begin
-  lblBlockInfo.Visible := false;
-  FeeSpin.Visible := false;
-  FeeSpin.Opacity := 0;
-  FeeSpin.Enabled := false;
-
-  // to są napisy w zakladce HISTORY
-  lbBalance.Text := BigIntegerBeautifulStr(myWallets[currentWallet].confirmed,
-  availableCoin[myWallets[currentWallet].coin].decimals);
-
-  { BigIntegerBeautifulStr(myWallets[currentWallet].confirmed
-  - StrToInt64Def(myWallets[currentWallet].efee[0], 0),
-  availableCoin[myWallets[currentWallet].coin].decimals); }
-
-  lbBalanceLong.Text := BigIntegertoFloatStr
-  (myWallets[currentWallet].confirmed,
-  availableCoin[myWallets[currentWallet].coin].decimals);
-  { BigIntegerToFloatStr(//(0 , availableCoin[myWallets[currentWallet].coin].decimals);{
-  max(0 , (myWallets[currentWallet].confirmed -
-  bigInteger(StrToInt64Def(myWallets[currentWallet].efee[0], 0))) ),
-  availableCoin[myWallets[currentWallet].coin].decimals); }
-  end
-  else
-  begin
-  lblBlockInfo.Visible := true;
-  FeeSpin.Visible := true;
-  FeeSpin.Enabled := true;
-  FeeSpin.Opacity := 1;
-
-  lbBalance.Text := BigIntegerBeautifulStr(myWallets[currentWallet].confirmed,
-  availableCoin[myWallets[currentWallet].coin].decimals); // -
-  // StrfloatToBigInteger( myWallets[currentWallet].efee[round(FeeSpin.Value) - 1] ,
-  // availableCoin[myWallets[currentWallet].coin].decimals)
-  { - round(StrToFloatDef(myWallets[currentWallet].efee[round(FeeSpin.Value) -
-  1], 0.0) * (Math.power(10,availableCoin[myWallets[currentWallet].coin].decimals))), }
-  // ,availableCoin[myWallets[currentWallet].coin].decimals);
-
-  lbBalanceLong.Text := BigIntegertoFloatStr
-  (myWallets[currentWallet].confirmed,
-  availableCoin[myWallets[currentWallet].coin].decimals); { -
-  StrfloatToBigInteger( myWallets[currentWallet].efee[round(FeeSpin.Value) - 1] ,
-  availableCoin[myWallets[currentWallet].coin].decimals)
-  {- round(StrToFloatDef(myWallets[currentWallet].efee[round(FeeSpin.Value) -
-  1], 0.0) * (Math.power(10,availableCoin[myWallets[currentWallet].coin].decimals))), }
-  // ,availableCoin[myWallets[currentWallet].coin].decimals);
-  end;
-  if isTokenTransfer then
-  begin
-  lblBlockInfo.Visible := false;
-  FeeSpin.Visible := false;
-  end;
-  // POLE Z KWOTA DO WYSLANIA
-  wvAmount.Text := BigIntegertoFloatStr(0, myWallets[currentWallet].decimals);
-
-  lblFiat.Text := myWallets[currentWallet].fiat;
-
-  if isEthereum then
-  begin
-  lblFeeHeader.Text := dictionary['GasPriceWEI'] + ':';
-  lblFee.Text := '';
-  wvFee.Text := myWallets[currentWallet].efee[0];
-  end
-  else
-  begin
-  lblFeeHeader.Text := dictionary['TransactionFee'] + ':';
-  lblFee.Text := '0.00 ' + availableCoin
-  [myWallets[currentWallet].coin].shortcut;
-  wvFee.Text := myWallets[currentWallet].efee[round(FeeSpin.Value) - 1];
-  end;
-  if wvFee.Text = '' then
-  wvFee.Text := '0';
-
-  ReceiveValue.Text := BigIntegertoFloatStr(0,
-  myWallets[currentWallet].decimals);
-  ReceiveAmountRealCurrency.Text := '0.00';
-
-  WVRealCurrency.Text := floatToStrF(strToFloatDef(wvAmount.Text, 0) *
-  myWallets[currentWallet].rate, ffFixed, 15, 2);
-
-  ShortcutValetInfoImage.Bitmap := getCoinIcon(myWallets[currentWallet].coin);
-
-  wvGFX.Bitmap := getCoinIcon(myWallets[currentWallet].coin);
-
-  // TopInfoConfirmed.Text := 'Available ' + availableCoin
-  // [myWallets[currentWallet].coin].shortcut + ' balance: ';
-  TopInfoConfirmedValue.Text := ' ' + getConfirmedAsString
-  (myWallets[currentWallet]);
-
-  // topInfoUnconfirmed.Text := 'Confirming balance: ';
-  TopInfoUnconfirmedValue.Text := ' ' + BigIntegertoFloatStr
-  (myWallets[currentWallet].unconfirmed,
-  availableCoin[myWallets[currentWallet].coin].decimals);
-
-  lblCoinShort.Text := availableCoin[myWallets[currentWallet].coin]
-  .shortcut + '   ';
-
-  lblReceiveCoinShort.Text := availableCoin[myWallets[currentWallet].coin]
-  .shortcut + '   ';
-
-  QRChangeTimerTimer(nil);
-
-  receiveAddress.Text := cutEveryNChar(4, myWallets[currentWallet].addr);
-
-  lblFiat.Text := floatToStrF(CurrentCryptoCurrency.getFiat(), ffFixed, 15, 2);
-
-  WVsendTO.Text := '';
-
-  SendAllFundsSwitch.IsChecked := false;
-  FeeFromAmountSwitch.IsChecked := false;
-
-  if TwalletInfo(CurrentCryptoCurrency).coin = 0 then
-  AddressTypelayout.Visible := true
-  else
-  AddressTypelayout.Visible := false;
-
-  if TwalletInfo(CurrentCryptoCurrency).coin = 3 then
-  BCHAddressesLayout.Visible := true
-  else
-  BCHAddressesLayout.Visible := false;
-
-  switchTab(PageControl, walletView);
-
-  end;
-
-  procedure TfrmHome.switchView(Sender: TObject);
-  begin
-  switchView(Sender, TPoint.Zero);
-  end; *)
-
-procedure TfrmHome.tabAnimUpdate(Sender: TObject);
-begin
-
-end;
-
-// delete wallet button
-procedure TfrmHome.btnSWipeClick(Sender: TObject);
-begin
-
-  popupWindowYesNo.Create(
-    procedure()
-    begin
-      wipeWalletDat;
-{$IFDEF WINDOWS}
-      frmHome.Close;
-{$ENDIF}
-{$IFDEF ANDROID}
-      SharedActivity.finish;
-{$ENDIF}
-    end,
-    procedure()
-    begin
-
-    end, dictionary['SureWipeWallet'] + #13#10 + dictionary
-    ['CantRestoreCoins']);
-
-end;
-
-procedure TfrmHome.btnWVSettingsClick(Sender: TObject);
-begin
-  switchTab(WVTabControl, WVSettings);
-  // WVTabControl.ActiveTab := WVSettings;
-end;
-
-procedure TfrmHome.btnDecryptedQRClick(Sender: TObject);
-var
-  alphaStr: AnsiString;
-begin
-
-end;
-
-procedure TfrmHome.btnImpSeedClick(Sender: TObject);
-var
-  alphaStr: AnsiString;
-begin
-  {
-    if pass.Text <> retypePass.Text then
-    begin
-    passwordMessage.Text := 'Passwords does not match';
-    exit;
-    end;
-    if pass.Text.length < 5 then
-    begin
-    popupWindow.Create('Password is too short. Minimum length is 5');
-    exit();
     end;
 
-    alphaStr :=
-    'You use the alpha version of the HODLER multiwallet, it may be unstable.' +
-    ' The current version of the program is used only for functionality tests and for sending feedback.'
-    + ' Confirm below that you have understood this message and accept it.';
+    procedure TfrmHome.switchView(Sender: TObject);
+    begin
+    switchView(Sender, TPoint.Zero);
+    end; *)
+
+  procedure TfrmHome.tabAnimUpdate(Sender: TObject);
+  begin
+
+  end;
+
+  // delete wallet button
+  procedure TfrmHome.btnSWipeClick(Sender: TObject);
+  begin
 
     popupWindowYesNo.Create(
-    procedure
-    begin
+      procedure()
+      begin
+        wipeWalletDat;
+{$IFDEF WINDOWS}
+        frmHome.Close;
+{$ENDIF}
+{$IFDEF ANDROID}
+        SharedActivity.finish;
+{$ENDIF}
+      end,
+      procedure()
+      begin
 
-    TThread.CreateAnonymousThread(
-    procedure
-    begin
-    TThread.Synchronize(nil,
-    procedure
-    begin }
+      end, dictionary['SureWipeWallet'] + #13#10 + dictionary
+      ['CantRestoreCoins']);
 
-  switchTab(PageControl, SeedCreation);
+  end;
 
-  { end);
-    end).Start;
-
-    end,
-    procedure
-    begin
-    end, alphaStr);
-    // PageControl.ActiveTab := SeedCreation; }
-
-end;
-
-procedure TfrmHome.btnCheckSeedClick(Sender: TObject);
-var
-  withoutWhiteChar: AnsiString;
-  seedFromWords: AnsiString;
-  it: AnsiString;
-  inputWordsList: TStringList;
-
-begin
-  withoutWhiteChar := StringReplace(frmHome.SeedField.Text, ' ', '',
-    [rfReplaceAll]);
-  withoutWhiteChar := StringReplace(withoutWhiteChar, #13, '', [rfReplaceAll]);
-  withoutWhiteChar := StringReplace(withoutWhiteChar, #10, '', [rfReplaceAll]);
-
-  if (length(withoutWhiteChar) = 64) and (isHex(frmHome.SeedField.Text)) then
+  procedure TfrmHome.btnWVSettingsClick(Sender: TObject);
   begin
-    userSavedSeed := true;
+    switchTab(WVTabControl, WVSettings);
+    // WVTabControl.ActiveTab := WVSettings;
+  end;
 
-    CreateNewAccountAndSave(AccountNameEdit.Text, pass.Text,
-      withoutWhiteChar, true);
-
-    withoutWhiteChar := '';
-    frmHome.SeedField.Text := '';
-
-    exit;
-  end
-  else
+  procedure TfrmHome.btnDecryptedQRClick(Sender: TObject);
+  var
+    alphaStr: AnsiString;
   begin
-    inputWordsList := SplitString(frmHome.SeedField.Text);
 
-    seedFromWords := fromMnemonic(inputWordsList);
+  end;
 
-    if seedFromWords = '' then
+  procedure TfrmHome.btnImpSeedClick(Sender: TObject);
+  var
+    alphaStr: AnsiString;
+  begin
+    {
+      if pass.Text <> retypePass.Text then
+      begin
+      passwordMessage.Text := 'Passwords does not match';
+      exit;
+      end;
+      if pass.Text.length < 5 then
+      begin
+      popupWindow.Create('Password is too short. Minimum length is 5');
+      exit();
+      end;
+
+      alphaStr :=
+      'You use the alpha version of the HODLER multiwallet, it may be unstable.' +
+      ' The current version of the program is used only for functionality tests and for sending feedback.'
+      + ' Confirm below that you have understood this message and accept it.';
+
+      popupWindowYesNo.Create(
+      procedure
+      begin
+
+      TThread.CreateAnonymousThread(
+      procedure
+      begin
+      TThread.Synchronize(nil,
+      procedure
+      begin }
+
+    switchTab(PageControl, SeedCreation);
+
+    { end);
+      end).Start;
+
+      end,
+      procedure
+      begin
+      end, alphaStr);
+      // PageControl.ActiveTab := SeedCreation; }
+
+  end;
+
+  procedure TfrmHome.btnCheckSeedClick(Sender: TObject);
+  var
+    withoutWhiteChar: AnsiString;
+    seedFromWords: AnsiString;
+    it: AnsiString;
+    inputWordsList: TStringList;
+
+  begin
+    withoutWhiteChar := StringReplace(frmHome.SeedField.Text, ' ', '',
+      [rfReplaceAll]);
+    withoutWhiteChar := StringReplace(withoutWhiteChar, #13, '',
+      [rfReplaceAll]);
+    withoutWhiteChar := StringReplace(withoutWhiteChar, #10, '',
+      [rfReplaceAll]);
+
+    if (length(withoutWhiteChar) = 64) and (isHex(frmHome.SeedField.Text)) then
     begin
+      userSavedSeed := true;
+
+      CreateNewAccountAndSave(AccountNameEdit.Text, pass.Text,
+        withoutWhiteChar, true);
+
+      withoutWhiteChar := '';
+      frmHome.SeedField.Text := '';
+
+      exit;
+    end
+    else
+    begin
+      inputWordsList := SplitString(frmHome.SeedField.Text);
+
+      seedFromWords := fromMnemonic(inputWordsList);
+
+      if seedFromWords = '' then
+      begin
+        exit;
+      end;
+
+      userSavedSeed := true;
+
+      CreateNewAccountAndSave(AccountNameEdit.Text, pass.Text,
+        seedFromWords, true);
+
+      seedFromWords := '';
+      inputWordsList.free;
+
+      {
+        Dodać obsługę błędów
+      }
+
       exit;
     end;
 
-    userSavedSeed := true;
-
-    CreateNewAccountAndSave(AccountNameEdit.Text, pass.Text,
-      seedFromWords, true);
-
-    seedFromWords := '';
-    inputWordsList.free;
-
-    {
-      Dodać obsługę błędów
-    }
-
-    exit;
   end;
 
-end;
+  procedure TfrmHome.btnOptionsClick(Sender: TObject);
+  begin
 
-procedure TfrmHome.btnOptionsClick(Sender: TObject);
-begin
-  switchTab(PageControl, Settings);
-  // PageControl.ActiveTab := Settings;
-end;
+    switchTab(PageControl, Settings);
+    // PageControl.ActiveTab := Settings;
+  end;
 
-procedure TfrmHome.btnQRClick(Sender: TObject);
+  procedure TfrmHome.btnQRClick(Sender: TObject);
 
-const
-  camPerm = 'android.permission.CAMERA';
+  const
+    camPerm = 'android.permission.CAMERA';
 
-begin
+  begin
 {$IFDEF ANDROID}
-  if TAndroidHelper.Context.checkCallingOrSelfPermission
-    (StringToJString(camPerm)) = -1 then
-  begin
-    requestForPermission(camPerm);
-
-    TThread.CreateAnonymousThread(
-      procedure
-      var
-        i: Integer;
-      begin
-        i := 0;
-
-        for i := 0 to 240 do
-        begin
-          if TAndroidHelper.Context.checkCallingOrSelfPermission
-            (StringToJString(camPerm)) = -1 then
-          begin
-            sleep(250);
-          end
-          else
-          begin
-            TThread.Synchronize(nil,
-              procedure
-              begin
-                btnQRClick(nil);
-              end);
-
-            break;
-
-          end;
-
-        end;
-
-      end).Start;
-
-    exit;
-
-    // SharedActivity.getIntent.
-    // TAndroidHelper.
-  end;
-{$ENDIF}
-  // context
-  if {$IFDEF ANDROID}TAndroidHelper.Context.checkCallingOrSelfPermission
-    (StringToJString(camPerm)) = 0 {$ELSE} true {$ENDIF} then
-  begin
-
-    try
-
-      cameraBackTabItem := PageControl.ActiveTab;
-
-      // PageControl.ActiveTab := TTabItem(frmHome.FindComponent('qrreader'));
-      CameraComponent1.Active := false;
-
-      CameraComponent1.Kind := FMX.Media.TCameraKind.BackCamera;
-
-      CameraComponent1.Quality := FMX.Media.TVideoCaptureQuality.MediumQuality;
-      if QRHeight = -1 then
-      begin
-        QRHeight := CameraComponent1.GetCaptureSetting.Height;
-        QRWidth := CameraComponent1.GetCaptureSetting.Width;
-      end;
-
-      CameraComponent1.SetCaptureSetting(TVideoCaptureSetting.Create(QRWidth,
-        QRHeight, 30));
-
-      CameraComponent1.FocusMode := FMX.Media.TFocusMode.ContinuousAutoFocus;
-
-      CameraComponent1.Active := true;
-
-      switchTab(PageControl, TTabItem(frmHome.FindComponent('qrreader')));
-      // btnDSBack.OnClick := backBtnDecryptSeed;
-
-    except
-      on E: Exception do
-      begin
-      end;
-    end;
-
-  end;
-
-end;
-
-procedure TfrmHome.btnGenSeedClick(Sender: TObject);
-var
-  alphaStr: AnsiString;
-begin
-  { if pass.Text <> retypePass.Text then
+    if TAndroidHelper.Context.checkCallingOrSelfPermission
+      (StringToJString(camPerm)) = -1 then
     begin
-    passwordMessage.Text := 'Passwords does not match';
-    exit;
-    end;
-    if pass.Text.length < 5 then
-    begin
-    popupWindow.Create('Password is too short. Minimum length is 5');
-    exit();
-    end;
-
-    alphaStr :=
-    'You use the alpha version of the HODLER multiwallet, it may be unstable.' +
-    ' The current version of the program is used only for functionality tests and for sending feedback.'
-    + ' Confirm below that you have understood this message and accept it.';
-
-    popupWindowYesNo.Create(
-    procedure
-    begin
-
-    TThread.CreateAnonymousThread(
-    procedure
-    begin
-    TThread.Synchronize(nil,
-    procedure
-    begin }
-
-  // PageControl.ActiveTab := walletDatCreation;
-
-  SetLength(trngBuffer, 4 * 1024);
-
-  // turn on phone's sensors
-  // they will be used for collect random data
-{$IFDEF ANDROID}
-  MotionSensor.Active := true;
-  OrientationSensor.Active := true;
-{$ENDIF}
-  // turn on timer that counts random value from sensors
-  gathener.Enabled := true;
-
-  switchTab(PageControl, walletDatCreation);
-  { end);
-    end).Start;
-
-    end,
-    procedure
-    begin
-    end, alphaStr); }
-
-end;
-
-procedure TfrmHome.btnAddContractClick(Sender: TObject);
-var
-  t: Token;
-begin
-
-  t := Token.CreateCustom(frmHome.ContractAddress.Text,
-    frmHome.TokenNameField.Text, frmHome.SymbolField.Text,
-    strtoint(frmHome.DecimalsField.Text), walletAddressForNewToken);
-
-  t.idInWallet := length(CurrentAccount.myTokens) + 10000;
-
-  CurrentAccount.addToken(t);
-  CurrentAccount.SaveFiles();
-
-  switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
-
-end;
-
-procedure TfrmHome.btnSBackClick(Sender: TObject);
-begin
-  switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
-  // PageControl.ActiveTab := TTabItem(frmHome.FindComponent('dashbrd'));
-end;
-
-procedure TfrmHome.btnSCBackClick(Sender: TObject);
-begin
-  switchTab(PageControl, createPassword);
-  // PageControl.ActiveTab := createPassword;
-end;
-
-procedure TfrmHome.btnANWBackClick(Sender: TObject);
-begin
-  switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
-  // PageControl.ActiveTab := Settings;
-end;
-
-// checking rewriting seed
-procedure TfrmHome.btnConfirmClick(Sender: TObject);
-var
-  ts: TStringList;
-  i: Integer;
-begin
-  ts := TStringList.Create(); // SplitString(frmHome.Memo1.Text);
-
-  for i := 0 to ConfirmedSeedFlowLayout.ChildrenCount - 1 do
-  begin
-    ts.Add(TButton(ConfirmedSeedFlowLayout.Children[i]).Text);
-  end;
-  // showmessage( ts.DelimitedText  );
-
-  if LowerCase(fromMnemonic(ts)) = LowerCase(tempMasterSeed) then
-  begin
-    tempMasterSeed := ''; // clear     seed can't be saved in var
-    // FormShow(nil);
-
-    userSavedSeed := true;
-    refreshWalletDat();
-
-    switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
-  end
-  else
-  begin
-    popupWindow.Create(dictionary['SeedsArentSame']);
-  end;
-
-  ts.free;
-
-end;
-
-procedure TfrmHome.btnCSBackClick(Sender: TObject);
-begin
-  // switchTab(PageControl, seedGenerated);
-  PageControl.ActiveTab := seedGenerated;
-end;
-
-procedure TfrmHome.RestoreOtherOpiotnsButtonClick(Sender: TObject);
-begin
-
-  if restoreOptionsLayout.Visible = false then
-  begin
-    restoreOptionsLayout.Visible := true;
-    OtherOptionsImage.Bitmap := arrowList.Source[1].MultiResBitmap[0].Bitmap;
-  end
-  else
-  begin
-    restoreOptionsLayout.Visible := false;
-    OtherOptionsImage.Bitmap := arrowList.Source[0].MultiResBitmap[0].Bitmap;
-  end;
-
-end;
-
-procedure TfrmHome.switchLegacyp2pkhButtonClick(Sender: TObject);
-begin
-  receiveAddress.Text := Bitcoin.generatep2pkh
-    (TwalletInfo(CurrentCryptoCurrency).pub,
-    AvailableCoin[TwalletInfo(CurrentCryptoCurrency).coin].p2pk);
-
-  receiveAddress.Text := cutEveryNChar(4, receiveAddress.Text, ' ');
-end;
-
-procedure TfrmHome.switchCompatiblep2shButtonClick(Sender: TObject);
-begin
-  receiveAddress.Text := Bitcoin.generatep2sh(TwalletInfo(CurrentCryptoCurrency)
-    .pub, AvailableCoin[TwalletInfo(CurrentCryptoCurrency).coin].p2sh);
-
-  receiveAddress.Text := cutEveryNChar(4, receiveAddress.Text, ' ');
-end;
-
-procedure TfrmHome.SwitchSegwitp2wpkhButtonClick(Sender: TObject);
-begin
-  receiveAddress.Text := Bitcoin.generatep2wpkh
-    (TwalletInfo(CurrentCryptoCurrency).pub);
-
-  receiveAddress.Text := cutEveryNChar(4, receiveAddress.Text, ' ');
-end;
-
-procedure TfrmHome.LoadAccountPanelClick(Sender: TObject);
-begin
-
-  LoadCurrentAccount(TfmxObject(Sender).TagString);
-  AccountsListPanel.Visible := false;
-
-end;
-
-procedure TfrmHome.ChangeAccountButtonClick(Sender: TObject);
-var
-  name: AnsiString;
-  fmxObj: TfmxObject;
-  Panel: TPanel;
-  Button: TButton;
-  AccountName: TLabel;
-  i: Integer;
-  flag: Boolean;
-begin
-
-  AccountsListPanel.Visible := not AccountsListPanel.Visible;
-
-  for name in AccountsNames do
-  begin
-    flag := true;
-
-    for i := 0 to AccountsListVertScrollBox.Content.ChildrenCount - 1 do
-    begin
-      fmxObj := AccountsListVertScrollBox.Content.Children[i];
-
-      if name = fmxObj.TagString then
-      begin
-        flag := false;
-        break;
-
-      end;
-
-    end;
-
-    if flag then
-    begin
-
-      { Panel := TPanel.Create(frmHome.AccountsListVertScrollBox);
-        Panel.Align := TAlignLayout.Top;
-        Panel.Height := 48;
-        Panel.Visible := true;
-        Panel.Parent := frmHome.AccountsListVertScrollBox;
-        Panel.TagString := name;
-        Panel.OnClick := LoadAccountPanelClick;
-
-        AccountName := TLabel.Create(Panel);
-        AccountName.Parent := Panel;
-        AccountName.Text := name;
-        AccountName.Align := TAlignLayout.Client;
-        AccountName.Visible := true; }
-
-      Button := TButton.Create(frmHome.AccountsListVertScrollBox);
-      Button.Align := TAlignLayout.Top;
-      Button.Height := 48;
-      Button.Visible := true;
-      Button.Parent := frmHome.AccountsListVertScrollBox;
-      Button.TagString := name;
-      Button.OnClick := LoadAccountPanelClick;
-      Button.Text := name;
-
-    end;
-
-  end;
-
-  AccountsListPanel.Height :=
-    min(PageControl.Height - ChangeAccountButton.Height,
-    length(AccountsNames) * 48 + 48);
-
-end;
-
-procedure TfrmHome.Button11Click(Sender: TObject);
-begin
-  switchTab(PageControl, RestoreFromFileTabitem);
-end;
-
-procedure TfrmHome.Button2Click(Sender: TObject);
-var
-  List: TStringList;
-  Stream: TResourceStream;
-  intArr: TIntegerArray;
-  checksum: TIntegerArray;
-  payload: TCharArray;
-  c: Char;
-  i: Integer;
-  adrInfo: TAddressInfo;
-  ac: Account;
-  addr: AnsiString;
-  hex: AnsiString;
-  ans: AnsiString;
-  bigInt: BigInteger;
-begin
-
-  Edit1.Text := getethValidaddress(Edit4.Text);
-
-end;
-
-procedure TfrmHome.Button3Click(Sender: TObject);
-begin
-  synchronizeCurrencyValue();
-end;
-
-procedure TfrmHome.ImportPrivateKey(Sender: TObject);
-var
-  ts: TStringList;
-  path: AnsiString;
-  out : AnsiString;
-  wd: TwalletInfo;
-  isCompressed: Boolean;
-  Data: WIFAddressData;
-  pub: AnsiString;
-
-  tced: AnsiString;
-  MasterSeed: AnsiString;
-begin
-
-  tced := TCA(passwordForDecrypt.Text);
-  MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
-  if not isHex(MasterSeed) then
-  begin
-    popupWindow.Create(dictionary['FailedToDecrypt']);
-    // DecryptSeedMessage.Text := 'Failed to decrypt master seed';
-    exit;
-  end;
-
-  /// ///////////////////////////////////////////
-
-  if isHex(WIFEdit.Text) and (length(WIFEdit.Text) = 64) then
-  begin
-    out := WIFEdit.Text;
-    if HexPrivKeyCompressedRadioButton.IsChecked then
-      isCompressed := true
-    else if HexPrivKeyNotCompressedRadioButton.IsChecked then
-      isCompressed := false
-    else
-      raise Exception.Create('compression not defined');
-
-  end
-  else
-  begin
-    Data := wifToPrivKey(WIFEdit.Text);
-    isCompressed := Data.isCompressed;
-    out := Data.PrivKey;
-  end;
-  if ImportCoinID <> 4 then
-  begin
-    pub := secp256k1_get_public(out , not isCompressed);
-
-    wd := TwalletInfo.Create(ImportCoinID, -1, -1,
-      Bitcoin_PublicAddrToWallet(pub, AvailableCoin[ImportCoinID].p2pk),
-      'Imported');
-    wd.pub := pub;
-    wd.EncryptedPrivKey := speckEncrypt((TCA(MasterSeed)), out);
-    wd.isCompressed := isCompressed;
-  end
-  else if ImportCoinID = 4 then
-  begin
-    pub := secp256k1_get_public(out , true);
-    wd := TwalletInfo.Create(ImportCoinID, -1, -1,
-      Ethereum_PublicAddrToWallet(pub), 'Imported');
-    wd.pub := pub;
-    wd.EncryptedPrivKey := speckEncrypt((TCA(MasterSeed)), out);
-    wd.isCompressed := false;
-  end;
-  CurrentAccount.AddCoin(wd);
-  CreatePanel(wd);
-
-  MasterSeed := '';
-
-  switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
-end;
-
-procedure TfrmHome.IPKBackClick(Sender: TObject);
-begin
-  switchTab(PageControl, Settings);
-end;
-
-procedure TfrmHome.IPKCLBackButtonClick(Sender: TObject);
-begin
-  switchTab(PageControl, Settings);
-end;
-
-procedure TfrmHome.btnACBackClick(Sender: TObject);
-begin
-  switchTab(PageControl, AddNewCoin);
-  // PageControl.ActiveTab := AddNewWallet;
-end;
-
-procedure TfrmHome.OrganizeButtonClick(Sender: TObject);
-var
-  Panel: TPanel;
-  fmxObj, child, temp: TfmxObject;
-
-  Button: TButton;
-
-begin
-
-  vibrate(100);
-  clearVertScrollBox(OrganizeList);
-  // walletlist.Repaint;
-
-  for fmxObj in WalletList.Content.Children do
-  begin
-
-    Panel := TPanel.Create(frmHome.OrganizeList);
-    Panel.Align := TAlignLayout.Top;
-    Panel.Position.Y := TPanel(fmxObj).Position.Y;
-    Panel.Height := 48;
-    Panel.Visible := true;
-    Panel.Parent := frmHome.OrganizeList;
-    Panel.TagObject := fmxObj.TagObject;
-    Panel.Touch.InteractiveGestures := [TInteractiveGesture.LongTap];
-
-{$IFDEF ANDROID}
-    Panel.OnGesture := frmHome.PanelDragStart;
-{$ELSE}
-    Panel.OnMouseDown := frmHome.PanelDragStart;
-{$ENDIF}
-    //
-    // Panel.OnGesture := frmHome.StartDragPanel;
-    // Panel.OnDragDrop := PanelDragDrop;
-
-    // Panel.DragMode := TDragMode.dmAutomatic;
-
-    for child in fmxObj.Children do
-    begin
-      if child.TagString <> 'balance' then
-        temp := child.Clone(Panel);
-      temp.Parent := Panel;
-
-    end;
-    Button := TButton.Create(Panel);
-    Button.Width := Panel.Height;
-    Button.Align := TAlignLayout.Mostright;
-    Button.Text := 'X';
-    // Button.Tag := fmxObj.Tag;
-    Button.Visible := true;
-    Button.Parent := Panel;
-    Button.OnClick := hideWallet;
-  end;
-
-  for fmxObj in OrganizeList.Content.Children do
-  begin
-    // TPanel(fmxObj).Position.Y := TPanel(fmxObj.TagObject).Position.Y - 1;
-  end;
-
-  OrganizeList.Repaint;
-
-  switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
-
-  SearchInDashBrdButton.Visible := false;
-  NewCryptoLayout.Visible := false;
-  WalletList.Visible := false;
-  OrganizeList.Visible := true;
-  BackToBalanceViewButton.Visible := true;
-  btnSync.Visible := false;
-end;
-
-procedure TfrmHome.ShowHideAdvancedButtonClick(Sender: TObject);
-begin
-
-  TransactionFeeLayout.Visible := not TransactionFeeLayout.Visible;
-  TransactionFeeLayout.Position.Y := Layout3.Position.Y + 1;
-
-  if TransactionFeeLayout.Visible then
-  begin
-    // ShowHideAdvancedIcon.Bitmap := showHideIcons.Source[1].MultiResBitmap[0].Bitmap;
-    arrowImg.Bitmap := arrowList.Source[1].MultiResBitmap[0].Bitmap;
-    ShowHideAdvancedButton.Text := dictionary['HideAdvanced'];
-  end
-  else
-  begin
-    // ShowHideAdvancedIcon.Bitmap := showHideIcons.Source[0].MultiResBitmap[0].Bitmap;
-    arrowImg.Bitmap := arrowList.Source[0].MultiResBitmap[0].Bitmap;
-    ShowHideAdvancedButton.Text := dictionary['ShowAdvanced'];
-  end;
-
-end;
-
-procedure TfrmHome.btnSeedGeneratedProceedClick(Sender: TObject);
-var
-  tempList: TStringList;
-  it: AnsiString;
-  Button: TButton;
-  maks, i: Integer;
-begin
-  maks := 0;
-
-  i := SeedWordsFlowLayout.ComponentCount - 1;
-  while i >= 0 do
-  begin
-    if SeedWordsFlowLayout.Components[i].ClassType = TButton then
-    begin
-      SeedWordsFlowLayout.Components[i].DisposeOf;
-      i := SeedWordsFlowLayout.ComponentCount - 1
-    end
-    else
-      dec(i);
-  end;
-
-  tempList := SplitString(toMnemonic(tempMasterSeed));
-  // clearVertScrollBox( SeedWordsBox );
-  tempList.Sort;
-
-  for it in tempList do
-  begin
-    Button := TButton.Create(SeedWordsFlowLayout);
-    Button.Text := it;
-
-    // button.Align := TAlignLayout.Top;
-    Button.Height := 36;
-    Button.Width := Button.Width + length(it) * 3;
-    Button.Visible := true;
-    Button.Parent := SeedWordsFlowLayout;
-    Button.OnClick := frmHome.WordSeedClick;
-
-  end;
-  for i := 0 to SeedWordsFlowLayout.ComponentCount - 1 do
-  begin
-
-    if SeedWordsFlowLayout.Components[i] is TButton then
-    begin
-      if maks < (TButton(SeedWordsFlowLayout.Components[i]).Position.Y +
-        TButton(SeedWordsFlowLayout.Components[i]).Height) then
-        maks := ceil(TButton(SeedWordsFlowLayout.Components[i]).Position.Y +
-          TButton(SeedWordsFlowLayout.Components[i]).Height);
-    end;
-
-  end;
-
-  SeedWordsFlowLayout.Height := maks;
-  ConfirmedSeedFlowLayout.Height := 1;
-  // Memo1.Text := '';
-
-  tempList.free;
-  switchTab(PageControl, checkSeed);
-  // PageControl.ActiveTab := checkSeed;
-end;
-
-procedure TfrmHome.btnOKAddNewCoinSettingsClick(Sender: TObject);
-var
-  MasterSeed, tced: AnsiString;
-  walletInfo: TwalletInfo;
-  arr: array of Integer;
-  wd: TwalletInfo;
-  i: Integer;
-  newID: Integer;
-begin
-  i := 0;
-
-  tced := TCA(NewCoinDescriptionPassEdit.Text);
-  MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
-  if not isHex(MasterSeed) then
-  begin
-    DecryptSeedMessage.Text := dictionary['FailedToDecrypt'];
-    exit;
-  end;
-
-  SetLength(arr, CurrentAccount.countWalletBy(newcoinID));
-  for wd in CurrentAccount.myCoins do
-  begin
-    if wd.coin = newcoinID then
-    begin
-      arr[i] := wd.X;
-      inc(i);
-    end;
-  end;
-  newID := i;
-  for i := 0 to length(arr) - 1 do
-  begin
-    if arr[i] <> i then
-    begin
-      newID := i;
-      break;
-    end;
-  end;
-
-  walletInfo := coindata.createCoin(newcoinID, newID, 0, MasterSeed,
-    NewCoinDescriptionEdit.Text);
-
-  CurrentAccount.AddCoin(walletInfo);
-  CreatePanel(walletInfo);
-
-  switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
-end;
-
-procedure TfrmHome.btnChangeDescriptionClick(Sender: TObject);
-begin
-  ChangeDescryptionEdit.Text := CurrentCryptoCurrency.description;
-  switchTab(PageControl, ChangeDescryptionScreen);
-  // PageControl.ActiveTab := ChangeDescryptionScreen;
-end;
-
-procedure TfrmHome.Button8Click(Sender: TObject);
-begin
-  switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
-  // switchTab(PageControl, );
-end;
-
-procedure TfrmHome.btnRestoreWalletClick(Sender: TObject);
-begin
-  { pass.Text := '';
-    retypePass.Text := '';
-    btnCreateWallet.Text := dictionary['StartRecoveringWallet'];
-    procCreateWallet := btnImpSeedClick;
-    switchTab(PageControl, createPassword); }
-
-  switchTab(PageControl, RestoreOptions);
-
-end;
-
-procedure TfrmHome.btnRFFBackClick(Sender: TObject);
-begin
-  switchTab(PageControl, RestoreOptions);
-end;
-
-procedure TfrmHome.btnCreateNewWalletClick(Sender: TObject);
-begin
-
-  pass.Text := '';
-  retypePass.Text := '';
-  btnCreateWallet.Text := dictionary['OpenNewWallet'];
-  procCreateWallet := btnGenSeedClick;
-  switchTab(PageControl, createPassword);
-
-end;
-
-procedure TfrmHome.btnCreateWalletClick(Sender: TObject);
-var
-  alphaStr: AnsiString;
-  c: Char;
-  num, low, up: Boolean;
-begin
-  num := false;
-  low := false;
-  up := false;
-  if pass.Text <> retypePass.Text then
-  begin
-    passwordMessage.Text := dictionary['PasswordNotMatch'];
-    exit;
-  end;
-  if pass.Text.length < 8 then
-  begin
-
-    popupWindow.Create(dictionary['PasswordShort']);
-    exit();
-
-  end
-  else
-  begin
-
-    for c in pass.Text do
-    begin
-      if isNumber(c) then
-        num := true;
-      if IsUpper(c) then
-        up := true;
-      if IsLower(c) then
-        low := true;
-    end;
-    if not(num and up and low) then
-    begin
-      popupWindow.Create(dictionary['PasswordShort']);
-      exit();
-
-    end;
-
-  end;
-
-  if AccountNameEdit.Text = '' then
-  begin
-    popupWindow.Create(' Your wallet must have name ');
-    exit();
-  end;
-
-  alphaStr := dictionary['AlphaVersionWarning'];
-
-  popupWindowYesNo.Create(
-    procedure
-    begin
+      requestForPermission(camPerm);
 
       TThread.CreateAnonymousThread(
         procedure
+        var
+          i: Integer;
         begin
-          TThread.Synchronize(nil,
-            procedure
+          i := 0;
+
+          for i := 0 to 240 do
+          begin
+            if TAndroidHelper.Context.checkCallingOrSelfPermission
+              (StringToJString(camPerm)) = -1 then
             begin
-
-              procCreateWallet(nil);
-
-            end);
-        end).Start;
-
-    end,
-    procedure
-    begin
-    end, alphaStr);
-
-end;
-
-procedure TfrmHome.btnChangeDescryptionOKClick(Sender: TObject);
-begin
-  CurrentCryptoCurrency.description := ChangeDescryptionEdit.Text;
-  // refreshWalletDat();
-  // repaintWalletList;
-  // saveTokensToFile();
-  CurrentAccount.SaveFiles();
-
-  switchTab(PageControl, walletView);
-
-  // PageControl.ActiveTab := walletView;
-end;
-
-procedure TfrmHome.btnCTBackClick(Sender: TObject);
-begin
-  switchTab(PageControl, AddNewToken);
-  // PageControl.ActiveTab := AddNewToken;
-end;
-
-procedure TfrmHome.btnExportPrivKeyClick(Sender: TObject);
-begin
-
-  decryptSeedBackTabItem := PageControl.ActiveTab;
-  switchTab(PageControl, descryptSeed);
-  // PageControl.ActiveTab := descryptSeed;
-
-  btnDSBack.OnClick := backBtnDecryptSeed;
-
-  btnDecryptSeed.OnClick := privateKeyPasswordCheck;
-
-end;
-
-procedure TfrmHome.btnANTBackClick(Sender: TObject);
-begin
-  // PageControl.ActiveTab := Settings;
-  switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
-end;
-
-procedure TfrmHome.btnEKSBackClick(Sender: TObject);
-begin
-
-  WVTabControl.ActiveTab := WVBalance;
-  // pageControl.ActiveTab := walletView;
-  switchTab(PageControl, walletView);
-end;
-
-procedure TfrmHome.btnAddManuallyClick(Sender: TObject);
-begin
-  switchTab(PageControl, ManuallyToken);
-  // PageControl.ActiveTab := ManuallyToken;
-end;
-
-procedure TfrmHome.btnMTBackClick(Sender: TObject);
-begin
-  switchTab(PageControl, ChoseToken);
-  // PageControl.ActiveTab := ChoseToken;
-end;
-
-procedure TfrmHome.btnSyncClick(Sender: TObject);
-var
-
-  aTask: ITask;
-begin
-  if (SyncBalanceThr <> nil) then
-  begin
-    if SyncBalanceThr.Finished then
-    begin
-
-      SyncBalanceThr.DisposeOf;
-      SyncBalanceThr := nil;
-      SyncBalanceThr := SynchronizeBalanceThread.Create();
-
-    end
-    else if SyncBalanceThr.TimeFromStart() > 1.0 / 1040.0 then
-    begin
-
-      SyncBalanceThr.Terminate;
-      SyncBalanceThr.WaitFor;
-      SyncBalanceThr.DisposeOf;
-      SyncBalanceThr := nil;
-      SyncBalanceThr := SynchronizeBalanceThread.Create();
-
-    end;
-  end;
-
-  if SyncHistoryThr <> nil then
-  begin
-
-    if SyncHistoryThr.Finished then
-    begin
-      SyncHistoryThr.DisposeOf;
-      SyncHistoryThr := nil;
-      SyncHistoryThr := SynchronizeHistoryThread.Create();
-    end
-    else if SyncHistoryThr.TimeFromStart() > 1.0 / 1040.0 then
-    begin
-
-      SyncHistoryThr.Terminate;
-      SyncHistoryThr.WaitFor;
-      SyncHistoryThr.DisposeOf;
-      SyncHistoryThr := nil;
-      SyncHistoryThr := SynchronizeHistoryThread.Create();
-
-    end;
-
-  end;
-
-end;
-
-// Show available ETH wallet during adding new Token
-procedure TfrmHome.btnAddNewTokenClick(Sender: TObject);
-var
-  i: Integer;
-  Panel: TPanel;
-  adrLabel: TLabel;
-  balLabel: TLabel;
-  coinIMG: TImage;
-  wd: TwalletInfo;
-begin
-
-  clearVertScrollBox(frmHome.AvailableCoinsBox);
-
-  for i := 0 to length(CurrentAccount.myCoins) - 1 do
-  begin
-    if CurrentAccount.myCoins[i].coin = 4 then // if ETH
-    begin
-
-      with frmHome.AvailableCoinsBox do
-      begin
-        wd := CurrentAccount.myCoins[i];
-        Panel := TPanel.Create(frmHome.AvailableCoinsBox);
-        Panel.Align := Panel.Align.alTop;
-        Panel.Height := 48;
-        Panel.Visible := true;
-        Panel.Parent := frmHome.AvailableCoinsBox;
-        Panel.TagString := CurrentAccount.myCoins[i].addr;
-        Panel.OnClick := frmHome.addToken;
-
-        adrLabel := TLabel.Create(frmHome.AvailableCoinsBox);
-        adrLabel.StyledSettings := adrLabel.StyledSettings -
-          [TStyledSetting.Size];
-        adrLabel.TextSettings.Font.Size := dashBoardFontSize;
-
-        adrLabel.Parent := Panel;
-        adrLabel.TagString := CurrentAccount.myCoins[i].addr;
-
-        if wd.description = '' then
-        begin
-          adrLabel.Text := AvailableCoin[wd.coin].displayName + ' (' +
-            AvailableCoin[wd.coin].shortcut + ')';
-        end
-        else
-        begin
-
-          adrLabel.Text := wd.description;
-        end;
-        adrLabel.Visible := true;
-        adrLabel.Width := 500;
-        adrLabel.Height := 48;
-        adrLabel.Position.X := 52;
-        adrLabel.Position.Y := 0;
-        adrLabel.OnClick := frmHome.addToken;
-
-        balLabel := TLabel.Create(frmHome.WalletList);
-        balLabel.StyledSettings := balLabel.StyledSettings -
-          [TStyledSetting.Size];
-        balLabel.TextSettings.Font.Size := 12;
-        balLabel.Parent := Panel;
-        balLabel.TagString := CurrentAccount.myCoins[i].addr;
-        balLabel.Text := CurrentAccount.myCoins[i].addr;
-
-        balLabel.TextSettings.HorzAlign := TTextAlign.center;
-        balLabel.Visible := true;
-        balLabel.Width := 500;
-        balLabel.Height := 14;
-        balLabel.Align := TAlignLayout.Bottom;
-        balLabel.OnClick := frmHome.addToken;
-
-        coinIMG := TImage.Create(frmHome.AvailableCoinsBox);
-        coinIMG.Parent := Panel;
-
-        coinIMG.Bitmap := getCoinIcon(wd.coin);
-
-        coinIMG.Height := 32.0;
-        coinIMG.Width := 50;
-        coinIMG.Position.X := 4;
-        coinIMG.Position.Y := 8;
-        coinIMG.OnClick := frmHome.addToken;
-        coinIMG.TagString := CurrentAccount.myCoins[i].addr;
-      end;
-
-    end;
-
-  end;
-
-  // PageControl.ActiveTab := AddNewToken;
-  switchTab(PageControl, AddNewToken);
-end;
-
-procedure TfrmHome.btnAddNewCoinClick(Sender: TObject);
-begin
-  createAddWalletView();
-  // PageControl.ActiveTab := AddNewWallet;
-  switchTab(PageControl, AddNewCoin);
-end;
-
-procedure TfrmHome.btnBackClick(Sender: TObject);
-begin
-  CurrentCryptoCurrency := nil;
-  CurrentCoin := nil;
-  switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
-  // PageControl.ActiveTab := TTabItem(frmHome.FindComponent('dashbrd'));
-end;
-
-procedure TfrmHome.btnQRBackClick(Sender: TObject);
-begin
-
-  CameraComponent1.Active := false;
-  switchTab(PageControl, cameraBackTabItem);
-  // PageControl.ActiveTab := cameraBackTabItem;
-end;
-
-procedure TfrmHome.btnSendClick(Sender: TObject);
-var
-  amount, fee: BigInteger;
-  Address: AnsiString;
-begin
-
-  if not isEthereum then
-    fee := StrFloatToBigInteger(wvFee.Text,
-      AvailableCoin[CurrentCoin.coin].decimals)
-  else
-  begin
-    if isTokenTransfer then
-      fee := BigInteger.Parse(wvFee.Text) * 66666
-    else
-      fee := BigInteger.Parse(wvFee.Text) * 21000;
-  end;
-
-  if (not isTokenTransfer) then
-  begin
-    amount := StrFloatToBigInteger(wvAmount.Text,
-      AvailableCoin[CurrentCoin.coin].decimals);
-    if FeeFromAmountSwitch.IsChecked then
-    begin
-      amount := amount - fee;
-    end;
-
-  end;
-
-  if (isEthereum) and (isTokenTransfer) then
-    amount := StrFloatToBigInteger(wvAmount.Text,
-      CurrentCryptoCurrency.decimals);
-
-  if WVsendTO.Text = '' then
-  begin
-    popupWindow.Create(dictionary['AddressFieldEmpty']);
-    exit;
-  end;
-
-  if isBech32Address(WVsendTO.Text) and (CurrentCoin.coin <> 0) then
-  begin
-    popupWindow.Create(dictionary['Bech32Unsupported']);
-    exit;
-  end;
-
-  if not isValidForCoin(CurrentCoin.coin, WVsendTO.Text) then
-  begin
-
-    popupWindow.Create(dictionary['WrongAddress']);
-    exit;
-  end;
-  if { (not isEthereum) and } (not isTokenTransfer) then
-    if amount + fee > (CurrentCoin.confirmed) then
-    begin
-      popupWindow.Create(dictionary['AmountExceed']);
-      exit;
-    end;
-
-  Address := WVsendTO.Text;
-  if (CurrentCryptoCurrency is TwalletInfo) and
-    (TwalletInfo(CurrentCryptoCurrency).coin = 3) and isCashAddress(Address)
-  then
-  begin
-    if isValidBCHCashAddress(Address) then
-    begin
-      Address := BCHCashAddrToLegacyAddr(Address);
-    end
-    else
-    begin
-      popupWindow.Create(dictionary['WrongAddress']);
-      exit;
-    end;
-  end;
-
-  if CurrentCoin.coin = 4 then
-  begin
-    if not isValidEthAddress(CurrentCoin.addr) then
-    begin
-      popupWindowYesNo.Create(
-        procedure // yes
-        begin
-
-        end,
-        procedure
-        begin // no
-
-          TThread.CreateAnonymousThread(
-            procedure
+              sleep(250);
+            end
+            else
             begin
               TThread.Synchronize(nil,
                 procedure
                 begin
-                  if ValidateBitcoinAddress(Address) then
-                  begin
-                    btnDecryptSeed.OnClick := TrySendTX;
-
-                    decryptSeedBackTabItem := PageControl.ActiveTab;
-                    // PageControl.ActiveTab := descryptSeed;
-                    btnDSBack.OnClick := backBtnDecryptSeed;
-                    switchTab(PageControl, descryptSeed);
-
-                  end;
+                  btnQRClick(nil);
                 end);
 
-            end).Start;
+              break;
 
-        end, 'This address may be incorrect. Do you want to check again?');
+            end;
+
+          end;
+
+        end).Start;
+
       exit;
+
+      // SharedActivity.getIntent.
+      // TAndroidHelper.
     end;
-  end;
-
-  if ValidateBitcoinAddress(Address) then
-  begin
-    btnDecryptSeed.OnClick := TrySendTX;
-
-    decryptSeedBackTabItem := PageControl.ActiveTab;
-    // PageControl.ActiveTab := descryptSeed;
-    switchTab(PageControl, descryptSeed);
-    btnDSBack.OnClick := backBtnDecryptSeed;
-
-  end;
-end;
-
-procedure TfrmHome.btnOCRClick(Sender: TObject);
-begin
-
-  // .ActiveTab := ReadOCR;
-  switchTab(PageControl, ReadOCR);
-  CameraComponent1.Active := false;
-  CameraComponent1.Kind := FMX.Media.TCameraKind.BackCamera;
-  CameraComponent1.Quality := FMX.Media.TVideoCaptureQuality.HighQuality;
-  CameraComponent1.FocusMode := FMX.Media.TFocusMode.ContinuousAutoFocus;
-  CameraComponent1.Active := true;
-
-end;
-
-procedure TfrmHome.btnReadOCRClick(Sender: TObject);
-var
-  str: AnsiString;
-begin
-  CameraComponent1.SampleBufferToBitmap(imgCameraOCR.Bitmap, true);
-  str := misc.getStringFromImage(imgCameraOCR.Bitmap);
-  str := misc.findAddress(str);
-
-  if str = 'Not found' then
-  begin
-
-    frmHome.btnReadOCR.Text := dictionary['ReadAgainOCR'];
-
-  end
-  else
-  begin
-
-    if not ValidateBitcoinAddress(str) = true then
-    begin
-      // SendMessage.Text :=
-      popupWindowOK.Create(
-        procedure
-        begin
-        end, dictionary['OCRInaccurate']);
-    end;
-
-    frmHome.WVsendTO.Text := str;
-
-    PageControl.ActiveTab := walletView;
-    switchTab(PageControl, walletView);
-    WVTabControl.ActiveTab := WVSend;
-
-  end;
-
-end;
-
-procedure TfrmHome.btnSSysClick(Sender: TObject);
-{$IFDEF ANDROID}
-var
-  Intent: JIntent;
 {$ENDIF}
-begin
-{$IFDEF ANDROID}
-  Intent := TJIntent.Create;
-  Intent := TJIntent.JavaClass.init(TJSettings.JavaClass.ACTION_SETTINGS);
-  TAndroidHelper.Activity.startActivity(Intent);
-{$ENDIF}
-end;
-
-procedure TfrmHome.CameraComponent1SampleBufferReady(Sender: TObject;
-const ATime: TMediaTime);
-begin
-  TThread.Synchronize(TThread.CurrentThread, GetImage);
-end;
-{$IFDEF VANDROID}
-
-function FindQRRect(Bitmap: TImage): TRectF;
-{$ELSE}
-
-function FindQRRect(Bitmap: TBitmap): TRectF;
-{$ENDIF}
-var
-  shorter: Integer;
-  a: Integer;
-begin
-  if Bitmap.Width > Bitmap.Height then
-    shorter := ceil(Bitmap.Height)
-  else
-    shorter := ceil(Bitmap.Width);
-
-  a := (shorter - ceil(shorter * 0.4));
-  if shorter = Bitmap.Width then
-  begin
-
-    result.Left := ceil(shorter * 0.2);
-    result.Right := shorter - ceil(shorter * 0.2);
-    result.Top := (Bitmap.Height - a) / 2;
-    result.Bottom := Bitmap.Height - ((Bitmap.Height - a) / 2);
-  end
-  else
-  begin
-    result.Top := ceil(shorter * 0.2);
-    result.Bottom := shorter - ceil(shorter * 0.2);
-    result.Left := (Bitmap.Width - a) / 2;
-    result.Right := Bitmap.Width - ((Bitmap.Width - a) / 2);
-
-  end;
-
-end;
-
-procedure TfrmHome.GetImage;
-var
-  scanBitmap: TBitmap;
-  tempBitmap: TBitmap;
-  ReadResult: TReadResult;
-  QRRect: TRectF;
-  ts: TStringList;
-  scale: double;
-  ac: Account;
-
-begin
-  if PageControl.ActiveTab = ReadOCR then
-  begin
-    CameraComponent1.SampleBufferToBitmap(imgCameraOCR.Bitmap, true);
-    exit;
-  end;
-  CameraComponent1.SampleBufferToBitmap(imgCamera.Bitmap, true);
-  // {$IFDEF VANDROID}
-  // QRRect := FindQRRect(imgCamera);
-  // {$ELSE}
-  // QRRect := FindQRRect(imgCamera.Bitmap);
-  // {$ENDIF}
-  scanBitmap := TBitmap.Create();
-  scanBitmap.Assign(imgCamera.Bitmap);
-
-  // scanBitmap := imgCamera.Bitmap;
-
-  ReadResult := nil;
-
-  TThread.CreateAnonymousThread(
-    procedure
+    // context
+    if {$IFDEF ANDROID}TAndroidHelper.Context.checkCallingOrSelfPermission
+      (StringToJString(camPerm)) = 0 {$ELSE} true {$ENDIF} then
     begin
 
       try
-        FScanInProgress := true;
-        try
-          ReadResult := FScanManager.Scan(scanBitmap);
-        except
-          on E: Exception do
-          begin
-            TThread.Synchronize(nil,
-              procedure
-              begin
-                // lblScanStatus.Text := E.Message;
-              end);
 
-            exit;
-          end;
+        cameraBackTabItem := PageControl.ActiveTab;
+
+        // PageControl.ActiveTab := TTabItem(frmHome.FindComponent('qrreader'));
+        CameraComponent1.Active := false;
+
+        CameraComponent1.Kind := FMX.Media.TCameraKind.BackCamera;
+
+        CameraComponent1.Quality :=
+          FMX.Media.TVideoCaptureQuality.MediumQuality;
+        if QRHeight = -1 then
+        begin
+          QRHeight := CameraComponent1.GetCaptureSetting.Height;
+          QRWidth := CameraComponent1.GetCaptureSetting.Width;
         end;
 
-        TThread.Synchronize(nil,
-          procedure
-          var
-            i: Integer;
+        CameraComponent1.SetCaptureSetting(TVideoCaptureSetting.Create(QRWidth,
+          QRHeight, 30));
 
-          var
-            wd: TwalletInfo;
-          begin
-            if (ReadResult <> nil) then
-            begin
-              // if ValidateBitcoinAddress(Trim(ReadResult.Text)) then
-              // begin
-              // WVsendTO.Text := Trim(ReadResult.Text);
-              // showmessage(ReadResult.text);
+        CameraComponent1.FocusMode := FMX.Media.TFocusMode.ContinuousAutoFocus;
 
-              { if currentWallet < 0 then
-                begin
-                btnQRBack.OnClick(nil);
-                ShowMSG(PageControl.ActiveTab,
-                'Address ' + Trim(ReadResult.Text) +
-                ' copied to transaction window');                 //   Nie ma przycisku QR w widoku głównym
-                btnSMVNo.Visible := false;
-                btnSMVYes.Text := 'OK';
-                btnSMVYes.Align := btnSMVYes.Align.alCenter;
-                end
-                else
-                begin }
-              // btnQRBack.OnClick(nil);
-              if cameraBackTabItem = walletView then
-              begin
+        CameraComponent1.Active := true;
 
-                ts := parseQRCode(ReadResult.Text);
+        switchTab(PageControl, TTabItem(frmHome.FindComponent('qrreader')));
+        // btnDSBack.OnClick := backBtnDecryptSeed;
 
-                if ts.Count = 1 then
-                begin
-                  WVsendTO.Text := ts.Strings[0];
-                end
-                else
-                begin
-                  if ts.Strings[0] <> AvailableCoin[CurrentCoin.coin].name then
-                  begin
-                    popupWindow.Create(dictionary['QRCodeFor'] + ' ' +
-                      ts.Strings[0]);
-                    ts.free;
-                    exit;
-                  end;
-                  WVsendTO.Text := ts.Strings[1];
-                  for i := 2 to ts.Count - 2 do
-                  begin
-                    if ts.Strings[i] = 'amount' then
-                      wvAmount.Text := ts.Strings[i + 1];
-                  end;
-                end;
-                ts.free;
-
-                switchTab(PageControl, cameraBackTabItem);
-                // PageControl.ActiveTab := cameraBackTabItem;
-              end
-              else if cameraBackTabItem = ManuallyToken then
-              begin
-                ContractAddress.Text := Trim(ReadResult.Text);
-                // PageControl.ActiveTab := cameraBackTabItem;
-                switchTab(PageControl, cameraBackTabItem);
-              end
-              else if cameraBackTabItem = checkSeed then
-              begin
-                if tempMasterSeed = Trim(ReadResult.Text) then
-                begin
-
-                  tempMasterSeed := '';
-
-                  userSavedSeed := true;
-                  refreshWalletDat();
-
-                  switchTab(PageControl,
-                    TTabItem(frmHome.FindComponent('dashbrd')));
-
-                end
-                else
-                begin
-                  switchTab(PageControl,
-                    TTabItem(frmHome.FindComponent('dashbrd')));
-                  // popupWindow.Create( 'Wrong QR code' );
-                end;
-
-              end
-              else if (cameraBackTabItem = RestoreOptions) or
-                (cameraBackTabItem = AddAccount) then
-              begin
-
-                if QRFind = QRSearchEncryted then
-                begin
-
-                  QRFind := '';
-
-                  tempQRFindEncryptedSeed := Trim(ReadResult.Text);
-
-                  RestoreWalletOKButton.OnClick := RestoreFromEncryptedQR;
-                  decryptSeedBackTabItem := PageControl.ActiveTab;
-                  PageControl.ActiveTab := RestoreWalletWithPassword;
-                  RWWPBackButton.OnClick := backBtnDecryptSeed;
-                  RestoreNameEdit.Text := '';
-                  RestorePasswordEdit.Text := '';
-
-                  switchTab(PageControl, RestoreWalletWithPassword);
-
-                end;
-
-              end
-              else if cameraBackTabItem = createPassword then
-              begin
-
-                if (QRFind = QRSearchDecryted) then
-                begin
-
-                  QRFind := '';
-
-                  CreateNewAccountAndSave(AccountNameEdit.Text, pass.Text,
-                    Trim(ReadResult.Text), true);
-
-                end;
-
-              end
-              else if cameraBackTabItem = ImportPrivKeyTabItem then
-              begin
-                WIFEdit.Text := ReadResult.Text;
-                switchTab(PageControl, ImportPrivKeyTabItem);
-              end
-              else if cameraBackTabItem = TTabItem(frmHome.FindComponent
-                ('dashbrd')) then
-              begin
-                // PageControl.ActiveTab := cameraBackTabItem;
-                switchTab(PageControl, cameraBackTabItem);
-              end;
-
-              CameraComponent1.Active := false;
-
-              // PageControl.ActiveTab := walletView;
-              // switchTab(PageControl, walletView);
-              // WVTabControl.ActiveTab := WVSend;
-
-              // end;
-              // end
-              { else
-                begin
-
-
-                ShowMSG(PageControl.ActiveTab, 'This is not a valid address:' +
-                #13#10 + Copy(Trim(ReadResult.Text), 0, 42));
-                btnSMVNo.Visible := false;
-                btnSMVYes.Text := 'OK';
-                btnSMVYes.Align := btnSMVYes.Align.alCenter;
-                end; }
-            end;
-          end);
-
-      finally
-        ReadResult.free;
-        scanBitmap.free;
-        FScanInProgress := false;
-      end;
-      // CameraComponent1.FlashMode.fmFlashoff;
-
-    end).Start;
-
-end;
-
-procedure TfrmHome.RestoreFromEncryptedQR(Sender: TObject);
-var
-  MasterSeed, tced: AnsiString;
-  ac: Account;
-begin
-
-  tced := TCA(RestorePasswordEdit.Text);
-  MasterSeed := SpeckDecrypt(tced, tempQRFindEncryptedSeed);
-  if not isHex(MasterSeed) then
-  begin
-    popupWindow.Create(dictionary['FailedToDecrypt']);
-    exit;
-  end;
-
-  CreateNewAccountAndSave(RestoreNameEdit.Text, RestorePasswordEdit.Text,
-    MasterSeed, true);
-
-  tced := '';
-  MasterSeed := '';
-
-end;
-
-procedure TfrmHome.FeeSpinChange(Sender: TObject);
-begin
-  if not isEthereum then
-  begin
-    wvFee.Text := CurrentCoin.efee[round(FeeSpin.Value) - 1];
-    lblBlockInfo.Text := dictionary['ConfirmInNext'] + ' ' +
-      inttostr(round(FeeSpin.Value)) + ' ' + dictionary['Blocks'];
-  end
-  else
-    FeeSpin.Value := 1.0;
-end;
-
-procedure TfrmHome.FeeToUSDUpdate(Sender: TObject);
-begin
-  if isTokenTransfer then
-  begin
-    lblFeeHeader.Text := dictionary['GasPriceWEI'] + ': ';
-    lblFee.Text := wvFee.Text + ' ' +
-      floatToStrF(CurrencyConverter.calculate(strToFloatDef(wvFee.Text,
-      0) * 66666 * CurrentCryptoCurrency.rate / (1000000.0 * 1000000.0 *
-      1000000.0)), ffFixed, 18, 2) + ' ' + CurrencyConverter.symbol;
-  end
-  else if isEthereum then
-  begin
-    lblFeeHeader.Text := dictionary['GasPriceWEI'] + ': ';
-    lblFee.Text := wvFee.Text + ' ' + AvailableCoin[CurrentCoin.coin].shortcut +
-      ' = ' + floatToStrF(CurrencyConverter.calculate(strToFloatDef(wvFee.Text,
-      0) * CurrentCoin.rate * 21000 / (1000000.0 * 1000000.0 * 1000000.0)),
-      ffFixed, 18, 2) + ' ' + CurrencyConverter.symbol;
-  end
-  else
-  begin
-    lblFeeHeader.Text := dictionary['TransactionFee'] + ': ';
-    lblFee.Text := wvFee.Text + ' ' + AvailableCoin[CurrentCoin.coin].shortcut +
-      ' = ' + floatToStrF(CurrencyConverter.calculate(strToFloatDef(wvFee.Text,
-      0) * CurrentCoin.rate), ffFixed, 18, 2) + ' ' + CurrencyConverter.symbol;
-  end;
-end;
-
-procedure TfrmHome.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
-begin
-{$IFDEF WIN32 or WIN64}
-  stylo.Destroy;
-
-{$ENDIF}
-end;
-
-procedure TfrmHome.FormCreate(Sender: TObject);
-var
-  i: Integer;
-  symbol: AnsiString;
-
-begin
-  DebugBtn.Visible := false;
-  log.d('DEBUD Start FormCreate()');
-  loadDictionary(loadLanguageFile('ENG'));
-  refreshComponentText();
-  log.d('DEBUD Language Loaded');
-  Randomize;
-
-  saveSeedInfoShowed := false;
-  FormatSettings.DecimalSeparator := '.';
-  shown := false;
-  CurrentCoin := nil;
-  CurrentCryptoCurrency := nil;
-  QRChangeTimer.Enabled := true;
-  TCAIterations := 5000;
-  log.d('DEBUD Start Loading Style');
-  stylo := TStyleManager.Create;
-  stylo.TrySetStyleFromResource('RT_DARK');
-  FFrameTake := 0;
-  log.d('DEBUD Style Loaded');
-  // CameraComponent1.Quality := FMX.Media.TVideoCaptureQuality.MediumQuality;
-  FScanManager := TScanManager.Create(TBarcodeFormat.QR_CODE, nil);
-  duringSync := false;
-
-  // SyncBalanceThr := SynchronizeBalanceThread.Create();
-  // SyncHistoryThr := SynchronizeHistoryThread.Create();
-
-  WVsendTO.Caret.Width := 2;
-  LanguageBox.ItemIndex := 0;
-  log.d('DEBUD Start Load Currenty Converter');
-
-  CurrencyConverter := tCurrencyConverter.Create();
-  if FileExists(System.IOUtils.TPath.Combine
-    (System.IOUtils.TPath.GetDocumentsPath, 'hodler.fiat.dat')) then
-    LoadCurrencyFiatFromFile();
-  log.d('DEBUD Parse fiat.dat');
-  for symbol in CurrencyConverter.availableCurrency.Keys do
-  begin
-    CurrencyBox.Items.Add(symbol);
-  end;
-  log.d('DEBUD Refresh Currency Value');
-
-  CurrencyBox.ItemIndex := CurrencyBox.Items.IndexOf('USD');
-  refreshCurrencyValue;
-
-  // CurrentAccount := Account.Create('default');
-  SystemTimer.Enabled := SYSTEM_APP;
-  linkLabel.Visible := not SYSTEM_APP;
-{$IFDEF ANDROID}
-  if SYSTEM_APP then
-  begin
-    updateBtn.Visible := true;
-    DebugBtn.Visible := false;
-    executeAndroid('settings put global setup_wizard_has_run 1');
-    executeAndroid('settings put secure user_setup_complete 1');
-    executeAndroid('settings put global device_provisioned 1');
-
-  end;
-{$ENDIF}
-{$IFDEF WIN32 or WIN64}
-  // OrganizeButton.Visible := true;
-  btnSSys.Visible := false;
-
-{$ELSE}
-
-  // RegisterDelphiNativeMethods();
-
-{$ENDIF}
-  log.d('DEBUD End FormCreate()');
-end;
-
-{$IFDEF ANDROID}
-
-procedure OnRequestPermissionsResultNative(AEnv: PJNIEnv; AThis: JNIObject;
-requestCode: Integer; permissions: JNIObjectArray; granted: JNIIntArray);
-var
-  i: Integer;
-  { LPermissionsArray: TJavaObjectArray<JString>;
-    LGrantedArray: TJavaArray<Integer>;
-    LPermissions: TPermissionResults;
-    I: Integer; }
-begin
-
-  TThread.CreateAnonymousThread(
-    procedure
-    begin
-      TThread.Synchronize(nil,
-        procedure
+      except
+        on E: Exception do
         begin
-          showmessage('OK');
-        end);
-    end).Start;
-
-  { // A bug in JNI Bridge means we get a (harmless) logcat here for each
-    // WrapJNIArray call as a GlobalRef is deleted as if it were a LocalRef:
-    // W/art: Attempt to remove non-JNI local reference, dumping thread
-    LGrantedArray := TJavaArray<Integer>.Wrap(WrapJNIArray(granted, TypeInfo(TJavaArray<Integer>)));
-    LPermissionsArray := TJavaObjectArray<JString>.Wrap(WrapJNIArray(permissions, TypeInfo(TJavaObjectArray<JString>)));
-    if (LGrantedArray.Length > 0) and (LPermissionsArray.Length > 0) and (LGrantedArray.Length = LPermissionsArray.Length) then
-    begin
-    SetLength(LPermissions, LGrantedArray.Length);
-    for I := 0 to LGrantedArray.Length - 1 do
-    begin
-    LPermissions[I].Granted := LGrantedArray.Items[I] = TJPackageManager.JavaClass.PERMISSION_GRANTED;
-    LPermissions[I].Permission := JStringToString(LPermissionsArray.Items[I]);
-    end;
-    TThread.Queue(nil,
-    procedure
-    begin
-    TOpenSystemHelper(FInstance.SystemHelper).DoPermissionsResult(requestCode, LPermissions);
-    end);
-    end; }
-end;
-
-procedure TfrmHome.RegisterDelphiNativeMethods();
-var
-  PEnv: PJNIEnv;
-  ActivityClass: JNIClass;
-  NativeMethod: JNINativeMethod;
-begin
-  PEnv := TJNIResolver.GetJNIEnv;
-  NativeMethod.name := 'onRequestPermissionsResultNative';
-  NativeMethod.Signature := '(I[Ljava/lang/String;[I)V';
-  // Integer, String [], Integer[] (VOID)
-  NativeMethod.FnPtr := @OnRequestPermissionsResultNative;
-  ActivityClass := PEnv^.GetObjectClass(PEnv,
-    PANativeActivity(System.DelphiActivity).clazz);
-  PEnv^.RegisterNatives(PEnv, ActivityClass, @NativeMethod, 1);
-  PEnv^.DeleteLocalRef(PEnv, ActivityClass);
-end;
-
-{$ENDIF}
-
-procedure TfrmHome.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
-Shift: TShiftState);
-var
-  FService: IFMXVirtualKeyboardService;
-begin
-  if Key = vkHardwareBack then
-  begin
-    Key := 0;
-    TPlatformServices.Current.SupportsPlatformService
-      (IFMXVirtualKeyboardService, IInterface(FService));
-    if (FService <> nil) and (TVirtualKeyboardState.Visible
-      in FService.VirtualKeyBoardState) then
-    begin
-      Key := 0;
-      FService.HideVirtualKeyboard;
-    end
-    else
-    begin
-
-      if (PageControl.ActiveTab = createPassword) or
-        (PageControl.ActiveTab = SeedCreation) then
-      begin
-        switchTab(PageControl, WelcomeTabItem);
-      end
-      else if PageControl.ActiveTab = walletDatCreation then
-      begin
-{$IFDEF ANDROID}
-        SharedActivity.moveTaskToBack(true);
-{$ENDIF}
-      end
-      else if PageControl.ActiveTab = QRReader then
-      begin
-        switchTab(PageControl, cameraBackTabItem);
-      end
-      else if (PageControl.ActiveTab = TTabItem(frmHome.FindComponent('dashbrd')
-        )) or (CurrentAccount = nil) then
-      begin
-        { MessageDlg('Exit HODLER?', TMsgDlgType.mtConfirmation,
-          [TMsgDlgBtn.mbOK, TMsgDlgBtn.mbCancel], -1, OnCloseDialog); }
-{$IFDEF ANDROID}
-        if not SYSTEM_APP then
-          SharedActivity.finish;
-{$ELSE}
-        frmHome.Close();
-{$ENDIF}
-      end
-      else
-      begin
-        switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
+        end;
       end;
+
     end;
-  end;
-end;
-
-procedure TfrmHome.OnCloseDialog(Sender: TObject; const AResult: TModalResult);
-begin
-  if AResult = mrOk then
-    Close;
-end;
-
-procedure TfrmHome.FormMouseMove(Sender: TObject; Shift: TShiftState;
-X, Y: Single);
-begin
-  if gathener.Enabled then
-
-    trngBuffer := trngBuffer + floattoStr(X * random($FFFF) * trngBufferCounter)
-      + floattoStr(Y * random($FFFF)) + inttostr(random($FFFFFFFF))
-end;
-
-procedure TfrmHome.FormResize(Sender: TObject);
-begin
-{$IFDEF WIN32 or WIN64}
-  // FIREMONKEY DOES NOT HAVE FORM CONSTRAITS
-  if frmHome.ClientWidth <> 384 then
-    frmHome.ClientWidth := 384;
-  if frmHome.ClientHeight <> 567 then
-    frmHome.ClientHeight := 567;
-{$ENDIF}
-end;
-
-procedure LoadCurrentAccount(name: AnsiString);
-var
-  cc: CryptoCurrency;
-begin
-  clearVertScrollBox(frmHome.WalletList);
-  if (SyncBalanceThr <> nil) and (not SyncBalanceThr.Finished) then
-  begin
-
-    SyncBalanceThr.Terminate;
-    while not(SyncBalanceThr.Finished) do
-    begin
-      application.ProcessMessages();
-      sleep(50);
-    end;
-    SyncBalanceThr.WaitFor;
-    SyncBalanceThr.DisposeOf;
-    SyncBalanceThr := nil;
-
-  end;
-  if (SyncHistoryThr <> nil) and (not SyncHistoryThr.Finished) then
-  begin
-
-    SyncHistoryThr.Terminate;
-    while not(SyncHistoryThr.Finished) do
-    begin
-      application.ProcessMessages();
-      sleep(50);
-    end;
-    SyncHistoryThr.WaitFor;
-    SyncHistoryThr.DisposeOf;
-    SyncHistoryThr := nil;
 
   end;
 
-  frmHome.ChangeAccountButton.Text := name;
-
-  if CurrentAccount <> nil then
-    CurrentAccount.free;
-
-  CurrentAccount := Account.Create(name);
-  CurrentAccount.LoadFiles;
-
-  for cc in CurrentAccount.myCoins do
-    CreatePanel(cc);
-
-  for cc in CurrentAccount.myTokens do
-    CreatePanel(cc);
-
-  refreshOrderInDashBrd();
-
-  frmHome.CurrencyBox.ItemIndex := frmHome.CurrencyBox.Items.IndexOf
-    (CurrencyConverter.symbol);
-
-  globalFiat := 0;
-
-  refreshCurrencyValue;
-
-  SyncBalanceThr := SynchronizeBalanceThread.Create();
-  SyncHistoryThr := SynchronizeHistoryThread.Create();
-
-  if (CurrentAccount.userSaveSeed = false) then
+  procedure TfrmHome.btnGenSeedClick(Sender: TObject);
+  var
+    alphaStr: AnsiString;
   begin
-    TThread.CreateAnonymousThread(
+    { if pass.Text <> retypePass.Text then
+      begin
+      passwordMessage.Text := 'Passwords does not match';
+      exit;
+      end;
+      if pass.Text.length < 5 then
+      begin
+      popupWindow.Create('Password is too short. Minimum length is 5');
+      exit();
+      end;
+
+      alphaStr :=
+      'You use the alpha version of the HODLER multiwallet, it may be unstable.' +
+      ' The current version of the program is used only for functionality tests and for sending feedback.'
+      + ' Confirm below that you have understood this message and accept it.';
+
+      popupWindowYesNo.Create(
       procedure
       begin
 
-        sleep(1000);
+      TThread.CreateAnonymousThread(
+      procedure
+      begin
+      TThread.Synchronize(nil,
+      procedure
+      begin }
 
-        TThread.Synchronize(nil,
-          procedure
-          begin
+    // PageControl.ActiveTab := walletDatCreation;
 
-            with frmHome do
-              popupWindowYesNo.Create(
-                procedure()
-                begin
+    SetLength(trngBuffer, 4 * 1024);
 
-                  btnDecryptSeed.OnClick := SendWalletFile;
+    // turn on phone's sensors
+    // they will be used for collect random data
+{$IFDEF ANDROID}
+    MotionSensor.Active := true;
+    OrientationSensor.Active := true;
+{$ENDIF}
+    // turn on timer that counts random value from sensors
+    gathener.Enabled := true;
 
-                  decryptSeedBackTabItem := PageControl.ActiveTab;
-                  PageControl.ActiveTab := descryptSeed;
-                  // switchTab(PageControl, descryptSeed);
-                  btnDSBack.OnClick := backBtnDecryptSeed;
-
-                end,
-                procedure()
-                begin
-
-                end, dictionary['CreateBackupWallet'], dictionary['Yes'],
-                dictionary['NotNow'], 1);
-          end);
+    switchTab(PageControl, walletDatCreation);
+    { end);
       end).Start;
 
-    saveSeedInfoShowed := true;
-  end;
-
-  refreshWalletDat;
-
-end;
-
-procedure TfrmHome.FormShow(Sender: TObject);
-var
-  i: Integer;
-  cc: CryptoCurrency;
-
-begin
-
-  log.d('DEBUD Start FormShow()');
-
-  if not isWalletDatExists then
-  begin
-    createWalletDat();
-  end;
-  try
-    parseWalletFile();
-  except
-    on E: Exception do
-    begin
-      showmessage('wallet file damaged');
-      exit;
-    end;
-  end;
-
-  log.d('DEBUD Loaded Wallet.dat');
-
-  if length(AccountsNames) = 0 then
-  begin
-    // PageControl.ActiveTab := createPassword;
-    // if CurrentAccount = nil then
-    // CurrentAccount := Account.Create('default');
-    lblWelcomeDescription.Text := dictionary['ConfigurationTakeOneStep'] +
-      #13#10 + dictionary['ChooseOption'] + ':';
-    switchTab(PageControl, WelcomeTabItem);
-  end
-  else
-  begin
-
-    // if CurrentAccount <> nil then
-    // CurrentAccount.free();
-    log.d('DEBUD Start Load account');
-    if (lastClosedAccount = '') then
-      lastClosedAccount := AccountsNames[0];
-
-    ChangeAccountButton.Text := lastClosedAccount;
-
-    try
-      LoadCurrentAccount(lastClosedAccount);
-    except
-      on E: Exception do
+      end,
+      procedure
       begin
-        showmessage('account file damaged');
-        exit;
-      end;
-    end;
+      end, alphaStr); }
 
-    log.d('DEBUD Account loaded');
+  end;
+
+  procedure TfrmHome.btnAddContractClick(Sender: TObject);
+  var
+    t: Token;
+  begin
+
+    t := Token.CreateCustom(frmHome.ContractAddress.Text,
+      frmHome.TokenNameField.Text, frmHome.SymbolField.Text,
+      strtoint(frmHome.DecimalsField.Text), walletAddressForNewToken);
+
+    t.idInWallet := length(CurrentAccount.myTokens) + 10000;
+
+    CurrentAccount.addToken(t);
+    CurrentAccount.SaveFiles();
 
     switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
 
   end;
 
-  if not shown then
+  procedure TfrmHome.btnSBackClick(Sender: TObject);
   begin
-  if CurrentAccount<>nil then  
-    TThread.Synchronize(nil,
-      procedure
-      begin
-        getDataOverHTTP('https://hodler2.nq.pl/analitics.php?hash=' +
-          GetSTrHashSHA256(CurrentAccount.EncryptedMasterSeed + API_PUB));
-      end);
-{$IFDEF ANDROID}
-    for i := 0 to frmHome.ComponentCount - 1 do
-      if frmHome.Components[i] is TEdit then
-      begin
-        TEdit(frmHome.Components[i]).KillFocusByReturn := true;
-        TEdit(frmHome.Components[i]).ReturnKeyType := TReturnKeyType.Done;
-      end;
-{$ENDIF}
+    switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
+    // PageControl.ActiveTab := TTabItem(frmHome.FindComponent('dashbrd'));
   end;
-  shown := true;
 
-  log.d('DEBUD End FormShow()');
+  procedure TfrmHome.btnSCBackClick(Sender: TObject);
+  begin
+    switchTab(PageControl, createPassword);
+    // PageControl.ActiveTab := createPassword;
+  end;
 
-end;
+  procedure TfrmHome.btnANWBackClick(Sender: TObject);
+  begin
+    switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
+    // PageControl.ActiveTab := Settings;
+  end;
 
-procedure TfrmHome.FormVirtualKeyboardHidden(Sender: TObject;
-KeyboardVisible: Boolean; const Bounds: TRect);
-var
-  FService: IFMXVirtualKeyboardService;
-begin
+  // checking rewriting seed
+  procedure TfrmHome.btnConfirmClick(Sender: TObject);
+  var
+    ts: TStringList;
+    i: Integer;
+  begin
+    ts := TStringList.Create(); // SplitString(frmHome.Memo1.Text);
 
-  KeyBoardLayout.Visible := false;
-  frmHome.PageControl.Repaint;
-
-end;
-
-procedure TfrmHome.FormVirtualKeyboardShown(Sender: TObject;
-KeyboardVisible: Boolean; const Bounds: TRect);
-var
-  FService: IFMXVirtualKeyboardService;
-  FToolbarService: IFMXVirtualKeyBoardToolbarService;
-begin
-  { TPlatformServices.Current.SupportsPlatformService( IFMXVirtualKeyBoardToolbarService , IInterface(FToolbarService));
-    if FToolbarservice <> nil then
+    for i := 0 to ConfirmedSeedFlowLayout.ChildrenCount - 1 do
     begin
-    FToolbarService.SetToolbarEnabled(false);
-    end; }
+      ts.Add(TButton(ConfirmedSeedFlowLayout.Children[i]).Text);
+    end;
+    // showmessage( ts.DelimitedText  );
 
-  if focused is TEdit then
-    if (TEdit(focused).name = 'wvAddress') or
-      (TEdit(focused).name = 'receiveAddress') then
+    if LowerCase(fromMnemonic(ts)) = LowerCase(tempMasterSeed) then
     begin
+      tempMasterSeed := ''; // clear     seed can't be saved in var
+      // FormShow(nil);
 
+      userSavedSeed := true;
+      refreshWalletDat();
+
+      switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
+    end
+    else
+    begin
+      popupWindow.Create(dictionary['SeedsArentSame']);
+    end;
+
+    ts.free;
+
+  end;
+
+  procedure TfrmHome.btnCSBackClick(Sender: TObject);
+  begin
+    // switchTab(PageControl, seedGenerated);
+    PageControl.ActiveTab := seedGenerated;
+  end;
+
+  procedure TfrmHome.RestoreOtherOpiotnsButtonClick(Sender: TObject);
+  begin
+
+    if restoreOptionsLayout.Visible = false then
+    begin
+      restoreOptionsLayout.Visible := true;
+      OtherOptionsImage.Bitmap := arrowList.Source[1].MultiResBitmap[0].Bitmap;
+    end
+    else
+    begin
+      restoreOptionsLayout.Visible := false;
+      OtherOptionsImage.Bitmap := arrowList.Source[0].MultiResBitmap[0].Bitmap;
+    end;
+
+  end;
+
+  procedure TfrmHome.switchLegacyp2pkhButtonClick(Sender: TObject);
+  begin
+    receiveAddress.Text := Bitcoin.generatep2pkh
+      (TwalletInfo(CurrentCryptoCurrency).pub,
+      AvailableCoin[TwalletInfo(CurrentCryptoCurrency).coin].p2pk);
+
+    receiveAddress.Text := cutEveryNChar(4, receiveAddress.Text, ' ');
+  end;
+
+  procedure TfrmHome.switchCompatiblep2shButtonClick(Sender: TObject);
+  begin
+    receiveAddress.Text := Bitcoin.generatep2sh
+      (TwalletInfo(CurrentCryptoCurrency).pub,
+      AvailableCoin[TwalletInfo(CurrentCryptoCurrency).coin].p2sh);
+
+    receiveAddress.Text := cutEveryNChar(4, receiveAddress.Text, ' ');
+  end;
+
+  procedure TfrmHome.SwitchSegwitp2wpkhButtonClick(Sender: TObject);
+  begin
+    receiveAddress.Text := Bitcoin.generatep2wpkh
+      (TwalletInfo(CurrentCryptoCurrency).pub);
+
+    receiveAddress.Text := cutEveryNChar(4, receiveAddress.Text, ' ');
+  end;
+
+  procedure TfrmHome.LoadAccountPanelClick(Sender: TObject);
+  begin
+
+    LoadCurrentAccount(TfmxObject(Sender).TagString);
+    AccountsListPanel.Visible := false;
+
+  end;
+
+  procedure TfrmHome.ChangeAccountButtonClick(Sender: TObject);
+  var
+    name: AnsiString;
+    fmxObj: TfmxObject;
+    Panel: TPanel;
+    Button: TButton;
+    AccountName: TLabel;
+    i: Integer;
+    flag: Boolean;
+  begin
+
+    AccountsListPanel.Visible := not AccountsListPanel.Visible;
+
+    for name in AccountsNames do
+    begin
+      flag := true;
+
+      for i := 0 to AccountsListVertScrollBox.Content.ChildrenCount - 1 do
+      begin
+        fmxObj := AccountsListVertScrollBox.Content.Children[i];
+
+        if name = fmxObj.TagString then
+        begin
+          flag := false;
+          break;
+
+        end;
+
+      end;
+
+      if flag then
+      begin
+
+        { Panel := TPanel.Create(frmHome.AccountsListVertScrollBox);
+          Panel.Align := TAlignLayout.Top;
+          Panel.Height := 48;
+          Panel.Visible := true;
+          Panel.Parent := frmHome.AccountsListVertScrollBox;
+          Panel.TagString := name;
+          Panel.OnClick := LoadAccountPanelClick;
+
+          AccountName := TLabel.Create(Panel);
+          AccountName.Parent := Panel;
+          AccountName.Text := name;
+          AccountName.Align := TAlignLayout.Client;
+          AccountName.Visible := true; }
+
+        Button := TButton.Create(frmHome.AccountsListVertScrollBox);
+        Button.Align := TAlignLayout.Top;
+        Button.Height := 48;
+        Button.Visible := true;
+        Button.Parent := frmHome.AccountsListVertScrollBox;
+        Button.TagString := name;
+        Button.OnClick := LoadAccountPanelClick;
+        Button.Text := name;
+
+      end;
+
+    end;
+
+    AccountsListPanel.Height :=
+      min(PageControl.Height - ChangeAccountButton.Height,
+      length(AccountsNames) * 48 + 48);
+
+  end;
+
+  procedure TfrmHome.Button11Click(Sender: TObject);
+  begin
+    switchTab(PageControl, RestoreFromFileTabitem);
+  end;
+
+  procedure TfrmHome.Button2Click(Sender: TObject);
+  var
+    List: TStringList;
+    Stream: TResourceStream;
+    intArr: TIntegerArray;
+    checksum: TIntegerArray;
+    payload: TCharArray;
+    c: Char;
+    i: Integer;
+    adrInfo: TAddressInfo;
+    ac: Account;
+    addr: AnsiString;
+    hex: AnsiString;
+    ans: AnsiString;
+    bigInt: BigInteger;
+  begin
+
+    Edit1.Text := getethValidaddress(Edit4.Text);
+
+  end;
+
+  procedure TfrmHome.Button3Click(Sender: TObject);
+  begin
+    synchronizeCurrencyValue();
+  end;
+
+  procedure TfrmHome.ImportPrivateKey(Sender: TObject);
+  var
+    ts: TStringList;
+    path: AnsiString;
+    out : AnsiString;
+    wd: TwalletInfo;
+    isCompressed: Boolean;
+    Data: WIFAddressData;
+    pub: AnsiString;
+
+    tced: AnsiString;
+    MasterSeed: AnsiString;
+  begin
+
+    tced := TCA(passwordForDecrypt.Text);
+    MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
+    if not isHex(MasterSeed) then
+    begin
+      popupWindow.Create(dictionary['FailedToDecrypt']);
+      // DecryptSeedMessage.Text := 'Failed to decrypt master seed';
       exit;
     end;
 
-  KeyBoardLayout.Height := frmHome.Height - Bounds.Top;
-  KeyBoardLayout.Visible := true;
+    /// ///////////////////////////////////////////
 
-  frmHome.PageControl.Repaint;
-  KeyBoardLayout.Repaint;
-  // showmessage('open');
-
-end;
-
-procedure TfrmHome.gathenerTimer(Sender: TObject);
-var
-  i: Integer;
-  ac: Account;
-begin
-  inc(trngBufferCounter);
-  // colecting random data for seed generator
-  trngBuffer := trngBuffer + GetSTrHashSHA256(inttohex(random($FFFFFFFF), 8) +
-    DateTimeToStr(Now));
-{$IFDEF ANDROID}
-  if MotionSensor.Sensor <> nil then
-    with MotionSensor.Sensor do
+    if isHex(WIFEdit.Text) and (length(WIFEdit.Text) = 64) then
     begin
-      trngBuffer := trngBuffer + floattoStr(Speed);
-      trngBuffer := trngBuffer + floattoStr(AccelerationX);
-      trngBuffer := trngBuffer + floattoStr(AccelerationY);
-      trngBuffer := trngBuffer + floattoStr(AccelerationZ);
-      trngBuffer := trngBuffer + floattoStr(Motion);
-    end;
-  if OrientationSensor.Sensor <> nil then
-    with OrientationSensor.Sensor do
+      out := WIFEdit.Text;
+      if HexPrivKeyCompressedRadioButton.IsChecked then
+        isCompressed := true
+      else if HexPrivKeyNotCompressedRadioButton.IsChecked then
+        isCompressed := false
+      else
+        raise Exception.Create('compression not defined');
+
+    end
+    else
     begin
-
-      trngBuffer := trngBuffer + floattoStr(TiltZ);
-      trngBuffer := trngBuffer + floattoStr(HeadingX);
-      trngBuffer := trngBuffer + floattoStr(HeadingY);
-      trngBuffer := trngBuffer + floattoStr(HeadingZ);
-      trngBuffer := trngBuffer + floattoStr(TiltY);
+      Data := wifToPrivKey(WIFEdit.Text);
+      isCompressed := Data.isCompressed;
+      out := Data.PrivKey;
     end;
-{$ENDIF}
-  GenerateSeedProgressBar.Value := trngBufferCounter div 2;
+    if ImportCoinID <> 4 then
+    begin
+      pub := secp256k1_get_public(out , not isCompressed);
 
-  if trngBufferCounter mod 20 = 0 then
-  begin
-    trngBuffer := GetSTrHashSHA256(trngBuffer);
-    labelForGenerating.Text := trngBuffer;
-  end;
-  if trngBufferCounter mod 200 = 0 then
-  begin
-    // 10sec of gathering random data should be enough to get unique seed
-    trngBuffer := GetSTrHashSHA256(trngBuffer + inttostr(random($FFFFFFFF)));
-    gathener.Enabled := false;
+      wd := TwalletInfo.Create(ImportCoinID, -1, -1,
+        Bitcoin_PublicAddrToWallet(pub, AvailableCoin[ImportCoinID].p2pk),
+        'Imported');
+      wd.pub := pub;
+      wd.EncryptedPrivKey := speckEncrypt((TCA(MasterSeed)), out);
+      wd.isCompressed := isCompressed;
+    end
+    else if ImportCoinID = 4 then
+    begin
+      pub := secp256k1_get_public(out , true);
+      wd := TwalletInfo.Create(ImportCoinID, -1, -1,
+        Ethereum_PublicAddrToWallet(pub), 'Imported');
+      wd.pub := pub;
+      wd.EncryptedPrivKey := speckEncrypt((TCA(MasterSeed)), out);
+      wd.isCompressed := false;
+    end;
+    CurrentAccount.AddCoin(wd);
+    CreatePanel(wd);
 
-    // PageControl.ActiveTab := seedGenerated;
+    MasterSeed := '';
 
-
-    // switchTab(PageControl, seedGenerated);
-    // BackupMemo.Lines.Clear;
-    // .Lines.Add('Master seed:');
-    // BackupMemo.Lines.Add(cutEveryNChar(4 , trngBuffer));
-    // BackupMemo.Lines.Add('Masterseed mnemonic:');
-    // BackupMemo.Lines.Add(toMnemonic(trngBuffer));
-    // for I := 0 to 3 do
-    // BackupMemo.Lines.Add(cutEveryNChar(4 , MidStr(trngBuffer , Low(trngBuffer) + i*16 , 16)));
-
-    // tempMasterSeed := trngBuffer;
-    // temporary variable     tempMasterSeed is reset  after use
-
-    if swForEncryption.IsChecked then
-      TCAIterations := 10000;
-
-    // if not isWalletDatExists then
-    // createWalletDat(trngBuffer, pass.Text);
-
-    CreateNewAccountAndSave(AccountNameEdit.Text, pass.Text, trngBuffer, false);
-
-
-    // FormShow(nil);
-
+    switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
   end;
 
-end;
-
-procedure TfrmHome.Image1Click(Sender: TObject);
-begin
-  btnSyncClick(nil);
-end;
-
-procedure TfrmHome.ImageControl4Click(Sender: TObject);
-{$IFDEF ANDROID}
-var
-  Intent: JIntent;
-{$ENDIF}
-begin
-{$IFDEF ANDROID}
-  Intent := TJIntent.Create;
-  Intent := TJIntent.JavaClass.init(TJSettings.JavaClass.ACTION_SETTINGS);
-  TAndroidHelper.Activity.startActivity(Intent);
-{$ENDIF}
-end;
-
-procedure TfrmHome.ImportPrivateKeyButtonClick(Sender: TObject);
-begin
-  creatImportPrivKeyCoinList();
-
-  HexPrivKeyDefaultRadioButton.IsChecked := true;
-  Layout31.Visible := false;
-  WIFEdit.Text := '';
-
-  switchTab(PageControl, ImportPrivKeyCoinList);
-end;
-
-procedure TfrmHome.LinkLayoutClick(Sender: TObject);
-var
-  wd: TwalletInfo;
-  tt: Token;
-  myURI: AnsiString;
-{$IFDEF ANDROID}
-  Intent: JIntent;
-
-{$ENDIF}
-begin
-  if CurrentCryptoCurrency is TwalletInfo then
+  procedure TfrmHome.IPKBackClick(Sender: TObject);
   begin
-    wd := TwalletInfo(CurrentCryptoCurrency);
-
-    case wd.coin of
-      0:
-        myURI := 'https://www.blockchain.com/btc/tx/';
-      1:
-        myURI := 'http://explorer.litecoin.net/tx/';
-      2:
-        myURI := 'https://chainz.cryptoid.info/dash/tx.dws?';
-      3:
-        myURI := 'https://blockchair.com/bitcoin-cash/transaction/';
-      4:
-        myURI := 'https://etherscan.io/tx/';
-
-    end;
-
-  end
-  else
-    myURI := myURI + 'https://etherscan.io/tx/';
-  // StringReplace(result, '-.', '-0.', [rfReplaceAll])
-
-  myURI := myURI + StringReplace(HistoryTransactionID.Text, ' ', '',
-    [rfReplaceAll]);
-
-{$IFDEF ANDROID}
-  Intent := TJIntent.Create;
-  Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
-  Intent.setData(StrToJURI(myURI));
-  SharedActivity.startActivity(Intent);
-{$ENDIF ANDROID}
-end;
-
-procedure TfrmHome.closeVirtualKeyBoard(Sender: TObject);
-
-var
-  FService: IFMXVirtualKeyboardService;
-begin
-
-  TPlatformServices.Current.SupportsPlatformService(IFMXVirtualKeyboardService,
-    IInterface(FService));
-  if FService <> nil then
-  begin
-    FService.HideVirtualKeyboard();
+    switchTab(PageControl, Settings);
   end;
 
-end;
+  procedure TfrmHome.IPKCLBackButtonClick(Sender: TObject);
+  begin
+    switchTab(PageControl, Settings);
+  end;
 
-procedure TfrmHome.Panel1Click(Sender: TObject);
-var
-  i: Integer;
-begin
+  procedure TfrmHome.btnACBackClick(Sender: TObject);
+  begin
+    switchTab(PageControl, AddNewCoin);
+    // PageControl.ActiveTab := AddNewWallet;
+  end;
 
-end;
+  procedure TfrmHome.OrganizeButtonClick(Sender: TObject);
+  var
+    Panel: TPanel;
+    fmxObj, child, temp: TfmxObject;
 
-procedure TfrmHome.Panel1DragDrop(Sender: TObject; const Data: TDragObject;
-const Point: TPointF);
-begin
-  TPanel(Sender).Position.X := Point.X;
-  TPanel(Sender).Position.Y := Point.Y;
-end;
+    Button: TButton;
 
-procedure TfrmHome.Panel1DragOver(Sender: TObject; const Data: TDragObject;
-const Point: TPointF; var Operation: TDragOperation);
-begin
-  Operation := TDragOperation.Move;
-end;
+  begin
 
-procedure TfrmHome.SwitchVWPrecision(Sender: TObject);
-begin
-  BalancePanel.Visible := not flagWVPrecision;
-  LongBalancePanel.Visible := flagWVPrecision;
-  flagWVPrecision := not flagWVPrecision;
-end;
+    vibrate(100);
+    clearVertScrollBox(OrganizeList);
+    // walletlist.Repaint;
 
-procedure TfrmHome.syncTimerTimer(Sender: TObject);
-begin
-  try
-    btnSync.OnClick(self);
-  except
-    on E: Exception do
+    for fmxObj in WalletList.Content.Children do
     begin
+
+      Panel := TPanel.Create(frmHome.OrganizeList);
+      Panel.Align := TAlignLayout.Top;
+      Panel.Position.Y := TPanel(fmxObj).Position.Y;
+      Panel.Height := 48;
+      Panel.Visible := true;
+      Panel.Parent := frmHome.OrganizeList;
+      Panel.TagObject := fmxObj.TagObject;
+      Panel.Touch.InteractiveGestures := [TInteractiveGesture.LongTap];
+
+{$IFDEF ANDROID}
+      Panel.OnGesture := frmHome.PanelDragStart;
+{$ELSE}
+      Panel.OnMouseDown := frmHome.PanelDragStart;
+{$ENDIF}
       //
+      // Panel.OnGesture := frmHome.StartDragPanel;
+      // Panel.OnDragDrop := PanelDragDrop;
+
+      // Panel.DragMode := TDragMode.dmAutomatic;
+
+      for child in fmxObj.Children do
+      begin
+        if child.TagString <> 'balance' then
+          temp := child.Clone(Panel);
+        temp.Parent := Panel;
+
+      end;
+      Button := TButton.Create(Panel);
+      Button.Width := Panel.Height;
+      Button.Align := TAlignLayout.Mostright;
+      Button.Text := 'X';
+      // Button.Tag := fmxObj.Tag;
+      Button.Visible := true;
+      Button.Parent := Panel;
+      Button.OnClick := hideWallet;
+    end;
+
+    for fmxObj in OrganizeList.Content.Children do
+    begin
+      // TPanel(fmxObj).Position.Y := TPanel(fmxObj.TagObject).Position.Y - 1;
+    end;
+
+    OrganizeList.Repaint;
+
+    switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
+
+    SearchInDashBrdButton.Visible := false;
+    NewCryptoLayout.Visible := false;
+    WalletList.Visible := false;
+    OrganizeList.Visible := true;
+    BackToBalanceViewButton.Visible := true;
+    btnSync.Visible := false;
+  end;
+
+  procedure TfrmHome.ShowHideAdvancedButtonClick(Sender: TObject);
+  begin
+
+    TransactionFeeLayout.Visible := not TransactionFeeLayout.Visible;
+    TransactionFeeLayout.Position.Y := Layout3.Position.Y + 1;
+
+    if TransactionFeeLayout.Visible then
+    begin
+      // ShowHideAdvancedIcon.Bitmap := showHideIcons.Source[1].MultiResBitmap[0].Bitmap;
+      arrowImg.Bitmap := arrowList.Source[1].MultiResBitmap[0].Bitmap;
+      ShowHideAdvancedButton.Text := dictionary['HideAdvanced'];
+    end
+    else
+    begin
+      // ShowHideAdvancedIcon.Bitmap := showHideIcons.Source[0].MultiResBitmap[0].Bitmap;
+      arrowImg.Bitmap := arrowList.Source[0].MultiResBitmap[0].Bitmap;
+      ShowHideAdvancedButton.Text := dictionary['ShowAdvanced'];
     end;
 
   end;
-end;
 
-procedure TfrmHome.SystemTimerTimer(Sender: TObject);
-begin
-{$IFDEF ANDROID}
-  if isScreenOn then
+  procedure TfrmHome.btnSeedGeneratedProceedClick(Sender: TObject);
+  var
+    tempList: TStringList;
+    it: AnsiString;
+    Button: TButton;
+    maks, i: Integer;
   begin
-    OfflineMode(0);
+    maks := 0;
 
-    TLabel(frmHome.FindComponent('HeaderLabel')).Text := 'Online';
-  end
-  else
-  begin
-    OfflineMode(1);
-    TLabel(frmHome.FindComponent('HeaderLabel')).Text := 'Offline';
-  end;
-{$ENDIF}
-end;
+    i := SeedWordsFlowLayout.ComponentCount - 1;
+    while i >= 0 do
+    begin
+      if SeedWordsFlowLayout.Components[i].ClassType = TButton then
+      begin
+        SeedWordsFlowLayout.Components[i].DisposeOf;
+        i := SeedWordsFlowLayout.ComponentCount - 1
+      end
+      else
+        dec(i);
+    end;
 
-procedure TfrmHome.QRChangeTimerTimer(Sender: TObject);
-var
-  Local_Row: Integer;
-  Local_Column: Integer;
-  vPixelB: Integer;
-  vPixelW: Integer;
-  QRCode: TDelphiZXingQRCode;
-  QRCodeBitmap: TBitmapData;
-  Row: Integer;
-  bmp: FMX.Graphics.TBitmap;
-  Column: Integer;
-  ms: TMemoryStream;
-  bmp2: FMX.Graphics.TBitmap;
-  DestW: Int64;
-  DestH: Int64;
-  pixW: Int64;
-  pixH: Int64;
-  j: Integer;
-  currentRow: Int64;
-  k: Int64;
-  currentCol: Int64;
-  X, Y: Integer;
-  rsrc, rDest: TRectF;
-  s: AnsiString;
-begin
+    tempList := SplitString(toMnemonic(tempMasterSeed));
+    // clearVertScrollBox( SeedWordsBox );
+    tempList.Sort;
 
-  vPixelB := TAlphaColorRec.Black;
-  // determine colour to use
-  vPixelW := TAlphaColorRec.white;
-  // determine colour to use
-  QRCode := TDelphiZXingQRCode.Create();
+    for it in tempList do
+    begin
+      Button := TButton.Create(SeedWordsFlowLayout);
+      Button.Text := it;
 
-  try
+      // button.Align := TAlignLayout.Top;
+      Button.Height := 36;
+      Button.Width := Button.Width + length(it) * 3;
+      Button.Visible := true;
+      Button.Parent := SeedWordsFlowLayout;
+      Button.OnClick := frmHome.WordSeedClick;
 
-    bmp := FMX.Graphics.TBitmap.Create();
-    s := {$IFDEF ANDROID}'  ' +
-{$ENDIF}AvailableCoin[CurrentCoin.coin].name + ':' +
-      StringReplace(receiveAddress.Text, ' ', '', [rfReplaceAll]) + '?amount=' +
-      ReceiveValue.Text + '&message=hodler';
-
-    QRCode.Data := s;
-
-    QRCode.Encoding := TQRCodeEncoding(0);
-    QRCode.QuietZone := 6;
-
-    bmp.SetSize(QRCode.Rows, QRCode.Columns);
-
-    if bmp.Map(TMapAccess.maReadWrite, QRCodeBitmap) then
+    end;
+    for i := 0 to SeedWordsFlowLayout.ComponentCount - 1 do
     begin
 
-      for Y := 0 to QRCode.Rows - 1 do
+      if SeedWordsFlowLayout.Components[i] is TButton then
       begin
-        for X := 0 to QRCode.Columns - 1 do
-        begin
+        if maks < (TButton(SeedWordsFlowLayout.Components[i]).Position.Y +
+          TButton(SeedWordsFlowLayout.Components[i]).Height) then
+          maks := ceil(TButton(SeedWordsFlowLayout.Components[i]).Position.Y +
+            TButton(SeedWordsFlowLayout.Components[i]).Height);
+      end;
 
-          if (QRCode.IsBlack[Y, X]) then
+    end;
+
+    SeedWordsFlowLayout.Height := maks;
+    ConfirmedSeedFlowLayout.Height := 1;
+    // Memo1.Text := '';
+
+    tempList.free;
+    switchTab(PageControl, checkSeed);
+    // PageControl.ActiveTab := checkSeed;
+  end;
+
+  procedure TfrmHome.btnOKAddNewCoinSettingsClick(Sender: TObject);
+  var
+    MasterSeed, tced: AnsiString;
+    walletInfo: TwalletInfo;
+    arr: array of Integer;
+    wd: TwalletInfo;
+    i: Integer;
+    newID: Integer;
+  begin
+    i := 0;
+
+    tced := TCA(NewCoinDescriptionPassEdit.Text);
+    MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
+    if not isHex(MasterSeed) then
+    begin
+      DecryptSeedMessage.Text := dictionary['FailedToDecrypt'];
+      exit;
+    end;
+
+    SetLength(arr, CurrentAccount.countWalletBy(newcoinID));
+    for wd in CurrentAccount.myCoins do
+    begin
+      if wd.coin = newcoinID then
+      begin
+        arr[i] := wd.X;
+        inc(i);
+      end;
+    end;
+    newID := i;
+    for i := 0 to length(arr) - 1 do
+    begin
+      if arr[i] <> i then
+      begin
+        newID := i;
+        break;
+      end;
+    end;
+
+    walletInfo := coindata.createCoin(newcoinID, newID, 0, MasterSeed,
+      NewCoinDescriptionEdit.Text);
+
+    CurrentAccount.AddCoin(walletInfo);
+    CreatePanel(walletInfo);
+
+    switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
+  end;
+
+  procedure TfrmHome.btnChangeDescriptionClick(Sender: TObject);
+  begin
+    ChangeDescryptionEdit.Text := CurrentCryptoCurrency.description;
+    switchTab(PageControl, ChangeDescryptionScreen);
+    // PageControl.ActiveTab := ChangeDescryptionScreen;
+  end;
+
+  procedure TfrmHome.Button8Click(Sender: TObject);
+  begin
+    switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
+    // switchTab(PageControl, );
+  end;
+
+  procedure TfrmHome.btnRestoreWalletClick(Sender: TObject);
+  begin
+    { pass.Text := '';
+      retypePass.Text := '';
+      btnCreateWallet.Text := dictionary['StartRecoveringWallet'];
+      procCreateWallet := btnImpSeedClick;
+      switchTab(PageControl, createPassword); }
+
+    switchTab(PageControl, RestoreOptions);
+
+  end;
+
+  procedure TfrmHome.btnRFFBackClick(Sender: TObject);
+  begin
+    switchTab(PageControl, RestoreOptions);
+  end;
+
+  procedure TfrmHome.btnCreateNewWalletClick(Sender: TObject);
+  begin
+
+    pass.Text := '';
+    retypePass.Text := '';
+    btnCreateWallet.Text := dictionary['OpenNewWallet'];
+    procCreateWallet := btnGenSeedClick;
+    switchTab(PageControl, createPassword);
+
+  end;
+
+  procedure TfrmHome.btnCreateWalletClick(Sender: TObject);
+  var
+    alphaStr: AnsiString;
+    c: Char;
+    num, low, up: Boolean;
+  begin
+    num := false;
+    low := false;
+    up := false;
+    if pass.Text <> retypePass.Text then
+    begin
+      passwordMessage.Text := dictionary['PasswordNotMatch'];
+      exit;
+    end;
+    if pass.Text.length < 8 then
+    begin
+
+      popupWindow.Create(dictionary['PasswordShort']);
+      exit();
+
+    end
+    else
+    begin
+
+      for c in pass.Text do
+      begin
+        if isNumber(c) then
+          num := true;
+        if IsUpper(c) then
+          up := true;
+        if IsLower(c) then
+          low := true;
+      end;
+      if not(num and up and low) then
+      begin
+        popupWindow.Create(dictionary['PasswordShort']);
+        exit();
+
+      end;
+
+    end;
+
+    if AccountNameEdit.Text = '' then
+    begin
+      popupWindow.Create(' Your wallet must have name ');
+      exit();
+    end;
+
+    alphaStr := dictionary['AlphaVersionWarning'];
+
+    popupWindowYesNo.Create(
+      procedure
+      begin
+
+        TThread.CreateAnonymousThread(
+          procedure
           begin
-            QRCodeBitmap.SetPixel(Y, X, vPixelB);
+            TThread.Synchronize(nil,
+              procedure
+              begin
+
+                procCreateWallet(nil);
+
+              end);
+          end).Start;
+
+      end,
+      procedure
+      begin
+      end, alphaStr);
+
+  end;
+
+  procedure TfrmHome.btnChangeDescryptionOKClick(Sender: TObject);
+  begin
+    CurrentCryptoCurrency.description := ChangeDescryptionEdit.Text;
+    // refreshWalletDat();
+    // repaintWalletList;
+    // saveTokensToFile();
+    CurrentAccount.SaveFiles();
+
+    switchTab(PageControl, walletView);
+
+    // PageControl.ActiveTab := walletView;
+  end;
+
+  procedure TfrmHome.btnCTBackClick(Sender: TObject);
+  begin
+    switchTab(PageControl, AddNewToken);
+    // PageControl.ActiveTab := AddNewToken;
+  end;
+
+  procedure TfrmHome.btnExportPrivKeyClick(Sender: TObject);
+  begin
+
+    decryptSeedBackTabItem := PageControl.ActiveTab;
+    switchTab(PageControl, descryptSeed);
+    // PageControl.ActiveTab := descryptSeed;
+
+    btnDSBack.OnClick := backBtnDecryptSeed;
+
+    btnDecryptSeed.OnClick := privateKeyPasswordCheck;
+
+  end;
+
+  procedure TfrmHome.btnANTBackClick(Sender: TObject);
+  begin
+    // PageControl.ActiveTab := Settings;
+    switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
+  end;
+
+  procedure TfrmHome.btnEKSBackClick(Sender: TObject);
+  begin
+
+    WVTabControl.ActiveTab := WVBalance;
+    // pageControl.ActiveTab := walletView;
+    switchTab(PageControl, walletView);
+  end;
+
+  procedure TfrmHome.btnAddManuallyClick(Sender: TObject);
+  begin
+    switchTab(PageControl, ManuallyToken);
+    // PageControl.ActiveTab := ManuallyToken;
+  end;
+
+  procedure TfrmHome.btnMTBackClick(Sender: TObject);
+  begin
+    switchTab(PageControl, ChoseToken);
+    // PageControl.ActiveTab := ChoseToken;
+  end;
+
+  procedure TfrmHome.btnSyncClick(Sender: TObject);
+  var
+
+    aTask: ITask;
+  begin
+    if (SyncBalanceThr <> nil) then
+    begin
+      if SyncBalanceThr.Finished then
+      begin
+
+        SyncBalanceThr.DisposeOf;
+        SyncBalanceThr := nil;
+        SyncBalanceThr := SynchronizeBalanceThread.Create();
+
+      end
+      else if SyncBalanceThr.TimeFromStart() > 1.0 / 1040.0 then
+      begin
+
+        SyncBalanceThr.Terminate;
+        SyncBalanceThr.WaitFor;
+        SyncBalanceThr.DisposeOf;
+        SyncBalanceThr := nil;
+        SyncBalanceThr := SynchronizeBalanceThread.Create();
+
+      end;
+    end;
+
+    if SyncHistoryThr <> nil then
+    begin
+
+      if SyncHistoryThr.Finished then
+      begin
+        SyncHistoryThr.DisposeOf;
+        SyncHistoryThr := nil;
+        SyncHistoryThr := SynchronizeHistoryThread.Create();
+      end
+      else if SyncHistoryThr.TimeFromStart() > 1.0 / 1040.0 then
+      begin
+
+        SyncHistoryThr.Terminate;
+        SyncHistoryThr.WaitFor;
+        SyncHistoryThr.DisposeOf;
+        SyncHistoryThr := nil;
+        SyncHistoryThr := SynchronizeHistoryThread.Create();
+
+      end;
+
+    end;
+
+  end;
+
+  // Show available ETH wallet during adding new Token
+  procedure TfrmHome.btnAddNewTokenClick(Sender: TObject);
+  var
+    i: Integer;
+    Panel: TPanel;
+    adrLabel: TLabel;
+    balLabel: TLabel;
+    coinIMG: TImage;
+    wd: TwalletInfo;
+  begin
+
+    clearVertScrollBox(frmHome.AvailableCoinsBox);
+
+    for i := 0 to length(CurrentAccount.myCoins) - 1 do
+    begin
+      if CurrentAccount.myCoins[i].coin = 4 then // if ETH
+      begin
+
+        with frmHome.AvailableCoinsBox do
+        begin
+          wd := CurrentAccount.myCoins[i];
+          Panel := TPanel.Create(frmHome.AvailableCoinsBox);
+          Panel.Align := Panel.Align.alTop;
+          Panel.Height := 48;
+          Panel.Visible := true;
+          Panel.Parent := frmHome.AvailableCoinsBox;
+          Panel.TagString := CurrentAccount.myCoins[i].addr;
+          Panel.OnClick := frmHome.addToken;
+
+          adrLabel := TLabel.Create(frmHome.AvailableCoinsBox);
+          adrLabel.StyledSettings := adrLabel.StyledSettings -
+            [TStyledSetting.Size];
+          adrLabel.TextSettings.Font.Size := dashBoardFontSize;
+
+          adrLabel.Parent := Panel;
+          adrLabel.TagString := CurrentAccount.myCoins[i].addr;
+
+          if wd.description = '' then
+          begin
+            adrLabel.Text := AvailableCoin[wd.coin].displayName + ' (' +
+              AvailableCoin[wd.coin].shortcut + ')';
           end
           else
           begin
-            QRCodeBitmap.SetPixel(Y, X, vPixelW);
-          end;
 
+            adrLabel.Text := wd.description;
+          end;
+          adrLabel.Visible := true;
+          adrLabel.Width := 500;
+          adrLabel.Height := 48;
+          adrLabel.Position.X := 52;
+          adrLabel.Position.Y := 0;
+          adrLabel.OnClick := frmHome.addToken;
+
+          balLabel := TLabel.Create(frmHome.WalletList);
+          balLabel.StyledSettings := balLabel.StyledSettings -
+            [TStyledSetting.Size];
+          balLabel.TextSettings.Font.Size := 12;
+          balLabel.Parent := Panel;
+          balLabel.TagString := CurrentAccount.myCoins[i].addr;
+          balLabel.Text := CurrentAccount.myCoins[i].addr;
+
+          balLabel.TextSettings.HorzAlign := TTextAlign.center;
+          balLabel.Visible := true;
+          balLabel.Width := 500;
+          balLabel.Height := 14;
+          balLabel.Align := TAlignLayout.Bottom;
+          balLabel.OnClick := frmHome.addToken;
+
+          coinIMG := TImage.Create(frmHome.AvailableCoinsBox);
+          coinIMG.Parent := Panel;
+
+          coinIMG.Bitmap := getCoinIcon(wd.coin);
+
+          coinIMG.Height := 32.0;
+          coinIMG.Width := 50;
+          coinIMG.Position.X := 4;
+          coinIMG.Position.Y := 8;
+          coinIMG.OnClick := frmHome.addToken;
+          coinIMG.TagString := CurrentAccount.myCoins[i].addr;
         end;
+
       end;
 
-      // QRCodeBitmap.
-      bmp.free;
-      bmp := BitmapDataToScaledBitmap(QRCodeBitmap, 6);
-      bmp.Unmap(QRCodeBitmap);
     end;
-  finally
-    QRCode.free;
+
+    // PageControl.ActiveTab := AddNewToken;
+    switchTab(PageControl, AddNewToken);
   end;
 
-  QRCodeImage.Bitmap := bmp;
-
-  try
-    // if ms <> nil then
-    // ms.Free;
-    if bmp <> nil then
-      bmp.free;
-    // if bmp2 <> nil then
-    // bmp2.Free;
-  except
-
-  end;
-
-  if ReceiveValue.IsFocused then
+  procedure TfrmHome.btnAddNewCoinClick(Sender: TObject);
   begin
-    if ReceiveValue.Text = '' then
-    begin
-      ReceiveAmountRealCurrency.Text := '0.00';
-    end
-    else
-    begin
-      ReceiveAmountRealCurrency.Text :=
-        floatToStrF((strToFloat(ReceiveValue.Text) * CurrencyConverter.calculate
-        (CurrentCryptoCurrency.rate)), ffFixed, 18, 2);
-    end;
-
+    createAddWalletView();
+    // PageControl.ActiveTab := AddNewWallet;
+    switchTab(PageControl, AddNewCoin);
   end;
 
-end;
+  procedure TfrmHome.btnBackClick(Sender: TObject);
+  begin
+    CurrentCryptoCurrency := nil;
+    CurrentCoin := nil;
+    switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
+    // PageControl.ActiveTab := TTabItem(frmHome.FindComponent('dashbrd'));
+  end;
 
-procedure TfrmHome.receiveAddressChange(Sender: TObject);
-begin
-  //
-  QRChangeTimerTimer(nil);
-end;
-
-procedure TfrmHome.ReceiveAmountRealCurrencyChange(Sender: TObject);
-begin
-  ReceiveAmountRealCurrency.Text :=
-    StringReplace(ReceiveAmountRealCurrency.Text, ',', '.', [rfReplaceAll]);
-end;
-
-procedure TfrmHome.ReceiveAmountRealCurrencyClick(Sender: TObject);
-begin
-  if strToFloatDef(ReceiveAmountRealCurrency.Text, 0) = 0 then
-    ReceiveAmountRealCurrency.Text := '';
-end;
-
-procedure TfrmHome.ReceiveAmountRealCurrencyExit(Sender: TObject);
-begin
-  if ReceiveAmountRealCurrency.Text = '' then
-    ReceiveAmountRealCurrency.Text := '0.00';
-end;
-
-procedure TfrmHome.ReceiveReatToCoin(Sender: TObject);
-begin
-  if ReceiveAmountRealCurrency.IsFocused then
+  procedure TfrmHome.btnQRBackClick(Sender: TObject);
   begin
 
-    if ReceiveAmountRealCurrency.Text = '' then
-    begin
-      ReceiveValue.Text := BigIntegertoFloatStr(0,
-        CurrentCryptoCurrency.decimals);
-    end
+    CameraComponent1.Active := false;
+    switchTab(PageControl, cameraBackTabItem);
+    // PageControl.ActiveTab := cameraBackTabItem;
+  end;
+
+  procedure TfrmHome.btnSendClick(Sender: TObject);
+  var
+    amount, fee: BigInteger;
+    Address: AnsiString;
+  begin
+
+    if not isEthereum then
+      fee := StrFloatToBigInteger(wvFee.Text,
+        AvailableCoin[CurrentCoin.coin].decimals)
     else
     begin
-      ReceiveValue.Text :=
-        floatToStrF((strToFloatDef(ReceiveAmountRealCurrency.Text,
-        0) / CurrencyConverter.calculate(CurrentCryptoCurrency.rate)), ffFixed,
-        18, CurrentCryptoCurrency.decimals);
+      if isTokenTransfer then
+        fee := BigInteger.Parse(wvFee.Text) * 66666
+      else
+        fee := BigInteger.Parse(wvFee.Text) * 21000;
     end;
 
-  end;
-end;
-
-procedure TfrmHome.ReceiveValueChange(Sender: TObject);
-begin
-  ReceiveValue.Text := StringReplace(ReceiveValue.Text, ',', '.',
-    [rfReplaceAll]);
-end;
-
-procedure TfrmHome.ReceiveValueClick(Sender: TObject);
-begin
-  if strToFloatDef(ReceiveValue.Text, 0) = 0 then
-    ReceiveValue.Text := '';
-end;
-
-procedure TfrmHome.SaveNewPrivateKeyButtonClick(Sender: TObject);
-begin
-
-  try
-    if isHex(WIFEdit.Text) then
+    if (not isTokenTransfer) then
     begin
-      if (length(WIFEdit.Text) <> 64) then
+      amount := StrFloatToBigInteger(wvAmount.Text,
+        AvailableCoin[CurrentCoin.coin].decimals);
+      if FeeFromAmountSwitch.IsChecked then
       begin
-        popupWindow.Create('Key too short');
+        amount := amount - fee;
+      end;
+
+    end;
+
+    if (isEthereum) and (isTokenTransfer) then
+      amount := StrFloatToBigInteger(wvAmount.Text,
+        CurrentCryptoCurrency.decimals);
+
+    if WVsendTO.Text = '' then
+    begin
+      popupWindow.Create(dictionary['AddressFieldEmpty']);
+      exit;
+    end;
+
+    if isBech32Address(WVsendTO.Text) and (CurrentCoin.coin <> 0) then
+    begin
+      popupWindow.Create(dictionary['Bech32Unsupported']);
+      exit;
+    end;
+
+    if not isValidForCoin(CurrentCoin.coin, WVsendTO.Text) then
+    begin
+
+      popupWindow.Create(dictionary['WrongAddress']);
+      exit;
+    end;
+    if { (not isEthereum) and } (not isTokenTransfer) then
+      if amount + fee > (CurrentCoin.confirmed) then
+      begin
+        popupWindow.Create(dictionary['AmountExceed']);
         exit;
       end;
 
-      if HexPrivKeyCompressedRadioButton.IsChecked then
+    Address := WVsendTO.Text;
+    if (CurrentCryptoCurrency is TwalletInfo) and
+      (TwalletInfo(CurrentCryptoCurrency).coin = 3) and isCashAddress(Address)
+    then
+    begin
+      if isValidBCHCashAddress(Address) then
       begin
-        LoadingKeyDataAniIndicator.Enabled := false;
-        LoadingKeyDataAniIndicator.Visible := false;
+        Address := BCHCashAddrToLegacyAddr(Address);
       end
-      else if HexPrivKeyNotCompressedRadioButton.IsChecked then
+      else
       begin
-        LoadingKeyDataAniIndicator.Enabled := false;
-        LoadingKeyDataAniIndicator.Visible := false;
+        popupWindow.Create(dictionary['WrongAddress']);
+        exit;
+      end;
+    end;
+
+    if CurrentCoin.coin = 4 then
+    begin
+      if not isValidEthAddress(CurrentCoin.addr) then
+      begin
+        popupWindowYesNo.Create(
+          procedure // yes
+          begin
+
+          end,
+          procedure
+          begin // no
+
+            TThread.CreateAnonymousThread(
+              procedure
+              begin
+                TThread.Synchronize(nil,
+                  procedure
+                  begin
+                    if ValidateBitcoinAddress(Address) then
+                    begin
+                      btnDecryptSeed.OnClick := TrySendTX;
+
+                      decryptSeedBackTabItem := PageControl.ActiveTab;
+                      // PageControl.ActiveTab := descryptSeed;
+                      btnDSBack.OnClick := backBtnDecryptSeed;
+                      switchTab(PageControl, descryptSeed);
+
+                    end;
+                  end);
+
+              end).Start;
+
+          end, 'This address may be incorrect. Do you want to check again?');
+        exit;
+      end;
+    end;
+
+    if ValidateBitcoinAddress(Address) then
+    begin
+      btnDecryptSeed.OnClick := TrySendTX;
+
+      decryptSeedBackTabItem := PageControl.ActiveTab;
+      // PageControl.ActiveTab := descryptSeed;
+      switchTab(PageControl, descryptSeed);
+      btnDSBack.OnClick := backBtnDecryptSeed;
+
+    end;
+  end;
+
+  procedure TfrmHome.btnOCRClick(Sender: TObject);
+  begin
+
+    // .ActiveTab := ReadOCR;
+    switchTab(PageControl, ReadOCR);
+    CameraComponent1.Active := false;
+    CameraComponent1.Kind := FMX.Media.TCameraKind.BackCamera;
+    CameraComponent1.Quality := FMX.Media.TVideoCaptureQuality.HighQuality;
+    CameraComponent1.FocusMode := FMX.Media.TFocusMode.ContinuousAutoFocus;
+    CameraComponent1.Active := true;
+
+  end;
+
+  procedure TfrmHome.btnReadOCRClick(Sender: TObject);
+  var
+    str: AnsiString;
+  begin
+    CameraComponent1.SampleBufferToBitmap(imgCameraOCR.Bitmap, true);
+    str := misc.getStringFromImage(imgCameraOCR.Bitmap);
+    str := misc.findAddress(str);
+
+    if str = 'Not found' then
+    begin
+
+      frmHome.btnReadOCR.Text := dictionary['ReadAgainOCR'];
+
+    end
+    else
+    begin
+
+      if not ValidateBitcoinAddress(str) = true then
+      begin
+        // SendMessage.Text :=
+        popupWindowOK.Create(
+          procedure
+          begin
+          end, dictionary['OCRInaccurate']);
+      end;
+
+      frmHome.WVsendTO.Text := str;
+
+      PageControl.ActiveTab := walletView;
+      switchTab(PageControl, walletView);
+      WVTabControl.ActiveTab := WVSend;
+
+    end;
+
+  end;
+
+  procedure TfrmHome.btnSSysClick(Sender: TObject);
+{$IFDEF ANDROID}
+  var
+    Intent: JIntent;
+{$ENDIF}
+  begin
+{$IFDEF ANDROID}
+    Intent := TJIntent.Create;
+    Intent := TJIntent.JavaClass.init(TJSettings.JavaClass.ACTION_SETTINGS);
+    TAndroidHelper.Activity.startActivity(Intent);
+{$ENDIF}
+  end;
+
+  procedure TfrmHome.CameraComponent1SampleBufferReady(Sender: TObject;
+  const ATime: TMediaTime);
+  begin
+    TThread.Synchronize(TThread.CurrentThread, GetImage);
+  end;
+{$IFDEF VANDROID}
+
+  function FindQRRect(Bitmap: TImage): TRectF;
+{$ELSE}
+
+  function FindQRRect(Bitmap: TBitmap): TRectF;
+{$ENDIF}
+  var
+    shorter: Integer;
+    a: Integer;
+  begin
+    if Bitmap.Width > Bitmap.Height then
+      shorter := ceil(Bitmap.Height)
+    else
+      shorter := ceil(Bitmap.Width);
+
+    a := (shorter - ceil(shorter * 0.4));
+    if shorter = Bitmap.Width then
+    begin
+
+      result.Left := ceil(shorter * 0.2);
+      result.Right := shorter - ceil(shorter * 0.2);
+      result.Top := (Bitmap.Height - a) / 2;
+      result.Bottom := Bitmap.Height - ((Bitmap.Height - a) / 2);
+    end
+    else
+    begin
+      result.Top := ceil(shorter * 0.2);
+      result.Bottom := shorter - ceil(shorter * 0.2);
+      result.Left := (Bitmap.Width - a) / 2;
+      result.Right := Bitmap.Width - ((Bitmap.Width - a) / 2);
+
+    end;
+
+  end;
+
+  procedure TfrmHome.GetImage;
+  var
+    scanBitmap: TBitmap;
+    tempBitmap: TBitmap;
+    ReadResult: TReadResult;
+    QRRect: TRectF;
+    ts: TStringList;
+    scale: double;
+    ac: Account;
+
+  begin
+    if PageControl.ActiveTab = ReadOCR then
+    begin
+      CameraComponent1.SampleBufferToBitmap(imgCameraOCR.Bitmap, true);
+      exit;
+    end;
+    CameraComponent1.SampleBufferToBitmap(imgCamera.Bitmap, true);
+    // {$IFDEF VANDROID}
+    // QRRect := FindQRRect(imgCamera);
+    // {$ELSE}
+    // QRRect := FindQRRect(imgCamera.Bitmap);
+    // {$ENDIF}
+    scanBitmap := TBitmap.Create();
+    scanBitmap.Assign(imgCamera.Bitmap);
+
+    // scanBitmap := imgCamera.Bitmap;
+
+    ReadResult := nil;
+
+    TThread.CreateAnonymousThread(
+      procedure
+      begin
+
+        try
+          FScanInProgress := true;
+          try
+            ReadResult := FScanManager.Scan(scanBitmap);
+          except
+            on E: Exception do
+            begin
+              TThread.Synchronize(nil,
+                procedure
+                begin
+                  // lblScanStatus.Text := E.Message;
+                end);
+
+              exit;
+            end;
+          end;
+
+          TThread.Synchronize(nil,
+            procedure
+            var
+              i: Integer;
+
+            var
+              wd: TwalletInfo;
+            begin
+              if (ReadResult <> nil) then
+              begin
+                // if ValidateBitcoinAddress(Trim(ReadResult.Text)) then
+                // begin
+                // WVsendTO.Text := Trim(ReadResult.Text);
+                // showmessage(ReadResult.text);
+
+                { if currentWallet < 0 then
+                  begin
+                  btnQRBack.OnClick(nil);
+                  ShowMSG(PageControl.ActiveTab,
+                  'Address ' + Trim(ReadResult.Text) +
+                  ' copied to transaction window');                 //   Nie ma przycisku QR w widoku głównym
+                  btnSMVNo.Visible := false;
+                  btnSMVYes.Text := 'OK';
+                  btnSMVYes.Align := btnSMVYes.Align.alCenter;
+                  end
+                  else
+                  begin }
+                // btnQRBack.OnClick(nil);
+                if cameraBackTabItem = walletView then
+                begin
+
+                  ts := parseQRCode(ReadResult.Text);
+
+                  if ts.Count = 1 then
+                  begin
+                    WVsendTO.Text := ts.Strings[0];
+                  end
+                  else
+                  begin
+                    if ts.Strings[0] <> AvailableCoin[CurrentCoin.coin].name
+                    then
+                    begin
+                      popupWindow.Create(dictionary['QRCodeFor'] + ' ' +
+                        ts.Strings[0]);
+                      ts.free;
+                      exit;
+                    end;
+                    WVsendTO.Text := ts.Strings[1];
+                    for i := 2 to ts.Count - 2 do
+                    begin
+                      if ts.Strings[i] = 'amount' then
+                        wvAmount.Text := ts.Strings[i + 1];
+                    end;
+                  end;
+                  ts.free;
+
+                  switchTab(PageControl, cameraBackTabItem);
+                  // PageControl.ActiveTab := cameraBackTabItem;
+                end
+                else if cameraBackTabItem = ManuallyToken then
+                begin
+                  ContractAddress.Text := Trim(ReadResult.Text);
+                  // PageControl.ActiveTab := cameraBackTabItem;
+                  switchTab(PageControl, cameraBackTabItem);
+                end
+                else if cameraBackTabItem = checkSeed then
+                begin
+                  if tempMasterSeed = Trim(ReadResult.Text) then
+                  begin
+
+                    tempMasterSeed := '';
+
+                    userSavedSeed := true;
+                    refreshWalletDat();
+
+                    switchTab(PageControl,
+                      TTabItem(frmHome.FindComponent('dashbrd')));
+
+                  end
+                  else
+                  begin
+                    switchTab(PageControl,
+                      TTabItem(frmHome.FindComponent('dashbrd')));
+                    // popupWindow.Create( 'Wrong QR code' );
+                  end;
+
+                end
+                else if (cameraBackTabItem = RestoreOptions) or
+                  (cameraBackTabItem = AddAccount) then
+                begin
+
+                  if QRFind = QRSearchEncryted then
+                  begin
+
+                    QRFind := '';
+
+                    tempQRFindEncryptedSeed := Trim(ReadResult.Text);
+
+                    RestoreWalletOKButton.OnClick := RestoreFromEncryptedQR;
+                    decryptSeedBackTabItem := PageControl.ActiveTab;
+                    PageControl.ActiveTab := RestoreWalletWithPassword;
+                    RWWPBackButton.OnClick := backBtnDecryptSeed;
+                    RestoreNameEdit.Text := '';
+                    RestorePasswordEdit.Text := '';
+
+                    switchTab(PageControl, RestoreWalletWithPassword);
+
+                  end;
+
+                end
+                else if cameraBackTabItem = createPassword then
+                begin
+
+                  if (QRFind = QRSearchDecryted) then
+                  begin
+
+                    QRFind := '';
+
+                    CreateNewAccountAndSave(AccountNameEdit.Text, pass.Text,
+                      Trim(ReadResult.Text), true);
+
+                  end;
+
+                end
+                else if cameraBackTabItem = ImportPrivKeyTabItem then
+                begin
+                  WIFEdit.Text := ReadResult.Text;
+                  switchTab(PageControl, ImportPrivKeyTabItem);
+                end
+                else if cameraBackTabItem = TTabItem(frmHome.FindComponent
+                  ('dashbrd')) then
+                begin
+                  // PageControl.ActiveTab := cameraBackTabItem;
+                  switchTab(PageControl, cameraBackTabItem);
+                end;
+
+                CameraComponent1.Active := false;
+
+                // PageControl.ActiveTab := walletView;
+                // switchTab(PageControl, walletView);
+                // WVTabControl.ActiveTab := WVSend;
+
+                // end;
+                // end
+                { else
+                  begin
+
+
+                  ShowMSG(PageControl.ActiveTab, 'This is not a valid address:' +
+                  #13#10 + Copy(Trim(ReadResult.Text), 0, 42));
+                  btnSMVNo.Visible := false;
+                  btnSMVYes.Text := 'OK';
+                  btnSMVYes.Align := btnSMVYes.Align.alCenter;
+                  end; }
+              end;
+            end);
+
+        finally
+          ReadResult.free;
+          scanBitmap.free;
+          FScanInProgress := false;
+        end;
+        // CameraComponent1.FlashMode.fmFlashoff;
+
+      end).Start;
+
+  end;
+
+  procedure TfrmHome.RestoreFromEncryptedQR(Sender: TObject);
+  var
+    MasterSeed, tced: AnsiString;
+    ac: Account;
+  begin
+
+    tced := TCA(RestorePasswordEdit.Text);
+    MasterSeed := SpeckDecrypt(tced, tempQRFindEncryptedSeed);
+    if not isHex(MasterSeed) then
+    begin
+      popupWindow.Create(dictionary['FailedToDecrypt']);
+      exit;
+    end;
+
+    CreateNewAccountAndSave(RestoreNameEdit.Text, RestorePasswordEdit.Text,
+      MasterSeed, true);
+
+    tced := '';
+    MasterSeed := '';
+
+  end;
+
+  procedure TfrmHome.FeeSpinChange(Sender: TObject);
+  begin
+    if not isEthereum then
+    begin
+      wvFee.Text := CurrentCoin.efee[round(FeeSpin.Value) - 1];
+      lblBlockInfo.Text := dictionary['ConfirmInNext'] + ' ' +
+        inttostr(round(FeeSpin.Value)) + ' ' + dictionary['Blocks'];
+    end
+    else
+      FeeSpin.Value := 1.0;
+  end;
+
+  procedure TfrmHome.FeeToUSDUpdate(Sender: TObject);
+  begin
+    if isTokenTransfer then
+    begin
+      lblFeeHeader.Text := dictionary['GasPriceWEI'] + ': ';
+      lblFee.Text := wvFee.Text + ' ' +
+        floatToStrF(CurrencyConverter.calculate(strToFloatDef(wvFee.Text,
+        0) * 66666 * CurrentCryptoCurrency.rate / (1000000.0 * 1000000.0 *
+        1000000.0)), ffFixed, 18, 2) + ' ' + CurrencyConverter.symbol;
+    end
+    else if isEthereum then
+    begin
+      lblFeeHeader.Text := dictionary['GasPriceWEI'] + ': ';
+      lblFee.Text := wvFee.Text + ' ' + AvailableCoin[CurrentCoin.coin].shortcut
+        + ' = ' + floatToStrF
+        (CurrencyConverter.calculate(strToFloatDef(wvFee.Text,
+        0) * CurrentCoin.rate * 21000 / (1000000.0 * 1000000.0 * 1000000.0)),
+        ffFixed, 18, 2) + ' ' + CurrencyConverter.symbol;
+    end
+    else
+    begin
+      lblFeeHeader.Text := dictionary['TransactionFee'] + ': ';
+      lblFee.Text := wvFee.Text + ' ' + AvailableCoin[CurrentCoin.coin].shortcut
+        + ' = ' + floatToStrF
+        (CurrencyConverter.calculate(strToFloatDef(wvFee.Text,
+        0) * CurrentCoin.rate), ffFixed, 18, 2) + ' ' +
+        CurrencyConverter.symbol;
+    end;
+  end;
+
+  procedure TfrmHome.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+  begin
+{$IFDEF WIN32 or WIN64}
+    stylo.Destroy;
+
+{$ENDIF}
+  end;
+
+  procedure TfrmHome.FormCreate(Sender: TObject);
+  var
+    i: Integer;
+    symbol: AnsiString;
+
+  begin
+    DebugBtn.Visible := false;
+    log.d('DEBUD Start FormCreate()');
+    loadDictionary(loadLanguageFile('ENG'));
+    refreshComponentText();
+    log.d('DEBUD Language Loaded');
+    Randomize;
+
+    saveSeedInfoShowed := false;
+    FormatSettings.DecimalSeparator := '.';
+    shown := false;
+    CurrentCoin := nil;
+    CurrentCryptoCurrency := nil;
+    QRChangeTimer.Enabled := true;
+    TCAIterations := 5000;
+
+    FFrameTake := 0;
+    log.d('DEBUD Style Loaded');
+    stylo := TStyleManager.Create;
+    stylo.TrySetStyleFromResource('RT_DARK');
+    // CameraComponent1.Quality := FMX.Media.TVideoCaptureQuality.MediumQuality;
+    FScanManager := TScanManager.Create(TBarcodeFormat.QR_CODE, nil);
+    duringSync := false;
+
+    // SyncBalanceThr := SynchronizeBalanceThread.Create();
+    // SyncHistoryThr := SynchronizeHistoryThread.Create();
+
+    WVsendTO.Caret.Width := 2;
+    LanguageBox.ItemIndex := 0;
+    log.d('DEBUD Start Load Currenty Converter');
+
+    CurrencyConverter := tCurrencyConverter.Create();
+    if FileExists(System.IOUtils.TPath.Combine
+      (System.IOUtils.TPath.GetDocumentsPath, 'hodler.fiat.dat')) then
+      LoadCurrencyFiatFromFile();
+    log.d('DEBUD Parse fiat.dat');
+    for symbol in CurrencyConverter.availableCurrency.Keys do
+    begin
+      CurrencyBox.Items.Add(symbol);
+    end;
+    log.d('DEBUD Refresh Currency Value');
+
+    CurrencyBox.ItemIndex := CurrencyBox.Items.IndexOf('USD');
+    refreshCurrencyValue;
+
+    // CurrentAccount := Account.Create('default');
+    SystemTimer.Enabled := SYSTEM_APP;
+    linkLabel.Visible := not SYSTEM_APP;
+{$IFDEF ANDROID}
+    if SYSTEM_APP then
+    begin
+      updateBtn.Visible := true;
+      DebugBtn.Visible := false;
+      executeAndroid('settings put global setup_wizard_has_run 1');
+      executeAndroid('settings put secure user_setup_complete 1');
+      executeAndroid('settings put global device_provisioned 1');
+
+    end;
+{$ENDIF}
+{$IFDEF WIN32 or WIN64}
+    // OrganizeButton.Visible := true;
+    btnSSys.Visible := false;
+
+{$ELSE}
+
+    // RegisterDelphiNativeMethods();
+
+{$ENDIF}
+    log.d('DEBUD End FormCreate()');
+  end;
+
+{$IFDEF ANDROID}
+
+  procedure OnRequestPermissionsResultNative(AEnv: PJNIEnv; AThis: JNIObject;
+  requestCode: Integer; permissions: JNIObjectArray; granted: JNIIntArray);
+  var
+    i: Integer;
+    { LPermissionsArray: TJavaObjectArray<JString>;
+      LGrantedArray: TJavaArray<Integer>;
+      LPermissions: TPermissionResults;
+      I: Integer; }
+  begin
+
+    TThread.CreateAnonymousThread(
+      procedure
+      begin
+        TThread.Synchronize(nil,
+          procedure
+          begin
+            showmessage('OK');
+          end);
+      end).Start;
+
+    { // A bug in JNI Bridge means we get a (harmless) logcat here for each
+      // WrapJNIArray call as a GlobalRef is deleted as if it were a LocalRef:
+      // W/art: Attempt to remove non-JNI local reference, dumping thread
+      LGrantedArray := TJavaArray<Integer>.Wrap(WrapJNIArray(granted, TypeInfo(TJavaArray<Integer>)));
+      LPermissionsArray := TJavaObjectArray<JString>.Wrap(WrapJNIArray(permissions, TypeInfo(TJavaObjectArray<JString>)));
+      if (LGrantedArray.Length > 0) and (LPermissionsArray.Length > 0) and (LGrantedArray.Length = LPermissionsArray.Length) then
+      begin
+      SetLength(LPermissions, LGrantedArray.Length);
+      for I := 0 to LGrantedArray.Length - 1 do
+      begin
+      LPermissions[I].Granted := LGrantedArray.Items[I] = TJPackageManager.JavaClass.PERMISSION_GRANTED;
+      LPermissions[I].Permission := JStringToString(LPermissionsArray.Items[I]);
+      end;
+      TThread.Queue(nil,
+      procedure
+      begin
+      TOpenSystemHelper(FInstance.SystemHelper).DoPermissionsResult(requestCode, LPermissions);
+      end);
+      end; }
+  end;
+
+  procedure TfrmHome.RegisterDelphiNativeMethods();
+  var
+    PEnv: PJNIEnv;
+    ActivityClass: JNIClass;
+    NativeMethod: JNINativeMethod;
+  begin
+    PEnv := TJNIResolver.GetJNIEnv;
+    NativeMethod.name := 'onRequestPermissionsResultNative';
+    NativeMethod.Signature := '(I[Ljava/lang/String;[I)V';
+    // Integer, String [], Integer[] (VOID)
+    NativeMethod.FnPtr := @OnRequestPermissionsResultNative;
+    ActivityClass := PEnv^.GetObjectClass(PEnv,
+      PANativeActivity(System.DelphiActivity).clazz);
+    PEnv^.RegisterNatives(PEnv, ActivityClass, @NativeMethod, 1);
+    PEnv^.DeleteLocalRef(PEnv, ActivityClass);
+  end;
+
+{$ENDIF}
+
+  procedure TfrmHome.FormKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+  var
+    FService: IFMXVirtualKeyboardService;
+  begin
+    if Key = vkHardwareBack then
+    begin
+      Key := 0;
+      TPlatformServices.Current.SupportsPlatformService
+        (IFMXVirtualKeyboardService, IInterface(FService));
+      if (FService <> nil) and (TVirtualKeyboardState.Visible
+        in FService.VirtualKeyBoardState) then
+      begin
+        Key := 0;
+        FService.HideVirtualKeyboard;
       end
       else
       begin
 
-        if Layout31.Visible = true then
+        if (PageControl.ActiveTab = createPassword) or
+          (PageControl.ActiveTab = SeedCreation) then
         begin
-          popupWindow.Create
-            ('You must check whether your hey is compressed or not');
+          switchTab(PageControl, WelcomeTabItem);
+        end
+        else if PageControl.ActiveTab = walletDatCreation then
+        begin
+{$IFDEF ANDROID}
+          SharedActivity.moveTaskToBack(true);
+{$ENDIF}
+        end
+        else if PageControl.ActiveTab = QRReader then
+        begin
+          switchTab(PageControl, cameraBackTabItem);
+        end
+        else if (PageControl.ActiveTab = TTabItem
+          (frmHome.FindComponent('dashbrd'))) or (CurrentAccount = nil) then
+        begin
+          { MessageDlg('Exit HODLER?', TMsgDlgType.mtConfirmation,
+            [TMsgDlgBtn.mbOK, TMsgDlgBtn.mbCancel], -1, OnCloseDialog); }
+{$IFDEF ANDROID}
+          if not SYSTEM_APP then
+            SharedActivity.finish;
+{$ELSE}
+          frmHome.Close();
+{$ENDIF}
+        end
+        else
+        begin
+          switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
+        end;
+      end;
+    end;
+  end;
+
+  procedure TfrmHome.OnCloseDialog(Sender: TObject;
+  const AResult: TModalResult);
+  begin
+    if AResult = mrOk then
+      Close;
+  end;
+
+  procedure TfrmHome.FormMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Single);
+  begin
+    if gathener.Enabled then
+
+      trngBuffer := trngBuffer +
+        floattoStr(X * random($FFFF) * trngBufferCounter) +
+        floattoStr(Y * random($FFFF)) + inttostr(random($FFFFFFFF))
+  end;
+
+  procedure TfrmHome.FormResize(Sender: TObject);
+  begin
+{$IFDEF WIN32 or WIN64}
+    // FIREMONKEY DOES NOT HAVE FORM CONSTRAITS
+    if frmHome.ClientWidth <> 384 then
+      frmHome.ClientWidth := 384;
+    if frmHome.ClientHeight <> 567 then
+      frmHome.ClientHeight := 567;
+{$ENDIF}
+  end;
+
+  procedure LoadCurrentAccount(name: AnsiString);
+  var
+    cc: CryptoCurrency;
+  begin
+    clearVertScrollBox(frmHome.WalletList);
+    if (SyncBalanceThr <> nil) and (not SyncBalanceThr.Finished) then
+    begin
+
+      SyncBalanceThr.Terminate;
+      while not(SyncBalanceThr.Finished) do
+      begin
+        application.ProcessMessages();
+        sleep(50);
+      end;
+      SyncBalanceThr.WaitFor;
+      SyncBalanceThr.DisposeOf;
+      SyncBalanceThr := nil;
+
+    end;
+    if (SyncHistoryThr <> nil) and (not SyncHistoryThr.Finished) then
+    begin
+
+      SyncHistoryThr.Terminate;
+      while not(SyncHistoryThr.Finished) do
+      begin
+        application.ProcessMessages();
+        sleep(50);
+      end;
+      SyncHistoryThr.WaitFor;
+      SyncHistoryThr.DisposeOf;
+      SyncHistoryThr := nil;
+
+    end;
+
+    frmHome.ChangeAccountButton.Text := name;
+
+    if CurrentAccount <> nil then
+      CurrentAccount.free;
+
+    CurrentAccount := Account.Create(name);
+    CurrentAccount.LoadFiles;
+
+    for cc in CurrentAccount.myCoins do
+      CreatePanel(cc);
+
+    for cc in CurrentAccount.myTokens do
+      CreatePanel(cc);
+
+    refreshOrderInDashBrd();
+
+    frmHome.CurrencyBox.ItemIndex := frmHome.CurrencyBox.Items.IndexOf
+      (CurrencyConverter.symbol);
+
+    globalFiat := 0;
+
+    refreshCurrencyValue;
+
+    SyncBalanceThr := SynchronizeBalanceThread.Create();
+    SyncHistoryThr := SynchronizeHistoryThread.Create();
+
+    if (CurrentAccount.userSaveSeed = false) then
+    begin
+      TThread.CreateAnonymousThread(
+        procedure
+        begin
+
+          sleep(1000);
+
+          TThread.Synchronize(nil,
+            procedure
+            begin
+
+              with frmHome do
+                popupWindowYesNo.Create(
+                  procedure()
+                  begin
+
+                    btnDecryptSeed.OnClick := SendWalletFile;
+
+                    decryptSeedBackTabItem := PageControl.ActiveTab;
+                    PageControl.ActiveTab := descryptSeed;
+                    // switchTab(PageControl, descryptSeed);
+                    btnDSBack.OnClick := backBtnDecryptSeed;
+
+                  end,
+                  procedure()
+                  begin
+
+                  end, dictionary['CreateBackupWallet'], dictionary['Yes'],
+                  dictionary['NotNow'], 1);
+            end);
+        end).Start;
+
+      saveSeedInfoShowed := true;
+    end;
+
+    refreshWalletDat;
+
+  end;
+
+  procedure TfrmHome.FormShow(Sender: TObject);
+  var
+    i: Integer;
+    cc: CryptoCurrency;
+
+  begin
+
+    log.d('DEBUD Start FormShow()');
+
+    if not isWalletDatExists then
+    begin
+      createWalletDat();
+    end;
+    try
+      parseWalletFile();
+    except
+      on E: Exception do
+      begin
+        showmessage('wallet file damaged');
+        exit;
+      end;
+    end;
+
+    log.d('DEBUD Loaded Wallet.dat');
+
+    if length(AccountsNames) = 0 then
+    begin
+      // PageControl.ActiveTab := createPassword;
+      // if CurrentAccount = nil then
+      // CurrentAccount := Account.Create('default');
+      lblWelcomeDescription.Text := dictionary['ConfigurationTakeOneStep'] +
+        #13#10 + dictionary['ChooseOption'] + ':';
+      switchTab(PageControl, WelcomeTabItem);
+    end
+    else
+    begin
+
+      // if CurrentAccount <> nil then
+      // CurrentAccount.free();
+      log.d('DEBUD Start Load account');
+      if (lastClosedAccount = '') then
+        lastClosedAccount := AccountsNames[0];
+
+      ChangeAccountButton.Text := lastClosedAccount;
+
+      try
+        LoadCurrentAccount(lastClosedAccount);
+      except
+        on E: Exception do
+        begin
+          showmessage('account file damaged');
+          exit;
+        end;
+      end;
+
+      log.d('DEBUD Account loaded');
+
+      switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
+
+    end;
+
+    if not shown then
+    begin
+      log.d('DEBUD Start Loading Style');
+
+      if CurrentAccount <> nil then
+        TThread.Synchronize(nil,
+          procedure
+          begin
+            getDataOverHTTP('https://hodler2.nq.pl/analitics.php?hash=' +
+              GetSTrHashSHA256(CurrentAccount.EncryptedMasterSeed + API_PUB));
+          end);
+{$IFDEF ANDROID}
+      for i := 0 to frmHome.ComponentCount - 1 do
+        if frmHome.Components[i] is TEdit then
+        begin
+          TEdit(frmHome.Components[i]).KillFocusByReturn := true;
+          TEdit(frmHome.Components[i]).ReturnKeyType := TReturnKeyType.Done;
+        end;
+{$ENDIF}
+    end;
+    shown := true;
+
+    log.d('DEBUD End FormShow()');
+
+  end;
+
+  procedure TfrmHome.FormVirtualKeyboardHidden(Sender: TObject;
+  KeyboardVisible: Boolean; const Bounds: TRect);
+  var
+    FService: IFMXVirtualKeyboardService;
+  begin
+
+    KeyBoardLayout.Visible := false;
+    frmHome.PageControl.Repaint;
+
+  end;
+
+  procedure TfrmHome.FormVirtualKeyboardShown(Sender: TObject;
+  KeyboardVisible: Boolean; const Bounds: TRect);
+  var
+    FService: IFMXVirtualKeyboardService;
+    FToolbarService: IFMXVirtualKeyBoardToolbarService;
+  begin
+    { TPlatformServices.Current.SupportsPlatformService( IFMXVirtualKeyBoardToolbarService , IInterface(FToolbarService));
+      if FToolbarservice <> nil then
+      begin
+      FToolbarService.SetToolbarEnabled(false);
+      end; }
+
+    if focused is TEdit then
+      if (TEdit(focused).name = 'wvAddress') or
+        (TEdit(focused).name = 'receiveAddress') then
+      begin
+
+        exit;
+      end;
+
+    KeyBoardLayout.Height := frmHome.Height - Bounds.Top;
+    KeyBoardLayout.Visible := true;
+
+    frmHome.PageControl.Repaint;
+    KeyBoardLayout.Repaint;
+    // showmessage('open');
+
+  end;
+
+  procedure TfrmHome.gathenerTimer(Sender: TObject);
+  var
+    i: Integer;
+    ac: Account;
+  begin
+    inc(trngBufferCounter);
+    // colecting random data for seed generator
+    trngBuffer := trngBuffer + GetSTrHashSHA256(inttohex(random($FFFFFFFF), 8) +
+      DateTimeToStr(Now));
+{$IFDEF ANDROID}
+    if MotionSensor.Sensor <> nil then
+      with MotionSensor.Sensor do
+      begin
+        trngBuffer := trngBuffer + floattoStr(Speed);
+        trngBuffer := trngBuffer + floattoStr(AccelerationX);
+        trngBuffer := trngBuffer + floattoStr(AccelerationY);
+        trngBuffer := trngBuffer + floattoStr(AccelerationZ);
+        trngBuffer := trngBuffer + floattoStr(Motion);
+      end;
+    if OrientationSensor.Sensor <> nil then
+      with OrientationSensor.Sensor do
+      begin
+
+        trngBuffer := trngBuffer + floattoStr(TiltZ);
+        trngBuffer := trngBuffer + floattoStr(HeadingX);
+        trngBuffer := trngBuffer + floattoStr(HeadingY);
+        trngBuffer := trngBuffer + floattoStr(HeadingZ);
+        trngBuffer := trngBuffer + floattoStr(TiltY);
+      end;
+{$ENDIF}
+    GenerateSeedProgressBar.Value := trngBufferCounter div 2;
+
+    if trngBufferCounter mod 20 = 0 then
+    begin
+      trngBuffer := GetSTrHashSHA256(trngBuffer);
+      labelForGenerating.Text := trngBuffer;
+    end;
+    if trngBufferCounter mod 200 = 0 then
+    begin
+      // 10sec of gathering random data should be enough to get unique seed
+      trngBuffer := GetSTrHashSHA256(trngBuffer + inttostr(random($FFFFFFFF)));
+      gathener.Enabled := false;
+
+      // PageControl.ActiveTab := seedGenerated;
+
+
+      // switchTab(PageControl, seedGenerated);
+      // BackupMemo.Lines.Clear;
+      // .Lines.Add('Master seed:');
+      // BackupMemo.Lines.Add(cutEveryNChar(4 , trngBuffer));
+      // BackupMemo.Lines.Add('Masterseed mnemonic:');
+      // BackupMemo.Lines.Add(toMnemonic(trngBuffer));
+      // for I := 0 to 3 do
+      // BackupMemo.Lines.Add(cutEveryNChar(4 , MidStr(trngBuffer , Low(trngBuffer) + i*16 , 16)));
+
+      // tempMasterSeed := trngBuffer;
+      // temporary variable     tempMasterSeed is reset  after use
+
+      if swForEncryption.IsChecked then
+        TCAIterations := 10000;
+
+      // if not isWalletDatExists then
+      // createWalletDat(trngBuffer, pass.Text);
+
+      CreateNewAccountAndSave(AccountNameEdit.Text, pass.Text,
+        trngBuffer, false);
+
+
+      // FormShow(nil);
+
+    end;
+
+  end;
+
+  procedure TfrmHome.Image1Click(Sender: TObject);
+  begin
+    btnSyncClick(nil);
+  end;
+
+  procedure TfrmHome.ImageControl4Click(Sender: TObject);
+{$IFDEF ANDROID}
+  var
+    Intent: JIntent;
+{$ENDIF}
+  begin
+{$IFDEF ANDROID}
+    Intent := TJIntent.Create;
+    Intent := TJIntent.JavaClass.init(TJSettings.JavaClass.ACTION_SETTINGS);
+    TAndroidHelper.Activity.startActivity(Intent);
+{$ENDIF}
+  end;
+
+  procedure TfrmHome.ImportPrivateKeyButtonClick(Sender: TObject);
+  begin
+    creatImportPrivKeyCoinList();
+
+    HexPrivKeyDefaultRadioButton.IsChecked := true;
+    Layout31.Visible := false;
+    WIFEdit.Text := '';
+
+    switchTab(PageControl, ImportPrivKeyCoinList);
+  end;
+
+  procedure TfrmHome.LinkLayoutClick(Sender: TObject);
+  var
+    wd: TwalletInfo;
+    tt: Token;
+    myURI: AnsiString;
+{$IFDEF ANDROID}
+    Intent: JIntent;
+
+{$ENDIF}
+  begin
+    if CurrentCryptoCurrency is TwalletInfo then
+    begin
+      wd := TwalletInfo(CurrentCryptoCurrency);
+
+      case wd.coin of
+        0:
+          myURI := 'https://www.blockchain.com/btc/tx/';
+        1:
+          myURI := 'http://explorer.litecoin.net/tx/';
+        2:
+          myURI := 'https://chainz.cryptoid.info/dash/tx.dws?';
+        3:
+          myURI := 'https://blockchair.com/bitcoin-cash/transaction/';
+        4:
+          myURI := 'https://etherscan.io/tx/';
+
+      end;
+
+    end
+    else
+      myURI := myURI + 'https://etherscan.io/tx/';
+    // StringReplace(result, '-.', '-0.', [rfReplaceAll])
+
+    myURI := myURI + StringReplace(HistoryTransactionID.Text, ' ', '',
+      [rfReplaceAll]);
+
+{$IFDEF ANDROID}
+    Intent := TJIntent.Create;
+    Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
+    Intent.setData(StrToJURI(myURI));
+    SharedActivity.startActivity(Intent);
+{$ENDIF ANDROID}
+  end;
+
+  procedure TfrmHome.closeVirtualKeyBoard(Sender: TObject);
+
+  var
+    FService: IFMXVirtualKeyboardService;
+  begin
+
+    TPlatformServices.Current.SupportsPlatformService
+      (IFMXVirtualKeyboardService, IInterface(FService));
+    if FService <> nil then
+    begin
+      FService.HideVirtualKeyboard();
+    end;
+
+  end;
+
+  procedure TfrmHome.Panel1Click(Sender: TObject);
+  var
+    i: Integer;
+  begin
+
+  end;
+
+  procedure TfrmHome.Panel1DragDrop(Sender: TObject; const Data: TDragObject;
+  const Point: TPointF);
+  begin
+    TPanel(Sender).Position.X := Point.X;
+    TPanel(Sender).Position.Y := Point.Y;
+  end;
+
+  procedure TfrmHome.Panel1DragOver(Sender: TObject; const Data: TDragObject;
+  const Point: TPointF; var Operation: TDragOperation);
+  begin
+    Operation := TDragOperation.Move;
+  end;
+
+  procedure TfrmHome.SwitchVWPrecision(Sender: TObject);
+  begin
+    BalancePanel.Visible := not flagWVPrecision;
+    LongBalancePanel.Visible := flagWVPrecision;
+    flagWVPrecision := not flagWVPrecision;
+  end;
+
+  procedure TfrmHome.syncTimerTimer(Sender: TObject);
+  begin
+    try
+      btnSync.OnClick(self);
+    except
+      on E: Exception do
+      begin
+        //
+      end;
+
+    end;
+  end;
+
+  procedure TfrmHome.SystemTimerTimer(Sender: TObject);
+  begin
+{$IFDEF ANDROID}
+    if isScreenOn then
+    begin
+      OfflineMode(0);
+
+      TLabel(frmHome.FindComponent('HeaderLabel')).Text := 'Online';
+    end
+    else
+    begin
+      OfflineMode(1);
+      TLabel(frmHome.FindComponent('HeaderLabel')).Text := 'Offline';
+    end;
+{$ENDIF}
+  end;
+
+  procedure TfrmHome.QRChangeTimerTimer(Sender: TObject);
+  var
+    Local_Row: Integer;
+    Local_Column: Integer;
+    vPixelB: Integer;
+    vPixelW: Integer;
+    QRCode: TDelphiZXingQRCode;
+    QRCodeBitmap: TBitmapData;
+    Row: Integer;
+    bmp: FMX.Graphics.TBitmap;
+    Column: Integer;
+    ms: TMemoryStream;
+    bmp2: FMX.Graphics.TBitmap;
+    DestW: Int64;
+    DestH: Int64;
+    pixW: Int64;
+    pixH: Int64;
+    j: Integer;
+    currentRow: Int64;
+    k: Int64;
+    currentCol: Int64;
+    X, Y: Integer;
+    rsrc, rDest: TRectF;
+    s: AnsiString;
+  begin
+
+    vPixelB := TAlphaColorRec.Black;
+    // determine colour to use
+    vPixelW := TAlphaColorRec.white;
+    // determine colour to use
+    QRCode := TDelphiZXingQRCode.Create();
+
+    try
+
+      bmp := FMX.Graphics.TBitmap.Create();
+      s := {$IFDEF ANDROID}'  ' +
+{$ENDIF}AvailableCoin[CurrentCoin.coin].name + ':' +
+        StringReplace(receiveAddress.Text, ' ', '', [rfReplaceAll]) + '?amount='
+        + ReceiveValue.Text + '&message=hodler';
+
+      QRCode.Data := s;
+
+      QRCode.Encoding := TQRCodeEncoding(0);
+      QRCode.QuietZone := 6;
+
+      bmp.SetSize(QRCode.Rows, QRCode.Columns);
+
+      if bmp.Map(TMapAccess.maReadWrite, QRCodeBitmap) then
+      begin
+
+        for Y := 0 to QRCode.Rows - 1 do
+        begin
+          for X := 0 to QRCode.Columns - 1 do
+          begin
+
+            if (QRCode.IsBlack[Y, X]) then
+            begin
+              QRCodeBitmap.SetPixel(Y, X, vPixelB);
+            end
+            else
+            begin
+              QRCodeBitmap.SetPixel(Y, X, vPixelW);
+            end;
+
+          end;
+        end;
+
+        // QRCodeBitmap.
+        bmp.free;
+        bmp := BitmapDataToScaledBitmap(QRCodeBitmap, 6);
+        bmp.Unmap(QRCodeBitmap);
+      end;
+    finally
+      QRCode.free;
+    end;
+
+    QRCodeImage.Bitmap := bmp;
+
+    try
+      // if ms <> nil then
+      // ms.Free;
+      if bmp <> nil then
+        bmp.free;
+      // if bmp2 <> nil then
+      // bmp2.Free;
+    except
+
+    end;
+
+    if ReceiveValue.IsFocused then
+    begin
+      if ReceiveValue.Text = '' then
+      begin
+        ReceiveAmountRealCurrency.Text := '0.00';
+      end
+      else
+      begin
+        ReceiveAmountRealCurrency.Text :=
+          floatToStrF((strToFloat(ReceiveValue.Text) *
+          CurrencyConverter.calculate(CurrentCryptoCurrency.rate)),
+          ffFixed, 18, 2);
+      end;
+
+    end;
+
+  end;
+
+  procedure TfrmHome.receiveAddressChange(Sender: TObject);
+  begin
+    //
+    QRChangeTimerTimer(nil);
+  end;
+
+  procedure TfrmHome.ReceiveAmountRealCurrencyChange(Sender: TObject);
+  begin
+    ReceiveAmountRealCurrency.Text :=
+      StringReplace(ReceiveAmountRealCurrency.Text, ',', '.', [rfReplaceAll]);
+  end;
+
+  procedure TfrmHome.ReceiveAmountRealCurrencyClick(Sender: TObject);
+  begin
+    if strToFloatDef(ReceiveAmountRealCurrency.Text, 0) = 0 then
+      ReceiveAmountRealCurrency.Text := '';
+  end;
+
+  procedure TfrmHome.ReceiveAmountRealCurrencyExit(Sender: TObject);
+  begin
+    if ReceiveAmountRealCurrency.Text = '' then
+      ReceiveAmountRealCurrency.Text := '0.00';
+  end;
+
+  procedure TfrmHome.ReceiveReatToCoin(Sender: TObject);
+  begin
+    if ReceiveAmountRealCurrency.IsFocused then
+    begin
+
+      if ReceiveAmountRealCurrency.Text = '' then
+      begin
+        ReceiveValue.Text := BigIntegertoFloatStr(0,
+          CurrentCryptoCurrency.decimals);
+      end
+      else
+      begin
+        ReceiveValue.Text :=
+          floatToStrF((strToFloatDef(ReceiveAmountRealCurrency.Text,
+          0) / CurrencyConverter.calculate(CurrentCryptoCurrency.rate)),
+          ffFixed, 18, CurrentCryptoCurrency.decimals);
+      end;
+
+    end;
+  end;
+
+  procedure TfrmHome.ReceiveValueChange(Sender: TObject);
+  begin
+    ReceiveValue.Text := StringReplace(ReceiveValue.Text, ',', '.',
+      [rfReplaceAll]);
+  end;
+
+  procedure TfrmHome.ReceiveValueClick(Sender: TObject);
+  begin
+    if strToFloatDef(ReceiveValue.Text, 0) = 0 then
+      ReceiveValue.Text := '';
+  end;
+
+  procedure TfrmHome.SearchEditChange(Sender: TObject);
+  begin
+    if SearchEdit.Text = '' then
+      SearchEdit.Visible := false;
+  end;
+
+  procedure TfrmHome.SearchEditChangeTracking(Sender: TObject);
+  var
+    fmxObj: TfmxObject;
+    Panel: TPanel;
+    lbl: TLabel;
+    i: Integer;
+  begin
+
+    // showmessage( inttoStr(frmhome.walletList.ChildrenCount) );
+
+    for fmxObj in WalletList.Content.Children do
+    begin
+
+      // showmessage( fmxObj.ToString );
+
+      if fmxObj is TPanel then
+        Panel := TPanel(fmxObj)
+      else
+        Continue;
+
+      for i := 0 to Panel.ChildrenCount - 1 do
+      begin
+
+        if (Panel.Children[i] is TLabel) and
+          (TLabel(Panel.Children[i]).TagString = 'name') then
+        begin
+
+          if (AnsiContainsText(TLabel(Panel.Children[i]).Text, SearchEdit.Text))
+            or (SearchEdit.Text = '') then
+          begin
+            Panel.Visible := true;
+            break;
+          end
+          else
+          begin
+            Panel.Visible := false;
+            break;
+          end;
+
+        end;
+
+      end;
+
+    end;
+
+  end;
+
+  procedure TfrmHome.SearchEditExit(Sender: TObject);
+  begin
+    // if SearchEdit.Text = '' then
+    // begin
+    SearchEdit.Visible := false;
+    TLabel(frmHome.FindComponent('HeaderLabel')).Visible := true;
+    SearchEdit.Text := '';
+    // end;
+  end;
+
+  procedure TfrmHome.SendAllFundsOnSwitch(Sender: TObject);
+  begin
+    if SendAllFundsSwitch.IsFocused then
+    begin
+      if SendAllFundsSwitch.IsChecked then
+      begin
+        wvAmount.Text := lbBalanceLong.Text;
+        WVRealCurrency.Text := floatToStrF(strToFloatDef(lbBalanceLong.Text, 0)
+          * CurrentCryptoCurrency.rate, ffFixed, 18, 2);
+        FeeFromAmountSwitch.IsChecked := true;
+        FeeFromAmountSwitch.Enabled := false;
+      end
+      else
+      begin
+        // SetFocused(WvAmount);
+        // WvAmount.
+        wvAmount.Text := BigIntegertoFloatStr(0,
+          CurrentCryptoCurrency.decimals);
+        FeeFromAmountSwitch.IsChecked := false;
+
+        FeeFromAmountSwitch.Enabled := true;
+      end;
+    end;
+  end;
+
+  procedure TfrmHome.SendDecryptedSeedButtonClick(Sender: TObject);
+  begin
+
+    btnDecryptSeed.OnClick := SendDecryptedSeed;
+
+    decryptSeedBackTabItem := PageControl.ActiveTab;
+
+    PageControl.ActiveTab := descryptSeed;
+
+    btnDSBack.OnClick := backBtnDecryptSeed;
+
+  end;
+
+  procedure TfrmHome.SendDecryptedSeed { ButtonClick } (Sender: TObject);
+  var
+    i: Integer;
+    Zip: TEncryptedZipFile;
+    img: TBitmap;
+    tempStr: TStream;
+    ImgPath: AnsiString;
+    zipPath: AnsiString;
+
+  var
+    MasterSeed, tced: AnsiString;
+
+  begin
+
+    tced := TCA(passwordForDecrypt.Text);
+    MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
+    if not isHex(MasterSeed) then
+    begin
+      popupWindow.Create(dictionary['FailedToDecrypt']);
+      // DecryptSeedMessage.Text := 'Failed to decrypt master seed';
+      exit;
+    end;
+    // tempMasterSeed
+    img := StrToQRBitmap(MasterSeed);
+    ImgPath := System.IOUtils.TPath.Combine
+      (System.IOUtils.TPath.GetDocumentsPath(), 'QRDecryptedSeed.png');
+    zipPath := System.IOUtils.TPath.Combine
+      (System.IOUtils.TPath.GetDownloadsPath(), 'QRDecryptedSeed.zip');
+
+    img.SaveToFile(ImgPath);
+
+    Zip := TEncryptedZipFile.Create(passwordForDecrypt.Text);
+
+    if FileExists(zipPath) then
+      DeleteFile(zipPath);
+
+    Zip.Open(zipPath, TZipMode.zmWrite);
+    Zip.Add(ImgPath);
+    Zip.Close;
+
+    shareFile(zipPath);
+
+    MasterSeed := '';
+    tced := '';
+
+    userSavedSeed := true;
+    refreshWalletDat();
+
+    DeleteFile(ImgPath);
+    // DeleteFile( zipPath );
+    // tempPassword := '';
+    img.free;
+    Zip.free;
+
+  end;
+
+  procedure TfrmHome.SendEncryptedSeed(Sender: TObject);
+  var
+    i: Integer;
+    Zip: TEncryptedZipFile;
+    img: TBitmap;
+    tempStr: TStream;
+    ImgPath: AnsiString;
+    zipPath: AnsiString;
+
+  var
+    MasterSeed, tced: AnsiString;
+
+  begin
+
+    tced := TCA(passwordForDecrypt.Text);
+    MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
+    if not isHex(MasterSeed) then
+    begin
+      popupWindow.Create(dictionary['FailedToDecrypt']);
+      // DecryptSeedMessage.Text := 'Failed to decrypt master seed';
+      exit;
+    end;
+
+    img := StrToQRBitmap(CurrentAccount.EncryptedMasterSeed);
+
+    ImgPath := System.IOUtils.TPath.Combine
+      (System.IOUtils.TPath.GetDocumentsPath(), 'QREncryptedSeed.png');
+    zipPath := System.IOUtils.TPath.Combine
+      (System.IOUtils.TPath.GetDownloadsPath(), 'QREncryptedSeed.zip');
+
+    img.SaveToFile(ImgPath);
+
+    Zip := TEncryptedZipFile.Create(passwordForDecrypt.Text);
+
+    if FileExists(zipPath) then
+      DeleteFile(zipPath);
+
+    Zip.Open(zipPath, TZipMode.zmWrite);
+    Zip.Add(ImgPath);
+    Zip.Close;
+
+    // passwordForDecrypt.Text := '';
+
+    shareFile(zipPath);
+
+    DeleteFile(ImgPath);
+    // DeleteFile( zipPath );
+    img.free;
+    Zip.free;
+
+    MasterSeed := '';
+    tced := '';
+
+    userSavedSeed := true;
+    refreshWalletDat();
+
+    switchTab(PageControl, BackupTabItem);
+
+  end;
+
+  procedure TfrmHome.SendEncryptedSeedButtonClick(Sender: TObject);
+  begin
+
+    btnDecryptSeed.OnClick := SendEncryptedSeed;
+
+    decryptSeedBackTabItem := PageControl.ActiveTab;
+    PageControl.ActiveTab := descryptSeed;
+    btnDSBack.OnClick := backBtnDecryptSeed;
+
+  end;
+
+  procedure TfrmHome.SendWalletFile(Sender: TObject);
+  var
+    i: Integer;
+    Zip: TEncryptedZipFile;
+    img: TBitmap;
+    tempStr: TStream;
+
+    ImgPath: AnsiString;
+    zipPath: AnsiString;
+    protectorPath: AnsiString;
+    ts: TStringList;
+    it: AnsiString;
+    fileName: AnsiString;
+  var
+    MasterSeed, tced: AnsiString;
+
+  begin
+
+    tced := TCA(passwordForDecrypt.Text);
+    MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
+    if not isHex(MasterSeed) then
+    begin
+      popupWindow.Create(dictionary['FailedToDecrypt']);
+      exit;
+    end;
+    tced := '';
+    MasterSeed := '';
+
+    fileName := CurrentAccount.name + '_' + FormatDateTime('dd_mmm_yyyy', Now);
+
+    zipPath := System.IOUtils.TPath.Combine
+      (System.IOUtils.TPath.GetDownloadsPath(), fileName + '.hsb.zip');
+
+    if FileExists(zipPath) then
+      DeleteFile(zipPath);
+
+    Zip := TEncryptedZipFile.Create(passwordForDecrypt.Text);
+
+    Zip.Open(zipPath, TZipMode.zmWrite);
+
+    img := StrToQRBitmap(CurrentAccount.EncryptedMasterSeed);
+    ImgPath := System.IOUtils.TPath.Combine
+      (System.IOUtils.TPath.GetDocumentsPath(), 'QREncryptedSeed.png');
+    img.SaveToFile(ImgPath);
+
+    for it in CurrentAccount.Paths do
+    begin
+
+      ts := TStringList.Create();
+      ts.LoadFromFile(it);
+      ts.SaveToFile(LeftStr(it, length(it) - 3) + 'hsb');
+      ts.free;
+
+      Zip.Add(it);
+
+    end;
+    for it in CurrentAccount.Paths do
+    begin
+      Zip.Add(LeftStr(it, length(it) - 3) + 'hsb');
+    end;
+    Zip.Add(ImgPath);
+    Zip.Close;
+
+    shareFile(zipPath);
+
+    CurrentAccount.userSaveSeed := true;
+    // refreshWalletDat();
+
+    DeleteFile(ImgPath);
+    // tempPassword := '';
+    img.free;
+    Zip.free;
+
+    switchTab(PageControl, decryptSeedBackTabItem);
+
+  end;
+
+  procedure TfrmHome.SendWalletFileButtonClick(Sender: TObject);
+  begin
+    btnDecryptSeed.OnClick := SendWalletFile;
+
+    decryptSeedBackTabItem := PageControl.ActiveTab;
+    PageControl.ActiveTab := descryptSeed;
+    btnDSBack.OnClick := backBtnDecryptSeed;
+  end;
+
+  procedure TfrmHome.ShowShareSheetAction1BeforeExecute(Sender: TObject);
+  begin
+    ShowShareSheetAction1.TextMessage := CurrentCryptoCurrency.addr;
+  end;
+
+  procedure TfrmHome.SearchInDashBrdButtonClick(Sender: TObject);
+  begin
+    TLabel(frmHome.FindComponent('HeaderLabel')).Visible := false;
+    SearchEdit.Visible := true;
+    SetFocused(SearchEdit);
+  end;
+
+  procedure TfrmHome.SeedMnemonicBackupButtonClick(Sender: TObject);
+  begin
+
+    btnDecryptSeed.OnClick := decryptSeedForSeedRestore;
+
+    decryptSeedBackTabItem := PageControl.ActiveTab;
+    PageControl.ActiveTab := descryptSeed;
+    btnDSBack.OnClick := backBtnDecryptSeed;
+
+  end;
+
+  procedure TfrmHome.SwitchSavedSeedSwitch(Sender: TObject);
+  begin
+    btnSkip.Enabled := frmHome.SwitchSavedSeed.IsChecked;
+  end;
+
+  procedure TfrmHome.SaveNewPrivateKeyButtonClick(Sender: TObject);
+  begin
+
+    try
+      if isHex(WIFEdit.Text) then
+      begin
+        if (length(WIFEdit.Text) <> 64) then
+        begin
+          popupWindow.Create('Key too short');
           exit;
         end;
 
-        LoadingKeyDataAniIndicator.Enabled := true;
-        LoadingKeyDataAniIndicator.Visible := true;
-        if ImportCoinID <> 4 then
+        if HexPrivKeyCompressedRadioButton.IsChecked then
         begin
-          TThread.CreateAnonymousThread(
-            procedure
-            var
-              comkey: AnsiString;
-              notkey: AnsiString;
-              Data: AnsiString;
-              ts: TStringList;
-              wd: TwalletInfo;
-              request: AnsiString;
-            begin
-              comkey := secp256k1_get_public(WIFEdit.Text, false);
-              notkey := secp256k1_get_public(WIFEdit.Text, true);
+          LoadingKeyDataAniIndicator.Enabled := false;
+          LoadingKeyDataAniIndicator.Visible := false;
+        end
+        else if HexPrivKeyNotCompressedRadioButton.IsChecked then
+        begin
+          LoadingKeyDataAniIndicator.Enabled := false;
+          LoadingKeyDataAniIndicator.Visible := false;
+        end
+        else
+        begin
 
-              wd := TwalletInfo.Create(ImportCoinID, -1, -1,
-                Bitcoin_PublicAddrToWallet(comkey,
-                AvailableCoin[ImportCoinID].p2pk), 'Imported');
-              wd.pub := comkey;
-              request := HODLER_URL + 'getSegwitBalance.php?coin=' +
-                AvailableCoin[wd.coin].name + '&' + segwitParameters(wd);
-              Data := getDataOverHTTP(request);
-              ts := TStringList.Create();
-              ts.Text := Data;
+          if Layout31.Visible = true then
+          begin
+            popupWindow.Create
+              ('You must check whether your hey is compressed or not');
+            exit;
+          end;
 
-              if strToFloatDef(ts[0], 0) + strToFloatDef(ts[1], 0) = 0 then
+          LoadingKeyDataAniIndicator.Enabled := true;
+          LoadingKeyDataAniIndicator.Visible := true;
+          if ImportCoinID <> 4 then
+          begin
+            TThread.CreateAnonymousThread(
+              procedure
+              var
+                comkey: AnsiString;
+                notkey: AnsiString;
+                Data: AnsiString;
+                ts: TStringList;
+                wd: TwalletInfo;
+                request: AnsiString;
               begin
-                Data := getDataOverHTTP(HODLER_URL +
-                  'getSegwitHistory.php?coin=' + AvailableCoin[wd.coin].name +
-                  '&' + segwitParameters(wd));
+                comkey := secp256k1_get_public(WIFEdit.Text, false);
+                notkey := secp256k1_get_public(WIFEdit.Text, true);
 
-                if length(Data) > 10 then
+                wd := TwalletInfo.Create(ImportCoinID, -1, -1,
+                  Bitcoin_PublicAddrToWallet(comkey,
+                  AvailableCoin[ImportCoinID].p2pk), 'Imported');
+                wd.pub := comkey;
+                request := HODLER_URL + 'getSegwitBalance.php?coin=' +
+                  AvailableCoin[wd.coin].name + '&' + segwitParameters(wd);
+                Data := getDataOverHTTP(request);
+                ts := TStringList.Create();
+                ts.Text := Data;
+
+                if strToFloatDef(ts[0], 0) + strToFloatDef(ts[1], 0) = 0 then
                 begin
+                  Data := getDataOverHTTP(HODLER_URL +
+                    'getSegwitHistory.php?coin=' + AvailableCoin[wd.coin].name +
+                    '&' + segwitParameters(wd));
 
+                  if length(Data) > 10 then
+                  begin
+
+                    TThread.Synchronize(nil,
+                      procedure
+                      begin
+                        HexPrivKeyCompressedRadioButton.IsChecked := true;
+                        SaveNewPrivateKeyButtonClick(Sender);
+                        ts.free;
+                        wd.free;
+                        exit;
+                      end);
+
+                  end;
+                end
+                else
+                begin
                   TThread.Synchronize(nil,
                     procedure
                     begin
@@ -5275,40 +5570,39 @@ begin
                       wd.free;
                       exit;
                     end);
-
                 end;
-              end
-              else
-              begin
-                TThread.Synchronize(nil,
-                  procedure
-                  begin
-                    HexPrivKeyCompressedRadioButton.IsChecked := true;
-                    SaveNewPrivateKeyButtonClick(Sender);
-                    ts.free;
-                    wd.free;
-                    exit;
-                  end);
-              end;
-              ts.free;
-              wd.free;
+                ts.free;
+                wd.free;
 
-              // // // // // // // // // // // // // // // // // // // //
+                // // // // // // // // // // // // // // // // // // // //
 
-              wd := TwalletInfo.Create(ImportCoinID, -1, -1,
-                Bitcoin_PublicAddrToWallet(notkey,
-                AvailableCoin[ImportCoinID].p2pk), '');
-              wd.pub := comkey;
+                wd := TwalletInfo.Create(ImportCoinID, -1, -1,
+                  Bitcoin_PublicAddrToWallet(notkey,
+                  AvailableCoin[ImportCoinID].p2pk), '');
+                wd.pub := comkey;
 
-              Data := getDataOverHTTP(HODLER_URL + 'getBalance.php?coin=' +
-                AvailableCoin[wd.coin].name + '&address=' + wd.addr);
-              ts := TStringList.Create();
-              ts.Text := Data;
-              if strToFloatDef(ts[0], 0) + strToFloatDef(ts[1], 0) = 0 then
-              begin
-                Data := getDataOverHTTP(HODLER_URL + 'getHistory.php?coin=' +
+                Data := getDataOverHTTP(HODLER_URL + 'getBalance.php?coin=' +
                   AvailableCoin[wd.coin].name + '&address=' + wd.addr);
-                if length(Data) > 10 then
+                ts := TStringList.Create();
+                ts.Text := Data;
+                if strToFloatDef(ts[0], 0) + strToFloatDef(ts[1], 0) = 0 then
+                begin
+                  Data := getDataOverHTTP(HODLER_URL + 'getHistory.php?coin=' +
+                    AvailableCoin[wd.coin].name + '&address=' + wd.addr);
+                  if length(Data) > 10 then
+                  begin
+                    TThread.Synchronize(nil,
+                      procedure
+                      begin
+                        HexPrivKeyNotCompressedRadioButton.IsChecked := true;
+                        SaveNewPrivateKeyButtonClick(Sender);
+                        ts.free;
+                        wd.free;
+                        exit;
+                      end);
+                  end;
+                end
+                else
                 begin
                   TThread.Synchronize(nil,
                     procedure
@@ -5320,429 +5614,184 @@ begin
                       exit;
                     end);
                 end;
-              end
-              else
-              begin
+
+                ts.free;
+                wd.free;
+
                 TThread.Synchronize(nil,
                   procedure
                   begin
+                    LoadingKeyDataAniIndicator.Enabled := false;
+                    LoadingKeyDataAniIndicator.Visible := false;
+                    Layout31.Visible := true;
+                  end);
+
+              end).Start();
+            exit;
+          end;
+          // Parsing for ETH
+          if ImportCoinID = 4 then
+          begin
+            TThread.CreateAnonymousThread(
+              procedure
+              var
+                comkey: AnsiString;
+                notkey: AnsiString;
+                Data: AnsiString;
+                ts: TStringList;
+                wd: TwalletInfo;
+                request: AnsiString;
+              begin
+                comkey := secp256k1_get_public(WIFEdit.Text, true);
+
+                wd := TwalletInfo.Create(ImportCoinID, -1, -1,
+                  Ethereum_PublicAddrToWallet(comkey), 'Imported');
+                wd.pub := comkey;
+
+                TThread.Synchronize(nil,
+                  procedure
+                  begin
+                    LoadingKeyDataAniIndicator.Enabled := false;
+                    LoadingKeyDataAniIndicator.Visible := false;
+                    Layout31.Visible := true;
                     HexPrivKeyNotCompressedRadioButton.IsChecked := true;
                     SaveNewPrivateKeyButtonClick(Sender);
-                    ts.free;
-                    wd.free;
-                    exit;
                   end);
-              end;
 
-              ts.free;
-              wd.free;
+              end).Start();
+            exit;
 
-              TThread.Synchronize(nil,
-                procedure
-                begin
-                  LoadingKeyDataAniIndicator.Enabled := false;
-                  LoadingKeyDataAniIndicator.Visible := false;
-                  Layout31.Visible := true;
-                end);
+          end;
 
-            end).Start();
-          exit;
-        end;
-        // Parsing for ETH
-        if ImportCoinID = 4 then
-        begin
-          TThread.CreateAnonymousThread(
-            procedure
-            var
-              comkey: AnsiString;
-              notkey: AnsiString;
-              Data: AnsiString;
-              ts: TStringList;
-              wd: TwalletInfo;
-              request: AnsiString;
-            begin
-              comkey := secp256k1_get_public(WIFEdit.Text, true);
-
-              wd := TwalletInfo.Create(ImportCoinID, -1, -1,
-                Ethereum_PublicAddrToWallet(comkey), 'Imported');
-              wd.pub := comkey;
-
-              TThread.Synchronize(nil,
-                procedure
-                begin
-                  LoadingKeyDataAniIndicator.Enabled := false;
-                  LoadingKeyDataAniIndicator.Visible := false;
-                  Layout31.Visible := true;
-                  HexPrivKeyNotCompressedRadioButton.IsChecked := true;
-                  SaveNewPrivateKeyButtonClick(Sender);
-                end);
-
-            end).Start();
-          exit;
-
-        end;
-
+        end
       end
-    end
-    else if WIFEdit.Text <> privKeyToWif(wifToPrivKey(WIFEdit.Text)) then
-    begin
-      popupWindow.Create('Wrong WIF');
-      exit;
+      else if WIFEdit.Text <> privKeyToWif(wifToPrivKey(WIFEdit.Text)) then
+      begin
+        popupWindow.Create('Wrong WIF');
+        exit;
+      end;
+    except
+      on E: Exception do
+      begin
+        popupWindow.Create('WIF is not valid');
+        exit;
+      end;
     end;
-  except
-    on E: Exception do
-    begin
-      popupWindow.Create('WIF is not valid');
-      exit;
-    end;
+
+    btnDecryptSeed.OnClick := ImportPrivateKey;
+
+    decryptSeedBackTabItem := PageControl.ActiveTab;
+    PageControl.ActiveTab := descryptSeed;
+    btnDSBack.OnClick := backBtnDecryptSeed;
   end;
 
-  btnDecryptSeed.OnClick := ImportPrivateKey;
-
-  decryptSeedBackTabItem := PageControl.ActiveTab;
-  PageControl.ActiveTab := descryptSeed;
-  btnDSBack.OnClick := backBtnDecryptSeed;
-end;
-
-procedure TfrmHome.SearchEditChange(Sender: TObject);
-begin
-  if SearchEdit.Text = '' then
-    SearchEdit.Visible := false;
-end;
-
-procedure TfrmHome.SearchEditChangeTracking(Sender: TObject);
-var
-  fmxObj: TfmxObject;
-  Panel: TPanel;
-  lbl: TLabel;
-  i: Integer;
-begin
-
-  // showmessage( inttoStr(frmhome.walletList.ChildrenCount) );
-
-  for fmxObj in WalletList.Content.Children do
+  procedure TfrmHome.RestoreFromFileButtonClick(Sender: TObject);
   begin
 
-    // showmessage( fmxObj.ToString );
+    clearVertScrollBox(BackupFileListVertScrollBox);
+{$IFDEF ANDROID}
+    requestForPermission('android.permission.READ_EXTERNAL_STORAGE');
+    requestForPermission('android.permission.WRITE_EXTERNAL_STORAGE');
 
-    if fmxObj is TPanel then
-      Panel := TPanel(fmxObj)
-    else
-      Continue;
-
-    for i := 0 to Panel.ChildrenCount - 1 do
-    begin
-
-      if (Panel.Children[i] is TLabel) and
-        (TLabel(Panel.Children[i]).TagString = 'name') then
+    TThread.CreateAnonymousThread(
+      procedure
+      var
+        i: Integer;
       begin
 
-        if (AnsiContainsText(TLabel(Panel.Children[i]).Text, SearchEdit.Text))
-          or (SearchEdit.Text = '') then
+        for i := 0 to 5 * 30 do
         begin
-          Panel.Visible := true;
-          break;
-        end
-        else
-        begin
-          Panel.Visible := false;
-          break;
+          if (TAndroidHelper.Context.checkCallingOrSelfPermission
+            (StringToJString('android.permission.READ_EXTERNAL_STORAGE')) = -1)
+            or (TAndroidHelper.Context.checkCallingOrSelfPermission
+            (StringToJString('android.permission.WRITE_EXTERNAL_STORAGE')) = -1)
+          then
+          begin
+            sleep(200);
+          end
+          else
+          begin
+{$ENDIF}
+            TThread.CreateAnonymousThread(
+              procedure
+              var
+                strArr: TStringDynArray;
+                Button: TButton;
+
+              begin
+
+                TThread.Synchronize(nil,
+                  procedure
+                  begin
+                    LoadBackupFileAniIndicator.Visible := true;
+                    LoadBackupFileAniIndicator.Enabled := true;
+                  end);
+
+{$IFDEF ANDROID}
+                strArr := TDirectory.GetFiles(TDirectory.GetParent
+                  (System.IOUtils.TPath.GetSharedDownloadsPath()), '*.hsb.zip',
+                  TSearchOption.SoAllDirectories);
+{$ELSE}
+                strArr := TDirectory.GetFiles('C:\', '*.hsb.zip',
+                  TSearchOption.SoAllDirectories);
+{$ENDIF}
+                TThread.Synchronize(nil,
+                  procedure
+                  var
+                    i: Integer;
+                  begin
+
+                    for i := 0 to length(strArr) - 1 do
+                    begin
+                      // if containsText ( strArr[i] , 'hsb' ) then
+                      // begin
+                      Button := TButton.Create(BackupFileListVertScrollBox);
+                      Button.Visible := true;
+                      Button.Align := TAlignLayout.Top;
+                      Button.Height := 48;
+                      if LeftStr(strArr[i],
+                        length(TDirectory.GetParent(System.IOUtils.TPath.
+                        GetSharedDownloadsPath()))) = TDirectory.GetParent
+                        (System.IOUtils.TPath.GetSharedDownloadsPath()) then
+                        Button.Text := RightStr(strArr[i],
+                          length(strArr[i]) -
+                          length(TDirectory.GetParent
+                          (System.IOUtils.TPath.GetSharedDownloadsPath())))
+                      else
+                        Button.Text := strArr[i];
+                      Button.TagString := strArr[i];
+                      Button.Parent := BackupFileListVertScrollBox;
+                      Button.OnClick := SelectFileInBackupFileList;
+                      // end;
+                    end;
+
+                    LoadBackupFileAniIndicator.Visible := false;
+                    LoadBackupFileAniIndicator.Enabled := false;
+
+                  end);
+
+              end).Start;
+{$IFDEF ANDROID}
+            TThread.Synchronize(nil,
+              procedure
+              begin
+
+                RFFPathEdit.Text := System.IOUtils.TPath.GetDownloadsPath();
+                switchTab(PageControl, RestoreFromFileTabitem);
+
+              end);
+            RFFPathEdit.Text := 'C:\';
+
+            switchTab(PageControl, RestoreFromFileTabitem);
+
+            break;
+          end;
         end;
 
-      end;
-
-    end;
-
-  end;
-
-end;
-
-procedure TfrmHome.SearchEditExit(Sender: TObject);
-begin
-  // if SearchEdit.Text = '' then
-  // begin
-  SearchEdit.Visible := false;
-  TLabel(frmHome.FindComponent('HeaderLabel')).Visible := true;
-  SearchEdit.Text := '';
-  // end;
-end;
-
-procedure TfrmHome.SendAllFundsOnSwitch(Sender: TObject);
-begin
-  if SendAllFundsSwitch.IsFocused then
-  begin
-    if SendAllFundsSwitch.IsChecked then
-    begin
-      wvAmount.Text := lbBalanceLong.Text;
-      WVRealCurrency.Text := floatToStrF(strToFloatDef(lbBalanceLong.Text, 0) *
-        CurrentCryptoCurrency.rate, ffFixed, 18, 2);
-      FeeFromAmountSwitch.IsChecked := true;
-      FeeFromAmountSwitch.Enabled := false;
-    end
-    else
-    begin
-      // SetFocused(WvAmount);
-      // WvAmount.
-      wvAmount.Text := BigIntegertoFloatStr(0, CurrentCryptoCurrency.decimals);
-      FeeFromAmountSwitch.IsChecked := false;
-
-      FeeFromAmountSwitch.Enabled := true;
-    end;
-  end;
-end;
-
-procedure TfrmHome.SendDecryptedSeedButtonClick(Sender: TObject);
-begin
-
-  btnDecryptSeed.OnClick := SendDecryptedSeed;
-
-  decryptSeedBackTabItem := PageControl.ActiveTab;
-
-  PageControl.ActiveTab := descryptSeed;
-
-  btnDSBack.OnClick := backBtnDecryptSeed;
-
-end;
-
-procedure TfrmHome.SendDecryptedSeed { ButtonClick } (Sender: TObject);
-var
-  i: Integer;
-  Zip: TEncryptedZipFile;
-  img: TBitmap;
-  tempStr: TStream;
-  ImgPath: AnsiString;
-  zipPath: AnsiString;
-
-var
-  MasterSeed, tced: AnsiString;
-
-begin
-
-  tced := TCA(passwordForDecrypt.Text);
-  MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
-  if not isHex(MasterSeed) then
-  begin
-    popupWindow.Create(dictionary['FailedToDecrypt']);
-    // DecryptSeedMessage.Text := 'Failed to decrypt master seed';
-    exit;
-  end;
-  // tempMasterSeed
-  img := StrToQRBitmap(MasterSeed);
-  ImgPath := System.IOUtils.TPath.Combine
-    (System.IOUtils.TPath.GetDocumentsPath(), 'QRDecryptedSeed.png');
-  zipPath := System.IOUtils.TPath.Combine
-    (System.IOUtils.TPath.GetDownloadsPath(), 'QRDecryptedSeed.zip');
-
-  img.SaveToFile(ImgPath);
-
-  Zip := TEncryptedZipFile.Create(passwordForDecrypt.Text);
-
-  if FileExists(zipPath) then
-    DeleteFile(zipPath);
-
-  Zip.Open(zipPath, TZipMode.zmWrite);
-  Zip.Add(ImgPath);
-  Zip.Close;
-
-  shareFile(zipPath);
-
-  MasterSeed := '';
-  tced := '';
-
-  userSavedSeed := true;
-  refreshWalletDat();
-
-  DeleteFile(ImgPath);
-  // DeleteFile( zipPath );
-  // tempPassword := '';
-  img.free;
-  Zip.free;
-
-end;
-
-procedure TfrmHome.SendEncryptedSeed(Sender: TObject);
-var
-  i: Integer;
-  Zip: TEncryptedZipFile;
-  img: TBitmap;
-  tempStr: TStream;
-  ImgPath: AnsiString;
-  zipPath: AnsiString;
-
-var
-  MasterSeed, tced: AnsiString;
-
-begin
-
-  tced := TCA(passwordForDecrypt.Text);
-  MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
-  if not isHex(MasterSeed) then
-  begin
-    popupWindow.Create(dictionary['FailedToDecrypt']);
-    // DecryptSeedMessage.Text := 'Failed to decrypt master seed';
-    exit;
-  end;
-
-  img := StrToQRBitmap(CurrentAccount.EncryptedMasterSeed);
-
-  ImgPath := System.IOUtils.TPath.Combine
-    (System.IOUtils.TPath.GetDocumentsPath(), 'QREncryptedSeed.png');
-  zipPath := System.IOUtils.TPath.Combine
-    (System.IOUtils.TPath.GetDownloadsPath(), 'QREncryptedSeed.zip');
-
-  img.SaveToFile(ImgPath);
-
-  Zip := TEncryptedZipFile.Create(passwordForDecrypt.Text);
-
-  if FileExists(zipPath) then
-    DeleteFile(zipPath);
-
-  Zip.Open(zipPath, TZipMode.zmWrite);
-  Zip.Add(ImgPath);
-  Zip.Close;
-
-  // passwordForDecrypt.Text := '';
-
-  shareFile(zipPath);
-
-  DeleteFile(ImgPath);
-  // DeleteFile( zipPath );
-  img.free;
-  Zip.free;
-
-  MasterSeed := '';
-  tced := '';
-
-  userSavedSeed := true;
-  refreshWalletDat();
-
-  switchTab(PageControl, BackupTabItem);
-
-end;
-
-procedure TfrmHome.SendEncryptedSeedButtonClick(Sender: TObject);
-begin
-
-  btnDecryptSeed.OnClick := SendEncryptedSeed;
-
-  decryptSeedBackTabItem := PageControl.ActiveTab;
-  PageControl.ActiveTab := descryptSeed;
-  btnDSBack.OnClick := backBtnDecryptSeed;
-
-end;
-
-procedure TfrmHome.SendWalletFile(Sender: TObject);
-var
-  i: Integer;
-  Zip: TEncryptedZipFile;
-  img: TBitmap;
-  tempStr: TStream;
-
-  ImgPath: AnsiString;
-  zipPath: AnsiString;
-  protectorPath: AnsiString;
-  ts: TStringList;
-  it: AnsiString;
-  fileName: AnsiString;
-var
-  MasterSeed, tced: AnsiString;
-
-begin
-
-  tced := TCA(passwordForDecrypt.Text);
-  MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
-  if not isHex(MasterSeed) then
-  begin
-    popupWindow.Create(dictionary['FailedToDecrypt']);
-    exit;
-  end;
-  tced := '';
-  MasterSeed := '';
-
-  fileName := CurrentAccount.name + '_' + FormatDateTime('dd_mmm_yyyy', Now);
-
-  zipPath := System.IOUtils.TPath.Combine
-    (System.IOUtils.TPath.GetDownloadsPath(), fileName + '.hsb.zip');
-
-  if FileExists(zipPath) then
-    DeleteFile(zipPath);
-
-  Zip := TEncryptedZipFile.Create(passwordForDecrypt.Text);
-
-  Zip.Open(zipPath, TZipMode.zmWrite);
-
-  img := StrToQRBitmap(CurrentAccount.EncryptedMasterSeed);
-  ImgPath := System.IOUtils.TPath.Combine
-    (System.IOUtils.TPath.GetDocumentsPath(), 'QREncryptedSeed.png');
-  img.SaveToFile(ImgPath);
-
-  for it in CurrentAccount.Paths do
-  begin
-
-    ts := TStringList.Create();
-    ts.LoadFromFile(it);
-    ts.SaveToFile(LeftStr(it, length(it) - 3) + 'hsb');
-    ts.free;
-
-    Zip.Add(it);
-
-  end;
-  for it in CurrentAccount.Paths do
-  begin
-    Zip.Add(LeftStr(it, length(it) - 3) + 'hsb');
-  end;
-  Zip.Add(ImgPath);
-  Zip.Close;
-
-  shareFile(zipPath);
-
-  CurrentAccount.userSaveSeed := true;
-  // refreshWalletDat();
-
-  DeleteFile(ImgPath);
-  // tempPassword := '';
-  img.free;
-  Zip.free;
-
-  switchTab(PageControl, decryptSeedBackTabItem);
-
-end;
-
-procedure TfrmHome.SendWalletFileButtonClick(Sender: TObject);
-begin
-  btnDecryptSeed.OnClick := SendWalletFile;
-
-  decryptSeedBackTabItem := PageControl.ActiveTab;
-  PageControl.ActiveTab := descryptSeed;
-  btnDSBack.OnClick := backBtnDecryptSeed;
-end;
-
-procedure TfrmHome.ShowShareSheetAction1BeforeExecute(Sender: TObject);
-begin
-  ShowShareSheetAction1.TextMessage := CurrentCryptoCurrency.addr;
-end;
-
-procedure TfrmHome.SearchInDashBrdButtonClick(Sender: TObject);
-begin
-  TLabel(frmHome.FindComponent('HeaderLabel')).Visible := false;
-  SearchEdit.Visible := true;
-  SetFocused(SearchEdit);
-end;
-
-procedure TfrmHome.SeedMnemonicBackupButtonClick(Sender: TObject);
-begin
-
-  btnDecryptSeed.OnClick := decryptSeedForSeedRestore;
-
-  decryptSeedBackTabItem := PageControl.ActiveTab;
-  PageControl.ActiveTab := descryptSeed;
-  btnDSBack.OnClick := backBtnDecryptSeed;
-
-end;
-
-procedure TfrmHome.SwitchSavedSeedSwitch(Sender: TObject);
-begin
-  btnSkip.Enabled := frmHome.SwitchSavedSeed.IsChecked;
-end;
-
-end.
+      end).Start;
+{$ELSE}
+            RFFPathEdit.Text := 'C:\';
+
+            switchTab(PageControl, RestoreFromFileTabitem);
+{$ENDIF}
+            end; end.
