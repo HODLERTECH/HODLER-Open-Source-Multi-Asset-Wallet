@@ -317,7 +317,7 @@ procedure CreatePanel(crypto: cryptoCurrency);
 procedure creatImportPrivKeyCoinList();
 function getETHValidAddress(address: AnsiString): AnsiString;
 function isValidETHAddress(address: AnsiString): Boolean;
-
+procedure searchTokens(InAddress: AnsiString);
 function inputType(input: TBitcoinOutput): integer;
 // procedure refresh
 
@@ -350,7 +350,101 @@ var
   bitmapData: TBitmapData;
 
   /// ////////////////////////////////////////////////////////////////
+procedure searchTokens(InAddress: AnsiString);
+var
+  data: AnsiString;
+  JsonValue: TJsonvalue;
+  JsonTokens: TJsonArray;
+  JsonIt: TJsonvalue;
+  T: Token;
+  address, name, decimals, symbol: AnsiString;
+  i: integer;
+  createToken: boolean;
+  createFromList: boolean;
+  CreateFromListIndex: integer;
+begin
+  data := getDataOverHTTP('https://api.ethplorer.io/getAddressInfo/' +
+    InAddress + '?apiKey=freekey');
+  JsonValue := TJSONObject.ParseJSONValue(data);
 
+  if JsonValue is TJSONObject then
+  begin
+    if JsonValue.tryGetValue<TJsonArray>('tokens', JsonTokens) then
+      for JsonIt in JsonTokens do
+      begin
+
+        address := JsonIt.GetValue<string>('tokenInfo.address');
+        decimals := JsonIt.GetValue<string>('tokenInfo.decimals');
+
+        try
+          name := JsonIt.GetValue<string>('tokenInfo.name');
+        except
+          on E: Exception do
+          begin
+            name := '';
+            showmessage('Load Token Name Error ' + E.Message);
+          end;
+        end;
+
+        try
+          symbol := JsonIt.GetValue<string>('tokenInfo.symbol');
+        except
+          on E: Exception do
+          begin
+            symbol := '';
+            showmessage('Load Token Symbol Error ' + E.Message);
+          end;
+        end;
+
+        createToken := true;
+        for i := 0 to Length(CurrentAccount.myTokens) - 1 do
+        begin
+          if (AnsiLowerCase(CurrentAccount.myTokens[i].addr) = AnsiLowerCase(InAddress)) and
+            (AnsiLowerCase(CurrentAccount.myTokens[i]._contractAddress) = AnsiLowerCase(address)) then
+          begin
+            createToken := false;
+            break;
+          end;
+        end;
+
+        if createToken then
+        begin
+
+          createFromList := false;
+          for i := 0 to Length(Token.availableToken) - 1 do
+          begin
+            if AnsiLowerCase(Token.availableToken[i].address) = AnsiLowerCase(address) then
+            begin
+              createFromList := true;
+              CreateFromListIndex := i;
+              break;
+
+            end;
+
+          end;
+
+          if createFromList then
+          begin
+            T := Token.Create(CreateFromListIndex, InAddress);
+          end
+          else
+          begin
+            T := Token.CreateCustom(address, name, symbol, strToInt(decimals),
+              InAddress);
+          end;
+
+          T.idInWallet := Length(CurrentAccount.myTokens) + 10000;
+
+          CurrentAccount.addToken(T);
+          CurrentAccount.SaveFiles();
+          CreatePanel(T);
+        end;
+
+      end;
+
+  end;
+
+end;
 function isValidETHAddress(address: AnsiString): Boolean;
 begin
   result := address = getETHValidAddress(address);
@@ -534,7 +628,8 @@ begin
   end;
 
   bech := decodeBCH(address);
-
+  if bech.hrp='FAIL' then
+  raise Exception.Create('BECH FAILRE');
   intarr := Copy(bech.values, 1, length(bech.values) - 1);
 
   intarr := Change(bech.values, 5, 8);
