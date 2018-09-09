@@ -1,3 +1,0 @@
-Ultimately, HODLER is planned to be an Open Source project, but because of the intensity of our current development work and the server API availability, we decided to withhold publishing the code until the release of the first fully stable version of HODLER wallet, and until a security audit carried out by independent experts.
-
-If you are interested in receiving an update when the source code becomes available in this repository, please write us at feedback (at) hodler.tech
