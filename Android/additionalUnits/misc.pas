@@ -241,7 +241,7 @@ function speckDecrypt(tcaKey, data: AnsiString): AnsiString;
 function hexatotbytes(H: AnsiString): Tbytes;
 
 function getUTXO(wallet: TWalletInfo): TUTXOS;
-function getDataOverHTTP(aURL: String): AnsiString;
+function getDataOverHTTP(aURL: String; useCache: Boolean = true): AnsiString;
 function parseUTXO(utxos: AnsiString): TUTXOS;
 function IntToTX(data: System.uint64; Padding: integer): AnsiString; overload;
 function IntToTX(data: BigInteger; Padding: integer): AnsiString; overload;
@@ -336,7 +336,7 @@ var
   lastChose: integer;
   lastView: TTabItem;
   isTokenDataInUse: Boolean = false;
-
+  firstSync: Boolean = true;
   i: integer;
 
 implementation
@@ -359,12 +359,12 @@ var
   T: Token;
   address, name, decimals, symbol: AnsiString;
   i: integer;
-  createToken: boolean;
-  createFromList: boolean;
+  createToken: Boolean;
+  createFromList: Boolean;
   CreateFromListIndex: integer;
 begin
-  data := getDataOverHTTP('https://api.ethplorer.io/getAddressInfo/' +
-    InAddress + '?apiKey=freekey');
+  data := getDataOverHTTP('https://api.ethplorer.io/getAddressInfo/' + InAddress
+    + '?apiKey=freekey');
   JsonValue := TJSONObject.ParseJSONValue(data);
 
   if JsonValue is TJSONObject then
@@ -382,7 +382,7 @@ begin
           on E: Exception do
           begin
             name := '';
-            showmessage('Load Token Name Error ' + E.Message);
+            showmessage('Load Token Name Error ' + E.message);
           end;
         end;
 
@@ -392,15 +392,17 @@ begin
           on E: Exception do
           begin
             symbol := '';
-            showmessage('Load Token Symbol Error ' + E.Message);
+            showmessage('Load Token Symbol Error ' + E.message);
           end;
         end;
 
         createToken := true;
         for i := 0 to Length(CurrentAccount.myTokens) - 1 do
         begin
-          if (AnsiLowerCase(CurrentAccount.myTokens[i].addr) = AnsiLowerCase(InAddress)) and
-            (AnsiLowerCase(CurrentAccount.myTokens[i]._contractAddress) = AnsiLowerCase(address)) then
+          if (AnsiLowerCase(CurrentAccount.myTokens[i].addr)
+            = AnsiLowerCase(InAddress)) and
+            (AnsiLowerCase(CurrentAccount.myTokens[i]._contractAddress)
+            = AnsiLowerCase(address)) then
           begin
             createToken := false;
             break;
@@ -413,7 +415,8 @@ begin
           createFromList := false;
           for i := 0 to Length(Token.availableToken) - 1 do
           begin
-            if AnsiLowerCase(Token.availableToken[i].address) = AnsiLowerCase(address) then
+            if AnsiLowerCase(Token.availableToken[i].address)
+              = AnsiLowerCase(address) then
             begin
               createFromList := true;
               CreateFromListIndex := i;
@@ -445,6 +448,7 @@ begin
   end;
 
 end;
+
 function isValidETHAddress(address: AnsiString): Boolean;
 begin
   result := address = getETHValidAddress(address);
@@ -457,7 +461,7 @@ var
   addr: AnsiString;
 begin
 
-  addr := Rightstr(address, length(address) - 2); // '0x'
+  addr := Rightstr(address, Length(address) - 2); // '0x'
   hex := keccak256String(lowercase(addr));
   ans := '0x';
 
@@ -478,8 +482,8 @@ begin
 
   ac.SaveFiles();
 
-  SetLength(AccountsNames, length(AccountsNames) + 1);
-  AccountsNames[length(AccountsNames) - 1] := ac.name;
+  SetLength(AccountsNames, Length(AccountsNames) + 1);
+  AccountsNames[Length(AccountsNames) - 1] := ac.name;
   refreshWalletDat;
 
 end;
@@ -578,8 +582,9 @@ begin
     balLabel.StyledSettings := balLabel.StyledSettings - [TStyledSetting.size];
     balLabel.TextSettings.Font.size := dashBoardFontSize;
     balLabel.Parent := Panel;
-    balLabel.text := BigIntegerBeautifulStr(crypto.confirmed, crypto.decimals) +
-      '    ' + floatToStrF(crypto.getFiat, ffFixed, 15, 2) + ' ' +
+    balLabel.text := BigIntegerBeautifulStr(crypto.confirmed +
+      crypto.unconfirmed, crypto.decimals) + '    ' +
+      floatToStrF(crypto.getFiat, ffFixed, 15, 2) + ' ' +
       CurrencyConverter.symbol;
     balLabel.TextSettings.HorzAlign := TTextAlign.Trailing;
     balLabel.Visible := true;
@@ -628,14 +633,14 @@ begin
   end;
 
   bech := decodeBCH(address);
-  if bech.hrp='FAIL' then
-  raise Exception.Create('BECH FAILRE');
-  intarr := Copy(bech.values, 1, length(bech.values) - 1);
+  if bech.hrp = 'FAIL' then
+    raise Exception.Create('BECH FAILRE');
+  intarr := Copy(bech.values, 1, Length(bech.values) - 1);
 
   intarr := Change(bech.values, 5, 8);
 
   hex := '';
-  for i := 0 to length(intarr) - 7 do
+  for i := 0 to Length(intarr) - 7 do
   begin
     tempInt := intarr[i];
     hex := hex + IntToHex(byte(tempInt));
@@ -681,7 +686,7 @@ begin
       tempStr := '08' + adrInfo.Hash;
   end;
 
-  SetLength(intarr, length(tempStr));
+  SetLength(intarr, Length(tempStr));
   i := 0;
 
   for c in tempStr do
@@ -785,7 +790,7 @@ end;
 function isSegwitAddress(address: AnsiString): Boolean;
 begin
   result := ((AnsiLeftStr(address, 3) = 'bc1') or
-    (AnsiLeftStr(address, 3) = 'ltc1')) and (length(address) > 39);
+    (AnsiLeftStr(address, 3) = 'ltc1')) and (Length(address) > 39);
 end;
 
 function decodeAddressInfo(address: AnsiString; coinid: integer): TAddressInfo;
@@ -810,9 +815,9 @@ begin
   else
   begin
     result := segwit_addr_decode(address);
-    if length(result.Hash) = 40 then
+    if Length(result.Hash) = 40 then
       result.scriptType := 2;
-    if length(result.Hash) = 64 then
+    if Length(result.Hash) = 64 then
       result.scriptType := 3;
 
   end;
@@ -838,6 +843,7 @@ var
   mimetypeStr: JString;
   fileUri: JParcelable;
   javafile: JFile;
+  Os: TOSVersion;
 {$ELSE}
   saveDialog: TSaveDialog;
 {$ENDIF}
@@ -845,15 +851,25 @@ begin
 {$IFDEF ANDROID}
   mimetypeStr := TJMimeTypeMap.JavaClass.getSingleton.getMimeTypeFromExtension
     (StringToJString(StringReplace(TPath.GetExtension(path), '.', '', [])));
-  javafile := TJFile.JavaClass.init(StringToJString(path));
   intent := TJIntent.Create();
-
   intent.setFlags(TJIntent.JavaClass.FLAG_GRANT_READ_URI_PERMISSION);
   intent.SetAction(TJIntent.JavaClass.ACTION_SEND);
   intent.setType(mimetypeStr);
-  fileUri := JParcelable(TJFileProvider.JavaClass.getUriForFile
-    (TAndroidHelper.context, StringToJString('tech.hodler.core.fileProvider'),
-    javafile));
+
+  if (Os.Major >= 5) then
+  begin
+    // FileProvider for Android 5.1+
+    javafile := TJFile.JavaClass.init(StringToJString(path));
+    fileUri := JParcelable(TJFileProvider.JavaClass.getUriForFile
+      (TAndroidHelper.context, StringToJString('tech.hodler.core.fileProvider'),
+      javafile));
+  end
+  else
+  Begin
+    // Oldschool URL
+    fileUri := JParcelable(TJnet_Uri.JavaClass.fromFile
+      (TJFile.JavaClass.init(StringToJString(path))));
+  end;
   intent.putExtra(TJIntent.JavaClass.EXTRA_STREAM, fileUri);
 
   SharedActivity.startActivity(TJIntent.JavaClass.createChooser(intent,
@@ -1022,8 +1038,8 @@ var
   data: AnsiString;
   StringReader: TStringReader;
   JSONTextReader: TJSONTextReader;
-  JSONValue: TJSONValue;
-  JSONArray: TJSONArray;
+  JsonValue: TJsonvalue;
+  JSONArray: TJsonArray;
   it: TJSONIterator;
   ts: TStringList;
 
@@ -1111,7 +1127,7 @@ begin
 
   clearVertScrollBox(frmHome.txHistory);
 
-  for i := length(wallet.history) - 1 downto 0 do
+  for i := Length(wallet.history) - 1 downto 0 do
   begin
 
     Panel := Tpanel.Create(frmHome.txHistory);
@@ -1170,7 +1186,14 @@ begin
     lbl.Parent := Panel;
     lbl.text := BigIntegerBeautifulStr(wallet.history[i].CountValues,
       wallet.decimals);
-
+    if wallet.history[i].confirmation = 0 then
+    begin
+      Panel.Opacity := 0.5;
+      lbl.Opacity := 0.5;
+      Image.Opacity := 0.5;
+      addrLbl.Opacity := 0.5;
+      datalbl.Opacity := 0.5;
+    end;
   end;
   i := 0;
   if frmHome.txHistory.Content.ChildrenCount <> 0 then
@@ -1578,7 +1601,7 @@ begin
   result := bi.tohexString();
 
   result := bi.tohexString();
-  while length(result) < 64 do
+  while Length(result) < 64 do
     result := '0' + result;
 
 end;
@@ -1637,10 +1660,10 @@ begin
   zeroCounter := 0;
 
   Str := num.ToDecimalString;
-  temp := (length(Str) - decimals);
+  temp := (Length(Str) - decimals);
   if temp > 8 then
   begin
-    SetLength(Str, length(Str) - decimals);
+    SetLength(Str, Length(Str) - decimals);
     result := Str;
   end
   else
@@ -1658,7 +1681,7 @@ begin
       else
         break;
     end;
-    SetLength(Str, length(Str) - max(0, zeroCounter - 2));
+    SetLength(Str, Length(Str) - max(0, zeroCounter - 2));
     result := Str;
   end;
 
@@ -1674,8 +1697,10 @@ var
 begin
   flag := false;
   counter := 0;
-
+  /// Cut additional chars exceeding decimals
   separator := FormatSettings.DecimalSeparator;
+  Str := leftstr(Str, Pos(separator, Str) + decimals);
+
   result := BigInteger.Create(0);
   for i := Low(Str) to High(Str) do
   begin
@@ -1727,7 +1752,7 @@ begin
     result := result + '0';
   end;
 
-  if length(Str) >= length(result) then
+  if Length(Str) >= Length(result) then
   begin
     result := Str;
   end
@@ -1743,7 +1768,7 @@ begin
   insert(FormatSettings.DecimalSeparator, result, High(result) - decimals +
     1{$IFDEF ANDROID} + 1{$ENDIF});
 
-  SetLength(result, length(result) - (decimals - precision));
+  SetLength(result, Length(result) - (decimals - precision));
   minus := Pos('-', result) > 1;
   if minus then
   begin
@@ -1922,7 +1947,7 @@ begin
   inc(n);
   result := Str;
 
-  for i := n to length(Str) + (length(Str) - 1) div (n - 1) do
+  for i := n to Length(Str) + (Length(Str) - 1) div (n - 1) do
 
   begin
     if i mod n = 0 then
@@ -1953,7 +1978,7 @@ begin
   if frmHome.SelectNewCoinBox.ComponentCount > 1 then
     exit;
 
-  for i := 0 to length(coinData.availablecoin) - 1 do
+  for i := 0 to Length(coinData.availablecoin) - 1 do
   begin
 
     with frmHome.SelectNewCoinBox do
@@ -2001,7 +2026,7 @@ begin
   if frmHome.ImportprivKeyCoinListVertScrollBox.ComponentCount > 1 then
     exit;
 
-  for i := 0 to length(coinData.availablecoin) - 1 do
+  for i := 0 to Length(coinData.availablecoin) - 1 do
   begin
 
     with frmHome.ImportprivKeyCoinListVertScrollBox do
@@ -2053,7 +2078,7 @@ var
 begin
   s := UpperCase(s);
   result := true;
-  for i := StrStartIteration to length(s){$IFDEF ANDROID} - 1{$ENDIF} do
+  for i := StrStartIteration to Length(s){$IFDEF ANDROID} - 1{$ENDIF} do
     if not(Char(s[i]) in ['0' .. '9']) and not(Char(s[i]) in ['A' .. 'F']) then
     begin
       result := false;
@@ -2078,13 +2103,13 @@ var
 
 begin
 
-  SetLength(buf, length(s));
-  for i := 0 to length(s) - 1 do
+  SetLength(buf, Length(s));
+  for i := 0 to Length(s) - 1 do
     buf[i] := System.UInt8(ord(s[i{$IFNDEF ANDROID} + 1{$ENDIF}]));
 
   init(K256State, 256);
 
-  update(K256State, buf, (length(s)) * 8);
+  update(K256State, buf, (Length(s)) * 8);
   Final(K256State, @K256Dig);
   result := TStateToHEX(K256Dig);
 
@@ -2107,13 +2132,13 @@ var
   bb: Tbytes;
 begin
   bb := hexatotbytes(s);
-  SetLength(buf, length(bb));
-  for i := 0 to length(bb) - 1 do
+  SetLength(buf, Length(bb));
+  for i := 0 to Length(bb) - 1 do
     buf[i] := bb[i];
 
   init(K256State, 256);
 
-  update(K256State, buf, (length(bb)) * 8);
+  update(K256State, buf, (Length(bb)) * 8);
   Final(K256State, @K256Dig);
   result := TStateToHEX(K256Dig);
 
@@ -2167,7 +2192,7 @@ begin
   for i := 0 to strArray.Count - 1 do
   begin
 
-    if ((length(strArray[i]) >= 25) and (length(strArray[i]) <= 43)) then
+    if ((Length(strArray[i]) >= 25) and (Length(strArray[i]) <= 43)) then
     begin
       result := strArray[i];
       strArray.free;
@@ -2195,7 +2220,7 @@ function inttoeth(data: System.uint64): AnsiString;
 var
   ll: integer;
 begin
-  ll := ceil(length(IntToHex(data, 0)) / 2);
+  ll := ceil(Length(IntToHex(data, 0)) / 2);
   result := IntToHex(data, ll * 2);
 end;
 
@@ -2204,7 +2229,7 @@ var
   ll: integer;
 begin
   result := data.tohexString;
-  if length(result) mod 2 = 1 then
+  if Length(result) mod 2 = 1 then
     result := '0' + result;
 
 end;
@@ -2218,7 +2243,7 @@ End;
 function BIntTo256Hex(data: BigInteger; Padding: integer): AnsiString;
 Begin
   result := data.tohexString;
-  while length(result) < Padding do
+  while Length(result) < Padding do
   begin
     result := '0' + result;
   end;
@@ -2229,7 +2254,7 @@ End;
 function IntToTX(data: BigInteger; Padding: integer): AnsiString;
 Begin
   result := data.tohexString;
-  while length(result) < Padding do
+  while Length(result) < Padding do
   begin
     result := '0' + result;
   end;
@@ -2257,23 +2282,146 @@ begin
     result := '';
 end;
 
-function getDataOverHTTP(aURL: String): AnsiString;
+const
+  Codes64 = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/';
+
+function Encode64(s: string): string;
+var
+  i: integer;
+  a: integer;
+  x: integer;
+  b: integer;
+begin
+  result := '';
+  a := 0;
+  b := 0;
+  for i := Low(s) to High(s) do
+  begin
+    x := ord(s[i]);
+    b := b * 256 + x;
+    a := a + 8;
+    while a >= 6 do
+    begin
+      a := a - 6;
+      x := b div (1 shl a);
+      b := b mod (1 shl a);
+      result := result + Codes64[x + 1];
+    end;
+  end;
+  if a > 0 then
+  begin
+    x := b shl (6 - a);
+    result := result + Codes64[x + 1];
+  end;
+end;
+
+function Decode64(s: string): string;
+var
+  i: integer;
+  a: integer;
+  x: integer;
+  b: integer;
+begin
+  result := '';
+  a := 0;
+  b := 0;
+  for i := Low(s) to High(s) do
+  begin
+    x := Pos(s[i], Codes64) - 1;
+    if x >= 0 then
+    begin
+      b := b * 64 + x;
+      a := a + 6;
+      if a >= 8 then
+      begin
+        a := a - 8;
+        x := b shr a;
+        b := b mod (1 shl a);
+        x := x mod 256;
+        result := result + chr(x);
+      end;
+    end
+    else
+      exit;
+  end;
+end;
+
+function loadCache(Hash: AnsiString): AnsiString;
+var
+  list: TStringList;
+  i: integer;
+  conv: TConvert;
+begin
+  result := '';
+  if fileExists(CurrentAccount.DirPath + '/cache.dat') = false then
+    exit;
+
+  list := TStringList.Create();
+  try
+    list.NameValueSeparator := '#';
+    list.LoadFromFile(CurrentAccount.DirPath + '/cache.dat');
+    i := list.IndexOfName(Hash);
+    if i >= 0 then
+    begin
+      conv := TConvert.Create(base64);
+
+      result := conv.FormattOstring(list.values[Hash]);
+      conv.free;
+    end;
+  finally
+    list.free;
+  end;
+end;
+
+procedure saveCache(Hash, data: AnsiString);
+var
+  ts: TStringList;
+  conv: TConvert;
+begin
+  ts := TStringList.Create;
+  try
+    if fileExists(CurrentAccount.DirPath + '/cache.dat') then
+      ts.LoadFromFile(CurrentAccount.DirPath + '/cache.dat');
+    ts.NameValueSeparator := '#';
+    conv := TConvert.Create(base64);
+    data := conv.StringToFormat(data);
+    if ts.IndexOfName(Hash) >= 0 then
+      ts.values[Hash] := data
+    else
+      ts.Add(Hash + '#' + data);
+    conv.free;
+    ts.SaveToFile(CurrentAccount.DirPath + '/cache.dat');
+  finally
+    ts.free;
+  end;
+end;
+
+function getDataOverHTTP(aURL: String; useCache: Boolean = true): AnsiString;
 var
   req: THTTPClient;
   LResponse: IHTTPResponse;
+  urlHash: AnsiString;
 begin
-
+  urlHash := GetStrHashSHA256(aURL);
+  if (firstSync and useCache) then
+  begin
+    result := loadCache(urlHash);
+  end;
   try
-    req := THTTPClient.Create();
-    aURL := aURL + buildAuth(aURL);
-    LResponse := req.get(aURL);
-    result := LResponse.ContentAsString();
+    if (result = '') or (not firstSync) then
+    begin
+
+      req := THTTPClient.Create();
+      aURL := aURL + buildAuth(aURL);
+      LResponse := req.get(aURL);
+      result := LResponse.ContentAsString();
+      saveCache(urlHash, LResponse.ContentAsString());
+    end;
   except
     on E: Exception do
-      result := '';
+    begin
+    end;
   end;
-
-  // showmessage(result);
   req.free;
 end;
 
@@ -2285,16 +2433,16 @@ var
   memstr: TMemoryStream;
 begin
   memstr := TMemoryStream.Create;
-  memstr.SetSize((length(H) div 2));
+  memstr.SetSize((Length(H) div 2));
   memstr.Seek(0, soFromBeginning);
 {$IFDEF ANDROID}
-  for i := 0 to (length(H) div 2) - 1 do
+  for i := 0 to (Length(H) div 2) - 1 do
   begin
     b := byte(strToInt('$' + Copy(H, ((i) * 2) + 1, 2)));
     memstr.Write(b, 1);
   end;
 {$ELSE}
-  for i := 1 to (length(H) div 2) do
+  for i := 1 to (Length(H) div 2) do
   begin
     b := byte(strToInt('$' + Copy(H, ((i - 1) * 2) + 1, 2)));
     memstr.Write(b, 1);
@@ -2317,7 +2465,7 @@ var
   WDPath: AnsiString;
 begin
   WDPath := TPath.Combine(TPath.GetDocumentsPath, 'hodler.wallet.dat');
-  result := FileExists(WDPath);
+  result := fileExists(WDPath);
 end;
 {$IFDEF ANDROID}
 
@@ -2328,10 +2476,10 @@ var
   memstr: TMemoryStream;
 begin
   memstr := TMemoryStream.Create;
-  memstr.SetSize((length(H) div 2) - 1);
+  memstr.SetSize((Length(H) div 2) - 1);
   memstr.Seek(0, soFromBeginning);
 
-  for i := 0 to (length(H) div 2) - 1 do
+  for i := 0 to (Length(H) div 2) - 1 do
   begin
     b := System.UInt8(strToInt('$' + Copy(H, (i) * 2, 2)));
     memstr.Write(b, 1);
@@ -2346,9 +2494,9 @@ var
   memstr: TMemoryStream;
 begin
   memstr := TMemoryStream.Create;
-  memstr.SetSize((length(H) div 2));
+  memstr.SetSize((Length(H) div 2));
   memstr.Seek(0, soFromBeginning);
-  for i := 1 to (length(H) div 2) do
+  for i := 1 to (Length(H) div 2) do
   begin
     b := byte(strToInt('$' + Copy(H, (i - 1) * 2 + 1, 2)));
     memstr.Write(b, 1);
@@ -2363,15 +2511,15 @@ var
   b: System.UInt8;
   bb: Tbytes;
 begin
-  SetLength(bb, (length(H) div 2));
+  SetLength(bb, (Length(H) div 2));
 {$IFDEF ANDROID}
-  for i := 0 to (length(H) div 2) - 1 do
+  for i := 0 to (Length(H) div 2) - 1 do
   begin
     b := System.UInt8(strToInt('$' + Copy(H, ((i) * 2) + 1, 2)));
     bb[i] := b;
   end;
 {$ELSE}
-  for i := 1 to (length(H) div 2) do
+  for i := 1 to (Length(H) div 2) do
   begin
     b := System.UInt8(strToInt('$' + Copy(H, ((i - 1) * 2) + 1, 2)));
     bb[i - 1] := b;
@@ -2392,7 +2540,7 @@ begin
   bb := hexatotbytes(H);
   HashSHA := THashSHA2.Create;
   HashSHA.Reset;
-  HashSHA.update(bb, (length(H) div 2));
+  HashSHA.update(bb, (Length(H) div 2));
   result := HashSHA.HashAsString;
 
 end;
@@ -2461,14 +2609,9 @@ begin
   result := s;
 end;
 
-function TBytesToString(bb: Tbytes): AnsiString;
-var
-  conv: TConvert;
+function TBytesToString(bb: Tbytes): WideString;
 begin
-  conv := TConvert.Create(raw);
-  result := conv.TBytesToString(bb);
-  conv.free;
-
+  result := TEncoding.ANSI.GetString(bb);
 end;
 
 function speckEncrypt(tcaKey, data: AnsiString): AnsiString;
@@ -2553,16 +2696,16 @@ var
   conv: TConvert;
 
 begin
-  SetLength(bb, (length(tcaKey) div 2));
-  SetLength(bb2, (length(data) div 2));
+  SetLength(bb, (Length(tcaKey) div 2));
+  SetLength(bb2, (Length(data) div 2));
 {$IFDEF ANDROID}
-  for i := 0 to (length(tcaKey) div 2) - 1 do
+  for i := 0 to (Length(tcaKey) div 2) - 1 do
   begin
     b := System.UInt8(strToInt('$' + Copy(tcaKey, ((i) * 2) + 1, 2)));
     bb[i] := b;
   end;
 {$ELSE}
-  for i := 1 to (length(tcaKey) div 2) do
+  for i := 1 to (Length(tcaKey) div 2) do
   begin
     b := System.UInt8(strToInt('$' + Copy(tcaKey, ((i - 1) * 2) + 1, 2)));
     bb[i - 1] := b;
@@ -2589,7 +2732,7 @@ procedure wipeAnsiString(var toWipe: AnsiString);
 var
   i: integer;
 begin
-  for i := 0 to length(toWipe) - 1 do
+  for i := 0 to Length(toWipe) - 1 do
     toWipe[i] := #0;
   toWipe := '';
 end;
@@ -2599,7 +2742,7 @@ procedure wipeAnsiString(var toWipe: AnsiString);
 var
   i: integer;
 begin
-  for i := 1 to length(toWipe) do
+  for i := 1 to Length(toWipe) do
     toWipe[i] := #0;
   toWipe := '';
 end;
@@ -2612,7 +2755,7 @@ begin
   s := StringReplace(s, '$', '', [rfReplaceAll]);
   result := '';
   repeat
-    if length(s) >= 2 then
+    if Length(s) >= 2 then
     begin
       v := Copy(s, 0, 2);
       delete(s, 1, 2);
@@ -2642,7 +2785,7 @@ var
   i: integer;
 begin
   result := '* ::: ';
-  for i := StrStartIteration to length(seed) do
+  for i := StrStartIteration to Length(seed) do
   begin
     result := result + seed[i];
 {$IFDEF ANDROID}
@@ -2667,7 +2810,7 @@ var
   ts, oldFile: TStringList;
   i: integer;
 begin
-  if not FileExists(TPath.Combine(TPath.GetDocumentsPath, 'hodler.wallet.dat'))
+  if not fileExists(TPath.Combine(TPath.GetDocumentsPath, 'hodler.wallet.dat'))
   then
   begin
     exit;
@@ -2686,8 +2829,8 @@ begin
   else
     ts.Add('');
 
-  ts.Add(IntToStr(length(AccountsNames)));
-  for i := 0 to length(AccountsNames) - 1 do
+  ts.Add(IntToStr(Length(AccountsNames)));
+  for i := 0 to Length(AccountsNames) - 1 do
     ts.Add(AccountsNames[i]);
 
   ts.SaveToFile(TPath.Combine(TPath.GetDocumentsPath, 'hodler.wallet.dat'));
@@ -2820,8 +2963,8 @@ begin
         T.orderInWallet := Position;
         inc(Position, 48);
 
-        T.idInWallet := length(ac.myTokens) + 10000;
-        ac.AddToken(T);
+        T.idInWallet := Length(ac.myTokens) + 10000;
+        ac.addToken(T);
 
       end;
 
@@ -2855,7 +2998,7 @@ begin
         begin
           ts := TStringList.Create;
           ts.LoadFromFile(filePath);
-          ts.text := StringofChar('@', length(ts.text));
+          ts.text := StringofChar('@', Length(ts.text));
           ts.SaveToFile(filePath);
           ts.free;
           DeleteFile(filePath);
@@ -2918,8 +3061,9 @@ begin
 
       if fmxObj.TagString = 'balance' then
       begin
-        TLabel(fmxObj).text := BigIntegerBeautifulStr(cc.confirmed, cc.decimals)
-          + '    ' + floatToStrF(cc.getFiat, ffFixed, 15, 2) + ' ' +
+        TLabel(fmxObj).text := BigIntegerBeautifulStr
+          (cc.confirmed + cc.unconfirmed, cc.decimals) + '    ' +
+          floatToStrF(cc.getFiat, ffFixed, 15, 2) + ' ' +
           CurrencyConverter.symbol;
       end;
 
@@ -2977,7 +3121,7 @@ var
   i, l: integer;
 begin
   result := 0;
-  l := length(T.history);
+  l := Length(T.history);
   if l = 0 then
     exit;
 
