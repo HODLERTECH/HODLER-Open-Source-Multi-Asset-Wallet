@@ -22,8 +22,8 @@ type
     // private
 
     id: integer;
-    //_name: AnsiString;
-    //_shortcut: AnsiString;
+    // _name: AnsiString;
+    // _shortcut: AnsiString;
     _contractAddress: AnsiString;
     // decimals : Integer;
     _WalletID: integer;
@@ -33,9 +33,8 @@ type
     idInWallet: integer;
     lastBlock: integer;
 
-    constructor CreateCustom(ContractAddress: AnsiString; name: AnsiString;
-      shortcut: AnsiString; decimalsint: integer;
-      WalletAddress: AnsiString); overload;
+constructor CreateCustom(ContractAddress: AnsiString; _name: AnsiString;
+  _shortcut: AnsiString; decimalsint: integer; WalletAddress: AnsiString);
     constructor Create(index: integer; WalletAddress: AnsiString); overload;
     constructor fromString(str: AnsiString);
     constructor fromStringList(list: TStringList);
@@ -44,10 +43,10 @@ type
     function toString(): AnsiString; virtual;
     function getIcon(): TBitmap; override;
 
-    //property name: AnsiString read _name;
+    // property name: AnsiString read _name;
     // property id : Integer read _id;
     property image: TBitmap read getIcon;
-    //property shortcut: AnsiString read _shortcut;
+    // property shortcut: AnsiString read _shortcut;
     property ContractAddress: AnsiString read _contractAddress;
     // property decimals : Integer read _decimals;
     property walletID: integer read _WalletID;
@@ -114,16 +113,16 @@ begin
 end;
 
 // custom token constructor
-constructor Token.CreateCustom(ContractAddress: AnsiString; name: AnsiString;
-  shortcut: AnsiString; decimalsint: integer; WalletAddress: AnsiString);
+constructor Token.CreateCustom(ContractAddress: AnsiString; _name: AnsiString;
+  _shortcut: AnsiString; decimalsint: integer; WalletAddress: AnsiString);
 begin
   inherited Create();
   creationTime := DateTimetoUnix(Now);
 
   id := -1;
   _contractAddress := ContractAddress;
-  name := name;
-  shortcut := shortcut;
+  name := _name;
+  shortcut := _shortcut;
   decimals := decimalsint;
   addr := WalletAddress;
 
