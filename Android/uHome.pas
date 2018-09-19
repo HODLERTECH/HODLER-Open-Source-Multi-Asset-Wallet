@@ -1976,16 +1976,16 @@ var
   dezip: TZipFile;
   it: AnsiString;
   ac: Account;
+  failure:boolean;
 begin
-
+   failure:=false;
   if not FileExists(RFFPathEdit.Text) then
   begin
     showmessage('file doesn''t exist');
     exit;
   end;
 
-  ac := Account.Create(RestoreFromFileAccountNameEdit.Text);
-  ac.SaveFiles();
+
 
   // if CurrentAccount = nil then
   // CurrentAccount := Account.Create(RestoreFromFileAccountNameEdit.Text);
@@ -2006,17 +2006,19 @@ begin
             3) + 'hsb', ac.DirPath);
           RenameFile(LeftStr(it, length(it) - 3) + 'hsb', it);
         except
-          on F: Exception do
-            showmessage('Zip Library Damaged  couldn''t load files');
+          on F: Exception do begin
+            showmessage('Wrong password or damaged file');
+            end;
         end;
     end;
 
   end;
-
+  if failure then exit;
+  
   Zip.Close;
-
   Zip.free;
-
+   ac := Account.Create(RestoreFromFileAccountNameEdit.Text);
+  ac.SaveFiles();
   ac.free;
   ac := Account.Create(RestoreFromFileAccountNameEdit.Text);
   ac.LoadFiles;
