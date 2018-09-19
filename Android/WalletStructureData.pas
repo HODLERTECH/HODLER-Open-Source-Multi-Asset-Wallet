@@ -1,7 +1,8 @@
 unit WalletStructureData;
 
 interface
-uses cryptoCurrencyData  , SysUtils , DateUtils , FMX.Graphics;
+
+uses cryptoCurrencyData, SysUtils, DateUtils, FMX.Graphics;
 
 {$IFDEF ANDROID}
 
@@ -40,7 +41,6 @@ type
 type
   TUTXOS = array of TBitcoinOutput;
 
-
 type
   TWalletInfo = class(cryptoCurrency)
     pub: AnsiString;
@@ -55,18 +55,19 @@ type
     efee: array [0 .. 6] of AnsiString;
     UTXO: TUTXOS;
     nonce: System.UInt32;
-    isCompressed : Boolean;
+    isCompressed: Boolean;
     // description: AnsiString;
     // rate : Double;    // coin cost in USD
 
     constructor Create(id: integer; _x: integer; _y: integer; _addr: AnsiString;
       _description: AnsiString; crTime: integer = -1);
 
-    function getIcon() : TBitmap; override ;
+    function getIcon(): TBitmap; override;
 
   end;
 
 implementation
+
 uses coinData;
 
 constructor TWalletInfo.Create(id: integer; _x: integer; _y: integer;
@@ -79,7 +80,7 @@ begin
   addr := _addr;
   decimals := availablecoin[id].decimals;
   description := _description;
-  ShortCut := availablecoin[id].shortcut;
+  ShortCut := availablecoin[id].ShortCut;
   name := availablecoin[id].displayName;
   isCompressed := true;
 
@@ -89,7 +90,7 @@ begin
   creationTime := crTime;
 end;
 
-function TwalletInfo.getIcon() : TBitmap;
+function TWalletInfo.getIcon(): TBitmap;
 begin
   result := getCoinIcon(coin);
 end;
