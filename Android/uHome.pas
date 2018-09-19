@@ -1992,7 +1992,8 @@ begin
 
   Zip := TEncryptedZipFile.Create(RFFPassword.Text);
   Zip.Open(RFFPathEdit.Text, TZipMode.zmRead);
-
+   ac := Account.Create(RestoreFromFileAccountNameEdit.Text);
+  ac.SaveFiles();
   for it in ac.Paths do
   begin
 
@@ -2008,18 +2009,18 @@ begin
         except
           on F: Exception do begin
             showmessage('Wrong password or damaged file');
+            RemoveDir(ac.DirPath);
             end;
         end;
     end;
 
   end;
-  if failure then exit;
-  
+  ac.free;
+    
   Zip.Close;
   Zip.free;
-   ac := Account.Create(RestoreFromFileAccountNameEdit.Text);
-  ac.SaveFiles();
-  ac.free;
+  if failure then exit;
+
   ac := Account.Create(RestoreFromFileAccountNameEdit.Text);
   ac.LoadFiles;
   ac.userSaveSeed := true;
