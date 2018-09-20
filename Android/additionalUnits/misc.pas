@@ -226,6 +226,7 @@ type
   end;
 {$ENDIF}
 
+procedure setBlackBackground(Owner: TComponent);
 function isP2PKH(netbyte: AnsiString; coinid: integer): Boolean;
 function isSegwitAddress(address: AnsiString): Boolean;
 function decodeAddressInfo(address: AnsiString; coinid: integer): TAddressInfo;
@@ -389,8 +390,8 @@ begin
   begin
     if AccountsNames[i] = name then
     begin
-       Delete(AccountsNames,i,1);
-     end;
+      delete(AccountsNames, i, 1);
+    end;
   end;
   ac.Free;
   refreshWalletDat;
@@ -721,6 +722,22 @@ begin
   result := ac;
 end;
 
+procedure setBlackBackground(Owner: TComponent);
+var
+  bg: TRectangle;
+begin
+  bg := TRectangle.Create(Owner);
+  bg.Parent := TFMXObject(Owner);
+  bg.Align := TalignLayout.Client;
+  bg.Fill.Color := TAlphaColors.Black;
+  bg.Stroke.Color := TAlphaColors.Black;
+  bg.Fill.Kind := TBrushKind.Solid;
+  bg.SendToBack;
+  bg.Visible := true;
+  TControl(Owner).Children.Items[bg.Index].SendToBack;
+  // bg.Index
+end;
+
 procedure CreatePanel(crypto: cryptoCurrency);
 var
   Panel: Tpanel;
@@ -729,6 +746,7 @@ var
   adrLabel: TLabel;
   coinIMG: TImage;
   price: TLabel;
+
 begin
   with frmhome.WalletList do
   begin
@@ -738,9 +756,8 @@ begin
     Panel.Height := 48;
     Panel.Visible := true;
     Panel.Parent := frmhome.WalletList;
-
     Panel.TagObject := crypto;
-
+    setBlackBackground(Panel);
     Panel.Position.y := crypto.orderInWallet;
 
     Panel.Touch.InteractiveGestures := [TInteractiveGesture.LongTap];
@@ -784,7 +801,7 @@ begin
     balLabel.Visible := true;
     balLabel.Width := 200;
     balLabel.Height := 48;
-    balLabel.Align := TAlignLayout.FitRight;
+    balLabel.Align := TalignLayout.FitRight;
     balLabel.TextSettings.Font.size := adrLabel.TextSettings.Font.size - 3;
     balLabel.Margins.Right := 15;
     balLabel.TagString := 'balance';
@@ -794,6 +811,7 @@ begin
       coinIMG.Bitmap := getCoinIcon(TWalletInfo(crypto).coin)
     else
       coinIMG.Bitmap := Token(crypto).Image;
+
     coinIMG.Height := 32.0;
     coinIMG.Width := 50;
     coinIMG.Position.x := 4;
@@ -804,7 +822,7 @@ begin
     price.Visible := true;
     price.text := floatToStrF(CurrencyConverter.calculate(crypto.rate),
       ffFixed, 18, 2);
-    price.Align := TAlignLayout.Bottom;
+    price.Align := TalignLayout.Bottom;
     price.Height := 16;
     price.TextSettings.HorzAlign := TTextAlign.Leading;
     price.Margins.Left := coinIMG.Width + 2;
@@ -1304,7 +1322,7 @@ end;
 
 procedure refreshOrderInDashBrd();
 var
-  fmxObj: TFmxObject;
+  fmxObj: TFMXObject;
 begin;
 
   if frmhome.WalletList.Content.ChildrenCount = 0 then
@@ -1328,7 +1346,7 @@ var
   lbl: TLabel;
   addrLbl: TLabel;
   datalbl: TLabel;
-  fmxObj: TFmxObject;
+  fmxObj: TFMXObject;
   i: integer;
 begin
 
@@ -1338,7 +1356,7 @@ begin
   begin
 
     Panel := Tpanel.Create(frmhome.txHistory);
-    Panel.Align := TAlignLayout.Top;
+    Panel.Align := TalignLayout.Top;
     Panel.Height := 36;
     Panel.Visible := true;
     Panel.Tag := i;
@@ -1386,7 +1404,7 @@ begin
       Image.Bitmap := frmhome.receiveImage.Bitmap;
 
     lbl := TLabel.Create(Panel);
-    lbl.Align := TAlignLayout.Bottom;
+    lbl.Align := TalignLayout.Bottom;
     lbl.Height := 18;
     lbl.TextSettings.HorzAlign := TTextAlign.taTrailing;
     lbl.Visible := true;
@@ -1491,7 +1509,7 @@ begin
   PlacementRectangle := TBounds.Create(RectF(0, 0, 0, 0));
 
   Panel := Tpanel.Create(self);
-  Panel.Align := TAlignLayout.Client;
+  Panel.Align := TalignLayout.Client;
   Panel.Height := 48;
   Panel.Visible := true;
   Panel.Tag := i;
@@ -1501,7 +1519,7 @@ begin
   for i := 0 to 5 do
   begin
     Panel := Tpanel.Create(Panel);
-    Panel.Align := TAlignLayout.Client;
+    Panel.Align := TalignLayout.Client;
     Panel.Visible := true;
     Panel.Tag := i;
     Panel.Parent := Panel2;
@@ -1510,12 +1528,12 @@ begin
 
   _ImageLayout := TLayout.Create(Panel);
   _ImageLayout.Visible := true;
-  _ImageLayout.Align := TAlignLayout.MostTop;
+  _ImageLayout.Align := TalignLayout.MostTop;
   _ImageLayout.Parent := Panel;
   _ImageLayout.Height := 96;
 
   _Image := TImage.Create(_ImageLayout);
-  _Image.Align := TAlignLayout.Center;
+  _Image.Align := TalignLayout.Center;
   _Image.Width := 64;
   _Image.Height := 64;
   _Image.Visible := true;
@@ -1532,7 +1550,7 @@ begin
   end;
 
   _lblMessage := TLabel.Create(Panel);
-  _lblMessage.Align := TAlignLayout.Client;
+  _lblMessage.Align := TalignLayout.Client;
   _lblMessage.Visible := true;
   _lblMessage.Parent := Panel;
   _lblMessage.text := mess;
@@ -1540,12 +1558,12 @@ begin
 
   _ButtonLayout := TLayout.Create(Panel);
   _ButtonLayout.Visible := true;
-  _ButtonLayout.Align := TAlignLayout.MostBottom;
+  _ButtonLayout.Align := TalignLayout.MostBottom;
   _ButtonLayout.Parent := Panel;
   _ButtonLayout.Height := 48;
 
   _YesButton := TButton.Create(_ButtonLayout);
-  _YesButton.Align := TAlignLayout.Right;
+  _YesButton.Align := TalignLayout.Right;
   _YesButton.Width := _ButtonLayout.Width / 2;
   _YesButton.Visible := true;
   _YesButton.Parent := _ButtonLayout;
@@ -1553,7 +1571,7 @@ begin
   _YesButton.OnClick := _onYesClick;
 
   _NoButton := TButton.Create(_ButtonLayout);
-  _NoButton.Align := TAlignLayout.Left;
+  _NoButton.Align := TalignLayout.Left;
   _NoButton.Width := _ButtonLayout.Width / 2;
   _NoButton.Visible := true;
   _NoButton.Parent := _ButtonLayout;
@@ -1619,7 +1637,7 @@ begin
   PlacementRectangle := TBounds.Create(RectF(0, 0, 0, 0));
 
   Panel := Tpanel.Create(self);
-  Panel.Align := TAlignLayout.Client;
+  Panel.Align := TalignLayout.Client;
   Panel.Height := 48;
   Panel.Visible := true;
   Panel.Tag := i;
@@ -1629,7 +1647,7 @@ begin
   for i := 0 to 5 do
   begin
     Panel := Tpanel.Create(Panel);
-    Panel.Align := TAlignLayout.Client;
+    Panel.Align := TalignLayout.Client;
     Panel.Visible := true;
     Panel.Tag := i;
     Panel.Parent := Panel2;
@@ -1638,12 +1656,12 @@ begin
 
   _ImageLayout := TLayout.Create(Panel);
   _ImageLayout.Visible := true;
-  _ImageLayout.Align := TAlignLayout.MostTop;
+  _ImageLayout.Align := TalignLayout.MostTop;
   _ImageLayout.Parent := Panel;
   _ImageLayout.Height := 96;
 
   _Image := TImage.Create(_ImageLayout);
-  _Image.Align := TAlignLayout.Center;
+  _Image.Align := TalignLayout.Center;
   _Image.Width := 64;
   _Image.Height := 64;
   _Image.Visible := true;
@@ -1660,14 +1678,14 @@ begin
   end;
 
   _lblMessage := TLabel.Create(Panel);
-  _lblMessage.Align := TAlignLayout.Client;
+  _lblMessage.Align := TalignLayout.Client;
   _lblMessage.Visible := true;
   _lblMessage.Parent := Panel;
   _lblMessage.text := mess;
   _lblMessage.TextSettings.HorzAlign := TTextAlign.Center;
 
   _OKbutton := TButton.Create(Panel);
-  _OKbutton.Align := TAlignLayout.Bottom;
+  _OKbutton.Align := TalignLayout.Bottom;
   _OKbutton.Height := 48;
   _OKbutton.Visible := true;
   _OKbutton.Parent := Panel;
@@ -1721,7 +1739,7 @@ begin
   PlacementRectangle := TBounds.Create(RectF(0, 0, 0, 0));
 
   Panel := Tpanel.Create(self);
-  Panel.Align := TAlignLayout.Client;
+  Panel.Align := TalignLayout.Client;
   Panel.Visible := true;
   Panel.Tag := i;
   Panel.Parent := self;
@@ -1730,7 +1748,7 @@ begin
   for i := 0 to 5 do
   begin
     Panel := Tpanel.Create(Panel);
-    Panel.Align := TAlignLayout.Client;
+    Panel.Align := TalignLayout.Client;
     Panel.Visible := true;
     Panel.Tag := i;
     Panel.Parent := Panel2;
@@ -1738,7 +1756,7 @@ begin
   end;
 
   messageLabel := TLabel.Create(Panel);
-  messageLabel.Align := TAlignLayout.Client;
+  messageLabel.Align := TalignLayout.Client;
   messageLabel.Visible := true;
   messageLabel.Parent := Panel;
   messageLabel.text := mess;
@@ -2060,7 +2078,7 @@ var
   bitmapData: TBitmapData;
   y: integer;
   x: integer;
-  color: TAlphaColor;
+  Color: TAlphaColor;
   i: integer;
   i_max: integer;
   bb: Tbytes;
@@ -2118,8 +2136,8 @@ begin
     begin
       for y := 0 to 31 do
       begin
-        color := bitmapData.GetPixel(x, y);
-        bitmapData.SetPixel(31 - x, y, color);
+        Color := bitmapData.GetPixel(x, y);
+        bitmapData.SetPixel(31 - x, y, Color);
       end;
     end;
   end;
@@ -2130,8 +2148,8 @@ begin
     begin
       for y := 0 to 15 do
       begin
-        color := bitmapData.GetPixel(x, y);
-        bitmapData.SetPixel(x, 31 - y, color);
+        Color := bitmapData.GetPixel(x, y);
+        bitmapData.SetPixel(x, 31 - y, Color);
       end;
     end;
   end;
@@ -3069,35 +3087,41 @@ var
   wd: TWalletInfo;
   ts, oldFile: TStringList;
   i: integer;
+  FLock: TObject;
 begin
-  if not fileExists(TPath.Combine(TPath.GetDocumentsPath, 'hodler.wallet.dat'))
-  then
-  begin
-    exit;
+  FLock := TObject.Create;
+  TMonitor.Enter(FLock);
+  try
+    if not fileExists(TPath.Combine(TPath.GetDocumentsPath, 'hodler.wallet.dat'))
+    then
+    begin
+      exit;
+    end;
+
+    ts := TStringList.Create;
+    oldFile := TStringList.Create;
+    oldFile.LoadFromFile(TPath.Combine(TPath.GetDocumentsPath,
+      'hodler.wallet.dat'));
+
+    ts.Add(intToStr(frmhome.LanguageBox.ItemIndex));
+    ts.Add(CurrencyConverter.symbol);
+
+    if CurrentAccount <> nil then
+      ts.Add(CurrentAccount.name)
+    else
+      ts.Add('');
+
+    ts.Add(intToStr(Length(AccountsNames)));
+    for i := 0 to Length(AccountsNames) - 1 do
+      ts.Add(AccountsNames[i]);
+
+    ts.SaveToFile(TPath.Combine(TPath.GetDocumentsPath, 'hodler.wallet.dat'));
+    ts.Free;
+
+    oldFile.Free; // ?
+  finally
+    TMonitor.exit(FLock);
   end;
-
-  ts := TStringList.Create;
-  oldFile := TStringList.Create;
-  oldFile.LoadFromFile(TPath.Combine(TPath.GetDocumentsPath,
-    'hodler.wallet.dat'));
-
-  ts.Add(intToStr(frmhome.LanguageBox.ItemIndex));
-  ts.Add(CurrencyConverter.symbol);
-
-  if CurrentAccount <> nil then
-    ts.Add(CurrentAccount.name)
-  else
-    ts.Add('');
-
-  ts.Add(intToStr(Length(AccountsNames)));
-  for i := 0 to Length(AccountsNames) - 1 do
-    ts.Add(AccountsNames[i]);
-
-  ts.SaveToFile(TPath.Combine(TPath.GetDocumentsPath, 'hodler.wallet.dat'));
-  ts.Free;
-
-  oldFile.Free; // ?
-
 end;
 
 procedure createWalletDat();
@@ -3307,7 +3331,7 @@ procedure updateBalanceLabels();
 var
   i: integer;
   component: TLabel;
-  fmxObj: TFmxObject;
+  fmxObj: TFMXObject;
   Panel: Tpanel;
   cc: cryptoCurrency;
 begin
@@ -3348,7 +3372,7 @@ procedure updateNameLabels();
 var
   i: integer;
   component: TLabel;
-  fmxObj: TFmxObject;
+  fmxObj: TFMXObject;
   Panel: Tpanel;
   cc: cryptoCurrency;
 begin
