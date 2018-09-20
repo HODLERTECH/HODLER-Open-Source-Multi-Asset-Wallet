@@ -3106,10 +3106,13 @@ begin
     ts.Add(intToStr(frmhome.LanguageBox.ItemIndex));
     ts.Add(CurrencyConverter.symbol);
 
-    if CurrentAccount <> nil then
-      ts.Add(CurrentAccount.name)
+    if lastClosedAccount = '' then
+      if CurrentAccount <> nil then
+        ts.Add(CurrentAccount.name)
+      else
+        ts.Add('')
     else
-      ts.Add('');
+      ts.Add(lastClosedAccount);
 
     ts.Add(intToStr(Length(AccountsNames)));
     for i := 0 to Length(AccountsNames) - 1 do
