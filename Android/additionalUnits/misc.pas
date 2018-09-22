@@ -331,7 +331,7 @@ const
   HODLER_URL: string = 'https://hodler1.nq.pl/';
   HODLER_URL2: string = 'https://hodlerstream.net/';
   HODLER_ETH: string = 'https://hodler2.nq.pl/';
-  HODLER_ETH2: string = 'https://hodlernode.net/';
+  HODLER_ETH2: string = 'https://hodler2.nq.pl/';
   API_PUB = {$I 'public_key.key' };
   API_PRIV = {$I 'private_key.key' };
 
@@ -717,7 +717,7 @@ begin
   ac.TCAIterations := TCAIterations;
   ac.EncryptedMasterSeed := speckEncrypt((TCA(pass)), seed);
   ac.userSaveSeed := false;
-
+  ac.privTCA := false; // not frmHome.notPrivTCA1.isChecked;
   GenetareCoinsData(seed, pass, ac);
   result := ac;
 end;
@@ -726,6 +726,7 @@ procedure setBlackBackground(Owner: TComponent);
 var
   bg: TRectangle;
 begin
+  exit;
   bg := TRectangle.Create(Owner);
   bg.Parent := TFMXObject(Owner);
   bg.Align := TalignLayout.Client;
@@ -1210,8 +1211,8 @@ var
   T: Token;
   w: TWalletInfo;
 begin
-  frmhome.lblReceiveRealCurrency.text := CurrencyConverter.symbol;
-  frmhome.lblCoinFiat.text := CurrencyConverter.symbol;
+  frmhome.lblReceiveRealCurrency.text := CurrencyConverter.symbol + '  ';
+  frmhome.lblCoinFiat.text := CurrencyConverter.symbol + '   ';
 
   TLabel(frmhome.FindComponent('globalBalance')).text :=
     floatToStrF(CurrencyConverter.calculate(globalFiat), ffFixed, 9, 2);
@@ -3048,6 +3049,10 @@ function priv256forHD(coin, x, y: integer; MasterSeed: AnsiString): AnsiString;
 var
   bi: BigInteger;
 begin
+  { if CurrentAccount.privTCA then
+    result := GetSHA256FromHex(TCA(IntToHex(x, 32) + GetSHA256FromHex(IntToHex(coin,
+    8) + GetSHA256FromHex(IntToHex(coin, 8) + IntToHex(x, 32) + MasterSeed +
+    IntToHex(y, 32))) + IntToHex(y, 32))) else }
   result := GetSHA256FromHex(IntToHex(x, 32) + GetSHA256FromHex(IntToHex(coin,
     8) + GetSHA256FromHex(IntToHex(coin, 8) + IntToHex(x, 32) + MasterSeed +
     IntToHex(y, 32))) + IntToHex(y, 32));
