@@ -17,7 +17,7 @@ type
     values: Array of BigInteger;
     CountValues: BigInteger;
     lastBlock: System.uint64;
-
+    confirmation: System.uint64;
     function toString(): AnsiString;
     procedure FromString(str: AnsiString);
 
@@ -36,13 +36,13 @@ type
     description: AnsiString;
     orderInWallet: Integer;
     deleted: boolean;
-    EncryptedPrivKey : AnsiString;
-    name , ShortCut : AnsiString;
+    EncryptedPrivKey: AnsiString;
+    name, ShortCut: AnsiString;
 
     constructor Create();
-    destructor Destroy(); override ;
+    destructor Destroy(); override;
 
-    function getIcon() : TBitmap; virtual ;
+    function getIcon(): TBitmap; virtual;
 
     function getFiat: Double;
   end;
@@ -51,15 +51,14 @@ implementation
 
 uses misc, uHome;
 
-function cryptoCurrency.getIcon() : TBitmap;
+function cryptoCurrency.getIcon(): TBitmap;
 begin
   raise Exception.Create('getIcon not implemented');
 end;
 
-
 destructor cryptoCurrency.Destroy();
 begin
-  SetLength( history , 0 );
+  SetLength(history, 0);
 end;
 
 constructor cryptoCurrency.Create();
@@ -68,9 +67,11 @@ begin
 end;
 
 function cryptoCurrency.getFiat: Double;
+var d:double;
 begin
-
-  result := currencyConverter.calculate(confirmed.asDouble) * rate /
+  d:=confirmed.asDouble+unconfirmed.AsDouble;
+  if d<0 then d:=0.0;
+  result := currencyConverter.calculate(d) * rate /
     Math.power(10, decimals);
 
 end;
@@ -116,8 +117,8 @@ begin
   data := list.Strings[2];
   size := strtoIntDef(list.Strings[3], 0);
 
-  setLength(addresses, size);
-  setLength(values, size);
+  SetLength(addresses, size);
+  SetLength(values, size);
 
   for i := 0 to size - 1 do
   begin
