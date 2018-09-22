@@ -28,7 +28,7 @@ uses
   languages, WIF, AccountData, WalletStructureData,
 
   FMX.Media, FMX.Objects, CurrencyConverter, uEncryptedZipFile, System.Zip
-  {$IFDEF ANDROID},
+{$IFDEF ANDROID},
   FMX.VirtualKeyBoard.Android,
   Androidapi.JNI,
   Androidapi.JNI.GraphicsContentViewText,
@@ -50,6 +50,7 @@ uses
   FMX.Filter.Effects, System.Actions, FMX.ActnList, System.Math.Vectors,
   FMX.Controls3D, FMX.Layers3D, FMX.StdActns, FMX.MediaLibrary.Actions,
   FMX.ComboEdit;
+procedure reloadWalletView;
 
 type
 
@@ -424,7 +425,7 @@ type
     RestoreSeedEncryptedQRButton: TButton;
     LinkLayout: TLayout;
     linkLabel: TLabel;
-    Layout25: TLayout;
+    bpmnemonicLayout: TLayout;
     MnemonicSeedDescriptionLabel: TLabel;
     Layout26: TLayout;
     HSBDescriptionLabel: TLabel;
@@ -591,6 +592,12 @@ type
     LoadingKeyDataAniIndicator: TAniIndicator;
     ImportPrivateKeyButton: TButton;
     StatusBarFixer: TRectangle;
+    privTCAPanel1: TPanel;
+    Label18: TLabel;
+    notPrivTCA1: TCheckBox;
+    privTCAPanel2: TPanel;
+    Label19: TLabel;
+    notPrivTCA2: TCheckBox;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -766,6 +773,9 @@ type
     procedure SendTransactionButtonClick(Sender: TObject);
     procedure APICheckCompressed(Sender: TObject);
     procedure switch1Switch(Sender: TObject);
+    procedure AccountsListPanelMouseLeave(Sender: TObject);
+    procedure AccountsListPanelExit(Sender: TObject);
+    procedure notPrivTCA2Change(Sender: TObject);
 
   private
     { Private declarations }
@@ -808,6 +818,7 @@ type
     procedure SelectFileInBackupFileList(Sender: TObject);
 
   var
+    cpTimeout: int64;
     shown: Boolean;
     isTokenTransfer: Boolean;
     MovingPanel: TPanel;
@@ -816,7 +827,7 @@ type
     procCreateWallet: procedure(Sender: TObject) of Object;
     dictionary: TObjectDictionary<AnsiString, WideString>;
     onFileManagerSelectClick: TProc;
-
+    curWU: Integer;
   end;
 
 procedure requestForPermission(permName: AnsiString);
@@ -906,6 +917,7 @@ begin
                 refreshWalletDat();
                 closeOrganizeView(nil);
                 AccountsListPanel.Visible := false;
+
               end);
 
           end).Start();
@@ -932,9 +944,9 @@ procedure TfrmHome.QRChangeTimerTimer(Sender: TObject);
     bmp: FMX.Graphics.TBitmap;
     Column: Integer;
     j: Integer;
-    currentRow: Int64;
-    k: Int64;
-    currentCol: Int64;
+    currentRow: int64;
+    k: int64;
+    currentCol: int64;
     X, Y: Integer;
     PP: Pointer;
     s: AnsiString;
@@ -1214,7 +1226,7 @@ end;
 
 procedure TfrmHome.FileManagerPathUpButtonClick(Sender: TObject);
 begin
-   if FileManagerPathLabel.Text <> '' then
+  if FileManagerPathLabel.Text <> '' then
     DrawDirectoriesAndFiles(TDirectory.GetParent(FileManagerPathLabel.Text));
 end;
 
@@ -1396,11 +1408,12 @@ var
 begin
 
   tced := TCA(passwordForDecrypt.Text);
+  passwordForDecrypt.Text := '';
   MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
   if not isHex(MasterSeed) then
   begin
     popupWindow.Create(dictionary['FailedToDecrypt']);
-       exit;
+    exit;
   end;
   switchTab(PageControl, seedGenerated);
   BackupMemo.Lines.Clear;
@@ -1477,7 +1490,7 @@ begin
   MovingPanel := TPanel(TPanel(Sender).Clone(OrganizeList));
   MovingPanel.Align := TAlignLayout.None;
   MovingPanel.Parent := OrganizeList;
- OrganizeList.Root.Captured := OrganizeList;
+  OrganizeList.Root.Captured := OrganizeList;
   MovingPanel.BringToFront;
   MovingPanel.Repaint;
   Grab := true;
@@ -1704,7 +1717,8 @@ begin
   end
   else
   begin
-     frmHome.tabAnim.Tab := TabItem;
+    frmHome.tabAnim.Tab := TabItem;
+    frmHome.AccountsListPanel.Visible := false;
     frmHome.tabAnim.ExecuteTarget(TabControl);
   end;
   frmHome.passwordForDecrypt.Text := '';
@@ -1792,18 +1806,18 @@ var
   dezip: TZipFile;
   it: AnsiString;
   ac: Account;
-  failure:boolean;
+  failure: Boolean;
 begin
-   failure:=false;
+  failure := false;
   if not FileExists(RFFPathEdit.Text) then
   begin
     showmessage('file doesn''t exist');
     exit;
   end;
-  
+
   Zip := TEncryptedZipFile.Create(RFFPassword.Text);
   Zip.Open(RFFPathEdit.Text, TZipMode.zmRead);
-   ac := Account.Create(RestoreFromFileAccountNameEdit.Text);
+  ac := Account.Create(RestoreFromFileAccountNameEdit.Text);
   ac.SaveFiles();
   for it in ac.Paths do
   begin
@@ -1818,20 +1832,25 @@ begin
             3) + 'hsb', ac.DirPath);
           RenameFile(LeftStr(it, length(it) - 3) + 'hsb', it);
         except
-          on F: Exception do begin
+          on F: Exception do
+          begin
             showmessage('Wrong password or damaged file');
-            RemoveDir(ac.DirPath);
-            end;
+
+          end;
         end;
     end;
 
   end;
   ac.free;
-    
+
   Zip.Close;
   Zip.free;
-  if failure then exit;
-
+  if failure then
+  begin
+    RemoveDir(ac.DirPath);
+    FormShow(nil);
+    exit;
+  end;
   ac := Account.Create(RestoreFromFileAccountNameEdit.Text);
   ac.LoadFiles;
   ac.userSaveSeed := true;
@@ -1875,7 +1894,6 @@ var
 begin
 
 end;
-
 
 procedure TfrmHome.backBtnDecryptSeed(Sender: TObject);
 begin
@@ -1921,9 +1939,9 @@ begin
   end;
 
   CurrentAccount.SaveFiles();
-
   clearVertScrollBox(WalletList);
-
+  lastClosedAccount := CurrentAccount.name;
+  refreshWalletDat();
   TLabel(frmHome.FindComponent('globalBalance')).Text := '0.00';
   FormShow(nil);
 
@@ -2139,6 +2157,7 @@ var
 begin
 
   tced := TCA(passwordForDecrypt.Text);
+  passwordForDecrypt.Text := '';
   MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
   if not isHex(MasterSeed) then
   begin
@@ -2157,6 +2176,16 @@ begin
 
   switchTab(PageControl, ExportKeyScreen);
 
+end;
+
+procedure TfrmHome.AccountsListPanelExit(Sender: TObject);
+begin
+  AccountsListPanel.Visible := false;
+end;
+
+procedure TfrmHome.AccountsListPanelMouseLeave(Sender: TObject);
+begin
+  AccountsListPanel.Visible := false;
 end;
 
 procedure TfrmHome.AddNewAccountButtonClick(Sender: TObject);
@@ -2181,7 +2210,7 @@ var
   myURI: AnsiString;
 
   URL: WideString;
-  {$IFDEF ANDROID}
+{$IFDEF ANDROID}
 var
   Intent: JIntent;
 {$ENDIF}
@@ -2195,7 +2224,6 @@ begin
   Intent.setData(StrToJURI(myURI));
   SharedActivity.startActivity(Intent);
 {$ENDIF ANDROID}
-
 end;
 
 procedure TfrmHome.TrySendTX(Sender: TObject);
@@ -2206,7 +2234,7 @@ var
 begin
 
   tced := TCA(ConfirmSendPasswordEdit.Text);
-  ConfirmSendPasswordEdit.Text:='';
+  ConfirmSendPasswordEdit.Text := '';
   MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
   if not isHex(MasterSeed) then
   begin
@@ -2324,6 +2352,7 @@ begin
           TransactionWaitForSendLinkLabel.Visible := true;
           if LeftStr(ans, length('Transaction sent')) = 'Transaction sent' then
           begin
+            SynchronizeCryptoCurrency(CurrentCryptoCurrency);
             TransactionWaitForSendLinkLabel.Text :=
               'Click here to see details in Explorer';
             TransactionWaitForSendDetailsLabel.Text := 'Transaction sent';
@@ -2358,7 +2387,6 @@ begin
         end);
 
     end).Start;
-
 
 end;
 
@@ -2474,8 +2502,7 @@ begin
   begin
 
     svc.setClipboard(removeSpace(lblPrivateKey.Text));
-    popupWindow.Create(removeSpace(lblPrivateKey.Text) + ' ' + dictionary
-      ['CopiedToClipboard']);
+    popupWindow.Create(dictionary['CopiedToClipboard']);
 
   end;
 end;
@@ -2488,19 +2515,18 @@ var
 {$ENDIF}
   svc: IFMXExtendedClipboardService;
 begin
+
   if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, svc)
   then
   begin
 
-    if Sender is TEdit then
+    if (Sender is TEdit) then
     begin
 
       if svc.GetClipboard().ToString() <> removeSpace(TEdit(Sender).Text) then
       begin
-
         svc.setClipboard(removeSpace(TEdit(Sender).Text));
-        popupWindow.Create(removeSpace(TEdit(Sender).Text) + ' ' + dictionary
-          ['CopiedToClipboard']);
+        popupWindow.Create(dictionary['CopiedToClipboard']);
 {$IFDEF ANDROID}
         Vibrator := TJvibrator.Wrap
           ((SharedActivityContext.getSystemService
@@ -2558,64 +2584,51 @@ begin
   lastChose := 1;
 end;
 
+procedure reloadWalletView;
+var
+  wd: TwalletInfo;
+  a: BigInteger;
+begin
+  with frmHome do
+  begin
+    isTokenTransfer := CurrentCryptoCurrency is Token;
+
+    if isTokenTransfer then
+    begin
+      for wd in CurrentAccount.myCoins do
+        if wd.addr = CurrentCryptoCurrency.addr then
+        begin
+          CurrentCoin := wd;
+          break;
+        end;
+    end
+    else
+      CurrentCoin := TwalletInfo(CurrentCryptoCurrency);
+    createHistoryList(CurrentCryptoCurrency);
+    frmHome.wvAddress.Text := CurrentCryptoCurrency.addr;
+
+    lbBalance.Text := BigIntegerBeautifulStr(CurrentCryptoCurrency.confirmed,
+      CurrentCryptoCurrency.decimals);
+
+    lbBalanceLong.Text := BigIntegertoFloatStr(CurrentCryptoCurrency.confirmed,
+      CurrentCryptoCurrency.decimals);
+
+    // POLE Z KWOTA DO WYSLANIA
+
+    lblFiat.Text := floatToStrF(CurrentCryptoCurrency.getFiat(),
+      ffFixed, 15, 2);
+
+  end;
+end;
+
 procedure TfrmHome.OpenWalletView(Sender: TObject; const Point: TPointF);
 var
   wd: TwalletInfo;
+  a: BigInteger;
 begin
 
   CurrentCryptoCurrency := CryptoCurrency(TfmxObject(Sender).TagObject);
-
-  isTokenTransfer := CurrentCryptoCurrency is Token;
-
-  if isTokenTransfer then
-  begin
-    for wd in CurrentAccount.myCoins do
-      if wd.addr = CurrentCryptoCurrency.addr then
-      begin
-        CurrentCoin := wd;
-        break;
-      end;
-  end
-  else
-    CurrentCoin := TwalletInfo(CurrentCryptoCurrency);
-
-  createHistoryList(CurrentCryptoCurrency);
-
-  frmHome.wvAddress.Text := CurrentCryptoCurrency.addr;
-
-  FeeFromAmountLayout.Visible := not isTokenTransfer;
-
-  WVTabControl.ActiveTab := WVBalance;
-
-  if isEthereum or isTokenTransfer then
-  begin
-
-    lblBlockInfo.Visible := false;
-    FeeSpin.Visible := false;
-    FeeSpin.Opacity := 0;
-    FeeSpin.Enabled := false;
-
-  end
-  else
-  begin
-
-    lblBlockInfo.Visible := true;
-    FeeSpin.Visible := true;
-    FeeSpin.Enabled := true;
-    FeeSpin.Opacity := 1;
-
-  end;
-
-  lbBalance.Text := BigIntegerBeautifulStr(CurrentCryptoCurrency.confirmed,
-    CurrentCryptoCurrency.decimals);
-
-  lbBalanceLong.Text := BigIntegertoFloatStr(CurrentCryptoCurrency.confirmed,
-    CurrentCryptoCurrency.decimals);
-
-  // POLE Z KWOTA DO WYSLANIA
-  wvAmount.Text := BigIntegertoFloatStr(0, CurrentCryptoCurrency.decimals);
-
-  lblFiat.Text := floatToStrF(CurrentCryptoCurrency.getFiat(), ffFixed, 15, 2);
+  reloadWalletView;
 
   if isEthereum or isTokenTransfer then
   begin
@@ -2640,7 +2653,7 @@ begin
   end;
   if wvFee.Text = '' then
     wvFee.Text := '0';
-
+  wvAmount.Text := BigIntegertoFloatStr(0, CurrentCryptoCurrency.decimals);
   ReceiveValue.Text := BigIntegertoFloatStr(0, CurrentCryptoCurrency.decimals);
   ReceiveAmountRealCurrency.Text := '0.00';
   WVRealCurrency.Text := floatToStrF(strToFloatDef(wvAmount.Text, 0) *
@@ -2659,7 +2672,26 @@ begin
   WVsendTO.Text := '';
   SendAllFundsSwitch.IsChecked := false;
   FeeFromAmountSwitch.IsChecked := false;
-                  if CurrentCryptoCurrency is TwalletInfo then
+  FeeFromAmountLayout.Visible := not isTokenTransfer;
+  if isEthereum or isTokenTransfer then
+  begin
+
+    lblBlockInfo.Visible := false;
+    FeeSpin.Visible := false;
+    FeeSpin.Opacity := 0;
+    FeeSpin.Enabled := false;
+
+  end
+  else
+  begin
+
+    lblBlockInfo.Visible := true;
+    FeeSpin.Visible := true;
+    FeeSpin.Enabled := true;
+    FeeSpin.Opacity := 1;
+
+  end;
+  if CurrentCryptoCurrency is TwalletInfo then
   begin
 
     if (TwalletInfo(CurrentCryptoCurrency).coin = 0) then
@@ -2688,8 +2720,24 @@ begin
     SearchTokenButton.Visible := true
   else
     SearchTokenButton.Visible := false;
-  switchTab(PageControl, walletView);
 
+  if not isEthereum then
+  begin
+
+    a := ((180 * length(TwalletInfo(CurrentCryptoCurrency).UTXO) +
+      (34 * 2) + 12));
+    curWU := a.asInteger;
+    a := (a * StrFloatToBigInteger(CurrentCoin.efee[round(FeeSpin.Value) - 1],
+      CurrentCoin.decimals)) div 1024;
+    a := Max(a, 999);
+    wvFee.Text := BigIntegertoFloatStr(a, CurrentCoin.decimals);
+    // CurrentCoin.efee[round(FeeSpin.Value) - 1] ;
+    lblBlockInfo.Text := dictionary['ConfirmInNext'] + ' ' +
+      IntToStr(round(FeeSpin.Value)) + ' ' + dictionary['Blocks'];
+  end;
+
+  WVTabControl.ActiveTab := WVBalance;
+  switchTab(PageControl, walletView);
 end;
 
 procedure TfrmHome.OpenWalletView(Sender: TObject);
@@ -2741,7 +2789,7 @@ procedure TfrmHome.btnImpSeedClick(Sender: TObject);
 var
   alphaStr: AnsiString;
 begin
-   switchTab(PageControl, SeedCreation);
+  switchTab(PageControl, SeedCreation);
 end;
 
 procedure TfrmHome.btnCheckSeedClick(Sender: TObject);
@@ -3003,9 +3051,15 @@ procedure TfrmHome.LoadAccountPanelClick(Sender: TObject);
 begin
   if OrganizeList.Visible = true then
     closeOrganizeView(nil);
-  firstSync := true ;
+  firstSync := true;
 
   LoadCurrentAccount(TfmxObject(Sender).TagString);
+  AccountsListPanel.Visible := false;
+end;
+
+procedure TfrmHome.notPrivTCA2Change(Sender: TObject);
+begin
+  notPrivTCA1.IsChecked := notPrivTCA2.IsChecked;
 end;
 
 procedure TfrmHome.ChangeAccountButtonClick(Sender: TObject);
@@ -3141,6 +3195,7 @@ var
 begin
 
   tced := TCA(passwordForDecrypt.Text);
+  passwordForDecrypt.Text := '';
   MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
   if not isHex(MasterSeed) then
   begin
@@ -3230,7 +3285,7 @@ begin
   begin
     Panel := TPanel.Create(frmHome.OrganizeList);
     Panel.Align := TAlignLayout.Top;
-    Panel.Position.Y := TPanel(fmxObj).Position.Y;
+    Panel.Position.Y := TPanel(fmxObj).Position.Y - 1;
     Panel.Height := 48;
     Panel.Visible := true;
     Panel.Parent := frmHome.OrganizeList;
@@ -3242,7 +3297,6 @@ begin
 {$ELSE}
     Panel.OnMouseDown := frmHome.PanelDragStart;
 {$ENDIF}
-
     for child in fmxObj.Children do
     begin
       if child.TagString <> 'balance' then
@@ -3268,7 +3322,7 @@ begin
   NewCryptoLayout.Visible := false;
   WalletList.Visible := false;
   OrganizeList.Visible := true;
-  BackToBalanceViewLayout.Visible :=true;
+  BackToBalanceViewLayout.Visible := true;
   btnSync.Visible := false;
 
 end;
@@ -3365,6 +3419,7 @@ begin
   i := 0;
 
   tced := TCA(NewCoinDescriptionPassEdit.Text);
+  NewCoinDescriptionPassEdit.Text := '';
   MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
   if not isHex(MasterSeed) then
   begin
@@ -3487,7 +3542,9 @@ end;
 
 procedure TfrmHome.btnRestoreWalletClick(Sender: TObject);
 begin
-    switchTab(PageControl, RestoreOptions);
+  privTCAPanel2.Visible := false;
+  notPrivTCA2.IsChecked := false;
+  switchTab(PageControl, RestoreOptions);
 end;
 
 procedure TfrmHome.btnRFFBackClick(Sender: TObject);
@@ -3497,7 +3554,8 @@ end;
 
 procedure TfrmHome.btnCreateNewWalletClick(Sender: TObject);
 begin
-
+  privTCAPanel2.Visible := false;
+  notPrivTCA2.IsChecked := false;
   pass.Text := '';
   retypePass.Text := '';
   btnCreateWallet.Text := dictionary['OpenNewWallet'];
@@ -3582,7 +3640,7 @@ end;
 procedure TfrmHome.btnChangeDescryptionOKClick(Sender: TObject);
 begin
   CurrentCryptoCurrency.description := ChangeDescryptionEdit.Text;
-   CurrentAccount.SaveFiles();
+  CurrentAccount.SaveFiles();
   switchTab(PageControl, walletView);
 end;
 
@@ -3628,6 +3686,15 @@ var
 
   aTask: ITask;
 begin
+  { if PageControl.ActiveTab = walletView then
+    begin
+    SynchronizeCryptoCurrency(CurrentCryptoCurrency);
+    reloadWalletView;
+    exit;
+    end; }
+  // if (SyncBalanceThr=nil)and(SyncHistoryThr=nil) then
+  if (frmHome.PageControl.ActiveTab = frmHome.walletView) then
+    reloadWalletView;
   if (SyncBalanceThr <> nil) then
   begin
     if SyncBalanceThr.Finished then
@@ -3786,7 +3853,7 @@ begin
 
   CameraComponent1.Active := false;
   switchTab(PageControl, cameraBackTabItem);
-  end;
+end;
 
 procedure TfrmHome.btnSendClick(Sender: TObject);
 var
@@ -3896,7 +3963,7 @@ begin
 
   if ValidateBitcoinAddress(Address) then
   begin
-       prepareConfirmSendTabItem();
+    prepareConfirmSendTabItem();
     switchTab(PageControl, ConfirmSendTabItem);
   end;
   ConfirmSendPasswordEdit.Text := '';
@@ -4177,14 +4244,23 @@ begin
     MasterSeed, true);
   tced := '';
   MasterSeed := '';
-
+  RestorePasswordEdit.Text := '';
 end;
 
 procedure TfrmHome.FeeSpinChange(Sender: TObject);
+var
+  a: BigInteger;
 begin
   if not isEthereum then
   begin
-    wvFee.Text := CurrentCoin.efee[round(FeeSpin.Value) - 1];
+    a := ((180 * length(TwalletInfo(CurrentCryptoCurrency).UTXO) +
+      (34 * 2) + 12));
+    curWU := a.asInteger;
+    a := (a * StrFloatToBigInteger(CurrentCoin.efee[round(FeeSpin.Value) - 1],
+      CurrentCoin.decimals)) div 1024;
+    a := Max(a, 999);
+    wvFee.Text := BigIntegertoFloatStr(a, CurrentCoin.decimals);
+    // CurrentCoin.efee[round(FeeSpin.Value) - 1] ;
     lblBlockInfo.Text := dictionary['ConfirmInNext'] + ' ' +
       IntToStr(round(FeeSpin.Value)) + ' ' + dictionary['Blocks'];
   end
@@ -4193,6 +4269,8 @@ begin
 end;
 
 procedure TfrmHome.FeeToUSDUpdate(Sender: TObject);
+var
+  satb: Integer;
 begin
   if isTokenTransfer then
   begin
@@ -4213,8 +4291,14 @@ begin
   else
   begin
     lblFeeHeader.Text := dictionary['TransactionFee'] + ': ';
-    lblFee.Text := wvFee.Text + ' ' + AvailableCoin[CurrentCoin.coin].shortcut +
-      ' = ' + floatToStrF(CurrencyConverter.calculate(strToFloatDef(wvFee.Text,
+    if curWU = 0 then
+      curWU := 440; // 2 in 2 out default
+    satb := BigInteger(StrFloatToBigInteger(wvFee.Text,
+      CurrentCryptoCurrency.decimals) div curWU).asInteger;
+
+    lblFee.Text := wvFee.Text + ' (' + IntToStr(satb) + ' sat/b) ' +
+      AvailableCoin[CurrentCoin.coin].shortcut + ' = ' +
+      floatToStrF(CurrencyConverter.calculate(strToFloatDef(wvFee.Text,
       0) * CurrentCoin.rate), ffFixed, 18, 6) + ' ' + CurrencyConverter.symbol;
   end;
 end;
@@ -4233,7 +4317,9 @@ var
   symbol: AnsiString;
 
 begin
+  cpTimeout := 0;
   DebugBtn.Visible := false;
+  bpmnemonicLayout.Position.Y := 386;
   log.d('DEBUD Start FormCreate()');
   loadDictionary(loadLanguageFile('ENG'));
   refreshComponentText();
@@ -4289,6 +4375,7 @@ begin
   DeleteAccountLayout.Visible := false;
   BackToBalanceViewLayout.Visible := false;
 
+  setBlackBackground(AccountsListVertScrollBox.Content);
 end;
 
 procedure TfrmHome.FormGesture(Sender: TObject;
@@ -4370,7 +4457,14 @@ begin
         switchTab(PageControl, cameraBackTabItem);
       end
       else if (PageControl.ActiveTab = TTabItem(frmHome.FindComponent('dashbrd')
-        )) or (CurrentAccount = nil) then
+        )) and (AccountsListPanel.Visible) then
+      begin
+        AccountsListPanel.Visible := false;
+        exit;
+      end
+      else if ((PageControl.ActiveTab = TTabItem(frmHome.FindComponent
+        ('dashbrd'))) and (not AccountsListPanel.Visible)) or
+        (CurrentAccount = nil) then
       begin
 
 {$IFDEF ANDROID}
@@ -4419,16 +4513,6 @@ var
   cc: CryptoCurrency;
   fmxObj: TfmxObject;
 begin
-
-  if not(frmHome.AccountsListVertScrollBox.Content.ChildrenCount = 0) then
-  begin
-
-    for fmxObj in frmHome.AccountsListVertScrollBox.Content.Children do
-      if TButton(fmxObj).Text = name then
-        TButton(fmxObj).Enabled := false
-      else
-        TButton(fmxObj).Enabled := true;
-  end;
 
   clearVertScrollBox(frmHome.WalletList);
   if (SyncBalanceThr <> nil) and (not SyncBalanceThr.Finished) then
@@ -4514,6 +4598,45 @@ begin
 
 end;
 
+procedure SetEditControlColor(AEditControl: TEdit; AColor: TAlphaColor);
+var
+  t: TfmxObject;
+  rec: TRectangle;
+begin
+  if AEditControl = nil then
+    exit;
+  { AEditControl.StyleName:='editstyle';
+    T := AEditControl.FindStyleResource('background');
+    if (T <> nil) and (T is TRectangle) then
+    if TRectangle(T).Fill <> nil then  begin
+    TRectangle(T).Fill.Color := AColor;
+    TRectangle(T).HitTest:=false;
+    TRectangle(T).Locked:=true;
+    end; }
+  rec := TRectangle.Create(AEditControl);
+  rec.Parent := AEditControl;
+  rec.HitTest := false;
+  rec.BringToFront;
+  rec.SendToBack;
+  rec.Visible := true;
+  rec.Fill.Color := AColor;
+  rec.Fill.Kind := TBrushKind.Solid;
+  rec.Align := TAlignLayout.Contents;
+  rec.Opacity := 0.1;
+  AEditControl.Repaint;
+end;
+
+procedure fixEditBG;
+var
+  comp: TComponent;
+  i: Integer;
+begin
+  for i := 0 to frmHome.ComponentCount - 1 do
+    if frmHome.Components[i] is TEdit then
+      SetEditControlColor(TEdit(frmHome.Components[i]), TAlphaColors.Gray);
+
+end;
+
 procedure TfrmHome.FormShow(Sender: TObject);
 var
   i: Integer;
@@ -4558,16 +4681,17 @@ begin
     except
       on E: Exception do
       begin
-        showmessage('account file damaged');
+        showmessage('account file damaged ' + E.message);
         exit;
       end;
     end;
     log.d('DEBUD Account loaded');
     switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
   end;
-
+  fixEditBG;
   if not shown then
   begin
+
     log.d('DEBUD Start Loading Style');
     if CurrentAccount <> nil then
       tthread.Synchronize(nil,
@@ -4618,7 +4742,7 @@ var
   FToolbarService: IFMXVirtualKeyBoardToolbarService;
   X, Y: Integer;
 begin
-if focused is TEdit then
+  if focused is TEdit then
     if (TEdit(focused).name = 'wvAddress') or
       (TEdit(focused).name = 'receiveAddress') then
     begin
@@ -4699,8 +4823,8 @@ begin
     gathener.Enabled := false;
     if swForEncryption.IsChecked then
       TCAIterations := 10000;
-CreateNewAccountAndSave(AccountNameEdit.Text, pass.Text, trngBuffer, false);
-end;
+    CreateNewAccountAndSave(AccountNameEdit.Text, pass.Text, trngBuffer, false);
+  end;
 
 end;
 
@@ -4724,7 +4848,7 @@ end;
 
 procedure TfrmHome.ImportPrivateKeyButtonClick(Sender: TObject);
 begin
-HexPrivKeyDefaultRadioButton.IsChecked := true;
+  HexPrivKeyDefaultRadioButton.IsChecked := true;
   Layout31.Visible := false;
   WIFEdit.Text := '';
 
@@ -4762,7 +4886,7 @@ begin
   end
   else
     myURI := myURI + 'https://etherscan.io/tx/';
- myURI := getURLToExplorer(CurrentCoin.coin,
+  myURI := getURLToExplorer(CurrentCoin.coin,
     StringReplace(HistoryTransactionID.Text, ' ', '', [rfReplaceAll]));
 {$IFDEF ANDROID}
   Intent := TJIntent.Create;
@@ -4913,9 +5037,9 @@ var
   lbl: TLabel;
   i: Integer;
 begin
-for fmxObj in WalletList.Content.Children do
+  for fmxObj in WalletList.Content.Children do
   begin
-if fmxObj is TPanel then
+    if fmxObj is TPanel then
       Panel := TPanel(fmxObj)
     else
       Continue;
@@ -4949,7 +5073,7 @@ end;
 
 procedure TfrmHome.SearchEditExit(Sender: TObject);
 begin
-SearchEdit.Visible := false;
+  SearchEdit.Visible := false;
   TLabel(frmHome.FindComponent('HeaderLabel')).Visible := true;
   SearchEdit.Text := '';
 end;
@@ -4970,7 +5094,7 @@ begin
     end
     else
     begin
- wvAmount.Text := BigIntegertoFloatStr(0, CurrentCryptoCurrency.decimals);
+      wvAmount.Text := BigIntegertoFloatStr(0, CurrentCryptoCurrency.decimals);
       FeeFromAmountSwitch.IsChecked := false;
 
       FeeFromAmountSwitch.Enabled := true;
@@ -5006,7 +5130,8 @@ begin
   if not isHex(MasterSeed) then
   begin
     popupWindow.Create(dictionary['FailedToDecrypt']);
-exit;
+    passwordForDecrypt.Text := '';
+    exit;
   end;
   img := StrToQRBitmap(MasterSeed);
   ImgPath := System.IOUtils.TPath.Combine
@@ -5039,7 +5164,7 @@ exit;
   DeleteFile(ImgPath);
   img.free;
   Zip.free;
-
+  passwordForDecrypt.Text := '';
 end;
 
 procedure TfrmHome.SendEncryptedSeed(Sender: TObject);
@@ -5057,10 +5182,12 @@ var
 begin
 
   tced := TCA(passwordForDecrypt.Text);
+
   MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
   if not isHex(MasterSeed) then
   begin
     popupWindow.Create(dictionary['FailedToDecrypt']);
+    passwordForDecrypt.Text := '';
     exit;
   end;
 
@@ -5080,13 +5207,14 @@ begin
   Zip.Open(zipPath, TZipMode.zmWrite);
   Zip.Add(ImgPath);
   Zip.Close;
-shareFile(zipPath);
+  shareFile(zipPath);
 
   DeleteFile(ImgPath);
   img.free;
   Zip.free;
   MasterSeed := '';
   tced := '';
+  passwordForDecrypt.Text := '';
   userSavedSeed := true;
   refreshWalletDat();
   switchTab(PageControl, BackupTabItem);
@@ -5119,10 +5247,12 @@ var
 begin
 
   tced := TCA(passwordForDecrypt.Text);
+
   MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
   if not isHex(MasterSeed) then
   begin
     popupWindow.Create(dictionary['FailedToDecrypt']);
+    passwordForDecrypt.Text := '';
     exit;
   end;
   tced := '';
@@ -5160,7 +5290,7 @@ begin
   img.free;
   Zip.free;
   switchTab(PageControl, decryptSeedBackTabItem);
-
+  passwordForDecrypt.Text := '';
 end;
 
 procedure TfrmHome.SendWalletFileButtonClick(Sender: TObject);
@@ -5176,7 +5306,7 @@ begin
   ShowShareSheetAction1.TextMessage := CurrentCryptoCurrency.addr;
 end;
 
-procedure TfrmHome.Switch1Switch(Sender: TObject);
+procedure TfrmHome.switch1Switch(Sender: TObject);
 begin
   PrivateKeySettingsLayout.Visible := Switch1.IsChecked;
 end;
@@ -5187,7 +5317,6 @@ begin
   SearchEdit.Visible := true;
   SetFocused(SearchEdit);
 end;
-
 
 procedure TfrmHome.SeedMnemonicBackupButtonClick(Sender: TObject);
 begin
@@ -5291,7 +5420,7 @@ begin
               end;
               ts.free;
               wd.free;
- wd := TwalletInfo.Create(ImportCoinID, -1, -1,
+              wd := TwalletInfo.Create(ImportCoinID, -1, -1,
                 Bitcoin_PublicAddrToWallet(notkey,
                 AvailableCoin[ImportCoinID].p2pk), '');
               wd.pub := comkey;
