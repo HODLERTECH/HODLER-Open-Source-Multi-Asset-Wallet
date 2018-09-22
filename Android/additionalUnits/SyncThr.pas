@@ -3,7 +3,7 @@ unit SyncThr;
 interface
 
 uses System.classes, System.sysutils, FMX.Controls, FMX.StdCtrls, FMX.dialogs,
-  StrUtils, WalletStructureData,CryptoCurrencyData, tokenData;
+  StrUtils, WalletStructureData, CryptoCurrencyData, tokenData;
 
 type
   SynchronizeBalanceThread = class(TThread)
@@ -35,7 +35,7 @@ procedure parseCoinHistory(text: AnsiString; wallet: TWalletInfo);
 procedure parseTokenHistory(text: AnsiString; T: Token);
 procedure synchronizeHistory;
 function segwitParameters(wi: TWalletInfo): AnsiString;
-procedure SynchronizeCryptoCurrency(cc: cryptoCurrency);
+procedure SynchronizeCryptoCurrency(var cc: cryptoCurrency);
 procedure parseBalances(s: AnsiString; var wd: TWalletInfo);
 procedure parseETHHistory(text: AnsiString; wallet: TWalletInfo);
 
@@ -43,15 +43,16 @@ procedure parseDataForERC20(s: string; var wd: Token);
 
 implementation
 
-uses uhome, misc, coinData,  Velthuis.BigIntegers, Bitcoin;
+uses uhome, misc, coinData, Velthuis.BigIntegers, Bitcoin;
 
-procedure SynchronizeCryptoCurrency(cc: cryptoCurrency);
+procedure SynchronizeCryptoCurrency(var cc: cryptoCurrency);
 var
   data: AnsiString;
 begin
+frmHome.RefreshProgressBar.Visible:=true;
   if cc is TWalletInfo then
   begin
-
+    frmHome.RefreshProgressBar.Value:=10;
     case TWalletInfo(cc).coin of
 
       0:
@@ -89,7 +90,7 @@ begin
 
       end;
     end;
-
+      frmHome.RefreshProgressBar.value:=30;
   end
   else
   begin
@@ -98,14 +99,14 @@ begin
 
     if Token(cc).lastBlock = 0 then
       Token(cc).lastBlock := getHighestBlockNumber(Token(cc));
-
+        frmHome.RefreshProgressBar.value:=30;
     parseDataForERC20(data, Token(cc));
   end;
 
   /// ////////////////HISTORY//////////////////////////
   if cc is TWalletInfo then
   begin
-
+      frmHome.RefreshProgressBar.value:=70;
     case TWalletInfo(cc).coin of
       0:
         begin
@@ -139,15 +140,15 @@ begin
     if Token(cc).lastBlock = 0 then
       Token(cc).lastBlock := getHighestBlockNumber(Token(cc));
 
-    data := getDataOverHTTP(HODLER_ETH + '/?cmd=tokenHistory&addr=' +
-      Token(cc).addr + '&contract=' + Token(cc).ContractAddress +
-      '&bno=' + inttostr(Token(cc).lastBlock));
+    data := getDataOverHTTP(HODLER_ETH + '/?cmd=tokenHistory&addr=' + Token(cc)
+      .addr + '&contract=' + Token(cc).ContractAddress + '&bno=' +
+      inttostr(Token(cc).lastBlock));
 
-
-    parseTokenHistory( data , Token(cc));
+    parseTokenHistory(data, Token(cc));
 
   end;
-
+     frmHome.RefreshProgressBar.value:=0;
+    frmHome.RefreshProgressBar.Visible:=false;
 end;
 
 function SynchronizeHistoryThread.TimeFromStart;
@@ -414,7 +415,7 @@ begin
 
       setLength(transHist.addresses, number);
       setLength(transHist.values, number);
-      sum:=0;
+      sum := 0;
       for j := 0 to number - 1 do
       begin
         transHist.addresses[j] := '0x' + rightStr(ts.Strings[i], 40);
@@ -681,6 +682,7 @@ begin
           inttostr(highestBlock));
 
       end;
+
     end);
   getDataThread.FreeOnTerminate := true;
 
