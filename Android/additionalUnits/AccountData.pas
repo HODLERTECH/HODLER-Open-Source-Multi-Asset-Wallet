@@ -3,32 +3,32 @@ unit AccountData;
 interface
 
 uses tokenData, WalletStructureData, cryptoCurrencyData, System.IOUtils,
-  Sysutils, Classes , FMX.Dialogs;
+  Sysutils, Classes, FMX.Dialogs;
 
 type
   Account = class
     name: AnsiString;
     myCoins: array of TWalletInfo;
     myTokens: array of Token;
-    TCAIterations : Integer;
-    EncryptedMasterSeed : AnsiString;
-    userSaveSeed : boolean;
-
-    DirPath : AnsiString;
+    TCAIterations: Integer;
+    EncryptedMasterSeed: AnsiString;
+    userSaveSeed: boolean;
+    privTCA: boolean;
+    DirPath: AnsiString;
     CoinFilePath: AnsiString;
     TokenFilePath: AnsiString;
-    SeedFilePath : AnsiString;
-    Paths : Array of AnsiString;
+    SeedFilePath: AnsiString;
+    Paths: Array of AnsiString;
 
     constructor Create(_name: AnsiString);
-    destructor Destroy(); override ;
+    destructor Destroy(); override;
 
     procedure LoadFiles();
     procedure SaveFiles();
 
-    procedure AddCoin( wd : TWalletInfo);
-    procedure AddToken( T : Token );
-    function countWalletBy(id: integer): integer;
+    procedure AddCoin(wd: TWalletInfo);
+    procedure AddToken(T: Token);
+    function countWalletBy(id: Integer): Integer;
 
   private
     procedure SaveTokenFile();
@@ -52,7 +52,6 @@ constructor Account.Create(_name: AnsiString);
 begin
   name := _name;
 
-
   if not DirectoryExists(TPath.Combine(TPath.GetDocumentsPath, name)) then
     CreateDir(TPath.Combine(TPath.GetDocumentsPath, name));
 
@@ -67,58 +66,58 @@ begin
   SeedFilePath := TPath.Combine(TPath.GetDocumentsPath, name);
   SeedFilePath := TPath.Combine(SeedFilePath, 'hodler.masterseed.dat');
 
-  SetLength(Paths , 3);
-  paths[0] := CoinFilePath;
+  SetLength(Paths, 3);
+  Paths[0] := CoinFilePath;
   Paths[1] := TokenFilePath;
-  paths[2] := SeedFilePath;
+  Paths[2] := SeedFilePath;
 
-  SetLength(myCoins , 0);
+  SetLength(myCoins, 0);
   SetLength(myTokens, 0);
-
 
 end;
 
 destructor Account.Destroy();
 begin
-   clearArrays();
+  clearArrays();
 end;
-
 
 procedure Account.SaveSeedFile();
 var
-  ts : TStringLIst;
+  ts: TStringLIst;
 begin
-  ts := TStringList.Create();
+  ts := TStringLIst.Create();
 
-  ts.Add( inttoStr(TCAIterations) );
-  ts.Add( EncryptedMasterSeed );
-  ts.Add( booltoStr( userSaveSeed ) );
-
-  ts.SaveToFile( SeedFilePath );
+  ts.Add(inttoStr(TCAIterations));
+  ts.Add(EncryptedMasterSeed);
+  ts.Add(booltoStr(userSaveSeed));
+  ts.Add(booltoStr(privTCA));
+  ts.SaveToFile(SeedFilePath);
   ts.Free;
 
 end;
 
 procedure Account.LoadSeedFile();
 var
-  ts : TStringLIst;
+  ts: TStringLIst;
 begin
-  ts := TStringList.Create();
+  ts := TStringLIst.Create();
 
-  ts.LoadFromFile( seedFilePath );
+  ts.LoadFromFile(SeedFilePath);
 
-  TCAIterations := strtoInt( ts[0] );
+  TCAIterations := strtoInt(ts[0]);
   EncryptedMasterSeed := ts[1];
-  userSaveSeed := strToBool( ts[2] );
-
+  userSaveSeed := strToBool(ts[2]);
+  if ts.Count>3 then
+  privTCA := strToBoolDef(ts[3],false) else
+  privTCA := false;
   ts.Free;
 
 end;
 
-function Account.countWalletBy(id: integer): integer;
+function Account.countWalletBy(id: Integer): Integer;
 var
-  ts: TStringList;
-  i, j: integer;
+  ts: TStringLIst;
+  i, j: Integer;
   wd: TWalletInfo;
 begin
 
@@ -130,44 +129,43 @@ begin
 
 end;
 
-
 procedure Account.clearArrays();
 var
-  T : Token;
-  wd : TWalletInfo;
+  T: Token;
+  wd: TWalletInfo;
 begin
 
   for T in myTokens do
-    if t <> nil then
-      t.Free;
+    if T <> nil then
+      T.Free;
 
-  SetLength( myTokens , 0 );
+  SetLength(myTokens, 0);
 
-  for Wd in MyCoins do
+  for wd in myCoins do
     if wd <> nil then
       wd.Free;
 
-  SetLength( myCoins , 0 );
+  SetLength(myCoins, 0);
 
 end;
 
-procedure Account.AddCoin( wd : TWalletInfo);
+procedure Account.AddCoin(wd: TWalletInfo);
 begin
-  SetLength(myCoins , length(myCoins) +1);
-  myCoins[ length(mycoins) -1 ] := wd;
+  SetLength(myCoins, length(myCoins) + 1);
+  myCoins[length(myCoins) - 1] := wd;
   SaveCoinFile();
 end;
 
-procedure Account.AddToken( T : Token );
+procedure Account.AddToken(T: Token);
 begin
-  SetLength( myTokens , Length(myTokens) +1);
-  myTokens [ length(myTokens) -1 ] := T;
+  SetLength(myTokens, length(myTokens) + 1);
+  myTokens[length(myTokens) - 1] := T;
   SaveTokenFile();
 end;
 
 procedure Account.LoadFiles();
 var
-  ts: TStringList;
+  ts: TStringLIst;
   i: Integer;
   T: Token;
 begin
@@ -183,20 +181,20 @@ end;
 
 procedure Account.LoadCoinFile();
 var
-  ts: TStringList;
+  ts: TStringLIst;
   i: Integer;
   wd: TWalletInfo;
 begin
 
-  if not fileExists( CoinFilePath ) then
+  if not fileExists(CoinFilePath) then
     exit;
 
-  ts := TStringList.Create();
+  ts := TStringLIst.Create();
 
-  ts.LoadFromFile( CoinFilePath );
+  ts.LoadFromFile(CoinFilePath);
   i := 0;
 
-  while i < ts.Count-1 do
+  while i < ts.Count - 1 do
   begin
     wd := TWalletInfo.Create(strtoInt(ts.Strings[i]),
       strtoInt(ts.Strings[i + 1]), strtoInt(ts.Strings[i + 2]),
@@ -204,12 +202,12 @@ begin
 
     wd.orderInWallet := strtoInt(ts[i + 6]);
     wd.pub := ts[i + 7];
-    wd.EncryptedPrivKey := ts[i+8];
-    wd.isCompressed := strToBool( ts[i+9] );
+    wd.EncryptedPrivKey := ts[i + 8];
+    wd.isCompressed := strToBool(ts[i + 9]);
 
     wd.wid := length(myCoins);
 
-    AddCoin( wd );
+    AddCoin(wd);
 
     i := i + 10;
   end;
@@ -220,14 +218,14 @@ end;
 
 procedure Account.LoadTokenFile();
 var
-  ts: TStringList;
+  ts: TStringLIst;
   i: Integer;
   T: Token;
 begin
-  if FileExists(TokenFilePath) then
+  if fileExists(TokenFilePath) then
   begin
 
-    ts := TStringList.Create();
+    ts := TStringLIst.Create();
 
     ts.LoadFromFile(TokenFilePath);
     // clear myTokens
@@ -240,12 +238,12 @@ begin
       T := Token.fromString(ts[i]);
       inc(i);
 
-      T.idInWallet := Length(myTokens) + 10000;
+      T.idInWallet := length(myTokens) + 10000;
 
       // histSize := strtoInt(ts[i]);
       inc(i);
 
-      AddToken( T );
+      AddToken(T);
       // add new token to array myTokens
 
     end;
@@ -257,7 +255,7 @@ end;
 
 procedure Account.SaveFiles();
 var
-  ts: TStringList;
+  ts: TStringLIst;
   i: Integer;
   fileData: AnsiString;
 begin
@@ -271,14 +269,14 @@ end;
 
 procedure Account.SaveTokenFile();
 var
-  ts: TStringList;
+  ts: TStringLIst;
   i: Integer;
   fileData: AnsiString;
 begin
-  ts := TStringList.Create();
+  ts := TStringLIst.Create();
 
   // convert all tokens to string and save in TStringList
-  for i := 0 to Length(myTokens) - 1 do
+  for i := 0 to length(myTokens) - 1 do
   begin
     if myTokens[i].deleted = false then
     begin
@@ -286,7 +284,7 @@ begin
       fileData := myTokens[i].ToString() + ' ';
 
       ts.Add(fileData);
-      ts.Add(inttostr(0));
+      ts.Add(inttoStr(0));
     end;
 
   end;
@@ -298,25 +296,26 @@ end;
 
 procedure Account.SaveCoinFile();
 var
-  ts: TStringList;
+  ts: TStringLIst;
   data: TWalletInfo;
 begin
 
-  ts := TStringList.Create();
+  ts := TStringLIst.Create();
 
   for data in myCoins do
   begin
-
-    ts.Add(inttostr(data.coin)); // Coin ID
-    ts.Add(inttostr(data.x)); // X
-    ts.Add(inttostr(data.y)); // Y
+if data.deleted then
+      Continue;
+    ts.Add(inttoStr(data.coin)); // Coin ID
+    ts.Add(inttoStr(data.x)); // X
+    ts.Add(inttoStr(data.y)); // Y
     ts.Add(data.addr);
     ts.Add(data.description);
-    ts.Add(inttostr(data.creationTime));
-    ts.Add(inttostr(data.orderInWallet));
+    ts.Add(inttoStr(data.creationTime));
+    ts.Add(inttoStr(data.orderInWallet));
     ts.Add(data.pub);
     ts.Add(data.EncryptedPrivKey);
-    ts.Add(boolToStr(data.isCompressed));
+    ts.Add(booltoStr(data.isCompressed));
 
   end;
 
