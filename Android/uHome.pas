@@ -932,7 +932,6 @@ uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
 {$R *.fmx}
 {$R *.SmXhdpiPh.fmx ANDROID}
 {$R *.iPhone55in.fmx IOS}
-{$R *.LgXhdpiPh.fmx ANDROID}
 {$R *.Windows.fmx MSWINDOWS}
 {$R *.Surface.fmx MSWINDOWS}
 
@@ -3304,8 +3303,8 @@ begin
   ShortcutValetInfoImage.Bitmap := CurrentCryptoCurrency.getIcon();
   wvGFX.Bitmap := CurrentCryptoCurrency.getIcon();
 
-  lblCoinShort.Text := CurrentCryptoCurrency.shortcut + '   ';
-  lblReceiveCoinShort.Text := CurrentCryptoCurrency.shortcut + '   ';
+  lblCoinShort.Text := CurrentCryptoCurrency.shortcut + '';
+  lblReceiveCoinShort.Text := CurrentCryptoCurrency.shortcut + '';
   QRChangeTimerTimer(nil);
   receiveAddress.Text := cutEveryNChar(4, CurrentCryptoCurrency.addr);
 
@@ -3369,7 +3368,9 @@ begin
     curWU := a.asInteger;
     a := (a * StrFloatToBigInteger(CurrentCoin.efee[round(FeeSpin.Value) - 1],
       CurrentCoin.decimals)) div 1024;
-    a := Max(a, 999);
+    if (CurrentCoin.coin = 0) or (CurrentCoin.coin = 1) then
+      a := a * 4;
+    a := Max(a, 500);
     wvFee.Text := BigIntegertoFloatStr(a, CurrentCoin.decimals);
     // CurrentCoin.efee[round(FeeSpin.Value) - 1] ;
     lblBlockInfo.Text := dictionary['ConfirmInNext'] + ' ' +
@@ -4974,7 +4975,9 @@ begin
     curWU := a.asInteger;
     a := (a * StrFloatToBigInteger(CurrentCoin.efee[round(FeeSpin.Value) - 1],
       CurrentCoin.decimals)) div 1024;
-    a := Max(a, 999);
+    if (CurrentCoin.coin = 0) or (CurrentCoin.coin = 1) then
+      a := a * 4;
+    a := Max(a, 500);
     wvFee.Text := BigIntegertoFloatStr(a, CurrentCoin.decimals);
     // CurrentCoin.efee[round(FeeSpin.Value) - 1] ;
     lblBlockInfo.Text := dictionary['ConfirmInNext'] + ' ' +
@@ -4987,6 +4990,7 @@ end;
 procedure TfrmHome.FeeToUSDUpdate(Sender: TObject);
 var
   satb: Integer;
+  curWUstr: AnsiString;
 begin
   if isTokenTransfer then
   begin
@@ -5011,9 +5015,16 @@ begin
       curWU := 440; // 2 in 2 out default
     satb := BigInteger(StrFloatToBigInteger(wvFee.Text,
       CurrentCryptoCurrency.decimals) div curWU).asInteger;
+    if (CurrentCoin.coin = 0) or (CurrentCoin.coin = 1) then
+    begin
+      curWUstr := ' sat/WU) ';
+      satb := satb div 4;
+    end
+    else
+      curWUstr := ' sat/b) ';
 
-    lblFee.Text := wvFee.Text + ' (' + IntToStr(satb) + ' sat/b) ' +
-      AvailableCoin[CurrentCoin.coin].shortcut + ' = ' +
+    lblFee.Text := wvFee.Text + ' (' + IntToStr(satb) + curWUstr + AvailableCoin
+      [CurrentCoin.coin].shortcut + ' = ' +
       floatToStrF(CurrencyConverter.calculate(strToFloatDef(wvFee.Text,
       0) * CurrentCoin.rate), ffFixed, 18, 6) + ' ' + CurrencyConverter.symbol;
   end;
