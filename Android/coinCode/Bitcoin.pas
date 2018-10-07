@@ -2,9 +2,8 @@ unit Bitcoin;
 
 interface
 
-
-uses  SysUtils, secp256k1, HashObj, base58, coinData, Velthuis.BigIntegers , WalletStructureData;
-
+uses SysUtils, secp256k1, HashObj, base58, coinData, Velthuis.BigIntegers,
+  WalletStructureData;
 
 function reedemFromPub(pub: AnsiString): AnsiString;
 function Bitcoin_PublicAddrToWallet(pub: AnsiString; netbyte: AnsiString = '00';
@@ -24,7 +23,7 @@ function generatep2wpkh(pub: AnsiString): AnsiString;
 
 implementation
 
-uses uHome, transactions, tokenData, bech32 , misc;
+uses uHome, transactions, tokenData, bech32, misc;
 
 function Bitcoin_createHD(coinid, x, y: integer; MasterSeed: AnsiString)
   : TWalletInfo;
@@ -39,7 +38,7 @@ begin
   result := TWalletInfo.Create(coinid, x, y, Bitcoin_PublicAddrToWallet(pub,
     availablecoin[coinid].p2pk), '');
   result.pub := pub;
-  result.isCompressed:=true;
+  result.isCompressed := true;
   wipeAnsiString(p);
   wipeAnsiString(MasterSeed);
 
@@ -125,7 +124,7 @@ begin
   result := '';
   TXBIP143 := TXBuilderBIP_143.Create;
   TXBIP143.sender := from;
-  TXBIP143.inputs := from.UTXO;
+  TXBIP143.inputs := inputs;
   TXBIP143.MasterSeed := MasterSeed;
   TXBIP143.addOutput(sendto, Amount);
   diff := TXBIP143.getAllToSPent - (Amount.AsInt64 + Fee.AsInt64);
@@ -156,7 +155,7 @@ begin
     result := '';
     TX := TXBuilder.Create;
     TX.sender := from;
-    TX.inputs := from.UTXO;
+    TX.inputs := inputs;
     TX.MasterSeed := MasterSeed;
     TX.addOutput(sendto, Amount);
     diff := TX.getAllToSPent - (Amount.AsInt64 + Fee.AsInt64);
@@ -221,14 +220,14 @@ var
 begin
   if CurrentCoin.coin <> 4 then
   begin
-    if (currentCoin.coin = 0) and canSegwit(getUTXO(from)) then
+    if (CurrentCoin.coin = 0) and canSegwit(currentaccount.aggregateUTXO(from)) then
     begin
-      TX := createSegwitTransaction(from, sendto, Amount, Fee, getUTXO(from),
+      TX := createSegwitTransaction(from, sendto, Amount, Fee, currentaccount.aggregateUTXO(from),
         MasterSeed);
     end
     else
     begin
-      TX := createTransaction(from, sendto, Amount, Fee, getUTXO(from),
+      TX := createTransaction(from, sendto, Amount, Fee, currentaccount.aggregateUTXO(from),
         MasterSeed);
     end;
   end
@@ -246,9 +245,8 @@ begin
     begin
 
       TXBuilder.value := BigInteger.Zero;
-      TXBuilder.receiver :=
-        StringReplace(Token(CurrentCryptoCurrency).ContractAddress, '0x', '',
-        [rfReplaceAll]);
+      TXBuilder.receiver := StringReplace(Token(CurrentCryptoCurrency)
+        .ContractAddress, '0x', '', [rfReplaceAll]);
       TXBuilder.gasLimit := 66666;
       TXBuilder.data := 'a9059cbb000000000000000000000000' +
         StringReplace(sendto, '0x', '', [rfReplaceAll]) +
