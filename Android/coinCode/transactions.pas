@@ -163,6 +163,7 @@ var
   txhash, priv, pub, scriptSig: AnsiString;
   scriptCode: AnsiString;
   reedem: AnsiString;
+  Y:integer;
 begin
   preImage := '';
   setHeader;
@@ -173,9 +174,8 @@ begin
     addToPreImage(inttotx(inputs[k].n, 8));
     if i = k then
     begin
-
+      Y:=inputs[k].Y;
       scriptCode := inputs[k].ScriptPubKey;
-
       addToPreImage(inttotx(length(scriptCode) div 2, 2));
       addToPreImage(scriptCode);
     end
@@ -198,7 +198,7 @@ begin
   end
   else
   begin
-    priv := priv256forhd(sender.coin, sender.x, sender.y, masterSeed);
+    priv := priv256forhd(sender.coin, sender.x, Y, masterSeed);
     pub := secp256k1_get_public(priv);
   end;
   scriptSig := secp256k1_signDER(txhash, priv);
@@ -214,10 +214,15 @@ var
   k: integer;
   hash1, hash2: AnsiString;
   txhash, priv, pub, scriptSig, scriptCode, reedem: AnsiString;
+  Y:integer;
 begin
   preImage := '';
   setHeader;
-  pub := currentCoin.pub;
+  Y:= inputs[i].Y;
+//  pub := currentCoin.pub;
+  pub:= CurrentAccount.getSibling(CurrentCoin,Y).pub;
+
+
   inputsBalance := 0;
   hash1 := '';
   hash2 := '';
@@ -232,6 +237,7 @@ begin
   addToPreImage(inttotx(inputs[i].n, 8));
 
   scriptCode := inputs[i].ScriptPubKey;
+
   if inputType(inputs[i]) = 2 then
   begin
     delete(scriptCode, 1, 2);
@@ -260,10 +266,9 @@ begin
   end
   else
   begin
-    priv := priv256forhd(sender.coin, sender.x, sender.y, masterSeed);
+    priv := priv256forhd(sender.coin, sender.x, Y, masterSeed);
     pub := secp256k1_get_public(priv);
   end;
-
   scriptSig := secp256k1_signDER(txhash, priv);
   der[i] := inttotx((length(scriptSig) + 2) div 2, 2) + scriptSig +
     inttotx(getHashType and 255, 2);
@@ -351,6 +356,7 @@ var
   txhash, priv, pub, scriptSig: AnsiString;
   scriptCode: AnsiString;
   reedem: AnsiString;
+  Y:integer;
 begin
   preImage := '';
   setHeader;
@@ -363,7 +369,7 @@ begin
     begin
 
       scriptCode := inputs[k].ScriptPubKey;
-
+      Y:=inputs[k].Y;
       addToPreImage(inttotx(length(scriptCode) div 2, 2));
       addToPreImage(scriptCode);
     end
@@ -382,12 +388,12 @@ begin
   if (sender.x = -1) and (sender.y = -1) then
   begin
     priv := speckDecrypt(TCA(masterSeed), sender.EncryptedPrivKey);
-     pub := secp256k1_get_public(priv, not sender.isCompressed);
+    pub := secp256k1_get_public(priv, not sender.isCompressed);
   end
   else
   begin
-    priv := priv256forhd(sender.coin, sender.x, sender.y, masterSeed);
-     pub := sender.pub;
+    priv := priv256forhd(sender.coin, sender.x, Y, masterSeed);
+    pub := CurrentAccount.getSibling(CurrentCoin,Y).pub;
   end;
 
   scriptSig := secp256k1_signDER(txhash, priv);
@@ -474,7 +480,7 @@ begin
           end;
         1:
           begin
-            reedem := reedemFromPub(currentCoin.pub);
+            reedem := reedemFromPub(CurrentAccount.getSibling(CurrentCoin,inputs[i].Y).pub);
             addToPreImage('1716' + reedem);
             witness := witness + '02' + der[i];
           end;
