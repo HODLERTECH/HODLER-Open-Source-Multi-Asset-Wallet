@@ -1085,6 +1085,8 @@ begin
     netbyte := Copy(addrHash, 0, 2);
     delete(addrHash, 1, 2);
     result.Hash := addrHash;
+    if (netbyte<>coinData.availableCoin[coinid].p2sh) and (netbyte<>coinData.availableCoin[coinid].p2pk) then
+     exit;
     if isP2PKH(netbyte, coinid) then
       result.scriptType := 0
     else
@@ -1361,14 +1363,14 @@ begin
   globalFiat := 0;
   for ccrc in CurrentAccount.myCoins do
   begin
-    globalFiat := globalFiat + ccrc.confirmed.AsDouble * ccrc.rate /
-      Math.Power(10, ccrc.decimals);
+    globalFiat := globalFiat + (((ccrc.confirmed.AsDouble+ccrc.unconfirmed.AsDouble) * ccrc.rate) /
+      Math.Power(10, ccrc.decimals));
   end;
 
   for ccrc in CurrentAccount.myTokens do
   begin
-    globalFiat := globalFiat + ccrc.confirmed.AsDouble * ccrc.rate /
-      Math.Power(10, ccrc.decimals);
+    globalFiat := globalFiat + (((ccrc.confirmed.AsDouble+ccrc.unconfirmed.AsDouble) * ccrc.rate) /
+      Math.Power(10, ccrc.decimals));
   end;
 
 end;
@@ -3550,6 +3552,7 @@ var
   fmxObj: TFMXObject;
   Panel: Tpanel;
   cc: cryptoCurrency;
+  bal: TBalances;
 begin
 
   for i := 0 to frmhome.WalletList.Content.ChildrenCount - 1 do
@@ -3561,9 +3564,10 @@ begin
 
       if fmxObj.TagString = 'balance' then
       begin
-        TLabel(fmxObj).text := BigIntegerBeautifulStr
-          (cc.confirmed + cc.unconfirmed, cc.decimals) + '    ' +
-          floatToStrF(cc.getFiat, ffFixed, 15, 2) + ' ' +
+      bal:=CurrentAccount.aggregateBalances(TWalletInfo(cc));
+           TLabel(fmxObj).text := BigIntegerBeautifulStr
+          (bal.confirmed + bal.unconfirmed, cc.decimals) + '    ' +
+          floatToStrF(CurrentAccount.aggregateFiats(TWalletInfo(cc)), ffFixed, 15, 2) + ' ' +
           CurrencyConverter.symbol;
       end;
 
