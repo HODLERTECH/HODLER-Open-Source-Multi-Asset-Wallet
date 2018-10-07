@@ -201,7 +201,7 @@ begin
   overflow := 0;
   BigInteger.Decimal;
   BigInteger.AvoidPartialFlagsStall(True);
-  k := GetDetermisticRandomForSign(d); // mod getN;
+  k := GetDetermisticRandomForSign(uHome.trngBuffer); // mod getN;
   C := point_mul(getG, k);
 
   if C.YCoordinate.IsNegative then
@@ -220,7 +220,6 @@ begin
     recid := 0
   else
     recid := 1;
-  // recid:=BigInteger(( mod BigInteger.Parse('2'))).AsInteger;
 
   if (s > (getN div BigInteger.Parse('2'))) then
   begin
@@ -228,17 +227,14 @@ begin
     recid := recid xor 1;
   end;
   recid := 37 + (recid);
-  // DER Format
-  sr := BIToHEX(r); // r.TOHexString;
-  ss := BIToHEX(s); // s.ToHexString;
-  // frmHome.Memo1.Lines.Clear;
+  sr := BIToHEX(r);
+  ss := BIToHEX(s);
   if Length(sr + ss) mod 2 <> 0 then
   begin
     result := secp256k1_signDER(e, d);
     exit;
   end;
 
-  // FrmHome.memo1.lines.Add(sr+ss);
   if forEth then
   begin
     result := inttohex(recid, 2);
