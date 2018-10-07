@@ -5,7 +5,6 @@ interface
 uses tokenData, WalletStructureData, cryptoCurrencyData, System.IOUtils,
   Sysutils, Classes, FMX.Dialogs, Json, Velthuis.BigIntegers;
 
-
 procedure loadCryptoCurrencyJSONData(data: TJSONValue; cc: cryptoCurrency);
 function getCryptoCurrencyJsonData(cc: cryptoCurrency): TJSONObject;
 
@@ -43,6 +42,7 @@ type
     function getSibling(wi: TWalletInfo; Y: Integer): TWalletInfo;
     function aggregateBalances(wi: TWalletInfo): TBalances;
     function aggregateUTXO(wi: TWalletInfo): TUTXOS;
+    function aggregateFiats(wi: TWalletInfo): double;
   private
     procedure SaveTokenFile();
     procedure SaveCoinFile();
@@ -62,6 +62,16 @@ implementation
 
 uses
   misc;
+
+function Account.aggregateFiats(wi: TWalletInfo): double;
+var
+  twi: cryptoCurrency;
+begin
+  result := 0.0;
+  for twi in getWalletWithX(wi.X, TWalletInfo(wi).coin) do
+    result := result + TWalletInfo(wi).getFiat;
+
+end;
 
 function Account.aggregateUTXO(wi: TWalletInfo): TUTXOS;
 var
