@@ -5,7 +5,7 @@ interface
 uses System.IOUtils, sysutils, StrUtils, Velthuis.BigIntegers, System.Classes,
   Math, // uHome ,
   FMX.Graphics, // misc,
-  base58,
+  base58, Json,
   FMX.Dialogs;
 
 type
@@ -20,6 +20,8 @@ type
     confirmation: System.uint64;
     function toString(): AnsiString;
     procedure FromString(str: AnsiString);
+    function toJsonValue(): TJsonValue;
+    procedure fromJsonValue( JsonValue : TJsonValue);
 
   end;
 
@@ -46,6 +48,7 @@ type
 
     function getFiat: Double;
   end;
+type TCryptoCurrencyArray = array of cryptocurrency;
 
 implementation
 
@@ -73,6 +76,91 @@ begin
   if d<0 then d:=0.0;
   result := currencyConverter.calculate(d) * rate /
     Math.power(10, decimals);
+
+end;
+
+
+function  transactionHistory.toJsonValue(): TJsonValue;
+var
+  HistJson : TJsonObject;
+  addrArray : TjsonArray;
+  addrValJson : TjsonObject;
+  i : Integer;
+begin
+  HistJson := TJsonObject.Create();
+
+  HistJson.AddPair('type' , typ );
+  HistJson.AddPair('transactionID' , TransactionID );
+  HistJson.AddPair('timeStamp' , data );
+  HistJson.AddPair('countValues' , CountValues.toString() );
+  HistJson.AddPair('lastBlock' , inttostr(lastBlock) );
+  HistJson.AddPair('confirmation' , IntToStr(confirmation) );
+
+  addrArray := TJSONArray.Create();
+
+  for i := 0 to Length(addresses)-1 do
+  begin
+
+    addrValJson := TJsonObject.Create;
+    addrValJson.AddPair('address' , addresses[i]);
+    addrValJson.AddPair('value'  , values[i].ToString() );
+
+    addrArray.Add( addrValJson );
+
+  end;
+
+  HistJson.AddPair('addressList' , addrArray );
+  result := HistJson;
+
+end;
+
+procedure  transactionHistory.fromJsonValue( JsonValue : TJsonValue);
+var
+  i : Integer;
+  conf , lastB, temp, countVal : AnsiString;
+  addrlist : TJsonArray;
+  JsonIt : TJsonValue;
+
+begin
+
+  JsonValue.TryGetValue<AnsiString>('type' , typ);
+  JsonValue.TryGetValue<AnsiString>('transactionID' , TransactionID );
+  JsonValue.TryGetValue<AnsiString>('timeStamp' , data );
+  if JsonValue.TryGetValue<AnsiString>('confirmation' , conf ) then
+  begin
+    confirmation := strToIntDef(conf , 0);
+  end;
+  if JsonValue.TryGetValue<AnsiString>('countValues' , CountVal ) then
+  begin
+    BigInteger.TryParse( countVal , 10 , CountValues);
+  end;
+  if JsonValue.TryGetValue<AnsiString>('lastBlock' ,lastB ) then
+  begin
+    lastBlock := strToIntDef( lastB , 0 );
+  end;
+
+  if JsonValue.TryGetValue<TJsonArray>('addressList' , addrlist ) then
+  begin
+    SetLength( addresses , addrList.Count);
+    setLength( values , addrlist.Count );
+
+    i := 0;
+    for JsonIt in addrList do
+    begin
+
+      JsonIt.TryGetValue<AnsiString>( 'address' , addresses[i] );
+
+      if JsonIt.TryGetValue<AnsiString>('value' , temp ) then
+      begin
+
+        BigInteger.TryParse( temp , 10 , values[i] );
+
+      end;
+
+      inc(i);
+    end;
+
+  end;
 
 end;
 
