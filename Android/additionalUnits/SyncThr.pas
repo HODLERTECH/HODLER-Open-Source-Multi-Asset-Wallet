@@ -35,7 +35,7 @@ procedure parseCoinHistory(text: AnsiString; wallet: TWalletInfo);
 procedure parseTokenHistory(text: AnsiString; T: Token);
 procedure synchronizeHistory;
 function segwitParameters(wi: TWalletInfo): AnsiString;
-procedure SynchronizeCryptoCurrency(var cc: cryptoCurrency);
+procedure SynchronizeCryptoCurrency(cc: cryptoCurrency);
 procedure parseBalances(s: AnsiString; var wd: TWalletInfo);
 procedure parseETHHistory(text: AnsiString; wallet: TWalletInfo);
 
@@ -45,7 +45,7 @@ implementation
 
 uses uhome, misc, coinData, Velthuis.BigIntegers, Bitcoin;
 
-procedure SynchronizeCryptoCurrency(var cc: cryptoCurrency);
+procedure SynchronizeCryptoCurrency(cc: cryptoCurrency);
 var
   data: AnsiString;
 begin
@@ -66,7 +66,7 @@ frmHome.RefreshProgressBar.Visible:=true;
             segwitParameters(TWalletInfo(cc)));
 
           parseBalances(data, TWalletInfo(cc));
-          TWalletInfo(cc).UTXO := parseUTXO(data);
+          TWalletInfo(cc).UTXO := parseUTXO(data,TWalletInfo(cc).Y);
 
         end;
 
@@ -86,7 +86,7 @@ frmHome.RefreshProgressBar.Visible:=true;
           [TWalletInfo(cc).coin].name + '&address=' + TWalletInfo(cc).addr);
 
         parseBalances(data, TWalletInfo(cc));
-        TWalletInfo(cc).UTXO := parseUTXO(data);
+        TWalletInfo(cc).UTXO := parseUTXO(data,TWalletInfo(cc).Y);
 
       end;
     end;
@@ -140,9 +140,9 @@ frmHome.RefreshProgressBar.Visible:=true;
     if Token(cc).lastBlock = 0 then
       Token(cc).lastBlock := getHighestBlockNumber(Token(cc));
 
-    data := getDataOverHTTP(HODLER_ETH + '/?cmd=tokenHistory&addr=' + Token(cc)
-      .addr + '&contract=' + Token(cc).ContractAddress + '&bno=' +
-      inttostr(Token(cc).lastBlock));
+    data := getDataOverHTTP(HODLER_ETH + '/?cmd=tokenHistory&addr=' +
+      Token(cc).addr + '&contract=' + Token(cc).ContractAddress +
+      '&bno=' + inttostr(Token(cc).lastBlock));
 
     parseTokenHistory(data, Token(cc));
 
@@ -179,14 +179,15 @@ begin
 
     synchronizeHistory();
 
-    TThread.Synchronize(nil,
-      procedure
-      begin
+    if (Self <> nil) and  (not Terminated )then
+      TThread.Synchronize(nil,
+        procedure
+        begin
 
-        if PageControl.ActiveTab = walletView then
-          createHistoryList(CurrentCryptoCurrency);
+          if PageControl.ActiveTab = walletView then
+            createHistoryList(CurrentCryptoCurrency);
 
-      end);
+        end);
 
   end;
 
@@ -248,17 +249,7 @@ begin
         if PageControl.ActiveTab = walletView then
         begin
 
-          TopInfoConfirmedValue.text :=
-            BigIntegerToFloatStr(CurrentCryptoCurrency.confirmed,
-            CurrentCryptoCurrency.decimals);
-          TopInfoUnconfirmedValue.text :=
-            BigIntegerToFloatStr(CurrentCryptoCurrency.unconfirmed,
-            CurrentCryptoCurrency.decimals);
-          lbBalance.text := BigIntegerBeautifulStr
-            (CurrentCryptoCurrency.confirmed, CurrentCryptoCurrency.decimals);
-          lbBalanceLong.text := TopInfoConfirmedValue.text;
-          lblFiat.text := floatToStrF(CurrentCryptoCurrency.getFiat(),
-            ffFixed, 15, 2);
+          reloadWalletView;
 
 
           // createHistoryList( CurrentCryptoCurrency );
@@ -339,6 +330,8 @@ begin
 
       setLength(transHist.addresses, number);
       setLength(transHist.values, number);
+
+      sum := 0;
 
       for j := 0 to number - 1 do
       begin
@@ -858,7 +851,7 @@ begin
         parseBalances(CoinDataArray[counter], CurrentAccount.myCoins[i]);
         inc(counter);
 
-        CurrentAccount.myCoins[i].UTXO := parseUTXO(CoinDataArray[counter]);
+        CurrentAccount.myCoins[i].UTXO := parseUTXO(CoinDataArray[counter],CurrentAccount.myCoins[i].Y);
         inc(counter);
 
         // parseCoinHistory( CoinDataArray[counter], myWallets[i]);
