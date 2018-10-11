@@ -36,6 +36,7 @@ type
     n: integer;
     ScriptPubKey: AnsiString;
     Amount: System.uint64;
+    Y: integer;
   end;
 
 type
@@ -83,6 +84,7 @@ begin
   ShortCut := availablecoin[id].ShortCut;
   name := availablecoin[id].displayName;
   isCompressed := true;
+  deleted := false;
 
   if crTime = -1 then
     crTime := DateTimeToUnix(now);

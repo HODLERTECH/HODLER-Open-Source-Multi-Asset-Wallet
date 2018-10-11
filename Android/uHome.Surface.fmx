@@ -2,263 +2,572 @@ inherited frmHome_Surface: TfrmHome_Surface
   ClientHeight = 1920
   ClientWidth = 1080
   DesignerMasterStyle = 0
-  inherited PageControl: TTabControl
+  inherited StatusBarFixer: TRectangle
     Size.Width = 1080.000000000000000000
     Size.Height = 1920.000000000000000000
-    Sizes = (
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s
-      1080s
-      1920s)
-    inherited dashbrd: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited Footer: TToolBar
-        Position.Y = 1872.000000000000000000
-        Size.Width = 1080.000000000000000000
-        inherited btnSync: TButton
-          Size.Width = 1080.000000000000000000
-        end
-      end
-      inherited Header: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited HeaderLabel: TLabel
-          Size.Width = 871.000000000000000000
-        end
-        inherited btnOptions: TButton
-          Position.X = 1032.000000000000000000
-        end
-      end
-      inherited Layout1: TLayout
-        Size.Width = 1080.000000000000000000
-        inherited globalBalance: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-        inherited globalCurrency: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-        inherited SearchLayout: TLayout
-          Size.Width = 1080.000000000000000000
-          inherited SearchInDashBrdButton: TSpeedButton
-            Position.X = 1048.000000000000000000
+  end
+  inherited ScrollBox: TVertScrollBox
+    Size.Width = 1080.000000000000000000
+    Size.Height = 1920.000000000000000000
+    Viewport.Width = 1064.000000000000000000
+    Viewport.Height = 1904.000000000000000000
+    inherited PageControl: TTabControl
+      Size.Width = 1064.000000000000000000
+      Size.Height = 1904.000000000000000000
+      Sizes = (
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s
+        1064s
+        1904s)
+      inherited dashbrd: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited Footer: TToolBar
+          Position.Y = 1856.000000000000000000
+          Size.Width = 1064.000000000000000000
+          inherited btnSync: TButton
+            Size.Width = 1064.000000000000000000
+            inherited DashBrdProgressBar: TProgressBar
+              Size.Width = 1064.000000000000000000
+            end
           end
         end
-      end
-      inherited NewCryptoLayout: TLayout
-        Position.Y = 1836.000000000000000000
-        Size.Width = 1080.000000000000000000
-        inherited NewTokenButton: TButton
-          Position.X = 888.000000000000000000
+        inherited Header: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited HeaderLabel: TLabel
+            Size.Width = 855.000000000000000000
+          end
+          inherited btnOptions: TButton
+            Position.X = 1016.000000000000000000
+          end
         end
-      end
-      inherited WalletList: TVertScrollBox
-        Size.Width = 1080.000000000000000000
-        Size.Height = 1678.000000000000000000
-        Viewport.Width = 1080.000000000000000000
-        Viewport.Height = 1678.000000000000000000
-      end
-      inherited OrganizeList: TVertScrollBox
-        Viewport.Width = 384.000000000000000000
-        Viewport.Height = 325.000000000000000000
-      end
-      inherited AccountsListPanel: TPanel
-        inherited AccountsListVertScrollBox: TVertScrollBox
+        inherited Layout1: TLayout
+          Size.Width = 1064.000000000000000000
+          inherited globalBalance: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+          inherited globalCurrency: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+          inherited SearchLayout: TLayout
+            Size.Width = 1064.000000000000000000
+            inherited SearchInDashBrdButton: TSpeedButton
+              Position.X = 1032.000000000000000000
+            end
+            inherited HideZeroWalletsCheckBox: TCheckBox
+              Size.Width = 1064.000000000000000000
+            end
+          end
+        end
+        inherited NewCryptoLayout: TLayout
+          Position.Y = 1820.000000000000000000
+          Size.Width = 1064.000000000000000000
+          inherited NewTokenButton: TButton
+            Position.X = 872.000000000000000000
+          end
+        end
+        inherited WalletList: TVertScrollBox
+          Size.Width = 1064.000000000000000000
+          Size.Height = 1550.000000000000000000
+          Viewport.Width = 1064.000000000000000000
+          Viewport.Height = 1550.000000000000000000
+        end
+        inherited OrganizeList: TVertScrollBox
           Viewport.Width = 384.000000000000000000
-          Viewport.Height = 121.000000000000000000
+          Viewport.Height = 325.000000000000000000
         end
-      end
-    end
-    inherited walletDatCreation: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited HeaderForWDC: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited labelHeaderForWDC: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-      end
-    end
-    inherited createPassword: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited panelPassword: TPanel
-        Size.Width = 1080.000000000000000000
-        inherited pass: TEdit
-          Position.X = 880.000000000000000000
-        end
-      end
-      inherited PanelRetypePassword: TPanel
-        Size.Width = 1080.000000000000000000
-        inherited retypePass: TEdit
-          Position.X = 880.000000000000000000
-        end
-      end
-      inherited passwordMessage: TLabel
-        Size.Width = 1080.000000000000000000
-      end
-      inherited Layout9: TLayout
-        Size.Width = 1080.000000000000000000
-        inherited Layout10: TLayout
-          Size.Width = 1080.000000000000000000
-          inherited Image3: TImage
-            Size.Width = 1080.000000000000000000
+        inherited AccountsListPanel: TPanel
+          inherited AccountsListVertScrollBox: TVertScrollBox
+            Viewport.Width = 384.000000000000000000
+            Viewport.Height = 121.000000000000000000
           end
         end
-        inherited Image4: TImage
-          Position.X = 412.000000000000000000
+        inherited DeleteAccountLayout: TLayout
+          Size.Width = 1064.000000000000000000
+          inherited OrganizeDragInfoLabel: TLabel
+            Size.Width = 884.000000000000000000
+          end
+          inherited PopupBox1: TPopupBox
+            Position.X = 884.000000000000000000
+          end
+        end
+        inherited BackToBalanceViewLayout: TLayout
+          Position.Y = 1772.000000000000000000
+          Size.Width = 1064.000000000000000000
+          inherited BackToBalanceViewButton: TButton
+            Position.X = 880.000000000000000000
+          end
         end
       end
-      inherited Layout11: TLayout
-        Size.Width = 1080.000000000000000000
-        inherited lblThanks: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-        inherited lblSetPassword: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-      end
-      inherited btnCreateWallet: TButton
-        Size.Width = 1080.000000000000000000
-      end
-      inherited AccountNamePanel: TPanel
-        Size.Width = 1080.000000000000000000
-        inherited AccountNameEdit: TEdit
-          Position.X = 880.000000000000000000
+      inherited walletDatCreation: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited HeaderForWDC: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited labelHeaderForWDC: TLabel
+            Size.Width = 1064.000000000000000000
+          end
         end
       end
-    end
-    inherited seedGenerated: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited headerForSG: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited labelHeaderForSG: TLabel
-          Size.Width = 1080.000000000000000000
+      inherited createPassword: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited panelPassword: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited pass: TEdit
+            Position.X = 864.000000000000000000
+          end
+        end
+        inherited PanelRetypePassword: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited retypePass: TEdit
+            Position.X = 864.000000000000000000
+          end
+        end
+        inherited passwordMessage: TLabel
+          Size.Width = 1064.000000000000000000
+        end
+        inherited Layout9: TLayout
+          Size.Width = 1064.000000000000000000
+          inherited Layout10: TLayout
+            Size.Width = 1064.000000000000000000
+            inherited HodlerLogoBackGroundImageCP: TImage
+              Size.Width = 1064.000000000000000000
+            end
+          end
+          inherited HodlerLogoImageCP: TImage
+            Position.X = 455.000000000000000000
+          end
+        end
+        inherited Layout11: TLayout
+          Size.Width = 1064.000000000000000000
+          inherited lblThanks: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+          inherited lblSetPassword: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited btnCreateWallet: TButton
+          Position.Y = 1856.000000000000000000
+          Size.Width = 1064.000000000000000000
+        end
+        inherited AccountNamePanel: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited AccountNameEdit: TEdit
+            Position.X = 864.000000000000000000
+          end
+        end
+        inherited privTCAPanel2: TPanel
+          Position.Y = 1808.000000000000000000
+          Size.Width = 1064.000000000000000000
+          inherited notPrivTCA2: TCheckBox
+            Position.X = 1016.000000000000000000
+          end
+        end
+        inherited Panel16: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited PasswordInfoStaticLabel: TLabel
+            Size.Width = 1044.000000000000000000
+          end
         end
       end
-      inherited PanelSG: TPanel
-        Size.Width = 1080.000000000000000000
-      end
-      inherited BackupMemo: TMemo
-        Size.Width = 1080.000000000000000000
-        Size.Height = 1777.000000000000000000
-        Viewport.Width = 1080.000000000000000000
-        Viewport.Height = 1777.000000000000000000
-      end
-      inherited btnSeedGeneratedProceed: TButton
-        Position.Y = 1873.000000000000000000
-        Size.Width = 1080.000000000000000000
-      end
-    end
-    inherited QRReader: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited QRHeader: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited lblQRHeader: TLabel
-          Size.Width = 1080.000000000000000000
+      inherited seedGenerated: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited headerForSG: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited labelHeaderForSG: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited PanelSG: TPanel
+          Size.Width = 1064.000000000000000000
+        end
+        inherited BackupMemo: TMemo
+          Size.Width = 1064.000000000000000000
+          Size.Height = 1761.000000000000000000
+          Viewport.Width = 1064.000000000000000000
+          Viewport.Height = 1761.000000000000000000
+        end
+        inherited btnSeedGeneratedProceed: TButton
+          Position.Y = 1857.000000000000000000
+          Size.Width = 1064.000000000000000000
         end
       end
-      inherited imgCamera: TImage
-        MultiResBitmap.Height = 117
-        MultiResBitmap.Width = 117
-        MultiResBitmap.LoadSize = 1
-        Size.Width = 1080.000000000000000000
-        Size.Height = 1872.000000000000000000
-      end
-    end
-    inherited walletView: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited headerforWV: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited btnWVShare: TButton
-          Position.X = 1032.000000000000000000
+      inherited QRReader: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited QRHeader: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited lblQRHeader: TLabel
+            Size.Width = 1064.000000000000000000
+          end
         end
-        inherited Layout4: TLayout
-          Position.X = 935.000000000000000000
+        inherited imgCamera: TImage
+          MultiResBitmap.Height = 117
+          MultiResBitmap.Width = 117
+          MultiResBitmap.LoadSize = 1
+          Size.Width = 1064.000000000000000000
+          Size.Height = 1856.000000000000000000
         end
       end
-      inherited WVTabControl: TTabControl
-        Size.Width = 1080.000000000000000000
-        Size.Height = 1824.000000000000000000
-        Sizes = (
-          1080s
-          1775s
-          1080s
-          1775s
-          1080s
-          1775s
-          1080s
-          1775s)
-        inherited WVBalance: TTabItem
-          ExplicitSize.cx = 61.000000000000000000
-          ExplicitSize.cy = 26.000000000000000000
-          inherited BalancePanel: TPanel
-            Size.Width = 1080.000000000000000000
-            inherited wvGFX: TImage
+      inherited walletView: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited headerforWV: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited btnWVShare: TButton
+            Position.X = 1016.000000000000000000
+          end
+          inherited Layout4: TLayout
+            Position.X = 919.000000000000000000
+          end
+        end
+        inherited WVTabControl: TTabControl
+          Size.Width = 1064.000000000000000000
+          Size.Height = 1808.000000000000000000
+          Sizes = (
+            1064s
+            1759s
+            1064s
+            1759s
+            1064s
+            1759s
+            1064s
+            1759s)
+          inherited WVBalance: TTabItem
+            ExplicitSize.cx = 61.000000000000000000
+            ExplicitSize.cy = 26.000000000000000000
+            inherited BalancePanel: TPanel
+              Size.Width = 1064.000000000000000000
+              inherited wvGFX: TImage
+                MultiResBitmap = <
+                  item
+                    Width = 32
+                    Height = 32
+                    PNG = {
+                      89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
+                      F4000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+                      088F49444154584795577D6C5567197FDE8F73EEBD6D47A1D2D2DB31B8AC6B4B
+                      0732182A2C500C810D58FC40A525CEAF4471129339CDFC436716B2A9FF9AC912
+                      1723CBCCD430CA229B4B86301794DBC59A050643E8282017967EECB6E9A05FF7
+                      E3BC1F3ECF7BEE29B72D5DF477F3E6DCF39EF77D7ECFF7790F8339602D3038DC
+                      CE59C7614DF7E6E89792A6106C37DA6E6560EF539625BBF5F87C7AB65E54DD90
+                      CC0E58C6CF7882FDCDFAF218DF7164809ED9CE7601ED870DC34D743F13B755C0
+                      EE03CE9E0643FFCD6B9F5F61ADFA81CAB39D7E82D7B92DDA80D6162FA14CC119
+                      0881F382E39D8562CE6465DCBECA98DCCFBFF8FA795A532EB31CB314208DC96A
+                      73687DC27A0B9E190478BC21C63D33A9E1A4CA850248879E386B6B0DF7A77BC0
+                      8AD6BC8D6CDC24139C5708E82F98A09EB3FDAC30F214DFDD9D8B6487AB424C53
+                      205A903FB4B9457ADE4111F3D614C702E8CF59752563455B2B9AFA3F20DD636C
+                      638AE98638487F9E0FBA10BCAB0C3C12DF75FCFD994A4C098C1E143B1F5A6B84
+                      3A1AE37E6D7F2E087A2E32D9B67CB6A71C3051C0A253B8A41B948621A0B9922B
+                      D2EF836D6DB1AA21E17905531CE25AEEF03B8E9F2A57C2098EE2933FB8A5197C
+                      DB15B3A23633A614BA9E24CF0124E11EC6DD07288C864AA849BCE2FD8C6D180A
+                      95BA43CA02D34350641BE35F7DAB37E2E42EDB57B4338AB900F34A8CF1123948
+                      675D3488D0A87070816439609F580EFEE75E02B1FC2B789F0796FC0C401C0BC3
+                      A271657B4916C924D9C4415CC449DC3C2AB540C57E2E2BE527FB2783A0C1B712
+                      28C39D8BC99D448E42C95A1C36FF11D88921E00BEF7584367F0358652D785B9F
+                      05F9A9C7018209F42D3A37DA8FB24826C9260EE27221206E7CCC0A8736370F4C
+                      DA7F4F64B2EC9EA68568DE7430261CA95CF704F065DBC07C7806ECE03B209A76
+                      02AB6986C2C12DC0EFDA00DEA65F823AFD3CE8B32F008B5523F7B48477B87C69
+                      5857A6EA6CB282AD8CED3ED14B696DB9524FA4163059999AC0522A737B693841
+                      1457AF0A58452D88650F827CE04960E4018CA0B7E91720577ECB11D8C153E881
+                      F15BE4336411077111277133F3D2AABA02DCD1831DACE644AFB56D8D73643CB9
+                      14C3C02AEBC0DBF22B60F396867394F91148D99B19D0975EC33ED119CE91E22E
+                      8C21D257C06E6E662CD076240663AD3C80C4C3F118AB492B65DA1A2D2985CB6E
+                      33C802EAA737AFB984738988E4FAFC1F2148EF03D3FF2F77CFE6DF0DF2D33F72
+                      F9E0C82969CBE410077111277173CC8F87BA2E94542C73D5AC415D94327DFE32
+                      8C7B935B4E3057DE089538BA0782934FBAEAC0CE03BC611DC8D60EB054A2AE3F
+                      94CB02204E7C416CE342EBD51B9A35D3FFD1681E95CF1C8340A5B770395A86F5
+                      8FB0A3D7C18C5C7261017F1EE80B9D606F5CC54A89E143838A520743DBA882CA
+                      641117718A40DDC7B56049AD4A041F078A026EE6B5ABA726ECE41066FB3C24C0
+                      87C551104B3E8BB9B1242444AB49413B1582E9204EE266275E5CAB1F409B4AF3
+                      1F034A4205FECE97D1B2169489AE2C25A0CB0BAC7D2AC9A80B52D9067FF91AD8
+                      F13E9C438FCC7E11C23F7112D5A4B838F3E61E04727F551258752ABCC779DDFB
+                      2A182C3B56BD342C4997F1580923BD101CD9152A46ADD9B9FE3672712D5F5F80
+                      5181ED287D0D5FF04E9919C3B90FADD74574FFCA30BE343B3108EAEF3F412B1F
+                      81E2A16DA0DFFB7D693DAE468544EB6EBC27E219F24A8338899BF3981E109C48
+                      08748D062EA42B09A1CCCE0D035BB406E742D8E10BE11FEA78637DA04EFE0C95
+                      78310C0B5A2D563FEADE15615BA685B764A7AF5B4B9CC48D6568CE3261200901
+                      FA8E342E0D820E00640578DB7F0B72C701D7869D050893791360328BC9378604
+                      941F01BAFEA27B06364C3C571DA6487F4399A5415CC489BBCE70CED931DA33B4
+                      98BA0C595C1AF49832BBF161E08B378068F932B0444D388F4AB0BB36015FF175
+                      B4128F45158B802DDB0E62CDDED25EF4025682BD91C1E59417A850996CC745AB
+                      983D1EB6E2E2448FC7E235D81E436F119C55CA9515ABBF1FF8221CD85C28BEB3
+                      40219289F03F7A82FA84C9BC05C11BDFC6105199865E23907AD8F621B0F99198
+                      5FD9CAF937DFCB32F0FF2CE21606ED04AA4A8B2951D05D54CB372E8339FF2750
+                      C7F682FAC74F9D10CA7CAA00474688C809486E87CE814A3FE5722124BF358883
+                      B888D371A346AC7020D53CC0F1757C2DCEF02CCDDB1A6E39C27982CE0193C320
+                      D6FD18FBFC0F21F8EBF7C07CD005B1EF9C03933D03FAF46F802DA0F68C8574F3
+                      2A3E4BBB761C7644B23944BA1F6C12B5A85C9AB74983AFE33D995E0E9DED3CBE
+                      2773B15E79BF5ED12CC4BD30AAE8788B9D3A1C18CBF4F582B5A808AF5D856218
+                      7AE05DE04D5F4055F17C73F53828F4903EF51CA8779E057DF975B7C79227E81A
+                      C9C11FC9260EE2224EE276C722E8006E77ADF7F31F0D7727627C55265F50F5CC
+                      0B5B5A045A88A71F36BF114CDFDB20EFFF3E96DADED01BFDD8D3FC6A5C43D94F
+                      6BC9DDD3316803958AC7642E30E7E2D50BD7B157BA8BD009C6B97AEA50FAFCDD
+                      E847F5B6EF79B5D78A0A9510654A5052624951DCB134E98A798B9CF4F6C3F952
+                      5BBE1D06AD564B7D298B4130041E6F23EB23CEA958DB4E6C4E1D28EA778D6B8D
+                      0A8EC6E278329E34EA52968BB645744E403812FC1BF50997A8B34E7053487FC8
+                      6C539DD1A90A2E0B793DC4A5B7C3FFEE153C96875CB4664A0142F4207F20D522
+                      351C1471BE263FAE01BF8ED4E5AC151BEBC2FA7528FB4BE1294757D6DA7BEA98
+                      AE475FC5AB045A654E2B861F2664791939619A02846841DFBE6445FD9DF299E1
+                      62FEB1BACA2A5FE515746930B54360074AFEDE58177AA6CB15136087B366A816
+                      D84681AFA5B884ECC478B1C6AFD89FED2BEEBBF3693CF6CE2027CC528050FE21
+                      5938B07825D7F018BEF277FA82616F0D3D8F3D0B147EA412247E94D2B769148D
+                      A2B659C9F9116CADCFF1473FF8FF3E4E23B8EA388C9B4A1A9B3F2C49B29CDD16
+                      047AABE2B09AE55443B7E761EAE3E77910DCB409D98F197BD613E24D9B60C7F8
+                      37AE973ECF41609551B24D8F9303C07F01FA10D5CA9848BA240000000049454E
+                      44AE426082}
+                  end>
+              end
+              inherited lblFiat: TLabel
+                Position.X = 967.000000000000000000
+              end
+            end
+            inherited txHistory: TVertScrollBox
+              Size.Width = 1064.000000000000000000
+              Size.Height = 1695.000000000000000000
+              Viewport.Width = 1064.000000000000000000
+              Viewport.Height = 1695.000000000000000000
+            end
+            inherited wvAddress: TEdit
+              Size.Width = 1064.000000000000000000
+            end
+          end
+          inherited WVReceive: TTabItem
+            ExplicitSize.cx = 60.000000000000000000
+            ExplicitSize.cy = 26.000000000000000000
+            inherited ReceiveVertScrollBox: TVertScrollBox
+              Size.Width = 1064.000000000000000000
+              Size.Height = 1759.000000000000000000
+              Viewport.Width = 1064.000000000000000000
+              Viewport.Height = 1759.000000000000000000
+              inherited ReceiveAmountLayout: TLayout
+                Size.Width = 1064.000000000000000000
+                inherited ReceiveValue: TEdit
+                  Size.Width = 1064.000000000000000000
+                  inherited lblReceiveCoinShort: TLabel
+                    Position.X = 897.000000000000000000
+                  end
+                end
+                inherited ReceiveAmountRealCurrency: TEdit
+                  Size.Width = 1064.000000000000000000
+                  inherited lblReceiveRealCurrency: TLabel
+                    Position.X = 873.000000000000000000
+                  end
+                end
+                inherited lblReceiveAmount: TLabel
+                  Size.Width = 1064.000000000000000000
+                end
+              end
+              inherited receiveAddress: TEdit
+                Size.Width = 1064.000000000000000000
+              end
+              inherited AddressTypelayout: TLayout
+                Size.Width = 1064.000000000000000000
+                inherited switchCompatiblep2shButton: TButton
+                  Size.Width = 808.000000000000000000
+                end
+                inherited SwitchSegwitp2wpkhButton: TButton
+                  Position.X = 936.000000000000000000
+                end
+              end
+              inherited Layout33: TLayout
+                Size.Width = 1064.000000000000000000
+                inherited QRCodeImage: TImage
+                  Size.Width = 1064.000000000000000000
+                end
+                inherited QREnlargeLabel: TLabel
+                  Size.Width = 1064.000000000000000000
+                end
+              end
+              inherited BCHAddressesLayout: TLayout
+                Size.Width = 1064.000000000000000000
+                inherited BCHCashAddrButton: TButton
+                  Size.Width = 872.000000000000000000
+                end
+              end
+            end
+          end
+          inherited WVSend: TTabItem
+            ExplicitSize.cx = 95.000000000000000000
+            ExplicitSize.cy = 49.000000000000000000
+            inherited SendVertScrollBox: TVertScrollBox
+              Size.Width = 1064.000000000000000000
+              Size.Height = 1759.000000000000000000
+              Viewport.Width = 1064.000000000000000000
+              Viewport.Height = 1759.000000000000000000
+              inherited btnSend: TButton
+                Size.Width = 1064.000000000000000000
+              end
+              inherited SendAmountLayout: TLayout
+                Size.Width = 1064.000000000000000000
+                inherited lblAmount: TLabel
+                  Size.Width = 1064.000000000000000000
+                end
+                inherited wvAmount: TEdit
+                  Size.Width = 1064.000000000000000000
+                  inherited lblCoinShort: TLabel
+                    Position.X = 940.079956054687500000
+                  end
+                end
+                inherited WVRealCurrency: TEdit
+                  Size.Width = 1064.000000000000000000
+                  inherited lblCoinFiat: TLabel
+                    Position.X = 932.000000000000000000
+                  end
+                end
+              end
+              inherited Layout3: TLayout
+                Size.Width = 1064.000000000000000000
+                inherited ShowHideAdvancedButton: TButton
+                  Size.Width = 1064.000000000000000000
+                  inherited Layout2: TLayout
+                    Position.X = 1016.000000000000000000
+                  end
+                end
+              end
+              inherited TransactionFeeLayout: TLayout
+                Size.Width = 1064.000000000000000000
+                inherited AutomaticFeeLayout: TLayout
+                  Size.Width = 1064.000000000000000000
+                  inherited FeeSpin: TSpinBox
+                    Position.X = 984.000000000000000000
+                  end
+                end
+                inherited FixedFeeLayout: TLayout
+                  Size.Width = 1064.000000000000000000
+                  inherited wvFee: TEdit
+                    Size.Width = 944.000000000000000000
+                  end
+                end
+                inherited Layout5: TLayout
+                  Size.Width = 1064.000000000000000000
+                  inherited lblFee: TLabel
+                    Size.Width = 1064.000000000000000000
+                  end
+                  inherited lblFeeHeader: TLabel
+                    Size.Width = 1064.000000000000000000
+                  end
+                end
+                inherited SendSettingsFlowLayout: TFlowLayout
+                  Size.Width = 1064.000000000000000000
+                end
+              end
+              inherited SendToLayout: TLayout
+                Size.Width = 1064.000000000000000000
+                inherited lblSendTo: TLabel
+                  Size.Width = 1064.000000000000000000
+                end
+                inherited AddressQRLayout: TLayout
+                  Size.Width = 1064.000000000000000000
+                  inherited btnAddressQR: TButton
+                    Position.X = 1016.000000000000000000
+                  end
+                  inherited WVsendTO: TEdit
+                    Size.Width = 1016.000000000000000000
+                  end
+                end
+              end
+            end
+          end
+          inherited WVSettings: TTabItem
+            ExplicitSize.cx = 63.000000000000000000
+            ExplicitSize.cy = 26.000000000000000000
+            inherited btnExportPrivKey: TButton
+              Size.Width = 1064.000000000000000000
+            end
+            inherited btnChangeDescription: TButton
+              Size.Width = 1064.000000000000000000
+            end
+            inherited SearchTokenButton: TButton
+              Size.Width = 1064.000000000000000000
+            end
+            inherited btnNewAddress: TButton
+              Size.Width = 1064.000000000000000000
+            end
+            inherited btnPrevAddress: TButton
+              Size.Width = 1064.000000000000000000
+            end
+          end
+        end
+        inherited ShortcutValetInfoPanel: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited IconLayout: TLayout
+            inherited ShortcutValetInfoImage: TImage
               MultiResBitmap = <
                 item
                   Width = 32
@@ -266,247 +575,102 @@ inherited frmHome_Surface: TfrmHome_Surface
                   PNG = {
                     89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
                     F4000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
-                    089049444154584795577B6C14C719FF666677EFCE763018FBB01DC0471C6C5C
-                    288150B8546EA9224880A80FDA62A3A62FA9A529AA94A655FA479B2A4249DB7F
-                    AB94488DAA12A54A5B114C5492460A85346A136295034120141C0C94B3911F39
-                    3B8EF1EB1E3B8F7EDFECAD39DB386A7FA7D1DEEECE7CBFEF3DB30CE68131C0E0
-                    701B67ED8715DDEBA35FAED3797FBB56662B03738F34ACEEB49A5848EF368A8A
-                    51879901C3F83957B0BF1BCF39C6771C19A077A6A34D40DB61CD7011DDCFC66D
-                    1530FB80B3A740D37FFDEA17561B237F28736CA717E371BB446950CAE0259029
-                    380321F0B9E07867A090D519276A5E61CCD9CFBFF4DA459A532AB3147314208D
-                    C96A7DE8BE9871173D3D08F0587D84BB7A4A41A7CC5A01680D98AE284BB604EB
-                    535D60584BCEA0D72C5A9D18E76502FAF3DAAFE56C3FCB8F3CC9779FCC86B283
-                    59016628104EC81DBABFD971DD8322E2AE2F8CFBD09F35F246DA88640B9AFA3F
-                    20D5A5CDB20453F55170BC051EA8BCFFAED4F07074D7F1F7672B312D307C51E8
-                    78708316F268847B35FD59DFBF769939C955733D6541261B740A77E806A56108
-                    AC1B0257A4DE07D3D86C647DCC75F3BA30C495B3C36B3F7EA654092B388C4FEE
-                    E09626F0CC3B11236AD2E352A2EB49F23C4012EE62DC3D80FC58A0849CC22BDE
-                    CF5A86A190893B1C27CFD41014D867A25F7BB33BE4E436DB57B7318AB900FD72
-                    84F1223938D6BA7010A196C1E002C9B2C016AF02EFF32F8258F555BCCF01ABDB
-                    0410C5C230685CC95A92453249367110177112370F4BCD97915F38E5CE27FBA7
-                    7CBFDE330E50865B17933B891C8592B5384CEE23309343C0AB3F61094D6E1458
-                    790DB85B9F01E7538F01F893C54C2DAE4759249364130771D9101037BE66F943
-                    F7370D4C997F4FA633ECEE95D568DE4C30262CA9937C1CF88A6DA03F380766F0
-                    3488953B81553541FEE016E0CB5AC1DDFC2B90679F0375FE7960914AE49E91F0
-                    1657AF0CABF244DCD495B13591DDFFE8A6B4365CCAC7138B98539E9834A5AE0B
-                    87154471752B8095D58058F100389F7E0218790023E86EFE25386BBE6D09CCE0
-                    19F4C0C42DF259B28883B88893B8997E716D3C0F77746107ABEAEC3626D9384F
-                    C6934B310CAC3C0EEE965F035BD0103CA3CC0F41CADE4C83BAF22AA8AE8EE019
-                    296EC31820750D4C6B1363BE322311186FE13EC41E8A46905C4A9D6C34A4144E
-                    BBCD200BA89FDEECB109671311C9D5C53F817F621FE8FE94BD670BEF0267E38F
-                    6D3E58724ADA1239C4415CC449DC1CF3E3C153978A2A96B86ACEA02E4A99BE70
-                    05C67DA59D4ED0D75E0F9438BA07FCB79FB0D5819D07787D129C96763054A2B6
-                    3F94CA02204EDC20B671A1D4BA8D4D8AB1FF28348FCA679E41A0D2AB5E859661
-                    FD23CC582FE8912B362CE02D0075A903CCE875AC9408BED4A8287530B48D2AA8
-                    44167111A7F0E53D5C0956A76491E0E34051C0C5BC66DDF403333584D9BE0009
-                    F065610CC4F2CF616E2C0F08D16A52D04C8760268893B8D95B2F6C5049B4A9F8
-                    FC63404928C1DBF9125AD68C32D195C504B47981B54F251976412A5BFFAF5F07
-                    33D187CFD023733742C0ACD1A826C5C59A37FF2090FB2BEA805526827B7CAEBA
-                    5F018D65C72A1B8292B4198F9530D20DFE915D8162D49AADEB6F2317E7F24D79
-                    1813D88E523DB8C15B65660DEB3EB45E15D0FD6B82F8D2D3C94190FFFC295AF9
-                    30140E6D03F5DE1F8AF371362A245A76E33D11CF92571CC449DC9C47D480E044
-                    42A06B3870225D490865767618D892F5F82C8019BE14FCA18E37DE07F2ED9FA3
-                    122F046141ABC5BA47EC5E11B4659A784B76AAD718E2246E2C437D9E090D8BC1
-                    47DF91C6C541503E805306EEF6DF81B3E3806DC3D602844EBF013095C1E41B47
-                    02CA0F1F5D7FD9BE0313249EAD0E5DA0BF81CCE2202EE2C455E738E7EC18AD19
-                    5E4A5D862C2E0E7A4D99DDF810F0A5AD209ABF022C56153C4725D8B2CDC0577F
-                    03ADC46351D912602BB68358BFB7B816BD80956046D3389DF202152A916DB968
-                    1633C783565C98EC7259B40ADB63E02D82B54ADAB262B5F7025F82039B0BC577
-                    0E28444E2CF88F9EA03EA1D36F82FFFA77304454A681D708A41EB67DF04D6E24
-                    E295B770FEADF7320CBCBF88A881413389AAD2644A147417D5F2E855D017FF0C
-                    F2D85E906FFDCC0AA1CCA70AB06484909C80E466E802C8134FDA5C08C86F0DE2
-                    202EE2B4DCA811CB1F48340D70DC8E7BA2EC435C96ACBFE508EB093A074C0D83
-                    48FE04FBFC8FC0FFDBF741DF780722DFBD003A730ED4D9DF025B44ED190BE9E6
-                    757C77C2B6E3A02392CD0152FD6016A316E50D3953A7713BDE93EEE6D0D1C6A3
-                    7BD2976BA5FB9BD54D42DC0D6312C5E03ADA8671602C53BD796350115EB316C5
-                    30F4C0BBC0577E1155C5F3CDF5E320D143EACCB3204F3F03EAEA6B768D214FD0
-                    3594833F924D1CC4459CC46D8F45D00EDCECBACFCB7D347C3216E16BD3B9BCAC
-                    656ED0D242D0443CFDB0858DA0FB3AC1B9F707586A7B036FF4FF0BF7824A9C43
-                    D94F73C9DD3331687C9988469CACAF2F442BAB93ECE59305E8006D5D3D7D287D
-                    EE2EF4A3ECF45CB7A6A720510951A20425259614C51D4B93AE98B7C849BB1F3E
-                    2FB6E5DB61D028D9E0394EC1F787C0E59F25EB43CEE9589B0E6C4EED28EAF78D
-                    1BB4F48F46A278329ED2B227C34572099D13109604FF867DC226EA9C13DC3452
-                    1F30D310D72A51C69D7C4E0D71C7DDE17DEF1A1ECB032E9A33AD00217C913B90
-                    6876141C1451BE3E37A100BF8E646FC6884DF1A07E2D4AFE52784A712A63CCF2
-                    3853B5E8AB688540ABF459C9F0C3842C2F2127CC5080104EE8DB5757567BA7F3
-                    F47021F768BCBCC29339099D0A74F510980F8BFEDE140F3C73CA16136087337A
-                    B80658ABC06D29EA406672A250E595EDCFF415F6DDF9141E7B679113E6284028
-                    FD90CC1F58BA862B7814B7FC9D9E60D85B03CF63CF02891FA904073F4AE9DB34
-                    8C4641998CC3F9116CADCFF2476EFC7F1FA7216C751CC645458DF51F97D7B1AC
-                    D9E6FB6AABE4B08E65657DCA7531F50192BE7FD3C49C7ECCD8F3AE106F98183B
-                    C6BFD95BFC3C07815546C936334E1600FF051489D4C49650E37D000000004945
-                    4E44AE426082}
+                    088F49444154584795577D6C5657197FCE39F7DEF7EDC780555ADA8E4119D252
+                    4106C30D964D14617C2C7EA0F2215567A21389C95CCCFED199856C6AF40F6326
+                    FB6359869941D74A5984B904843999B065D5850D36A1E3CBBD605ABAB70D8396
+                    F6FDB8E7DCE3F33BF7BDE56D0B8BFEDE9CDCF79E7BCEF37BBEEFB9826E006B49
+                    D0EE0D526CDC6D701FEDFF72435408D744C6AE14646FD756347499AB53F06CA9
+                    AABEEC097BD10A79CC57E2AF36F00EC8B57B2EE299EDDCA068C3EE48F026DC8F
+                    C77515B0DB488AC729C2FFE8C52FCCB356FF40E7C5BAA042D6B92D2622632C5F
+                    62994A0A528AE795E43B4BC55C94F5D276AF10DE76F9A5974E604DB9CC724C50
+                    001AC3EA68D7D20AEBDFFC441FD1C38D29E94723860EEB5C2C807765BAD3A2AD
+                    35DEDFDE4DB6A9356F131B97791552562AEA2D4461BD14DB45E1D2637253572E
+                    911DAF8A31468164417ED7F216CFF73B54CA5F541C0AA93767F5AB19ABDA5AD9
+                    D4FF01EDDD91FD6C93308D69F28249019942F8B68EA82DBDFEE07BE395181598
+                    3C2876AE5A1C29BD3F2583DADE5C181E3C25BCB6B9133DE5C08942969D223DDC
+                    B0340E01E64AAE687F8FECAA16AB1B2B7CBF1015FBA5F1D6061B0F1E2D57C209
+                    4EE293EF58D14C817D2D65556D66486B763D24DF004C227D8E7B4054188C95D0
+                    237CE5FB71DB3814BAE926CF2B08D34F45716F7AF32BA7134EE9B27DDE068198
+                    2B8A5E4809592227CF59970C10463A1E5231598EC4C7E652F0F99DA4E67E95EF
+                    F3241AEE224A73615836AE6C2F6441266483035CE004B74C4A2DD4A99F7A55DE
+                    277B47C2B031B01E21C39D8BE14E90B35058CBC3E63F243BDC4F72EA271CA1CD
+                    5F2651554BFECA27C9FBD4C344E130FB969D9BEC67599009D9E000970B01B8F9
+                    B128EC5ADE7C71C4FE6B3893151F9F3395CD1B0B219423F5963C4272D66A8A3E
+                    3846B6EF4D5273D691A869A642C70A92B7DE43FEB29F937EEB6932C77F4B2235
+                    99B9C724BCC3D93303A6AAA9CE36548AF9A94D874E23ADADD4FA91A69B8557D5
+                    34CCA554E6F6D270821057BF9A44652DA959F79177F7A324E0018EA0BFEC67E4
+                    CDFF9623B07D47D90357AF918F93050E708113DC22DAB9A0AE4037757307ABD9
+                    79DADAB6D937C878B894C320AAEAC85FF16B129366C673C8FC0450F64A86CC99
+                    17C97477C67350DC853146FB39B20F340B111A7B294543AD32A48AFBD3295173
+                    44EBA86DB68552BCEC3A0316A09F5E39EF12CE2522939B137FA0F0C8368A7AFF
+                    E1EEC594DBC8BBF3872E1F1C3992B64C0E38C0054E704BCE8F551D274B2A96B9
+                    6AC2401745A64F99C5719FE39603D1B97DB112FB1FA4F0F0A3AE3AB8F3906C5C
+                    425EEB46B22851D71FCA651181935F10ABA53266E1D79A8DC8FCDBB079289F1B
+                    0C00A537752E5BC6F5CFB0831728BA74C685858249644E7692BDFC3E574A8A1F
+                    46AC283A18DB860A2A93052E70AA50DF2E8D120D4697083E0A88026F96B50B47
+                    27EC483F67FB2426E087C54152333EC3B931232664ABA1A01D0DC1588013DCE2
+                    D0738BCDDD6C5369FE238024D414ACFB235BD6C232D995A5047479C1B58F924C
+                    BA20CA36FCF3D7C95EEDE139F6C8C41721BDC193AC26E2E2CCBBF100E0FEEA06
+                    12939BE27B9E37A7F752C4652726CF8C4BD2653C57C2A5D314EE591F2B86D6EC
+                    5C7F1DB9BC562E2DD0A0E276D47E9E5FF04E9971C3B98FAD374576FFFC38BE98
+                    1DEE23FDEA8FD8CA362AEE5A4DE69DDF95D6F36A5648B56EE27B108F93571AE0
+                    04B794297351499000B8268317E20A21C8ECDC0089698B782E861D3819FF41C7
+                    1BEA217DF827ACC4737158D86AB5708B7B57C46D190BAFC96EBF602D38C1CD65
+                    181D172AA2BB2864DF41E3D2004C48E45592BFE619F2D6EE706DD859C088322F
+                    138D6439F9869800F911B2EB4FB96764E3C473D51115F13796591AE00227EF3A
+                    26A51407B0A77F3ABA0C2C2E0D3C4666CFBE9FE4F47B48B57C8544454D3CCF4A
+                    885B97919CF70DB6928F4595D348CC5A436AD1D6D25EF6025782BD9CE1E5C80B
+                    56A84CB6E3C22A610FC6ADB838DCED8B740DB7C7D85B80B34ABBB212F577909C
+                    C6839B0BE23B0108915711FF674FA04F44995728DCF76D0E11CA34F61A00F5B8
+                    ED5368F397524155AB940FBC931514FC49A52DF5D96156158B9128EC2ED4F2E5
+                    B3149D789EF481ADA4FFFE632704998F0A706440420E30B9ED7F97F491C75C2E
+                    C4E4D70638C0054E7023FDD8D4DCAF3285613DDC9B16ED3DECA35177F126643D
+                    5CCF24A2E14E16C2E577EC195686DB2EBB1ACA84FBBE43FA8D5FF2F805857FD9
+                    42C5BDDC82B94A48C1FD887B2C0FB2C1012E70825B52E706997E3073AA5EFBBF
+                    99D7ACD46A1AD438DE72A78E07C7B2FD42C15A0E89AC5DC0A48249DF2639E78B
+                    CCCFE79BF70F92660F99A34F917EF34932675F727B2C3C816B22877F900D0E70
+                    8113DCEE58441B49DAF54B83FC87035D1529B920932FE87AE1C72D2D0116F2E9
+                    474C994D51CFEBE4DDF17D2EB5AD6CF1F7F84DC83D2D98CC6B90FD580B778F45
+                    9F0D75533AE5E5C2E8DDF4E4A94BC40B5D45EAA4C8E5DCE8A1F4E9DBF835A75F
+                    0F7CBFF67C51B312F0610224259714E2CEA5892BE72D73E2EDC7F3A5B67C3DF4
+                    59A367069E570CC37EF2E5A7617DC2399AF4B6939BD34616F5ECECC5910EF7A7
+                    D27C321E89F4DFB252B54DC33981E148F82FE20AB8449D70821B45FB07C27EAE
+                    2E324D95D22BE44DBFF4FCB5C177CFF1B13CE6C29A510580E4417E47538B67A8
+                    43A5E5A2FC55439C4EFA50D6AACD7571FD3A94FD4578CAD191B576799D30F5EC
+                    AB74B562ABA2B7B4E00F13585E460E8C51004816F46C6BA8ACBFC57B62A0987F
+                    A8AEAA3AD0794DAF198A6AFBC9FEB3E4EFCD75B1673AB238DB1277381BF5D792
+                    B857F16B29ED5176F86AB126A8DC9EED296EBBE5713EF68E2307262800947F48
+                    16764C9F2F0D3DC4AFFC758112DC5B63CF73CF22CD1FA980C71FA5F8364DA251
+                    3436EB49B9875BEB5372CB7FFEBF8FD304AE3A76F3A692C6D1EF6734889C5D1D
+                    8666A596B450E4746397EF73EAF3E779185EB1155E2F67EC715FA9976D853820
+                    BF79A1F4794E8AAB0CC936364E0E44FF051A9DE4C437D348C50000000049454E
+                    44AE426082}
                 end>
             end
-            inherited lblFiat: TLabel
-              Position.X = 983.000000000000000000
-            end
           end
-          inherited txHistory: TVertScrollBox
-            Size.Width = 1080.000000000000000000
-            Size.Height = 1711.000000000000000000
-            Viewport.Width = 1080.000000000000000000
-            Viewport.Height = 1711.000000000000000000
-          end
-          inherited wvAddress: TEdit
-            Size.Width = 1080.000000000000000000
-          end
-        end
-        inherited WVReceive: TTabItem
-          ExplicitSize.cx = 60.000000000000000000
-          ExplicitSize.cy = 26.000000000000000000
-          inherited ReceiveVertScrollBox: TVertScrollBox
-            Size.Width = 1080.000000000000000000
-            Size.Height = 1775.000000000000000000
-            Viewport.Width = 1080.000000000000000000
-            Viewport.Height = 1775.000000000000000000
-            inherited ReceiveAmountLayout: TLayout
-              Size.Width = 1080.000000000000000000
-              inherited ReceiveValue: TEdit
-                Size.Width = 1080.000000000000000000
-                inherited lblReceiveCoinShort: TLabel
-                  Position.X = 928.000000000000000000
-                end
-              end
-              inherited ReceiveAmountRealCurrency: TEdit
-                Size.Width = 1080.000000000000000000
-                inherited lblReceiveRealCurrency: TLabel
-                  Position.X = 904.000000000000000000
-                end
-              end
-              inherited lblReceiveAmount: TLabel
-                Size.Width = 1080.000000000000000000
-              end
+          inherited ShortcutValetInfoValueLayout: TLayout
+            Size.Width = 927.000000000000000000
+            inherited TopInfoUnconfirmedValue: TLabel
+              Size.Width = 911.000000000000000000
             end
-            inherited receiveAddress: TEdit
-              Size.Width = 1080.000000000000000000
+            inherited TopInfoConfirmedValue: TLabel
+              Size.Width = 911.000000000000000000
             end
-            inherited AddressTypelayout: TLayout
-              Size.Width = 1080.000000000000000000
-              inherited switchCompatiblep2shButton: TButton
-                Size.Width = 824.000000000000000000
-              end
-              inherited SwitchSegwitp2wpkhButton: TButton
-                Position.X = 952.000000000000000000
-              end
-            end
-            inherited Layout33: TLayout
-              Size.Width = 1080.000000000000000000
-              inherited Layout32: TLayout
-                Size.Width = 1080.000000000000000000
-              end
-              inherited ArtificialSpace: TLayout
-                Size.Width = 1080.000000000000000000
-              end
-              inherited QRCodeImage: TImage
-                Size.Width = 1080.000000000000000000
-              end
-            end
-            inherited BCHAddressesLayout: TLayout
-              Size.Width = 1080.000000000000000000
-              inherited BCHCashAddrButton: TButton
-                Size.Width = 888.000000000000000000
-              end
-            end
-          end
-        end
-        inherited WVSend: TTabItem
-          ExplicitSize.cx = 95.000000000000000000
-          ExplicitSize.cy = 49.000000000000000000
-          inherited SendVertScrollBox: TVertScrollBox
-            Size.Width = 1080.000000000000000000
-            Size.Height = 1775.000000000000000000
-            Viewport.Width = 1080.000000000000000000
-            Viewport.Height = 1775.000000000000000000
-            inherited btnSend: TButton
-              Size.Width = 1080.000000000000000000
-            end
-            inherited SendAmountLayout: TLayout
-              Size.Width = 1080.000000000000000000
-              inherited lblAmount: TLabel
-                Size.Width = 1080.000000000000000000
-              end
-              inherited wvAmount: TEdit
-                Size.Width = 1080.000000000000000000
-                inherited lblCoinShort: TLabel
-                  Position.X = 956.079956054687500000
-                end
-              end
-              inherited WVRealCurrency: TEdit
-                Size.Width = 1080.000000000000000000
-                inherited lblCoinFiat: TLabel
-                  Position.X = 948.000000000000000000
-                end
-              end
-            end
-            inherited Layout3: TLayout
-              Size.Width = 1080.000000000000000000
-              inherited ShowHideAdvancedButton: TButton
-                Size.Width = 1080.000000000000000000
-                inherited Layout2: TLayout
-                  Position.X = 1032.000000000000000000
-                end
-              end
-            end
-            inherited TransactionFeeLayout: TLayout
-              Size.Width = 1080.000000000000000000
-              inherited AutomaticFeeLayout: TLayout
-                Size.Width = 1080.000000000000000000
-                inherited FeeSpin: TSpinBox
-                  Position.X = 1000.000000000000000000
-                end
-              end
-              inherited FixedFeeLayout: TLayout
-                Size.Width = 1080.000000000000000000
-                inherited wvFee: TEdit
-                  Size.Width = 960.000000000000000000
-                end
-              end
-              inherited Layout5: TLayout
-                Size.Width = 1080.000000000000000000
-                inherited lblFee: TLabel
-                  Size.Width = 1080.000000000000000000
-                end
-                inherited lblFeeHeader: TLabel
-                  Size.Width = 1080.000000000000000000
-                end
-              end
-              inherited SendSettingsFlowLayout: TFlowLayout
-                Size.Width = 1080.000000000000000000
-              end
-            end
-            inherited SendToLayout: TLayout
-              Size.Width = 1080.000000000000000000
-              inherited lblSendTo: TLabel
-                Size.Width = 1080.000000000000000000
-              end
-              inherited AddressQRLayout: TLayout
-                Size.Width = 1080.000000000000000000
-                inherited btnAddressQR: TButton
-                  Position.X = 1032.000000000000000000
-                end
-                inherited WVsendTO: TEdit
-                  Size.Width = 1032.000000000000000000
-                end
-              end
-            end
-          end
-        end
-        inherited WVSettings: TTabItem
-          ExplicitSize.cx = 63.000000000000000000
-          ExplicitSize.cy = 26.000000000000000000
-          inherited btnExportPrivKey: TButton
-            Size.Width = 1080.000000000000000000
-          end
-          inherited btnChangeDescription: TButton
-            Size.Width = 1080.000000000000000000
           end
         end
       end
-      inherited ShortcutValetInfoPanel: TPanel
-        Size.Width = 1080.000000000000000000
-        inherited IconLayout: TLayout
-          inherited ShortcutValetInfoImage: TImage
+      inherited zx_gfxStorage: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited gfxStorage: TScrollBox
+          Size.Width = 1064.000000000000000000
+          Size.Height = 1904.000000000000000000
+          Viewport.Width = 1064.000000000000000000
+          Viewport.Height = 1904.000000000000000000
+          inherited gfxBitcoin: TImage
+            MultiResBitmap.Height = 16
+            MultiResBitmap.Width = 32
+            MultiResBitmap.LoadSize = 2
             MultiResBitmap = <
               item
                 Width = 32
@@ -514,1078 +678,1155 @@ inherited frmHome_Surface: TfrmHome_Surface
                 PNG = {
                   89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
                   F4000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
-                  089449444154584795577B70545719FFCE39F7DEDD4D5202918424A5B0349210
-                  411A8A0A154419B040C72A2D9BA0F535A35819676A75EA1F5AA7C3B4EABF4EA5
-                  33761C71EA541D4A58A4B533A5503BAD3C6A9C0E34142125802C74B249773369
-                  C86B1FF73CFCBE73F7864D423AFADB3973F79E7BCEF7FBDEF75C06B3C0186070
-                  B09DB38E838AEEF591071A74C1DFAA95D9CCC0DC250D6BE8526373E9D95A5135
-                  EC30D36F18EF7605FBBBF19CA37CDBE17E7A663ADB05B41FD40C37D1FD74DC52
-                  01B307387B1234FDD72FDDBFDC18F9439967DBBD18AFB35B9406A50C5E029982
-                  331002E705C73B03C59CCE3851F32263CE5EFE9597CFD39A7299E598A100694C
-                  56EB036B63C69DF7D400C0A38D11EEEA0905C7652E1080BBD23D5196680DF627
-                  7BC034B6E64D68E30627C67985807441FBF59CED6585A127F8CEAE5C283B5815
-                  608A02E182FC818D2D8EEBEE1711775571D48774CEC8B75246245AD1D4FF01C9
-                  1E6D3E1B67AA310A8E37C70355F0DF911A1E8A268EBD375D894981E18362E7BD
-                  ABB5904722DCAB4DE77CFFCD8BCC492C9BE9290B4C1430E814EED00D4AC310D0
-                  5CC915C9F7C07CA1C5C8C698EB167431CB95B3CDEB3876BA5C092B388C4F7EFF
-                  A666F0CCC98811B5A95129D1F524791620097731EE1E40612450424EE015EFA7
-                  6DC350C8F86D8E53602A0B45B63EFAB5D77B434E6EB37D793BA3980BD0C908E3
-                  257270AC75E120422D83C10592E5807D6C19785F7A1EC4B21D789F07D6F01980
-                  28168641E3CAF6922C9249B28983B88893B879586ABE8CFCC2A9743E999EF0FD
-                  46CF3840196E5D4CEE2472144AD6E230F90FC18C6781CFFF842534F9616095B5
-                  E06E7E1A9C4F3D0AE08FA36FD1B9E17E94453249367110970D0171E3635638B0
-                  B1B97FC2FC7B3C95611F5F3A1FCD9B0AC6842575D63C067CC916D01F74831978
-                  1BC4D2EDC06A9AA1B07F13F03BD681BBE15720CF3C0BEAEC1F8045AA917B4AC2
-                  5B5CBE34A82AE375A6A182AD88EC7CA397D2DA70291F8BCF634E657C1C4BA9CC
-                  EDA56105515CDD2A6015B520967C119C7B1E07461EC008BA1B7E09CE8A6F5B02
-                  33701A3D3076937C9A2CE2202EE2246EA69F5F595780DB7AB083D5BCD06B4CA2
-                  69968C2797621858651DB89B7E0D6CCEE2608E323F04297B2305EAD24BA07A3A
-                  833952DC863140F20A98AF3633E62B331481D156EE43ECBE6884D59C9052279A
-                  0C2985CB6E31C802EAA737AED984B38988E4EAFC9FC13FB10774FA5FF69ECDBD
-                  139C4FFFD8E68325A7A42D93431CC4459CC4CD313FEE3D74A1A46299AB660CEA
-                  A294E9739760DC97DAE5047DE595408923BBC03FFEB8AD0EEC3CC01BD780D3DA
-                  01864AD4F687725900C4892F882D5C28D5F660B362E9FF28348FCA679641A0D2
-                  9BBF0C2DC3FA479891EBA0872ED9B0803707D4854E30C357B15222F850A3A2D4
-                  C1D036AAA03259C4459CC29777712558839225828F02450137F3DAB6C9093391
-                  C56C9F8304F8B0380262D1E731371605846835296826433015C449DCEC8DE756
-                  AB7BD0A6D2FC4780925082B7FD05B4AC0565A22B4B0968F3026B9F4A32EC8254
-                  B6FEDFBE0E66AC0FE7D023335F84F04F9C4435292ED6BCD90781DC5FD500AC3A
-                  1EDCE3BCEA7D1134961DAB5E1C94A4CD78AC84A15EF00F2702C5A8355BD7DF42
-                  2EAEE56B0B3022B01D25AFE10BDE2A336D58F7A1F5AA88EE5F11C49766C70740
-                  BEF953B4F221281ED802EADD3F96D6E36A5448B4EEC47B229E26AF348893B839
-                  8FA87EC1898440D770E042BA9210CAECDC20B005AB702E8019BC10FCA18E37DA
-                  07F2F8CF5189E782B0A0D5A2ED61FBAE08DA322DBC293B79DD18E2246E2C437D
-                  96090D6DE0A3EF48E3D220281FC0A90077EBEFC0D9B6CFB6616B0142A75E0398
-                  C860F28D2201E5878FAEBF689F810912CF56872ED2DF406669101771E2AE6ECE
-                  393B4A7BB20BA9CB90C5A5418F29B39BEE03BE701D88960781C56A82795482DD
-                  B101F8F26FA095782CAA58006CC95610AB7697F6A217B012CC700A97535EA042
-                  65B22D17AD62E658D08A8BE33D2E8BD6607B0CBC45B056495B56ACFE6EE00B70
-                  6073A1F8CE0085C88905FFD113D42774EA75F05FF90E8688CA34F01A81D4C3B6
-                  0FBEC90F45BCCA56CEBFF56E8681F75711353060C651555A4C8982EEA25A1EBE
-                  0CFAFC5F401EDD0DF21F3FB34228F3A9022C1921242720B9C99E0379E2099B0B
-                  01F9CD411CC4459C961B3562857DF1E67E8EAFE36B51D68DDB128D371D613D41
-                  E7808941106B7E827DFE47E0BFFA7DD0EF9F84C877CF81CE74833AF35B60F3A8
-                  3D6321DDB88ACF4ED8761C7444B23940320D06DB98AE5C9C370D1A5FC7BB52BD
-                  1C3ADB797457EA62BD747FB3BC59888D3022E9788B9D3A1818CBE4F58231A808
-                  AF5D8962187AE01DE04BBF8CAAE2F9E6EA3190E82175FA19906F3F0DEAF2CB76
-                  8F214FD03594833F924D1CC4459CC46D8F45D001DC24D67AF90F07BB6211BE32
-                  952FC87AE6062D2D042DC4D30F9BDB04BAEF143877FF004B6D77E08D34F634AF
-                  1AD750F6D35A72F7540C185FC6A31127E7EB73D1EAF96B58B2AB089DA0ADAB27
-                  0FA5CFDE897E94A73CD7ADBD5694A88428538292124B8AE28EA54957CC5BE4A4
-                  B71FCE97DAF2AD3060945CEC394ED1F7B3E0F2CF91F521E764AC4D2736A70E14
-                  F5FBA6D55AFA4722513C194F687932C34562019D13109604FF867DC226EA8C13
-                  DC24921F30B3BE4EAB7805770A7995E58EBBCDFBDE153C96075CB466520142F8
-                  20BF2FDEE228D82FA27C557E4C017E1DC953192376D405F56B51F697C2538E43
-                  1963D6D531558FBE8A5609B44A9F910C3F4CC8F23272C2140508E182BE3D0D15
-                  F5B73B4F0D16F38FD4555679322FE1A4025D9B05D35DF2F78EBAC033876C3101
-                  7638A3B3B5C0D60B7C2D451DC88C8F156BBC8ABD99BEE29EDB9FC463EF3472C2
-                  0C0508E51F92857D0B5770058FE02B7FBB2718F6D6C0F3D8B340E2472AC1C18F
-                  52FA360DA3515426E3707E185BEB33FCE1F7FFBF8FD310B63A0EE2A692C6FA4F
-                  8B1A58CE6CF17DB55972686339D9D8E5BA98FAF879EEFB374CCC4963C69E7585
-                  78CDC4D851FECDEBA5CF73105865946C53E36401F05F3CC9D5E122F776790000
-                  000049454E44AE426082}
+                  088A49444154584795577D6C5657197FCE39F7DEF77DDB8EB24A4BDB3128435A
+                  2AC8607302D9C42CE080451D2A2D197ECCE882683297AD7FA8330BD9D4A88925
+                  93FDB12C6199CE8F4A59045C02C25CA6B005CCC2069BD051D856302DB56DBAD2
+                  AFF7E39E738FCFEFDCF72D6F5BBAE8EFCDC97DEFB9E73CBFE7FB9E2B6806584B
+                  82F63549D1BCCFE03E3AFCA59A281B6E8C8C5D2FC8DEAAADA839694667E3D96A
+                  5536E4097BC50A79DA57E26F36F08EC84DFBAFE0996D6F52D4B42F12BC09F753
+                  715D05EC4E92E2098AF03F3AF885A5D6EAEFEB8CD81CA46495DB622232C6F225
+                  96A9A420A5785E49BEB3944B477D5ED21E10C2DB2DEF7BE92CD614CB2CC63405
+                  A031AC8EF6AE4E59FFC6277B891EAE4D483F1A37744CA76301BCEB444752B434
+                  C6FB5B3BC8AE69CCD8828D6BBD9494258A7AB251582DC56E911D7C5C6E3D992E
+                  C88E57C598A440614166EFDD0D9EEFB7A984BF323712524FDAEAB62EAB5A1AD9
+                  D4FF01AD1D91BDBF4E98DA2479C1AC804C367C4B47B42DB9E5E8BB5395981058
+                  78906BBFE7F648E9C3091954F6A4C3F0B7E785D7B264BAA71C3851C8B253A487
+                  1B96C621C05CDE15ADEF927DA0C1EADA94EF67A35CBF34DEA6A0F9E8A962259C
+                  E0427C326DEBEA29B0AF25ACAAEC1AD19A5D0FC9338049A4CF710F88B2C3B112
+                  7A9CAF7C3F651B8742D7DDE0795961FA2927EE4ADEFF4A678153BA6C5FDA2410
+                  7345D18B0921F3E4E439EB0A0384918E87544C9626F1B125147CFE05524BBEC2
+                  F71912359F264A72615836AE682F6441266483035CE004B72C945AA8133FF14A
+                  BD4FF68C87616D603D42863B17C39D2067A1B09687CD7C4876AC9FE49C4F3842
+                  9B1922515A49FEFAA7C8FBD4C344E118FB969D5BD8CFB22013B2C1012E170270
+                  F36391DD7B77FD9571FBAFB1AE3EF1F1C573D8BCC9104239526F550BC9851B28
+                  FACF69B2BD6F905ABC9944453D65DBD691BCF94EF2D7FE8CF49BCF9039F31C89
+                  4439734F4A78878B17064C695D95AD2911CB125B5FED445A5BA9754BDD8DC22B
+                  AD1BE3522A727B7E384188AB5F46A2A492D4C2CF91B7E63112F00047D05FFB53
+                  F2963DE0086CEF29F6C0E835F229B2C0012E70825B442F2CAFCAD20D1DDCC12A
+                  7ED9696DCBA219321E2EE53088D22AF2D7ED22316B413C87CC2F00CA5EED2273
+                  E120998EF6780E8ABB30C6687D8FEC0FEA85088D1D4CD048A30C29756F32212A
+                  8E6B1DB52CB2508A975D67C002F4D3AB975CC2B944647273F6F7141EDF4951CF
+                  3FDDBD987D0B79773CE2F2C19123698BE480035CE004B7E4FCB867D7B9BC8A45
+                  AE9A36D04591E9B31772DC17BBE540F4DEA15889C30F5278EC31571DDC7948D6
+                  AE22AFB1992C4AD4F587625944E0E417C406A98C59F148BD1127DE376C1ECA67
+                  8601A0F4E62C61CBB8FE1976F8324583175C58289845E65C3BD9A10FB85212FC
+                  306245D1C1D8365450912C70815385FA566994A8313A4FF051401478B3AC5C31
+                  3161C7FB39DB6731013FCC0D939AFF59CE8DF931215B0D05ED440826039CE016
+                  AF3E7FBB59C336E5E73F0248424DC1E63FB1650D2C935D994F4097175CFB28C9
+                  421744D9867FF92AD9D16E9E638F4C7F11D2099E6435111767DECC0380FBCB6A
+                  4894D7C5F73C6F3A0F50C46527CA17C425E9329E2B61B093C2FD5B62C5D09A9D
+                  EBAF2397D7CAD5591A56DC8E5A2FF10BDE29336538F7B1F526C7EE5F16C717B3
+                  63BDA4FFFE43B6721BE5F66E20F3F66FF2EB79352BA41AB7F23D88A7C8CB0F70
+                  825BCA84B9A22448005C0B8317E20A21C8ECF40089B92B792E861D3817FF41C7
+                  1BE9267DECC7ACC4F37158D86AB562BB7B57C46D190BAFC96EBD6C2D38C1CD65
+                  189D112AA2FB2864DF41E3FC004C48E49590BFF159F236ED716DD859C088BA5E
+                  261AEFE3E41B6102E447C8AE3FEF9E918D13CF554794C3DF58667E800B9CBCEB
+                  B494521CC19EFE79E832B0383FF01899BDE85E92F3EE24D5F06512A98A789E95
+                  1037AF25B9F46B6C251F8B4AE69258B891D4CA1DF9BDEC05AE043BD4C5CB9117
+                  AC50916CC78555C21E8D5B716EACC317C90A6E8FB1B7006795766525AA6F2339
+                  97073717C4771A10222F15FF674FA04F445DAF5078E85B1C229469EC3500EA71
+                  DBA7D06606134169A394DF78BB4F50F06795B4D46BC758552C46A2B0BB50CB43
+                  17293AFB07D2477690FEC78F9C10643E2AC09101057280C96DFF3BA48F3FEE72
+                  2126BF36C0012E70821BE9C7A6A67FD5951DD3633D49D1DACD3E9A70176F42D6
+                  C3F54C226AEE60215C7EA79F6565B8EDB2ABA14C78E8DBA44FFC82C7CF29FCEB
+                  76CA1DE016CC55420AEE47DC6379900D0E708113DC92DA9B64F2C1AEF3D5DAFF
+                  F5D27AA5BE49C31AC75BEED4F1E058B65ECE5ACB219195CB995430E95B24177F
+                  91F9F97CF3C151D2EC2173EA69D26F3C45E6E24B6E8F8527702DC8E11F648303
+                  5CE004B73B16513349BB657590F970E0642A21977765B2BA5AF8714B2B000BF9
+                  F423662FA2A8FB75F26EFB1E97DA0EB6F83BFC26E49E1694F31A643FD6C2DD93
+                  D16B435D974C78E9307A27593E679578F1648EDA2972393771287DE6167ECDE9
+                  D703DFAFBC94D3AC047C580092924B0A71E7D2C495F39639F1F6E3F97C5BBE1E
+                  7AADD10B02CFCB85613FF9F233B07EE2508A05F863DB4925BFFBFE05E9F99BB0
+                  B02E25BDDEC8E8D65E361D162196780B7AA5B185EE98361893036ECDE481BD90
+                  01599009D98E9CB9C0896D135507B807CD64327BEA1A3C436D2A295766460D71
+                  3AE93FF659F568555CBF0E457F119E62ECEAB3765B9530D5AC6EB24CB18ED19B
+                  5AF08749819C39F24B272B00141674EFAC29A9BEC97B72209779A8AAB42CD019
+                  4DAF198A2AFBC91ECCFBFBD12A9CA04088B32D7187B3517F2589BB14BF96921E
+                  F58D8DE62A8292DD7DDDB99D373DC1C7DE29E4C0340580E20FC9EC9E79CBA4A1
+                  87F895BF3950827B2B3F6711DCB348F3472AE0F14729BE4D392A0E3963FB3C29
+                  F7736B7D5A6EFFF7FFF7715A80AB8E7DBC29AF71F4BBF935226D3784A159AF25
+                  AD10695D7BD2F739F5F9F33C0CAFDA94D7C3197BC657EA659B1247E4D72FE73F
+                  CF49719521DB27C7C981E8BF9063F9909FC5524D0000000049454E44AE426082}
+                FileName = 'C:\Users\PC\Desktop\HODLER_APP_ALPHA\coin_icons\1 (1).png'
+              end>
+          end
+          inherited gfxLitecoin: TImage
+            MultiResBitmap.Height = 16
+            MultiResBitmap.Width = 32
+            MultiResBitmap.LoadSize = 2
+          end
+          inherited gfxDash: TImage
+            MultiResBitmap.Height = 16
+            MultiResBitmap.Width = 32
+            MultiResBitmap.LoadSize = 2
+          end
+          inherited gfxBitcoinCash: TImage
+            MultiResBitmap.Height = 16
+            MultiResBitmap.Width = 32
+            MultiResBitmap.LoadSize = 2
+            MultiResBitmap = <
+              item
+                Width = 32
+                Height = 32
+                PNG = {
+                  89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
+                  F4000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+                  0705494441545847ED567D8C54D5153FE7DE375F3BB3B3B3ECBCB1DA15365189
+                  428D5DC45A635DC634ED26AD4AFCC0C4C43FE83F85141B77170424A4AB498BEC
+                  AA8B55A9DA260DFDAF65AAA64563307E8C0B41499035D1155A24DD10283233EC
+                  CEEEEC7CEE7BF7F49CC7EC0076456893F61F7FC99B79F7BCF375CFD7BDF035FE
+                  DF40E2A7FE3E27F823B3FCE7B808FD9706DA091A463D39838F83F168FDA0F84F
+                  C16220BC1F5CA15D3488380A733D75E772BF9E17F5D66C44FE3DA10BE05C5E91
+                  F568ACCBA3CFF1E0F860E2F0796A0DAF14EF04C96DD2142E3BF8544B34FB12AE
+                  8219F95C1A8ADF46A0EE24C2258EEB248486DACA58480711CCAEA6BEDC1EA17D
+                  D20FFE2B23F1D501C4B5658069E6D79EEE73C00B83E56D97B1B13AA50EC3810D
+                  3521E4A7DC2DB147B29BF93B9D1E4CDC12D4B4C5D22AE9F721B886F8E1C89301
+                  CD7F5A23D466081C32EF96ABB829BE31F38144622A92F855B4596D2C9584EF7C
+                  43AC02F093FE84938D9CF56CE134B897C7D13759A6DFB4AECFAC11DAF880FDB3
+                  7F96D4B3D7B681DE5325D381CA8C3955058683E20B83CDFB0B4780C6B80EBA02
+                  A88E19725AABF0F3D886CC8B223F31187FA125A4579FCCD1CCDF235C437574B0
+                  0F2AC5429DF547887F00B4262BE6504B20DA27EBEC4062756B446FCF36131E3E
+                  4D6E2719B5A350D0D0321FECEA7CEA2457B5472DDDCA79101D879867C704E896
+                  887AE1F4D6C42AD1D11288F54C96E8B0E896F5AC3D71D8333A0B7B1A687D9B14
+                  073EAA1EFEAC9A1F685B7AAA04CF8F660C57B682F650551F2F26DC95F73DEF76
+                  04AF36E195AFD3C84CD150290754CD733C11DA7987498E86C89C2CC376D121BA
+                  38C69BD6C701C546DD9C878603231C8E85F350172ACEC7AD1D99D7BC4A06FDF4
+                  75712E1E462790A2F224BF393096EB50FEB645F4E7D44E6D2F7F9B4EDC9D724F
+                  5CFFA04BB5123BA1BC1D8A8CC812AAA7FA5957AC98D955289A4FAFE150892DF9
+                  2E683820F9F0595C6DA05F965E1E0FDBB78402D8355C21D31E21BDADA029FF83
+                  010756FC1E0EECDF8B7F3C12B396DEF41DCA66ABB878F15D7AF7916BD547DF5C
+                  6260E68C131209910DFAD4B2BE70E2669E190E67FF652960B155377BD601C987
+                  5431227A6DA401976F9F403ACBCCACF31290CDCEE0BA0D9BB1BB7BCAA4D33FC4
+                  F43BB7E3E8E89B6E5F6F2F825F9A820BB3DE56221BF4CBA660B9AC9170586C88
+                  2D8F81E1BD6CE3BCDCC8DD5F9898A9B20B478566D074F6C4098BD3D22108BDCD
+                  0EC676FEC4B2D36B68686888779EC4642842C9EB97D11BAFEE53E9F7DE331D95
+                  05E6995A90404A8621B2867BCDA064859D433C9AAF999AD8F218188D17E965F2
+                  63012D2FD1ECADB25DDE7BA345B9DF55F337789DE3DD779BE4B22E65DFB187EC
+                  45DB89271A249349F5CAF80D7AE5F7D7BA5465154A7BB2A24319B03D9D4E25CF
+                  899896D2974D0BADE1C0C58027207CBB9257E072F3729EA19482546AB92ABACF
+                  C1E8DEC7380D3D38E6DEAA9E9909F3B61B69BE201A0E88A758A36672422DB226
+                  345989CAF96DC3AF9CDFF0C1B133348ECDC3D5A3FC5B00900E67A76CDBC7DF6A
+                  1E9FC88A0E1E985961272B1863BE88F8D65B8FACE7802C3E649F9B5B7D012E99
+                  AB84C65D37A27874CA84F3D602393D940563C5FD6AE8C9AD949D4EE2E48F7EE9
+                  AC58B1CFECDE1755E974DA40EAA7D01B3C3373455674701F1F94350F98AB627E
+                  E5175BB216342220152B2DC24CB7C99A855EADD6CEA958A96CB70623D12B8D9D
+                  FC1377ABDFCBBB847CF7EE61D5BD54BAE2016C0F1ED7E06B62678D275B611D0E
+                  C15F450521755DB80D99D31873DFBBFD60458B99FDE51A0D7705511DE7F3C163
+                  22FED30108FB0E52F7C2BF99D1D151B7636C87B9E79EEFB95993C61EFC1C21C0
+                  27301B1719912DD54CFA59D6C583CD622DF7CED98602995E47C6C98D36E96FDD
+                  104EFC582E1BE8536B0FE5C42A4F4A92632F009D85132A965A6D5DF1FE6F75B8
+                  F60115AFEE4048FF82DB858324C6790ECC4EBA630E395AD3BAC759573E64DF15
+                  0DAB454726F83C99CB0181B4CDE069EF2EF0C43FFA1704637D9F1FB8AC091E5A
+                  9C503ACD3DED45820B0D43F340B55D0E3BFEB259A7DEFA9D6A3DB9D7EAFCEC80
+                  025F088E178C2BBC2213ADC19AD8BADC87C79E6E0F690BB70CF09171EEC92BB8
+                  A8E338CF27E244009E9BAFD01A96E398772843C6939321C03D2FB4313E2925EC
+                  C75C72A21578A86D63E625911F7FD27E311654ABE63A8EB132C785445A321446
+                  982A9827A285CC6649476E6BE2BBA1005F4850DD2E85645CAFB83CF011C23E20
+                  5439BF2E9977CA65B529BEE994E45D4D3527B6F0856443B9C875CBF116915973
+                  AC027062D0FE54825EA735C0770E37C43DFBC52BD9145FC934A93BF8E6B384D5
+                  7957328D788AA7EB089F7DBB9A7AB27B85367B250B5AD057E6E9C7C161318998
+                  7C3D034E75A31BBE14D981B6667174F6A259277F29846796D7B06C9DEC8DB0B9
+                  9EAF54F845D00ACEE122CF917FBF964B2C5397762D17455FE5043BFA5FE19237
+                  F935FE8700F81761116E100B3994990000000049454E44AE426082}
+                FileName = 'C:\Users\PC\Desktop\HODLER_APP_ALPHA\coin_icons\1 (1).png'
+              end>
+          end
+          inherited gfxEthereum: TImage
+            MultiResBitmap.Height = 16
+            MultiResBitmap.Width = 32
+            MultiResBitmap.LoadSize = 2
+          end
+          inherited wordlist: TMemo
+            Viewport.Width = 97.000000000000000000
+            Viewport.Height = 145.000000000000000000
+          end
+          inherited DirectoryImage: TImage
+            MultiResBitmap = <
+              item
+                Width = 128
+                Height = 128
+                PNG = {
+                  89504E470D0A1A0A0000000D4948445200000080000000800806000000C33E61
+                  CB000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+                  074849444154785EEDDD4D6C1C671907F0E77D67F66B76EDB5D7F1DAD98DA169
+                  DAF21595C44EA07C1D6801550809F5C2BD07E81DC401C40504074E880B170412
+                  4D9B282455559A809D525541EA17891CB5B4C56AB0934689DB602B24A97713EF
+                  EEBC2F3B9B07D74E6CEFCCEE38BCB3F3FF45899FFFE438FFCCEC4CDE99250000
+                  000000000000000000E869C2FB63FECFA3C3095BFD84147D450B5568FD8DA934
+                  FDACF8E8E2EF394197C4E25F0B65ADF43451A2C8DB0C57A96891192F7E7DF15D
+                  DE005D90AEB27E199D9DEFC966859607F5694AF006E88294241EE6394A2616AE
+                  147FCE337441367F6FBF3546CBDC2CFD70616A248AE5358A578048DAB58B4443
+                  EB27AFBD501AE24DD081C816C0634B2A2FEBDA6F394207225D008F20F9D8C254
+                  F17B1C21A0C817A045547FB5F097A14F7082007AA300E43824AC43FA8F9F4EF2
+                  06F0A9470AD02469EF427EF1179CC0A7DE2940D3DC1CFD60F185E2D738820F3D
+                  5500EFD2B056A33FE0D2D0BF9E2A802791A0D2B2AAFD8E23B4D17305F00821BF
+                  DDBC347C82236C422C9C286A9E7B4CB5AA75FA47CD32D478436FD1CD5F24E6EB
+                  AE78ADF4CD0F16786B603D5C8078A8127D9851E2BBC5472F1FE64D81F4E42920
+                  4E1CA2BE7A4D1F5898DA36C19B0241017A40324D092DE4E31C0341017A85529F
+                  E4291014A0470892368F81A000318702C41C0A10732840CCA100318702C41C0A
+                  10732840CCA100318702C41C0A10732840CCA100318702C4DCD62F096B88CB22
+                  939D212BD37A1D0D6C112BB964A5B79FE5B4A1E6CE6E68A1A71BC9EA9F46769F
+                  5CDAD2028844EE6FE769ECCBBBF2591C690CA3884EEB9A7A640B778C7BDEEABF
+                  6F3F76BE999A3B659F4C5A8F6DDDCE71C62E92B0339CC04042EB6F6C5101AA55
+                  3B31B28703984AD41FDE9A02C8813394B0729CC0504ADB335B52002B5BC673FA
+                  1120491F08BF00CDCBBEF9D487E39CC0588D1B6E9D8E865E0091EE7BA74CF758
+                  1CC158D673DB1E9ABC1E7A01A4331AC9F70EC68D6A1EFEBD9FA116C015342392
+                  FD1D3DA102778FD6EA72E1DA8D13DE1C6A0112A9E1791EC1605A8843E2AB271B
+                  DE1C5A01962E5143DA239FE2080693523FC963780570CAD634A5D338FF9B4ED1
+                  DB837B26CF700AAF0056B6B4CC23984C50EBC3DFFF8452809B44D72D1AC6B5BF
+                  E166AF55946BABA739B68452808CE54C5346663982A176E6B32F6DFBECE4458E
+                  2DA11440644671DF3F02048935877F4FD705500D7DE1DC720A877FE355AAF5E4
+                  D2331C56745D00E10CBE8B451F11A0B3CF7A4BC038ADE87AC7D9D9D1311EC160
+                  42AA956BFFD5BA2B80906F082B87F7F49BEFFDFCD9BE17795EA3AB02C8E450C7
+                  6FA884BB476B3A28BE73C4E5B8461705682C53A6FC200730DAFA877F4FE70590
+                  9953D2B623F48593B1F5666162F24D9EEFD0710144BAB4EE21054CF3D17FFCAC
+                  A7B3022877D1729CFD9CC05097E8BC5B77D5418EEBEAA8003A993F4394753882
+                  A14AFA9E178BFBA7DEE7B8AE8E0A60674A033C82C936B8F65F2D78011AE2ECDC
+                  4DABA35793C35D54A7A51BAEFD2CA70D052F803338875BBF1160EB67CAFB8E55
+                  396D28D08E9C6D7EFC93D9EDF77204A3DD5AF5DB4EA002EC24EBB4B432F77304
+                  5329BA3830FEF997386D2A5001ECF4C8551EC1605AEAA785F8A9E2B8A90005A8
+                  5474B2B09703184C0BE5EBF0EFF15D0021065FB792E9618E6028457A7A68EFD4
+                  DB1CDBF25F006747A0D305FC7F48257DFFEBF7F8DAA9F53ACDCB4CE1218E60A8
+                  E607B4869D948738FAE2AB00894CDF1BCD1FE95B094C35A0E944DF83CF5FE6E8
+                  8BAF02C85C09E7FE0850EBACFA6DA77D0194FCC7B9F7FA70EBD77CD72BCB99E7
+                  78F6AD6D018453B8E07D2F3F473094263AFAB12F1EBDC1D1B74D0BE03DF12B52
+                  DBB1E8330284087EF8F76C5A805CD97E552652F7710463A90B037B8E9FE410C8
+                  E6A70067B4C213984CCBA784F0CE02C16D5880864B5775A688655F11D0D0C16E
+                  FEACB66101EC44FAF58490431CC1505AD1A9E17DC7663806B6610164AE9CE211
+                  4C76DB0B1F82DAA000EE394D835FE00086AA12D56D1DECD6EFEDD62D80B00B6F
+                  5949C211C0700ED164FFBE638B1C3B7247016667498BDC58892318ADFDAADF76
+                  EE28C0CE7BF56969A771EBD7703797DDABF91C3DCFB1637714C04A8F7CC02318
+                  2C95B48EC80726BB7E33DBDA0254966F52AEF4194E6032DDFDE1DFB3A6002AE7
+                  BC62091BCBBE0DD750FADCE0C4E4CB1CBBB2A600D2D981973D4680DDBCF6EFF4
+                  D6EFED5615A0FE6F37D18F655F1120857C8AC7AEAD144058FD7F4FD9A9418E60
+                  AED7F2E3C7DB7E41A45F1F15203786377D46800AE1DA7FB5560194ABFFD9A85A
+                  5F6A6D0163D5AE556A56521DE6188A560184539849E6B3F8A62FC3D979E7F8C0
+                  EE13573886427A4FFC5AE91D1FE70C060BFAD0871F729712AFC804DEF56BBA9A
+                  A62B0369E738C7D04839F0C0CAB74780B99AE7E7C362F7911AC7D04869F53DC2
+                  33184C51F8877F8F549AB6F10C865244FF1A9A38F62AC7504969BB1DAF2783BB
+                  4368FD6B1E432795903FF6BE4C80339846D3CB83E39FFB0DA7D0B51EF9FACFA9
+                  6F8D37ABF07DAD69BF90752C053381B22E9190472D2D0F74BBEC0B0000000000
+                  000000000000E28AE8BFD0D0C79AB77D126E0000000049454E44AE426082}
               end>
           end
         end
-        inherited ShortcutValetInfoValueLayout: TLayout
-          Size.Width = 927.000000000000000000
-          inherited TopInfoUnconfirmedValue: TLabel
-            Size.Width = 927.000000000000000000
+      end
+      inherited Settings: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited SHeader: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited lblSHeader: TLabel
+            Size.Width = 1064.000000000000000000
           end
-          inherited TopInfoConfirmedValue: TLabel
-            Size.Width = 927.000000000000000000
+        end
+        inherited btnSWipe: TButton
+          Size.Width = 1064.000000000000000000
+        end
+        inherited DebugBtn: TButton
+          Size.Width = 1064.000000000000000000
+        end
+        inherited OrganizeButton: TButton
+          Size.Width = 1064.000000000000000000
+        end
+        inherited Panel2: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited LanguageBox: TPopupBox
+            Position.X = 952.000000000000000000
+          end
+          inherited SettingsLanguageLabel: TLabel
+            Size.Width = 922.000000000000000000
           end
         end
-        inherited Layout12: TLayout
-          Position.X = 1064.000000000000000000
+        inherited Panel3: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited CurrencyBox: TPopupBox
+            Position.X = 952.000000000000000000
+          end
+          inherited SettingsCurrencyLabel: TLabel
+            Size.Width = 922.000000000000000000
+          end
+        end
+        inherited CreateBackupButton: TButton
+          Size.Width = 1064.000000000000000000
+        end
+        inherited DeleteAccountButton: TButton
+          Size.Width = 1064.000000000000000000
+        end
+        inherited Panel8: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited DayNightModeStaticLabel: TLabel
+            Size.Width = 930.000000000000000000
+          end
+          inherited DayNightModeSwitch: TSwitch
+            Position.X = 976.000000000000000000
+          end
         end
       end
-    end
-    inherited zx_gfxStorage: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited gfxStorage: TScrollBox
-        Size.Width = 1080.000000000000000000
-        Size.Height = 1920.000000000000000000
-        Viewport.Width = 1080.000000000000000000
-        Viewport.Height = 1920.000000000000000000
-        inherited gfxBitcoin: TImage
-          MultiResBitmap.Height = 16
-          MultiResBitmap.Width = 32
-          MultiResBitmap.LoadSize = 2
-          MultiResBitmap = <
-            item
-              Width = 32
-              Height = 32
-              PNG = {
-                89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
-                F4000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
-                088949444154584795577F6C55D51DFF9E73EEBDEFBDB652EC68692B429151E8
-                6008320746C7626002663FD88412D9AF64338C6D76C6F8CFE662886ECBF6C7B2
-                399E8931C1B8B82D1D850D9C090C9C71038D5D4C157450F9A1169696AE6D6A29
-                7D7D3FEE39F7ECFB39F7BDF2DA52B37D5E4EEEBBE79EF3FD7C7FDF7305CD006B
-                49D0FE6D52B4EE37B88F8E7CB921CA879B22633708B2B76A2B1A3ACDD86C3C5B
-                ABAA463C612F5B214FFA4AFCCD06DE51B9F9E0653CB31DDB146DDB1F09DE84FB
-                A9B8AE02763749F13845F81FBDF08565D6EA1FE89CD812A4649DDB622232C6F2
-                2596A9A420A5785E49BEB354C846035ED21E12C2DB23BFF4E269AC2997598E69
-                0A4063581DED5B9BB2FE8D4FF4133DD498907E346EE8B8CEC6027857577752B4
-                B5C4FBD3DD6457B7E46CC9C6755E4ACA0A457DF928AC97628FC80F3F26B77766
-                4BB2E355312629505A90DB77F712CFF7DB55C25F55B81A525FD6EA3FF558D5D6
-                C2A6FE0F487747F6BE26611A93E405B30232F9F02D1DD18EE4D663EF4E556242
-                60E941A1E39ED591D2471232A8EDCB8661FB59E1B52D9DEE29074E14B2EC14E9
-                E186A5710830577445FA5DB2F72FB1BA31E5FBF9A830288DB739683DD655AE84
-                135C8A4FAE7D7D3305F6D58455B53D57B566D743F20C6012E973DC03A2FC68AC
-                841EE72BDF4FD9C6A1D04D37785E5E98412A88BB92F7BF7CAEC4295DB62FDB26
-                107345D18184904572F29C75A501C248C7432A26CB92F8D8520A3EFF3CA9A5F7
-                F17D8E44C3A789925C18968D2BDB0B599009D9E0001738C12D4BA516EAC44FBC
-                4AEF937DE361D818588F90E1CEC57027C85928ACE561731F92CD0C929CF30947
-                687323242A6BC9DFF024799F7A8828CCB06FD9B9A5FD2C0B32211B1CE0722100
-                373F16F97D77375F1EB7FFCAF40C888F2F9EC3E64D8610CA917A6B1E21B97023
-                45FF3949B6FF0D528BB790A869A67CFB7A9237DF49FEBA9F917EF36932A79E25
-                91A866EE4909EF70E1FC90A96CAAB30D15627962FB2BE790D6566AFD48D38DC2
-                AB6CCA702995B9BD389C20C4D5AF2251514B6AE1E7C8BBE35112F00047D05FF7
-                53F2967FD311D8FE2EF6C0D835F229B2C0012E70825B44CFAFA8CBD30DDDDCC1
-                6A7E7DCEDAB64533643C5CCA61109575E4AFFF1589590BE239647E0950F64A0F
-                99F32F90E9EE88E7A0B80B638CF47B641F6E162234763841575B6448A97B9309
-                517342EBA86D918552BCEC3A0316A09F5EB9E812CE2522939BD3BFA7F0C46E8A
-                FAFEE9EEC5EC5BC8BBFD61970F8E1C495B26071CE00227B825E7C73D4F9D29AA
-                58E6AA69035D14993E7B21C77DB15B0E44EF1D8E9538F20085C71F75D5C19D87
-                64E31AF25A5AC9A2445D7F289745044E7E416C94CA9895DF6F36A2EB7DC3E6A1
-                7C6618004A6FCE52B68CEB9F61472F51347CDE8585825964CE74901DF9802B25
-                C10F2356141D8C6D430595C902173855A86F95468906A38B041F05448137CBDA
-                951313767C90B37D1613F0C3C228A9F99FE5DC981F13B2D550D04E846032C009
-                6EF1CA73ABCD1D6C5371FE238024D4146CF9235BB68465B22B8B09E8F2826B1F
-                2559EA8228DBF02F5F253BD6CB73EC91E92F427A9D27594DC4C59937F300E0FE
-                AA0612D54DF13DCF9B738728E2B213D50BE2927419CF95307C8EC2835B63C5D0
-                9A9DEBAF2397D7CAB5791A55DC8ED217F905EF9499329CFBD87A5360F72F8FE3
-                8BD94C3FE9BFFF90ADDC41857D1BC9BCFDDBE27A5ECD0AA996ED7C0FE229F28A
-                039CE09632612E2B091200D7D2E085B84208323B3B4462EE2A9E8B6187CEC47F
-                D0F1AEF6923EFE6356E2B9382C6CB55AB9D3BD2BE2B68C85D764A72F590B4E70
-                731946A7848A683385EC3B685C1C800989BC0AF2373D43DEE6BDAE0D3B0B1851
-                CF4B44E3039C7C579900F911B2EBCFBA6764E3C473D51115F03796591CE00227
-                EF3A29A51447B167701EBA0C2C2E0E3C46662FBA97E4BC3B492DF90A89544D3C
-                CF4A889BD7915CF635B6928F451573492CDC446AD5AEE25EF60257821DE9E1E5
-                C80B56A84CB6E3C22A618FC5ADB890E9F645B286DB63EC2DC059A55D5989FADB
-                48CEE5C1CD05F19D0684C84BC5FFD913E81351CFCB141EFE168708651A7B0D80
-                7ADCF629B4B9E14450D922E537DE1E1014FC59252DF5DB0CAB8AC5481476176A
-                79E40245A7FF40FAE82ED2FFF8911382CC47053832A0440E30B91D7C87F489C7
-                5C2EC4E4D70638C0054E7023FDD8D4EC2F7BF2199DE94B8A742FFB68C25DBC09
-                590FD7338968B89D8570F99D7C8695E1B6CBAE8632E1E16F937EFD173C7E4EE1
-                5F7752E110B760AE1252703FE21ECB836C70800B9CE096D4B14D261FE8395BAF
-                FDDF2C6B566A078D6A1C6FB953C7836399BE94B79643226B5730A960D2B7482E
-                FE22F3F3F9E68363A4D943A62B4DFA8D27C95C78D1EDB1F004AE2539FC836C70
-                800B9CE076C7226A2569B7AE0D721F0E75A61272454F2EAFEB851FB7B412B090
-                4F3F62F6228A7A5F23EFB6EF71A9ED628BBFC36F42EE694135AF41F6632DDC3D
-                19FD36D44DC984970DA37792D573D688039D05EAA0C8E5DCC4A1F4E95BF835A7
-                5F0B7CBFF66241B312F06109484A2E29C49D4B1357CE5BE6C4DB8FE78B6DF97A
-                E8B7462F083CAF108683E4CBCFC0FA89432916E08FED2095FCEEFBE7A5E76FC6
-                C2A694F4FA23A3D3FD6C3A2C422CF116F42A630BDD316D382607DC9AC9037B21
-                03B22013B21D39738113DB26AA0E700F5AC9E4F6362DF10CB5ABA45C951B33C4
-                E9A40F0C58F5605D5CBF0E657F119E723C3560EDD63A61EA59DD6495621DA337
-                B5E00F9312397314974E5600282DE8DDDD50517F93F7C45021D756575915E89C
-                A6570D45B583648F14FDFD601D4E5020C4D996B8C3D968B096C45D8A5F4B498F
-                063263859AA062CF406F61F74D8FF3B1770A39304D01A0FC4332BF77DE7269A8
-                8D5FF95B0225B8B7F27316C13D8B347FA4021E7F94E2DB94A3E2503076C093F2
-                20B7D6B4DCF9EFFFEFE3B404571DFB795351E3E877F31B44D66E0C43B3414B5A
-                29B2BAB1D3F739F5F9F33C0CAFD894D7C7197BCA57EA259B1247E5D72F153FCF
-                49719521DB27C7C981E8BFCD5FF9A2B7B5D53A0000000049454E44AE426082}
-              FileName = 'C:\Users\PC\Desktop\HODLER_APP_ALPHA\coin_icons\1 (1).png'
-            end>
+      inherited descryptSeed: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited DSHeader: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited lblDSHeader: TLabel
+            Size.Width = 1064.000000000000000000
+          end
         end
-        inherited gfxLitecoin: TImage
-          MultiResBitmap.Height = 16
-          MultiResBitmap.Width = 32
-          MultiResBitmap.LoadSize = 2
+        inherited panelDecryptSeedPass: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited passwordForDecrypt: TEdit
+            Position.X = 864.000000000000000000
+          end
         end
-        inherited gfxDash: TImage
-          MultiResBitmap.Height = 16
-          MultiResBitmap.Width = 32
-          MultiResBitmap.LoadSize = 2
+        inherited btnDecryptSeed: TButton
+          Size.Width = 1064.000000000000000000
         end
-        inherited gfxBitcoinCash: TImage
-          MultiResBitmap.Height = 16
-          MultiResBitmap.Width = 32
-          MultiResBitmap.LoadSize = 2
-          MultiResBitmap = <
-            item
-              Width = 32
-              Height = 32
-              PNG = {
-                89504E470D0A1A0A0000000D4948445200000020000000200806000000737A7A
-                F4000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
-                0707494441545847ED566D8C54E5153EE77DEF7CEDCCCECEB273C75A579C444B
-                142AB2686DD5B0ECC6D81F2D4AAC6262C28FFA47080B2D5DFC40425C4D5A74F1
-                ABCAE267D2F4876953378A8AFC69AA3B2EA8D820DB545748957425203033ECCE
-                EEEC7CEEBDEFE93997D9017445D0C4FEF1496EEE7DCF3D5FEFF97A5FF81EFF6F
-                20F153FB9E11FC9359BE39CE42FFB9815E020DC39E9CC107C178B41E50FC5230
-                0F086F035768670D228EC24C4FCDB9EC93B3A2DE9A8DC8DB133A034EE515598F
-                C6BA3CFA0C0F8E6E4EEC3F4DADE195E29D20B90D9AC225071F6D8A669EC31530
-                25BF8B8FC71711A81B8970A1E33A09A1A1B6D216D25E04B3BDA13BBB53681FF5
-                80FFC2487C6500715D096092F9B5A7FB14F0C260E989F3D8588D5283E1C0861A
-                107213EEA6D8DD998DFC9F8E6F4E5C13D4B4C9D2AAC3EF43700DF1C39127039A
-                5F5A2354A7081C3203A50A6E88AF4FEF96484C44127F8836AAF5C5A2F09D6E88
-                55007ED493703291939ECD9904F7FC38FAC64BF474F33DE92EA18DF6DAAB3E2F
-                AAA72E6D01BDB3422689CA8C3815058683E20B83CDFB0B478046B80EDA03A80E
-                1A729A2BB026766FFA59911FDB1C7FA629A4571EC9D2D47F225C433524D907B5
-                8D85DA6A8F10FF0A688D97CDBEA640B45BD699DEC4CAE688DE9A6924DC7F9CDC
-                3632EAC57C5E43D36CB02BB3A98D5CD51AB57433E74174EC639EBF8C816E8AA8
-                678E3F9C58213A9A02B1B5E345DA2FBA653D6D4F1CF68C4EC39E045ADB22C581
-                F7A9DF7E5AC9F5B65C75AC087DC369C395ADA03554D1870A0977F9AD7D6E3278
-                8909FF7A070D4D150C15B340951CC713A19577782D4743648E9460ABE8105D1C
-                E30D6BE38062A366CE43DD81210EC79C59A8F365E7C3E664FA0DAF92413F7659
-                9C8B87D106A4A834CE5F0E8C6493CADF32975E7FED556D2F7D930EDFDCEF1EBE
-                7CB94BD5223BA1BC1D8A8CC812AA477B5857AC90DE9E2F988F7FC4A1125BF25F
-                507740F2E1B3B8DA40BF2CBD3C1AB6AF0905B07DB04CA635427A4B5E53EE865E
-                0796FD09FE3DF44F7CE5B38435FF8A0594C95470DEBC9BF4C067F3D5BF2E5868
-                60EA84131209910DFAD4E2EE70E2A73C331CCEFECB52C062AB66F6A403920FA9
-                6244F4DA48032E7D610CE92433B3CE4A40263385BFF9DD3DD8D999353B533FC7
-                C1B73A7178F8EFEEEAAE2E04BF34051766ADAD4436E8974DC1525923E1A0D810
-                5B1E03C3FBD8C279B992BB3F3F365561170E08CDA0695B15272C4C4A8720AC69
-                7430F6D21D969DEAA2BEBE3EDE79072E0A45A8FDF2C5F4E68EF754EAEDB74DB2
-                7C91E9AB0609A46418226BB8D70C4A56D839C403B9AAA98A2D8F8151FF905E26
-                3FE6D1F212CDDE2ADBE5BDD75B94FB5D35FE80D759DE7DA7E958DCAEEC253BC9
-                9EBB9518D0D1D1A1DE98FC895E7EFD3A972AAC42694F56742803B6A7D329E738
-                119352FAB269A1D51D381BF0048405E59C02B79FB5B168B11FB6F52F55F9D216
-                18DEF500A761158EB8D7A9BEA9306FBB9EE633A2EE80788A556A2427D4246B42
-                9391A89CDE3632BA10C27B474ED038365D95037C6EE401A4C3D929DBF6F1BFAA
-                C727B2A283076646D8C90AC6982F22BEADA945D67340161FB0CF8DCDBE0097CC
-                C542E3AE1B523C3A65C2796B819C1ECA8291C2FBAAEFC9C72933D981E3BFF8BD
-                F3AB65EF9A813D71954AA50CF4DF096B822766AEC88A0EEEE3BDB2E6017371CC
-                AFFC624BD6827A04A462A545986991AC59685BA57A4AC54A65BB55188A5E68EC
-                8EBF71B7FABDBC4BC8070676ABCEF959F34EEA766C0D1ED2E06B60678D275B66
-                1D0EC1EBA28290DACFDC86CC698CB975A007AC6821FD7EA94A83ED415487F87C
-                F098885F3A0061DF5EEA4C7E68868787DDE4C89FCD922557BB1993C22E3C8A10
-                E013988D8B8CC816AB26F514EBE2C166B1965B666C43814CAF4F46C98D36E81F
-                5F114EFC522E1BE853EBF665C52A4F4A92632F006DF9C32AD6BFD2FAE17BCFEB
-                707537152E4922A4EEE776E12089719E03D393EEA0438ED674D783AC2B17B26F
-                8A86D5DC4FC6F83C99C90181B4CD1F8F7B778187FEDB735130D67D74CF790DB0
-                7A5E42E977B9A7BD4870A1616816A896F3E1C5D736EA6DFF7841351FD965B57D
-                BA47812F0487F2C6155E918956A12B7657F683838FB586B4859B9EE023E3D493
-                577056C7718E4FC4B1006C99ADD01A94E398772843C693E3C2949E17DA089F94
-                12F6832E39D132AC6E599F7E4EE4471FB19F8D05D58A998E632CCF702191960C
-                851126F2E6A1683EBD51D2917D38F1B350802F24A83AA5908CEB1597073E42D8
-                07840AE7D725F356A9A436C4371C93BCAB89C6C426BE90DC5B2A70DD72BC4564
-                DA1CAB001CDB6C7F2C41AFD1EAE03B871BE29EFDE2956C82AF649AD412BEF92C
-                6475DE954C231EE3E93AC467DFF686B5995D429BBE92052DE82EF1F4E3E0B098
-                444CFE9E00A7BADE0D5F894C6F4BA3383A7DD1AC91BF12C233CD6B58B646F646
-                D84CCFD72AFC226819E770AEE7C897AFE512CBFE73BB968BA2AF73821DFD5638
-                E74D7E8FEF1000FF0353F27034AE0622AA0000000049454E44AE426082}
-              FileName = 'C:\Users\PC\Desktop\HODLER_APP_ALPHA\coin_icons\1 (1).png'
-            end>
-        end
-        inherited gfxEthereum: TImage
-          MultiResBitmap.Height = 16
-          MultiResBitmap.Width = 32
-          MultiResBitmap.LoadSize = 2
-        end
-        inherited wordlist: TMemo
-          Viewport.Width = 97.000000000000000000
-          Viewport.Height = 145.000000000000000000
-        end
-        inherited DirectoryImage: TImage
-          MultiResBitmap = <
-            item
-              Width = 128
-              Height = 128
-              PNG = {
-                89504E470D0A1A0A0000000D4948445200000080000000800806000000C33E61
-                CB000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
-                074449444154785EEDDD4D6C1C671907F0E77D67F66B76EDB5D7F1DAD9CD1609
-                B5A5D0A8247602E5EB400BA8AA90502FDC7B00EE200E202EA072E05471E18240
-                A2691385A4AA4A13B053AA2A48FD2291A3B614AC06B555FC91065B6912BC9B78
-                77E77DBBB37970EDC4F6CEEC8EC33B3BFF5F94F8F94F8EF3CFCCCEE49D590200
-                00000000000000000080BE26BC3F16FF3C3E9AB0D5CF48D1D7B45085F6DF984A
-                D32F8A8F2CFF9E13F4482CFFB550D64ACF10258ABCCD70D5AA169989E23797DF
-                E50DD003E92AEB57D1D9F99E6C566879589FA5046F801E4849E2219EA36472E9
-                72F1099EA107B2F57BF7CD315AE6E7E8C74BD363512CAF51BC024452A542A2A9
-                F553575F2C8DF026E842640BE0B125955775FDB71CA10B912E8047907C6C69BA
-                F87D8E1050E40BD0266A4F2EFD65E4339C2080FE2800390E09EB88FEE3E792BC
-                017CEA9302B448DABF945FFE2527F0A97F0AD0323F4F3F5A7EB1F80D8EE0435F
-                15C0BB34ACD7E90FB834F4AFAF0AE04924A8B4AAEABFE3081DF45D013C42C8EF
-                B42E0D7FC011B621964E1535CF7DA656D33AFD935619EABCA1BFE8D62F128B0D
-                57BC5E7AF4C325DE1A581F17201E6A44FFCD28F1BDE223978EF2A640FAF21410
-                270ED140A3AE0F2D4DEF9AE44D81A0007D2099A68416F2718E81A000FD42A9FB
-                780A0405E81382A4CD63202840CCA100318702C41C0A10732840CCA100318702
-                C41C0A10732840CCA100318702C41C0A10732840CCA10031B7F34BC29AE292C8
-                6467C9CAB45F47033BC44AAE58E9DDE7396DA9B5B39B5AE89966B2F6A7B1BDA7
-                5776B4002291FBDB2255BE5AC96771A4318C223AABEBEAE11DDC31EE07D6E0DD
-                07B1F3CDD4DA290764D27A6CE7768E539927616738818184D6DFDAA102D46A76
-                626C1F073095683CB433059043E72861E53881A194B66777A40056B68CE7F423
-                40923E147E015A977D8BA9EA04273056F3BADBA0E3A11740A407FE59A6BB2C8E
-                602CEBF95D0F4E5D0BBD00D2198FE47B07E346B50EFFDECF500BE00A9A15C9C1
-                AE9E50813B476B75A970F5FA296F0EB50089D4E8228F60302DC411F1F5D34D6F
-                0EAD002B0BD494F6D8673982C1A4D44FF1185E019CB23543E934CEFFA653F4CE
-                F0BEA9739CC22B80952DADF2082613D4FEF0F73FA114E006D1358B4671ED6FB8
-                B9AB55E5DAEA198E6DA114206339339491598E60A8723EFBF2AECF4FCD736C0B
-                A50022338EFBFE1120486C38FC7B7A2E806AEA0B0BAB291CFE8D57AD35922BCF
-                7258D373018433FC2E167D4480CE3EE72D01E3B4A6E71D6767C72B3C82C18454
-                6BD7FEEBF5560021DF14560EEFE937DFC5FCF9819778DEA0A702C8E448D76FA8
-                843B476B3A2CBE7BCCE5B8410F0568AE52A6FC000730DAE6877F4FF705909933
-                D2B623F48593B1F5566172EA2D9E6FD3750144BAB4E921054CF3C97FFC6CA6BB
-                022877D9729C839CC0500B34E7365C7598E3A6BA2A804EE6CF11651D8E60A892
-                AEBC543C387D91E3A6BA2A809D290DF10826DBE2DA7FBDE005688AF3F337ACAE
-                5E4D0E77508356AEBBF6739CB614BC00CEF07BB8F51B01B67EB67CE0448DD396
-                02EDC8B9D6C73F99DDFD698E60B49BAB7E3B095480325967A595B98723984AD1
-                FCD0C4175FE6B4AD4005B0D3635778048369A99F11E2E78AE3B60214A05AD5C9
-                C27E0E60302D94AFC3BFC7770184187EC34AA6473982A114E99991FDD3EF70EC
-                C87F019C3D814E17F0FF2195F4FDAFDFE36BA7361AB4283385073982A15A1FD0
-                9A76521EE1E88BAF022432036FB67EA46F2630D590A653030FBC7089A32FBE0A
-                2073259CFB23406DB2EAB793CE0550F2ED858B03B8F56BBE6BD5D5CCF33CFBD6
-                B100C2295CF0BE979F23184A131DBFEBCBC7AF73F46DDB02784FFC8AD46E2CFA
-                8C0021821FFE3DDB162057B65F9389D4DD1CC158EAC2D0BE93A73904B2FD29C0
-                19AFF20426D3F26921BCB340705B16A0E9D2159D2962D957043475B09B3FEB6D
-                59003B917E2321E408473094567466F4C089598E816D5900992BA7780493DDF2
-                C287A0B62880FBBEA6E12F710043D5881AB60E76EBF7569B1640D8857F5849C2
-                11C0700ED1D4E08113CB1CBB725B01E6E6488B5CA5C4118CD679D56F27B715A0
-                BC479F95761AB77E0D7763D5BD92CFD10B1CBB765B01ACF4D8873C82C15249EB
-                98BC77AAE737B36D2C4075F506E54AF7730293E9DE0FFF9E0D055039E7554BD8
-                58F66DB8A6D2EF0F4F4EBDC2B1271B0A209D3D78D96304D8AD6BFF6E6FFDDE6A
-                5D011AFF71138358F6150152C8A779ECD95A018435F8F7949D1AE608E67A3D3F
-                71B2E31744FAF549017215BCE933025408D7FEEBB50BA05CFDAF66CDFA4A7B0B
-                18AB7EB55AB792EA28C750B40B209CC26C329FC5377D19CECE3B2787F69EBACC
-                3114D27BE2D74AEFF914673058D0873EFC9015255E9509BCEBD774754D9787D2
-                CE498EA19172E8DEB56F8F0073B5CECF47C5DE63758EA191D21A7898673098A2
-                F00FFF1EA934EDE2190CA588FE3D3279E2358EA192D276BB5E4F067786D0FAD7
-                3C864E2A217FEA7D990067308DA6578627BEF01B4EA16B3FF2F5D1996F4FB4AA
-                F043ADE9A0900D2C053381B21648C8E39696877A5DF605000000000000000000
-                00007145F431C37AC794EA4D151C0000000049454E44AE426082}
-            end>
+        inherited DecryptSeedMessage: TLabel
+          Size.Width = 1064.000000000000000000
         end
       end
-    end
-    inherited Settings: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited SHeader: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited lblSHeader: TLabel
-          Size.Width = 1080.000000000000000000
+      inherited ReadOCR: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited imgCameraOCR: TImage
+          Size.Width = 1064.000000000000000000
+          Size.Height = 1808.000000000000000000
+        end
+        inherited OCRHeader: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited lblOCRHeader: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited btnReadOCR: TButton
+          Position.Y = 1856.000000000000000000
+          Size.Width = 1064.000000000000000000
         end
       end
-      inherited btnSWipe: TButton
-        Size.Width = 1080.000000000000000000
-      end
-      inherited DebugBtn: TButton
-        Size.Width = 1080.000000000000000000
-      end
-      inherited OrganizeButton: TButton
-        Size.Width = 1080.000000000000000000
-      end
-      inherited Panel2: TPanel
-        Size.Width = 1080.000000000000000000
-        inherited LanguageBox: TPopupBox
-          Position.X = 968.000000000000000000
+      inherited SeedCreation: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited SCHeader: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited lblSCHeader: TLabel
+            Size.Width = 1064.000000000000000000
+          end
         end
-        inherited SettingsLanguageLabel: TLabel
-          Size.Width = 968.000000000000000000
+        inherited PanelEnterSeed: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited lblEnterSeed: TLabel
+            Size.Width = 1064.000000000000000000
+          end
         end
-      end
-      inherited Panel3: TPanel
-        Size.Width = 1080.000000000000000000
-        inherited CurrencyBox: TPopupBox
-          Position.X = 968.000000000000000000
+        inherited btnCheckSeed: TButton
+          Position.Y = 1856.000000000000000000
+          Size.Width = 1064.000000000000000000
         end
-        inherited SettingsCurrencyLabel: TLabel
-          Size.Width = 968.000000000000000000
-        end
-      end
-      inherited CreateBackupButton: TButton
-        Size.Width = 1080.000000000000000000
-      end
-      inherited ImportPrivateKeyButton: TButton
-        Size.Width = 1080.000000000000000000
-      end
-    end
-    inherited descryptSeed: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited DSHeader: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited lblDSHeader: TLabel
-          Size.Width = 1080.000000000000000000
+        inherited SeedField: TMemo
+          Size.Width = 1064.000000000000000000
+          Size.Height = 1760.000000000000000000
+          Viewport.Width = 1064.000000000000000000
+          Viewport.Height = 1760.000000000000000000
         end
       end
-      inherited panelDecryptSeedPass: TPanel
-        Size.Width = 1080.000000000000000000
-        inherited passwordForDecrypt: TEdit
-          Position.X = 880.000000000000000000
+      inherited AddNewCoin: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited SelectNewCoinBox: TVertScrollBox
+          Size.Width = 1064.000000000000000000
+          Size.Height = 1856.000000000000000000
+          Viewport.Width = 1064.000000000000000000
+          Viewport.Height = 1856.000000000000000000
+        end
+        inherited ANWHeader: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited lblANWHeader: TLabel
+            Size.Width = 1064.000000000000000000
+          end
         end
       end
-      inherited btnDecryptSeed: TButton
-        Size.Width = 1080.000000000000000000
-      end
-      inherited DecryptSeedMessage: TLabel
-        Size.Width = 1080.000000000000000000
-      end
-    end
-    inherited ReadOCR: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited imgCameraOCR: TImage
-        Size.Width = 1080.000000000000000000
-        Size.Height = 1824.000000000000000000
-      end
-      inherited OCRHeader: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited lblOCRHeader: TLabel
-          Size.Width = 1080.000000000000000000
+      inherited checkSeed: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited btnConfirm: TButton
+          Position.Y = 1856.000000000000000000
+          Size.Width = 1064.000000000000000000
+        end
+        inherited CSHeader: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited lblCSHeader: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited SeedWordsBox: TVertScrollBox
+          Size.Width = 1064.000000000000000000
+          Size.Height = 1591.000000000000000000
+          Viewport.Width = 1064.000000000000000000
+          Viewport.Height = 1591.000000000000000000
+        end
+        inherited Memo1: TMemo
+          Viewport.Width = 384.000000000000000000
+          Viewport.Height = 88.000000000000000000
+        end
+        inherited lblRetypeSeed: TLabel
+          Size.Width = 1064.000000000000000000
+        end
+        inherited ConfirmedSeedVertScrollBox: TVertScrollBox
+          Size.Width = 1064.000000000000000000
+          Viewport.Width = 1064.000000000000000000
+          Viewport.Height = 200.000000000000000000
         end
       end
-      inherited btnReadOCR: TButton
-        Position.Y = 1872.000000000000000000
-        Size.Width = 1080.000000000000000000
-      end
-    end
-    inherited SeedCreation: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited SCHeader: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited lblSCHeader: TLabel
-          Size.Width = 1080.000000000000000000
+      inherited AddNewToken: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited ANTHeader: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited lblANTHeader: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited AvailableCoinsBox: TVertScrollBox
+          Size.Width = 1064.000000000000000000
+          Size.Height = 1856.000000000000000000
+          Viewport.Width = 1064.000000000000000000
+          Viewport.Height = 1856.000000000000000000
         end
       end
-      inherited PanelEnterSeed: TPanel
-        Size.Width = 1080.000000000000000000
-        inherited lblEnterSeed: TLabel
-          Size.Width = 1080.000000000000000000
+      inherited ExportKeyScreen: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited EKSHeader: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited lblEKSHeader: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited Layout56: TLayout
+          Size.Width = 1064.000000000000000000
+          Size.Height = 1856.000000000000000000
+          inherited lblPrivateKey: TEdit
+            Size.Width = 1064.000000000000000000
+          end
+          inherited lblWIFKey: TEdit
+            Size.Width = 1064.000000000000000000
+          end
+          inherited HexFormatLabel: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+          inherited WIFFormatLabel: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+          inherited layoutForPrivQR: TLayout
+            Size.Width = 1064.000000000000000000
+            inherited CopyPrivateKeyButton: TButton
+              Size.Width = 1064.000000000000000000
+            end
+          end
         end
       end
-      inherited btnCheckSeed: TButton
-        Position.Y = 1872.000000000000000000
-        Size.Width = 1080.000000000000000000
-      end
-      inherited SeedField: TMemo
-        Size.Width = 1080.000000000000000000
-        Size.Height = 1776.000000000000000000
-        Viewport.Width = 1080.000000000000000000
-        Viewport.Height = 1776.000000000000000000
-      end
-    end
-    inherited AddNewCoin: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited SelectNewCoinBox: TVertScrollBox
-        Size.Width = 1080.000000000000000000
-        Size.Height = 1872.000000000000000000
-        Viewport.Width = 1080.000000000000000000
-        Viewport.Height = 1872.000000000000000000
-      end
-      inherited ANWHeader: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited lblANWHeader: TLabel
-          Size.Width = 1080.000000000000000000
+      inherited ChoseToken: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited CTHeader: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited lblCTHeader: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited AvailableTokensBox: TVertScrollBox
+          Size.Width = 1064.000000000000000000
+          Size.Height = 1760.000000000000000000
+          Viewport.Width = 1064.000000000000000000
+          Viewport.Height = 1760.000000000000000000
+        end
+        inherited btnAddManually: TButton
+          Position.Y = 1856.000000000000000000
+          Size.Width = 1064.000000000000000000
+        end
+        inherited FindERC20autoButton: TButton
+          Position.Y = 1808.000000000000000000
+          Size.Width = 1064.000000000000000000
         end
       end
-    end
-    inherited checkSeed: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited btnConfirm: TButton
-        Position.Y = 1872.000000000000000000
-        Size.Width = 1080.000000000000000000
-      end
-      inherited CSHeader: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited lblCSHeader: TLabel
-          Size.Width = 1080.000000000000000000
+      inherited ManuallyToken: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited MTHeader: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited lblMTHeader: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+          inherited btnMTQR: TButton
+            Position.X = 1016.000000000000000000
+          end
+        end
+        inherited ContractAddressPanel: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited ContractAddress: TEdit
+            Size.Width = 1064.000000000000000000
+          end
+          inherited lblContractAddress: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited DecimalsPanel: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited DecimalsField: TEdit
+            Size.Width = 1064.000000000000000000
+          end
+          inherited lblDecimals: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited SymbolPanel: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited SymbolField: TEdit
+            Size.Width = 1064.000000000000000000
+          end
+          inherited lblSymbol: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited TokenNamePanel: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited TokenNameField: TEdit
+            Size.Width = 1064.000000000000000000
+          end
+          inherited lblTokenName: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited btnAddContract: TButton
+          Position.Y = 1856.000000000000000000
+          Size.Width = 1064.000000000000000000
         end
       end
-      inherited SeedWordsBox: TVertScrollBox
-        Size.Width = 1080.000000000000000000
-        Size.Height = 1607.000000000000000000
-        Viewport.Width = 1080.000000000000000000
-        Viewport.Height = 1607.000000000000000000
+      inherited ShowMsgView: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
       end
-      inherited Memo1: TMemo
-        Viewport.Width = 384.000000000000000000
-        Viewport.Height = 88.000000000000000000
-      end
-      inherited lblRetypeSeed: TLabel
-        Size.Width = 1080.000000000000000000
-      end
-      inherited ConfirmedSeedVertScrollBox: TVertScrollBox
-        Size.Width = 1080.000000000000000000
-        Viewport.Width = 1080.000000000000000000
-        Viewport.Height = 200.000000000000000000
-      end
-    end
-    inherited AddNewToken: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited ANTHeader: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited lblANTHeader: TLabel
-          Size.Width = 1080.000000000000000000
+      inherited DebugScreen: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited Edit1: TEdit
+          Size.Width = 1064.000000000000000000
+        end
+        inherited Button2: TButton
+          Size.Width = 1064.000000000000000000
+        end
+        inherited Label1: TLabel
+          Size.Width = 1064.000000000000000000
+        end
+        inherited Edit4: TEdit
+          Size.Width = 1064.000000000000000000
         end
       end
-      inherited AvailableCoinsBox: TVertScrollBox
-        Size.Width = 1080.000000000000000000
-        Size.Height = 1872.000000000000000000
-        Viewport.Width = 1080.000000000000000000
-        Viewport.Height = 1872.000000000000000000
-      end
-    end
-    inherited ExportKeyScreen: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited EKSHeader: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited lblEKSHeader: TLabel
-          Size.Width = 1080.000000000000000000
+      inherited AddNewCoinSettings: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited ToolBar2: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited lblACHeader: TLabel
+            Size.Width = 1064.000000000000000000
+          end
         end
-      end
-      inherited lblPrivateKey: TLabel
-        Size.Width = 1080.000000000000000000
-      end
-    end
-    inherited ChoseToken: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited CTHeader: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited lblCTHeader: TLabel
-          Size.Width = 1080.000000000000000000
+        inherited NewCoinDescriptionPanel: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited NewCoinDescriptionEdit: TEdit
+            Position.X = 864.000000000000000000
+          end
         end
-      end
-      inherited AvailableTokensBox: TVertScrollBox
-        Size.Width = 1080.000000000000000000
-        Size.Height = 1824.000000000000000000
-        Viewport.Width = 1080.000000000000000000
-        Viewport.Height = 1824.000000000000000000
-      end
-      inherited btnAddManually: TButton
-        Position.Y = 1872.000000000000000000
-        Size.Width = 1080.000000000000000000
-      end
-    end
-    inherited ManuallyToken: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited MTHeader: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited lblMTHeader: TLabel
-          Size.Width = 1080.000000000000000000
+        inherited btnOKAddNewCoinSettings: TButton
+          Position.Y = 1856.000000000000000000
+          Size.Width = 1064.000000000000000000
         end
-        inherited btnMTQR: TButton
-          Position.X = 1032.000000000000000000
+        inherited Label4: TLabel
+          Position.Y = 1820.000000000000000000
+          Size.Width = 1064.000000000000000000
         end
-      end
-      inherited ContractAddressPanel: TPanel
-        Size.Width = 1080.000000000000000000
-        inherited ContractAddress: TEdit
-          Size.Width = 1080.000000000000000000
+        inherited NewCoinDescriptionPassPanel: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited NewCoinDescriptionPassEdit: TEdit
+            Position.X = 864.000000000000000000
+          end
         end
-        inherited lblContractAddress: TLabel
-          Size.Width = 1080.000000000000000000
+        inherited Panel11: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited Layout50: TLayout
+            Position.X = 983.000000000000000000
+          end
+          inherited ImportPrivKeyStaticLabel: TLabel
+            Size.Width = 973.000000000000000000
+          end
         end
-      end
-      inherited DecimalsPanel: TPanel
-        Size.Width = 1080.000000000000000000
-        inherited DecimalsField: TEdit
-          Size.Width = 1080.000000000000000000
-        end
-        inherited lblDecimals: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-      end
-      inherited SymbolPanel: TPanel
-        Size.Width = 1080.000000000000000000
-        inherited SymbolField: TEdit
-          Size.Width = 1080.000000000000000000
-        end
-        inherited lblSymbol: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-      end
-      inherited TokenNamePanel: TPanel
-        Size.Width = 1080.000000000000000000
-        inherited TokenNameField: TEdit
-          Size.Width = 1080.000000000000000000
-        end
-        inherited lblTokenName: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-      end
-      inherited btnAddContract: TButton
-        Position.Y = 1872.000000000000000000
-        Size.Width = 1080.000000000000000000
-      end
-    end
-    inherited ShowMsgView: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-    end
-    inherited DebugScreen: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited Edit1: TEdit
-        Size.Width = 1080.000000000000000000
-      end
-      inherited Button2: TButton
-        Size.Width = 1080.000000000000000000
-      end
-      inherited Label1: TLabel
-        Size.Width = 1080.000000000000000000
-      end
-      inherited Edit4: TEdit
-        Size.Width = 1080.000000000000000000
-      end
-    end
-    inherited AddNewCoinSettings: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited ToolBar2: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited lblACHeader: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-      end
-      inherited NewCoinDescriptionPanel: TPanel
-        Size.Width = 1080.000000000000000000
-        inherited NewCoinDescriptionEdit: TEdit
-          Position.X = 880.000000000000000000
-        end
-      end
-      inherited btnOKAddNewCoinSettings: TButton
-        Size.Width = 1080.000000000000000000
-      end
-      inherited Label4: TLabel
-        Size.Width = 1080.000000000000000000
-      end
-      inherited NewCoinDescriptionPassPanel: TPanel
-        Size.Width = 1080.000000000000000000
-        inherited NewCoinDescriptionPassEdit: TEdit
-          Position.X = 880.000000000000000000
-        end
-      end
-    end
-    inherited ChangeDescryptionScreen: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited ChangeDescryptionHeader: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited lblChangeDescryptionHeader: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-      end
-      inherited ChangeDescryptionPanel: TPanel
-        Size.Width = 1080.000000000000000000
-        inherited ChangeDescryptionEdit: TEdit
-          Size.Width = 1080.000000000000000000
-        end
-        inherited lblChangeDescryption: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-      end
-      inherited btnChangeDescryptionOK: TButton
-        Position.Y = 1872.000000000000000000
-        Size.Width = 1080.000000000000000000
-      end
-    end
-    inherited WelcomeTabItem: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited Layout6: TLayout
-        Size.Width = 1080.000000000000000000
-        inherited lblWelcome: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-        inherited lblWelcomeDescription: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-      end
-      inherited btnCreateNewWallet: TButton
-        Size.Width = 1080.000000000000000000
-      end
-      inherited btnRestoreWallet: TButton
-        Size.Width = 1080.000000000000000000
-      end
-      inherited Layout7: TLayout
-        Size.Width = 1080.000000000000000000
-        inherited Layout8: TLayout
-          Size.Width = 1080.000000000000000000
-          inherited Image2: TImage
+        inherited PrivateKeySettingsLayout: TLayout
+          inherited Layout31: TLayout
             Size.Width = 1080.000000000000000000
+            inherited Layout34: TLayout
+              Size.Width = 821.000000000000000000
+              inherited HexPrivKeyCompressedRadioButton: TRadioButton
+                Size.Width = 821.000000000000000000
+              end
+              inherited HexPrivKeyNotCompressedRadioButton: TRadioButton
+                Size.Width = 821.000000000000000000
+              end
+            end
           end
         end
-        inherited Image1: TImage
-          Position.X = 412.000000000000000000
+        inherited Panel15: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited OwnXCheckBox: TCheckBox
+            Size.Width = 968.000000000000000000
+          end
+          inherited OwnXEdit: TEdit
+            Position.X = 983.000000000000000000
+          end
         end
       end
-      inherited Layout29: TLayout
-        Position.Y = 1879.000000000000000000
-        Size.Width = 1080.000000000000000000
-        inherited WelcomeTabLanguageBox: TPopupBox
-          Position.X = 992.000000000000000000
+      inherited ChangeDescryptionScreen: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited ChangeDescryptionHeader: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited lblChangeDescryptionHeader: TLabel
+            Size.Width = 1064.000000000000000000
+          end
         end
-        inherited Label5: TLabel
-          Size.Width = 992.000000000000000000
+        inherited ChangeDescryptionPanel: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited ChangeDescryptionEdit: TEdit
+            Size.Width = 1064.000000000000000000
+          end
+          inherited lblChangeDescryption: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited btnChangeDescryptionOK: TButton
+          Position.Y = 1856.000000000000000000
+          Size.Width = 1064.000000000000000000
         end
       end
-    end
-    inherited HistoryDetails: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited ToolBar1: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited Label2: TLabel
+      inherited WelcomeTabItem: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited Layout6: TLayout
+          Size.Width = 1064.000000000000000000
+          inherited lblWelcome: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+          inherited lblWelcomeDescription: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited btnCreateNewWallet: TButton
+          Size.Width = 1064.000000000000000000
+        end
+        inherited btnRestoreWallet: TButton
+          Size.Width = 1064.000000000000000000
+        end
+        inherited Layout7: TLayout
+          Size.Width = 1064.000000000000000000
+          inherited Layout8: TLayout
+            Size.Width = 1064.000000000000000000
+            inherited HodlerLogoBackGroundImageWTI: TImage
+              Size.Width = 1064.000000000000000000
+            end
+          end
+          inherited HodlerLogoImageWTI: TImage
+            Position.X = 455.000000000000000000
+          end
+        end
+        inherited Layout29: TLayout
+          Position.Y = 1863.000000000000000000
+          Size.Width = 1064.000000000000000000
+          inherited WelcomeTabLanguageBox: TPopupBox
+            Position.X = 976.000000000000000000
+          end
+          inherited WTIChangeLanguageLabel: TLabel
+            Size.Width = 976.000000000000000000
+          end
+        end
+      end
+      inherited HistoryDetails: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited ToolBar1: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited TransactionDetailsHeaderLabel: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited HistoryTransactionVertScrollBox: TVertScrollBox
+          Size.Width = 1044.000000000000000000
+          Size.Height = 1856.000000000000000000
+          Viewport.Width = 1044.000000000000000000
+          Viewport.Height = 1856.000000000000000000
+          inherited LinkLayout: TLayout
+            inherited linkLabel: TLabel
+              TextSettings.Font.StyleExt = {04070000000000000004000000}
+            end
+          end
+        end
+        inherited Layout18: TLayout
+          Size.Height = 1856.000000000000000000
+        end
+        inherited Layout17: TLayout
+          Position.X = 1054.000000000000000000
+          Size.Height = 1856.000000000000000000
+        end
+      end
+      inherited RestoreOptions: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited Layout13: TLayout
+          Size.Width = 1064.000000000000000000
+          inherited Layout14: TLayout
+            Size.Width = 1064.000000000000000000
+            inherited Image5: TImage
+              Size.Width = 1064.000000000000000000
+            end
+          end
+          inherited Image6: TImage
+            Position.X = 455.000000000000000000
+          end
+        end
+        inherited Layout15: TLayout
+          Size.Width = 1064.000000000000000000
+          inherited ResotreWalletHeaderLabel: TLabel
+            Enabled = False
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited VertScrollBox2: TVertScrollBox
+          Size.Width = 1064.000000000000000000
+          Size.Height = 1708.000000000000000000
+          Viewport.Width = 1064.000000000000000000
+          Viewport.Height = 1708.000000000000000000
+          inherited ImportExodusSeedButton: TButton
+            Size.Width = 1064.000000000000000000
+          end
+          inherited ImportLadgerNanoSSeedButton: TButton
+            Size.Width = 1064.000000000000000000
+          end
+          inherited RestoreOtherOpiotnsButton: TButton
+            Size.Width = 1064.000000000000000000
+            inherited Layout30: TLayout
+              Position.X = 1016.000000000000000000
+            end
+          end
+          inherited ImportCoinomiSeedButton: TButton
+            Size.Width = 1064.000000000000000000
+          end
+          inherited RestoreFromFileButton: TButton
+            Size.Width = 1064.000000000000000000
+          end
+          inherited restoreOptionsLayout: TLayout
+            Size.Width = 1080.000000000000000000
+            inherited RestoreDecryptedSeedQRButton: TButton
+              Size.Width = 1080.000000000000000000
+            end
+            inherited RestoreFromStringSeedButton: TButton
+              Size.Width = 1080.000000000000000000
+            end
+            inherited RestoreSeedEncryptedQRButton: TButton
+              Size.Width = 1080.000000000000000000
+            end
+          end
+        end
+      end
+      inherited BackupTabItem: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited ToolBar3: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited BackupHeaderLabel: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited VertScrollBox1: TVertScrollBox
+          Size.Width = 1064.000000000000000000
+          Size.Height = 1856.000000000000000000
+          Viewport.Width = 1064.000000000000000000
+          Viewport.Height = 1856.000000000000000000
+          inherited Layout26: TLayout
+            Size.Width = 1064.000000000000000000
+            inherited HSBDescriptionLabel: TLabel
+              Size.Width = 1064.000000000000000000
+            end
+            inherited SendWalletFileButton: TButton
+              Size.Width = 1064.000000000000000000
+            end
+          end
+          inherited Layout27: TLayout
+            Size.Width = 1064.000000000000000000
+            inherited SendEncryptedSeedButton: TButton
+              Size.Width = 1064.000000000000000000
+            end
+            inherited EncryptedQRDescriptionLabel: TLabel
+              Size.Width = 1064.000000000000000000
+            end
+          end
+          inherited Layout28: TLayout
+            Size.Width = 1064.000000000000000000
+            inherited SendDecryptedSeedButton: TButton
+              Size.Width = 1064.000000000000000000
+            end
+            inherited DecryptedQRDescriptionLabel: TLabel
+              Size.Width = 1064.000000000000000000
+            end
+          end
+        end
+      end
+      inherited fileManager: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited FilesManagerScrollBox: TVertScrollBox
+          Size.Width = 1064.000000000000000000
+          Size.Height = 1807.000000000000000000
+          Viewport.Width = 1064.000000000000000000
+          Viewport.Height = 1807.000000000000000000
+        end
+        inherited Layout22: TLayout
+          Position.Y = 1856.000000000000000000
+          Size.Width = 1064.000000000000000000
+          inherited SelectFilePath: TButton
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited Layout24: TLayout
+          Size.Width = 1064.000000000000000000
+          inherited FileManagerPathLabel: TLabel
+            Size.Width = 1007.000000000000000000
+          end
+          inherited FileManagerPathUpButton: TButton
+            Position.X = 1007.000000000000000000
+          end
+        end
+      end
+      inherited RestoreFromFileTabitem: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited RFFHeader: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited RFFHeaderLabel: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited BackupFileListVertScrollBox: TVertScrollBox
+          Size.Width = 1064.000000000000000000
+          Size.Height = 1808.000000000000000000
+          Viewport.Width = 1064.000000000000000000
+          Viewport.Height = 1808.000000000000000000
+        end
+        inherited RFFSelectFileButton: TButton
+          Position.Y = 1856.000000000000000000
+          Size.Width = 1064.000000000000000000
+        end
+      end
+      inherited WaitWalletGenerate: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+      end
+      inherited ImportPrivKeyTabItem: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited SaveNewPrivateKeyButton: TButton
+          Position.Y = 1856.000000000000000000
+          Size.Width = 1064.000000000000000000
+        end
+        inherited ToolBar4: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited IPKheaderLabel: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+          inherited IPKQRButton: TButton
+            Position.X = 1016.000000000000000000
+          end
+        end
+        inherited ImportPrivateKeyButton: TButton
           Size.Width = 1080.000000000000000000
         end
       end
-      inherited HistoryTransactionVertScrollBox: TVertScrollBox
-        Size.Width = 1060.000000000000000000
-        Size.Height = 1872.000000000000000000
-        Viewport.Width = 1060.000000000000000000
-        Viewport.Height = 1872.000000000000000000
-        inherited LinkLayout: TLayout
-          inherited linkLabel: TLabel
+      inherited AddAccount: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited ToolBar5: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited AAccHeaderLabel: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited ConfirmNewAccountButton: TButton
+          Size.Width = 1064.000000000000000000
+        end
+        inherited btnImportCoinomi: TButton
+          Size.Width = 1064.000000000000000000
+          TabOrder = 8
+        end
+        inherited btnImportExodus: TButton
+          Size.Width = 1064.000000000000000000
+        end
+        inherited btnImportLadgerNanoS: TButton
+          Size.Width = 1064.000000000000000000
+        end
+        inherited RestoreHSBButton: TButton
+          Size.Width = 1064.000000000000000000
+        end
+        inherited Layout35: TLayout
+          Size.Width = 1064.000000000000000000
+          inherited btnRestoreDecryptedQR: TButton
+            Size.Width = 1064.000000000000000000
+          end
+          inherited btnRestoreSeed: TButton
+            Size.Width = 1064.000000000000000000
+          end
+          inherited btnRestoreEncQR: TButton
+            Size.Width = 1064.000000000000000000
+          end
+        end
+      end
+      inherited RestoreWalletWithPassword: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited RestoreWalletOKButton: TButton
+          Size.Width = 1064.000000000000000000
+        end
+        inherited Panel6: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited RestoreNameEdit: TEdit
+            Position.X = 864.000000000000000000
+          end
+        end
+        inherited Panel7: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited RestorePasswordEdit: TEdit
+            Position.X = 864.000000000000000000
+          end
+        end
+        inherited ToolBar6: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited RWPHeaderLabel: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+      end
+      inherited ImportPrivKeyCoinList: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited IPKCLHeader: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited ImportPrivCoinListHeaderLabel: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited ImportPrivKeyCoinListVertScrollBox: TVertScrollBox
+          Size.Width = 1064.000000000000000000
+          Size.Height = 1856.000000000000000000
+          Viewport.Width = 1064.000000000000000000
+          Viewport.Height = 1856.000000000000000000
+        end
+      end
+      inherited HSBPassword: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited RestoreFromFileConfirmButton: TButton
+          Position.Y = 1856.000000000000000000
+          Size.Width = 1064.000000000000000000
+        end
+        inherited RFFPathEdit: TLabel
+          Size.Width = 1064.000000000000000000
+        end
+        inherited ToolBar7: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited HSBPassHeaderLabel: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited Layout23: TLayout
+          Size.Width = 1064.000000000000000000
+          inherited RestoreFromFileAccountNameEdit: TEdit
+            Size.Width = 1064.000000000000000000
+          end
+          inherited RestoreFromFileAccountNameLabel: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited Layout36: TLayout
+          Size.Width = 1064.000000000000000000
+          inherited RFFPassword: TEdit
+            Size.Width = 1064.000000000000000000
+          end
+          inherited RFFPasswordInfo: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+      end
+      inherited TransactionWaitForSend: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited TransactionWaitForSendAniIndicator: TAniIndicator
+          Size.Width = 1064.000000000000000000
+        end
+        inherited Panel13: TPanel
+          Position.Y = 880.000000000000000000
+          Size.Width = 1064.000000000000000000
+          inherited TransactionWaitForSendDetailsLabel: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+          inherited TransactionWaitForSendLinkLabel: TLabel
+            Size.Width = 1064.000000000000000000
             TextSettings.Font.StyleExt = {04070000000000000004000000}
           end
         end
-      end
-      inherited Layout18: TLayout
-        Size.Height = 1872.000000000000000000
-      end
-      inherited Layout17: TLayout
-        Position.X = 1070.000000000000000000
-        Size.Height = 1872.000000000000000000
-      end
-    end
-    inherited RestoreOptions: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited Layout13: TLayout
-        Size.Width = 1080.000000000000000000
-        inherited Layout14: TLayout
-          Size.Width = 1080.000000000000000000
-          inherited Image5: TImage
-            Size.Width = 1080.000000000000000000
-          end
-        end
-        inherited Image6: TImage
-          Position.X = 412.000000000000000000
+        inherited TransactionWaitForSendBackButton: TButton
+          Position.Y = 1856.000000000000000000
+          Size.Width = 1064.000000000000000000
         end
       end
-      inherited Layout15: TLayout
-        Size.Width = 1080.000000000000000000
-        inherited ResotreWalletHeaderLabel: TLabel
-          Enabled = False
-          Size.Width = 1080.000000000000000000
+      inherited ConfirmSendTabItem: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited SendTransactionButton: TButton
+          Position.Y = 1856.000000000000000000
+          Size.Width = 1064.000000000000000000
         end
-      end
-      inherited VertScrollBox2: TVertScrollBox
-        Size.Width = 1080.000000000000000000
-        Size.Height = 1703.000000000000000000
-        Viewport.Width = 1080.000000000000000000
-        Viewport.Height = 1703.000000000000000000
-        inherited ImportExodusSeedButton: TButton
-          Size.Width = 1080.000000000000000000
+        inherited Label16: TLabel
+          Size.Width = 1064.000000000000000000
         end
-        inherited ImportLadgerNanoSSeedButton: TButton
-          Size.Width = 1080.000000000000000000
-        end
-        inherited RestoreOtherOpiotnsButton: TButton
-          Size.Width = 1080.000000000000000000
-          inherited Layout30: TLayout
-            Position.X = 1032.000000000000000000
+        inherited ToolBar8: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited ConfirmSendHeaderLabel: TLabel
+            Size.Width = 1064.000000000000000000
           end
         end
-        inherited ImportCoinomiSeedButton: TButton
-          Size.Width = 1080.000000000000000000
-        end
-        inherited RestoreFromFileButton: TButton
-          Size.Width = 1080.000000000000000000
-        end
-        inherited restoreOptionsLayout: TLayout
-          Size.Width = 1080.000000000000000000
-          inherited RestoreDecryptedSeedQRButton: TButton
-            Size.Width = 1080.000000000000000000
-          end
-          inherited RestoreFromStringSeedButton: TButton
-            Size.Width = 1080.000000000000000000
-          end
-          inherited RestoreSeedEncryptedQRButton: TButton
-            Size.Width = 1080.000000000000000000
+        inherited Panel10: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited ConfirmSendPasswordEdit: TEdit
+            Position.X = 864.000000000000000000
           end
         end
-      end
-    end
-    inherited BackupTabItem: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited ToolBar3: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited BackupHeaderLabel: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-      end
-      inherited VertScrollBox1: TVertScrollBox
-        Size.Width = 1080.000000000000000000
-        Size.Height = 1872.000000000000000000
-        Viewport.Width = 1080.000000000000000000
-        Viewport.Height = 1872.000000000000000000
-        inherited Layout25: TLayout
-          Size.Width = 1080.000000000000000000
-          inherited SeedMnemonicBackupButton: TButton
-            Size.Width = 1080.000000000000000000
+        inherited Panel12: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited Layout38: TLayout
+            Size.Width = 1064.000000000000000000
+            inherited Layout40: TLayout
+              Position.X = 1054.000000000000000000
+            end
+            inherited SendFromLabel: TLabel
+              Size.Width = 1044.000000000000000000
+            end
+            inherited SendFromStaticLabel: TLabel
+              Size.Width = 1044.000000000000000000
+            end
           end
-          inherited MnemonicSeedDescriptionLabel: TLabel
-            Size.Width = 1080.000000000000000000
+          inherited Layout41: TLayout
+            Size.Width = 1064.000000000000000000
+            inherited Layout43: TLayout
+              Position.X = 1054.000000000000000000
+            end
+            inherited SendFeeLabel: TLabel
+              Size.Width = 1044.000000000000000000
+            end
+            inherited SendFeeStaticLabel: TLabel
+              Size.Width = 1044.000000000000000000
+            end
           end
-        end
-        inherited Layout26: TLayout
-          Size.Width = 1080.000000000000000000
-          inherited HSBDescriptionLabel: TLabel
-            Size.Width = 1080.000000000000000000
+          inherited Layout44: TLayout
+            Size.Width = 1064.000000000000000000
+            inherited Layout46: TLayout
+              Position.X = 1054.000000000000000000
+            end
+            inherited SendValueLabel: TLabel
+              Size.Width = 1044.000000000000000000
+            end
+            inherited SendValueStaticLabel: TLabel
+              Size.Width = 1044.000000000000000000
+            end
           end
-          inherited SendWalletFileButton: TButton
-            Size.Width = 1080.000000000000000000
+          inherited Layout47: TLayout
+            Size.Width = 1064.000000000000000000
+            inherited Layout49: TLayout
+              Position.X = 1054.000000000000000000
+            end
+            inherited SendToLabel: TLabel
+              Size.Width = 1044.000000000000000000
+            end
+            inherited SendToStaticLabel: TLabel
+              Size.Width = 1044.000000000000000000
+            end
           end
-        end
-        inherited Layout27: TLayout
-          Size.Width = 1080.000000000000000000
-          inherited SendEncryptedSeedButton: TButton
-            Size.Width = 1080.000000000000000000
+          inherited SendDetailsLabel: TLabel
+            Size.Width = 1064.000000000000000000
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
           end
-          inherited EncryptedQRDescriptionLabel: TLabel
-            Size.Width = 1080.000000000000000000
-          end
-        end
-        inherited Layout28: TLayout
-          Size.Width = 1080.000000000000000000
-          inherited SendDecryptedSeedButton: TButton
-            Size.Width = 1080.000000000000000000
-          end
-          inherited DecryptedQRDescriptionLabel: TLabel
-            Size.Width = 1080.000000000000000000
+          inherited Layout53: TLayout
+            Size.Width = 1064.000000000000000000
+            inherited Layout55: TLayout
+              Position.X = 1054.000000000000000000
+            end
+            inherited WaitTimeLabel: TLabel
+              Size.Width = 1044.000000000000000000
+            end
           end
         end
       end
-    end
-    inherited fileManager: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited FilesManagerScrollBox: TVertScrollBox
-        Size.Width = 1080.000000000000000000
-        Size.Height = 1823.000000000000000000
-        Viewport.Width = 1080.000000000000000000
-        Viewport.Height = 1823.000000000000000000
-      end
-      inherited Layout22: TLayout
-        Position.Y = 1872.000000000000000000
-        Size.Width = 1080.000000000000000000
-        inherited SelectFilePath: TButton
-          Size.Width = 1080.000000000000000000
+      inherited SameYWalletList: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited YaddressesVertScrollBox: TVertScrollBox
+          Size.Width = 1064.000000000000000000
+          Size.Height = 1904.000000000000000000
+          Viewport.Width = 1064.000000000000000000
+          Viewport.Height = 1904.000000000000000000
         end
       end
-      inherited Layout24: TLayout
-        Size.Width = 1080.000000000000000000
-        inherited FileManagerPathLabel: TLabel
-          Size.Width = 1023.000000000000000000
+      inherited PasswordForGenerateYAddressesTabItem: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited NewYaddressesOKButton: TButton
+          Position.Y = 1856.000000000000000000
+          Size.Width = 1064.000000000000000000
         end
-        inherited FileManagerPathUpButton: TButton
-          Position.X = 1023.000000000000000000
+        inherited Label20: TLabel
+          Size.Width = 1064.000000000000000000
         end
-      end
-    end
-    inherited RestoreFromFileTabitem: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited RFFHeader: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited RFFHeaderLabel: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-      end
-      inherited BackupFileListVertScrollBox: TVertScrollBox
-        Size.Width = 1080.000000000000000000
-        Size.Height = 1824.000000000000000000
-        Viewport.Width = 1080.000000000000000000
-        Viewport.Height = 1824.000000000000000000
-      end
-      inherited RFFSelectFileButton: TButton
-        Position.Y = 1872.000000000000000000
-        Size.Width = 1080.000000000000000000
-      end
-    end
-    inherited WaitWalletGenerate: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-    end
-    inherited ImportPrivKeyTabItem: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited WIFEdit: TEdit
-        Size.Width = 1080.000000000000000000
-      end
-      inherited SaveNewPrivateKeyButton: TButton
-        Position.Y = 1872.000000000000000000
-        Size.Width = 1080.000000000000000000
-      end
-      inherited ToolBar4: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited Label7: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-        inherited IPKQRButton: TButton
-          Position.X = 1032.000000000000000000
-        end
-      end
-      inherited Layout31: TLayout
-        Size.Width = 1080.000000000000000000
-        inherited Layout34: TLayout
-          Size.Width = 831.000000000000000000
-          inherited HexPrivKeyCompressedRadioButton: TRadioButton
-            Size.Width = 831.000000000000000000
+        inherited ToolBar9: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited GNAHeaderLabel: TLabel
+            Size.Width = 1064.000000000000000000
           end
-          inherited HexPrivKeyNotCompressedRadioButton: TRadioButton
-            Size.Width = 831.000000000000000000
+        end
+        inherited Panel9: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited GenerateYAddressPasswordEdit: TEdit
+            Position.X = 864.000000000000000000
+          end
+        end
+        inherited Panel14: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited AmountNewAddressesLabel: TLabel
+            Size.Width = 1034.000000000000000000
+          end
+          inherited SpinBox1: TSpinBox
+            Position.X = 944.000000000000000000
+          end
+          inherited Layout57: TLayout
+            Size.Width = 944.000000000000000000
+            inherited TrackBar1: TTrackBar
+              Size.Width = 914.000000000000000000
+            end
           end
         end
       end
-      inherited ImportPrivKeyLabel: TLabel
-        Size.Width = 1080.000000000000000000
-      end
-    end
-    inherited AddAccount: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited ToolBar5: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited AAccHeaderLabel: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-      end
-      inherited ConfirmNewAccountButton: TButton
-        Size.Width = 1080.000000000000000000
-      end
-      inherited Button1: TButton
-        Size.Width = 1080.000000000000000000
-        TabOrder = 8
-      end
-      inherited Button4: TButton
-        Size.Width = 1080.000000000000000000
-      end
-      inherited Button5: TButton
-        Size.Width = 1080.000000000000000000
-      end
-      inherited Button6: TButton
-        Size.Width = 1080.000000000000000000
-      end
-      inherited Layout35: TLayout
-        Size.Width = 1080.000000000000000000
-        inherited Button7: TButton
-          Size.Width = 1080.000000000000000000
-        end
-        inherited Button9: TButton
-          Size.Width = 1080.000000000000000000
-        end
-        inherited Button10: TButton
-          Size.Width = 1080.000000000000000000
+      inherited BigQRCode: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited BigQRCodeImage: TImage
+          Size.Width = 1064.000000000000000000
+          Size.Height = 1904.000000000000000000
         end
       end
     end
-    inherited RestoreWalletWithPassword: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited RestoreWalletOKButton: TButton
-        Position.Y = 1872.000000000000000000
-        Size.Width = 1080.000000000000000000
-      end
-      inherited Panel6: TPanel
-        Size.Width = 1080.000000000000000000
-        inherited RestoreNameEdit: TEdit
-          Position.X = 880.000000000000000000
-        end
-      end
-      inherited Panel7: TPanel
-        Size.Width = 1080.000000000000000000
-        inherited RestorePasswordEdit: TEdit
-          Position.X = 880.000000000000000000
-        end
-      end
-      inherited ToolBar6: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited Label14: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-      end
-    end
-    inherited ImportPrivKeyCoinList: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited IPKCLHeader: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited ImportPrivCoinListHeaderLabel: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-      end
-      inherited ImportPrivKeyCoinListVertScrollBox: TVertScrollBox
-        Size.Width = 1080.000000000000000000
-        Size.Height = 1872.000000000000000000
-        Viewport.Width = 1080.000000000000000000
-        Viewport.Height = 1872.000000000000000000
-      end
-    end
-    inherited HSBPassword: TTabItem
-      ExplicitSize.cx = 8.000000000000000000
-      ExplicitSize.cy = 8.000000000000000000
-      inherited RestoreFromFileConfirmButton: TButton
-        Position.Y = 1872.000000000000000000
-        Size.Width = 1080.000000000000000000
-      end
-      inherited RFFPathEdit: TLabel
-        Size.Width = 1080.000000000000000000
-      end
-      inherited ToolBar7: TToolBar
-        Size.Width = 1080.000000000000000000
-        inherited Label12: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-      end
-      inherited Layout23: TLayout
-        Size.Width = 1080.000000000000000000
-        inherited RestoreFromFileAccountNameEdit: TEdit
-          Size.Width = 1080.000000000000000000
-        end
-        inherited RestoreFromFileAccountNameLabel: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-      end
-      inherited Layout36: TLayout
-        Size.Width = 1080.000000000000000000
-        inherited RFFPassword: TEdit
-          Size.Width = 1080.000000000000000000
-        end
-        inherited RFFPasswordInfo: TLabel
-          Size.Width = 1080.000000000000000000
-        end
-      end
-    end
-  end
-  inherited SystemTimer: TTimer [8]
-  end
-  inherited MotionSensor: TMotionSensor [9]
-  end
-  inherited OrientationSensor: TOrientationSensor [10]
-  end
-  inherited FOcr1: TFOcr [11]
-  end
-  inherited ImageList1: TImageList [12]
-  end
-  inherited TokenIcons: TImageList [13]
-  end
-  inherited GestureManager1: TGestureManager [14]
-  end
-  inherited ActionList: TActionList [15]
-  end
-  inherited btnImageList: TImageList [16]
-  end
-  inherited showHideIcons: TImageList [17]
-  end
-  inherited ImageList2: TImageList [18]
-  end
-  inherited arrowList: TImageList [19]
   end
 end

@@ -3,7 +3,8 @@ unit languages;
 interface
 
 
-uses system.Generics.Collections , System.Classes , System.Types , SysUtils , System.IOUtils , Fmx.Dialogs;
+uses system.Generics.Collections , System.Classes , System.Types , SysUtils , System.IOUtils , Fmx.Dialogs, Json , FMX.TabControl
+  , FMX.stdCtrls , fmx.Controls , FMX.edit;
 
 {$IFDEF ANDROID}
 
@@ -25,9 +26,77 @@ const
  //////////////////////////////////////////////////////////////////////////////////
  ///
 Function loadLanguageFile(lang : AnsiString) : WideString;
+function dictionary( key : AnsiString ): WideString;
+procedure prepareTranslateFile();
 
 implementation
+uses
+  uHome;
 //////////////////////////////////////////////////////////////////////////////////
+
+
+procedure prepareTranslateFile();
+var
+  i : integer;
+  comp : TComponent;
+  data : TJsonObject;
+  ts : TStringList;
+
+begin
+
+  data := TJSONObject.Create();
+
+  for i := 0 to frmHome.ComponentCount - 1 do
+  begin
+    comp := frmHome.Components[i];
+    if comp is TTabItem then
+      Continue;
+
+    if comp.Name = 'FileManagerPathLabel' then
+      Continue;
+
+    if comp is TEdit then
+      Continue;
+
+
+    if comp is TPresentedTextControl then
+    begin
+      data.AddPair( trim(comp.Name) , TPresentedTextControl(comp).text );
+    end
+
+    else if comp is TTextControl then
+    begin
+      data.AddPair( trim(comp.Name) , TTextControl(comp).text );
+    end;
+
+  end;
+
+  //data save to file;
+
+  ts := TStringList.Create();
+  ts.Text := data.ToString();
+  ts.SaveToFile( System.IOUtils.TPath.Combine(System.IOUtils.TPath.GetDocumentsPath, 'ENG.langSRC') );
+  ts.Free;
+  data.Free;
+
+
+end;
+
+function dictionary( key : AnsiString ): WideString;
+var
+  value : WideString;
+begin
+
+  if frmhome.SourceDictionary.TryGetValue(key , value) then
+  begin
+
+    exit(value);
+
+  end;
+
+  result := key;
+
+end;
 
 Function loadLanguageFile(lang : AnsiString) : WideString;
 var
@@ -36,11 +105,11 @@ var
 begin
   lang := AnsiUpperCase(lang);
 
-{$IFDEF ANDROID}
+(*{$IFDEF ANDROID}
 
   List := TStringList.Create;
   try
-    List.LoadFromFile(System.ioUtils.TPath.GetDocumentsPath + PathDelim + lang + '.lang' , TEncoding.BigEndianUnicode);
+    List.LoadFromFile(System.ioUtils.TPath.GetDocumentsPath + PathDelim + lang + 'lang.json' , TEncoding.BigEndianUnicode);
   Except
   on E : Exception do
     begin
@@ -49,7 +118,7 @@ begin
       //List.Free;
   end;
 
-{$ELSE}
+{$ELSE} *)
   Stream := TResourceStream.Create(HInstance, lang + '_lang', RT_RCDATA);
   try
     List := TStringList.Create;
@@ -62,7 +131,7 @@ begin
   finally
     Stream.Free;
   end;
-{$ENDIF}
+//{$ENDIF}
 
   Result := List.Text;
   list.Free;

@@ -327,6 +327,7 @@ procedure prepareConfirmSendTabItem();
 
 procedure LoadStyle( name : AnsiString );
 procedure EnlargeQRCode( img :  Tbitmap );
+function elevateCheckPermission(name:string):integer;
 // procedure refresh
 {$WRITEABLECONST ON}
 
@@ -334,7 +335,7 @@ const
   HODLER_URL: string = 'https://hodler1.nq.pl/';
   HODLER_URL2: string = 'https://hodlerstream.net/';
   HODLER_ETH: string = 'https://hodler2.nq.pl/';
-  HODLER_ETH2: string = 'https://hodler2.nq.pl/';
+  HODLER_ETH2: string = 'https://hodlernode.net/';
   API_PUB = {$I 'public_key.key' };
   API_PRIV = {$I 'private_key.key' };
 
@@ -362,7 +363,21 @@ var
 
   /// ////////////////////////////////////////////////////////////////
 
+function elevateCheckPermission(name:string):integer;
+var
+os:TOSVersion;
 
+begin
+{$IFDEF ANDROID}
+if os.major<6 then begin
+result:=0;
+exit;
+end;
+
+result:=TAndroidHelper.Context.checkCallingOrSelfPermission
+          (StringToJString(name));
+{$ENDIF}
+end;
 procedure EnlargeQRCode( img :  Tbitmap );
 begin
   with frmHome do
@@ -471,12 +486,12 @@ begin
     if (not isTokenTransfer) then
       if amount + tempFee > (CurrentAccount.aggregateBalances(CurrentCoin).confirmed) then
       begin
-        raise Exception.Create(dictionary['AmountExceed']);
+        raise Exception.Create(dictionary('AmountExceed'));
         exit;
       end;
     if ((amount) = 0) or ((fee) = 0) then
     begin
-      raise Exception.Create(dictionary['InvalidValues']);
+      raise Exception.Create(dictionary('InvalidValues'));
 
       exit;
     end;
@@ -793,15 +808,43 @@ var
   adrLabel: TLabel;
   coinIMG: TImage;
   price: TLabel;
+  ccEmpty : boolean;
+  tempBalances : TBalances;
 
 begin
+
+  if crypto is TWalletInfo then
+    begin
+
+      if TwalletInfo(crypto).coin = 4 then
+      begin
+
+        ccEmpty := (crypto.confirmed + crypto.unconfirmed > 0);
+
+      end
+      else
+      begin
+        tempBalances := CurrentAccount.aggregateBalances(tWalletInfo(crypto));
+        ccEmpty := (tempBalances.confirmed + tempBalances.unconfirmed > 0);
+
+      end;
+
+    end
+    else
+    begin
+
+      ccEmpty := (crypto.confirmed + crypto.unconfirmed > 0);
+    end;
+
+
+
   with frmhome.WalletList do
   begin
 
     Panel := Tpanel.Create(frmhome.WalletList);
     Panel.Align := Panel.Align.alTop;
     Panel.Height := 48;
-    Panel.Visible := true;
+    Panel.Visible := (ccEmpty or (not frmhome.HideZeroWalletsCheckBox.IsChecked));
     Panel.Parent := frmhome.WalletList;
     Panel.TagObject := crypto;
     setBlackBackground(Panel);
@@ -878,6 +921,10 @@ begin
     price.TagString := 'price';
     price.StyledSettings := balLabel.StyledSettings - [TStyledSetting.size];
     price.TextSettings.Font.size := 9;
+
+
+
+
   end;
 end;
 
@@ -1287,7 +1334,7 @@ begin
 
     with frmhome do
     begin
-      it := dictionary.GetEnumerator();
+      it := sourcedictionary.GetEnumerator();
       While (it.MoveNext) do
       begin
 
@@ -1325,8 +1372,8 @@ var
 
 begin
 
-  if frmhome.dictionary = nil then
-    frmhome.dictionary := TObjectDictionary<AnsiString, WideString>.Create();
+  if frmhome.sourcedictionary = nil then
+    frmhome.sourcedictionary := TObjectDictionary<AnsiString, WideString>.Create();
 
   StringReader := TStringReader.Create(langData);
   JSONTextReader := TJSONTextReader.Create(StringReader);
@@ -1336,7 +1383,7 @@ begin
   it.Recurse;
   while (it.Next()) do
   begin
-    frmhome.dictionary.AddOrSetValue(it.Key, it.AsString);
+    frmhome.sourcedictionary.AddOrSetValue(trim(it.Key), it.AsString);
   end;
 
 end;
@@ -1917,8 +1964,8 @@ begin
     if (temp < 0) or (temp > 2047) then
     begin
       result := '';
-      popupWindow.Create(input[i] + ' ' + frmhome.dictionary
-        ['NotExistInWorldlist']);
+      popupWindow.Create(input[i] + ' ' + dictionary
+        ('NotExistInWorldlist'));
       exit;
     end;
     bi := bi + fromMnemonic(input[i]);
@@ -1977,6 +2024,9 @@ var
   zeroCounter: integer;
 begin
 
+  if decimals = 0 then
+    exit( num.ToString );
+
   if num < 0 then
   begin
     result := '0.00';
@@ -2032,11 +2082,25 @@ var
   flag: Boolean;
   counter: integer;
 begin
+
+  {if pos( Str , '.' ) = 0 then
+  begin
+    str := str + '.';
+  end;  }
+
+
+
   flag := false;
   counter := 0;
   /// Cut additional chars exceeding decimals
   separator := FormatSettings.DecimalSeparator;
-  Str := LeftStr(Str, Pos(separator, Str) + decimals);
+    //str := str + StringOfChar('0' , decimals);
+  if pos( separator , Str ) <> 0 then
+  begin
+    //str := str + StringOfChar('0' , decimals + 1) ;
+    Str := LeftStr(Str, Pos(separator, Str) + decimals);
+  end;
+
 
   result := BigInteger.Create(0);
   for i := Low(Str) to High(Str) do
@@ -2078,6 +2142,9 @@ var
 begin
   if precision = -1 then
     precision := decimals;
+
+  if decimals = 0 then
+    exit( num.ToString );
 
   // temp := BigInteger.Create(num);
   Str := num.ToDecimalString;
@@ -3564,11 +3631,39 @@ begin
 
       if fmxObj.TagString = 'balance' then
       begin
-      bal:=CurrentAccount.aggregateBalances(TWalletInfo(cc));
-           TLabel(fmxObj).text := BigIntegerBeautifulStr
-          (bal.confirmed + bal.unconfirmed, cc.decimals) + '    ' +
-          floatToStrF(CurrentAccount.aggregateFiats(TWalletInfo(cc)), ffFixed, 15, 2) + ' ' +
-          CurrencyConverter.symbol;
+        if cc is TwalletInfo then
+        begin
+
+          if TwalletInfo(cc).coin = 4 then
+          begin
+
+            TLabel(fmxObj).text := BigIntegerBeautifulStr
+              (cc.confirmed + cc.unconfirmed, cc.decimals) + '    ' +
+              floatToStrF(cc.getFiat(), ffFixed, 15, 2) + ' ' +
+              CurrencyConverter.symbol;
+          end
+          else
+          begin
+            bal:=CurrentAccount.aggregateBalances(TWalletInfo(cc));
+
+            TLabel(fmxObj).text := BigIntegerBeautifulStr
+              (bal.confirmed + bal.unconfirmed, cc.decimals) + '    ' +
+              floatToStrF(CurrentAccount.aggregateFiats(TWalletInfo(cc)), ffFixed, 15, 2) + ' ' +
+              CurrencyConverter.symbol;
+          end;
+
+        end
+        else
+        begin
+
+          TLabel(fmxObj).text := BigIntegerBeautifulStr
+            (cc.confirmed + cc.unconfirmed, cc.decimals) + '    ' +
+            floatToStrF(cc.getFiat(), ffFixed, 15, 2) + ' ' +
+            CurrencyConverter.symbol;
+
+        end;
+
+
       end;
 
       if fmxObj.TagString = 'price' then

@@ -4,7 +4,7 @@
         <ProjectFileVersion>12</ProjectFileVersion>
     </ProjectExtensions>
     <PropertyGroup>
-        <DeviceId Condition="'$(Platform)'=='Android'">5200ee705b6ac4f9</DeviceId>
+        <DeviceId Condition="'$(Platform)'=='Android'"/>
         <DeviceId Condition="'$(Platform)'=='iOSDevice32'"/>
         <DeviceId Condition="'$(Platform)'=='iOSDevice64'"/>
         <DeviceId Condition="'$(Platform)'=='iOSSimulator'">iPhone5</DeviceId>
@@ -935,6 +935,24 @@
         </DeployFile>
     </ItemGroup>
     <ItemGroup Condition="'$(Platform)'=='Win32'">
+        <DeployFile Include="OKSterling.style" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Core\</RemoteDir>
+            <RemoteName>OKSterling.style</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Languages\POLlang.json" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Core\</RemoteDir>
+            <RemoteName>POLlang.json</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="Win32\Release\HODLER_Core.exe" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Core\</RemoteDir>
             <RemoteName>HODLER_Core.exe</RemoteName>
@@ -945,18 +963,27 @@
             <Overwrite>True</Overwrite>
             <Required>True</Required>
         </DeployFile>
-        <DeployFile Include="Languages\ENG.lang" Condition="'$(Config)'=='Release'">
+        <DeployFile Include="Languages\PT.lang" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Core\</RemoteDir>
-            <RemoteName>ENG.lang</RemoteName>
+            <RemoteName>PT.lang</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="Languages\PT.lang" Condition="'$(Config)'=='Debug'">
+        <DeployFile Include="Languages\DUT.lang" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Core\</RemoteDir>
-            <RemoteName>PT.lang</RemoteName>
+            <RemoteName>DUT.lang</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Languages\FRA.lang" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Core\</RemoteDir>
+            <RemoteName>FRA.lang</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -999,9 +1026,9 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="Win10ModernDark.Style" Condition="'$(Config)'=='Release'">
+        <DeployFile Include="Languages\ZHX.lang" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Core\</RemoteDir>
-            <RemoteName>Win10ModernDark.Style</RemoteName>
+            <RemoteName>ZHX.lang</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -1016,6 +1043,16 @@
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Win32\Debug\HODLER_Core.exe" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Core\</RemoteDir>
+            <RemoteName>HODLER_Core.exe</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
         </DeployFile>
         <DeployFile Include="Jet.style" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Core\</RemoteDir>
@@ -1053,6 +1090,15 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="Languages\JPN.lang" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Core\</RemoteDir>
+            <RemoteName>JPN.lang</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="All Platforms\Debug\HODLER_Core" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Core\</RemoteDir>
             <RemoteName>HODLER_Core.exe</RemoteName>
@@ -1063,6 +1109,15 @@
             <Overwrite>True</Overwrite>
             <Required>True</Required>
         </DeployFile>
+        <DeployFile Include="Languages\ENGlang.json" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Core\</RemoteDir>
+            <RemoteName>ENGlang.json</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="Languages\PT.lang" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Core\</RemoteDir>
             <RemoteName>PT.lang</RemoteName>
@@ -1072,9 +1127,36 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="Languages\DEU.lang" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Core\</RemoteDir>
+            <RemoteName>DEU.lang</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Languages\SPA.lang" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Core\</RemoteDir>
+            <RemoteName>SPA.lang</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="Languages\SPA.lang" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Core\</RemoteDir>
             <RemoteName>SPA.lang</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OKSterling.style" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Core\</RemoteDir>
+            <RemoteName>OKSterling.style</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -1093,15 +1175,6 @@
         <DeployFile Include="Languages\JPN.lang" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Core\</RemoteDir>
             <RemoteName>JPN.lang</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="Languages\POL.lang" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Core\</RemoteDir>
-            <RemoteName>POL.lang</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -1145,15 +1218,6 @@
             <RemoteName>libHODLER_Core.so</RemoteName>
             <DeployClass>AndroidLibnativeMipsFile</DeployClass>
             <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="Languages\ENG.lang" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>HODLER_Core\assets\internal\</RemoteDir>
-            <RemoteName>ENG.lang</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
@@ -1339,9 +1403,9 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="Languages\ENG.lang" Condition="'$(Config)'=='Release'">
+        <DeployFile Include="Languages\POLlang.json" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Core\assets\internal\</RemoteDir>
-            <RemoteName>ENG.lang</RemoteName>
+            <RemoteName>POLlang.json</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -1375,6 +1439,15 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="Languages\ENGlang.json" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Core\assets\internal\</RemoteDir>
+            <RemoteName>ENGlang.json</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="Languages\ZHX.lang" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Core\assets\internal\</RemoteDir>
             <RemoteName>ZHX.lang</RemoteName>
@@ -1398,6 +1471,15 @@
             <RemoteName>ic_launcher.png</RemoteName>
             <DeployClass>Android_LauncherIcon72</DeployClass>
             <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OKSterling.style" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Core\assets\internal\</RemoteDir>
+            <RemoteName>OKSterling.style</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
@@ -1429,6 +1511,15 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="xml\file_paths.xml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Core\res\xml\</RemoteDir>
+            <RemoteName>file_paths.xml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="$(BDS)\lib\android\release\mips\libnative-activity.so" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Core\library\lib\mips\</RemoteDir>
             <RemoteName>libHODLER_Core.so</RemoteName>
@@ -1447,11 +1538,47 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="xml\file_paths.xml" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Core\res\xml\</RemoteDir>
+            <RemoteName>file_paths.xml</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="Android\Debug\classes.dex" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Core\classes\</RemoteDir>
             <RemoteName>classes.dex</RemoteName>
             <DeployClass>AndroidClassesDexFile</DeployClass>
             <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OKSterling.style" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Core\assets\internal\</RemoteDir>
+            <RemoteName>OKSterling.style</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Languages\ENGlang.json" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Core\assets\internal\</RemoteDir>
+            <RemoteName>ENGlang.json</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Languages\POLlang.json" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Core\assets\internal\</RemoteDir>
+            <RemoteName>POLlang.json</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
@@ -1582,15 +1709,6 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="Languages\POL.lang" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Core\assets\internal\</RemoteDir>
-            <RemoteName>POL.lang</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
         <DeployFile Include="Languages\DUT.lang" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Core\assets\internal\</RemoteDir>
             <RemoteName>DUT.lang</RemoteName>
@@ -1621,15 +1739,6 @@
         <DeployFile Include="Languages\SPA.lang" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Core\assets\internal\</RemoteDir>
             <RemoteName>SPA.lang</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="Languages\POL.lang" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>HODLER_Core\assets\internal\</RemoteDir>
-            <RemoteName>POL.lang</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>

@@ -69,7 +69,7 @@ var
 begin
   result := 0.0;
   for twi in getWalletWithX(wi.X, TWalletInfo(wi).coin) do
-    result := result + TWalletInfo(wi).getFiat;
+    result := result + TWalletInfo(twi).getFiat;
 
 end;
 

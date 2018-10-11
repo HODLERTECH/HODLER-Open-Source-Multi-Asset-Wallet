@@ -1,5 +1,5 @@
 ﻿[]
-Coordinates=222,1136,59,33
+Coordinates=1192,1040,59,33
 
 [WVReceive]
 Coordinates=404,270,69,33
@@ -279,9 +279,6 @@ Coordinates=1258,309,108,51
 [ANWHeader]
 Coordinates=1636,924,73,33
 
-[Image4]
-Coordinates=140,654,49,51
-
 [TokenNameField]
 Coordinates=438,482,96,51
 
@@ -378,9 +375,6 @@ Coordinates=926,944,104,51
 [tabAnim]
 Coordinates=1936,672,55,33
 
-[Label6]
-Coordinates=15,520,46,51
-
 [BalancePanel]
 Coordinates=1936,727,81,33
 
@@ -459,9 +453,6 @@ Coordinates=1616,867,95,33
 [Layout10]
 Coordinates=1261,1040,59,33
 
-[Layout12]
-Coordinates=1192,1040,59,33
-
 [StyleBook1]
 Coordinates=1103,1040,70,33
 
@@ -473,9 +464,6 @@ Coordinates=2240,287,92,33
 
 [btnImageList]
 Coordinates=1014,1040,78,33
-
-[Label9]
-Coordinates=1016,713,46,51
 
 [Edit1]
 Coordinates=341,578,40,51
@@ -518,9 +506,6 @@ Coordinates=443,155,85,51
 
 [checkSeed]
 Coordinates=787,1040,68,33
-
-[Label3]
-Coordinates=734,828,46,51
 
 [AvailableTokensBox]
 Coordinates=2525,452,115,33
@@ -636,9 +621,6 @@ Coordinates=164,173,53,51
 [CurrencyBox]
 Coordinates=194,1040,79,33
 
-[Label8]
-Coordinates=206,732,46,51
-
 [NewCoinDescriptionPassPanel]
 Coordinates=2673,1,166,33
 
@@ -647,9 +629,6 @@ Coordinates=1857,309,116,51
 
 [lblMTHeader]
 Coordinates=418,828,76,51
-
-[Image2]
-Coordinates=181,828,49,51
 
 [Layout20]
 Coordinates=125,1040,59,33
@@ -1049,9 +1028,6 @@ Coordinates=1725,463,123,51
 [HistoryTransactionID]
 Coordinates=2177,386,118,51
 
-[Label2]
-Coordinates=122,828,46,51
-
 [arrowImg]
 Coordinates=495,654,60,51
 
@@ -1100,9 +1076,6 @@ Coordinates=2033,540,128,51
 [TopInfoConfirmedValue]
 Coordinates=597,1,131,51
 
-[Image3]
-Coordinates=401,270,49,51
-
 [Layout7]
 Coordinates=2350,1018,53,33
 
@@ -1129,12 +1102,6 @@ Coordinates=1040,828,76,51
 
 [DebugScreen]
 Coordinates=2465,1018,80,33
-
-[Label11]
-Coordinates=278,654,52,51
-
-[Image1]
-Coordinates=1243,924,49,51
 
 [Memo1]
 Coordinates=68,732,49,51
@@ -1206,4 +1173,34 @@ Coordinates=1846,1210,59,33
 Coordinates=1670,1210,71,69
 Visible=True
 ExplicitSubNodes=ItemIndex;Items.Text
+
+[HodlerLogoBackGroundImageWTI]
+Coordinates=181,828,49,51
+
+[HodlerLogoImageWTI]
+Coordinates=1243,924,49,51
+
+[HodlerLogoImageCP]
+Coordinates=140,654,49,51
+
+[HodlerLogoBackGroundImageCP]
+Coordinates=401,270,49,51
+
+[SaveSeedIsImportantStaticLabel]
+Coordinates=1016,713,46,51
+
+[HistoryDateStaticLabel]
+Coordinates=206,732,46,51
+
+[HistoryStatusStaticLabel]
+Coordinates=15,520,46,51
+
+[TransactionIDStaticLabel]
+Coordinates=278,654,52,51
+
+[DetailsAddressListStaticLabel]
+Coordinates=734,828,46,51
+
+[TransactionDetailsHeaderLabel]
+Coordinates=122,828,46,51
 
