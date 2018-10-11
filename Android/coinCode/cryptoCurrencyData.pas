@@ -74,7 +74,7 @@ var d:double;
 begin
   d:=confirmed.asDouble+unconfirmed.AsDouble;
   if d<0 then d:=0.0;
-  result := currencyConverter.calculate(d) * rate /
+  result := frmHome.currencyConverter.calculate(d) * rate /
     Math.power(10, decimals);
 
 end;

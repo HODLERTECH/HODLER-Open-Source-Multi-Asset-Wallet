@@ -115,7 +115,12 @@ uses
   WIF in 'additionalUnits\WIF.pas',
   AccountData in 'additionalUnits\AccountData.pas',
   WalletStructureData in 'WalletStructureData.pas',
-  SystemApp in 'SystemApp.pas';
+  SystemApp in 'SystemApp.pas',
+  AccountRelated in 'additionalUnits\AccountRelated.pas',
+  QRRelated in 'additionalUnits\QRRelated.pas',
+  FileManagerRelated in 'additionalUnits\FileManagerRelated.pas',
+  WalletViewRelated in 'additionalUnits\WalletViewRelated.pas',
+  BackupRelated in 'additionalUnits\BackupRelated.pas';
 
 {$R *.res}
 

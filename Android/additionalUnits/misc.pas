@@ -887,7 +887,7 @@ begin
     balLabel.text := BigIntegerBeautifulStr(crypto.confirmed +
       crypto.unconfirmed, crypto.decimals) + '    ' +
       floatToStrF(crypto.getFiat, ffFixed, 15, 2) + ' ' +
-      CurrencyConverter.symbol;
+      frmHome.CurrencyConverter.symbol;
     balLabel.TextSettings.HorzAlign := TTextAlign.Trailing;
     balLabel.Visible := true;
     balLabel.Width := 200;
@@ -912,7 +912,7 @@ begin
     price := TLabel.Create(Panel);
     price.Parent := Panel;
     price.Visible := true;
-    price.text := floatToStrF(CurrencyConverter.calculate(crypto.rate),
+    price.text := floatToStrF(frmHome.CurrencyConverter.calculate(crypto.rate),
       ffFixed, 18, 2);
     price.Align := TalignLayout.Bottom;
     price.Height := 16;
@@ -1045,7 +1045,7 @@ begin
     for line in ts do
     begin
       pair := SplitString(line);
-      CurrencyConverter.updateCurrencyRatio(pair[1], strToFloat(pair[0]));
+      frmHome.CurrencyConverter.updateCurrencyRatio(pair[1], strToFloat(pair[0]));
       pair.Free;
     end;
 
@@ -1057,18 +1057,18 @@ begin
   ts.Free;
 
   frmhome.CurrencyBox.Items.Clear;
-  for symbol in CurrencyConverter.availableCurrency.Keys do
+  for symbol in frmHome.CurrencyConverter.availableCurrency.Keys do
   begin
     frmhome.CurrencyBox.Items.Add(symbol);
   end;
   frmhome.CurrencyBox.ItemIndex := frmhome.CurrencyBox.Items.IndexOf
-    (CurrencyConverter.symbol);
+    (frmHome.CurrencyConverter.symbol);
 
   ts := TStringList.Create();
 
-  for symbol in CurrencyConverter.availableCurrency.Keys do
+  for symbol in frmHome.CurrencyConverter.availableCurrency.Keys do
   begin
-    data := floattoStr(CurrencyConverter.availableCurrency[symbol]);
+    data := floattoStr(frmHome.CurrencyConverter.availableCurrency[symbol]);
     data := data + ' ' + symbol;
     ts.Add(data);
   end;
@@ -1092,7 +1092,7 @@ begin
     for line in ts do
     begin
       pair := SplitString(line);
-      CurrencyConverter.updateCurrencyRatio(pair[1], strToFloat(pair[0]));
+      frmHome.CurrencyConverter.updateCurrencyRatio(pair[1], strToFloat(pair[0]));
       pair.Free;
     end;
 
@@ -1312,13 +1312,13 @@ var
   T: Token;
   w: TWalletInfo;
 begin
-  frmhome.lblReceiveRealCurrency.text := CurrencyConverter.symbol;
-  frmhome.lblCoinFiat.text := CurrencyConverter.symbol;
+  frmhome.lblReceiveRealCurrency.text := frmHome.CurrencyConverter.symbol;
+  frmhome.lblCoinFiat.text := frmHome.CurrencyConverter.symbol;
 
   TLabel(frmhome.FindComponent('globalBalance')).text :=
-    floatToStrF(CurrencyConverter.calculate(globalFiat), ffFixed, 9, 2);
+    floatToStrF(frmHome.CurrencyConverter.calculate(globalFiat), ffFixed, 9, 2);
   TLabel(frmhome.FindComponent('globalCurrency')).text := '         ' +
-    CurrencyConverter.symbol;
+    frmHome.CurrencyConverter.symbol;
 
   updateBalanceLabels();
 end;
@@ -3299,7 +3299,7 @@ begin
       JSonObject := TJsonObject.Create();
 
       JsonObject.AddPair('languageIndex' , intToStr(frmhome.LanguageBox.ItemIndex) );
-      JsonObject.AddPair('currency' , CurrencyConverter.symbol );
+      JsonObject.AddPair('currency' , frmHome.CurrencyConverter.symbol );
       if CurrentAccount <> nil then
         JsonObject.AddPair('lastOpen' , CurrentAccount.name )
       else
@@ -3349,7 +3349,7 @@ begin
   JSonObject := TJsonObject.Create();
 
   JsonObject.AddPair('languageIndex' , intToStr(frmhome.LanguageBox.ItemIndex) );
-  JsonObject.AddPair('currency' , CurrencyConverter.symbol );
+  JsonObject.AddPair('currency' , frmHome.CurrencyConverter.symbol );
   JsonObject.AddPair('lastOpen' , '' );
   JsonObject.AddPair('accounts' , JsonArray );
   JsonObject.AddPair('styleName', 'RT_WHITE');
@@ -3576,7 +3576,7 @@ begin
     JsonArray := TJsonArray(JsonObject.GetValue('accounts'));
 
     frmhome.LanguageBox.ItemIndex := strToInt( JsonObject.GetValue<string>('languageIndex') );
-    CurrencyConverter.setCurrency( JsonObject.GetValue<string>('currency') );
+    frmHome.CurrencyConverter.setCurrency( JsonObject.GetValue<string>('currency') );
 
     lastClosedAccount := JsonObject.GetValue<string>('lastOpen');
 
@@ -3596,7 +3596,7 @@ begin
   begin
 
     frmhome.LanguageBox.ItemIndex := strToInt(ts[0]);
-    CurrencyConverter.setCurrency(ts[1]);
+    frmHome.CurrencyConverter.setCurrency(ts[1]);
 
     lastClosedAccount := ts[2];
 
@@ -3640,7 +3640,7 @@ begin
             TLabel(fmxObj).text := BigIntegerBeautifulStr
               (cc.confirmed + cc.unconfirmed, cc.decimals) + '    ' +
               floatToStrF(cc.getFiat(), ffFixed, 15, 2) + ' ' +
-              CurrencyConverter.symbol;
+              frmHome.CurrencyConverter.symbol;
           end
           else
           begin
@@ -3649,7 +3649,7 @@ begin
             TLabel(fmxObj).text := BigIntegerBeautifulStr
               (bal.confirmed + bal.unconfirmed, cc.decimals) + '    ' +
               floatToStrF(CurrentAccount.aggregateFiats(TWalletInfo(cc)), ffFixed, 15, 2) + ' ' +
-              CurrencyConverter.symbol;
+              frmHome.CurrencyConverter.symbol;
           end;
 
         end
@@ -3659,7 +3659,7 @@ begin
           TLabel(fmxObj).text := BigIntegerBeautifulStr
             (cc.confirmed + cc.unconfirmed, cc.decimals) + '    ' +
             floatToStrF(cc.getFiat(), ffFixed, 15, 2) + ' ' +
-            CurrencyConverter.symbol;
+            frmHome.CurrencyConverter.symbol;
 
         end;
 
@@ -3670,8 +3670,8 @@ begin
       begin
         try
           TLabel(fmxObj).text :=
-            floatToStrF(CurrencyConverter.calculate(cc.rate), ffFixed, 15, 2) +
-            ' ' + CurrencyConverter.symbol + '/' + cc.shortcut;
+            floatToStrF(frmHome.CurrencyConverter.calculate(cc.rate), ffFixed, 15, 2) +
+            ' ' + frmHome.CurrencyConverter.symbol + '/' + cc.shortcut;
         finally
 
         end;

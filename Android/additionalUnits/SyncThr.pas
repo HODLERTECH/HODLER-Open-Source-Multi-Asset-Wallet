@@ -43,7 +43,7 @@ procedure parseDataForERC20(s: string; var wd: Token);
 
 implementation
 
-uses uhome, misc, coinData, Velthuis.BigIntegers, Bitcoin;
+uses uhome, misc, coinData, Velthuis.BigIntegers, Bitcoin,WalletViewRelated;
 
 procedure SynchronizeCryptoCurrency(cc: cryptoCurrency);
 var
