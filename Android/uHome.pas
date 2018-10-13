@@ -636,6 +636,14 @@ type
     PerByteFeeRatio: TRadioButton;
     PerByteFeeEdit: TEdit;
     LoadMore: TButton;
+    PrivateSendLayout: TLayout;
+    Layout12: TLayout;
+    PrivateSendSwitch: TSwitch;
+    Label3: TLabel;
+    InstantSendLayout: TLayout;
+    Layout32: TLayout;
+    InstantSendSwitch: TSwitch;
+    Label5: TLabel;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -829,6 +837,7 @@ type
     procedure SendAllFundsSwitchClick(Sender: TObject);
     procedure LoadMoreClick(Sender: TObject);
     procedure PerByteFeeEditChangeTracking(Sender: TObject);
+    procedure InstantSendSwitchClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -2269,6 +2278,39 @@ procedure TfrmHome.ImportPrivateKey(Sender: TObject);
 begin
   BackupRelated.ImportPriv(Sender);
   switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
+end;
+
+procedure TfrmHome.InstantSendSwitchClick(Sender: TObject);
+begin
+  if InstantSendSwitch.IsChecked = true then
+  begin
+    wvFee.Text := BigIntegertoFloatStr
+      (100000 * length(CurrentAccount.aggregateUTXO(CurrentCoin)),
+      CurrentCoin.decimals);
+    PerByteFeeEdit.Enabled := false;
+    FeeSpin.Enabled := false;
+    wvFee.Enabled := false;
+    AutomaticFeeRadio.IsChecked := false;
+    AutomaticFeeRadio.Enabled := false;
+    FixedFeeRadio.IsChecked := true;
+    FixedFeeRadio.Enabled := false;
+    PerByteFeeRatio.IsChecked := false;
+    PerByteFeeRatio.Enabled := false;
+  end
+  else
+  begin
+    PerByteFeeEdit.Enabled := true;
+    FeeSpin.Enabled := true;
+    wvFee.Enabled := false;
+    AutomaticFeeRadio.IsChecked := true;
+    AutomaticFeeRadio.Enabled := true;
+    FixedFeeRadio.IsChecked := false;
+    FixedFeeRadio.Enabled := true;
+    PerByteFeeRatio.IsChecked := false;
+    PerByteFeeRatio.Enabled := true;
+  end;
+
+  FeeToUSDUpdate(nil);
 end;
 
 procedure TfrmHome.IPKBackClick(Sender: TObject);

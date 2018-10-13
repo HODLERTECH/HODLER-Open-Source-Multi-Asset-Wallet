@@ -1537,7 +1537,7 @@ frmHome.LoadMore.Visible:=false;
         Panel.OnClick := frmhome.ShowHistoryDetails;
     {$ENDIF}
     holder:=THistoryHolder.Create;
-    holder.__ObjAddRef;
+    {$IFDEF ANDROID}holder.__ObjAddRef;{$ENDIF}
       Panel.TagObject:=holder;
         (Panel.TagObject as THistoryHolder).history:=hist[i];
 

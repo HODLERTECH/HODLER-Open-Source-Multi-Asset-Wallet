@@ -258,9 +258,12 @@ begin
     TX := TXBuilder.Image;
   end;
   result := TX;
-  if TX <> '' then
+  if TX <> '' then  begin
+  if frmHome.InstantSendSwitch.isChecked then
+  coin:=coin+'&mode=instant';
     result := getDataOverHTTP(HODLER_URL + 'sendTX.php?coin=' + coin +
       '&tx=' + TX);
+  end;
 end;
 
 end.

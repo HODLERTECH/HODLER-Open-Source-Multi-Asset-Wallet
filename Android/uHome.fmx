@@ -2127,7 +2127,7 @@ object frmHome: TfrmHome
                 TabOrder = 3
                 object AutomaticFeeLayout: TLayout
                   Align = Top
-                  Position.Y = 42.000000000000000000
+                  Position.Y = 84.000000000000000000
                   Size.Width = 352.000000000000000000
                   Size.Height = 32.000000000000000000
                   Size.PlatformDefault = False
@@ -2172,7 +2172,7 @@ object frmHome: TfrmHome
                 end
                 object FixedFeeLayout: TLayout
                   Align = Top
-                  Position.Y = 74.000000000000000000
+                  Position.Y = 116.000000000000000000
                   Size.Width = 352.000000000000000000
                   Size.Height = 32.000000000000000000
                   Size.PlatformDefault = False
@@ -2202,7 +2202,7 @@ object frmHome: TfrmHome
                 object LayoutPresentationFee: TLayout
                   Align = Top
                   HitTest = True
-                  Position.Y = 138.000000000000000000
+                  Position.Y = 180.000000000000000000
                   Size.Width = 352.000000000000000000
                   Size.Height = 48.000000000000000000
                   Size.PlatformDefault = False
@@ -2236,7 +2236,7 @@ object frmHome: TfrmHome
                 object SendSettingsFlowLayout: TFlowLayout
                   Align = MostTop
                   Size.Width = 352.000000000000000000
-                  Size.Height = 42.000000000000000000
+                  Size.Height = 84.000000000000000000
                   Size.PlatformDefault = False
                   TabOrder = 3
                   Justify = Center
@@ -2278,7 +2278,7 @@ object frmHome: TfrmHome
                     Size.Width = 175.000000000000000000
                     Size.Height = 42.000000000000000000
                     Size.PlatformDefault = False
-                    TabOrder = 1
+                    TabOrder = 3
                     object SwitchSendAllFundsLayout: TLayout
                       Align = FitLeft
                       Size.Width = 80.000000000000000000
@@ -2305,10 +2305,75 @@ object frmHome: TfrmHome
                       TabOrder = 1
                     end
                   end
+                  object PrivateSendLayout: TLayout
+                    Align = Fit
+                    Size.Width = 175.000000000000000000
+                    Size.Height = 42.000000000000000000
+                    Size.PlatformDefault = False
+                    TabOrder = 2
+                    object Layout12: TLayout
+                      Align = FitLeft
+                      Size.Width = 80.000000000000000000
+                      Size.Height = 42.000000000000000000
+                      Size.PlatformDefault = False
+                      TabOrder = 0
+                      object PrivateSendSwitch: TSwitch
+                        Enabled = False
+                        IsChecked = False
+                        Position.X = 8.000000000000000000
+                        Position.Y = 8.000000000000000000
+                        Size.Width = 44.000000000000000000
+                        Size.Height = 26.000000000000000000
+                        Size.PlatformDefault = False
+                        TabOrder = 0
+                        OnClick = SendAllFundsSwitchClick
+                      end
+                    end
+                    object Label3: TLabel
+                      Align = Client
+                      Size.Width = 95.000000000000000000
+                      Size.Height = 42.000000000000000000
+                      Size.PlatformDefault = False
+                      Text = 'PrivateSend'
+                      TabOrder = 1
+                    end
+                  end
+                  object InstantSendLayout: TLayout
+                    Align = Fit
+                    Size.Width = 174.000000000000000000
+                    Size.Height = 42.000000000000000000
+                    Size.PlatformDefault = False
+                    TabOrder = 1
+                    object Layout32: TLayout
+                      Align = FitLeft
+                      Size.Width = 80.000000000000000000
+                      Size.Height = 42.000000000000000000
+                      Size.PlatformDefault = False
+                      TabOrder = 0
+                      object InstantSendSwitch: TSwitch
+                        IsChecked = False
+                        Position.X = 8.000000000000000000
+                        Position.Y = 8.000000000000000000
+                        Size.Width = 44.000000000000000000
+                        Size.Height = 26.000000000000000000
+                        Size.PlatformDefault = False
+                        TabOrder = 0
+                        OnClick = InstantSendSwitchClick
+                      end
+                    end
+                    object Label5: TLabel
+                      Align = Client
+                      Size.Width = 94.000000000000000000
+                      Size.Height = 42.000000000000000000
+                      Size.PlatformDefault = False
+                      Text = 'InstantSend'
+                      TabOrder = 1
+                    end
+                  end
                 end
                 object LayoutPerByte: TLayout
                   Align = Top
-                  Position.Y = 106.000000000000000000
+                  Position.Y = 148.000000000000000000
                   Size.Width = 352.000000000000000000
                   Size.Height = 32.000000000000000000
                   Size.PlatformDefault = False
