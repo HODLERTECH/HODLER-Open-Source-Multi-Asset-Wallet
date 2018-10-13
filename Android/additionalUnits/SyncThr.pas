@@ -184,8 +184,8 @@ begin
         procedure
         begin
 
-          if PageControl.ActiveTab = walletView then
-            createHistoryList(CurrentCryptoCurrency);
+         if PageControl.ActiveTab = walletView then
+          createHistoryList(CurrentCryptoCurrency,0,lastHistCC);
 
         end);
 
@@ -272,8 +272,8 @@ begin
           Formatdatetime('dd mmm yyyy hh:mm:ss', now);
 
         duringSync := false;
-        txHistory.Enabled := true;
-        txHistory.EndUpdate;
+        //txHistory.Enabled := true;
+        //txHistory.EndUpdate;
 
       end);
 

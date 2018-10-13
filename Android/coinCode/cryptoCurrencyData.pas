@@ -24,12 +24,12 @@ type
     procedure fromJsonValue( JsonValue : TJsonValue);
 
   end;
-
+type TxHistory=array of transactionHistory;
 type
   cryptoCurrency = class
 
     creationTime: Integer;
-    history: Array of transactionHistory;
+    history: TxHistory;
     confirmed: BigInteger;
     unconfirmed: BigInteger;
     decimals: Integer;

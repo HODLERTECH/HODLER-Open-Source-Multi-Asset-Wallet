@@ -311,7 +311,7 @@ type
     ColorAnimation1: TColorAnimation;
     Layout4: TLayout;
     RefreshWalletView: TButton;
-    Layout5: TLayout;
+    LayoutPresentationFee: TLayout;
     lblFeeHeader: TLabel;
     Panel1: TPanel;
     RefreshWalletViewTimer: TTimer;
@@ -632,6 +632,10 @@ type
     Panel16: TPanel;
     PasswordInfoStaticLabel: TLabel;
     Label2: TLabel;
+    LayoutPerByte: TLayout;
+    PerByteFeeRatio: TRadioButton;
+    PerByteFeeEdit: TEdit;
+    LoadMore: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -823,6 +827,8 @@ type
     procedure HideZeroWalletsCheckBoxChange(Sender: TObject);
     procedure QRChangeTimerTimer(Sender: TObject);
     procedure SendAllFundsSwitchClick(Sender: TObject);
+    procedure LoadMoreClick(Sender: TObject);
+    procedure PerByteFeeEditChangeTracking(Sender: TObject);
 
   private
     { Private declarations }
@@ -830,13 +836,12 @@ type
     procedure GetImage();
   public
     { Public declarations }
-FScanManager: TScanManager;
+    FScanManager: TScanManager;
     FScanInProgress: Boolean;
     FFrameTake: Integer;
 {$IFDEF ANDROID}
     procedure RegisterDelphiNativeMethods();
 {$ENDIF}
-
     procedure OpenWalletView(Sender: TObject; const Point: TPointF); overload;
     procedure OpenWalletView(Sender: TObject); overload;
     procedure OpenWalletViewFromYWalletList(Sender: TObject);
@@ -885,7 +890,6 @@ FScanManager: TScanManager;
 
 procedure requestForPermission(permName: AnsiString);
 procedure switchTab(TabControl: TTabControl; TabItem: TTabItem);
-
 
 const
   SYSTEM_APP: Boolean = {$IFDEF ANDROID}false{$ELSE}false{$ENDIF};
@@ -1251,6 +1255,30 @@ begin
   OrganizeList.AniCalculations.TouchTracking := [];
 end;
 
+procedure TfrmHome.PerByteFeeEditChangeTracking(Sender: TObject);
+var
+  temp: BigInteger;
+  decimals: Integer;
+  b: BigInteger;
+begin
+  temp := curWU;
+
+  decimals := Pos('.', PerByteFeeEdit.Text);
+  if decimals = Low(PerByteFeeEdit.Text) - 1 then
+  begin
+    decimals := 0;
+    b := strToIntdef(PerByteFeeEdit.Text, 0);
+  end
+  else
+  begin
+    decimals := length(PerByteFeeEdit.Text) - decimals;
+    b := StrFloatToBigInteger(PerByteFeeEdit.Text, decimals);
+  end;
+
+  temp := (temp * b) div BigInteger.pow(10, decimals);
+  wvFee.Text := BigIntegertoFloatStr(temp, CurrentCoin.decimals);
+end;
+
 procedure TfrmHome.PopupBox1Change(Sender: TObject);
 begin
   WalletViewRelated.changeViewOrder(Sender);
@@ -1577,9 +1605,13 @@ begin
 end;
 
 procedure TfrmHome.changeFeeWay(Sender: TObject);
+var
+  temp: BigInteger;
 begin
-  if AutomaticFeeRadio.IsPressed then
+
+  if AutomaticFeeRadio.IsChecked then
   begin
+    PerByteFeeEdit.Enabled := false;
     FeeSpin.Enabled := true;
     wvFee.Enabled := false;
     if FeeSpin.Value = FeeSpin.Max then
@@ -1595,11 +1627,27 @@ begin
 
     FeeSpin.Value
   end;
+
   if FixedFeeRadio.IsPressed then
   begin
     FeeSpin.Enabled := false;
     wvFee.Enabled := true;
+    PerByteFeeEdit.Enabled := false;
+
   end;
+
+  if PerByteFeeRatio.IsPressed then
+  begin
+
+    PerByteFeeEdit.Enabled := true;
+    wvFee.Enabled := false;
+    FeeSpin.Enabled := false;
+
+    PerByteFeeEditChangeTracking(nil);
+
+  end;
+
+  FeeToUSDUpdate(nil);
 
 end;
 
@@ -2017,7 +2065,7 @@ end;
 
 procedure TfrmHome.btnQRClick(Sender: TObject);
 begin
-QRRelated.scanQR(Sender);
+  QRRelated.scanQR(Sender);
 end;
 
 procedure TfrmHome.btnGenSeedClick(Sender: TObject);
@@ -2153,6 +2201,16 @@ begin
   AccountsListPanel.Visible := false;
 end;
 
+procedure TfrmHome.LoadMoreClick(Sender: TObject);
+var
+  tmp: Single;
+begin
+
+  createHistoryList(CurrentCryptoCurrency, txHistory.ComponentCount - 1,
+    txHistory.ComponentCount + 9);
+
+end;
+
 procedure TfrmHome.notPrivTCA2Change(Sender: TObject);
 begin
   notPrivTCA1.IsChecked := notPrivTCA2.IsChecked;
@@ -2160,7 +2218,7 @@ end;
 
 procedure TfrmHome.ChangeAccountButtonClick(Sender: TObject);
 begin
-AccountRelated.changeAccount(Sender);
+  AccountRelated.changeAccount(Sender);
 end;
 
 procedure TfrmHome.HSBPasswordBackBtnClick(Sender: TObject);
@@ -2230,7 +2288,7 @@ end;
 
 procedure TfrmHome.OrganizeButtonClick(Sender: TObject);
 begin
-WalletViewRelated.OrganizeView(Sender);
+  WalletViewRelated.OrganizeView(Sender);
 end;
 
 procedure TfrmHome.ShowHideAdvancedButtonClick(Sender: TObject);
@@ -2254,15 +2312,15 @@ end;
 
 procedure TfrmHome.btnSeedGeneratedProceedClick(Sender: TObject);
 begin
-BackupRelated.splitWords(sender);
-switchTab(PageControl, checkSeed);
+  BackupRelated.splitWords(Sender);
+  switchTab(PageControl, checkSeed);
 end;
 
 procedure TfrmHome.btnOKAddNewCoinSettingsClick(Sender: TObject);
 
 begin
 
-WalletViewRelated.newCoin(Sender);
+  WalletViewRelated.newCoin(Sender);
 
 end;
 
@@ -2304,7 +2362,7 @@ end;
 
 procedure TfrmHome.btnCreateWalletClick(Sender: TObject);
 begin
-WalletViewRelated.CreateWallet(Sender);
+  WalletViewRelated.CreateWallet(Sender);
 end;
 
 procedure TfrmHome.btnChangeDescryptionOKClick(Sender: TObject);
@@ -2354,7 +2412,7 @@ end;
 
 procedure TfrmHome.btnSyncClick(Sender: TObject);
 begin
-WalletViewRelated.Synchro;
+  WalletViewRelated.Synchro;
 end;
 
 // Show available ETH wallet during adding new Token
@@ -2396,7 +2454,7 @@ end;
 
 procedure TfrmHome.btnSendClick(Sender: TObject);
 begin
-WalletViewRelated.SendClick(Sender);
+  WalletViewRelated.SendClick(Sender);
 end;
 
 procedure TfrmHome.btnOCRClick(Sender: TObject);
@@ -2501,22 +2559,22 @@ end;
 
 procedure TfrmHome.GetImage;
 begin
-QRRelated.parseCamera;
+  QRRelated.parseCamera;
 end;
 
 procedure TfrmHome.RestoreFromEncryptedQR(Sender: TObject);
 begin
-BackupRelated.RestoreEQR(Sender);
+  BackupRelated.RestoreEQR(Sender);
 end;
 
 procedure TfrmHome.FeeSpinChange(Sender: TObject);
 begin
-WalletViewRelated.calcFeeWithSpin;
+  WalletViewRelated.calcFeeWithSpin;
 end;
 
 procedure TfrmHome.FeeToUSDUpdate(Sender: TObject);
 begin
-WalletViewRelated.calcUSDFee;
+  WalletViewRelated.calcUSDFee;
 end;
 
 procedure TfrmHome.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -2529,7 +2587,7 @@ end;
 
 procedure TfrmHome.FormCreate(Sender: TObject);
 begin
-AccountRelated.InitializeHodler;
+  AccountRelated.InitializeHodler;
 end;
 
 procedure TfrmHome.FormGesture(Sender: TObject;
@@ -2666,11 +2724,9 @@ begin
 {$ENDIF}
 end;
 
-
-
 procedure TfrmHome.FormShow(Sender: TObject);
 begin
-AccountRelated.afterInitialize;
+  AccountRelated.afterInitialize;
 end;
 
 procedure TfrmHome.FormVirtualKeyboardHidden(Sender: TObject;
@@ -2700,15 +2756,28 @@ var
   FService: IFMXVirtualKeyboardService;
   FToolbarService: IFMXVirtualKeyBoardToolbarService;
   X, Y: Integer;
+  sameY: Integer;
 begin
+  Y := 0;
   if focused is TEdit then
+  begin
     if (TEdit(focused).name = 'wvAddress') or
       (TEdit(focused).name = 'receiveAddress') then
     begin
 
       exit;
     end;
-  X := (round(frmHome.Height * 0.5));
+    if (PageControl.ActiveTab = walletView) and (TEdit(focused).ReadOnly = false)
+    then
+    begin
+      Y := round((focused as TEdit).LocalToAbsolute(PointF((focused as TEdit)
+        .Position.X, (focused as TEdit).Position.Y)).Y -
+        (frmHome.Height div 3));
+      // if Y<(frmHome.Height div 3) then Y:=0;
+
+    end;
+  end;
+  X := (round(frmHome.Height * 1));
   KeyBoardLayout.Height := frmHome.Height + X;
   frmHome.ScrollBox.Align := TAlignLayout.None;
   PageControl.Align := ScrollBox.Align;
@@ -2736,6 +2805,23 @@ begin
           .Touch.InteractiveGestures := [TInteractiveGesture.Pan];
       end;
   end;
+  sameY := round(ScrollBox.ViewportPosition.Y);
+  if Y <> 0 then
+  begin
+    repeat
+      if Y > ScrollBox.ViewportPosition.Y then
+        ScrollBox.ViewportPosition :=
+          PointF(0, ScrollBox.ViewportPosition.Y + 10);
+      if Y < ScrollBox.ViewportPosition.Y then
+        ScrollBox.ViewportPosition :=
+          PointF(0, ScrollBox.ViewportPosition.Y - 10);
+      application.ProcessMessages;
+      if sameY = round(ScrollBox.ViewportPosition.Y) then
+        break;
+
+    until abs(Y - round(ScrollBox.ViewportPosition.Y)) < 15;
+  end;
+
 end;
 
 procedure TfrmHome.gathenerTimer(Sender: TObject);
@@ -2768,23 +2854,32 @@ begin
       trngBuffer := trngBuffer + floattoStr(TiltY);
     end;
 {$ENDIF}
-  GenerateSeedProgressBar.Value := trngBufferCounter div 2;
-
-  if trngBufferCounter mod 20 = 0 then
+  if PageControl.ActiveTab = walletDatCreation then
   begin
+
+    GenerateSeedProgressBar.Value := trngBufferCounter div 2;
+
+    if trngBufferCounter mod 10 = 0 then
+    begin
+      trngBuffer := GetSTrHashSHA256(trngBuffer);
+      labelForGenerating.Text := trngBuffer;
+    end;
+    if trngBufferCounter mod 200 = 0 then
+    begin
+      // 10sec of gathering random data should be enough to get unique seed
+      trngBuffer := GetSTrHashSHA256(trngBuffer + IntToStr(random($FFFFFFFF)));
+      gathener.Enabled := false;
+      if swForEncryption.IsChecked then
+        TCAIterations := 10000;
+      CreateNewAccountAndSave(AccountNameEdit.Text, pass.Text,
+        trngBuffer, false);
+    end;
+  end
+  else
+  begin
+    trngBufferCounter := 0;
     trngBuffer := GetSTrHashSHA256(trngBuffer);
-    labelForGenerating.Text := trngBuffer;
   end;
-  if trngBufferCounter mod 200 = 0 then
-  begin
-    // 10sec of gathering random data should be enough to get unique seed
-    trngBuffer := GetSTrHashSHA256(trngBuffer + IntToStr(random($FFFFFFFF)));
-    gathener.Enabled := false;
-    if swForEncryption.IsChecked then
-      TCAIterations := 10000;
-    CreateNewAccountAndSave(AccountNameEdit.Text, pass.Text, trngBuffer, false);
-  end;
-
 end;
 
 procedure TfrmHome.Image1Click(Sender: TObject);
@@ -3026,12 +3121,12 @@ end;
 
 procedure TfrmHome.SendAllFundsSwitchClick(Sender: TObject);
 begin
-walletviewrelated.sendallfunds;
+  WalletViewRelated.sendallfunds;
 end;
 
 procedure TfrmHome.SendEncryptedSeed(Sender: TObject);
 begin
-BackupRelated.SendEQR;
+  BackupRelated.SendEQR;
 end;
 
 procedure TfrmHome.SendEncryptedSeedButtonClick(Sender: TObject);
@@ -3044,7 +3139,7 @@ end;
 
 procedure TfrmHome.SendWalletFile(Sender: TObject);
 begin
-BackupRelated.SendHSB;
+  BackupRelated.SendHSB;
 end;
 
 procedure TfrmHome.SendWalletFileButtonClick(Sender: TObject);
@@ -3100,14 +3195,14 @@ end;
 // must be in the end        caused ide error
 procedure TfrmHome.APICheckCompressed(Sender: TObject);
 begin
-WalletViewRelated.importCheck;
+  WalletViewRelated.importCheck;
 end;
 
 procedure TfrmHome.ScrollKeeperTimer(Sender: TObject);
 var
   FService: IFMXVirtualKeyboardService;
 begin
-
+{$IFDEF ANDROID}
   TPlatformServices.Current.SupportsPlatformService(IFMXVirtualKeyboardService,
     IInterface(FService));
 
@@ -3115,9 +3210,13 @@ begin
     ((FService <> nil) and (not(TVirtualKeyboardState.Visible
     in FService.VirtualKeyBoardState))) then
     ScrollBox.ViewportPosition := PointF(0, 0);
+{$ENDIF}
+  // syncFont;
 end;
 
 procedure TfrmHome.RestoreFromFileButtonClick(Sender: TObject);
 begin
-BackupRelated.RestoreFromFile(Sender);
-          end; end.
+  BackupRelated.RestoreFromFile(Sender);
+end;
+
+end.

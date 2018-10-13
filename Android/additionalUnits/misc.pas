@@ -130,7 +130,10 @@ type
 const
   StrStartIteration = 1;
 {$ENDIF}
-
+type THistoryHolder= class(TObject)
+public
+history:transactionHistory;
+end;
 type
   popupWindow = class(TPopup)
   public
@@ -292,7 +295,7 @@ function fromMnemonic(input: TStringList): AnsiString; overload;
 function BitmapDataToScaledBitmap(data: TBitmapData; scale: integer): TBitmap;
 function parseQRCode(Str: AnsiString): TStringList;
 function isBech32Address(Str: AnsiString): Boolean;
-procedure createHistoryList(wallet: cryptoCurrency);
+procedure createHistoryList(wallet: cryptoCurrency;start:integer=0;stop:integer=10);
 procedure RefreshGlobalFiat();
 procedure Vibrate(ms: int64);
 procedure refreshOrderInDashBrd();
@@ -350,7 +353,7 @@ var
   isTokenDataInUse: Boolean = false;
   firstSync: Boolean = true;
   i: integer;
-
+  lastHistCC:integer;
 implementation
 
 uses Bitcoin, uHome, base58, bech32, Ethereum, coinData, strutils, secp256k1
@@ -1440,8 +1443,45 @@ begin;
   frmhome.WalletList.Repaint;
 
 end;
+function aggregateAndSortTX(CCArray:TCryptoCurrencyArray):TxHistory;
+procedure Sort(var Tab : TxHistory);
+var
+  i, j : Integer;
+  Temp : transactionHistory;
+begin
+if Length(Tab)<=2 then exit;
 
-procedure createHistoryList(wallet: cryptoCurrency);
+  for I := Low(Tab) to High(Tab) do
+  begin
+    for J := Low(Tab)+1 to High(Tab) do
+    begin
+      if strToFloatDef(Tab[j].data,0) > strToFloatDef(Tab[j-1].data,0) then
+      begin
+        Temp := Tab[j];
+        Tab[j] := Tab[j-1];
+        Tab[j-1] := Temp;
+      end;
+    end;
+  end;
+end;
+
+var i:integer;
+cc : cryptoCurrency;
+tmp:TxHistory;
+tx:transactionHistory;
+begin
+SetLength(result,0);
+SetLength(tmp,0);
+for cc in CCArray do
+  begin
+  SetLength(result,Length(tmp)+Length(cc.history));
+  Insert(cc.history,tmp,Length(tmp)-Length(cc.history));
+  end;
+Sort(tmp);
+result:=tmp;
+SetLength(tmp,0);
+end;
+procedure createHistoryList(wallet: cryptoCurrency;start:integer=0;stop:integer=10);
 var
   Panel: Tpanel;
   Image: TImage;
@@ -1453,9 +1493,16 @@ var
 
   cc : cryptoCurrency;
   CCArray : TCryptoCurrencyArray;
-
+  hist:TxHistory;
+  var tmp:single;
+  holder:THistoryHolder;
 begin
+tmp:=frmHome.txHistory.ViewportPosition.Y;
 
+lastHistCC:=stop;
+frmHome.LoadMore.TagString:='LOADMORE';
+frmHome.LoadMore.Visible:=false;
+  if start=0 then
   clearVertScrollBox(frmhome.txHistory);
 
   if wallet is tWalletInfo then
@@ -1467,27 +1514,32 @@ begin
     Setlength(ccArray , 1);
     CCArray[0] := wallet;
   end;
-
-  for cc in CCArray do
-  begin
-
-
-      for i := Length(cc.history) - 1 downto 0 do
+ hist:=aggregateAndSortTX(CCArray);
+  if start>=length(hist) then exit;
+ if length(hist)>10 then
+ frmHome.LoadMore.Visible:=true;
+ if start>stop then start:=0;
+ 
+      for i := start to stop do
       begin
+        if i>=length(hist) then exit;
 
         Panel := Tpanel.Create(frmhome.txHistory);
-        Panel.Align := TalignLayout.Top;
+        Panel.Align := TalignLayout.MostTop;
         Panel.Height := 36;
         Panel.Visible := true;
         Panel.Tag := i;
         Panel.Parent := frmhome.txHistory;
-        //Panel.Position.y := -strToIntdef(cc.history[i].data, 0);
+        Panel.Position.y := (((i*36) div 36)*36)+0.1;
     {$IFDEF ANDROID}
         Panel.OnTap := frmhome.ShowHistoryDetails;
     {$ELSE}
         Panel.OnClick := frmhome.ShowHistoryDetails;
     {$ENDIF}
-        // Panel.Tag:= wallet.history[i];
+    holder:=THistoryHolder.Create;
+    holder.__ObjAddRef;
+      Panel.TagObject:=holder;
+        (Panel.TagObject as THistoryHolder).history:=hist[i];
 
         addrLbl := TLabel.Create(Panel);
         addrLbl.Visible := true;
@@ -1496,7 +1548,7 @@ begin
         addrLbl.Height := 18;
         addrLbl.Position.x := 36;
         addrLbl.Position.y := 0;
-        addrLbl.text :=  cc.history[i].addresses[0];
+        addrLbl.text :=  hist[i].addresses[0];
         addrLbl.TextSettings.HorzAlign := TTextAlign.Leading;
 
         datalbl := TLabel.Create(Panel);
@@ -1508,7 +1560,7 @@ begin
 
         datalbl.Position.y := 18;
         datalbl.text := FormatDateTime('dd mmm yyyy hh:mm',
-          UnixToDateTime(strToIntdef(cc.history[i].data, 0)));
+          UnixToDateTime(strToIntdef(hist[i].data, 0)));
         datalbl.TextSettings.HorzAlign := TTextAlign.Leading;
 
         Image := TImage.Create(Panel);
@@ -1518,9 +1570,9 @@ begin
         Image.Position.y := 9;
         Image.Visible := true;
         Image.Parent := Panel;
-        if cc.history[i].typ = 'OUT' then
+        if hist[i].typ = 'OUT' then
           Image.Bitmap := frmhome.sendImage.Bitmap;
-        if cc.history[i].typ = 'IN' then
+        if hist[i].typ = 'IN' then
           Image.Bitmap := frmhome.receiveImage.Bitmap;
 
         lbl := TLabel.Create(Panel);
@@ -1529,10 +1581,10 @@ begin
         lbl.TextSettings.HorzAlign := TTextAlign.taTrailing;
         lbl.Visible := true;
         lbl.Parent := Panel;
-        lbl.text := BigIntegerBeautifulStr(cc.history[i].CountValues,
-          cc.decimals);
+        lbl.text := BigIntegerBeautifulStr(hist[i].CountValues,
+          wallet.decimals);
 
-        if cc.history[i].confirmation = 0 then
+        if hist[i].confirmation = 0 then
         begin
           Panel.Opacity := 0.5;
           lbl.Opacity := 0.5;
@@ -1545,17 +1597,10 @@ begin
 
 
 
-
-  end;
-
-
-  {if frmhome.txHistory.Content.ChildrenCount <> 0 then
-    for fmxObj in frmhome.txHistory.Content.Children do
-    begin
-      Tpanel(fmxObj).Position.y := -strToIntdef(wallet.history[i].data, 0);
-      inc(i);
-    end; }
-
+//frmHome.txHistory.RecalcAbsolute;
+//frmHome.txHistory.RealignContent;
+frmHome.LoadMore.Position.Y:=stop*360;
+frmHome.txHistory.ViewportPosition:=PointF(0,tmp);
 
 end;
 
@@ -2227,8 +2272,9 @@ begin
   i := VSB.ComponentCount - 1;
   while i >= 0 do
   begin
-    if VSB.Components[i].ClassType = TButton then
+    if (VSB.Components[i].ClassType = TButton) then
     begin
+    if (TButton(VSB.Components[i]).TagString<>'LOADMORE') then    
       VSB.Components[i].disposeOf;
       i := VSB.ComponentCount - 1
     end
@@ -2418,54 +2464,6 @@ begin
     end;
   end;
 end;
-
-{ procedure creatImportPrivKeyCoinList();
-  var
-  Panel: Tpanel;
-  coinName: TLabel;
-  balLabel: TLabel;
-  coinIMG: TImage;
-  begin
-  // if already generated then exit
-  if frmHome.ImportprivKeyCoinListVertScrollBox.ComponentCount > 1 then
-  exit;
-
-  for i := 0 to Length(coinData.availablecoin) - 1 do
-  begin
-
-  with frmHome.ImportprivKeyCoinListVertScrollBox do
-  begin
-  Panel := Tpanel.Create(frmHome.ImportprivKeyCoinListVertScrollBox);
-  Panel.Align := Panel.Align.alTop;
-  Panel.Height := 48;
-  Panel.Visible := true;
-  Panel.Tag := i;
-  Panel.Parent := frmHome.ImportprivKeyCoinListVertScrollBox;
-  Panel.OnClick := frmHome.importPrivCoinListPanelClick;
-
-  coinName := TLabel.Create(Panel);
-  coinName.Parent := Panel;
-  coinName.text := availablecoin[i].displayName;
-  coinName.Visible := true;
-  coinName.Width := 500;
-  coinName.Position.x := 52;
-  coinName.Position.y := 16;
-  coinName.Tag := i;
-  coinName.OnClick := frmHome.addNewWalletPanelClick;
-
-  coinIMG := TImage.Create(Panel);
-  coinIMG.Parent := Panel;
-  coinIMG.Bitmap := frmHome.ImageList1.Source[i].MultiResBitmap[0].Bitmap;
-  coinIMG.Height := 32.0;
-  coinIMG.Width := 50;
-  coinIMG.Position.x := 4;
-  coinIMG.Position.y := 8;
-  coinIMG.OnClick := frmHome.addNewWalletPanelClick;
-  coinIMG.Tag := i;
-
-  end;
-  end;
-  end; }
 
 function TStateToHEX(bb: TKeccakMaxDigest): AnsiString;
 var

@@ -141,7 +141,7 @@ begin
   with frmHome do begin
   if not isEthereum then
   begin
-    a := ((180 * length(TwalletInfo(CurrentCryptoCurrency).UTXO) +
+    a := ((180 * length(CurrentAccount.aggregateUTXO(currentCoin)) +
       (34 * 2) + 12));
     curWU := a.asInteger;
     a := (a * StrFloatToBigInteger(CurrentCoin.efee[round(FeeSpin.Value) - 1],
@@ -371,8 +371,11 @@ var
   aTask: ITask;
 begin
   if (frmHome.PageControl.ActiveTab = frmHome.walletView) then
+  begin
+    SynchronizeCryptoCurrency(CurrentCryptoCurrency);
     reloadWalletView;
-
+    exit;
+  end;
   if (SyncBalanceThr <> nil) then
   begin
     if SyncBalanceThr.Finished then
@@ -752,12 +755,14 @@ var
   wd: TwalletInfo;
   a: BigInteger;
 begin
-
+  lastHistCC:=10;
   CurrentCryptoCurrency := CryptoCurrency(TfmxObject(Sender).TagObject);
   reloadWalletView;
 with frmHome do begin
   if isEthereum or isTokenTransfer then
   begin
+
+    LayoutPerByte.Visible:=false;
     YAddresses.Visible := false;
     btnNewAddress.Visible := false;
     btnPrevAddress.Visible := false;
@@ -776,6 +781,8 @@ with frmHome do begin
   end
   else
   begin
+
+    LayoutPerByte.Visible:=true;
     YAddresses.Visible := true;
     btnNewAddress.Visible := true;
     btnPrevAddress.Visible := true;
@@ -899,7 +906,7 @@ begin
     else
       CurrentCoin := TwalletInfo(CurrentCryptoCurrency);
 
-    createHistoryList(CurrentCryptoCurrency);
+    createHistoryList(CurrentCryptoCurrency,0,lastHistCC);
 
     frmHome.wvAddress.Text := CurrentCryptoCurrency.addr;
 
@@ -1464,9 +1471,11 @@ var
 begin
   with frmHome do
   begin
-    th := CurrentCryptoCurrency.history[TfmxObject(Sender).Tag];
+        switchTab(PageControl, HistoryDetails);
+if TfmxObject(Sender).TagObject=nil then exit;
 
-    HistoryTransactionValue.Text := BigIntegertoFloatStr(th.CountValues,
+    th := THistoryHolder(TfmxObject(Sender).TagObject).history;
+     HistoryTransactionValue.Text := BigIntegertoFloatStr(th.CountValues,
       CurrentCryptoCurrency.decimals);
     if th.confirmation > 0 then
       historyTransactionConfirmation.Text := IntToStr(th.confirmation) +
@@ -1529,15 +1538,16 @@ begin
       rightLayout.Parent := Panel;
 
       valuelbl := TLabel.Create(Panel);
-      valuelbl.Align := TAlignLayout.Client;
+      valuelbl.Align := TAlignLayout.Top;
       valuelbl.Visible := true;
       valuelbl.Parent := Panel;
+      valuelbl.Position.Y:=26;
       valuelbl.Text := BigIntegertoFloatStr(th.values[i],
         CurrentCryptoCurrency.decimals);
       valuelbl.TextSettings.HorzAlign := TTextAlign.Trailing;
 
       addrlbl := TLabel.Create(Panel);
-      addrlbl.Align := TAlignLayout.Client;
+      addrlbl.Align := TAlignLayout.Top;
       addrlbl.Visible := true;
       addrlbl.Parent := Panel;
       addrlbl.Text := th.addresses[i];
@@ -1545,7 +1555,7 @@ begin
 
     end;
 
-    switchTab(PageControl, HistoryDetails);
+
   end;
 end;
 
