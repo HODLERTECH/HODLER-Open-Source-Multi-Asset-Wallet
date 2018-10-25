@@ -42,7 +42,7 @@ uses
   procedure NewHSB(path, password, accname: AnsiString);
   procedure oldHSB(path, password, accname: AnsiString);
   function isPasswordZip(path: AnsiString): Boolean;
-  procedure PKCheckPassword(Sender:TObject);
+  function PKCheckPassword(Sender:TObject): boolean;
   procedure CheckSeed(Sender:TObject);
   procedure ImportPriv(Sender:TObject);
   procedure splitWords(Sender:TObject);
@@ -249,6 +249,7 @@ begin
   Zip.Close;
   shareFile(zipPath);
   CurrentAccount.userSaveSeed := true;
+  CurrentAccount.SaveFiles();
   DeleteFile(ImgPath);
   img.free;
   Zip.free;
@@ -543,7 +544,7 @@ begin
 end;
 end;
 
-procedure PKCheckPassword(Sender:TObject);
+function PKCheckPassword(Sender:TObject): boolean;
 var
   MasterSeed, tced: AnsiString;
 var
@@ -551,6 +552,8 @@ var
   tempStr: AnsiString;
   {$IFDEF MSWINDOWS}lblPrivateKey:TMemo; {$ENDIF}
 begin
+
+  result := true;
 with frmhome do
 begin
 
@@ -564,8 +567,8 @@ tced := TCA(passwordForDecrypt.Text);
 
     if not isHex(tempStr) then
     begin
-      DecryptSeedMessage.Text := dictionary('FailedToDecrypt');
-      exit;
+      raise Exception.Create(  dictionary('FailedToDecrypt')  );
+      exit(false);
     end;
    {$IFDEF MSWINDOWS}lblPrivateKey:=PrivateKeyMemo;{$ENDIF}
     lblPrivateKey.Text := cutEveryNChar(4, tempStr);
@@ -580,11 +583,11 @@ tced := TCA(passwordForDecrypt.Text);
 
     if not isHex(MasterSeed) then
     begin
-      DecryptSeedMessage.Text := dictionary('FailedToDecrypt');
+      raise Exception.Create(  dictionary('FailedToDecrypt')  );
       wipeAnsiString(MasterSeed);
-      exit;
+      exit(false);
     end;
-
+    {$IFDEF MSWINDOWS}lblPrivateKey:=PrivateKeyMemo;{$ENDIF}
     lblPrivateKey.Text := priv256forhd(CurrentCoin.coin, CurrentCoin.X,
       CurrentCoin.Y, MasterSeed);
     lblWIFKey.Text := PrivKeyToWIF(lblPrivateKey.Text, CurrentCoin.coin <> 4,

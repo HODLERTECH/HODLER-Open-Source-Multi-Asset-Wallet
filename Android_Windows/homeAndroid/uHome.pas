@@ -572,7 +572,7 @@ type
     PrivKeyQRImage: TImage;
     Panel11: TPanel;
     Layout50: TLayout;
-    Switch1: TSwitch;
+    IsPrivKeySwitch: TSwitch;
     ImportPrivKeyStaticLabel: TLabel;
     Layout52: TLayout;
     PrivateKeySettingsLayout: TLayout;
@@ -639,6 +639,17 @@ type
     PerByteFeeRatio: TRadioButton;
     PerByteFeeEdit: TEdit;
     LoadMore: TButton;
+    RavencoinAddrTypeLayout: TLayout;
+    LegacyRavenAddrButton: TButton;
+    SegwitRavenAddrButton: TButton;
+    InstantSendLayout: TLayout;
+    Layout5: TLayout;
+    Label5: TLabel;
+    PrivateSendLayout: TLayout;
+    Label3: TLabel;
+    Layout12: TLayout;
+    Switch1: TSwitch;
+    InstantSendSwitch: TSwitch;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -810,7 +821,7 @@ type
     procedure CSBackButtonClick(Sender: TObject);
     procedure SendTransactionButtonClick(Sender: TObject);
     procedure APICheckCompressed(Sender: TObject);
-    procedure switch1Switch(Sender: TObject);
+    procedure IsPrivKeySwitchSwitch(Sender: TObject);
     procedure AccountsListPanelMouseLeave(Sender: TObject);
     procedure AccountsListPanelExit(Sender: TObject);
     procedure notPrivTCA2Change(Sender: TObject);
@@ -832,6 +843,7 @@ type
     procedure SendAllFundsSwitchClick(Sender: TObject);
     procedure LoadMoreClick(Sender: TObject);
     procedure PerByteFeeEditChangeTracking(Sender: TObject);
+    procedure InstantSendSwitchClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -1222,12 +1234,12 @@ begin
   begin
 
     OwnXEdit.Enabled := OwnXCheckBox.IsChecked;
-    Switch1.Enabled := not OwnXCheckBox.IsChecked;
+    IsPrivKeySwitch.Enabled := not OwnXCheckBox.IsChecked;
 
     if OwnXCheckBox.IsChecked then
     begin
 
-      Switch1.IsChecked := false;
+      IsPrivKeySwitch.IsChecked := false;
     end
     else
     begin
@@ -1728,8 +1740,15 @@ end;
 
 procedure TfrmHome.privateKeyPasswordCheck(Sender: TObject);
 begin
-  BackupRelated.PKCheckPassword(Sender);
-  switchTab(PageControl, ExportKeyScreen);
+   try
+    if BackupRelated.PKCheckPassword(Sender) then
+      switchTab(PageControl, ExportKeyScreen);
+  except on E: Exception do
+    begin
+      popupWindow.Create(E.Message);
+    end;
+  end;
+
 end;
 
 procedure TfrmHome.AccountsListPanelExit(Sender: TObject);
@@ -2280,6 +2299,11 @@ begin
   switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
 end;
 
+procedure TfrmHome.InstantSendSwitchClick(Sender: TObject);
+begin
+  InstantSendClick();
+end;
+
 procedure TfrmHome.IPKBackClick(Sender: TObject);
 begin
   switchTab(PageControl, Settings);
@@ -2442,7 +2466,7 @@ begin
   NewCoinDescriptionEdit.Text := '';
   OwnXEdit.Text := '';
   OwnXCheckBox.IsChecked := false;
-  Switch1.IsChecked := false;
+  IsPrivKeySwitch.IsChecked := false;
 
   switchTab(PageControl, AddNewCoin);
 end;
@@ -2597,6 +2621,7 @@ end;
 procedure TfrmHome.FormCreate(Sender: TObject);
 begin
   AccountRelated.InitializeHodler;
+  AccountsListPanel.Visible := false;
 end;
 
 procedure TfrmHome.FormGesture(Sender: TObject;
@@ -3176,9 +3201,9 @@ begin
   end;
 end;
 
-procedure TfrmHome.switch1Switch(Sender: TObject);
+procedure TfrmHome.IsPrivKeySwitchSwitch(Sender: TObject);
 begin
-  PrivateKeySettingsLayout.Visible := Switch1.IsChecked;
+  PrivateKeySettingsLayout.Visible := IsPrivKeySwitch.IsChecked;
 end;
 
 procedure TfrmHome.SearchInDashBrdButtonClick(Sender: TObject);

@@ -651,9 +651,6 @@ Coordinates=2177,1002,82,33
 [AutomaticFeeRadio]
 Coordinates=2525,782,111,33
 
-[TokenIcons]
-Coordinates=2177,1057,71,33
-
 [QRChangeTimer]
 Coordinates=2559,837,95,33
 
@@ -1188,4 +1185,7 @@ Coordinates=1016,713,46,51
 
 [TransactionDetailsHeaderLabel]
 Coordinates=122,828,46,51
+
+[TokenIcons3]
+Coordinates=2177,1057,71,33
 

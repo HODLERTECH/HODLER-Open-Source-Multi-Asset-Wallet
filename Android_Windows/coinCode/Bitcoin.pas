@@ -220,7 +220,7 @@ var
 begin
   if CurrentCoin.coin <> 4 then
   begin
-    if (CurrentCoin.coin = 0) and canSegwit(currentaccount.aggregateUTXO(from)) then
+    if ((CurrentCoin.coin = 0) or (CurrentCoin.coin = 5) ) and canSegwit(currentaccount.aggregateUTXO(from)) then
     begin
       TX := createSegwitTransaction(from, sendto, Amount, Fee, currentaccount.aggregateUTXO(from),
         MasterSeed);
@@ -258,9 +258,12 @@ begin
     TX := TXBuilder.Image;
   end;
   result := TX;
-  if TX <> '' then
+  if TX <> '' then  begin
+    if frmHome.InstantSendSwitch.isChecked then
+      coin:=coin+'&mode=instant';
     result := getDataOverHTTP(HODLER_URL + 'sendTX.php?coin=' + coin +
       '&tx=' + TX);
+  end;
 end;
 
 end.

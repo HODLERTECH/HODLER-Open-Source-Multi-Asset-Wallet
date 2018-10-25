@@ -153,7 +153,7 @@ type
     ANWHeader: TToolBar;
     lblANWHeader: TLabel;
     btnANWBack: TButton;
-    TokenIcons: TImageList;
+    TokenIcons3: TImageList;
     checkSeed: TTabItem;
     btnConfirm: TButton;
     CSHeader: TToolBar;
@@ -559,7 +559,7 @@ type
     Layout47: TLayout;
     SendDetailsLabel: TLabel;
     Layout50: TLayout;
-    Switch1: TSwitch;
+    IsPrivKeySwitch: TSwitch;
     ImportPrivKeyStaticLabel: TLabel;
     Panel11: TPanel;
     PrivateKeySettingsLayout: TLayout;
@@ -639,8 +639,20 @@ type
     privTCAPanel1: TPanel;
     PreAlphaWalletLabel: TLabel;
     notPrivTCA1: TCheckBox;
-    LoadMoreHistoryButton: TButton;
+    LoadMore: TButton;
     FindUnusedAddressButton: TButton;
+    TokenIcons: TImageList;
+    RavencoinAddrTypeLayout: TLayout;
+    LegacyRavenAddrButton: TButton;
+    SegwitRavenAddrButton: TButton;
+    PrivateSendLayout: TLayout;
+    Label2: TLabel;
+    Layout39: TLayout;
+    Switch1: TSwitch;
+    InstantSendLayout: TLayout;
+    Layout42: TLayout;
+    InstantSendSwitch: TSwitch;
+    Label5: TLabel;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -810,7 +822,7 @@ type
     procedure CheckUpdateButtonClick(Sender: TObject);
     procedure SendTransactionButtonClick(Sender: TObject);
     procedure CSBackButtonClick(Sender: TObject);
-    procedure Switch1Switch(Sender: TObject);
+    procedure IsPrivKeySwitchSwitch(Sender: TObject);
     procedure TransactionWaitForSendLinkLabelClick(Sender: TObject);
     procedure TransactionWaitForSendBackButtonClick(Sender: TObject);
     procedure DeleteAccountButtonClick(Sender: TObject);
@@ -834,10 +846,11 @@ type
     procedure backBtnDecryptSeed(Sender: TObject);
     procedure HideZeroWalletsCheckBoxChange(Sender: TObject);
     procedure notPrivTCA2Change(Sender: TObject);
-    procedure LoadMoreHistory(Sender: TObject);
+    procedure LoadMoreClick(Sender: TObject);
     procedure YAddressClick(Sender: TObject);
     procedure AccountsListPanelExit(Sender: TObject);
     procedure AccountsListPanelMouseLeave(Sender: TObject);
+    procedure InstantSendSwitchClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -967,22 +980,12 @@ uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
 {$R *.Surface.fmx MSWINDOWS}
 
 
-procedure TfrmHome.LoadMoreHistory(Sender: TObject);
+procedure TfrmHome.LoadMoreClick(Sender: TObject);
 var
   i : Integer;
 begin
-
-  HistoryMaxLength := HistoryMaxLength + 10;
-
-  for i := 0 to txHistory.Content.ChildrenCount - 1 do
-  begin
-
-    if i < frmHome.HistoryMaxLength then
-      Tpanel(frmhome.txHistory.Content.Children[i]).Visible := true;
-
-  end;
-  frmhome.LoadMoreHistoryButton.Position.Y := 1000000000;
-
+  createHistoryList(CurrentCryptoCurrency, txHistory.ComponentCount - 1,
+    txHistory.ComponentCount + 9);
 end;
 
 procedure TfrmHOme.OpenWalletViewFromYWalletList(Sender : TObject);
@@ -1256,12 +1259,12 @@ begin
   begin
 
     OwnXEdit.Enabled := OwnXCheckBox.IsChecked;
-    Switch1.Enabled := not OwnXCheckBox.IsChecked;
+    IsPrivKeySwitch.Enabled := not OwnXCheckBox.IsChecked;
 
     if OwnXCheckBox.IsChecked then
     begin
 
-      Switch1.IsChecked := false;
+      IsPrivKeySwitch.IsChecked := false;
     end
     else
     begin
@@ -1834,8 +1837,16 @@ end;
 
 procedure TfrmHome.privateKeyPasswordCheck(Sender: TObject);
 begin
-  BackupRelated.PKCheckPassword(Sender);
-  switchTab(PageControl, ExportKeyScreen);
+  try
+    if BackupRelated.PKCheckPassword(Sender) then
+      switchTab(PageControl, ExportKeyScreen);
+  except on E: Exception do
+    begin
+      popupWindow.Create(E.Message);
+    end;
+  end;
+
+
 end;
 
 procedure TfrmHome.AccountsListPanelExit(Sender: TObject);
@@ -1860,9 +1871,9 @@ begin
   ImportCoinID := newcoinID;
 
   ownXCheckBox.IsChecked := false;
-  switch1.IsChecked := false;
+  IsPrivKeySwitch.IsChecked := false;
   OwnXCheckBox.EnableD := true;
-  switch1.Enabled := true;
+  IsPrivKeySwitch.Enabled := true;
 
   PrivateKeySettingsLayout.Visible := false;
   LoadingKeyDataAniIndicator.Visible := false;
@@ -2387,6 +2398,11 @@ begin
   switchTab(PageControl, walletView);
 end;
 
+procedure TfrmHome.InstantSendSwitchClick(Sender: TObject);
+begin
+  InstantSendClick();
+end;
+
 procedure TfrmHome.IPKBackClick(Sender: TObject);
 begin
   switchTab(PageControl, Settings);
@@ -2551,8 +2567,8 @@ begin
   NewCoinDescriptionEdit.Text := '';
   OwnXEdit.Text := '';
   OwnXCheckBox.IsChecked := false;
-  Switch1.IsChecked := false;
-  switch1.Enabled := false;
+  IsPrivKeySwitch.IsChecked := false;
+  IsPrivKeySwitch.Enabled := false;
   NewCoinDescriptionPassEdit.Text := '';
   NewCoinDescriptionEdit.Text := '';
 
@@ -2718,6 +2734,7 @@ end;
 procedure TfrmHome.FormCreate(Sender: TObject);
 begin
   AccountRelated.InitializeHodler;
+  BackupInfoLabel.Position.Y := 100000;
 end;
 
 procedure TfrmHome.FormDeactivate(Sender: TObject);
@@ -2986,27 +3003,35 @@ begin
       trngBuffer := trngBuffer + floattoStr(TiltY);
     end;
 {$ENDIF}
-  GenerateSeedProgressBar.Value := trngBufferCounter div 2;
 
-  if trngBufferCounter mod 20 = 0 then 
+  if PageControl.ActiveTab = walletDatCreation then
   begin
+    GenerateSeedProgressBar.Value := trngBufferCounter div 2;
+    if trngBufferCounter mod 20 = 0 then
+    begin
+      trngBuffer := GetSTrHashSHA256(trngBuffer);
+      labelForGenerating.Text := trngBuffer;
+    end;
+    if trngBufferCounter mod 200 = 0 then
+    begin
+      // 10sec of gathering random data should be enough to get unique seed
+      trngBuffer := GetSTrHashSHA256(trngBuffer + IntToStr(random($FFFFFFFF)));
+      gathener.Enabled := false;
+
+      if swForEncryption.IsChecked then
+        TCAIterations := 10000;
+
+
+      CreateNewAccountAndSave(AccountNameEdit.Text, pass.Text, trngBuffer, false);
+
+
+     end;
+  end
+  else
+  begin
+    trngBufferCounter := 0;
     trngBuffer := GetSTrHashSHA256(trngBuffer);
-    labelForGenerating.Text := trngBuffer;
   end;
-  if trngBufferCounter mod 200 = 0 then
-  begin
-    // 10sec of gathering random data should be enough to get unique seed
-    trngBuffer := GetSTrHashSHA256(trngBuffer + IntToStr(random($FFFFFFFF)));
-    gathener.Enabled := false;
-
-    if swForEncryption.IsChecked then
-      TCAIterations := 10000;
-
-    
-    CreateNewAccountAndSave(AccountNameEdit.Text, pass.Text, trngBuffer, false);
-
-
-   end;
 
 end;
 
@@ -3365,9 +3390,9 @@ begin
   end;
 end;
 
-procedure TfrmHome.switch1Switch(Sender: TObject);
+procedure TfrmHome.IsPrivKeySwitchSwitch(Sender: TObject);
 begin
-  PrivateKeySettingsLayout.Visible := Switch1.IsChecked;
+  PrivateKeySettingsLayout.Visible := IsPrivKeySwitch.IsChecked;
 end;
 
 procedure TfrmHome.SearchInDashBrdButtonClick(Sender: TObject);

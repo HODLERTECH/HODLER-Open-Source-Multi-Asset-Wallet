@@ -336,6 +336,8 @@ procedure prepareConfirmSendTabItem();
 procedure LoadStyle(name: AnsiString);
 procedure EnlargeQRCode(img: TBitmap);
 function elevateCheckPermission(name: string): integer;
+procedure AskForBackup(delay : Integer = 0);
+
 // procedure refresh
 {$WRITEABLECONST ON}
 
@@ -373,6 +375,39 @@ var
   bitmapData: TBitmapData;
 
   /// ////////////////////////////////////////////////////////////////
+
+
+procedure AskForBackup(delay : Integer = 0);
+begin
+   Tthread.CreateAnonymousThread(
+      procedure
+      begin
+
+        sleep(delay);
+
+        Tthread.Synchronize(nil,
+          procedure
+          begin
+
+            with frmHome do
+              popupWindowYesNo.Create(
+                procedure()
+                begin
+
+                  btnDecryptSeed.OnClick := SendWalletFile;
+
+                  decryptSeedBackTabItem := PageControl.ActiveTab;
+                  PageControl.ActiveTab := descryptSeed;
+                  btnDSBack.OnClick := backBtnDecryptSeed;
+                end,
+                procedure()
+                begin
+
+                end, dictionary('CreateBackupWallet'), dictionary('Yes'),
+                dictionary('NotNow'), 1);
+          end);
+      end).Start;
+end;
 
 function elevateCheckPermission(name: string): integer;
 var
@@ -1435,19 +1470,18 @@ begin
   for ccrc in CurrentAccount.myCoins do
   begin
     globalFiat := globalFiat +
-      (((ccrc.confirmed.AsDouble + ccrc.unconfirmed.AsDouble) * ccrc.rate) /
-      Math.Power(10, ccrc.decimals));
+      Max( (((ccrc.confirmed.AsDouble + ccrc.unconfirmed.AsDouble) * ccrc.rate) /
+      Math.Power(10, ccrc.decimals)) , 0 );
   end;
 
   for ccrc in CurrentAccount.myTokens do
   begin
     globalFiat := globalFiat +
-      (((ccrc.confirmed.AsDouble + ccrc.unconfirmed.AsDouble) * ccrc.rate) /
-      Math.Power(10, ccrc.decimals));
+      Max( (((ccrc.confirmed.AsDouble + ccrc.unconfirmed.AsDouble) * ccrc.rate) /
+      Math.Power(10, ccrc.decimals)) , 0 );
   end;
 
 end;
-
 procedure refreshOrderInDashBrd();
 var
   fmxObj: TFMXObject;
@@ -1530,10 +1564,10 @@ begin
   tmp := frmHome.TxHistory.ViewportPosition.Y;
 
   lastHistCC := stop;
-  {$IFDEF ANDROID}
+  //{$IFDEF ANDROID}
   frmHome.LoadMore.TagString := 'LOADMORE';
   frmHome.LoadMore.Visible := false;
-  {$ENDIF}
+  //{$ENDIF}
   if start = 0 then
     clearVertScrollBox(frmHome.TxHistory);
 
@@ -1550,10 +1584,10 @@ begin
   hist := aggregateAndSortTX(CCArray);
   if start >= Length(hist) then
     exit;
-    {$IFDEF ANDROID}
+    //{$IFDEF ANDROID}
   if Length(hist) > 10 then
     frmHome.LoadMore.Visible := true;
-    {$ENDIF}
+    //{$ENDIF}
   if start > stop then
     start := 0;
 
@@ -1636,9 +1670,9 @@ begin
 
   // frmHome.txHistory.RecalcAbsolute;
   // frmHome.txHistory.RealignContent;
-  {$IFDEF ANDROID}
+  //{$IFDEF ANDROID}
   frmHome.LoadMore.Position.Y := stop * 360;
-  {$ENDIF}
+  //{$ENDIF}
   frmHome.TxHistory.ViewportPosition := PointF(0, tmp);
 
 end;
@@ -3368,6 +3402,9 @@ var
   Position: integer;
   i, j: integer;
 begin
+
+  //raise Exception.Create('print path');
+
   Position := 0;
 
   if ac = nil then

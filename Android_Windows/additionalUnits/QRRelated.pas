@@ -65,12 +65,13 @@ procedure changeQR(Sender: TObject);
 	  PP: Pointer;
 	  s: AnsiString;
 begin
-  with frmHome do begin
+
   if CurrentCoin=nil then exit;
   
     vPixelB := TAlphaColorRec.Black;
     vPixelW := TAlphaColorRec.white;
     QRCode := TDelphiZXingQRCode.Create();
+
 
     try
 
@@ -78,8 +79,8 @@ begin
 
       s := {$IFDEF ANDROID}'  ' +
 {$ENDIF}AvailableCoin[CurrentCoin.coin].name + ':' +
-        StringReplace(receiveAddress.Text, ' ', '', [rfReplaceAll]) + '?amount='
-        + ReceiveValue.Text + '&message=hodler';
+        StringReplace(frmhome.receiveAddress.Text, ' ', '', [rfReplaceAll]) + '?amount='
+        + frmhome.ReceiveValue.Text + '&message=hodler';
 
       QRCode.Encoding := TQRCodeEncoding(0);
       QRCode.QuietZone := 6;
@@ -114,9 +115,9 @@ begin
         QRCodeBitmap.Data := PP;
         if QRCodeBitmap.Data <> nil then
         begin
-          bmp.free;
-          bmp := BitmapDataToScaledBitmap(QRCodeBitmap, 6);
-          bmp.Unmap(QRCodeBitmap);
+          bmp.Assign(BitmapDataToScaledBitmap(QRCodeBitmap, 6));
+          //bmp := ;
+          //bmp.Unmap(QRCodeBitmap);
         end;
       end
       else
@@ -125,17 +126,24 @@ begin
       QRCode.free;
     end;
 
-    QRCodeImage.Bitmap := bmp;
+
+    if frmhome.QRCodeImage.Bitmap <> nil then
+      frmhome.QRCodeImage.Bitmap.Assign(bmp)
+    else
+    begin
+      frmhome.QRCodeImage.Bitmap := bmp;
+      exit;
+    end;
 
     try
       
-      if bmp <> nil then
+      if assigned(bmp) then
         bmp.free;
      
     except
 
     end;
-  end;
+
 end;
 
 procedure parseCamera;

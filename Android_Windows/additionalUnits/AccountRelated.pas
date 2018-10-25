@@ -165,6 +165,7 @@ begin
         end;
       end;
 
+
       switchTab(PageControl, HOME_TABITEM);
     end;
 {$IFDEF ANDROID}
@@ -219,6 +220,7 @@ begin
           TEdit(frmHome.Components[i]).KillFocusByReturn := true;
           TEdit(frmHome.Components[i]).ReturnKeyType := TReturnKeyType.Done;
         end;
+        AccountsListPanel.Visible := false;
 {$ENDIF}
     end;
     shown := true;
@@ -233,6 +235,11 @@ var
   exist: Boolean;
   i: integer;
 begin
+
+  //TThread.Synchronize(nil,procedure
+  //begin
+    TLabel(frmHome.FindComponent('globalBalance')).Text := 'Calculating...';
+  //end);
 
   try
 
@@ -329,8 +336,8 @@ begin
     frmHome.CurrencyBox.ItemIndex := frmHome.CurrencyBox.Items.IndexOf
       (frmHome.CurrencyConverter.symbol);
 
-    globalFiat := 0;
-
+    //globalFiat := 0;
+    refreshGlobalFiat();
     refreshCurrencyValue;
 
     SyncBalanceThr := SynchronizeBalanceThread.Create();
@@ -341,37 +348,12 @@ begin
   end;
   if (currentAccount.userSaveSeed = false) then
   begin
-    Tthread.CreateAnonymousThread(
-      procedure
-      begin
 
-        sleep(1000);
-
-        Tthread.Synchronize(nil,
-          procedure
-          begin
-
-            with frmHome do
-              popupWindowYesNo.Create(
-                procedure()
-                begin
-
-                  btnDecryptSeed.OnClick := SendWalletFile;
-
-                  decryptSeedBackTabItem := PageControl.ActiveTab;
-                  PageControl.ActiveTab := descryptSeed;
-                  btnDSBack.OnClick := backBtnDecryptSeed;
-                end,
-                procedure()
-                begin
-
-                end, dictionary('CreateBackupWallet'), dictionary('Yes'),
-                dictionary('NotNow'), 1);
-          end);
-      end).Start;
+    AskForBackup(1500);
 
     saveSeedInfoShowed := true;
   end;
+
   try
     refreshWalletDat;
 {$IFDEF MSWINDOWS}
@@ -423,6 +405,7 @@ var
   JSON: TJsonObject;
   WData: AnsiString;
 begin
+
   with frmHome do
   begin
 
@@ -434,6 +417,7 @@ begin
       (System.SysUtils.GetEnvironmentVariable('APPDATA'));
     HOME_TABITEM := walletView;
 {$ENDIF}
+
     syncFont;
     if FileExists(System.IOUtils.TPath.Combine(HOME_PATH, 'hodler.wallet.dat'))
     then
@@ -518,7 +502,8 @@ begin
 {$ENDIF}
 {$IFDEF WIN32 or WIN64}
     btnSSys.Visible := false;
-
+    ExportPrivKeyInfoLabel.Position.Y := 100000;
+    ChangeDescriptionInfoLabel.Position.Y := 100000;
 {$ELSE}
     btnSend.Position.y := 1000;
     setBlackBackground(AccountsListVertScrollBox.Content);
