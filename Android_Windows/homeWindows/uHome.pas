@@ -958,7 +958,7 @@ resourcestring
   QRSearchDecryted = 'QRSearchDecryted';
 
 resourcestring
-  CURRENT_VERSION = '0.2.7';
+  CURRENT_VERSION = '0.2.8';
 
 var
   LATEST_VERSION: AnsiString;
