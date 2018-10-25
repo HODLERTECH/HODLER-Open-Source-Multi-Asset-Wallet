@@ -447,8 +447,10 @@ inherited frmHome_Surface: TfrmHome_Surface
               end
               inherited Layout33: TLayout
                 Size.Width = 1064.000000000000000000
+                Size.Height = 1447.000000000000000000
                 inherited QRCodeImage: TImage
                   Size.Width = 1064.000000000000000000
+                  Size.Height = 1399.000000000000000000
                 end
                 inherited QREnlargeLabel: TLabel
                   Size.Width = 1064.000000000000000000
@@ -459,6 +461,10 @@ inherited frmHome_Surface: TfrmHome_Surface
                 inherited BCHCashAddrButton: TButton
                   Size.Width = 872.000000000000000000
                 end
+              end
+              inherited YAddresses: TLayout
+                Position.Y = 1711.000000000000000000
+                Size.Width = 1064.000000000000000000
               end
               inherited RavencoinAddrTypeLayout: TLayout
                 Size.Width = 1064.000000000000000000

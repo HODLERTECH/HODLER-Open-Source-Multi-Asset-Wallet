@@ -1575,7 +1575,7 @@ inherited frmHome_Surface: TfrmHome_Surface
       end
       inherited Layout56: TLayout
         Size.Width = 759.000000000000000000
-        Size.Height = 1682.000000000000000000
+        Size.Height = 1733.000000000000000000
         inherited lblWIFKey: TEdit
           Size.Width = 729.000000000000000000
         end
@@ -1584,15 +1584,13 @@ inherited frmHome_Surface: TfrmHome_Surface
         Position.Y = 1872.000000000000000000
         Size.Width = 759.000000000000000000
       end
-      inherited PrivateKeyMemo: TMemo
-        Size.Width = 729.000000000000000000
-        Viewport.Width = 729.000000000000000000
-        Viewport.Height = 100.000000000000000000
-      end
       inherited WIFFormatLabel: TLabel
         Size.Width = 729.000000000000000000
       end
       inherited HexFormatLabel: TLabel
+        Size.Width = 729.000000000000000000
+      end
+      inherited lblPrivateKey: TEdit
         Size.Width = 729.000000000000000000
       end
     end

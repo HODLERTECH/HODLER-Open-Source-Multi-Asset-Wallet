@@ -517,6 +517,13 @@ begin
 {$ELSE}
     DebugBtn.Visible := false;
 {$ENDIF}
+
+
+    wvAddress.TagString := 'copyable';
+    receiveAddress.TagString := 'copyable';
+    lblPrivateKey.TagString := 'copyable';
+    lblWIFKey.TagString := 'copyable';
+
   end;
 end;
 

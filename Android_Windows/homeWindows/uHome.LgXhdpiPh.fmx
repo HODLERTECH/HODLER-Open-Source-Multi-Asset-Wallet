@@ -445,7 +445,7 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
           inherited SendVertScrollBox: TVertScrollBox
             Size.Width = 129.000000000000000000
             Size.Height = 598.000000000000000000
-            Viewport.Width = 124.000000000000000000
+            Viewport.Width = 129.000000000000000000
             Viewport.Height = 598.000000000000000000
             inherited btnSend: TButton
               Size.Width = 124.000000000000000000
@@ -1411,6 +1411,9 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
                 405C11FD175C90CAE70E553C8A0000000049454E44AE426082}
             end>
         end
+        inherited CopyButtonPitStopEdit: TEdit
+          Size.Height = 32.000000000000000000
+        end
       end
     end
     inherited Settings: TTabItem
@@ -1657,7 +1660,7 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
       end
       inherited Layout56: TLayout
         Size.Width = 129.000000000000000000
-        Size.Height = 457.000000000000000000
+        Size.Height = 525.000000000000000000
         inherited lblWIFKey: TEdit
           Size.Width = 99.000000000000000000
           Size.Height = 32.000000000000000000
@@ -1667,16 +1670,15 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Position.Y = 647.000000000000000000
         Size.Width = 129.000000000000000000
       end
-      inherited PrivateKeyMemo: TMemo
-        Size.Width = 99.000000000000000000
-        Viewport.Width = 99.000000000000000000
-        Viewport.Height = 100.000000000000000000
-      end
       inherited WIFFormatLabel: TLabel
         Size.Width = 99.000000000000000000
       end
       inherited HexFormatLabel: TLabel
         Size.Width = 99.000000000000000000
+      end
+      inherited lblPrivateKey: TEdit
+        Size.Width = 99.000000000000000000
+        Size.Height = 32.000000000000000000
       end
     end
     inherited ChoseToken: TTabItem

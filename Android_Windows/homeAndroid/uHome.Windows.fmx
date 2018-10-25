@@ -453,8 +453,10 @@ inherited frmHome_Windows: TfrmHome_Windows
               end
               inherited Layout33: TLayout
                 Size.Width = 624.000000000000000000
+                Size.Height = 7.000000000000000000
                 inherited QRCodeImage: TImage
                   Size.Width = 624.000000000000000000
+                  Size.Height = 0.000000000000000000
                 end
                 inherited QREnlargeLabel: TLabel
                   Size.Width = 624.000000000000000000
@@ -465,6 +467,10 @@ inherited frmHome_Windows: TfrmHome_Windows
                 inherited BCHCashAddrButton: TButton
                   Size.Width = 432.000000000000000000
                 end
+              end
+              inherited YAddresses: TLayout
+                Position.Y = 271.000000000000000000
+                Size.Width = 624.000000000000000000
               end
               inherited RavencoinAddrTypeLayout: TLayout
                 Size.Width = 624.000000000000000000

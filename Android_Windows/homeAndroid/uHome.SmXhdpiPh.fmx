@@ -345,6 +345,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             245s
             225s)
           inherited WVBalance: TTabItem
+            Size.Width = 61.000000000000000000
             ExplicitSize.cx = 250.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited BalancePanel: TPanel
@@ -448,13 +449,12 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             end
           end
           inherited WVReceive: TTabItem
-            Size.Width = 56.000000000000000000
             ExplicitSize.cx = 125.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited ReceiveVertScrollBox: TVertScrollBox
               Size.Width = 245.000000000000000000
               Size.Height = 225.000000000000000000
-              Viewport.Width = 245.000000000000000000
+              Viewport.Width = 240.000000000000000000
               Viewport.Height = 225.000000000000000000
               inherited ReceiveAmountLayout: TLayout
                 Size.Width = 240.000000000000000000
@@ -488,8 +488,10 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
               end
               inherited Layout33: TLayout
                 Size.Width = 240.000000000000000000
+                Size.Height = 0.000000000000000000
                 inherited QRCodeImage: TImage
                   Size.Width = 240.000000000000000000
+                  Size.Height = 0.000000000000000000
                 end
                 inherited QREnlargeLabel: TLabel
                   Size.Width = 240.000000000000000000
@@ -501,6 +503,13 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
                   Size.Width = 48.000000000000000000
                 end
               end
+              inherited YAddresses: TLayout
+                Position.Y = 177.000000000000000000
+                Size.Width = 240.000000000000000000
+                inherited changeYbutton: TButton
+                  Position.X = 72.000000000000000000
+                end
+              end
               inherited RavencoinAddrTypeLayout: TLayout
                 Size.Width = 240.000000000000000000
                 inherited SegwitRavenAddrButton: TButton
@@ -510,7 +519,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             end
           end
           inherited WVSend: TTabItem
-            Size.Width = 39.000000000000000000
+            Size.Width = 61.000000000000000000
             ExplicitSize.cx = 62.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited SendVertScrollBox: TVertScrollBox
@@ -605,7 +614,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             end
           end
           inherited WVSettings: TTabItem
-            Size.Width = 65.000000000000000000
+            Size.Width = 62.000000000000000000
             ExplicitSize.cx = 64.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited btnExportPrivKey: TButton

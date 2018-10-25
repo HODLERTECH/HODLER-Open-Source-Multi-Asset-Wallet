@@ -650,6 +650,8 @@ type
     Layout12: TLayout;
     Switch1: TSwitch;
     InstantSendSwitch: TSwitch;
+    CopyButtonPitStopEdit: TEdit;
+    CopyTextButton: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -844,6 +846,8 @@ type
     procedure LoadMoreClick(Sender: TObject);
     procedure PerByteFeeEditChangeTracking(Sender: TObject);
     procedure InstantSendSwitchClick(Sender: TObject);
+    procedure FormFocusChanged(Sender: TObject);
+    procedure CopyTextButtonClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -1581,12 +1585,12 @@ begin
   if LeftStr(receiveAddress.Text, length('bitcoincash:')) = 'bitcoincash:' then
     receiveAddress.Text := RightStr(receiveAddress.Text,
       length(receiveAddress.Text) - length('bitcoincash:'));
-  receiveAddress.Text := cutEveryNChar(4, receiveAddress.Text, ' ');
+  receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar, receiveAddress.Text, ' ');
 end;
 
 procedure TfrmHome.BCHLegacyButtonClick(Sender: TObject);
 begin
-  receiveAddress.Text := cutEveryNChar(4, TwalletInfo(CurrentCryptoCurrency)
+  receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar, TwalletInfo(CurrentCryptoCurrency)
     .addr, ' ')
 end;
 
@@ -1927,14 +1931,19 @@ procedure TfrmHome.CopyPrivateKeyButtonClick(Sender: TObject);
 var
   svc: IFMXExtendedClipboardService;
 begin
-  if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, svc)
+  (*if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, svc)
   then
   begin
 
     svc.setClipboard(removeSpace(lblPrivateKey.Text));
     popupWindow.Create(dictionary('CopiedToClipboard'));
 
-  end;
+  end;*)
+end;
+
+procedure TfrmHome.CopyTextButtonClick(Sender: TObject);
+begin
+  WalletViewRelated.CopyTextButtonClick();
 end;
 
 procedure TfrmHome.CopyToClipboard(Sender: TObject;
@@ -1958,24 +1967,15 @@ begin
 
       vibrate(200);
     end;
-
-    if (Sender is TEdit) then
+     if Sender is TLabel then
     begin
 
-      if svc.GetClipboard().ToString() <> removeSpace(TEdit(Sender).Text) then
-      begin
-        svc.setClipboard(removeSpace(TEdit(Sender).Text));
-        popupWindow.Create(dictionary('CopiedToClipboard'));
-{$IFDEF ANDROID}
-        Vibrator := TJvibrator.Wrap
-          ((SharedActivityContext.getSystemService
-          (TJContext.JavaClass.VIBRATOR_SERVICE) as ILocalObject)
-          .GetObjectID());
-        Vibrator.vibrate(200);
+      svc.setClipboard(Tlabel(Sender).TagString);
+      popupWindow.Create(dictionary('CopiedToClipboard'));
 
-{$ENDIF}
-      end;
+      vibrate(200);
     end;
+
 
   end;
 
@@ -2200,7 +2200,7 @@ begin
     (TwalletInfo(CurrentCryptoCurrency).pub,
     AvailableCoin[TwalletInfo(CurrentCryptoCurrency).coin].p2pk);
 
-  receiveAddress.Text := cutEveryNChar(4, receiveAddress.Text, ' ');
+  receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar, receiveAddress.Text, ' ');
 end;
 
 procedure TfrmHome.switchCompatiblep2shButtonClick(Sender: TObject);
@@ -2208,7 +2208,7 @@ begin
   receiveAddress.Text := Bitcoin.generatep2sh(TwalletInfo(CurrentCryptoCurrency)
     .pub, AvailableCoin[TwalletInfo(CurrentCryptoCurrency).coin].p2sh);
 
-  receiveAddress.Text := cutEveryNChar(4, receiveAddress.Text, ' ');
+  receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar, receiveAddress.Text, ' ');
 end;
 
 procedure TfrmHome.SwitchSegwitp2wpkhButtonClick(Sender: TObject);
@@ -2216,7 +2216,7 @@ begin
   receiveAddress.Text := Bitcoin.generatep2wpkh
     (TwalletInfo(CurrentCryptoCurrency).pub);
 
-  receiveAddress.Text := cutEveryNChar(4, receiveAddress.Text, ' ');
+  receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar, receiveAddress.Text, ' ');
 end;
 
 procedure TfrmHome.LoadAccountPanelClick(Sender: TObject);
@@ -2622,6 +2622,11 @@ procedure TfrmHome.FormCreate(Sender: TObject);
 begin
   AccountRelated.InitializeHodler;
   AccountsListPanel.Visible := false;
+end;
+
+procedure TfrmHome.FormFocusChanged(Sender: TObject);
+begin
+  SetCopyButtonPosition;
 end;
 
 procedure TfrmHome.FormGesture(Sender: TObject;

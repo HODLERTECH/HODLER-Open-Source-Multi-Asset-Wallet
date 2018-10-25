@@ -60,6 +60,8 @@ procedure calcUSDFee;
 procedure sendAllFunds;
 procedure importCheck;
 procedure InstantSendClick;
+procedure SetCopyButtonPosition;
+procedure CopyTextButtonClick;
 
 var
   SyncOpenWallet : TThread;
@@ -70,6 +72,43 @@ uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, WalletStructureData, AccountRelated;
 
+
+procedure CopyTextButtonClick;
+var
+  svc: IFMXExtendedClipboardService;
+begin
+
+  if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, svc)
+  then
+  begin
+
+    svc.setClipboard(removeSpace(TEdit(frmhome.CopyTextButton.Parent).Text));
+    popupWindow.Create(removeSpace(TEdit(frmhome.CopyTextButton.Parent).Text) +' ' +dictionary('CopiedToClipboard'));
+
+  end;
+
+  //TEdit(frmhome.CopyTextButton.Parent).Text;
+end;
+
+procedure SetCopyButtonPosition;
+begin
+  if (frmhome.focused <> nil) and (frmhome.focused is TEdit) and (TEdit(frmhome.focused).TagString = 'copyable') then
+  begin
+
+    frmHome.CopyTextButton.Parent := TEdit(frmhome.focused);
+
+  end
+  else if (frmhome.focused is TButton) and (TButton(frmhome.focused).Name = frmhome.CopyTextButton.Name) then
+  begin
+
+  end
+  else
+  begin
+
+    frmHome.CopyTextButton.Parent := frmhome.CopyButtonPitStopEdit;
+
+  end;
+end;
 
 procedure InstantSendClick;
 begin
@@ -969,7 +1008,7 @@ begin
     lblReceiveCoinShort.Text := CurrentCryptoCurrency.shortcut + '';
     QRChangeTimerTimer(nil);
 {$IFDEF ANDROID}
-    receiveAddress.Text := cutEveryNChar(4, CurrentCryptoCurrency.addr);
+    receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar, CurrentCryptoCurrency.addr);
 {$ELSE}
     receiveAddress.Text := CurrentCryptoCurrency.addr;
 {$ENDIF}
@@ -1708,7 +1747,7 @@ begin
     begin
       Panel := TPanel.Create(HistoryTransactionVertScrollBox);
       Panel.Align := TAlignLayout.Top;
-      Panel.Height := 36;
+      Panel.Height := 42;
       Panel.Visible := true;
       Panel.Tag := i;
       Panel.TagString := th.addresses[i];
@@ -1734,6 +1773,7 @@ begin
       rightLayout.Parent := Panel;
 
       valuelbl := TLabel.Create(Panel);
+      valuelbl.Height := 21;
       valuelbl.Align := TAlignLayout.Top;
       valuelbl.Visible := true;
       valuelbl.Parent := Panel;
@@ -1741,13 +1781,30 @@ begin
       valuelbl.Text := BigIntegertoFloatStr(th.values[i],
         CurrentCryptoCurrency.decimals);
       valuelbl.TextSettings.HorzAlign := TTextAlign.Trailing;
+      valuelbl.TagString := th.addresses[i];
+      valuelbl.HitTest := true;
 
       addrlbl := TLabel.Create(Panel);
+      addrlbl.Height := 21;
       addrlbl.Align := TAlignLayout.Top;
       addrlbl.Visible := true;
       addrlbl.Parent := Panel;
       addrlbl.Text := th.addresses[i];
       addrlbl.TextSettings.HorzAlign := TTextAlign.Leading;
+      addrlbl.TagString := th.addresses[i];
+      addrlbl.HitTest := true;
+
+
+      {$IFDEF ANDRIOD}
+      valuelbl.OnGesture := CopyToClipboard;
+      valuelbl.Touch.GestureManager := GestureManager1;
+      valuelbl.Touch.InteractiveGestures := [TInteractiveGesture.DoubleTap,
+        TInteractiveGesture.LongTap];
+      addrlbl.OnGesture := CopyToClipboard;
+      addrlbl.Touch.GestureManager := GestureManager1;
+      addrlbl.Touch.InteractiveGestures := [TInteractiveGesture.DoubleTap,
+        TInteractiveGesture.LongTap];
+      {$ENDIF}
 
     end;
 

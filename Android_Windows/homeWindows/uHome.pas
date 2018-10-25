@@ -593,7 +593,6 @@ type
     Layout56: TLayout;
     CopyPrivateKeyButton: TButton;
     OrganizeDragInfoLabel: TLabel;
-    PrivateKeyMemo: TMemo;
     PopupBox1: TPopupBox;
     PerByteFeeLayout: TLayout;
     PerByteFeeRatio: TRadioButton;
@@ -653,6 +652,9 @@ type
     Layout42: TLayout;
     InstantSendSwitch: TSwitch;
     Label5: TLabel;
+    CopyTextButton: TButton;
+    lblPrivateKey: TEdit;
+    CopyButtonPitStopEdit: TEdit;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -814,7 +816,6 @@ type
     procedure SystemTimerTimer(Sender: TObject);
     procedure updateBtnClick(Sender: TObject);
     procedure BackupBackButtonClick(Sender: TObject);
-    procedure FormDeactivate(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure NoPrintScreenImageClick(Sender: TObject);
     procedure SearchTokenButtonClick(Sender: TObject);
@@ -851,6 +852,8 @@ type
     procedure AccountsListPanelExit(Sender: TObject);
     procedure AccountsListPanelMouseLeave(Sender: TObject);
     procedure InstantSendSwitchClick(Sender: TObject);
+    procedure FormFocusChanged(Sender: TObject);
+    procedure CopyTextButtonClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -2037,14 +2040,19 @@ procedure TfrmHome.CopyPrivateKeyButtonClick(Sender: TObject);
 var
   svc: IFMXExtendedClipboardService;
 begin
-  if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, svc)
+  {if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, svc)
   then
   begin
 
-    svc.setClipboard(removeSpace(PrivateKeyMemo.Text));
+    svc.setClipboard(removeSpace(lblPrivateKey.Text));
     popupWindow.Create(dictionary('CopiedToClipboard'));
 
-  end;
+  end; }
+end;
+
+procedure TfrmHome.CopyTextButtonClick(Sender: TObject);
+begin
+  WalletViewRelated.CopyTextButtonClick();
 end;
 
 procedure TfrmHome.CopyToClipboard(Sender: TObject;
@@ -2055,6 +2063,7 @@ var
 {$ENDIF}
   svc: IFMXExtendedClipboardService;
 begin
+
 
   if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, svc)
   then
@@ -2528,7 +2537,7 @@ end;
 procedure TfrmHome.btnEKSBackClick(Sender: TObject);
 begin
 
-  PrivateKeyMemo.Text := '';
+  lblPrivateKey.Text := '';
 
   WVTabControl.ActiveTab := WVBalance;
   switchTab(PageControl, walletView);
@@ -2737,8 +2746,9 @@ begin
   BackupInfoLabel.Position.Y := 100000;
 end;
 
-procedure TfrmHome.FormDeactivate(Sender: TObject);
+procedure TfrmHome.FormFocusChanged(Sender: TObject);
 begin
+  SetCopyButtonPosition;
 end;
 
 {$IFDEF ANDROID}

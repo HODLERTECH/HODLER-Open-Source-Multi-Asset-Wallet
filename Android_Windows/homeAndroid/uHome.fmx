@@ -22,6 +22,7 @@ object frmHome: TfrmHome
   OnMouseMove = FormMouseMove
   OnResize = FormResize
   OnShow = FormShow
+  OnFocusChanged = FormFocusChanged
   OnVirtualKeyboardShown = FormVirtualKeyboardShown
   OnVirtualKeyboardHidden = FormVirtualKeyboardHidden
   Touch.GestureManager = GestureManager1
@@ -255,7 +256,7 @@ object frmHome: TfrmHome
       Size.Height = 551.000000000000000000
       Size.PlatformDefault = False
       TabHeight = 49.000000000000000000
-      TabIndex = 0
+      TabIndex = 5
       TabOrder = 0
       TabPosition = None
       OnChange = closeVirtualKeyBoard
@@ -340,7 +341,7 @@ object frmHome: TfrmHome
         CustomIcon = <
           item
           end>
-        IsSelected = True
+        IsSelected = False
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -1378,7 +1379,7 @@ object frmHome: TfrmHome
         CustomIcon = <
           item
           end>
-        IsSelected = False
+        IsSelected = True
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -1462,7 +1463,7 @@ object frmHome: TfrmHome
           Size.Height = 455.000000000000000000
           Size.PlatformDefault = False
           TabHeight = 49.000000000000000000
-          TabIndex = 2
+          TabIndex = 1
           TabOrder = 1
           TabPosition = PlatformDefault
           OnChange = closeVirtualKeyBoard
@@ -1661,7 +1662,6 @@ object frmHome: TfrmHome
             object wvAddress: TEdit
               Touch.GestureManager = GestureManager1
               Touch.InteractiveGestures = [LongTap, DoubleTap]
-              OnGesture = CopyToClipboard
               Align = Top
               StyleLookup = 'transparentedit'
               TabOrder = 4
@@ -1678,7 +1678,7 @@ object frmHome: TfrmHome
             CustomIcon = <
               item
               end>
-            IsSelected = False
+            IsSelected = True
             Size.Width = 61.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
@@ -1784,7 +1784,6 @@ object frmHome: TfrmHome
               object receiveAddress: TEdit
                 Touch.GestureManager = GestureManager1
                 Touch.InteractiveGestures = [LongTap, DoubleTap]
-                OnGesture = CopyToClipboard
                 Align = Top
                 TabOrder = 1
                 KeyboardType = Alphabet
@@ -1795,6 +1794,16 @@ object frmHome: TfrmHome
                 Size.Height = 32.000000000000000000
                 Size.PlatformDefault = False
                 OnChange = receiveAddressChange
+                object CopyTextButton: TButton
+                  Align = Right
+                  Position.X = 296.000000000000000000
+                  Size.Width = 72.000000000000000000
+                  Size.Height = 32.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 0
+                  Text = 'Copy'
+                  OnClick = CopyTextButtonClick
+                end
               end
               object AddressTypelayout: TLayout
                 Align = MostTop
@@ -1841,11 +1850,11 @@ object frmHome: TfrmHome
                   MultiResBitmap = <
                     item
                     end>
-                  Align = Contents
+                  Align = Client
                   Margins.Top = 16.000000000000000000
                   Margins.Bottom = 16.000000000000000000
                   Size.Width = 368.000000000000000000
-                  Size.Height = 62.000000000000000000
+                  Size.Height = 46.000000000000000000
                   Size.PlatformDefault = False
                   OnClick = QRCodeImageClick
                 end
@@ -1944,7 +1953,7 @@ object frmHome: TfrmHome
             CustomIcon = <
               item
               end>
-            IsSelected = True
+            IsSelected = False
             Size.Width = 47.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
@@ -8765,6 +8774,15 @@ object frmHome: TfrmHome
             Position.X = 312.000000000000000000
             Position.Y = 312.000000000000000000
             Size.Width = 33.000000000000000000
+            Size.Height = 33.000000000000000000
+            Size.PlatformDefault = False
+          end
+          object CopyButtonPitStopEdit: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            TabOrder = 14
+            Position.X = 55.000000000000000000
+            Position.Y = 518.000000000000000000
+            Size.Width = 313.000000000000000000
             Size.Height = 33.000000000000000000
             Size.PlatformDefault = False
           end

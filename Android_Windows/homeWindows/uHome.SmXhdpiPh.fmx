@@ -1637,6 +1637,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
       ExplicitSize.cx = 8.000000000000000000
       ExplicitSize.cy = 8.000000000000000000
       inherited EKSHeader: TToolBar
+        Position.Y = 49.000000000000000000
         Size.Width = 200.000000000000000000
         inherited lblEKSHeader: TLabel
           Size.Width = 200.000000000000000000
@@ -1652,11 +1653,6 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
       inherited CopyPrivateKeyButton: TButton
         Position.Y = 152.000000000000000000
         Size.Width = 200.000000000000000000
-      end
-      inherited PrivateKeyMemo: TMemo
-        Size.Width = 170.000000000000000000
-        Viewport.Width = 170.000000000000000000
-        Viewport.Height = 100.000000000000000000
       end
       inherited WIFFormatLabel: TLabel
         Size.Width = 170.000000000000000000

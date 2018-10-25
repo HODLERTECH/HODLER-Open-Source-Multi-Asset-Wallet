@@ -336,7 +336,7 @@ procedure prepareConfirmSendTabItem();
 procedure LoadStyle(name: AnsiString);
 procedure EnlargeQRCode(img: TBitmap);
 function elevateCheckPermission(name: string): integer;
-procedure AskForBackup(delay : Integer = 0);
+procedure AskForBackup(delay : Integer = 0 ; afterChange : boolean = false);
 
 // procedure refresh
 {$WRITEABLECONST ON}
@@ -364,6 +364,7 @@ var
   lastHistCC: integer;
   HOME_PATH : AnsiString;
   HOME_TABITEM : TTabItem;
+  cutAddressEveryNChar : Integer = -1;
 implementation
 
 uses Bitcoin, uHome, base58, bech32, Ethereum, coinData, strutils, secp256k1
@@ -377,13 +378,21 @@ var
   /// ////////////////////////////////////////////////////////////////
 
 
-procedure AskForBackup(delay : Integer = 0);
+procedure AskForBackup(delay : Integer = 0 ;  afterChange : boolean = false );
 begin
    Tthread.CreateAnonymousThread(
+
       procedure
+      var
+        msg : AnsiString;
       begin
 
         sleep(delay);
+
+        if afterChange then
+          msg := dictionary('CreateBackupAfterChange')
+        else
+          msg := dictionary('CreateBackupWallet');
 
         Tthread.Synchronize(nil,
           procedure
@@ -403,7 +412,7 @@ begin
                 procedure()
                 begin
 
-                end, dictionary('CreateBackupWallet'), dictionary('Yes'),
+                end, msg , dictionary('Yes'),
                 dictionary('NotNow'), 1);
           end);
       end).Start;
@@ -2426,6 +2435,9 @@ function cutEveryNChar(n: integer; Str: AnsiString; sep: AnsiChar = ' ')
 var
   i, j: integer;
 begin
+
+  if n < 0 then
+    exit(Str);
   inc(n);
   result := Str;
 

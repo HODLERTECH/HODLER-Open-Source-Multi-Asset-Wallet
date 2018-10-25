@@ -448,6 +448,10 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             inherited receiveAddress: TEdit
               Size.Width = 93.000000000000000000
               Size.Height = 30.000000000000000000
+              inherited CopyTextButton: TButton
+                Position.X = 19.000000000000000000
+                Size.Height = 30.000000000000000000
+              end
             end
             inherited AddressTypelayout: TLayout
               Size.Width = 93.000000000000000000
@@ -1499,6 +1503,9 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
                 405C11FD175C90CAE70E553C8A0000000049454E44AE426082}
             end>
         end
+        inherited CopyButtonPitStopEdit: TEdit
+          Size.Height = 30.000000000000000000
+        end
       end
     end
     inherited Settings: TTabItem
@@ -1820,6 +1827,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
       ExplicitSize.cx = 8.000000000000000000
       ExplicitSize.cy = 8.000000000000000000
       inherited EKSHeader: TToolBar
+        Position.Y = 17.000000000000000000
         Size.Width = 93.000000000000000000
         Size.Height = 44.000000000000000000
         inherited lblEKSHeader: TLabel
@@ -1832,7 +1840,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
       end
       inherited Layout56: TLayout
         Size.Width = 93.000000000000000000
-        Size.Height = 482.000000000000000000
+        Size.Height = 552.000000000000000000
         inherited lblWIFKey: TEdit
           Size.Width = 63.000000000000000000
           Size.Height = 30.000000000000000000
@@ -1842,19 +1850,17 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Position.Y = 668.000000000000000000
         Size.Width = 93.000000000000000000
       end
-      inherited PrivateKeyMemo: TMemo
-        Position.Y = 61.000000000000000000
-        Size.Width = 63.000000000000000000
-        Viewport.Width = 63.000000000000000000
-        Viewport.Height = 100.000000000000000000
-      end
       inherited WIFFormatLabel: TLabel
-        Position.Y = 161.000000000000000000
+        Position.Y = 91.000000000000000000
         Size.Width = 63.000000000000000000
       end
       inherited HexFormatLabel: TLabel
-        Position.Y = 44.000000000000000000
         Size.Width = 63.000000000000000000
+      end
+      inherited lblPrivateKey: TEdit
+        Position.Y = 61.000000000000000000
+        Size.Width = 63.000000000000000000
+        Size.Height = 30.000000000000000000
       end
     end
     inherited ChoseToken: TTabItem

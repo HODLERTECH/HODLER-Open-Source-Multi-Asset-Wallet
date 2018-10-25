@@ -570,7 +570,7 @@ tced := TCA(passwordForDecrypt.Text);
       raise Exception.Create(  dictionary('FailedToDecrypt')  );
       exit(false);
     end;
-   {$IFDEF MSWINDOWS}lblPrivateKey:=PrivateKeyMemo;{$ENDIF}
+   //{$IFDEF MSWINDOWS}lblPrivateKey:=PrivateKeyMemo;{$ENDIF}
     lblPrivateKey.Text := cutEveryNChar(4, tempStr);
     lblWIFKey.Text := PrivKeyToWIF(tempStr, CurrentCoin.isCompressed,
       AvailableCoin[TwalletInfo(CurrentCoin).coin].wifByte);
@@ -587,12 +587,12 @@ tced := TCA(passwordForDecrypt.Text);
       wipeAnsiString(MasterSeed);
       exit(false);
     end;
-    {$IFDEF MSWINDOWS}lblPrivateKey:=PrivateKeyMemo;{$ENDIF}
+    //{$IFDEF MSWINDOWS}lblPrivateKey:=PrivateKeyMemo;{$ENDIF}
     lblPrivateKey.Text := priv256forhd(CurrentCoin.coin, CurrentCoin.X,
       CurrentCoin.Y, MasterSeed);
     lblWIFKey.Text := PrivKeyToWIF(lblPrivateKey.Text, CurrentCoin.coin <> 4,
       AvailableCoin[TwalletInfo(CurrentCoin).coin].wifByte);
-    // lblPrivateKey.Text := cutEveryNChar(4,lblPrivateKey.Text );
+
     wipeAnsiString(MasterSeed);
 
   end;
