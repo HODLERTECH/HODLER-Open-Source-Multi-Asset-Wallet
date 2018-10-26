@@ -64,14 +64,13 @@ procedure SetCopyButtonPosition;
 procedure CopyTextButtonClick;
 
 var
-  SyncOpenWallet : TThread;
+  SyncOpenWallet: TThread;
 
 implementation
 
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, WalletStructureData, AccountRelated;
-
 
 procedure CopyTextButtonClick;
 var
@@ -83,29 +82,32 @@ begin
   begin
 
     svc.setClipboard(removeSpace(TEdit(frmhome.CopyTextButton.Parent).Text));
-    popupWindow.Create(removeSpace(TEdit(frmhome.CopyTextButton.Parent).Text) +' ' +dictionary('CopiedToClipboard'));
+    popupWindow.Create(removeSpace(TEdit(frmhome.CopyTextButton.Parent).Text) +
+      ' ' + dictionary('CopiedToClipboard'));
 
   end;
 
-  //TEdit(frmhome.CopyTextButton.Parent).Text;
+  // TEdit(frmhome.CopyTextButton.Parent).Text;
 end;
 
 procedure SetCopyButtonPosition;
 begin
-  if (frmhome.focused <> nil) and (frmhome.focused is TEdit) and (TEdit(frmhome.focused).TagString = 'copyable') then
+  if (frmhome.focused <> nil) and (frmhome.focused is TEdit) and
+    (TEdit(frmhome.focused).TagString = 'copyable') then
   begin
 
-    frmHome.CopyTextButton.Parent := TEdit(frmhome.focused);
+    frmhome.CopyTextButton.Parent := TEdit(frmhome.focused);
 
   end
-  else if (frmhome.focused is TButton) and (TButton(frmhome.focused).Name = frmhome.CopyTextButton.Name) then
+  else if (frmhome.focused is TButton) and
+    (TButton(frmhome.focused).Name = frmhome.CopyTextButton.Name) then
   begin
 
   end
   else
   begin
 
-    frmHome.CopyTextButton.Parent := frmhome.CopyButtonPitStopEdit;
+    frmhome.CopyTextButton.Parent := frmhome.CopyButtonPitStopEdit;
 
   end;
 end;
@@ -113,7 +115,7 @@ end;
 procedure InstantSendClick;
 begin
 
-  with FrmHome do
+  with frmhome do
     if InstantSendSwitch.IsChecked = true then
     begin
       wvFee.Text := BigIntegertoFloatStr
@@ -337,10 +339,10 @@ begin
           procedure
           begin // no
 
-            tthread.CreateAnonymousThread(
+            TThread.CreateAnonymousThread(
               procedure
               begin
-                tthread.Synchronize(nil,
+                TThread.Synchronize(nil,
                   procedure
                   begin
                     if ValidateBitcoinAddress(Address) then
@@ -597,10 +599,10 @@ begin
       procedure
       begin
 
-        tthread.CreateAnonymousThread(
+        TThread.CreateAnonymousThread(
           procedure
           begin
-            tthread.Synchronize(nil,
+            TThread.Synchronize(nil,
               procedure
               begin
 
@@ -618,7 +620,7 @@ end;
 
 procedure newCoin(Sender: TObject);
 begin
-  tthread.CreateAnonymousThread(
+  TThread.CreateAnonymousThread(
     procedure
     var
       MasterSeed, tced: AnsiString;
@@ -645,7 +647,7 @@ begin
       if not isHex(MasterSeed) then
       begin
 
-        tthread.Synchronize(nil,
+        TThread.Synchronize(nil,
           procedure
           begin
             popupWindow.Create(dictionary('FailedToDecrypt'));
@@ -684,14 +686,14 @@ begin
 
         CurrentAccount.AddCoin(walletInfo);
         CreatePanel(walletInfo);
-        currentAccount.userSaveSeed := false;
-        currentAccount.SaveFiles();
+        CurrentAccount.userSaveSeed := false;
+        CurrentAccount.SaveFiles();
         askforBackup(1000);
         MasterSeed := '';
-        tthread.Synchronize(nil,
+        TThread.Synchronize(nil,
           procedure
           begin
-            switchTab(frmhome.PageControl, frmhome.walletView);
+            switchTab(frmhome.PageControl, HOME_TABITEM);
           end);
 
       end
@@ -706,7 +708,7 @@ begin
           if (length(frmhome.WIFEdit.Text) = 64) then
           begin
 
-            tthread.Synchronize(nil,
+            TThread.Synchronize(nil,
               procedure
               begin
                 if not(frmhome.HexPrivKeyCompressedRadioButton.IsChecked or
@@ -726,7 +728,7 @@ begin
           else
           begin
 
-            tthread.Synchronize(nil,
+            TThread.Synchronize(nil,
               procedure
               begin
                 popupWindow.Create('Private Key must have 64 characters');
@@ -742,7 +744,7 @@ begin
             privKeyToWif(wifToPrivKey(frmhome.WIFEdit.Text)) then
           begin
 
-            tthread.Synchronize(nil,
+            TThread.Synchronize(nil,
               procedure
               begin
                 popupWindow.Create('Wrong WIF');
@@ -777,12 +779,12 @@ begin
 
         end;
 
-        currentAccount.userSaveSeed := false;
-        currentAccount.SaveFiles();
+        CurrentAccount.userSaveSeed := false;
+        CurrentAccount.SaveFiles();
 
         askforBackup(1000);
 
-        tthread.Synchronize(nil,
+        TThread.Synchronize(nil,
           procedure
           begin
             CurrentAccount.AddCoin(wd);
@@ -796,7 +798,7 @@ begin
           SearchTokens(wd.addr);
         end;
 
-        tthread.Synchronize(nil,
+        TThread.Synchronize(nil,
           procedure
           begin
             switchTab(frmhome.PageControl, HOME_TABITEM);
@@ -804,7 +806,7 @@ begin
 
       end;
 
-      tthread.Synchronize(nil,
+      TThread.Synchronize(nil,
         procedure
         begin
           frmhome.btnSyncClick(nil);
@@ -820,7 +822,7 @@ var
 
   Button: TButton;
   i: Integer;
-
+  Control: TControl;
 begin
   with frmhome do
   begin
@@ -882,50 +884,57 @@ procedure OpenWallet(Sender: TObject);
 var
   wd: TwalletInfo;
   a: BigInteger;
+  Control: TComponent;
 begin
+
+  frmhome.TopInfoConfirmedValue.Text := ' Calculating...';
+  frmhome.TopInfoUnconfirmedValue.Text := ' Calculating...';
   lastHistCC := 10;
   CurrentCryptoCurrency := CryptoCurrency(TfmxObject(Sender).TagObject);
-
+  frmhome.InstantSendLayout.Visible :=
+    TwalletInfo(CurrentCryptoCurrency).coin = 2;
   if SyncOpenWallet <> nil then
   begin
     if not SyncOpenWallet.Finished then
     begin
       SyncOpenWallet.Terminate;
-      //SyncOpenWallet.WaitFor;
+      // SyncOpenWallet.WaitFor;
     end;
 
-    syncOpenWallet.disposeof;
-    SyncOpenWallet := Tthread.CreateAnonymousThread(procedure
-    begin
-      SynchronizeCryptoCurrency(CurrentCryptoCurrency);
-      tthread.Synchronize(nil , procedure
+    SyncOpenWallet.DisposeOf;
+    SyncOpenWallet := TThread.CreateAnonymousThread(
+      procedure
       begin
-        reloadWalletView;
+        SynchronizeCryptoCurrency(CurrentCryptoCurrency);
+        TThread.Synchronize(nil,
+          procedure
+          begin
+            reloadWalletView;
+          end);
+
       end);
-
-
-    end);
-    syncOpenWallet.FreeOnTerminate := false;
-    syncOpenWallet.Start;
+    SyncOpenWallet.FreeOnTerminate := false;
+    SyncOpenWallet.Start;
   end
   else
   begin
 
-    SyncOpenWallet := Tthread.CreateAnonymousThread(procedure
-    begin
-
-      SynchronizeCryptoCurrency(CurrentCryptoCurrency);
-      tthread.Synchronize(nil , procedure
+    SyncOpenWallet := TThread.CreateAnonymousThread(
+      procedure
       begin
-        reloadWalletView;
-      end);
 
-    end);
-    syncOpenWallet.FreeOnTerminate := false;
-    syncOpenWallet.Start;
+        SynchronizeCryptoCurrency(CurrentCryptoCurrency);
+        TThread.Synchronize(nil,
+          procedure
+          begin
+            reloadWalletView;
+          end);
+
+      end);
+    SyncOpenWallet.FreeOnTerminate := false;
+    SyncOpenWallet.Start;
 
   end;
-
 
   reloadWalletView;
 
@@ -963,12 +972,12 @@ begin
     else
     begin
 
-      if (CurrentCoin.x <> -1) and (CurrentCoin.y <> -1) then
+      if (CurrentCoin.X <> -1) and (CurrentCoin.Y <> -1) then
         YAddresses.Visible := true
       else
-        Yaddresses.Visible := false;
-      InstantSendLayout.Visible := CurrentCoin.coin = 2;
-      if currentcoin.coin = 2 then
+        YAddresses.Visible := false;
+
+      if CurrentCoin.coin = 2 then
       begin
         SendSettingsFlowLayout.Height := 84;
         TransactionFeeLayout.Height := 228;
@@ -982,6 +991,14 @@ begin
       InstantSendSwitch.IsChecked := false;
 {$IFDEF ANDROID}
       LayoutPerByte.Visible := true;
+      LayoutPerByte.Position.Y := 196;
+      LayoutPresentationFee.Position.Y := 228;
+      LayoutPresentationFee.Align := TAlignLayout.Top;
+      LayoutPresentationFee.RecalcAbsoluteNow;
+      QRCodeImage.Position.Y := 16;
+      QRCodeImage.Size.Height := 256;
+      TransactionFeeLayout.RecalcUpdateRect;
+      TransactionFeeLayout.Repaint;
 {$ELSE}
       PerByteFeeLayout.Visible := true;
 {$ENDIF}
@@ -993,7 +1010,10 @@ begin
     end;
     if wvFee.Text = '' then
       wvFee.Text := '0';
-
+    TransactionFeeLayout.BeginUpdate;
+    TransactionFeeLayout.RecalcUpdateRect;
+    TransactionFeeLayout.Repaint;
+    TransactionFeeLayout.EndUpdate;
     wvAmount.Text := BigIntegertoFloatStr(0, CurrentCryptoCurrency.decimals);
     ReceiveValue.Text := BigIntegertoFloatStr(0,
       CurrentCryptoCurrency.decimals);
@@ -1008,7 +1028,8 @@ begin
     lblReceiveCoinShort.Text := CurrentCryptoCurrency.shortcut + '';
     QRChangeTimerTimer(nil);
 {$IFDEF ANDROID}
-    receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar, CurrentCryptoCurrency.addr);
+    receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar,
+      CurrentCryptoCurrency.addr);
 {$ELSE}
     receiveAddress.Text := CurrentCryptoCurrency.addr;
 {$ENDIF}
@@ -1226,7 +1247,7 @@ begin
         procedure
         begin
 
-          tthread.CreateAnonymousThread(
+          TThread.CreateAnonymousThread(
             procedure
             begin
               switchTab(PageControl, walletView);
@@ -1258,13 +1279,13 @@ begin
       end;
     end;
 
-    tthread.CreateAnonymousThread(
+    TThread.CreateAnonymousThread(
       procedure
       var
         ans: AnsiString;
       begin
 
-        tthread.Synchronize(nil,
+        TThread.Synchronize(nil,
           procedure
           begin
             TransactionWaitForSendAniIndicator.Visible := true;
@@ -1278,11 +1299,11 @@ begin
           end);
 
         ans := sendCoinsTO(CurrentCoin, Address, amount, fee, MasterSeed,
-          AvailableCoin[CurrentCoin.coin].name);
+          AvailableCoin[CurrentCoin.coin].Name);
 
         SynchronizeCryptoCurrency(CurrentCryptoCurrency);
 
-        tthread.Synchronize(nil,
+        TThread.Synchronize(nil,
           procedure
           var
             ts: TStringList;
@@ -1295,10 +1316,11 @@ begin
             if LeftStr(ans, length('Transaction sent')) = 'Transaction sent'
             then
             begin
-              tthread.CreateAnonymousThread(procedure
-              begin
-                SynchronizeCryptoCurrency(CurrentCryptoCurrency);
-              end).Start;
+              TThread.CreateAnonymousThread(
+                procedure
+                begin
+                  SynchronizeCryptoCurrency(CurrentCryptoCurrency);
+                end).Start;
               TransactionWaitForSendLinkLabel.Text :=
                 'Click here to see details in Explorer';
               TransactionWaitForSendDetailsLabel.Text := 'Transaction sent';
@@ -1367,7 +1389,7 @@ begin
 
       coinName := TLabel.Create(frmhome.AvailableTokensBox);
       coinName.Parent := Panel;
-      coinName.Text := Token.availableToken[i].name;
+      coinName.Text := Token.availableToken[i].Name;
       coinName.Visible := true;
       coinName.Width := 500;
       coinName.Position.X := 52;
@@ -1468,7 +1490,7 @@ begin
 
     clearVertScrollBox(WalletList);
 
-    lastClosedAccount := CurrentAccount.name;
+    lastClosedAccount := CurrentAccount.Name;
     refreshWalletDat();
 
     TLabel(frmhome.FindComponent('globalBalance')).Text := '0.00';
@@ -1525,12 +1547,12 @@ var
     adesc, bdesc: AnsiString;
   begin
     if a.description = '' then
-      adesc := a.name
+      adesc := a.Name
     else
       adesc := a.description;
 
     if b.description = '' then
-      bdesc := b.name
+      bdesc := b.Name
     else
       bdesc := b.description;
 
@@ -1734,7 +1756,7 @@ begin
     begin
       fmxObject := HistoryTransactionVertScrollBox.Content.Children[i];
 
-      if LeftStr(fmxObject.name, length('HistoryValueAddressPanel_')) = 'HistoryValueAddressPanel_'
+      if LeftStr(fmxObject.Name, length('HistoryValueAddressPanel_')) = 'HistoryValueAddressPanel_'
       then
       begin
         fmxObject.DisposeOf;
@@ -1751,7 +1773,7 @@ begin
       Panel.Visible := true;
       Panel.Tag := i;
       Panel.TagString := th.addresses[i];
-      Panel.name := 'HistoryValueAddressPanel_' + IntToStr(i);
+      Panel.Name := 'HistoryValueAddressPanel_' + IntToStr(i);
       Panel.Parent := HistoryTransactionVertScrollBox;
       Panel.Position.Y := 1000 + Panel.Height * i;
 {$IFDEF ANDRIOD}
@@ -1794,8 +1816,7 @@ begin
       addrlbl.TagString := th.addresses[i];
       addrlbl.HitTest := true;
 
-
-      {$IFDEF ANDRIOD}
+{$IFDEF ANDRIOD}
       valuelbl.OnGesture := CopyToClipboard;
       valuelbl.Touch.GestureManager := GestureManager1;
       valuelbl.Touch.InteractiveGestures := [TInteractiveGesture.DoubleTap,
@@ -1804,8 +1825,7 @@ begin
       addrlbl.Touch.GestureManager := GestureManager1;
       addrlbl.Touch.InteractiveGestures := [TInteractiveGesture.DoubleTap,
         TInteractiveGesture.LongTap];
-      {$ENDIF}
-
+{$ENDIF}
     end;
 
     switchTab(PageControl, HistoryDetails);
@@ -1895,158 +1915,157 @@ begin
           if newcoinID <> 4 then
           begin
 
-            {tthread.CreateAnonymousThread(
+            { tthread.CreateAnonymousThread(
               procedure
               var
-                comkey: AnsiString;
-                notkey: AnsiString;
-                WData: AnsiString;
-                ts: TStringList;
-                wd: TwalletInfo;
-                request: AnsiString;
-              begin  }
+              comkey: AnsiString;
+              notkey: AnsiString;
+              WData: AnsiString;
+              ts: TStringList;
+              wd: TwalletInfo;
+              request: AnsiString;
+              begin }
 
-                comkey := secp256k1_get_public(WIFEdit.Text, false);
-                notkey := secp256k1_get_public(WIFEdit.Text, true);
+            comkey := secp256k1_get_public(WIFEdit.Text, false);
+            notkey := secp256k1_get_public(WIFEdit.Text, true);
 
-                wd := TwalletInfo.Create(newcoinID, -1, -1,
-                  Bitcoin_PublicAddrToWallet(comkey,
-                  AvailableCoin[newcoinID].p2pk), 'Imported');
-                wd.pub := comkey;
-                request := HODLER_URL + 'getSegwitBalance.php?coin=' +
-                  AvailableCoin[wd.coin].name + '&' + segwitParameters(wd);
-                WData := getDataOverHTTP(request);
-                ts := TStringList.Create();
-                ts.Text := WData;
-                if strToFloatDef(ts[0], 0) + strToFloatDef(ts[1], 0) = 0 then
-                begin
-                  WData := getDataOverHTTP(HODLER_URL +
-                    'getSegwitHistory.php?coin=' + AvailableCoin[wd.coin].name +
-                    '&' + segwitParameters(wd));
+            wd := TwalletInfo.Create(newcoinID, -1, -1,
+              Bitcoin_PublicAddrToWallet(comkey, AvailableCoin[newcoinID].p2pk),
+              'Imported');
+            wd.pub := comkey;
+            request := HODLER_URL + 'getSegwitBalance.php?coin=' + AvailableCoin
+              [wd.coin].Name + '&' + segwitParameters(wd);
+            WData := getDataOverHTTP(request);
+            ts := TStringList.Create();
+            ts.Text := WData;
+            if strToFloatDef(ts[0], 0) + strToFloatDef(ts[1], 0) = 0 then
+            begin
+              WData := getDataOverHTTP(HODLER_URL + 'getSegwitHistory.php?coin='
+                + AvailableCoin[wd.coin].Name + '&' + segwitParameters(wd));
 
-                  if length(WData) > 10 then
-                  begin
+              if length(WData) > 10 then
+              begin
 
-                    tthread.Synchronize(nil,
-                      procedure
-                      begin
-                        HexPrivKeyCompressedRadioButton.IsChecked := true;
-                        ts.free;
-                        ts := nil;
-                        wd.free;
-                        wd := nil;
-                        exit;
-                      end);
-
-                  end;
-                end
-                else
-                begin
-                  tthread.Synchronize(nil,
-                    procedure
-                    begin
-                      HexPrivKeyCompressedRadioButton.IsChecked := true;
-                      ts.free;
-                      ts := nil;
-                      wd.free;
-                      wd := nil;
-                      exit;
-                    end);
-                end;
-                if ts <> nil then
-                  ts.free;
-                if wd <> nil then
-                  wd.free;
-
-                wd := TwalletInfo.Create(newcoinID, -1, -1,
-                  Bitcoin_PublicAddrToWallet(notkey,
-                  AvailableCoin[newcoinID].p2pk), '');
-                wd.pub := comkey;
-
-                WData := getDataOverHTTP(HODLER_URL + 'getBalance.php?coin=' +
-                  AvailableCoin[wd.coin].name + '&address=' + wd.addr);
-                ts := TStringList.Create();
-                ts.Text := WData;
-
-                if strToFloatDef(ts[0], 0) + strToFloatDef(ts[1], 0) = 0 then
-                begin
-                  WData := getDataOverHTTP(HODLER_URL + 'getHistory.php?coin=' +
-                    AvailableCoin[wd.coin].name + '&address=' + wd.addr);
-                  if length(WData) > 10 then
-                  begin
-                    tthread.Synchronize(nil,
-                      procedure
-                      begin
-                        HexPrivKeyNotCompressedRadioButton.IsChecked := true;
-                        ts.free;
-                        ts := nil;
-                        wd.free;
-                        wd := nil;
-                        exit; // +
-                      end);
-                  end;
-                end
-                else
-                begin
-                  tthread.Synchronize(nil,
-                    procedure
-                    begin
-                      HexPrivKeyNotCompressedRadioButton.IsChecked := true;
-                      ts.free;
-                      ts := nil;
-                      wd.free;
-                      wd := nil;
-                      exit;
-                    end);
-                end;
-                if ts <> nil then
-                  ts.free;
-                if wd <> nil then
-                  wd.free;
-
-                tthread.Synchronize(nil,
+                TThread.Synchronize(nil,
                   procedure
                   begin
-                    LoadingKeyDataAniIndicator.Enabled := false;
-                    LoadingKeyDataAniIndicator.Visible := false;
-                    Layout31.Visible := true;
+                    HexPrivKeyCompressedRadioButton.IsChecked := true;
+                    ts.free;
+                    ts := nil;
+                    wd.free;
+                    wd := nil;
+                    exit;
                   end);
 
-              //end).Start();
+              end;
+            end
+            else
+            begin
+              TThread.Synchronize(nil,
+                procedure
+                begin
+                  HexPrivKeyCompressedRadioButton.IsChecked := true;
+                  ts.free;
+                  ts := nil;
+                  wd.free;
+                  wd := nil;
+                  exit;
+                end);
+            end;
+            if ts <> nil then
+              ts.free;
+            if wd <> nil then
+              wd.free;
+
+            wd := TwalletInfo.Create(newcoinID, -1, -1,
+              Bitcoin_PublicAddrToWallet(notkey,
+              AvailableCoin[newcoinID].p2pk), '');
+            wd.pub := comkey;
+
+            WData := getDataOverHTTP(HODLER_URL + 'getBalance.php?coin=' +
+              AvailableCoin[wd.coin].Name + '&address=' + wd.addr);
+            ts := TStringList.Create();
+            ts.Text := WData;
+
+            if strToFloatDef(ts[0], 0) + strToFloatDef(ts[1], 0) = 0 then
+            begin
+              WData := getDataOverHTTP(HODLER_URL + 'getHistory.php?coin=' +
+                AvailableCoin[wd.coin].Name + '&address=' + wd.addr);
+              if length(WData) > 10 then
+              begin
+                TThread.Synchronize(nil,
+                  procedure
+                  begin
+                    HexPrivKeyNotCompressedRadioButton.IsChecked := true;
+                    ts.free;
+                    ts := nil;
+                    wd.free;
+                    wd := nil;
+                    exit; // +
+                  end);
+              end;
+            end
+            else
+            begin
+              TThread.Synchronize(nil,
+                procedure
+                begin
+                  HexPrivKeyNotCompressedRadioButton.IsChecked := true;
+                  ts.free;
+                  ts := nil;
+                  wd.free;
+                  wd := nil;
+                  exit;
+                end);
+            end;
+            if ts <> nil then
+              ts.free;
+            if wd <> nil then
+              wd.free;
+
+            TThread.Synchronize(nil,
+              procedure
+              begin
+                LoadingKeyDataAniIndicator.Enabled := false;
+                LoadingKeyDataAniIndicator.Visible := false;
+                Layout31.Visible := true;
+              end);
+
+            // end).Start();
 
             exit;
           end;
           // Parsing for ETH
           if newcoinID = 4 then
           begin
-           { tthread.CreateAnonymousThread(
+            { tthread.CreateAnonymousThread(
               procedure
               var
-                comkey: AnsiString;
-                notkey: AnsiString;
-                StrData: AnsiString;
-                ts: TStringList;
-                wd: TwalletInfo;
-                request: AnsiString;
+              comkey: AnsiString;
+              notkey: AnsiString;
+              StrData: AnsiString;
+              ts: TStringList;
+              wd: TwalletInfo;
+              request: AnsiString;
               begin }
-                comkey := secp256k1_get_public(WIFEdit.Text, true);
+            comkey := secp256k1_get_public(WIFEdit.Text, true);
 
-                wd := TwalletInfo.Create(newcoinID, -1, -1,
-                  Ethereum_PublicAddrToWallet(comkey), 'Imported');
-                wd.pub := comkey;
+            wd := TwalletInfo.Create(newcoinID, -1, -1,
+              Ethereum_PublicAddrToWallet(comkey), 'Imported');
+            wd.pub := comkey;
 
-                tthread.Synchronize(nil,
-                  procedure
-                  begin
-                    LoadingKeyDataAniIndicator.Enabled := false;
-                    LoadingKeyDataAniIndicator.Visible := false;
-                    Layout31.Visible := true;
-                    HexPrivKeyNotCompressedRadioButton.IsChecked := true;
-                  end);
+            TThread.Synchronize(nil,
+              procedure
+              begin
+                LoadingKeyDataAniIndicator.Enabled := false;
+                LoadingKeyDataAniIndicator.Visible := false;
+                Layout31.Visible := true;
+                HexPrivKeyNotCompressedRadioButton.IsChecked := true;
+              end);
 
-                wd.free;
+            wd.free;
 
-              //end).Start();
+            // end).Start();
             exit;
 
           end;

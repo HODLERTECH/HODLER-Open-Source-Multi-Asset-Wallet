@@ -2861,14 +2861,6 @@ begin
   if Pos('Transport endpoint is not connected', aResult) > 0 then
     switch := true;
 
-  if (Pos(HODLER_URL, aURL) > 0) and (switch) then
-  begin
-    switch := true;
-    aURL := StringReplace(aURL, HODLER_URL, HODLER_URL2, [rfReplaceAll]);
-    tmp := HODLER_URL2;
-    HODLER_URL2 := HODLER_URL;
-    HODLER_URL := tmp;
-  end;
   if (Pos(HODLER_ETH, aURL) > 0) and (switch) then
   begin
     switch := true;
@@ -2892,7 +2884,7 @@ begin
     result := loadCache(urlHash);
   end;
   try
-    if (result = 'NOCACHE') or (not firstSync) then
+    if ((result = 'NOCACHE') or (not firstSync) or (not usecache)) then
     begin
 
       req := THTTPClient.Create();

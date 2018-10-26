@@ -70,7 +70,7 @@ begin
     0:
       URL := 'https://www.blockchain.com/btc/tx/';
     1:
-      URL := 'http://explorer.litecoin.net/tx/';
+      URL := 'https://chain.so/tx/LTC/';
     2:
       URL := 'https://chainz.cryptoid.info/dash/tx.dws?';
     3:

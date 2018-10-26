@@ -101,7 +101,15 @@
         android:icon="%icon%"
         android:theme="%theme%"
         android:hardwareAccelerated="%hardwareAccelerated%">
-
+ <provider
+        android:name="android.support.v4.content.FileProvider"
+        android:authorities="tech.hodler.core.fileProvider"
+        android:grantUriPermissions="true"
+        android:exported="false">
+        <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_paths" />
+    </provider>
 <%application-meta-data%>
 		<%services%>
         <!-- Our activity is a subclass of the built-in NativeActivity framework class.

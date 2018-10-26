@@ -238,6 +238,7 @@ begin
 
   //TThread.Synchronize(nil,procedure
   //begin
+  Application.ProcessMessages;
     TLabel(frmHome.FindComponent('globalBalance')).Text := 'Calculating...';
   //end);
 

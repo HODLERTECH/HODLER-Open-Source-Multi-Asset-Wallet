@@ -450,7 +450,7 @@ type
     switchCompatiblep2shButton: TButton;
     SwitchSegwitp2wpkhButton: TButton;
     AddressTypelayout: TLayout;
-    Layout33: TLayout;
+    QRCodeRecvLayout: TLayout;
     WaitWalletGenerate: TTabItem;
     WaitForGenerationProgressBar: TProgressBar;
     WaitForGenerationLabel: TLabel;
@@ -634,7 +634,6 @@ type
     HideZeroWalletsCheckBox: TCheckBox;
     Panel16: TPanel;
     PasswordInfoStaticLabel: TLabel;
-    Label2: TLabel;
     LayoutPerByte: TLayout;
     PerByteFeeRatio: TRadioButton;
     PerByteFeeEdit: TEdit;
