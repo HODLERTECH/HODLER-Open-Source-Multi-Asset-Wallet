@@ -174,7 +174,7 @@ begin
     if not shown then
     begin
 {$IFDEF MSWINDOWS}
-      frmHome.Caption := 'HODLER Core v' + CURRENT_VERSION;
+      frmHome.Caption := 'HODLER Open Source Multi-Asset Wallet v' + CURRENT_VERSION;
       Tthread.CreateAnonymousThread(
         procedure
         begin

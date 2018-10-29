@@ -1743,7 +1743,7 @@ begin
 
   if (LATEST_VERSION <> '') and (LATEST_VERSION <> CURRENT_VERSION) then
   begin
-    frmHome.Caption := 'HODLER Core v' + CURRENT_VERSION +
+    frmHome.Caption := 'HODLER Open Source Multi-Asset Wallet v' + CURRENT_VERSION +
       ' (New version is available)';
     X := MessageDlg
       ('The new version is available.  Do you want to download it?',

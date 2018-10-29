@@ -593,11 +593,8 @@ begin
 
     end;
 
-    alphaStr := dictionary('AlphaVersionWarning');
 
-    popupWindowYesNo.Create(
-      procedure
-      begin
+
 
         TThread.CreateAnonymousThread(
           procedure
@@ -611,10 +608,7 @@ begin
               end);
           end).Start;
 
-      end,
-      procedure
-      begin
-      end, alphaStr);
+
   end;
 end;
 

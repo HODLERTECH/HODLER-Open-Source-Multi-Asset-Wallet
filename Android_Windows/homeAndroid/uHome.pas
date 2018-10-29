@@ -950,7 +950,7 @@ resourcestring
   QRSearchDecryted = 'QRSearchDecryted';
 
 resourcestring
-  CURRENT_VERSION = '0.2.7';
+  CURRENT_VERSION = '0.2.8';
 
 var
   LATEST_VERSION: AnsiString;
@@ -3177,6 +3177,9 @@ end;
 
 procedure TfrmHome.SendWalletFile(Sender: TObject);
 begin
+if SYSTEM_APP then
+decryptSeedForSeedRestore(Sender)
+else
   BackupRelated.SendHSB;
 end;
 
