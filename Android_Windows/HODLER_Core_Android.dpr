@@ -6,6 +6,9 @@ uses
   System.StartUpCopy,
   FMX.Forms,
   FMX.Styles,
+  IOUtils,
+  System.SysUtils,
+  FMX.Types,
   uHome in 'homeAndroid\uHome.pas' {frmHome},
   misc in 'additionalUnits\misc.pas',
   base58 in 'additionalUnits\base58.pas',
@@ -122,6 +125,7 @@ uses
   WalletViewRelated in 'additionalUnits\WalletViewRelated.pas',
   BackupRelated in 'additionalUnits\BackupRelated.pas';
 
+
 {$R *.res}
 
 var
@@ -129,12 +133,15 @@ var
 
 begin
 
-{$IFDEF ANDROID}
-  Application.Initialize;
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
 
-  Application.FormFactor.Orientations := [TFormOrientation.Portrait];
-  Application.CreateForm(TfrmHome, frmHome);
-  Application.Run;
+    Application.Initialize;
+
+    Application.FormFactor.Orientations := [TFormOrientation.Portrait];
+    Application.CreateForm(TfrmHome, frmHome);
+    Application.Run;
+
+  
 {$ELSE}
   VKAutoShowMode := TVKAutoShowMode.Never;
 
@@ -151,7 +158,7 @@ begin
 
       Application.FormFactor.Orientations := [TFormOrientation.Portrait];
       Application.CreateForm(TfrmHome, frmHome);
-      Application.Run;
+  Application.Run;
     finally
       ReleaseMutex(H);
     end;

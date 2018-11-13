@@ -1,11 +1,8 @@
 ﻿[]
-Coordinates=1192,1040,59,33
+Coordinates=203,558,44,33
 
 [WVReceive]
 Coordinates=404,270,69,33
-
-[FOcr1]
-Coordinates=203,558,44,33
 
 [lbBalance]
 Coordinates=72,1,62,51
@@ -1037,9 +1034,6 @@ Coordinates=458,366,60,51
 [HistoryTransactionVertScrollBox]
 Coordinates=2673,507,176,33
 
-[ImageList1]
-Coordinates=64,1136,68,33
-
 [imageSMV]
 Coordinates=333,942,66,51
 
@@ -1203,4 +1197,7 @@ Coordinates=734,828,46,51
 
 [TransactionDetailsHeaderLabel]
 Coordinates=122,828,46,51
+
+[coinIconsList]
+Coordinates=64,1136,68,33
 

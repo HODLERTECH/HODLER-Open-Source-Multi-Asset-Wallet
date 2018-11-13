@@ -30,10 +30,10 @@ uses
   Androidapi.NativeActivity,
   Androidapi.JNIBridge, SystemApp
 {$ENDIF},
-  FMX.Menus,
+  {FMX.Menus,}
   ZXing.BarcodeFormat,
   ZXing.ReadResult,
-  ZXing.ScanManager, FMX.EditBox, FMX.SpinBox, FOcr, FMX.Gestures, FMX.Effects,
+  ZXing.ScanManager, FMX.EditBox, FMX.SpinBox, FMX.Gestures, FMX.Effects,
   FMX.Filter.Effects, System.Actions, FMX.ActnList, System.Math.Vectors,
   FMX.Controls3D, FMX.Layers3D, FMX.StdActns, FMX.MediaLibrary.Actions,
   FMX.ComboEdit;
@@ -348,11 +348,13 @@ begin
 
   end;
 
-  CreateNewAccountAndSave(RestoreNameEdit.Text, RestorePasswordEdit.Text,
-    MasterSeed, true);
+  createSelectGenerateCoinView();
+  frmhome.NextButtonSGC.OnClick := frmhome.CoinListCreateFromQR;
+  switchTab( PageControl , frmhome.SelectGenetareCoin );
+
   tced := '';
   MasterSeed := '';
-  RestorePasswordEdit.Text := '';
+
   end;
 end;
 
@@ -633,7 +635,7 @@ begin
           on F: Exception do
           begin
             failure := true;
-            showmessage('Wrong password or damaged file');
+            //showmessage('Wrong password or damaged file');
 
           end;
         end;
@@ -647,7 +649,8 @@ begin
   if failure then
   begin
     RemoveDir(ac.DirPath);
-    frmHome.FormShow(nil);
+    popupWindow.Create('Wrong password or damaged file');
+    //frmHome.FormShow(nil);
     exit;
   end;
   ac := Account.Create(accname);
@@ -712,7 +715,7 @@ begin
           on F: Exception do
           begin
             failure := true;
-            showmessage('Damaged file');
+            //showmessage('Damaged file');
 
           end;
         end;
@@ -733,10 +736,10 @@ begin
   Zip.free;
   if failure then
   begin
-
+    popupWindow.Create('Wrong password or damaged file');
     RemoveDir(ac.DirPath);
-    frmHome.FormShow(nil);
-    showmessage('Failed to decrypt files');
+    //frmHome.FormShow(nil);
+    //showmessage('Failed to decrypt files');
     exit;
   end;
   ac := Account.Create(accname);
@@ -746,7 +749,8 @@ begin
     on E: Exception do
     begin
       RemoveDir(ac.DirPath);
-      frmHome.FormShow(nil);
+      popupWindow.Create('Wrong password or damaged file');
+      //frmHome.FormShow(nil);
       exit;
     end;
   end;

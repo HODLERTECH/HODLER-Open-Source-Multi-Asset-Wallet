@@ -5,7 +5,7 @@ unit base58;
 interface
 
 uses System.SysUtils , FMX.Dialogs;
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
 
 type
   AnsiString = string;
@@ -193,7 +193,7 @@ begin
   end;
   result := false;
 
-  if Copy(Address, 0, 3) <> 'bc1' then
+  if not isSegwitAddress(Address) then
   begin
 
     if (Length(Address) < 26) or (Length(Address) > 35) then

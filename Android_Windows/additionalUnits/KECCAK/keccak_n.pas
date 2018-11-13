@@ -99,7 +99,7 @@ const
 type
   TState_B = packed array [0 .. KeccakPermutationSizeInBytes - 1] of byte;
   TState_L = packed array [0 .. (KeccakPermutationSizeInBytes) div 4 - 1]
-    of longint;
+    of system.int32;
   TKDQueue = packed array [0 .. KeccakMaximumRateInBytes - 1] of byte;
 
 type
@@ -160,7 +160,7 @@ const
 {$IFNDEF BIT16}
 
 type
-  TBABytes = array [0 .. MaxLongint - 1] of byte;
+  TBABytes = array [0 .. $7fffffff - 1] of System.uint8;
 {$ELSE}
 
 type
@@ -177,11 +177,15 @@ type
 {$ENDIF}
 {$ENDIF}
 {$ENDIF}
+
+{$IFDEF IOS}
+{$DEFINE USE_64BITCODE}
+{$ENDIF}
   { .$define USE_64BITCODE }
 
   { --------------------------------------------------------------------------- }
 {$IFNDEF BIT16}
-{$IFDEF USE_64BITCODE}
+{$IFDEF USE_64BITCODE OR IOS}
 {$I kperm_64.inc}
 {$IFDEF HAS_MSG}
 {$MESSAGE '* using 64-bit code'}

@@ -31,10 +31,10 @@ uses
   Androidapi.NativeActivity,
   Androidapi.JNIBridge, SystemApp
 {$ENDIF},
-  FMX.Menus,
+  {FMX.Menus,}
   ZXing.BarcodeFormat,
   ZXing.ReadResult,
-  ZXing.ScanManager, FMX.EditBox, FMX.SpinBox, FOcr, FMX.Gestures, FMX.Effects,
+  ZXing.ScanManager, FMX.EditBox, FMX.SpinBox, FMX.Gestures, FMX.Effects,
   FMX.Filter.Effects, System.Actions, FMX.ActnList, System.Math.Vectors,
   FMX.Controls3D, FMX.Layers3D, FMX.StdActns, FMX.MediaLibrary.Actions,
   FMX.ComboEdit;

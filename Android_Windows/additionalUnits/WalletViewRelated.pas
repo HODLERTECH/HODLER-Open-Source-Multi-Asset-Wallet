@@ -31,10 +31,10 @@ uses
   Androidapi.NativeActivity,
   Androidapi.JNIBridge, SystemApp
 {$ENDIF},
-  FMX.Menus,
+  {FMX.Menus,}
   ZXing.BarcodeFormat,
   ZXing.ReadResult,
-  ZXing.ScanManager, FMX.EditBox, FMX.SpinBox, FOcr, FMX.Gestures, FMX.Effects,
+  ZXing.ScanManager, FMX.EditBox, FMX.SpinBox, FMX.Gestures, FMX.Effects,
   FMX.Filter.Effects, System.Actions, FMX.ActnList, System.Math.Vectors,
   FMX.Controls3D, FMX.Layers3D, FMX.StdActns, FMX.MediaLibrary.Actions,
   FMX.ComboEdit;
@@ -384,6 +384,10 @@ begin
 
       switchTab(PageControl, ConfirmSendTabItem);
 
+    end
+    else
+    begin
+
     end;
     ConfirmSendPasswordEdit.Text := '';
 
@@ -593,10 +597,13 @@ begin
 
     end;
 
+    createSelectGenerateCoinView();
+    frmhome.NextButtonSGC.OnClick := frmhome.CoinListCreateFromSeed;
+    switchTab( PageControl , SelectGenetareCoin );
 
 
 
-        TThread.CreateAnonymousThread(
+        {TThread.CreateAnonymousThread(
           procedure
           begin
             TThread.Synchronize(nil,
@@ -606,7 +613,7 @@ begin
                 procCreateWallet(nil);
 
               end);
-          end).Start;
+          end).Start; }
 
 
   end;
@@ -679,7 +686,11 @@ begin
           frmhome.NewCoinDescriptionEdit.Text);
 
         CurrentAccount.AddCoin(walletInfo);
-        CreatePanel(walletInfo);
+        tthread.Synchronize(nil , procedure
+        begin
+          CreatePanel(walletInfo);
+        end);
+
         CurrentAccount.userSaveSeed := false;
         CurrentAccount.SaveFiles();
         askforBackup(1000);
@@ -899,7 +910,7 @@ begin
     SyncOpenWallet := TThread.CreateAnonymousThread(
       procedure
       begin
-        SynchronizeCryptoCurrency(CurrentCryptoCurrency);
+        //SynchronizeCryptoCurrency(CurrentCryptoCurrency);
         TThread.Synchronize(nil,
           procedure
           begin
@@ -917,7 +928,7 @@ begin
       procedure
       begin
 
-        SynchronizeCryptoCurrency(CurrentCryptoCurrency);
+        //SynchronizeCryptoCurrency(CurrentCryptoCurrency);
         TThread.Synchronize(nil,
           procedure
           begin
@@ -942,7 +953,7 @@ begin
 {$ENDIF}
     if isEthereum or isTokenTransfer then
     begin
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
       LayoutPerByte.Visible := false;
 {$ELSE}
       PerByteFeeLayout.Visible := false;
@@ -983,7 +994,7 @@ begin
         TransactionFeeLayout.Height := 228 - 42;
       end;
       InstantSendSwitch.IsChecked := false;
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
       LayoutPerByte.Visible := true;
       LayoutPerByte.Position.Y := 196;
       LayoutPresentationFee.Position.Y := 228;
@@ -1057,7 +1068,7 @@ begin
     if CurrentCryptoCurrency is TwalletInfo then
     begin
 
-      if (TwalletInfo(CurrentCryptoCurrency).coin = 0) then
+      if (TwalletInfo(CurrentCryptoCurrency).coin = 0) or (TWalletInfo(CurrentCryptoCurrency).coin = 1 ) then
         AddressTypelayout.Visible := true;
 
       if (TwalletInfo(CurrentCryptoCurrency).X = -1) and
@@ -1068,7 +1079,7 @@ begin
       if TwalletInfo(CurrentCryptoCurrency).coin = 3 then
         BCHAddressesLayout.Visible := true;
 
-      if (TwalletInfo(CurrentCryptoCurrency).coin = 5) then
+      if (TwalletInfo(CurrentCryptoCurrency).coin = 5) or (TwalletInfo(CurrentCryptoCurrency).coin = 6)  then
         RavencoinAddrTypeLayout.Visible := true;
 
     end;
@@ -1294,7 +1305,9 @@ begin
 
         ans := sendCoinsTO(CurrentCoin, Address, amount, fee, MasterSeed,
           AvailableCoin[CurrentCoin.coin].Name);
-
+        //Tthread.Synchronize(nil, procedure begin
+        //  showmessage(ans);
+        //end);
         SynchronizeCryptoCurrency(CurrentCryptoCurrency);
 
         TThread.Synchronize(nil,

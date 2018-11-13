@@ -6,7 +6,7 @@ interface
 uses system.Generics.Collections , System.Classes , System.Types , SysUtils , System.IOUtils , Fmx.Dialogs, Json , FMX.TabControl
   , FMX.stdCtrls , fmx.Controls , FMX.edit;
 
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
 
 const
   StrStartIteration = 0;

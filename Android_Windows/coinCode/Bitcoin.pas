@@ -19,7 +19,7 @@ function sendCoinsTO(from: TWalletInfo; sendto: AnsiString;
 
 function generatep2sh(pub, netbyte: AnsiString): AnsiString;
 function generatep2pkh(pub, netbyte: AnsiString): AnsiString;
-function generatep2wpkh(pub: AnsiString): AnsiString;
+function generatep2wpkh(pub: AnsiString ; hrp : AnsiString = 'bc'): AnsiString;
 
 implementation
 
@@ -92,13 +92,15 @@ begin
   result := Encode58(s);
 end;
 
-function generatep2wpkh(pub: AnsiString): AnsiString;
+function generatep2wpkh(pub: AnsiString ; hrp : AnsiString = 'bc'): AnsiString;
 var
   s: AnsiString;
 begin
+  if hrp = '' then
+    hrp := 'bc';
   s := GetSHA256FromHex(pub);
   s := hash160FromHex(s);
-  result := segwit_addr_encode('bc', 0, s);
+  result := segwit_addr_encode(hrp, 0, s);
 end;
 
 function Bitcoin_PublicAddrToWallet(pub: AnsiString; netbyte: AnsiString = '00';
@@ -220,7 +222,7 @@ var
 begin
   if CurrentCoin.coin <> 4 then
   begin
-    if ((CurrentCoin.coin = 0) or (CurrentCoin.coin = 5) ) and canSegwit(currentaccount.aggregateUTXO(from)) then
+    if ((CurrentCoin.coin in [0,1,5,6]) ) and canSegwit(currentaccount.aggregateUTXO(from)) then
     begin
       TX := createSegwitTransaction(from, sendto, Amount, Fee, currentaccount.aggregateUTXO(from),
         MasterSeed);

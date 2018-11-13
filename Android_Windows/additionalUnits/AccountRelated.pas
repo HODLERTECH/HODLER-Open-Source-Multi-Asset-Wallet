@@ -31,10 +31,10 @@ uses
   Androidapi.NativeActivity,
   Androidapi.JNIBridge, SystemApp
 {$ENDIF},
-  FMX.Menus,
+  {FMX.Menus,}
   ZXing.BarcodeFormat,
   ZXing.ReadResult,
-  ZXing.ScanManager, FMX.EditBox, FMX.SpinBox, FOcr, FMX.Gestures, FMX.Effects,
+  ZXing.ScanManager, FMX.EditBox, FMX.SpinBox, FMX.Gestures, FMX.Effects,
   FMX.Filter.Effects, System.Actions, FMX.ActnList, System.Math.Vectors,
   FMX.Controls3D, FMX.Layers3D, FMX.StdActns, FMX.MediaLibrary.Actions,
   FMX.ComboEdit;
@@ -98,7 +98,7 @@ var
     comp: TComponent;
     i: integer;
   begin
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     for i := 0 to frmHome.ComponentCount - 1 do
       if frmHome.Components[i] is TEdit then
         SetEditControlColor(TEdit(frmHome.Components[i]), TAlphaColors.Gray);
@@ -130,7 +130,7 @@ begin
       lblWelcomeDescription.Text := dictionary('ConfigurationTakeOneStep') +
         #13#10 + dictionary('ChooseOption') + ':';
       switchTab(PageControl, WelcomeTabItem);
-{$IFNDEF ANDROID}
+{$IFDEF MSWINDOWS}
       Panel8.Visible := false;
       DashBrdPanel.Visible := false;
       Splitter1.Visible := false;
@@ -140,7 +140,7 @@ begin
     else
     begin
 
-{$IFNDEF ANDROID}
+{$IFDEF MSWINDOWS}
       Splitter1.Visible := true;
       Panel8.Visible := true;
       DashBrdPanel.Visible := true;
@@ -168,7 +168,7 @@ begin
 
       switchTab(PageControl, HOME_TABITEM);
     end;
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     fixEditBG;
 {$ENDIF}
     if not shown then
@@ -213,7 +213,7 @@ begin
 
       end;
 
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
       for i := 0 to frmHome.ComponentCount - 1 do
         if frmHome.Components[i] is TEdit then
         begin
@@ -240,6 +240,10 @@ begin
   //begin
   Application.ProcessMessages;
     TLabel(frmHome.FindComponent('globalBalance')).Text := 'Calculating...';
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
+
+  frmhome.AccountsListPanel.visible := false;
+{$ENDIF}
   //end);
 
   try
@@ -373,6 +377,7 @@ var
   l: TLabel;
   i: integer;
 begin
+exit;
   for i := 0 to frmHome.ComponentCount - 1 do
   begin
     comp := frmHome.Components[i];
@@ -407,10 +412,14 @@ var
   WData: AnsiString;
 begin
 
+try
+
+
+
   with frmHome do
   begin
 
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     HOME_PATH := System.IOUtils.TPath.GetDocumentsPath;
     HOME_TABITEM := TTabItem(frmHome.FindComponent('dashbrd'));
 {$ELSE}
@@ -526,6 +535,12 @@ begin
     lblWIFKey.TagString := 'copyable';
 
   end;
+
+except on E: Exception do
+  showmessage(E.Message);
+
+end;
+
 end;
 
 procedure changeAccount(Sender: Tobject);
@@ -540,7 +555,7 @@ var
 begin
   with frmHome do
   begin
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     AccountsListPanel.Visible := not AccountsListPanel.Visible;
 {$ENDIF}
     for i := AccountsListVertScrollBox.Content.ChildrenCount - 1 downto 0 do
@@ -631,7 +646,7 @@ begin
                 lastClosedAccount := '';
                 refreshWalletDat();
                 changeAccount(nil);
-{$IFDEF ANDOIRD}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
                 AccountsListPanel.Visible := false;
 {$ENDIF}
                 closeOrganizeView(nil);
@@ -701,7 +716,7 @@ begin
       TwalletInfo(TfmxObject(Sender).TagObject).deleted := true;
 
       currentAccount.SaveFiles;
-{$IFDEF ANDOIRD}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
       changeY(nil);
       frmHome.PageControl.ActiveTab := frmHome.SameYWalletList;
 {$ELSE}
@@ -950,7 +965,7 @@ begin
 
                   end;
                   refreshWalletDat();
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
                   closeOrganizeView(nil);
                   AccountsListPanel.Visible := false;
 {$ENDIF}

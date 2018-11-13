@@ -23,20 +23,21 @@ type
     flag: System.UInt32;
     decimals: smallint;
     availableFirstLetter: AnsiString;
+    hrp : AnsiString;
 
   end;
 
 const
   // all supported coin
-  availableCoin: array [0 .. 5] of coinInfo = ((id: 0; displayName: 'Bitcoin';
+  availableCoin: array [0 .. 6] of coinInfo = ((id: 0; displayName: 'Bitcoin';
     name: 'bitcoin'; shortcut: 'BTC'; WifByte: '80'; p2sh: '05'; p2pk: '00';
 
-    flag: 0; decimals: 8; availableFirstLetter: '13b';
+    flag: 0; decimals: 8; availableFirstLetter: '13b'; hrp : 'bc';
 
     ), (id: 1; displayName: 'Litecoin'; name: 'litecoin'; shortcut: 'LTC';
-    WifByte: 'B0'; p2sh: '05'; p2pk: '30';
+    WifByte: 'B0'; p2sh: '32'{'05'}; p2pk: '30';
 
-    flag: 0; decimals: 8; availableFirstLetter: 'l3m';
+    flag: 0; decimals: 8; availableFirstLetter: 'lm'; hrp :'ltc';
 
     ), (id: 2; displayName: 'DASH'; name: 'dash'; shortcut: 'DASH';
     WifByte: 'CC'; p2sh: '10'; p2pk: '4c'; flag: 0; decimals: 8;
@@ -52,6 +53,10 @@ const
 
     ), (id: 5; displayName: 'Ravencoin'; name: 'ravencoin'; shortcut: 'RVN';
     WifByte: '80';p2sh :'7a'; p2pk: '3c'; flag: 0; decimals: 8; availableFirstLetter: 'Rr';
+
+    ),
+    (id:6; displayName: 'Digibyte'; name: 'digibyte'; shortcut: 'DGB';
+    WifByte: '80';p2sh :'3f'; p2pk: '1e'; flag: 0; decimals: 8; availableFirstLetter: 'SD';
 
     )
 
@@ -79,6 +84,8 @@ begin
       URL := 'https://etherscan.io/tx/';
     5:
       URL := 'https://ravencoin.network/tx/';
+    6:
+      URL := 'https://digiexplorer.info/tx/';
     end;
 
   result := URL + hash;
@@ -86,7 +93,7 @@ end;
 
 function getCoinIcon(id: Integer): TBitmap;
 begin
-  result := frmhome.ImageList1.Source[id].MultiResBitmap[0].Bitmap;
+  result := frmhome.coinIconsList.Source[id].MultiResBitmap[0].Bitmap;
 end;
 
 function CreateCoin(id, x, y: Integer; MasterSeed: AnsiString;
@@ -171,7 +178,7 @@ begin
         info := decodeAddressInfo(address, id);
       except on E: Exception do
         begin
-          
+
 
           exit(false);
         end;

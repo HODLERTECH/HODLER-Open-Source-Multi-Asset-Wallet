@@ -57,7 +57,7 @@ type
 
     // list all supported tokens
   const
-    availableToken: array [0 .. 11] of tokenInfo = ((id: 10000;
+    availableToken: array [0 .. 12] of tokenInfo = ((id: 10000;
       name: 'HODLER.TECH'; shortcut: 'HDL';
       address: '0x95c4be8534d69c248c0623c4c9a7a2a001c17337'; decimals: 18;
 
@@ -84,13 +84,19 @@ type
       ),
 
       (id: 10011; name: 'LAtoken'; shortcut: 'LA';
-      address: '0xe50365f5d679cb98a1dd62d6f6e58e59321bcddf'; decimals: 18;));
+      address: '0xe50365f5d679cb98a1dd62d6f6e58e59321bcddf'; decimals: 18;)
+      ,
+
+      (id: 10012; name: 'Algory'; shortcut: 'ALG';
+      address: '0x16b0a1a87ae8af5c792fabc429c4fe248834842b'; decimals: 18;));
   end;
 
 type
   tokenERC20 = class(Token)
 
   end;
+
+function getTokenIcon(id: Integer): TBitmap;
 
 implementation
 
@@ -171,6 +177,13 @@ begin
   end
   else
     result := generateIcon(ContractAddress);
+
+end;
+
+function getTokenIcon(id: Integer): TBitmap;
+begin
+
+  result := frmhome.TokenIcons.Source[id - 10000].MultiResBitmap[0].Bitmap;
 
 end;
 

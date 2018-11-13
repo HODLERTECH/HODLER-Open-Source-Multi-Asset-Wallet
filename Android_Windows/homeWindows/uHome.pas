@@ -24,7 +24,7 @@ uses
   FMX.Layouts, FMX.ExtCtrls, Velthuis.BigIntegers, FMX.ScrollBox, FMX.Memo,
   FMX.Platform, System.Threading, Math, DelphiZXingQRCode,
   FMX.TabControl, System.Sensors, System.Sensors.Components, FMX.Edit,
-  FMX.Clipboard, bech32, cryptoCurrencyData, FMX.VirtualKeyBoard, JSON, URLMon,
+  FMX.Clipboard, bech32, cryptoCurrencyData, FMX.VirtualKeyBoard, JSON,
   languages, WIF, AccountData, WalletStructureData,
   System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
 
@@ -44,7 +44,10 @@ uses
   Androidapi.NativeActivity,
   Androidapi.JNIBridge, SystemApp
 {$ENDIF},
-  misc, FMX.Menus,
+{$IFDEF MSWINDOWS}
+URLMon,
+{$ENDIF}
+  misc, {FMX.Menus,}
   ZXing.BarcodeFormat,
   ZXing.ReadResult,
   ZXing.ScanManager, FMX.EditBox, FMX.SpinBox, FOcr, FMX.Gestures, FMX.Effects,
@@ -573,7 +576,7 @@ type
     TransactionWaitForSendLinkLabel: TLabel;
     Layout53: TLayout;
     WaitTimeLabel: TLabel;
-    ImageList1: TImageList;
+    coinIconsList: TImageList;
     WelcomeTabInfoLabel: TLabel;
     AddAccountInfoLabel: TLabel;
     BackupInfoLabel: TLabel;
@@ -655,6 +658,14 @@ type
     CopyTextButton: TButton;
     lblPrivateKey: TEdit;
     CopyButtonPitStopEdit: TEdit;
+    SelectGenetareCoin: TTabItem;
+    ToolBar10: TToolBar;
+    SGCHeaderLabel: TLabel;
+    BackBtnSGC: TButton;
+    NextButtonSGC: TButton;
+    Panel17: TPanel;
+    SelectGenerateCoinStaticLabel: TLabel;
+    GenerateCoinVertScrollBox: TVertScrollBox;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -854,6 +865,8 @@ type
     procedure InstantSendSwitchClick(Sender: TObject);
     procedure FormFocusChanged(Sender: TObject);
     procedure CopyTextButtonClick(Sender: TObject);
+    procedure PanelSelectGenerateCoinOnClick(Sender : TObject);
+    procedure NextButtonSGCClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -897,6 +910,9 @@ type
     procedure SelectFileInBackupFileList(Sender: TObject);
     procedure removeAccount(Sender: TObject);
     procedure PopupBox1_popupMenuClose(Sender: TObject);
+
+    procedure CoinListCreateFromSeed(Sender : TObject);
+    procedure CoinListCreateFromQR(Sender : TObject);
 
   var
     HistoryMaxLength : Integer;
@@ -961,7 +977,7 @@ resourcestring
   QRSearchDecryted = 'QRSearchDecryted';
 
 resourcestring
-  CURRENT_VERSION = '0.2.8';
+  CURRENT_VERSION = '0.2.9';
 
 var
   LATEST_VERSION: AnsiString;
@@ -972,8 +988,9 @@ uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
   TokenData ,AccountRelated,QRRelated, FileManagerRelated, WalletViewRelated, BackupRelated
 {$IFDEF ANDRIOD}
 
-{$ELSE} , Winapi.ShellAPI
- 
+{$ENDIF}
+{$IFDEF MSWINDOWS}
+, Winapi.ShellAPI
 {$ENDIF};
 {$R *.fmx}
 {$R *.SmXhdpiPh.fmx ANDROID}
@@ -982,6 +999,50 @@ uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
 {$R *.Windows.fmx MSWINDOWS}
 {$R *.Surface.fmx MSWINDOWS}
 
+{$IFNDEF MSWINDOWS}
+function ShellExecute(a : Integer ; b,c: String; d,e : PWideChar; f : Integer ): Integer;
+begin
+
+end;
+
+{$ENDIF}
+
+procedure Tfrmhome.CoinListCreateFromSeed(Sender : TObject);
+begin
+  TThread.CreateAnonymousThread(
+  procedure
+  begin
+    TThread.Synchronize(nil,
+    procedure
+    begin
+
+      procCreateWallet(nil);
+
+    end);
+  end).Start;
+end;
+procedure Tfrmhome.CoinListCreateFromQR(Sender : TObject);
+var
+  MasterSeed, tced: AnsiString;
+begin
+
+  tced := TCA(RestorePasswordEdit.Text);
+  MasterSeed := SpeckDecrypt(tced, tempQRFindEncryptedSeed);
+
+  CreateNewAccountAndSave(RestoreNameEdit.Text, RestorePasswordEdit.Text,
+    MasterSeed, true);
+  tced := '';
+  MasterSeed := '';
+  RestorePasswordEdit.Text := '';
+end;
+
+
+procedure TfrmHome.PanelSelectGenerateCoinOnClick(Sender : TObject);
+begin
+
+  TCheckBox(TFmxObject(Sender).TagObject).IsChecked := not TCheckBox(TFmxObject(Sender).TagObject).IsChecked;
+
+end;
 
 procedure TfrmHome.LoadMoreClick(Sender: TObject);
 var
@@ -1714,12 +1775,15 @@ var
   FileStream: TFileStream;
   fPath: String;
 begin
+{$IFDEF MSWINDOWS}
   fPath := ExtractFileDir(ParamStr(0)) + '/update.bin';
 
   aURL := 'https://github.com/HODLERTECH/Putty-Updater/raw/master/binaries/' +
     trim(ver) + '.exe?xx=' + IntToStr(random($FFFFF));
   URLDownloadToFile(nil, PWideChar(aURL), PWideChar(fPath), 0, nil);
-
+{$ELSE}
+  Showmessage('notImplemented');
+{$ENDIF}
 end;
 
 function GetFileSize(const FileName: string): Int64;
@@ -2332,8 +2396,9 @@ end;
 
 procedure TfrmHome.SwitchSegwitp2wpkhButtonClick(Sender: TObject);
 begin
+
   receiveAddress.Text := Bitcoin.generatep2wpkh
-    (TwalletInfo(CurrentCryptoCurrency).pub);
+    (TwalletInfo(CurrentCryptoCurrency).pub , availableCoin[TwalletInfo(CurrentCryptoCurrency).coin].hrp );
 
   receiveAddress.Text := receiveAddress.Text;
 end;
@@ -2350,6 +2415,21 @@ end;
 procedure TfrmHome.notPrivTCA2Change(Sender: TObject);
 begin
   notPrivTCA1.IsChecked := notPrivTCA2.IsChecked;
+end;
+
+procedure TfrmHome.NextButtonSGCClick(Sender: TObject);
+begin
+  TThread.CreateAnonymousThread(
+  procedure
+  begin
+    TThread.Synchronize(nil,
+    procedure
+    begin
+
+      procCreateWallet(nil);
+
+    end);
+  end).Start;
 end;
 
 procedure TfrmHome.NoPrintScreenImageClick(Sender: TObject);
@@ -2397,7 +2477,9 @@ var
   bigInt: BigInteger;
 begin
 
-  Edit1.Text := getethValidaddress(Edit4.Text);
+  createSelectGenerateCoinView();
+  frmhome.NextButtonSGC.OnClick := frmhome.CoinListCreateFromSeed;
+  switchTab( pageControl , SelectGenetareCoin );
 
 end;
 

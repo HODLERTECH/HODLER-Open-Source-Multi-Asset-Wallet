@@ -4,7 +4,7 @@ interface
 
 uses
   system.Generics.Collections;
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
 
 const
   StrStartIteration = 0;

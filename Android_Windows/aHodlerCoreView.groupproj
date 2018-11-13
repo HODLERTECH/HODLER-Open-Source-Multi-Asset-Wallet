@@ -1,6 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{EC15B03F-1D58-459B-A0E9-28E1F5C93350}</ProjectGuid>
+        <ProjectGuid>{16817845-BE5C-43C6-A529-643C9E6EF576}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
         <Projects Include="HODLER_Core_Windows.dproj">

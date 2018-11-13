@@ -44,12 +44,11 @@ uses
   Androidapi.NativeActivity,
   Androidapi.JNIBridge, SystemApp
 {$ELSE}
-  ,URLMon
 {$ENDIF},
   misc, FMX.Menus,
   ZXing.BarcodeFormat,
   ZXing.ReadResult,
-  ZXing.ScanManager, FMX.EditBox, FMX.SpinBox, FOcr, FMX.Gestures, FMX.Effects,
+  ZXing.ScanManager, FMX.EditBox, FMX.SpinBox,  FMX.Gestures, FMX.Effects,
   FMX.Filter.Effects, System.Actions, FMX.ActnList, System.Math.Vectors,
   FMX.Controls3D, FMX.Layers3D, FMX.StdActns, FMX.MediaLibrary.Actions,
   FMX.ComboEdit;
@@ -135,7 +134,6 @@ type
     btnAddNewWallet: TButton;
     wvAddress: TEdit;
     btnOCR: TButton;
-    FOcr1: TFOcr;
     ReadOCR: TTabItem;
     imgCameraOCR: TImage;
     OCRHeader: TToolBar;
@@ -156,7 +154,7 @@ type
     ANWHeader: TToolBar;
     lblANWHeader: TLabel;
     btnANWBack: TButton;
-    ImageList1: TImageList;
+    coinIconsList: TImageList;
     TokenIcons: TImageList;
     checkSeed: TTabItem;
     btnConfirm: TButton;
@@ -651,6 +649,14 @@ type
     InstantSendSwitch: TSwitch;
     CopyButtonPitStopEdit: TEdit;
     CopyTextButton: TButton;
+    SelectGenetareCoin: TTabItem;
+    ToolBar10: TToolBar;
+    SGCHeaderLabel: TLabel;
+    BackBtnSGC: TButton;
+    NextButtonSGC: TButton;
+    Panel17: TPanel;
+    SelectGenerateCoinStaticLabel: TLabel;
+    GenerateCoinVertScrollBox: TVertScrollBox;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -847,6 +853,12 @@ type
     procedure InstantSendSwitchClick(Sender: TObject);
     procedure FormFocusChanged(Sender: TObject);
     procedure CopyTextButtonClick(Sender: TObject);
+    procedure NextButtonSGCClick(Sender: TObject);
+    procedure generateNewAddressClick(Sender: TObject);
+    procedure PanelSelectGenerateCoinOnClick(Sender : TObject);
+    procedure NewYaddressesOKButtonClick(Sender: TObject);
+
+
 
   private
     { Private declarations }
@@ -891,6 +903,8 @@ type
     procedure YAddressClick(Sender: TObject);
     procedure deleteYaddress(Sender: TObject);
     procedure generateNewAddressesClick(Sender: TObject);
+    procedure CoinListCreateFromSeed(Sender : TObject);
+    procedure CoinListCreateFromQR(Sender : TObject);
 
   var
     cpTimeout: int64;
@@ -965,6 +979,42 @@ uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
 {$R *.iPhone55in.fmx IOS}
 {$R *.Windows.fmx MSWINDOWS}
 {$R *.Surface.fmx MSWINDOWS}
+
+procedure Tfrmhome.CoinListCreateFromSeed(Sender : TObject);
+begin
+  TThread.CreateAnonymousThread(
+  procedure
+  begin
+    TThread.Synchronize(nil,
+    procedure
+    begin
+
+      procCreateWallet(nil);
+
+    end);
+  end).Start;
+end;
+procedure Tfrmhome.CoinListCreateFromQR(Sender : TObject);
+var
+  MasterSeed, tced: AnsiString;
+begin
+
+  tced := TCA(RestorePasswordEdit.Text);
+  MasterSeed := SpeckDecrypt(tced, tempQRFindEncryptedSeed);
+
+  CreateNewAccountAndSave(RestoreNameEdit.Text, RestorePasswordEdit.Text,
+    MasterSeed, true);
+  tced := '';
+  MasterSeed := '';
+  RestorePasswordEdit.Text := '';
+end;
+
+procedure TfrmHome.PanelSelectGenerateCoinOnClick(Sender : TObject);
+begin
+
+  TCheckBox(TFmxObject(Sender).TagObject).IsChecked := not TCheckBox(TFmxObject(Sender).TagObject).IsChecked;
+
+end;
 
 procedure TfrmHome.OpenWalletViewFromYWalletList(Sender: TObject);
 begin
@@ -2213,7 +2263,7 @@ end;
 procedure TfrmHome.SwitchSegwitp2wpkhButtonClick(Sender: TObject);
 begin
   receiveAddress.Text := Bitcoin.generatep2wpkh
-    (TwalletInfo(CurrentCryptoCurrency).pub);
+    (TwalletInfo(CurrentCryptoCurrency).pub , availableCoin[TwalletInfo(CurrentCryptoCurrency).coin].hrp );
 
   receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar, receiveAddress.Text, ' ');
 end;
@@ -2236,6 +2286,31 @@ begin
   createHistoryList(CurrentCryptoCurrency, txHistory.ComponentCount - 1,
     txHistory.ComponentCount + 9);
 
+end;
+
+procedure TfrmHome.generateNewAddressClick(Sender: TObject);
+begin
+  generateNewYAddress(Sender);
+end;
+
+procedure TfrmHome.NewYaddressesOKButtonClick(Sender: TObject);
+begin
+  generateNewYAddress(Sender);
+end;
+
+procedure TfrmHome.NextButtonSGCClick(Sender: TObject);
+begin
+  TThread.CreateAnonymousThread(
+  procedure
+  begin
+    TThread.Synchronize(nil,
+    procedure
+    begin
+
+      procCreateWallet(nil);
+
+    end);
+  end).Start;
 end;
 
 procedure TfrmHome.notPrivTCA2Change(Sender: TObject);
@@ -2619,8 +2694,14 @@ end;
 
 procedure TfrmHome.FormCreate(Sender: TObject);
 begin
-  AccountRelated.InitializeHodler;
-  AccountsListPanel.Visible := false;
+
+  try
+    AccountRelated.InitializeHodler;
+    AccountsListPanel.Visible := false;
+  except on E: Exception do
+    showmessage(E.Message);
+  end;
+
 end;
 
 procedure TfrmHome.FormFocusChanged(Sender: TObject);
@@ -2764,7 +2845,13 @@ end;
 
 procedure TfrmHome.FormShow(Sender: TObject);
 begin
-  AccountRelated.afterInitialize;
+
+  try
+     AccountRelated.afterInitialize;
+  except on E: Exception do
+    showmessage(E.Message);
+  end;
+
 end;
 
 procedure TfrmHome.FormVirtualKeyboardHidden(Sender: TObject;

@@ -4,7 +4,7 @@ interface
 
 uses cryptoCurrencyData, SysUtils, DateUtils, FMX.Graphics;
 
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
 
 const
   StrStartIteration = 0;
