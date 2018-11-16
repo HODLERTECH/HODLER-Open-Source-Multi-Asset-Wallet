@@ -58,7 +58,7 @@ begin
 
 end;
 
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
 
 function En58(V: AnsiString): AnsiString;
 var

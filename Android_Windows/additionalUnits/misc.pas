@@ -526,7 +526,7 @@ end;
 
 procedure EnlargeQRCode(img: TBitmap);
 begin
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
   with frmhome do
   begin
     BigQRCodeBackTab := PageControl.ActiveTab;
@@ -540,17 +540,19 @@ end;
 
 procedure LoadStyle(name: AnsiString);
 begin
-
 {$IFDEF IOS}
-  name := name + '_IOS';
+exit;
 {$ENDIF}
-  stylo.TrySetStyleFromResource(name);
+
 
   if name = 'RT_DARK' then
     frmhome.StatusBarFixer.Fill.Color := TAlphaColorRec.Black
   else
     frmhome.StatusBarFixer.Fill.Color := TAlphaColorRec.Whitesmoke;
-
+{$IFDEF IOS}
+  name := name + '_IOS';
+{$ENDIF}
+  stylo.TrySetStyleFromResource(name);
   currentStyle := name;
 end;
 
@@ -1007,7 +1009,7 @@ begin
 
     panel.Touch.InteractiveGestures := [TInteractiveGesture.LongTap];
     panel.OnGesture := frmhome.SwitchViewToOrganize;
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     panel.OnTap := frmhome.OpenWalletView;
 {$ELSE}
     panel.OnClick := frmhome.OpenWalletView;
@@ -1134,7 +1136,7 @@ begin
     netbyte := '05'
   else
     netbyte := '00';
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
   delete(hex, 1, 2);
 {$ELSE}
   delete(hex, 1, 2);
@@ -1142,7 +1144,7 @@ begin
   s := netbyte + hex;
   r := GetSHA256FromHex(s);
   r := GetSHA256FromHex(r);
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
   s := s + Copy(r, 0, 8);
 {$ELSE}
   s := s + Copy(r, 1, 8);
@@ -1369,7 +1371,7 @@ begin
   saveDialog.Title := 'Save your text or word file';
   saveDialog.FileName := ExtractFileName(path);
 
-  saveDialog.InitialDir := GetCurrentDir;
+  saveDialog.InitialDir := {$IFDEF IOS}TPath.GetSharedDocumentsPath{$ELSE}GetCurrentDir{$ENDIF};
 
   saveDialog.Filter := 'Zip File|*.zip';
 
@@ -1712,13 +1714,13 @@ begin
     panel.Tag := i;
     panel.Parent := frmhome.TxHistory;
     panel.Position.Y := (((i * 36) div 36) * 36) + 0.1;
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     panel.OnTap := frmhome.ShowHistoryDetails;
 {$ELSE}
     panel.OnClick := frmhome.ShowHistoryDetails;
 {$ENDIF}
     holder := THistoryHolder.Create;
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     holder.__ObjAddRef;
 {$ENDIF}
     panel.TagObject := holder;
@@ -2355,7 +2357,7 @@ begin
   end;
 
   insert(FormatSettings.DecimalSeparator, result, High(result) - decimals +
-    1{$IFDEF ANDROID} + 1{$ENDIF});
+    1{$IF DEFINED(ANDROID) OR DEFINED(IOS)} + 1{$ENDIF});
 
   setLength(result, length(result) - (decimals - precision));
   minus := Pos('-', result) > 1;
@@ -2624,7 +2626,7 @@ var
 begin
   s := UpperCase(s);
   result := true;
-  for i := StrStartIteration to length(s){$IFDEF ANDROID} - 1{$ENDIF} do
+  for i := StrStartIteration to length(s){$IF DEFINED(ANDROID) OR DEFINED(IOS)} - 1{$ENDIF} do
     if not(Char(s[i]) in ['0' .. '9']) and not(Char(s[i]) in ['A' .. 'F']) then
     begin
       result := false;
@@ -2651,7 +2653,7 @@ begin
 
   setLength(buf, length(s));
   for i := 0 to length(s) - 1 do
-    buf[i] := System.UInt8(ord(s[i{$IFNDEF ANDROID} + 1{$ENDIF}]));
+    buf[i] := System.UInt8(ord(s[i{$IF DEFINED(ANDROID) OR DEFINED(IOS)} + 1{$ENDIF}]));
 
   init(K256State, 256);
 
@@ -3075,7 +3077,7 @@ begin
   memstr := TMemoryStream.Create;
   memstr.SetSize(int64(length(H) div 2));
   memstr.Seek(int64(0), soFromBeginning);
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
   for i := 0 to (length(H) div 2) - 1 do
   begin
     b := byte(strToInt('$' + Copy(H, ((i) * 2) + 1, 2)));
@@ -3107,7 +3109,7 @@ begin
   WDPath := TPath.Combine(HOME_PATH, 'hodler.wallet.dat');
   result := fileExists(WDPath);
 end;
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
 
 function HexToStream(H: AnsiString): TStream;
 var
@@ -3116,8 +3118,8 @@ var
   memstr: TMemoryStream;
 begin
   memstr := TMemoryStream.Create;
-  memstr.SetSize((length(H) div 2) - 1);
-  memstr.Seek(0, soFromBeginning);
+  memstr.SetSize({$IFDEF IOS}Int64{$ENDIF}((length(H) div 2) - 1));
+  memstr.Seek({$IFDEF IOS}Int64{$ENDIF}(0), soFromBeginning);
 
   for i := 0 to (length(H) div 2) - 1 do
   begin
@@ -3152,7 +3154,7 @@ var
   bb: Tbytes;
 begin
   setLength(bb, (length(H) div 2));
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
   for i := 0 to (length(H) div 2) - 1 do
   begin
     b := System.UInt8(strToInt('$' + Copy(H, ((i) * 2) + 1, 2)));
@@ -3310,9 +3312,9 @@ begin
   speck.PaddingMode := TSPECKPaddingMode.nopadding;
   speck.IVMode := TSPECKIVMode.userdefined;
   speck.IV := '0123456789abcdef';
-  cipher := trim(speck.Decrypt(data));
+  result := trim(speck.Decrypt(data));
   speck.Free;
-  result := cipher;
+  //result := string(cipher);
 end;
 
 function AES256CBCEncrypt(tcaKey, data: AnsiString): AnsiString;
@@ -3359,7 +3361,7 @@ var
 begin
   setLength(bb, (length(tcaKey) div 2));
   setLength(bb2, (length(data) div 2));
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
   for i := 0 to (length(tcaKey) div 2) - 1 do
   begin
     b := System.UInt8(strToInt('$' + Copy(tcaKey, ((i) * 2) + 1, 2)));
@@ -3387,7 +3389,7 @@ begin
   result := cipher;
 end;
 
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
 
 procedure wipeAnsiString(var toWipe: AnsiString);
 var
@@ -3453,7 +3455,7 @@ begin
   for i := StrStartIteration to length(seed) do
   begin
     result := result + seed[i];
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     if i mod 1 = 0 then
       result := result + ' ';
     if i mod 7 = 0 then

@@ -38,7 +38,7 @@ begin
     dest[i] := tmp[i];
 
 end;
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
 
 function Encode58(V: AnsiString): AnsiString;
 var
@@ -202,7 +202,7 @@ begin
     Decoded := Decode58(Address);
     Hashed := GetSHA256FromHex(GetSHA256FromHex(Copy(Decoded, 0, 42)));
     i := 1;
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     i := 0;
 {$ENDIF}
     Decoded := Copy(Decoded, 43, 8);

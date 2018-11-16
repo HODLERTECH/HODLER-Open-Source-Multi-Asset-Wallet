@@ -53,7 +53,7 @@ begin
   s := netbyte + s;
   r := GetSHA256FromHex(s);
   r := GetSHA256FromHex(r);
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
   s := s + copy(r, 0, 8);
 {$ELSE}
   s := s + copy(r, 1, 8);
@@ -84,7 +84,7 @@ begin
   s := netbyte + s;
   r := GetSHA256FromHex(s);
   r := GetSHA256FromHex(r);
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
   s := s + copy(r, 0, 8);
 {$ELSE}
   s := s + copy(r, 1, 8);

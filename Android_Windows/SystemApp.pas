@@ -21,6 +21,7 @@ uses
 function OfflineMode(turnedon: system.uint32): boolean;
 function isScreenOn: boolean;
 procedure executeAndroid(cmd: String);
+
 type
   JProcess = interface;
 
@@ -155,8 +156,8 @@ end;
 
 function OfflineMode(turnedon: system.uint32): boolean;
 begin
-executeAndroid('settings put global airplane_mode_on '+inttostr(turnedon));
-executeAndroid('am broadcast -a android.intent.action.AIRPLANE_MODE');
+  executeAndroid('settings put global airplane_mode_on ' + inttostr(turnedon));
+  executeAndroid('am broadcast -a android.intent.action.AIRPLANE_MODE');
 end;
 
 procedure executeAndroid(cmd: String);

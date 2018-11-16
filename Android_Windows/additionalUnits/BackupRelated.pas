@@ -152,11 +152,11 @@ begin
     end).Start;
 end;
 {$ENDIF}
-{$IFDEF MSWINDOWS}
+{$IF DEFINED(MSWINDOWS) OR DEFINED(IOS)}
 
   openDialog := TOpenDialog.Create(frmhome);
   openDialog.Title := 'Open File';
-  openDialog.InitialDir := GetCurrentDir;
+  openDialog.InitialDir := {$IFDEF IOS}System.IOUtils.TPath.GetSharedDocumentsPath{$ELSE}GetCurrentDir{$ENDIF};
   openDialog.Filter := 'Zip File|*.zip';
   openDialog.DefaultExt := 'zip';
   openDialog.FilterIndex := 1;
@@ -210,7 +210,7 @@ begin
     IntToStr(DateTimeToUnix(Now));
 
   zipPath := System.IOUtils.TPath.Combine
-    (System.IOUtils.TPath.GetDownloadsPath(), FileName + '.hsb.zip');
+    ({$IFDEF IOS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath(){$ENDIF}, FileName + '.hsb.zip');
 
   if FileExists(zipPath) then
     DeleteFile(zipPath);
@@ -288,7 +288,7 @@ begin
     (HOME_PATH, 'QREncryptedSeed.png');
   DecodeDate(Now, Y, m, d);
   zipPath := System.IOUtils.TPath.Combine
-    (System.IOUtils.TPath.GetDownloadsPath(), 'QREncryptedSeed' +
+    ({$IFDEF IOS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath(){$ENDIF}, 'QREncryptedSeed' +
     Format('%d.%d.%d', [Y, m, d]) + '.' + IntToStr(DateTimeToUnix(Now))
     + '.zip');
 

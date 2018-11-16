@@ -78,7 +78,7 @@ begin
     Panel.TagString := path;
     Panel.Parent := frmHome.FilesManagerScrollBox;
 
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     Panel.OnTap := frmHome.DirectoryPanelClick;
 {$ELSE}
     Panel.OnClick := frmHome.DirectoryPanelClick;
@@ -121,7 +121,7 @@ begin
       Panel.TagString := path;
       Panel.Parent := frmHome.FilesManagerScrollBox;
 
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
       Panel.OnTap := frmHome.FilePanelClick;
 {$ELSE}
       Panel.OnClick := frmHome.FilePanelClick;

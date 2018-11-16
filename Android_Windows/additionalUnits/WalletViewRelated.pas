@@ -847,7 +847,7 @@ begin
       Panel.TagObject := fmxObj.TagObject;
       Panel.Touch.InteractiveGestures := [TInteractiveGesture.LongTap];
 
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
       Panel.OnGesture := frmhome.PanelDragStart;
 {$ELSE}
       Panel.OnMouseDown := frmhome.PanelDragStart;
@@ -870,7 +870,7 @@ begin
 
     OrganizeList.Repaint;
 
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     switchTab(PageControl, HOME_TABITEM);
 {$ENDIF}
     DeleteAccountLayout.Visible := true;
@@ -1032,7 +1032,7 @@ begin
     lblCoinShort.Text := CurrentCryptoCurrency.shortcut + '';
     lblReceiveCoinShort.Text := CurrentCryptoCurrency.shortcut + '';
     QRChangeTimerTimer(nil);
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar,
       CurrentCryptoCurrency.addr);
 {$ELSE}

@@ -64,7 +64,7 @@ var
   fmxObj: TfmxObject;
   Settings: ITextSettings;
   Instance: TComponent;
-
+   alphaStr:string;
   procedure SetEditControlColor(AEditControl: TEdit; AColor: TAlphaColor);
   var
     t: TfmxObject;
@@ -130,6 +130,12 @@ begin
       lblWelcomeDescription.Text := dictionary('ConfigurationTakeOneStep') +
         #13#10 + dictionary('ChooseOption') + ':';
       switchTab(PageControl, WelcomeTabItem);
+{$IFDEF IOS}
+  alphaStr := dictionary('AlphaVersionWarning');
+
+  popupWindow.Create(
+alphaStr);
+    {$ENDIF}
 {$IFDEF MSWINDOWS}
       Panel8.Visible := false;
       DashBrdPanel.Visible := false;
@@ -418,7 +424,9 @@ try
 
   with frmHome do
   begin
-
+{$IFDEF IOS}
+StyloSwitch.Visible:=false;
+{$ENDIF}
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     HOME_PATH := System.IOUtils.TPath.GetDocumentsPath;
     HOME_TABITEM := TTabItem(frmHome.FindComponent('dashbrd'));

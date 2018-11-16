@@ -169,7 +169,7 @@ begin
     scanBitmap := TBitmap.Create();
     scanBitmap.Assign(imgCamera.Bitmap);
     ReadResult := nil;
-
+    {$IFDEF IOS} if not FScanInProgress then {$ENDIF}                 
     tthread.CreateAnonymousThread(
       procedure
       begin

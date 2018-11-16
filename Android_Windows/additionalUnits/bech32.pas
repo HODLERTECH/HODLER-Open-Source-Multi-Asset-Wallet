@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, FMX.Dialogs, System.strUtils, WalletStructureData;
 
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
 
 const
   StrStartIteration = 0;
@@ -587,7 +587,7 @@ var
   bb: TIntegerArray;
 begin
   setlength(bb, (Length(H) div 2));
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
   for i := 0 to (Length(H) div 2) - 1 do
   begin
     b := System.Uint8(strtoInt('$' + Copy(H, ((i) * 2) + 1, 2)));

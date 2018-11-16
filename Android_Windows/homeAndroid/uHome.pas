@@ -48,7 +48,7 @@ uses
   misc, FMX.Menus,
   ZXing.BarcodeFormat,
   ZXing.ReadResult,
-  ZXing.ScanManager, FMX.EditBox, FMX.SpinBox,  FMX.Gestures, FMX.Effects,
+  ZXing.ScanManager, FMX.EditBox, FMX.SpinBox, FMX.Gestures, FMX.Effects,
   FMX.Filter.Effects, System.Actions, FMX.ActnList, System.Math.Vectors,
   FMX.Controls3D, FMX.Layers3D, FMX.StdActns, FMX.MediaLibrary.Actions,
   FMX.ComboEdit;
@@ -596,7 +596,7 @@ type
     YaddressesVertScrollBox: TVertScrollBox;
     changeYbutton: TButton;
     DayNightModeSwitch: TSwitch;
-    Panel8: TPanel;
+    StyloSwitch: TPanel;
     DayNightModeStaticLabel: TLabel;
     YAddresses: TLayout;
     FindUnusedAddressButton: TButton;
@@ -855,10 +855,8 @@ type
     procedure CopyTextButtonClick(Sender: TObject);
     procedure NextButtonSGCClick(Sender: TObject);
     procedure generateNewAddressClick(Sender: TObject);
-    procedure PanelSelectGenerateCoinOnClick(Sender : TObject);
+    procedure PanelSelectGenerateCoinOnClick(Sender: TObject);
     procedure NewYaddressesOKButtonClick(Sender: TObject);
-
-
 
   private
     { Private declarations }
@@ -903,8 +901,8 @@ type
     procedure YAddressClick(Sender: TObject);
     procedure deleteYaddress(Sender: TObject);
     procedure generateNewAddressesClick(Sender: TObject);
-    procedure CoinListCreateFromSeed(Sender : TObject);
-    procedure CoinListCreateFromQR(Sender : TObject);
+    procedure CoinListCreateFromSeed(Sender: TObject);
+    procedure CoinListCreateFromQR(Sender: TObject);
 
   var
     cpTimeout: int64;
@@ -980,21 +978,22 @@ uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
 {$R *.Windows.fmx MSWINDOWS}
 {$R *.Surface.fmx MSWINDOWS}
 
-procedure Tfrmhome.CoinListCreateFromSeed(Sender : TObject);
+procedure TfrmHome.CoinListCreateFromSeed(Sender: TObject);
 begin
   TThread.CreateAnonymousThread(
-  procedure
-  begin
-    TThread.Synchronize(nil,
     procedure
     begin
+      TThread.Synchronize(nil,
+        procedure
+        begin
 
-      procCreateWallet(nil);
+          procCreateWallet(nil);
 
-    end);
-  end).Start;
+        end);
+    end).Start;
 end;
-procedure Tfrmhome.CoinListCreateFromQR(Sender : TObject);
+
+procedure TfrmHome.CoinListCreateFromQR(Sender: TObject);
 var
   MasterSeed, tced: AnsiString;
 begin
@@ -1009,10 +1008,11 @@ begin
   RestorePasswordEdit.Text := '';
 end;
 
-procedure TfrmHome.PanelSelectGenerateCoinOnClick(Sender : TObject);
+procedure TfrmHome.PanelSelectGenerateCoinOnClick(Sender: TObject);
 begin
 
-  TCheckBox(TFmxObject(Sender).TagObject).IsChecked := not TCheckBox(TFmxObject(Sender).TagObject).IsChecked;
+  TCheckBox(TFmxObject(Sender).TagObject).IsChecked :=
+    not TCheckBox(TFmxObject(Sender).TagObject).IsChecked;
 
 end;
 
@@ -1065,7 +1065,7 @@ end;
 
 procedure TfrmHome.importPrivCoinListPanelClick(Sender: TObject);
 begin
-  ImportCoinID := TfmxObject(Sender).Tag;
+  ImportCoinID := TFmxObject(Sender).Tag;
 
   switchTab(PageControl, ImportPrivKeyTabItem);
 end;
@@ -1078,7 +1078,7 @@ end;
 
 procedure TfrmHome.FilePanelClick(Sender: TObject);
 begin
-  frmHome.FileManagerPathLabel.Text := TfmxObject(Sender).TagString;
+  frmHome.FileManagerPathLabel.Text := TFmxObject(Sender).TagString;
 end;
 
 procedure TfrmHome.FilePanelClick(Sender: TObject; const Point: TPointF);
@@ -1106,7 +1106,7 @@ end;
 procedure TfrmHome.DirectoryPanelClick(Sender: TObject);
 begin
 
-  DrawDirectoriesAndFiles(TfmxObject(Sender).TagString);
+  DrawDirectoriesAndFiles(TFmxObject(Sender).TagString);
 end;
 
 procedure TfrmHome.closeOrganizeView(Sender: TObject);
@@ -1240,7 +1240,7 @@ end;
 procedure TfrmHome.OrganizeListMouseMove(Sender: TObject; Shift: TShiftState;
 X, Y: Single);
 var
-  fmxObj: TfmxObject;
+  fmxObj: TFmxObject;
 begin
   if Grab then
   begin
@@ -1265,7 +1265,7 @@ end;
 procedure TfrmHome.OrganizeListMouseUp(Sender: TObject; Button: TMouseButton;
 Shift: TShiftState; X, Y: Single);
 var
-  fmxObj: TfmxObject;
+  fmxObj: TFmxObject;
 begin
   Grab := false;
 
@@ -1367,7 +1367,7 @@ procedure TfrmHome.SwitchViewToOrganize(Sender: TObject;
 const EventInfo: TGestureEventInfo; var Handled: Boolean);
 var
   Panel: TPanel;
-  fmxObj, child, temp: TfmxObject;
+  fmxObj, child, temp: TFmxObject;
 
   Button: TButton;
 
@@ -1522,7 +1522,7 @@ end;
 
 procedure TfrmHome.SelectFileInBackupFileList(Sender: TObject);
 begin
-  RFFPathEdit.Text := TfmxObject(Sender).TagString;
+  RFFPathEdit.Text := TFmxObject(Sender).TagString;
   switchTab(PageControl, HSBPassword);
 end;
 
@@ -1634,13 +1634,14 @@ begin
   if LeftStr(receiveAddress.Text, length('bitcoincash:')) = 'bitcoincash:' then
     receiveAddress.Text := RightStr(receiveAddress.Text,
       length(receiveAddress.Text) - length('bitcoincash:'));
-  receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar, receiveAddress.Text, ' ');
+  receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar,
+    receiveAddress.Text, ' ');
 end;
 
 procedure TfrmHome.BCHLegacyButtonClick(Sender: TObject);
 begin
-  receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar, TwalletInfo(CurrentCryptoCurrency)
-    .addr, ' ')
+  receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar,
+    TwalletInfo(CurrentCryptoCurrency).addr, ' ')
 end;
 
 procedure TfrmHome.BigQRCodeImageClick(Sender: TObject);
@@ -1793,10 +1794,11 @@ end;
 
 procedure TfrmHome.privateKeyPasswordCheck(Sender: TObject);
 begin
-   try
+  try
     if BackupRelated.PKCheckPassword(Sender) then
       switchTab(PageControl, ExportKeyScreen);
-  except on E: Exception do
+  except
+    on E: Exception do
     begin
       popupWindow.Create(E.Message);
     end;
@@ -1857,7 +1859,7 @@ var
   Intent: JIntent;
 {$ENDIF}
 begin
-  myURI := TfmxObject(Sender).TagString;
+  myURI := TFmxObject(Sender).TagString;
 
   URL := myURI;
 {$IFDEF ANDROID}
@@ -1980,14 +1982,14 @@ procedure TfrmHome.CopyPrivateKeyButtonClick(Sender: TObject);
 var
   svc: IFMXExtendedClipboardService;
 begin
-  (*if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, svc)
-  then
-  begin
+  (* if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, svc)
+    then
+    begin
 
     svc.setClipboard(removeSpace(lblPrivateKey.Text));
     popupWindow.Create(dictionary('CopiedToClipboard'));
 
-  end;*)
+    end; *)
 end;
 
 procedure TfrmHome.CopyTextButtonClick(Sender: TObject);
@@ -2016,15 +2018,14 @@ begin
 
       vibrate(200);
     end;
-     if Sender is TLabel then
+    if Sender is TLabel then
     begin
 
-      svc.setClipboard(Tlabel(Sender).TagString);
+      svc.setClipboard(TLabel(Sender).TagString);
       popupWindow.Create(dictionary('CopiedToClipboard'));
 
       vibrate(200);
     end;
-
 
   end;
 
@@ -2096,11 +2097,10 @@ begin
     procedure()
     begin
       wipeWalletDat;
-{$IFDEF WINDOWS}
-      frmHome.Close;
-{$ENDIF}
 {$IFDEF ANDROID}
       SharedActivity.finish;
+{$ELSE}
+      frmHome.Close;
 {$ENDIF}
     end,
     procedure()
@@ -2153,7 +2153,7 @@ begin
 
   // turn on phone's sensors
   // they will be used for collect random data
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
   MotionSensor.Active := true;
   OrientationSensor.Active := true;
 {$ENDIF}
@@ -2249,7 +2249,8 @@ begin
     (TwalletInfo(CurrentCryptoCurrency).pub,
     AvailableCoin[TwalletInfo(CurrentCryptoCurrency).coin].p2pk);
 
-  receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar, receiveAddress.Text, ' ');
+  receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar,
+    receiveAddress.Text, ' ');
 end;
 
 procedure TfrmHome.switchCompatiblep2shButtonClick(Sender: TObject);
@@ -2257,15 +2258,18 @@ begin
   receiveAddress.Text := Bitcoin.generatep2sh(TwalletInfo(CurrentCryptoCurrency)
     .pub, AvailableCoin[TwalletInfo(CurrentCryptoCurrency).coin].p2sh);
 
-  receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar, receiveAddress.Text, ' ');
+  receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar,
+    receiveAddress.Text, ' ');
 end;
 
 procedure TfrmHome.SwitchSegwitp2wpkhButtonClick(Sender: TObject);
 begin
   receiveAddress.Text := Bitcoin.generatep2wpkh
-    (TwalletInfo(CurrentCryptoCurrency).pub , availableCoin[TwalletInfo(CurrentCryptoCurrency).coin].hrp );
+    (TwalletInfo(CurrentCryptoCurrency).pub,
+    AvailableCoin[TwalletInfo(CurrentCryptoCurrency).coin].hrp);
 
-  receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar, receiveAddress.Text, ' ');
+  receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar,
+    receiveAddress.Text, ' ');
 end;
 
 procedure TfrmHome.LoadAccountPanelClick(Sender: TObject);
@@ -2274,7 +2278,7 @@ begin
     closeOrganizeView(nil);
   firstSync := true;
 
-  LoadCurrentAccount(TfmxObject(Sender).TagString);
+  LoadCurrentAccount(TFmxObject(Sender).TagString);
   AccountsListPanel.Visible := false;
 end;
 
@@ -2301,16 +2305,16 @@ end;
 procedure TfrmHome.NextButtonSGCClick(Sender: TObject);
 begin
   TThread.CreateAnonymousThread(
-  procedure
-  begin
-    TThread.Synchronize(nil,
     procedure
     begin
+      TThread.Synchronize(nil,
+        procedure
+        begin
 
-      procCreateWallet(nil);
+          procCreateWallet(nil);
 
-    end);
-  end).Start;
+        end);
+    end).Start;
 end;
 
 procedure TfrmHome.notPrivTCA2Change(Sender: TObject);
@@ -2626,7 +2630,7 @@ end;
 procedure TfrmHome.CameraComponent1SampleBufferReady(Sender: TObject;
 const ATime: TMediaTime);
 begin
-  Tthread.Synchronize(Tthread.CurrentThread, GetImage);
+  TThread.Synchronize(TThread.CurrentThread, GetImage);
 end;
 {$IFDEF VANDROID}
 
@@ -2698,8 +2702,9 @@ begin
   try
     AccountRelated.InitializeHodler;
     AccountsListPanel.Visible := false;
-  except on E: Exception do
-    showmessage(E.Message);
+  except
+    on E: Exception do
+      showmessage(E.Message);
   end;
 
 end;
@@ -2722,10 +2727,10 @@ var
   i: Integer;
 begin
 
-  Tthread.CreateAnonymousThread(
+  TThread.CreateAnonymousThread(
     procedure
     begin
-      Tthread.Synchronize(nil,
+      TThread.Synchronize(nil,
         procedure
         begin
           showmessage('OK');
@@ -2847,9 +2852,10 @@ procedure TfrmHome.FormShow(Sender: TObject);
 begin
 
   try
-     AccountRelated.afterInitialize;
-  except on E: Exception do
-    showmessage(E.Message);
+    AccountRelated.afterInitialize;
+  except
+    on E: Exception do
+      showmessage(E.Message);
   end;
 
 end;
@@ -2958,7 +2964,7 @@ begin
   // colecting random data for seed generator
   trngBuffer := trngBuffer + GetSTrHashSHA256(inttohex(random($FFFFFFFF), 8) +
     DateTimeToStr(Now));
-{$IFDEF ANDROID}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
   if MotionSensor.Sensor <> nil then
     with MotionSensor.Sensor do
     begin
@@ -3190,7 +3196,7 @@ end;
 
 procedure TfrmHome.SearchEditChangeTracking(Sender: TObject);
 var
-  fmxObj: TfmxObject;
+  fmxObj: TFmxObject;
   Panel: TPanel;
   lbl: TLabel;
   i: Integer;
@@ -3264,10 +3270,10 @@ end;
 
 procedure TfrmHome.SendWalletFile(Sender: TObject);
 begin
-if SYSTEM_APP then
-decryptSeedForSeedRestore(Sender)
-else
-  BackupRelated.SendHSB;
+  if SYSTEM_APP then
+    decryptSeedForSeedRestore(Sender)
+  else
+    BackupRelated.SendHSB;
 end;
 
 procedure TfrmHome.SendWalletFileButtonClick(Sender: TObject);

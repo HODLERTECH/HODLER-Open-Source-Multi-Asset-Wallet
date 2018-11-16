@@ -316,7 +316,7 @@ var
 
   innerID, X, Y, address, description, creationTime, panelYPosition, publicKey,
     EncryptedPrivateKey, isCompressed: AnsiString;
-
+   s:string;
 begin
 
   if not fileExists(CoinFilePath) then
@@ -328,8 +328,8 @@ begin
 
   if ts.Text[low(ts.Text)] = '[' then
   begin
-
-    JsonArray := TJsonArray(TJSONObject.ParseJSONValue(ts.Text));
+    s:=ts.Text;
+    JsonArray := TJsonArray(TJSONObject.ParseJSONValue(s));
 
     for coinJson in JsonArray do
     begin
