@@ -126,7 +126,11 @@ var
 
 begin
   result := nil;
+  if (wi.x=-1) and (wi.y=-1) then begin
+    result:=wi;
+    exit;
 
+  end;
   for i := 0 to Length(myCoins) - 1 do
   begin
 

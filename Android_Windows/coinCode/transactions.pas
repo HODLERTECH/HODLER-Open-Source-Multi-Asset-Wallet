@@ -163,7 +163,7 @@ var
   txhash, priv, pub, scriptSig: AnsiString;
   scriptCode: AnsiString;
   reedem: AnsiString;
-  Y:integer;
+  y: integer;
 begin
   preImage := '';
   setHeader;
@@ -174,7 +174,7 @@ begin
     addToPreImage(inttotx(inputs[k].n, 8));
     if i = k then
     begin
-      Y:=inputs[k].Y;
+      y := inputs[k].y;
       scriptCode := inputs[k].ScriptPubKey;
       addToPreImage(inttotx(length(scriptCode) div 2, 2));
       addToPreImage(scriptCode);
@@ -198,7 +198,7 @@ begin
   end
   else
   begin
-    priv := priv256forhd(sender.coin, sender.x, Y, masterSeed);
+    priv := priv256forhd(sender.coin, sender.x, y, masterSeed);
     pub := secp256k1_get_public(priv);
   end;
   scriptSig := secp256k1_signDER(txhash, priv);
@@ -214,14 +214,16 @@ var
   k: integer;
   hash1, hash2: AnsiString;
   txhash, priv, pub, scriptSig, scriptCode, reedem: AnsiString;
-  Y:integer;
+  y: integer;
 begin
   preImage := '';
   setHeader;
-  Y:= inputs[i].Y;
-//  pub := currentCoin.pub;
-  pub:= CurrentAccount.getSibling(CurrentCoin,Y).pub;
-
+  y := inputs[i].y;
+  // pub := currentCoin.pub;
+  if masterSeed = '' then
+    pub := sender.pub
+  else
+    pub := CurrentAccount.getSibling(CurrentCoin, y).pub;
 
   inputsBalance := 0;
   hash1 := '';
@@ -261,12 +263,15 @@ begin
   txhash := (GetSha256FromHex(GetSha256FromHex(preImage)));
   if (sender.x = -1) and (sender.y = -1) then
   begin
-    priv := speckDecrypt(TCA(masterSeed), sender.EncryptedPrivKey);
+    if masterSeed = '' then
+      priv := sender.EncryptedPrivKey
+    else
+      priv := speckDecrypt(TCA(masterSeed), sender.EncryptedPrivKey);
     pub := secp256k1_get_public(priv, not sender.isCompressed);
   end
   else
   begin
-    priv := priv256forhd(sender.coin, sender.x, Y, masterSeed);
+    priv := priv256forhd(sender.coin, sender.x, y, masterSeed);
     pub := secp256k1_get_public(priv);
   end;
   scriptSig := secp256k1_signDER(txhash, priv);
@@ -288,7 +293,7 @@ end;
 
 function TxBuilder.getHashType: system.UInt8;
 begin
-  if sender.coin in [3,7] then
+  if sender.coin in [3, 7] then
     result := $01 or $40
   else
     result := $01;
@@ -327,7 +332,7 @@ var
   outData: TAddressInfo;
 begin
   inc(outputsCount);
-  outData := decodeAddressInfo(address, currentCoin.coin);
+  outData := decodeAddressInfo(address, CurrentCoin.coin);
   outputScript := outData.outputScript;
 
   outputBuffer := outputBuffer + (inttotx(amount, 16));
@@ -341,7 +346,7 @@ var
   outData: TAddressInfo;
 begin
   inc(outputsCount);
-  outData := decodeAddressInfo(address, currentCoin.coin);
+  outData := decodeAddressInfo(address, CurrentCoin.coin);
   outputScript := outData.outputScript;
 
   outputBuffer := outputBuffer + (inttotx(amount, 16));
@@ -356,7 +361,7 @@ var
   txhash, priv, pub, scriptSig: AnsiString;
   scriptCode: AnsiString;
   reedem: AnsiString;
-  Y:integer;
+  y: integer;
 begin
   preImage := '';
   setHeader;
@@ -369,7 +374,7 @@ begin
     begin
 
       scriptCode := inputs[k].ScriptPubKey;
-      Y:=inputs[k].Y;
+      y := inputs[k].y;
       addToPreImage(inttotx(length(scriptCode) div 2, 2));
       addToPreImage(scriptCode);
     end
@@ -387,13 +392,16 @@ begin
   txhash := (GetSha256FromHex(GetSha256FromHex(preImage)));
   if (sender.x = -1) and (sender.y = -1) then
   begin
-    priv := speckDecrypt(TCA(masterSeed), sender.EncryptedPrivKey);
+    if masterSeed = '' then
+      priv := sender.EncryptedPrivKey
+    else
+      priv := speckDecrypt(TCA(masterSeed), sender.EncryptedPrivKey);
     pub := secp256k1_get_public(priv, not sender.isCompressed);
   end
   else
   begin
-    priv := priv256forhd(sender.coin, sender.x, Y, masterSeed);
-    pub := CurrentAccount.getSibling(CurrentCoin,Y).pub;
+    priv := priv256forhd(sender.coin, sender.x, y, masterSeed);
+    pub := CurrentAccount.getSibling(CurrentCoin, y).pub;
   end;
 
   scriptSig := secp256k1_signDER(txhash, priv);
@@ -480,7 +488,8 @@ begin
           end;
         1:
           begin
-            reedem := reedemFromPub(CurrentAccount.getSibling(CurrentCoin,inputs[i].Y).pub);
+            reedem := reedemFromPub(CurrentAccount.getSibling(CurrentCoin,
+              inputs[i].y).pub);
             addToPreImage('1716' + reedem);
             witness := witness + '02' + der[i];
           end;
