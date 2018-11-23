@@ -88,7 +88,12 @@ begin
       mutex.Release();
 
       semaphore.WaitFor();
+      try
       SynchronizeCryptoCurrency(CurrentAccount.myCoins[id]);
+      except on E:Exception do begin
+
+      end;
+      end;
       semaphore.Release();
 
       TThread.Synchronize(nil, procedure
@@ -117,7 +122,11 @@ begin
       mutex.Release();
 
       semaphore.WaitFor();
+      try
       SynchronizeCryptoCurrency(CurrentAccount.myTokens[id]);
+      except on E:Exception do begin
+      end;
+      end;
       semaphore.Release();
 
       TThread.Synchronize(nil, procedure
@@ -416,8 +425,12 @@ begin
         btnSync.Repaint();
 
       end);
-
+    try
     SynchronizeAll();
+    except on E:Exception do
+    begin
+    end;
+    end;
     //synchronizeAddresses;
     refreshGlobalFiat();
 
@@ -476,7 +489,8 @@ var
   tempts: TStringList;
 begin
   sum := 0;
-
+  if text='' then exit;
+  
   ts := TStringList.Create();
   try
     ts.text := text;
@@ -669,7 +683,7 @@ begin
     wd.rate := StrToFloatDef(ts.Strings[9], 0);
 
   except
-    on E: Exception do
+    on E: Exception do  begin end;
   end;
 
   ts.Free;

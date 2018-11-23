@@ -407,7 +407,7 @@ begin
     lbl.Parent := panel;
     lbl.Visible := true;
     lbl.Align := TAlignLayout.Client;
-    lbl.Text := availablecoin[i].name;
+    lbl.Text := availablecoin[i].Displayname;
 
     checkBox := TCheckBox.Create(panel);
     checkBox.Parent := panel;
@@ -541,10 +541,8 @@ end;
 procedure LoadStyle(name: AnsiString);
 begin
 {$IFDEF IOS}
-exit;
+  exit;
 {$ENDIF}
-
-
   if name = 'RT_DARK' then
     frmhome.StatusBarFixer.Fill.Color := TAlphaColorRec.Black
   else
@@ -652,7 +650,7 @@ begin
     address := removeSpace(WVsendTO.Text);
 
     if (CurrentCryptoCurrency is TWalletInfo) and
-      (TWalletInfo(CurrentCryptoCurrency).coin = 3) then
+      (TWalletInfo(CurrentCryptoCurrency).coin in [3, 7]) then
     begin
       CashAddr := StringReplace(LowerCase(address), 'bitcoincash:', '',
         [rfReplaceAll]);
@@ -674,7 +672,7 @@ begin
     SendFromLabel.Text := CurrentCoin.addr;
     SendToLabel.Text := address;
     if ((CurrentCryptoCurrency is TWalletInfo) and
-      (TWalletInfo(CurrentCryptoCurrency).coin = 3)) then
+      (TWalletInfo(CurrentCryptoCurrency).coin in [3, 7])) then
     begin
       CashAddr := StringReplace(LowerCase(removeSpace(WVsendTO.Text)),
         'bitcoincash:', '', [rfReplaceAll]);
@@ -1371,7 +1369,8 @@ begin
   saveDialog.Title := 'Save your text or word file';
   saveDialog.FileName := ExtractFileName(path);
 
-  saveDialog.InitialDir := {$IFDEF IOS}TPath.GetSharedDocumentsPath{$ELSE}GetCurrentDir{$ENDIF};
+  saveDialog.InitialDir :=
+  {$IFDEF IOS}TPath.GetSharedDocumentsPath{$ELSE}GetCurrentDir{$ENDIF};
 
   saveDialog.Filter := 'Zip File|*.zip';
 
@@ -2588,7 +2587,7 @@ begin
 
       coinName := TLabel.Create(frmhome.SelectNewCoinBox);
       coinName.Parent := panel;
-      coinName.Text := availablecoin[i].name;
+      coinName.Text := availablecoin[i].Displayname;
       coinName.Visible := true;
       coinName.Width := 500;
       coinName.Position.x := 52;
@@ -2653,7 +2652,8 @@ begin
 
   setLength(buf, length(s));
   for i := 0 to length(s) - 1 do
-    buf[i] := System.UInt8(ord(s[i{$IF DEFINED(ANDROID) OR DEFINED(IOS)} + 1{$ENDIF}]));
+    buf[i] := System.UInt8
+      (ord(s[i{$IF DEFINED(ANDROID) OR DEFINED(IOS)} + 1{$ENDIF}]));
 
   init(K256State, 256);
 
@@ -2894,8 +2894,6 @@ begin
   end;
 end;
 
-
-
 function loadCache(Hash: AnsiString): AnsiString;
 var
   list: TStringList;
@@ -2911,9 +2909,10 @@ begin
   list := TStringList.Create();
   try
     list.NameValueSeparator := '#';
-     TThread.Synchronize(nil , procedure
+    Tthread.Synchronize(nil,
+      procedure
       begin
-       list.LoadFromFile(CurrentAccount.DirPath + '/cache.dat');
+        list.LoadFromFile(CurrentAccount.DirPath + '/cache.dat');
       end);
 
     i := list.IndexOfName(Hash);
@@ -2934,98 +2933,95 @@ var
   ts: TStringList;
   conv: TConvert;
 var
-  Flock:TObject;
+  Flock: TObject;
 begin
   if (CurrentAccount = nil) then
     exit();
-//FLock := TObject.Create;
-//TMonitor.Enter(FLock);
-try
-  ts := TStringList.Create;
+  // FLock := TObject.Create;
+  // TMonitor.Enter(FLock);
   try
+    ts := TStringList.Create;
     try
-      TThread.Synchronize(nil , procedure
-      begin
-        if fileExists(CurrentAccount.DirPath + '/cache.dat') then
-        ts.LoadFromFile(CurrentAccount.DirPath + '/cache.dat');
-      end);
-      
-      ts.NameValueSeparator := '#';
-      conv := TConvert.Create(base64);
-      data := conv.StringToFormat(data);
-      if ts.IndexOfName(Hash) >= 0 then
-        ts.values[Hash] := data
-      else
-        ts.Add(Hash + '#' + data);
-      conv.Free;
-       TThread.Synchronize(nil , procedure
-      begin
-        ts.SaveToFile(CurrentAccount.DirPath + '/cache.dat');
+      try
+        Tthread.Synchronize(nil,
+          procedure
+          begin
+            if fileExists(CurrentAccount.DirPath + '/cache.dat') then
+              ts.LoadFromFile(CurrentAccount.DirPath + '/cache.dat');
+          end);
 
+        ts.NameValueSeparator := '#';
+        conv := TConvert.Create(base64);
+        data := conv.StringToFormat(data);
+        if ts.IndexOfName(Hash) >= 0 then
+          ts.values[Hash] := data
+        else
+          ts.Add(Hash + '#' + data);
+        conv.Free;
+        Tthread.Synchronize(nil,
+          procedure
+          begin
+            ts.SaveToFile(CurrentAccount.DirPath + '/cache.dat');
 
-      end);
+          end);
 
-    except
-      on E: Exception do
+      except
+        on E: Exception do
 
+      end;
+
+    finally
+      ts.Free;
     end;
-
   finally
-    ts.Free;
+    // TMonitor.Exit(FLock);
   end;
-finally
-  //TMonitor.Exit(FLock);
-end;
 end;
 
 function apiStatus(aURL, aResult: string; exceptional: Boolean = false): string;
 var
   switch: Boolean;
   tmp: string;
-  FLock:TObject;
+  Flock: TObject;
 begin
-FLock := TObject.Create;
-TMonitor.Enter(FLock);
-try
-if AnsiContainsStr(aURL , 'ravencoin') or AnsiContainsStr(aURL , 'digibyte') then
-  begin
+  Flock := TObject.Create;
+  TMonitor.Enter(Flock);
+  try
+    switch := exceptional;
+    result := '';
+    if Pos('Transport endpoint is not connected', aResult) > 0 then
+      switch := true;
 
-    if HODLER_URL <> 'https://hodler1.nq.pl/' then
+{    if (Pos(HODLER_ETH, aURL) > 0) and (switch) then
     begin
-      tmp := HODLER_URL2;
-      HODLER_URL2 := HODLER_URL;
-      HODLER_URL := tmp;
-    end;
-    result := aresult;
-    exit;
+      switch := true;
+      aURL := StringReplace(aURL, HODLER_ETH, HODLER_ETH2, [rfReplaceAll]);
+      tmp := HODLER_ETH2;
+      HODLER_ETH2 := HODLER_ETH;
+      HODLER_ETH := tmp;
+    end;}
+    result := aResult;
+  finally
+    TMonitor.exit(Flock);
+    Flock.Free;
   end;
-
-
-  switch := exceptional;
-  result := '';
-  if Pos('Transport endpoint is not connected', aResult) > 0 then
-    switch := true;
-  if (Pos(HODLER_URL, aURL) > 0) and (switch) then
-  begin
-    switch := true;
-    aURL := StringReplace(aURL, HODLER_URL, HODLER_URL2, [rfReplaceAll]);
-    tmp := HODLER_URL2;
-    HODLER_URL2 := HODLER_URL;
-    HODLER_URL := tmp;
-  end;
-  if (Pos(HODLER_ETH, aURL) > 0) and (switch) then
-  begin
-    switch := true;
-    aURL := StringReplace(aURL, HODLER_ETH, HODLER_ETH2, [rfReplaceAll]);
-    tmp := HODLER_ETH2;
-    HODLER_ETH2 := HODLER_ETH;
-    HODLER_ETH := tmp;
-  end;
-  result := aResult;
-finally
-  TMonitor.Exit(FLock);
-  FLock.Free;
 end;
+
+function ensureURL(aURL: string): string;
+begin
+  if AnsiContainsStr(aURL, 'ravencoin') or AnsiContainsStr(aURL, 'digibyte') or
+    AnsiContainsStr(aURL, 'bitcoinabc') or AnsiContainsStr(aURL, 'bitcoin') or
+    AnsiContainsStr(aURL, 'litecoin') or AnsiContainsStr(aURL, 'dash') then
+  begin
+    aURL := StringReplace(aURL, 'hodlerstream.net', 'hodler1.nq.pl',
+      [rfReplaceAll]);
+  end;
+  if AnsiContainsStr(aURL, 'bitcoinsv') then
+  begin
+    aURL := StringReplace(aURL, 'hodler1.nq.pl', 'hodlerstream.net',
+      [rfReplaceAll]);
+  end;
+  result := aURL;
 end;
 
 function getDataOverHTTP(aURL: String; useCache: Boolean = true): AnsiString;
@@ -3034,6 +3030,7 @@ var
   LResponse: IHTTPResponse;
   urlHash: AnsiString;
 begin
+  aURL:=ensureURL(aURL);
   urlHash := GetStrHashSHA256(aURL);
   if (firstSync and useCache) then
   begin
@@ -3050,8 +3047,11 @@ begin
       LResponse := req.get(aURL);
       result := apiStatus(aURL, LResponse.ContentAsString());
       try
-      saveCache(urlHash, result);
-      except on E:Exception do begin end
+        saveCache(urlHash, result);
+      except
+        on E: Exception do
+        begin
+        end
 
       end;
       if LResponse.StatusCode <> 200 then
@@ -3118,8 +3118,8 @@ var
   memstr: TMemoryStream;
 begin
   memstr := TMemoryStream.Create;
-  memstr.SetSize({$IFDEF IOS}Int64{$ENDIF}((length(H) div 2) - 1));
-  memstr.Seek({$IFDEF IOS}Int64{$ENDIF}(0), soFromBeginning);
+  memstr.SetSize({$IFDEF IOS}int64{$ENDIF}((length(H) div 2) - 1));
+  memstr.Seek({$IFDEF IOS}int64{$ENDIF}(0), soFromBeginning);
 
   for i := 0 to (length(H) div 2) - 1 do
   begin
@@ -3314,7 +3314,7 @@ begin
   speck.IV := '0123456789abcdef';
   result := trim(speck.Decrypt(data));
   speck.Free;
-  //result := string(cipher);
+  // result := string(cipher);
 end;
 
 function AES256CBCEncrypt(tcaKey, data: AnsiString): AnsiString;
@@ -3476,12 +3476,12 @@ var
   wd: TWalletInfo;
   ts { , oldFile } : TStringList;
   i: integer;
-  FLock: TObject;
+  Flock: TObject;
   JsonObject: TJSONObject;
   JSONArray: TJsonArray;
 begin
-  FLock := TObject.Create;
-  TMonitor.Enter(FLock);
+  Flock := TObject.Create;
+  TMonitor.Enter(Flock);
   try
     if not fileExists(TPath.Combine(HOME_PATH, 'hodler.wallet.dat')) then
     begin
@@ -3516,7 +3516,7 @@ begin
     ts.Free;
 
   finally
-    TMonitor.exit(FLock);
+    TMonitor.exit(Flock);
   end;
 
 end;
@@ -3589,7 +3589,8 @@ begin
         frmhome.WaitForGenerationLabel.Text := 'Generating BTC Wallet';
       end);
 
-    for i := 0 to (frmhome.GenerateCoinVertScrollBox.Content.ChildrenCount - 1) do
+    for i := 0 to (frmhome.GenerateCoinVertScrollBox.Content.
+      ChildrenCount - 1) do
     begin
 
       panel := TPanel(frmhome.GenerateCoinVertScrollBox.Content.Children[i]);
@@ -3651,20 +3652,21 @@ begin
       if EthAddress = '' then
       begin
         wd := Ethereum_createHD(4, 0, 0, seed);
-          wd.orderInWallet := Position;
-          inc(Position, 48);
-          ac.AddCoin(wd);
-          Tthread.Synchronize(nil,
-            procedure
-            begin
-              frmhome.WaitForGenerationLabel.Text := 'Generating ETH Wallet';
-              frmhome.WaitForGenerationProgressBar.Value :=
-                frmhome.WaitForGenerationProgressBar.Value + 1;
-            end);
+        wd.orderInWallet := Position;
+        inc(Position, 48);
+        ac.AddCoin(wd);
+        Tthread.Synchronize(nil,
+          procedure
+          begin
+            frmhome.WaitForGenerationLabel.Text := 'Generating ETH Wallet';
+            frmhome.WaitForGenerationProgressBar.Value :=
+              frmhome.WaitForGenerationProgressBar.Value + 1;
+          end);
 
-          EthAddress := wd.addr;
+        EthAddress := wd.addr;
       end;
-      for i := 0 to frmhome.GenerateCoinVertScrollBox.Content.ChildrenCount - 1 do
+      for i := 0 to frmhome.GenerateCoinVertScrollBox.Content.
+        ChildrenCount - 1 do
       begin
 
         panel := TPanel(frmhome.GenerateCoinVertScrollBox.Content.Children[i]);
@@ -3679,14 +3681,12 @@ begin
           Continue;
         end;
 
-
         T := Token.Create(panel.Tag - 10000, EthAddress);
         T.orderInWallet := Position;
         inc(Position, 48);
 
-        T.idInWallet := Length(ac.myTokens) + 10000;
+        T.idInWallet := length(ac.myTokens) + 10000;
         ac.addToken(T);
-
 
       end;
 

@@ -288,7 +288,7 @@ end;
 
 function TxBuilder.getHashType: system.UInt8;
 begin
-  if sender.coin = 3 then
+  if sender.coin in [3,7] then
     result := $01 or $40
   else
     result := $01;

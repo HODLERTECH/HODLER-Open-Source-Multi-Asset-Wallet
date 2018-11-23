@@ -29,7 +29,7 @@ type
 
 const
   // all supported coin
-  availableCoin: array [0 .. 6] of coinInfo = ((id: 0; displayName: 'Bitcoin';
+  availableCoin: array [0 .. 7] of coinInfo = ((id: 0; displayName: 'Bitcoin';
     name: 'bitcoin'; shortcut: 'BTC'; WifByte: '80'; p2sh: '05'; p2pk: '00';
 
     flag: 0; decimals: 8; availableFirstLetter: '13b'; hrp : 'bc';
@@ -43,8 +43,8 @@ const
     WifByte: 'CC'; p2sh: '10'; p2pk: '4c'; flag: 0; decimals: 8;
     availableFirstLetter: 'X';
 
-    ), (id: 3; displayName: 'Bitcoin Cash'; name: 'bitcoincash';
-    shortcut: 'BCH'; WifByte: '80'; p2sh: '05'; p2pk: '00';
+    ), (id: 3; displayName: 'Bitcoin ABC'; name: 'bitcoinabc';
+    shortcut: 'BAB'; WifByte: '80'; p2sh: '05'; p2pk: '00';
 
     flag: 0; decimals: 8; availableFirstLetter: '13pq';
 
@@ -57,6 +57,11 @@ const
     ),
     (id:6; displayName: 'Digibyte'; name: 'digibyte'; shortcut: 'DGB';
     WifByte: '80';p2sh :'3f'; p2pk: '1e'; flag: 0; decimals: 8; availableFirstLetter: 'SD';
+
+    ), (id: 7; displayName: 'Bitcoin SV'; name: 'bitcoinsv';
+    shortcut: 'BSV'; WifByte: '80'; p2sh: '05'; p2pk: '00';
+
+    flag: 0; decimals: 8; availableFirstLetter: '13pq';
 
     )
 
@@ -86,6 +91,8 @@ begin
       URL := 'https://ravencoin.network/tx/';
     6:
       URL := 'https://digiexplorer.info/tx/';
+    7:
+      URL := 'https://bsvexplorer.info/tx/';
     end;
 
   result := URL + hash;
@@ -152,7 +159,7 @@ begin
   if availableCoin[id].flag = 0 then
   begin
 
-    if (id = 3) then
+    if (id in [3,7]) then
     begin
 
       str := StringReplace(address, ' ', '', [rfReplaceAll]);

@@ -6,7 +6,7 @@
         <MainSource>HODLER_Wallet_Mobile.dpr</MainSource>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Release</Config>
-        <Platform Condition="'$(Platform)'==''">iOSDevice64</Platform>
+        <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1247</TargetedPlatforms>
         <AppType>Application</AppType>
     </PropertyGroup>
@@ -506,83 +506,7 @@
         <PF_MobileProvisionPathAppStore>/Users/hodler/Library/MobileDevice/Provisioning Profiles/79cdf7b6-5652-460b-8c92-59110f81616b.mobileprovision</PF_MobileProvisionPathAppStore>
         <PF_KeyChainAccessAppStore>7W8J746W7R.com.hodlertech.hodler;</PF_KeyChainAccessAppStore>
         <PF_AppIdentifierAppStore>7W8J746W7R.com.hodlertech.hodler</PF_AppIdentifierAppStore>
-        <PF_EntitlementExtraKeyValuesAppStore>&lt;key&gt;com.apple.developer.pass-type-identifiers&lt;/key&gt;
-	&lt;array&gt;
-	&lt;string&gt;7W8J746W7R.*&lt;/string&gt;
-	&lt;/array&gt;
-	&lt;key&gt;com.apple.developer.networking.networkextension&lt;/key&gt;
-	&lt;array&gt;
-	&lt;string&gt;app-proxy-provider&lt;/string&gt;
-	&lt;string&gt;content-filter-provider&lt;/string&gt;
-	&lt;string&gt;packet-tunnel-provider&lt;/string&gt;
-	&lt;string&gt;dns-proxy&lt;/string&gt;
-	&lt;/array&gt;
-	&lt;key&gt;com.apple.developer.networking.HotspotConfiguration&lt;/key&gt;
-	&lt;true/&gt;
-	&lt;key&gt;com.apple.developer.networking.multipath&lt;/key&gt;
-	&lt;true/&gt;
-	&lt;key&gt;com.apple.developer.nfc.readersession.formats&lt;/key&gt;
-	&lt;array&gt;
-	&lt;string&gt;NDEF&lt;/string&gt;
-	&lt;/array&gt;
-	&lt;key&gt;com.apple.developer.ClassKit-environment&lt;/key&gt;
-	&lt;array&gt;
-	&lt;string&gt;production&lt;/string&gt;
-	&lt;/array&gt;
-	&lt;key&gt;com.apple.developer.authentication-services.autofill-credential-provider&lt;/key&gt;
-	&lt;true/&gt;
-	&lt;key&gt;com.apple.developer.networking.wifi-info&lt;/key&gt;
-	&lt;true/&gt;
-	&lt;key&gt;inter-app-audio&lt;/key&gt;
-	&lt;true/&gt;
-	&lt;key&gt;get-task-allow&lt;/key&gt;
-	&lt;false/&gt;
-	&lt;key&gt;com.apple.developer.healthkit&lt;/key&gt;
-	&lt;true/&gt;
-	&lt;key&gt;com.apple.developer.healthkit.access&lt;/key&gt;
-	&lt;array&gt;
-	&lt;string&gt;health-records&lt;/string&gt;
-	&lt;/array&gt;
-	&lt;key&gt;com.apple.developer.ubiquity-kvstore-identifier&lt;/key&gt;
-	&lt;string&gt;7W8J746W7R.*&lt;/string&gt;
-	&lt;key&gt;com.apple.developer.icloud-services&lt;/key&gt;
-	&lt;string&gt;*&lt;/string&gt;
-	&lt;key&gt;com.apple.developer.icloud-container-identifiers&lt;/key&gt;
-	&lt;array&gt;
-	&lt;/array&gt;
-	&lt;key&gt;com.apple.developer.icloud-container-development-container-identifiers&lt;/key&gt;
-	&lt;array&gt;
-	&lt;/array&gt;
-	&lt;key&gt;com.apple.developer.ubiquity-container-identifiers&lt;/key&gt;
-	&lt;array&gt;
-	&lt;/array&gt;
-	&lt;key&gt;com.apple.developer.associated-domains&lt;/key&gt;
-	&lt;string&gt;*&lt;/string&gt;
-	&lt;key&gt;com.apple.security.application-groups&lt;/key&gt;
-	&lt;array&gt;
-	&lt;/array&gt;
-	&lt;key&gt;com.apple.developer.homekit&lt;/key&gt;
-	&lt;true/&gt;
-	&lt;key&gt;com.apple.developer.team-identifier&lt;/key&gt;
-	&lt;string&gt;7W8J746W7R&lt;/string&gt;
-	&lt;key&gt;com.apple.external-accessory.wireless-configuration&lt;/key&gt;
-	&lt;true/&gt;
-	&lt;key&gt;aps-environment&lt;/key&gt;
-	&lt;string&gt;production&lt;/string&gt;
-	&lt;key&gt;com.apple.developer.in-app-payments&lt;/key&gt;
-	&lt;array&gt;
-	&lt;/array&gt;
-	&lt;key&gt;com.apple.developer.default-data-protection&lt;/key&gt;
-	&lt;string&gt;NSFileProtectionComplete&lt;/string&gt;
-	&lt;key&gt;com.apple.developer.networking.vpn.api&lt;/key&gt;
-	&lt;array&gt;
-	&lt;string&gt;allow-vpn&lt;/string&gt;
-	&lt;/array&gt;
-	&lt;key&gt;beta-reports-active&lt;/key&gt;
-	&lt;true/&gt;
-	&lt;key&gt;com.apple.developer.siri&lt;/key&gt;
-	&lt;true/&gt;
-	</PF_EntitlementExtraKeyValuesAppStore>
+        <PF_EntitlementExtraKeyValuesAppStore>&lt;key&gt;com.apple.developer.pass-type-identifiers&lt;/key&gt;&lt;array&gt;&lt;string&gt;7W8J746W7R.*&lt;/string&gt;&lt;/array&gt;&lt;key&gt;com.apple.developer.networking.networkextension&lt;/key&gt;&lt;array&gt;&lt;string&gt;app-proxy-provider&lt;/string&gt;&lt;string&gt;content-filter-provider&lt;/string&gt;&lt;string&gt;packet-tunnel-provider&lt;/string&gt;&lt;string&gt;dns-proxy&lt;/string&gt;&lt;/array&gt;&lt;key&gt;com.apple.developer.networking.HotspotConfiguration&lt;/key&gt;&lt;true/&gt;&lt;key&gt;com.apple.developer.networking.multipath&lt;/key&gt;&lt;true/&gt;&lt;key&gt;com.apple.developer.nfc.readersession.formats&lt;/key&gt;&lt;array&gt;&lt;string&gt;NDEF&lt;/string&gt;&lt;/array&gt;&lt;key&gt;com.apple.developer.ClassKit-environment&lt;/key&gt;&lt;array&gt;&lt;string&gt;production&lt;/string&gt;&lt;/array&gt;&lt;key&gt;com.apple.developer.authentication-services.autofill-credential-provider&lt;/key&gt;&lt;true/&gt;&lt;key&gt;com.apple.developer.networking.wifi-info&lt;/key&gt;&lt;true/&gt;&lt;key&gt;inter-app-audio&lt;/key&gt;&lt;true/&gt;&lt;key&gt;get-task-allow&lt;/key&gt;&lt;false/&gt;&lt;key&gt;com.apple.developer.healthkit&lt;/key&gt;&lt;true/&gt;&lt;key&gt;com.apple.developer.healthkit.access&lt;/key&gt;&lt;array&gt;&lt;string&gt;health-records&lt;/string&gt;&lt;/array&gt;&lt;key&gt;com.apple.developer.ubiquity-kvstore-identifier&lt;/key&gt;&lt;string&gt;7W8J746W7R.*&lt;/string&gt;&lt;key&gt;com.apple.developer.icloud-services&lt;/key&gt;&lt;string&gt;*&lt;/string&gt;&lt;key&gt;com.apple.developer.icloud-container-identifiers&lt;/key&gt;&lt;array&gt;&lt;/array&gt;&lt;key&gt;com.apple.developer.icloud-container-development-container-identifiers&lt;/key&gt;&lt;array&gt;&lt;/array&gt;&lt;key&gt;com.apple.developer.ubiquity-container-identifiers&lt;/key&gt;&lt;array&gt;&lt;/array&gt;&lt;key&gt;com.apple.developer.associated-domains&lt;/key&gt;&lt;string&gt;*&lt;/string&gt;&lt;key&gt;com.apple.security.application-groups&lt;/key&gt;&lt;array&gt;&lt;/array&gt;&lt;key&gt;com.apple.developer.homekit&lt;/key&gt;&lt;true/&gt;&lt;key&gt;com.apple.developer.team-identifier&lt;/key&gt;&lt;string&gt;7W8J746W7R&lt;/string&gt;&lt;key&gt;com.apple.external-accessory.wireless-configuration&lt;/key&gt;&lt;true/&gt;&lt;key&gt;aps-environment&lt;/key&gt;&lt;string&gt;production&lt;/string&gt;&lt;key&gt;com.apple.developer.in-app-payments&lt;/key&gt;&lt;array&gt;&lt;/array&gt;&lt;key&gt;com.apple.developer.default-data-protection&lt;/key&gt;&lt;string&gt;NSFileProtectionComplete&lt;/string&gt;&lt;key&gt;com.apple.developer.networking.vpn.api&lt;/key&gt;&lt;array&gt;&lt;string&gt;allow-vpn&lt;/string&gt;&lt;/array&gt;&lt;key&gt;beta-reports-active&lt;/key&gt;&lt;true/&gt;&lt;key&gt;com.apple.developer.siri&lt;/key&gt;&lt;true/&gt;</PF_EntitlementExtraKeyValuesAppStore>
         <PF_AutoMobileProvisionAppStore>False</PF_AutoMobileProvisionAppStore>
         <PF_AutoCertificateAppStore>False</PF_AutoCertificateAppStore>
     </PropertyGroup>
@@ -820,6 +744,12 @@
                 <Platform value="Win64">True</Platform>
             </Platforms>
             <Deployment Version="3">
+                <DeployFile LocalName="iOS_icons\FM_LaunchImage_640x1136.png" Configuration="Release" Class="iPhone_Launch640x1136">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>Default-568h@2x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\POLlang.json" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
@@ -852,7 +782,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="iOS_icons\FM_ApplicationIcon_180x180.png" Configuration="Release" Class="iPhone_AppIcon180">
+                <DeployFile LocalName="iOS_icons\FM_ApplicationIcon_120x120.png" Configuration="Release" Class="iPhone_AppIcon120">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -962,11 +892,6 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="iOS_icons\FM_ApplicationIcon_114x114.png" Configuration="Release" Class="iPhone_AppIcon114">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="gfx\splash960x720.png" Configuration="Release" Class="Android_SplashImage960">
                     <Platform Name="All Platforms">
                         <Overwrite>true</Overwrite>
@@ -985,12 +910,6 @@
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageLandscape_1024x748.png" Configuration="Release" Class="iPad_Launch1024">
                     <Platform Name="iOSDevice32">
                         <RemoteName>Default-Landscape.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="iOS_icons\FM_LaunchImage_1242x2208.png" Configuration="Release" Class="iPhone_Launch1242">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>Default-736h@3x.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1014,16 +933,6 @@
                 <DeployFile LocalName="Languages\ZHX.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSSimulator">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="Win32\Debug\HODLER_Wallet_Mobile.exe" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="All Platforms">
-                        <RemoteName>HODLER_Core</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                    <Platform Name="Win32">
-                        <RemoteName>HODLER_Wallet_Mobile.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1101,6 +1010,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="iOS_icons\FM_LaunchImage_320x480.png" Configuration="Release" Class="iPhone_Launch320">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>Default.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\lib\android\release\x86\libnative-activity.so" Configuration="Release" Class="AndroidLibnativeX86File"/>
                 <DeployFile LocalName="Android\Debug\styles.xml" Configuration="Debug" Class="AndroidSplashStyles"/>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_SpotlightSearchIcon_50x50.png" Configuration="Debug" Class="iPad_SpotLight50">
@@ -1146,11 +1061,6 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="Android\Debug\AndroidManifest.xml" Configuration="Debug" Class="ProjectAndroidManifest"/>
-                <DeployFile LocalName="iOS_icons\FM_ApplicationIcon_60x60.png" Configuration="Release" Class="iPhone_AppIcon60">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageLandscape_2048x1496.png" Configuration="Debug" Class="iPad_Launch2048">
                     <Platform Name="iOSDevice32">
                         <RemoteName>Default-Landscape@2x.png</RemoteName>
@@ -1184,6 +1094,16 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_60x60.png" Configuration="Release" Class="iPhone_AppIcon60">
                     <Platform Name="iOSSimulator">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Win32\Debug\HODLER_Wallet_Mobile.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="All Platforms">
+                        <RemoteName>HODLER_Core</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                    <Platform Name="Win32">
+                        <RemoteName>HODLER_Wallet_Mobile.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1231,6 +1151,11 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="iOS_icons\FM_ApplicationIcon_114x114.png" Configuration="Release" Class="iPhone_AppIcon114">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImagePortrait_1536x2008.png" Configuration="Release" Class="iPad_Launch1536">
                     <Platform Name="iOSDevice32">
                         <RemoteName>Default-Portrait@2x.png</RemoteName>
@@ -1238,12 +1163,6 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="Android\Release\styles.xml" Configuration="Release" Class="AndroidSplashStyles"/>
-                <DeployFile LocalName="iOS_icons\FM_LaunchImage_750x1334.png" Configuration="Release" Class="iPhone_Launch750">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>Default-667h@2x.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="Languages\JPN.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSSimulator">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -1321,6 +1240,11 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="iOS_icons\FM_ApplicationIcon_58x58.png" Configuration="Release" Class="iPhone_Spotlight58">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\Redist\iossimulator\libPCRE.dylib" Class="DependencyModule">
                     <Platform Name="iOSSimulator">
                         <Overwrite>true</Overwrite>
@@ -1343,15 +1267,6 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Android\Release\libHODLER_Wallet_Mobile.so" Configuration="Release" Class="ProjectOutput">
-                    <Platform Name="All Platforms">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                    <Platform Name="Android">
-                        <RemoteName>libHODLER_Wallet_Mobile.so</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="Android\Debug\libHODLER_Core.so" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_SettingIcon_29x29.png" Configuration="Debug" Class="iPad_Setting29">
                     <Platform Name="iOSDevice32">
@@ -1359,14 +1274,14 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="Android\Release\AndroidManifest.xml" Configuration="Release" Class="ProjectAndroidManifest"/>
-                <DeployFile LocalName="iOS_icons\FM_LaunchImage_2208x1242.png" Configuration="Release" Class="iPhone_Launch2208">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>Default-Landscape-736h@3x.png</RemoteName>
+                <DeployFile LocalName="iOSDevice32\Debug\HODLER_Core_Android.entitlements" Configuration="Debug" Class="ProjectiOSEntitlements">
+                    <Platform Name="iOSDevice32">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="iOSDevice32\Debug\HODLER_Core_Android.entitlements" Configuration="Debug" Class="ProjectiOSEntitlements">
-                    <Platform Name="iOSDevice32">
+                <DeployFile LocalName="iOSSimulator\Debug\HODLER_Wallet_Mobile" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="iOSSimulator">
+                        <RemoteName>HODLER_Wallet_Mobile</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1392,8 +1307,9 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="iOS_icons\FM_ApplicationIcon_58x58.png" Configuration="Release" Class="iPhone_Spotlight58">
+                <DeployFile LocalName="iOS_icons\FM_LaunchImage_640x960.png" Configuration="Release" Class="iPhone_Launch640">
                     <Platform Name="iOSDevice64">
+                        <RemoteName>Default@2x.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1422,11 +1338,6 @@
                 <DeployFile LocalName="Languages\ZHX.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="iOSDevice64\Release\HODLER_Wallet_Mobile.entitlements" Configuration="Release" Class="ProjectiOSEntitlements">
-                    <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1472,9 +1383,9 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="iOSSimulator\Debug\HODLER_Wallet_Mobile" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="iOSSimulator">
-                        <RemoteName>HODLER_Wallet_Mobile</RemoteName>
+                <DeployFile LocalName="iOSDevice64\Release\HODLER_Wallet_Mobile.info.plist" Configuration="Release" Class="ProjectiOSInfoPList">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>Info.plist</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1565,11 +1476,6 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="iOS_icons\FM_ApplicationIcon_40x40.png" Configuration="Release" Class="iPhone_Spotlight40">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="Languages\ZHX.lang" Configuration="Release" Class="ProjectFile">
                     <Platform Name="iOSDevice32">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -1578,6 +1484,15 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_ApplicationIcon_152x152.png" Configuration="Debug" Class="iPad_AppIcon152">
                     <Platform Name="iOSDevice32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Win32\Release\HODLER_Wallet_Mobile.exe" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="All Platforms">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                    <Platform Name="Win32">
+                        <RemoteName>HODLER_Wallet_Mobile.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1608,6 +1523,11 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_114x114.png" Configuration="Release" Class="iPhone_AppIcon114">
                     <Platform Name="iOSDevice32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="iOS_icons\FM_ApplicationIcon_87x87.png" Configuration="Release" Class="iPhone_AppIcon87">
+                    <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1718,14 +1638,15 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="iOS_icons\FM_ApplicationIcon_87x87.png" Configuration="Release" Class="iPhone_AppIcon87">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="iOSDevice32\Debug\ResourceRules.plist" Configuration="Debug" Class="ProjectiOSDeviceResourceRules">
                     <Platform Name="iOSDevice32">
                         <RemoteName>ResourceRules.plist</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="iOSSimulator\Release\HODLER_Wallet_Mobile" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="iOSSimulator">
+                        <RemoteName>HODLER_Wallet_Mobile</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1756,13 +1677,13 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(BDS)\lib\android\debug\mips\libnative-activity.so" Configuration="Release" Class="AndroidLibnativeMipsFile"/>
-                <DeployFile LocalName="iOSDevice64\Release\HODLER_Wallet_Mobile" Configuration="Release" Class="ProjectOutput">
+                <DeployFile LocalName="iOS_icons\FM_LaunchImage_1125x2436.png" Configuration="Release" Class="iPhone_Launch1125">
                     <Platform Name="iOSDevice64">
-                        <RemoteName>HODLER_Wallet_Mobile</RemoteName>
+                        <RemoteName>Default-812h@3x.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="$(BDS)\lib\android\debug\mips\libnative-activity.so" Configuration="Release" Class="AndroidLibnativeMipsFile"/>
                 <DeployFile LocalName="Languages\ENGlang.json" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSDevice32">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -1820,6 +1741,11 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="iOS_icons\FM_ApplicationIcon_57x57.png" Configuration="Release" Class="iPhone_AppIcon57">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_180x180.png" Configuration="Debug" Class="iPhone_AppIcon180">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
@@ -1836,17 +1762,6 @@
                 <DeployFile LocalName="OKSterling.style" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSDevice32">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="iOS_icons\FM_LaunchImage_640x1136.png" Configuration="Release" Class="iPhone_Launch640x1136">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>Default-568h@2x.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="iOS_icons\FM_ApplicationIcon_120x120.png" Configuration="Release" Class="iPhone_AppIcon120">
-                    <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1886,12 +1801,6 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="iOSDevice32\Debug\HODLER_Wallet_Mobile" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="iOSDevice32">
-                        <RemoteName>HODLER_Wallet_Mobile</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImagePortrait_768x1024.png" Configuration="Release" Class="iPad_Launch768x1024">
                     <Platform Name="iOSDevice32">
                         <RemoteName>Default-Portrait~ipad.png</RemoteName>
@@ -1910,12 +1819,6 @@
                 <DeployFile LocalName="Languages\DEU.lang" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="iOS_icons\FM_LaunchImage_2436x1125.png" Configuration="Release" Class="iPhone_Launch2436">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>Default-Landscape-812h@3x.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1951,12 +1854,6 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_SettingIcon_58x58.png" Configuration="Release" Class="iPad_Setting58">
                     <Platform Name="iOSSimulator">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="iOSSimulator\Release\HODLER_Wallet_Mobile" Configuration="Release" Class="ProjectOutput">
-                    <Platform Name="iOSSimulator">
-                        <RemoteName>HODLER_Wallet_Mobile</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -2006,15 +1903,6 @@
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImagePortrait_768x1024.png" Configuration="Debug" Class="iPad_Launch768x1024">
                     <Platform Name="iOSDevice64">
                         <RemoteName>Default-Portrait~ipad.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="Win32\Release\HODLER_Wallet_Mobile.exe" Configuration="Release" Class="ProjectOutput">
-                    <Platform Name="All Platforms">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                    <Platform Name="Win32">
-                        <RemoteName>HODLER_Wallet_Mobile.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -2144,12 +2032,6 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="iOS_icons\FM_LaunchImage_640x960.png" Configuration="Release" Class="iPhone_Launch640">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>Default@2x.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="Languages\ENGlang.json" Configuration="Release" Class="ProjectFile">
                     <Platform Name="iOSDevice32">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -2184,6 +2066,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="iOS_icons\FM_LaunchImage_2436x1125.png" Configuration="Release" Class="iPhone_Launch2436">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>Default-Landscape-812h@3x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\POLlang.json" Configuration="Release" Class="ProjectFile">
                     <Platform Name="iOSDevice32">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -2199,17 +2087,17 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="iOS_icons\FM_ApplicationIcon_57x57.png" Configuration="Release" Class="iPhone_AppIcon57">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_57x57.png" Configuration="Debug" Class="iPhone_AppIcon57">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_ApplicationIcon_144x144.png" Configuration="Debug" Class="iPad_AppIcon144">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="iOS_icons\FM_ApplicationIcon_40x40.png" Configuration="Release" Class="iPhone_Spotlight40">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -2229,6 +2117,15 @@
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImagePortrait_1536x2048.png" Configuration="Debug" Class="iPad_Launch1536x2048">
                     <Platform Name="iOSDevice32">
                         <RemoteName>Default-Portrait@2x~ipad.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Android\Release\libHODLER_Wallet_Mobile.so" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="All Platforms">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                    <Platform Name="Android">
+                        <RemoteName>libHODLER_Wallet_Mobile.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -2256,11 +2153,6 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="iOS_icons\FM_ApplicationIcon_80x80.png" Configuration="Release" Class="iPhone_Spotlight80">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="Jet.style" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSDevice32">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -2282,6 +2174,15 @@
                 <DeployFile LocalName="gfx\Icon72x72.png" Configuration="Release" Class="Android_LauncherIcon72"/>
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgsqlite3.dylib" Class="DependencyModule">
                     <Platform Name="OSX32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Android\Debug\libHODLER_Wallet_Mobile.so" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="All Platforms">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                    <Platform Name="Android">
+                        <RemoteName>libHODLER_Wallet_Mobile.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -2315,12 +2216,6 @@
                 <DeployFile LocalName="iOSDevice64\Debug\HODLER_Core_Android.info.plist" Configuration="Debug" Class="ProjectiOSInfoPList">
                     <Platform Name="iOSDevice64">
                         <RemoteName>Info.plist</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="iOSDevice32\Release\HODLER_Wallet_Mobile" Configuration="Release" Class="ProjectOutput">
-                    <Platform Name="iOSDevice32">
-                        <RemoteName>HODLER_Wallet_Mobile</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -2390,15 +2285,6 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\lib\android\debug\armeabi\libnative-activity.so" Configuration="Debug" Class="AndroidLibnativeArmeabiFile"/>
                 <DeployFile LocalName="gfx\Icon48x48.png" Configuration="Debug" Class="Android_LauncherIcon48"/>
-                <DeployFile LocalName="Android\Debug\libHODLER_Wallet_Mobile.so" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="All Platforms">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                    <Platform Name="Android">
-                        <RemoteName>libHODLER_Wallet_Mobile.so</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="Jet.style" Configuration="Release" Class="ProjectFile">
                     <Platform Name="iOSDevice32">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -2502,6 +2388,11 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="iOSDevice64\Release\HODLER_Wallet_Mobile.entitlements" Configuration="Release" Class="ProjectiOSEntitlements">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_40x40.png" Configuration="Release" Class="iPhone_Spotlight40">
                     <Platform Name="iOSDevice32">
                         <Overwrite>true</Overwrite>
@@ -2520,6 +2411,11 @@
                 <DeployFile LocalName="Jet.style" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSDevice64">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="iOS_icons\FM_ApplicationIcon_60x60.png" Configuration="Release" Class="iPhone_AppIcon60">
+                    <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -2555,6 +2451,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="iOSDevice64\Debug\HODLER_Wallet_Mobile" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>HODLER_Wallet_Mobile</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\DUT.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
@@ -2567,6 +2469,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="iOS_icons\FM_LaunchImage_750x1334.png" Configuration="Release" Class="iPhone_Launch750">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>Default-667h@2x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="iOSDevice32\Release\HODLER_Core_Android.dSYM" Configuration="Release" Class="ProjectiOSDeviceDebug">
                     <Platform Name="iOSDevice32">
                         <RemoteName>HODLER_Core_Android</RemoteName>
@@ -2576,12 +2484,6 @@
                 <DeployFile LocalName="Android\Debug\classes.dex" Configuration="Debug" Class="AndroidClassesDexFile"/>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_ApplicationIcon_144x144.png" Configuration="Release" Class="iPad_AppIcon144">
                     <Platform Name="iOSDevice32">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="iOSDevice64\Release\HODLER_Wallet_Mobile.dSYM" Configuration="Release" Class="ProjectiOSDeviceDebug">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>HODLER_Wallet_Mobile</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -2648,12 +2550,6 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="iOSDevice64\Debug\HODLER_Wallet_Mobile" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>HODLER_Wallet_Mobile</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_2208x1242.png" Configuration="Release" Class="iPhone_Launch2208">
                     <Platform Name="iOSDevice32">
                         <RemoteName>Default-Landscape-736h@3x.png</RemoteName>
@@ -2691,11 +2587,6 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="iOS_icons\FM_ApplicationIcon_29x29.png" Configuration="Release" Class="iPhone_Spotlight29">
-                    <Platform Name="iOSDevice64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_58x58.png" Configuration="Debug" Class="iPhone_Spotlight58">
                     <Platform Name="iOSDevice32">
                         <Overwrite>true</Overwrite>
@@ -2713,6 +2604,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="iOSDevice32\Debug\HODLER_Wallet_Mobile" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="iOSDevice32">
+                        <RemoteName>HODLER_Wallet_Mobile</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_60x60.png" Configuration="Debug" Class="iPhone_AppIcon60">
                     <Platform Name="iOSDevice32">
                         <Overwrite>true</Overwrite>
@@ -2720,6 +2617,16 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_57x57.png" Configuration="Debug" Class="iPhone_AppIcon57">
                     <Platform Name="iOSSimulator">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="All Platforms\Debug\HODLER_Wallet_Mobile.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="All Platforms">
+                        <RemoteName>HODLER_Core</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                    <Platform Name="Win32">
+                        <RemoteName>HODLER_Wallet_Mobile.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -2749,12 +2656,6 @@
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageLandscape_1024x748.png" Configuration="Debug" Class="iPad_Launch1024">
                     <Platform Name="iOSDevice32">
                         <RemoteName>Default-Landscape.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="iOS_icons\FM_LaunchImage_1125x2436.png" Configuration="Release" Class="iPhone_Launch1125">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>Default-812h@3x.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -2829,6 +2730,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="iOS_icons\FM_LaunchImage_1242x2208.png" Configuration="Release" Class="iPhone_Launch1242">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>Default-736h@3x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\ZHX.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSDevice64">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -2837,6 +2744,11 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_114x114.png" Configuration="Debug" Class="iPhone_AppIcon114">
                     <Platform Name="iOSSimulator">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="iOS_icons\FM_ApplicationIcon_80x80.png" Configuration="Release" Class="iPhone_Spotlight80">
+                    <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -3020,6 +2932,11 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="iOS_icons\FM_ApplicationIcon_29x29.png" Configuration="Release" Class="iPhone_Spotlight29">
+                    <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_29x29.png" Configuration="Debug" Class="iPhone_Spotlight29">
                     <Platform Name="iOSDevice32">
                         <Overwrite>true</Overwrite>
@@ -3096,16 +3013,6 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="All Platforms\Debug\HODLER_Wallet_Mobile.exe" Configuration="Debug" Class="ProjectOutput">
-                    <Platform Name="All Platforms">
-                        <RemoteName>HODLER_Core</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                    <Platform Name="Win32">
-                        <RemoteName>HODLER_Wallet_Mobile.exe</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="..\..\Downloads\FireMonkey_Premium_Style_Pack_XE6\FireMonkey Premium Style Pack XE6\FireMonkey Premium Style Pack XE6\Win\Jet.style" Configuration="Release" Class="ProjectFile"/>
                 <DeployFile LocalName="Android\Release\libHODLER_Core.so" Configuration="Release" Class="ProjectOutput"/>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_SpotlightSearchIcon_80x80.png" Configuration="Release" Class="iPad_SpotLight80">
@@ -3126,6 +3033,12 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_SpotlightSearchIcon_50x50.png" Configuration="Debug" Class="iPad_SpotLight50">
                     <Platform Name="iOSDevice32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="iOS_icons\FM_LaunchImage_2208x1242.png" Configuration="Release" Class="iPhone_Launch2208">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>Default-Landscape-736h@3x.png</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -3158,12 +3071,6 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="iOS_icons\FM_LaunchImage_320x480.png" Configuration="Release" Class="iPhone_Launch320">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>Default.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_1242x2208.png" Configuration="Debug" Class="iPhone_Launch1242">
                     <Platform Name="iOSSimulator">
                         <RemoteName>Default-736h@3x.png</RemoteName>
@@ -3185,6 +3092,12 @@
                     </Platform>
                     <Platform Name="Android">
                         <RemoteName>libHODLER_Core.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="iOSDevice64\Release\HODLER_Wallet_Mobile.dSYM" Configuration="Release" Class="ProjectiOSDeviceDebug">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>HODLER_Wallet_Mobile</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -3221,12 +3134,6 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="iOSDevice64\Release\HODLER_Wallet_Mobile.info.plist" Configuration="Release" Class="ProjectiOSInfoPList">
-                    <Platform Name="iOSDevice64">
-                        <RemoteName>Info.plist</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_80x80.png" Configuration="Release" Class="iPhone_Spotlight80">
                     <Platform Name="iOSSimulator">
                         <Overwrite>true</Overwrite>
@@ -3243,6 +3150,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="iOSDevice64\Release\HODLER_Wallet_Mobile" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="iOSDevice64">
+                        <RemoteName>HODLER_Wallet_Mobile</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_1242x2208.png" Configuration="Debug" Class="iPhone_Launch1242">
                     <Platform Name="iOSDevice32">
                         <RemoteName>Default-736h@3x.png</RemoteName>
@@ -3256,6 +3169,12 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_114x114.png" Configuration="Debug" Class="iPhone_AppIcon114">
                     <Platform Name="iOSDevice32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="iOSDevice32\Release\HODLER_Wallet_Mobile" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="iOSDevice32">
+                        <RemoteName>HODLER_Wallet_Mobile</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -3329,6 +3248,11 @@
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageLandscape_2048x1496.png" Configuration="Release" Class="iPad_Launch2048">
                     <Platform Name="iOSDevice32">
                         <RemoteName>Default-Landscape@2x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="iOS_icons\FM_ApplicationIcon_180x180.png" Configuration="Release" Class="iPhone_AppIcon180">
+                    <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

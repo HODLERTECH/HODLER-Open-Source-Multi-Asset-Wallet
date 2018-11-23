@@ -152,7 +152,7 @@ var
   diff: int64;
 begin
 
-  if from.coin <> 3 then
+  if not (from.coin in [3,7]) then
   begin
     result := '';
     TX := TXBuilder.Create;

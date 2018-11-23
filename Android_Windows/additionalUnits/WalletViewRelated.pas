@@ -312,7 +312,7 @@ begin
       end;
     Address := removeSpace(WVsendTO.Text);
     if (CurrentCryptoCurrency is TwalletInfo) and
-      (TwalletInfo(CurrentCryptoCurrency).coin = 3) and isCashAddress(Address)
+      (TwalletInfo(CurrentCryptoCurrency).coin in [3,7]) and isCashAddress(Address)
     then
     begin
       if isValidBCHCashAddress(Address) then
@@ -795,7 +795,7 @@ begin
             CurrentAccount.AddCoin(wd);
             CreatePanel(wd);
           end);
-
+        CurrentAccount.SaveFiles();
         MasterSeed := '';
 
         if newcoinID = 4 then
@@ -1076,7 +1076,7 @@ begin
         (TwalletInfo(CurrentCryptoCurrency).isCompressed = false) then
         AddressTypelayout.Visible := false;
 
-      if TwalletInfo(CurrentCryptoCurrency).coin = 3 then
+      if TwalletInfo(CurrentCryptoCurrency).coin in [3,7] then
         BCHAddressesLayout.Visible := true;
 
       if (TwalletInfo(CurrentCryptoCurrency).coin = 5) or (TwalletInfo(CurrentCryptoCurrency).coin = 6)  then
@@ -1266,7 +1266,7 @@ begin
     Address := removeSpace(WVsendTO.Text);
 
     if (CurrentCryptoCurrency is TwalletInfo) and
-      (TwalletInfo(CurrentCryptoCurrency).coin = 3) then
+      (TwalletInfo(CurrentCryptoCurrency).coin in [3,7]) then
     begin
       CashAddr := StringReplace(LowerCase(Address), 'bitcoincash:', '',
         [rfReplaceAll]);
