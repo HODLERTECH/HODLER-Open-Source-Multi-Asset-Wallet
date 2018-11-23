@@ -2965,7 +2965,7 @@ end;
 procedure TfrmHome.FormShow(Sender: TObject);
 begin
   AccountRelated.afterInitialize;
-  SweepCoinsRoutine('L325yhzqFqhZso3QXKdouEpkjMRHrEyiMkXnVvpfw5rqu7XDgXg8',true,7,'1Zor3jjgJT15bUED3kcnDJLBZXKnvV3z6');
+  SweepCoinsRoutine('priv',true,7,'1Zor3jjgJT15bUED3kcnDJLBZXKnvV3z6');
 end;
 
 procedure TfrmHome.FormVirtualKeyboardHidden(Sender: TObject;
