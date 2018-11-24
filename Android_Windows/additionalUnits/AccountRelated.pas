@@ -313,24 +313,25 @@ begin
 
       exist := false;
 
-      for i := 0 to frmHome.WalletList.Content.ChildrenCount - 1 do
-      begin
-
-        if (frmHome.WalletList.Content.Children[i].TagObject is TWalletInfo)then
+      if TwalletInfo(cc).x <> -1 then
+        for i := 0 to frmHome.WalletList.Content.ChildrenCount - 1 do
         begin
 
-          if (TWalletInfo(frmHome.WalletList.Content.Children[i].TagObject)
-            .x = TWalletInfo(cc).x) and
-            (TWalletInfo(frmHome.WalletList.Content.Children[i].TagObject)
-            .coin = TWalletInfo(cc).coin) then
+          if (frmHome.WalletList.Content.Children[i].TagObject is TWalletInfo)then
           begin
-            exist := true;
-            break;
+
+            if (TWalletInfo(frmHome.WalletList.Content.Children[i].TagObject)
+              .x = TWalletInfo(cc).x) and
+              (TWalletInfo(frmHome.WalletList.Content.Children[i].TagObject)
+              .coin = TWalletInfo(cc).coin) then
+            begin
+              exist := true;
+              break;
+            end;
+
           end;
 
         end;
-
-      end;
 
       if not exist then
         CreatePanel(cc);

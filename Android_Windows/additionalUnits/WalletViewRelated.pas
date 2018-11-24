@@ -13,7 +13,7 @@ uses
   FMX.Platform, System.Threading, Math, DelphiZXingQRCode,
   FMX.TabControl, System.Sensors, System.Sensors.Components, FMX.Edit,
   FMX.Clipboard, FMX.VirtualKeyBoard, JSON,
-  languages,
+  languages, WalletStructureData,
 
   FMX.Media, FMX.Objects, uEncryptedZipFile, System.Zip
 {$IFDEF ANDROID},
@@ -51,7 +51,7 @@ procedure reloadWalletView;
 procedure OpenWallet(Sender: TObject);
 procedure organizeView(Sender: TObject);
 procedure newCoin(Sender: TObject);
-procedure CreateWallet(Sender: TObject);
+procedure CreateWallet(Sender: TObject ; Option : AnsiString = '');
 procedure ShowETHWallets(Sender: TObject);
 procedure synchro;
 procedure SendClick(Sender: TObject);
@@ -62,6 +62,8 @@ procedure importCheck;
 procedure InstantSendClick;
 procedure SetCopyButtonPosition;
 procedure CopyTextButtonClick;
+procedure PrepareSendTabAndSend(from: TWalletInfo; sendto: AnsiString;
+  Amount, Fee: BigInteger; MasterSeed: AnsiString; coin: AnsiString = 'bitcoin');
 
 var
   SyncOpenWallet: TThread;
@@ -70,7 +72,100 @@ implementation
 
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
-  transactions, WalletStructureData, AccountRelated;
+  transactions,  AccountRelated;
+
+procedure PrepareSendTabAndSend(from: TWalletInfo; sendto: AnsiString;
+  Amount, Fee: BigInteger; MasterSeed: AnsiString; coin: AnsiString = 'bitcoin');
+begin
+
+with frmhome do
+begin
+
+
+
+  TThread.CreateAnonymousThread(
+      procedure
+      var
+        ans: AnsiString;
+      begin
+
+        TThread.Synchronize(nil,
+          procedure
+          begin
+            TransactionWaitForSendAniIndicator.Visible := true;
+            TransactionWaitForSendAniIndicator.Enabled := true;
+            TransactionWaitForSendDetailsLabel.Visible := true;
+            TransactionWaitForSendDetailsLabel.Text :=
+              'Sending... It may take a few seconds';
+            TransactionWaitForSendLinkLabel.Visible := false;
+
+            switchTab(PageControl, TransactionWaitForSend);
+          end);
+
+        ans := sendCoinsTO(from, sendto, amount, fee, MasterSeed,
+          AvailableCoin[CurrentCoin.coin].Name);
+        //Tthread.Synchronize(nil, procedure begin
+        //  showmessage(ans);
+        //end);
+        SynchronizeCryptoCurrency(CurrentCryptoCurrency);
+
+        TThread.Synchronize(nil,
+          procedure
+          var
+            ts: TStringList;
+            i: Integer;
+          begin
+            TransactionWaitForSendAniIndicator.Visible := false;
+            TransactionWaitForSendAniIndicator.Enabled := false;
+            TransactionWaitForSendDetailsLabel.Visible := false;
+            TransactionWaitForSendLinkLabel.Visible := true;
+            if LeftStr(ans, length('Transaction sent')) = 'Transaction sent'
+            then
+            begin
+              TThread.CreateAnonymousThread(
+                procedure
+                begin
+                  SynchronizeCryptoCurrency(CurrentCryptoCurrency);
+                end).Start;
+              TransactionWaitForSendLinkLabel.Text :=
+                'Click here to see details in Explorer';
+              TransactionWaitForSendDetailsLabel.Text := 'Transaction sent';
+
+              StringReplace(ans, #$A, ' ', [rfReplaceAll]);
+              ts := SplitString(ans, ' ');
+              TransactionWaitForSendLinkLabel.TagString :=
+                getURLToExplorer(CurrentCoin.coin, ts[ts.Count - 1]);
+              TransactionWaitForSendLinkLabel.Text :=
+                TransactionWaitForSendLinkLabel.TagString;
+              ts.free;
+              TransactionWaitForSendDetailsLabel.Visible := true;
+              TransactionWaitForSendLinkLabel.Visible := true;
+            end
+            else
+            begin
+              TransactionWaitForSendDetailsLabel.Visible := true;
+              TransactionWaitForSendLinkLabel.Visible := false;
+              ts := SplitString(ans, #$A);
+              TransactionWaitForSendDetailsLabel.Text := ts[0];
+              for i := 1 to ts.Count - 1 do
+                if ts[i] <> '' then
+                begin
+                  TransactionWaitForSendDetailsLabel.Text :=
+                    TransactionWaitForSendDetailsLabel.Text + #13#10 +
+                    'Error: ' + ts[i];
+                  break;
+                end;
+
+              ts.free;
+            end;
+
+          end);
+
+      end).Start;
+
+end;
+
+end;
 
 procedure CopyTextButtonClick;
 var
@@ -329,7 +424,7 @@ begin
     end;
     if CurrentCoin.coin = 4 then
     begin
-      if not isValidEthAddress(CurrentCoin.addr) then
+      if not isValidEthAddress(address) then
       begin
         popupWindowYesNo.Create(
           procedure // yes
@@ -533,7 +628,7 @@ begin
 
 end;
 
-procedure CreateWallet(Sender: TObject);
+procedure CreateWallet(Sender: TObject ; Option : AnsiString = '');
 var
   alphaStr: AnsiString;
   c: Char;
@@ -599,7 +694,22 @@ begin
 
     createSelectGenerateCoinView();
     frmhome.NextButtonSGC.OnClick := frmhome.CoinListCreateFromSeed;
-    switchTab( PageControl , SelectGenetareCoin );
+    if option = '' then
+    begin
+
+      switchTab( PageControl , SelectGenetareCoin );
+    end
+    else if option = 'claim' then
+    begin
+
+      for i := 0 to frmhome.GenerateCoinVertScrollBox.Content.ChildrenCount -1 do
+      begin
+
+        if Tpanel(frmhome.GenerateCoinVertScrollBox.Content.Children[i]).Tag = 7 then
+          TcheckBox(Tpanel(frmhome.GenerateCoinVertScrollBox.Content.Children[i]).TagObject).IsChecked := true;
+      end;
+      frmhome.NextButtonSGC.OnClick();
+    end;
 
 
 
@@ -1284,7 +1394,7 @@ begin
       end;
     end;
 
-    TThread.CreateAnonymousThread(
+    {TThread.CreateAnonymousThread(
       procedure
       var
         ans: AnsiString;
@@ -1362,7 +1472,9 @@ begin
 
           end);
 
-      end).Start;
+      end).Start;}
+    PrepareSendTabAndSend(CurrentCoin, Address, amount, fee, MasterSeed,
+          AvailableCoin[CurrentCoin.coin].Name);
 
   end;
 
