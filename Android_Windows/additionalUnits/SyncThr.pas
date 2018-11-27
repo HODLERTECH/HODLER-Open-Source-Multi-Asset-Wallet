@@ -470,6 +470,7 @@ begin
         duringSync := false;
         // txHistory.Enabled := true;
         // txHistory.EndUpdate;
+        hideEmptyWallets(nil);
 
       end);
 
@@ -730,7 +731,11 @@ begin
 
     // wd.efee[0]:=ts.Strings[0];//floattostrF(strtointdef(ts.Strings[0],11000000000) /1000000000000000000,ffFixed,18,18);
     wd.confirmed := BigInteger.Parse(ts.Strings[1]);
-    wd.rate := strToFloat(ts[2]);
+    if (wd.id < 10000) or (not Token.AvailableToken[wd.id - 10000].stableCoin) then
+
+      wd.rate := strToFloat(ts[2])
+    else
+      wd.rate := Token.AvailableToken[wd.id - 10000].stableValue;
     // floattostrF(strtoint64def(ts.Strings[1],-1) /1000000000000000000,ffFixed,18,18);
     wd.unconfirmed := '0';
     // wd.nonce:=strtointdef(ts.Strings[2],0);

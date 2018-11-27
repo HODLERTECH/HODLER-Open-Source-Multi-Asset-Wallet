@@ -68,6 +68,10 @@ function Account.aggregateFiats(wi: TWalletInfo): double;
 var
   twi: cryptoCurrency;
 begin
+
+  if wi.x = -1 then
+    exit( wi.getfiat() );
+
   result := 0.0;
   for twi in getWalletWithX(wi.X, TWalletInfo(wi).coin) do
     result := result + TWalletInfo(twi).getFiat;
@@ -81,6 +85,20 @@ var
   i: Integer;
 begin
   SetLength(result, 0);
+
+  if wi.x = -1 then
+  begin
+
+    for i := 0 to Length(TWalletInfo(wi).utxo) - 1 do
+    begin
+      SetLength(result, Length(result) + 1);
+      result[high(result)] := TWalletInfo(wi).utxo[i];
+    end;
+    exit();
+
+  end;
+
+
   for twi in getWalletWithX(wi.X, TWalletInfo(wi).coin) do
   begin
     for i := 0 to Length(TWalletInfo(twi).utxo) - 1 do
@@ -98,6 +116,17 @@ var
   twis: TCryptoCurrencyArray;
   i: Integer;
 begin
+
+  if wi.x = -1 then
+  begin
+
+    result.confirmed := wi.confirmed;
+    result.unconfirmed := wi.unconfirmed;
+
+    exit();
+  end;
+
+
   result.confirmed := BigInteger.Zero;
   result.unconfirmed := BigInteger.Zero;
   twis := getWalletWithX(wi.X, TWalletInfo(wi).coin);
@@ -447,7 +476,8 @@ begin
 
         end;
 
-        AddToken(T);
+        if (T.id < 10000) or (Token.availableToken[T.id - 10000].address <> '') then     // if token.address = ''   token is no longer exist
+          AddToken(T);
 
         {
           tokenJson.AddPair('name' , myTokens[i].name );

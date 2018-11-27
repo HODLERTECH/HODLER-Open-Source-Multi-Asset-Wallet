@@ -530,7 +530,7 @@ type
     ToolBar8: TToolBar;
     ConfirmSendHeaderLabel: TLabel;
     CSBackButton: TButton;
-    Panel10: TPanel;
+    ConfirmSendPasswordPanel: TPanel;
     ConfirmSendPasswordEdit: TEdit;
     ConfirmSendPasswordLabel: TLabel;
     Panel12: TPanel;
@@ -657,6 +657,28 @@ type
     Panel17: TPanel;
     SelectGenerateCoinStaticLabel: TLabel;
     GenerateCoinVertScrollBox: TVertScrollBox;
+    ClaimTabItem: TTabItem;
+    ToolBar11: TToolBar;
+    CTIHeaderLabel: TLabel;
+    CTIHeaderBackButton: TButton;
+    Panel18: TPanel;
+    PrivateKeyEditSV: TEdit;
+    Label7: TLabel;
+    CompressedPrivKeySVCheckBox: TCheckBox;
+    Panel19: TPanel;
+    AddressSVEdit: TEdit;
+    Label9: TLabel;
+    ClaimYourBCHSVButton: TButton;
+    ClaimWalletListTabItem: TTabItem;
+    ClaimCoinListVertScrollBox: TVertScrollBox;
+    Button4: TButton;
+    Panel20: TPanel;
+    SelectCoinToClaimStaticLabel: TLabel;
+    ToolBar12: TToolBar;
+    Label12: TLabel;
+    Button5: TButton;
+    ConfirmSendClaimCoinButton: TButton;
+    BCHSVBCHABCReplayProtectionLabel: TLabel;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -903,6 +925,7 @@ type
     procedure generateNewAddressesClick(Sender: TObject);
     procedure CoinListCreateFromSeed(Sender: TObject);
     procedure CoinListCreateFromQR(Sender: TObject);
+    procedure ClaimCoinSelectInListClick(Sender : TObject);
 
   var
     cpTimeout: int64;
@@ -957,6 +980,8 @@ var
   BigQRCodeBackTab: TTabItem;
   ImportCoinID: Integer;
 
+  ToClaimWD , FromClaimWD : TWalletInfo;
+
 resourcestring
   QRSearchEncryted = 'QRSearchEncryted';
   QRSearchDecryted = 'QRSearchDecryted';
@@ -977,6 +1002,14 @@ uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
 {$R *.iPhone55in.fmx IOS}
 {$R *.Windows.fmx MSWINDOWS}
 {$R *.Surface.fmx MSWINDOWS}
+
+procedure TfrmHome.ClaimCoinSelectInListClick(Sender : TObject);
+begin
+
+  ToclaimWD := TWalletInfo(TfmxObject(Sender).tagObject);
+  switchTab(pageControl , ClaimTabItem);
+
+end;
 
 procedure TfrmHome.CoinListCreateFromSeed(Sender: TObject);
 begin

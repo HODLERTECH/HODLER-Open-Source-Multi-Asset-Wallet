@@ -14,6 +14,8 @@ type
     shortcut: AnsiString;
     address: AnsiString;
     decimals: integer;
+    stableCoin : boolean;
+    stableValue : Single;
 
   end;
 
@@ -56,25 +58,25 @@ type
     // property WalletAddress : AnsiString read _WalletAddress;
 
     // list all supported tokens
-  const
-    availableToken: array [0 .. 12] of tokenInfo = ((id: 10000;
+  const    // if address = ''  token no longer exists
+    availableToken: array [0 .. 15] of tokenInfo = ((id: 10000;
       name: 'HODLER.TECH'; shortcut: 'HDL';
       address: '0x95c4be8534d69c248c0623c4c9a7a2a001c17337'; decimals: 18;
 
       ), (id: 10001; name: 'Maker'; shortcut: 'MKR';
       address: '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2'; decimals: 18;
       ), (id: 10002; name: 'Tronix'; shortcut: 'TRX';
-      address: '0xf230b790e05390fc8295f4d3f60332c93bed42e2'; decimals: 6;
+      address: ''{'0xf230b790e05390fc8295f4d3f60332c93bed42e2'}; decimals: 6;
       ), (id: 10003; name: 'VeChain'; shortcut: 'VEN';
-      address: '0xd850942ef8811f2a866692a623011bde52a462c1'; decimals: 18;
+      address: ''{.....}; decimals: 18;
       ), (id: 10004; name: 'Binance Coin'; shortcut: 'BNB';
       address: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52'; decimals: 18;
       ), (id: 10005; name: 'OmiseGO'; shortcut: 'OMG';
       address: '0xd26114cd6EE289AccF82350c8d8487fedB8A0C07'; decimals: 18;
       ), (id: 10006; name: 'ICON'; shortcut: 'ICX';
-      address: '0xb5a5f22694352c15b00323844ad545abb2b11028'; decimals: 18;
+      address: ''{'0xb5a5f22694352c15b00323844ad545abb2b11028'}; decimals: 18;
       ), (id: 10007; name: 'Zilliqa'; shortcut: 'ZIL';
-      address: '0x05f4a42e251f2d52b8ed15e9fedaacfcef1fad27'; decimals: 12;
+      address: ''{'0x05f4a42e251f2d52b8ed15e9fedaacfcef1fad27'}; decimals: 12;
       ), (id: 10008; name: 'Aeternity'; shortcut: 'AE';
       address: '0x5ca9a71b1d01849c0a95490cc00559717fcf0d1d'; decimals: 18;
       ), (id: 10009; name: 'Bytom'; shortcut: 'BTM';
@@ -88,7 +90,18 @@ type
       ,
 
       (id: 10012; name: 'Algory'; shortcut: 'ALG';
-      address: '0x16b0a1a87ae8af5c792fabc429c4fe248834842b'; decimals: 18;));
+      address: '0x16b0a1a87ae8af5c792fabc429c4fe248834842b'; decimals: 18;),
+
+
+      (id: 10013; name: 'Gemini dollar'; shortcut: 'GUSD';
+      address: '0x056fd409e1d7a124bd7017459dfea2f387b6d5cd'; decimals: 2; stableCoin:true ; StableValue: 1 )
+      ,
+      (id: 10014; name: 'USD Coin'; shortcut: 'USDC';
+      address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'; decimals: 6; stableCoin:true ; StableValue: 1 )
+      ,
+      (id: 10015; name: 'Paxos Standard'; shortcut: 'PAX';
+      address: '0x8e870d67f660d95d5be530380d0ec0bd388289e1'; decimals: 18; stableCoin:true ; StableValue: 1 )
+      );
   end;
 
 type

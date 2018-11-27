@@ -51,13 +51,163 @@ procedure restoreEQR(Sender: TObject);
 procedure SendHSB;
 procedure SendEQR;
 procedure RestoreFromFile(Sender: TObject);
-procedure SweepCoinsRoutine(priv: AnsiString; isCompressed: Boolean;
-coin: Integer; targetAddr: AnsiString);
+function SweepCoinsRoutine(priv: AnsiString; isCompressed: Boolean;
+coin: Integer; targetAddr: AnsiString):AnsiString;
+procedure ClaimSV();
+procedure createClaimCoinList(id : Integer);
+
 implementation
 
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
-  transactions, WalletStructureData, AccountRelated;
+  transactions, WalletStructureData, AccountRelated, walletViewRelated;
+
+
+
+procedure createClaimCoinList(id : Integer);
+var
+  i : Integer;
+  panel : TPanel;
+  lbl : TLabel;
+  image : TImage;
+begin
+
+  clearVertScrollBox(frmhome.ClaimCoinListvertScrollBox);
+
+  for I := 0 to (length(currentAccount.myCoins) -1)  do
+  begin
+
+    if (currentAccount.mycoins[i].coin = id) then
+    begin
+
+      panel := Tpanel.create(frmhome.claimCoinListVertScrollbox);
+      panel.parent := frmhome.claimcoinListVertScrollBox;
+      panel.visible := true;
+      panel.align := TAlignLayout.Top;
+      panel.height := 48;
+      panel.tagObject := currentAccount.mycoins[i];
+      panel.onclick := frmhome.ClaimCoinSelectInListClick;
+
+      lbl := TLabel.create(panel);
+      lbl.parent := panel;
+      lbl.align := TAlignLayout.client;
+      lbl.margins.left := 15;
+      lbl.margins.right := 15;
+      lbl.visible := true;
+      lbl.Text := currentAccount.mycoins[i].addr;
+
+      image := Timage.create(panel);
+      image.parent := panel;
+      image.bitmap := currentAccount.mycoins[i].getIcon();
+      image.align := TAlignLayout.left;
+      image.width := 32 + 2*15;
+      image.visible := true;
+
+
+
+
+
+
+
+
+
+    end;
+  end;
+
+end;
+
+procedure ClaimSV();
+var
+  ans : AnsiString;
+  tempPriv , out , pub: AnsiString;
+  isCompressed : Boolean;
+  WData: WIFAddressData;
+  tmp : Integer;
+ // targetAddr : AnsiString;
+
+begin
+  if ((frmhome.PrivateKeyEditSV.text = '')) then
+  begin
+    popupWindow.Create('Missing Values');
+    exit();
+  end;
+
+  temppriv := removeSpace(frmhome.PrivateKeyEditSV.Text);
+
+  if isHex(temppriv) and (length(temppriv) = 64) then
+  begin
+    out := temppriv;
+  end
+  else
+  begin
+    WData := wifToPrivKey(temppriv);
+    isCompressed := WData.isCompressed;
+    out := WData.PrivKey;
+  end;
+  pub := secp256k1_get_public(out , not isCompressed);
+
+  if fromClaimWD <> nil then
+    fromClaimWD.Free;
+
+  fromClaimWD := TWalletInfo.Create(7, -1, -1, Bitcoin_PublicAddrToWallet(pub,
+    AvailableCoin[ImportCoinID].p2pk), 'Imported');
+  fromClaimWD.pub := pub;
+  fromClaimWD.EncryptedPrivKey := out;
+  fromClaimWD.isCompressed := isCompressed;
+  parseBalances(getDataOverHTTP(HODLER_URL + 'getBalance.php?coin=' +
+    AvailableCoin[7].name + '&address=' + fromClaimWD.addr), fromClaimWD);
+  fromClaimWD.UTXO := parseUTXO(getDataOverHTTP(HODLER_URL + 'getUTXO.php?coin=' +
+    AvailableCoin[7].name + '&address=' + fromClaimWD.addr), -1);
+
+ // tmp:=CurrentCoin.coin;
+  ///CurrentCoin.coin:=7;
+
+  if (toClaimWD.addr = fromClaimWD.addr) or ( bitcoinCashAddressToCashAddress(fromClaimWD.addr) = rightStr(toClaimWD.addr , Length(bitcoinCashAddressToCashAddress(fromClaimWD.addr))) ) then
+  begin
+    raise Exception.Create('Use different destination address');
+  end;
+
+  if not isValidForCoin( 7 , toClaimWD.addr ) then
+  begin
+    raise Exception.Create('Wrong Target Address');
+  end;
+
+  if fromClaimWD.confirmed <= BigInteger(1700) then
+  begin
+    raise Exception.Create('Amount too small');
+  end;
+
+
+
+  //WalletViewRelated.PrepareSendTabAndSend(wd, targetAddr, wd.confirmed-BigInteger(1700), BigInteger(1700), '', AvailableCoin[coin].name);
+  //CurrentCoin.coin:=tmp;
+
+  frmhome.SendFromLabel.Text := Bitcoin_PublicAddrToWallet(pub,
+    AvailableCoin[7].p2pk);
+  frmhome.SendToLabel.Text := ToClaimWD.addr;
+  frmhome.SendFeeLabel.Text := '0.00001700';
+  frmhome.SendValueLabel.Text := BigIntegerToFloatStr(FromClaimWD.confirmed - BigInteger(1700) , 8);
+
+  {try
+
+    ans := SweepCoinsRoutine(frmhome.PrivateKeyEditSV.text ,frmhome.CompressedPrivKeySVCheckBox.ischecked,7,frmhome.AddressSVEdit.text);
+    if ans <> '' then
+
+
+  except on E: Exception do
+  begin
+    popupWindow.Create( E.Message );
+  end;
+  end; }
+
+  frmhome.ConfirmSendPasswordPanel.Visible := false;
+  frmhome.SendTransactionButton.visible := false;
+  frmhome.ConfirmSendClaimCoinButton.Visible := true;
+
+  switchTab(frmhome.pageControl , frmhome.ConfirmSendTabItem );
+
+end;
+
 
 procedure RestoreFromFile(Sender: TObject);
 var
@@ -416,14 +566,18 @@ begin
 
 end;
 
-procedure SweepCoinsRoutine(priv: AnsiString; isCompressed: Boolean;
-coin: Integer; targetAddr: AnsiString);
+function SweepCoinsRoutine(priv: AnsiString; isCompressed: Boolean;
+coin: Integer; targetAddr: AnsiString): AnsiString;
 var
   out , pub: AnsiString;
   WData: WIFAddressData;
   wd: TWalletInfo;
   tmp:integer;
 begin
+
+  priv := removeSpace(priv);
+  targetAddr := removeSpace( targetAddr );
+
   if isHex(priv) and (length(priv) = 64) then
   begin
     out := priv;
@@ -445,10 +599,29 @@ begin
     AvailableCoin[coin].name + '&address=' + wd.addr), wd);
   wd.UTXO := parseUTXO(getDataOverHTTP(HODLER_URL + 'getUTXO.php?coin=' +
     AvailableCoin[coin].name + '&address=' + wd.addr), -1);
-    tmp:=CurrentCoin.coin;
-    CurrentCoin.coin:=coin;
-  ShowMessage(SendCoinsTo(wd, targetAddr, wd.confirmed-BigInteger(1700), BigInteger(1700), '', AvailableCoin[coin].name));
+  tmp:=CurrentCoin.coin;
+  CurrentCoin.coin:=coin;
+
+  if (targetAddr = wd.addr) or ( bitcoinCashAddressToCashAddress(wd.addr) = rightStr(targetAddr , Length(bitcoinCashAddressToCashAddress(wd.addr))) ) then
+  begin
+    raise Exception.Create('Use different destination address');
+  end;
+
+  if not isValidForCoin( coin , targetAddr ) then
+  begin
+    raise Exception.Create('Wrong Target Address');
+  end;
+
+  if wd.confirmed <= BigInteger(1700) then
+  begin
+    raise Exception.Create('Amount too small');
+  end;
+
+
+
+  WalletViewRelated.PrepareSendTabAndSend(wd, targetAddr, wd.confirmed-BigInteger(1700), BigInteger(1700), '', AvailableCoin[coin].name);
   CurrentCoin.coin:=tmp;
+  //free wd ?
 end;
 
 procedure ImportPriv(Sender: TObject);

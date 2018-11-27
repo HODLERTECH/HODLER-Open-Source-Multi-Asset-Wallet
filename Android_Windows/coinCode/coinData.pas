@@ -43,8 +43,8 @@ const
     WifByte: 'CC'; p2sh: '10'; p2pk: '4c'; flag: 0; decimals: 8;
     availableFirstLetter: 'X';
 
-    ), (id: 3; displayName: 'Bitcoin ABC'; name: 'bitcoinabc';
-    shortcut: 'BAB'; WifByte: '80'; p2sh: '05'; p2pk: '00';
+    ), (id: 3; displayName: 'Bitcoin Cash'; name: 'bitcoinabc';
+    shortcut: 'BCH'; WifByte: '80'; p2sh: '05'; p2pk: '00';
 
     flag: 0; decimals: 8; availableFirstLetter: '13pq';
 
@@ -92,7 +92,7 @@ begin
     6:
       URL := 'https://digiexplorer.info/tx/';
     7:
-      URL := 'https://bsvexplorer.info/tx/';
+      URL := 'https://bsvexplorer.info//#/tx/';
     end;
 
   result := URL + hash;

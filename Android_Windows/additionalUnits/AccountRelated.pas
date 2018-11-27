@@ -242,6 +242,7 @@ var
   i: integer;
 begin
 
+  frmhome.AccountsListPanel.enabled := false;
   //TThread.Synchronize(nil,procedure
   //begin
   Application.ProcessMessages;
@@ -356,7 +357,11 @@ begin
     SyncHistoryThr := SynchronizeHistoryThread.Create();
   except
     on E: Exception do
+    begin
+
       showmessage(E.Message);
+      frmhome.AccountsListPanel.enabled := true;
+    end;
   end;
   if (currentAccount.userSaveSeed = false) then
   begin
@@ -369,12 +374,17 @@ begin
   try
     refreshWalletDat;
 {$IFDEF MSWINDOWS}
-    frmHome.OpenWalletView(frmHome.WalletList.Content.Children[0]);
+    if frmHome.WalletList.Content.ChildrenCount > 0 then
+      frmHome.OpenWalletView(frmHome.WalletList.Content.Children[0]);
 {$ENDIF}
   except
     on E: Exception do
+    begin
       showmessage('XX' + E.Message);
+      frmhome.AccountsListPanel.enabled := true;
+    end;
   end;
+  frmhome.AccountsListPanel.enabled := true;
 end;
 
 

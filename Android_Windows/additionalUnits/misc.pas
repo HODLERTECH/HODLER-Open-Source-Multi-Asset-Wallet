@@ -390,7 +390,16 @@ var
 begin
 
   if frmhome.GenerateCoinVertScrollBox.Content.ChildrenCount <> 0 then
+  begin
+
+    for i := 0 to frmhome.GenerateCoinVertScrollBox.Content.ChildrenCount -1 do
+    begin
+       TcheckBox(Tpanel(frmhome.GenerateCoinVertScrollBox.Content.Children[i]).TagObject).IsChecked := false;
+    end;
+
     exit;
+
+  end;
 
   for i := 0 to length(availablecoin) - 1 do
   begin
@@ -431,6 +440,9 @@ begin
 
   for i := 0 to length(Token.availableToken) - 1 do
   begin
+
+    if Token.availableToken[i].address = '' then
+      Continue;
 
     panel := TPanel.Create(frmhome.GenerateCoinVertScrollBox);
     panel.Parent := frmhome.GenerateCoinVertScrollBox;
@@ -602,6 +614,12 @@ var
 begin
   with frmhome do
   begin
+
+    ConfirmSendPasswordPanel.Visible := true;
+    SendTransactionButton.visible := true;
+    ConfirmSendClaimCoinButton.Visible := false;
+
+    BCHSVBCHABCReplayProtectionLabel.visible := ((currentcoin.coin = 3) or (CurrentCoin.coin = 7));
 
     if not isEthereum then
     begin
@@ -2653,7 +2671,7 @@ begin
   setLength(buf, length(s));
   for i := 0 to length(s) - 1 do
     buf[i] := System.UInt8
-      (ord(s[i{$IF DEFINED(ANDROID) OR DEFINED(IOS)} + 1{$ENDIF}]));
+      (ord(s[i{$IF NOT( DEFINED(ANDROID) OR DEFINED(IOS) ) } + 1{$ENDIF}]));
 
   init(K256State, 256);
 

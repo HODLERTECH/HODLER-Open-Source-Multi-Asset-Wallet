@@ -545,7 +545,7 @@ type
     ToolBar8: TToolBar;
     ConfirmSendHeaderLabel: TLabel;
     CSBackButton: TButton;
-    Panel10: TPanel;
+    ConfirmSendPasswordPanel: TPanel;
     ConfirmSendPasswordEdit: TEdit;
     ConfirmSendPasswordLabel: TLabel;
     SendFromLabel: TLabel;
@@ -666,6 +666,30 @@ type
     Panel17: TPanel;
     SelectGenerateCoinStaticLabel: TLabel;
     GenerateCoinVertScrollBox: TVertScrollBox;
+    claimButton: TButton;
+    ClaimTabItem: TTabItem;
+    ToolBar11: TToolBar;
+    CTIHeaderLabel: TLabel;
+    CTIHeaderBackButton: TButton;
+    Panel18: TPanel;
+    PrivateKeyEditSV: TEdit;
+    Label7: TLabel;
+    Panel19: TPanel;
+    AddressSVEdit: TEdit;
+    Label9: TLabel;
+    ClaimYourBCHSVButton: TButton;
+    CompressedPrivKeySVCheckBox: TCheckBox;
+    Button1: TButton;
+    BCHSVBCHABCReplayProtectionLabel: TLabel;
+    ClaimWalletListTabItem: TTabItem;
+    ClaimCoinListVertScrollBox: TVertScrollBox;
+    Button4: TButton;
+    Panel20: TPanel;
+    SelectCoinToClaimStaticLabel: TLabel;
+    ToolBar12: TToolBar;
+    Label12: TLabel;
+    Button5: TButton;
+    ConfirmSendClaimCoinButton: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -867,6 +891,9 @@ type
     procedure CopyTextButtonClick(Sender: TObject);
     procedure PanelSelectGenerateCoinOnClick(Sender : TObject);
     procedure NextButtonSGCClick(Sender: TObject);
+    procedure ClaimYourBCHSVButtonClick(Sender: TObject);
+    procedure claimButtonClick(Sender: TObject);
+    procedure ConfirmSendClaimCoinButtonClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -913,6 +940,7 @@ type
 
     procedure CoinListCreateFromSeed(Sender : TObject);
     procedure CoinListCreateFromQR(Sender : TObject);
+    procedure ClaimCoinSelectInListClick(Sender : TObject);
 
   var
     HistoryMaxLength : Integer;
@@ -971,13 +999,14 @@ var
   CurrentStyle: AnsiString;
   BigQRCodeBackTab: TTabItem;
   ImportCoinID: Integer;
+  ToClaimWD , FromClaimWD : TWalletInfo;
 
 resourcestring
   QRSearchEncryted = 'QRSearchEncryted';
   QRSearchDecryted = 'QRSearchDecryted';
 
 resourcestring
-  CURRENT_VERSION = '0.2.9';
+  CURRENT_VERSION = '0.3.0';
 
 var
   LATEST_VERSION: AnsiString;
@@ -1006,6 +1035,14 @@ begin
 end;
 
 {$ENDIF}
+
+procedure TfrmHome.ClaimCoinSelectInListClick(Sender : TObject);
+begin
+
+  ToclaimWD := TWalletInfo(TfmxObject(Sender).tagObject);
+  switchTab(pageControl , ClaimTabItem);
+
+end;
 
 procedure Tfrmhome.CoinListCreateFromSeed(Sender : TObject);
 begin
@@ -1832,6 +1869,10 @@ begin
           end;
         end);
 
+  end
+  else
+  begin
+    popupWindow.Create( dictionary('LatestVersion') );
   end;
 
 end;
@@ -1848,6 +1889,42 @@ begin
   WalletViewRelated.chooseToken(Sender);
   switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
   btnSyncClick(nil);
+end;
+
+procedure TfrmHome.claimButtonClick(Sender: TObject);
+begin
+
+  if CurrentAccount = nil then
+  begin
+    privTCAPanel2.Visible := false;
+    notPrivTCA2.IsChecked := false;
+    pass.Text := '';
+    retypePass.Text := '';
+    btnCreateWallet.Text := dictionary('OpenNewWallet');
+    procCreateWallet := btnGenSeedClick;
+    btnCreateWallet.TagString := 'claim' ; // generate list options - '' default ( user chose coin )
+    switchTab(PageControl, createPassword);
+    exit();
+  end;
+
+  createClaimCoinList(7);
+
+  switchTab(pageControl , ClaimWalletListTabItem);
+end;
+
+procedure TfrmHome.ClaimYourBCHSVButtonClick(Sender: TObject);
+begin
+
+  try
+    claimsv();
+  except on E: Exception do
+    begin
+      popupWindow.Create(E.Message);
+    end;
+  end;
+
+
+
 end;
 
 procedure TfrmHome.DayNightModeSwitchSwitch(Sender: TObject);
@@ -2098,6 +2175,16 @@ begin
   procCreateWallet := btnGenSeedClick;
   switchTab(PageControl, createPassword);
 
+end;
+
+procedure TfrmHome.ConfirmSendClaimCoinButtonClick(Sender: TObject);
+var
+  temp : Integer;
+begin
+  temp := CurrentCoin.coin;
+  currentCoin.coin := 7;
+  WalletViewRelated.PrepareSendTabAndSend(FromClaimWD, toClaimWD.addr, FromClaimWD.confirmed-BigInteger(1700), BigInteger(1700), '', AvailableCoin[7].name);
+  currentcoin.coin := temp;
 end;
 
 procedure TfrmHome.CopyPrivateKeyButtonClick(Sender: TObject);
@@ -2579,13 +2666,14 @@ begin
   retypePass.Text := '';
   btnCreateWallet.Text := dictionary('OpenNewWallet');
   procCreateWallet := btnGenSeedClick;
+  btnCreateWallet.TagString := '' ; // generate list options - '' default ( user chose coin )
   switchTab(PageControl, createPassword);
 
 end;
 
 procedure TfrmHome.btnCreateWalletClick(Sender: TObject);
 begin
-  WalletViewRelated.CreateWallet(Sender);
+  WalletViewRelated.CreateWallet(Sender , TfmxObject(Sender).TagString );   // tagString - generate list oprions | '' - user choose coins | 'claim' - only BSV
 end;
 
 procedure TfrmHome.btnChangeDescryptionOKClick(Sender: TObject);
@@ -2965,7 +3053,7 @@ end;
 procedure TfrmHome.FormShow(Sender: TObject);
 begin
   AccountRelated.afterInitialize;
-  SweepCoinsRoutine('priv',true,7,'1Zor3jjgJT15bUED3kcnDJLBZXKnvV3z6');
+  //SweepCoinsRoutine('priv',true,7,'1Zor3jjgJT15bUED3kcnDJLBZXKnvV3z6');
 end;
 
 procedure TfrmHome.FormVirtualKeyboardHidden(Sender: TObject;

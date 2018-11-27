@@ -82,6 +82,12 @@ begin
         StringReplace(frmhome.receiveAddress.Text, ' ', '', [rfReplaceAll]) + '?amount='
         + frmhome.ReceiveValue.Text + '&message=hodler';
 
+      if currentCoin.coin in [3,7] then
+        s := {$IFDEF ANDROID}'  ' +
+{$ENDIF}'bitcoincash' + ':' +
+        StringReplace(frmhome.receiveAddress.Text, ' ', '', [rfReplaceAll]) + '?amount='
+        + frmhome.ReceiveValue.Text + '&message=hodler';
+
       QRCode.Encoding := TQRCodeEncoding(0);
       QRCode.QuietZone := 6;
       QRCode.Data := s;
@@ -207,13 +213,22 @@ begin
                 end
                 else
                 begin
-                  if ts.Strings[0] <> AvailableCoin[CurrentCoin.coin].name
+                  if lowercase(ts.Strings[0]) <> lowercase(AvailableCoin[CurrentCoin.coin].name)
                   then
                   begin
-                    popupWindow.Create(dictionary('QRCodeFor') + ' ' +
+                    if CurrentCoin.coin in [3,7] then
+                    begin
+
+                    end
+                    else
+                    begin
+                      popupWindow.Create(dictionary('QRCodeFor') + ' ' +
                       ts.Strings[0]);
-                    ts.free;
-                    exit;
+                      ts.free;
+                      exit;
+                    end;
+
+                    
                   end;
                   WVsendTO.Text := ts.Strings[1];
                   for i := 2 to ts.Count - 2 do

@@ -6,14 +6,23 @@
     <PropertyGroup>
         <DeviceId Condition="'$(Platform)'=='Android'"/>
         <DeviceId Condition="'$(Platform)'=='iOSDevice32'"/>
-        <DeviceId Condition="'$(Platform)'=='iOSDevice64'">18194ccda5d512aad89ec274b2be2fdec60e7b85</DeviceId>
+        <DeviceId Condition="'$(Platform)'=='iOSDevice64'"/>
         <DeviceId Condition="'$(Platform)'=='iOSSimulator'">iPhone5</DeviceId>
     </PropertyGroup>
     <ItemGroup Condition="'$(Platform)'=='iOSDevice64'">
-        <DeployFile Include="iOS_icons\FM_ApplicationIcon_180x180.png" Condition="'$(Config)'=='Release'">
+        <DeployFile Include="iOS_icons\FM_LaunchImage_640x1136.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>FM_ApplicationIcon_180x180.png</RemoteName>
-            <DeployClass>iPhone_AppIcon180</DeployClass>
+            <RemoteName>Default-568h@2x.png</RemoteName>
+            <DeployClass>iPhone_Launch640x1136</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="iOS_icons\FM_ApplicationIcon_120x120.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
+            <RemoteName>FM_ApplicationIcon_120x120.png</RemoteName>
+            <DeployClass>iPhone_AppIcon120</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -73,24 +82,6 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="iOS_icons\FM_ApplicationIcon_114x114.png" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>FM_ApplicationIcon_114x114.png</RemoteName>
-            <DeployClass>iPhone_AppIcon114</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="iOS_icons\FM_LaunchImage_1242x2208.png" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>Default-736h@3x.png</RemoteName>
-            <DeployClass>iPhone_Launch1242</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
         <DeployFile Include="Jet.style" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile.app\StartUp\Documents\</RemoteDir>
             <RemoteName>Jet.style</RemoteName>
@@ -127,6 +118,15 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="iOS_icons\FM_LaunchImage_320x480.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
+            <RemoteName>Default.png</RemoteName>
+            <DeployClass>iPhone_Launch320</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageLandscape_1024x768.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
             <RemoteName>Default-Landscape~ipad.png</RemoteName>
@@ -140,15 +140,6 @@
             <RemoteDir>HODLER_Wallet_Mobile.app\StartUp\Documents\</RemoteDir>
             <RemoteName>iOSJet.style</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="iOS_icons\FM_ApplicationIcon_60x60.png" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>FM_ApplicationIcon_60x60.png</RemoteName>
-            <DeployClass>iPhone_AppIcon60</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -181,10 +172,10 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="iOS_icons\FM_LaunchImage_750x1334.png" Condition="'$(Config)'=='Release'">
+        <DeployFile Include="iOS_icons\FM_ApplicationIcon_114x114.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>Default-667h@2x.png</RemoteName>
-            <DeployClass>iPhone_Launch750</DeployClass>
+            <RemoteName>FM_ApplicationIcon_114x114.png</RemoteName>
+            <DeployClass>iPhone_AppIcon114</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -235,16 +226,16 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_2208x1242.png" Condition="'$(Config)'=='Debug'">
+        <DeployFile Include="iOS_icons\FM_ApplicationIcon_58x58.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>Default-Landscape-736h@3x.png</RemoteName>
-            <DeployClass>iPhone_Launch2208</DeployClass>
+            <RemoteName>FM_ApplicationIcon_58x58.png</RemoteName>
+            <DeployClass>iPhone_Spotlight58</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="iOS_icons\FM_LaunchImage_2208x1242.png" Condition="'$(Config)'=='Release'">
+        <DeployFile Include="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_2208x1242.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
             <RemoteName>Default-Landscape-736h@3x.png</RemoteName>
             <DeployClass>iPhone_Launch2208</DeployClass>
@@ -262,19 +253,10 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="iOS_icons\FM_ApplicationIcon_58x58.png" Condition="'$(Config)'=='Release'">
+        <DeployFile Include="iOS_icons\FM_LaunchImage_640x960.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>FM_ApplicationIcon_58x58.png</RemoteName>
-            <DeployClass>iPhone_Spotlight58</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="iOSDevice64\Release\HODLER_Wallet_Mobile.entitlements" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile.app\..\</RemoteDir>
-            <RemoteName>HODLER_Wallet_Mobile.entitlements</RemoteName>
-            <DeployClass>ProjectiOSEntitlements</DeployClass>
+            <RemoteName>Default@2x.png</RemoteName>
+            <DeployClass>iPhone_Launch640</DeployClass>
             <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -284,6 +266,15 @@
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
             <RemoteName>Default-568h@2x.png</RemoteName>
             <DeployClass>iPhone_Launch640x1136</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="iOSDevice64\Release\HODLER_Wallet_Mobile.info.plist" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
+            <RemoteName>Info.plist</RemoteName>
+            <DeployClass>ProjectiOSInfoPList</DeployClass>
             <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -316,10 +307,10 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="iOS_icons\FM_ApplicationIcon_40x40.png" Condition="'$(Config)'=='Release'">
+        <DeployFile Include="iOS_icons\FM_ApplicationIcon_87x87.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>FM_ApplicationIcon_40x40.png</RemoteName>
-            <DeployClass>iPhone_Spotlight40</DeployClass>
+            <RemoteName>FM_ApplicationIcon_87x87.png</RemoteName>
+            <DeployClass>iPhone_AppIcon87</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -334,47 +325,28 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="iOS_icons\FM_ApplicationIcon_87x87.png" Condition="'$(Config)'=='Release'">
+        <DeployFile Include="iOS_icons\FM_LaunchImage_1125x2436.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>FM_ApplicationIcon_87x87.png</RemoteName>
-            <DeployClass>iPhone_AppIcon87</DeployClass>
+            <RemoteName>Default-812h@3x.png</RemoteName>
+            <DeployClass>iPhone_Launch1125</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="iOSDevice64\Release\HODLER_Wallet_Mobile" Condition="'$(Config)'=='Release'">
+        <DeployFile Include="iOS_icons\FM_ApplicationIcon_57x57.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>HODLER_Wallet_Mobile</RemoteName>
-            <DeployClass>ProjectOutput</DeployClass>
-            <Operation>1</Operation>
+            <RemoteName>FM_ApplicationIcon_57x57.png</RemoteName>
+            <DeployClass>iPhone_AppIcon57</DeployClass>
+            <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
-            <Required>True</Required>
         </DeployFile>
         <DeployFile Include="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_180x180.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
             <RemoteName>FM_ApplicationIcon_180x180.png</RemoteName>
             <DeployClass>iPhone_AppIcon180</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="iOS_icons\FM_LaunchImage_640x1136.png" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>Default-568h@2x.png</RemoteName>
-            <DeployClass>iPhone_Launch640x1136</DeployClass>
-            <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="iOS_icons\FM_ApplicationIcon_120x120.png" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>FM_ApplicationIcon_120x120.png</RemoteName>
-            <DeployClass>iPhone_AppIcon120</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -402,15 +374,6 @@
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
             <RemoteName>FM_SpotlightSearchIcon_50x50.png</RemoteName>
             <DeployClass>iPad_SpotLight50</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="iOS_icons\FM_LaunchImage_2436x1125.png" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>Default-Landscape-812h@3x.png</RemoteName>
-            <DeployClass>iPhone_Launch2436</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -479,15 +442,6 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="iOS_icons\FM_LaunchImage_640x960.png" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>Default@2x.png</RemoteName>
-            <DeployClass>iPhone_Launch640</DeployClass>
-            <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
         <DeployFile Include="iOSDevice64\Debug\ResourceRules.plist" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
             <RemoteName>ResourceRules.plist</RemoteName>
@@ -506,10 +460,10 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="iOS_icons\FM_ApplicationIcon_57x57.png" Condition="'$(Config)'=='Release'">
+        <DeployFile Include="iOS_icons\FM_LaunchImage_2436x1125.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>FM_ApplicationIcon_57x57.png</RemoteName>
-            <DeployClass>iPhone_AppIcon57</DeployClass>
+            <RemoteName>Default-Landscape-812h@3x.png</RemoteName>
+            <DeployClass>iPhone_Launch2436</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -533,19 +487,19 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="Languages\ENGlang.json" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile.app\StartUp\Documents\</RemoteDir>
-            <RemoteName>ENGlang.json</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
+        <DeployFile Include="iOS_icons\FM_ApplicationIcon_40x40.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
+            <RemoteName>FM_ApplicationIcon_40x40.png</RemoteName>
+            <DeployClass>iPhone_Spotlight40</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="iOS_icons\FM_ApplicationIcon_80x80.png" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>FM_ApplicationIcon_80x80.png</RemoteName>
-            <DeployClass>iPhone_Spotlight80</DeployClass>
+        <DeployFile Include="Languages\ENGlang.json" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile.app\StartUp\Documents\</RemoteDir>
+            <RemoteName>ENGlang.json</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -668,10 +622,28 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="iOSDevice64\Release\HODLER_Wallet_Mobile.entitlements" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile.app\..\</RemoteDir>
+            <RemoteName>HODLER_Wallet_Mobile.entitlements</RemoteName>
+            <DeployClass>ProjectiOSEntitlements</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="Jet.style" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile.app\StartUp\Documents\</RemoteDir>
             <RemoteName>Jet.style</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="iOS_icons\FM_ApplicationIcon_60x60.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
+            <RemoteName>FM_ApplicationIcon_60x60.png</RemoteName>
+            <DeployClass>iPhone_AppIcon60</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -686,11 +658,21 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="iOSDevice64\Release\HODLER_Wallet_Mobile.dSYM" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile.app\..\$(PROJECTNAME).app.dSYM\Contents\Resources\DWARF\</RemoteDir>
+        <DeployFile Include="iOSDevice64\Debug\HODLER_Wallet_Mobile" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
             <RemoteName>HODLER_Wallet_Mobile</RemoteName>
-            <DeployClass>ProjectiOSDeviceDebug</DeployClass>
+            <DeployClass>ProjectOutput</DeployClass>
             <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
+        </DeployFile>
+        <DeployFile Include="iOS_icons\FM_LaunchImage_750x1334.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
+            <RemoteName>Default-667h@2x.png</RemoteName>
+            <DeployClass>iPhone_Launch750</DeployClass>
+            <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
@@ -713,29 +695,10 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="iOSDevice64\Debug\HODLER_Wallet_Mobile" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>HODLER_Wallet_Mobile</RemoteName>
-            <DeployClass>ProjectOutput</DeployClass>
-            <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-            <Required>True</Required>
-        </DeployFile>
         <DeployFile Include="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_2436x1125.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
             <RemoteName>Default-Landscape-812h@3x.png</RemoteName>
             <DeployClass>iPhone_Launch2436</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="iOS_icons\FM_ApplicationIcon_29x29.png" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>FM_ApplicationIcon_29x29.png</RemoteName>
-            <DeployClass>iPhone_Spotlight29</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -755,15 +718,6 @@
             <RemoteName>Default-Landscape.png</RemoteName>
             <DeployClass>iPad_Launch1024</DeployClass>
             <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="iOS_icons\FM_LaunchImage_1125x2436.png" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>Default-812h@3x.png</RemoteName>
-            <DeployClass>iPhone_Launch1125</DeployClass>
-            <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
@@ -804,10 +758,28 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="iOS_icons\FM_LaunchImage_1242x2208.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
+            <RemoteName>Default-736h@3x.png</RemoteName>
+            <DeployClass>iPhone_Launch1242</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="Languages\ZHX.lang" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile.app\StartUp\Documents\</RemoteDir>
             <RemoteName>ZHX.lang</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="iOS_icons\FM_ApplicationIcon_80x80.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
+            <RemoteName>FM_ApplicationIcon_80x80.png</RemoteName>
+            <DeployClass>iPhone_Spotlight80</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -867,10 +839,28 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="iOS_icons\FM_LaunchImage_320x480.png" Condition="'$(Config)'=='Release'">
+        <DeployFile Include="iOS_icons\FM_ApplicationIcon_29x29.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>Default.png</RemoteName>
-            <DeployClass>iPhone_Launch320</DeployClass>
+            <RemoteName>FM_ApplicationIcon_29x29.png</RemoteName>
+            <DeployClass>iPhone_Spotlight29</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="iOS_icons\FM_LaunchImage_2208x1242.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
+            <RemoteName>Default-Landscape-736h@3x.png</RemoteName>
+            <DeployClass>iPhone_Launch2208</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="iOSDevice64\Release\HODLER_Wallet_Mobile.dSYM" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile.app\..\$(PROJECTNAME).app.dSYM\Contents\Resources\DWARF\</RemoteDir>
+            <RemoteName>HODLER_Wallet_Mobile</RemoteName>
+            <DeployClass>ProjectiOSDeviceDebug</DeployClass>
             <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -881,15 +871,6 @@
             <RemoteName>FM_ApplicationIcon_152x152.png</RemoteName>
             <DeployClass>iPad_AppIcon152</DeployClass>
             <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="iOSDevice64\Release\HODLER_Wallet_Mobile.info.plist" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>Info.plist</RemoteName>
-            <DeployClass>ProjectiOSInfoPList</DeployClass>
-            <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
@@ -911,6 +892,16 @@
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="iOSDevice64\Release\HODLER_Wallet_Mobile" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
+            <RemoteName>HODLER_Wallet_Mobile</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
         </DeployFile>
         <DeployFile Include="iOSSterling.style" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile.app\StartUp\Documents\</RemoteDir>
@@ -952,6 +943,15 @@
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
             <RemoteName>FM_ApplicationIcon_152x152.png</RemoteName>
             <DeployClass>iPad_AppIcon152</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="iOS_icons\FM_ApplicationIcon_180x180.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
+            <RemoteName>FM_ApplicationIcon_180x180.png</RemoteName>
+            <DeployClass>iPhone_AppIcon180</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -1383,16 +1383,6 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="iOSDevice32\Debug\HODLER_Wallet_Mobile" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>HODLER_Wallet_Mobile</RemoteName>
-            <DeployClass>ProjectOutput</DeployClass>
-            <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-            <Required>True</Required>
-        </DeployFile>
         <DeployFile Include="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImagePortrait_768x1024.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
             <RemoteName>Default-Portrait~ipad.png</RemoteName>
@@ -1555,16 +1545,6 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="iOSDevice32\Release\HODLER_Wallet_Mobile" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>HODLER_Wallet_Mobile</RemoteName>
-            <DeployClass>ProjectOutput</DeployClass>
-            <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-            <Required>True</Required>
-        </DeployFile>
         <DeployFile Include="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_750x1334.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
             <RemoteName>Default-667h@2x.png</RemoteName>
@@ -1717,6 +1697,16 @@
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="iOSDevice32\Debug\HODLER_Wallet_Mobile" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
+            <RemoteName>HODLER_Wallet_Mobile</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
         </DeployFile>
         <DeployFile Include="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_60x60.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
@@ -1907,6 +1897,16 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="iOSDevice32\Release\HODLER_Wallet_Mobile" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
+            <RemoteName>HODLER_Wallet_Mobile</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
+        </DeployFile>
         <DeployFile Include="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageLandscape_2048x1496.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
             <RemoteName>Default-Landscape@2x.png</RemoteName>
@@ -1945,6 +1945,15 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="Languages\PT.lang" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Mobile\</RemoteDir>
+            <RemoteName>PT.lang</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="Win32\Debug\HODLER_Wallet_Mobile.exe" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile\</RemoteDir>
             <RemoteName>HODLER_Wallet_Mobile.exe</RemoteName>
@@ -1954,15 +1963,6 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
             <Required>True</Required>
-        </DeployFile>
-        <DeployFile Include="Languages\PT.lang" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>HODLER_Wallet_Mobile\</RemoteDir>
-            <RemoteName>PT.lang</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
         </DeployFile>
         <DeployFile Include="Languages\FRA.lang" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile\</RemoteDir>
@@ -1990,6 +1990,16 @@
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Win32\Release\HODLER_Wallet_Mobile.exe" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile\</RemoteDir>
+            <RemoteName>HODLER_Wallet_Mobile.exe</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
         </DeployFile>
         <DeployFile Include="Languages\JPN.lang" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile\</RemoteDir>
@@ -2026,16 +2036,6 @@
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="Win32\Release\HODLER_Wallet_Mobile.exe" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile\</RemoteDir>
-            <RemoteName>HODLER_Wallet_Mobile.exe</RemoteName>
-            <DeployClass>ProjectOutput</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-            <Required>True</Required>
         </DeployFile>
         <DeployFile Include="OKSterling.style" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile\</RemoteDir>
@@ -2091,6 +2091,16 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="All Platforms\Debug\HODLER_Wallet_Mobile.exe" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Mobile\</RemoteDir>
+            <RemoteName>HODLER_Wallet_Mobile.exe</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
+        </DeployFile>
         <DeployFile Include="Languages\FRA.lang" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile\</RemoteDir>
             <RemoteName>FRA.lang</RemoteName>
@@ -2126,16 +2136,6 @@
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="All Platforms\Debug\HODLER_Wallet_Mobile.exe" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>HODLER_Wallet_Mobile\</RemoteDir>
-            <RemoteName>HODLER_Wallet_Mobile.exe</RemoteName>
-            <DeployClass>ProjectOutput</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-            <Required>True</Required>
         </DeployFile>
         <DeployFile Include="Languages\SPA.lang" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile\</RemoteDir>
@@ -2281,34 +2281,6 @@
         <DeployFile Include="Languages\POLlang.json" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
             <RemoteName>POLlang.json</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="iOSJet.style" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
-            <RemoteName>iOSJet.style</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="Android\Release\libHODLER_Wallet_Mobile.so" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile\library\lib\armeabi-v7a\</RemoteDir>
-            <RemoteName>libHODLER_Wallet_Mobile.so</RemoteName>
-            <DeployClass>ProjectOutput</DeployClass>
-            <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-            <Required>True</Required>
-        </DeployFile>
-        <DeployFile Include="iOSSterling.style" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
-            <RemoteName>iOSSterling.style</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -2549,6 +2521,16 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="Android\Release\libHODLER_Wallet_Mobile.so" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile\library\lib\armeabi-v7a\</RemoteDir>
+            <RemoteName>libHODLER_Wallet_Mobile.so</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
+        </DeployFile>
         <DeployFile Include="Languages\PT.lang" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
             <RemoteName>PT.lang</RemoteName>
@@ -2567,6 +2549,16 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="Android\Debug\libHODLER_Wallet_Mobile.so" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Mobile\library\lib\armeabi-v7a\</RemoteDir>
+            <RemoteName>libHODLER_Wallet_Mobile.so</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
+        </DeployFile>
         <DeployFile Include="Jet.style" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
             <RemoteName>Jet.style</RemoteName>
@@ -2584,16 +2576,6 @@
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="Android\Debug\libHODLER_Wallet_Mobile.so" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>HODLER_Wallet_Mobile\library\lib\armeabi-v7a\</RemoteDir>
-            <RemoteName>libHODLER_Wallet_Mobile.so</RemoteName>
-            <DeployClass>ProjectOutput</DeployClass>
-            <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-            <Required>True</Required>
         </DeployFile>
         <DeployFile Include="gfx\splash640x480.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile\res\drawable-large\</RemoteDir>
@@ -2984,6 +2966,16 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="iOSSimulator\Debug\HODLER_Wallet_Mobile" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
+            <RemoteName>HODLER_Wallet_Mobile</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
+        </DeployFile>
         <DeployFile Include="$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_29x29.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
             <RemoteName>FM_SpotlightSearchIcon_29x29.png</RemoteName>
@@ -3001,16 +2993,6 @@
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="iOSSimulator\Debug\HODLER_Wallet_Mobile" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>HODLER_Wallet_Mobile</RemoteName>
-            <DeployClass>ProjectOutput</DeployClass>
-            <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-            <Required>True</Required>
         </DeployFile>
         <DeployFile Include="Languages\JPN.lang" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile.app\StartUp\Documents\</RemoteDir>
@@ -3065,6 +3047,16 @@
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="iOSSimulator\Release\HODLER_Wallet_Mobile" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
+            <RemoteName>HODLER_Wallet_Mobile</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
         </DeployFile>
         <DeployFile Include="Languages\ENGlang.json" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile.app\StartUp\Documents\</RemoteDir>
@@ -3137,16 +3129,6 @@
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="iOSSimulator\Release\HODLER_Wallet_Mobile" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>
-            <RemoteName>HODLER_Wallet_Mobile</RemoteName>
-            <DeployClass>ProjectOutput</DeployClass>
-            <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-            <Required>True</Required>
         </DeployFile>
         <DeployFile Include="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_320x480.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile.app\</RemoteDir>

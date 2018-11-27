@@ -103,7 +103,7 @@ begin
           end);
 
         ans := sendCoinsTO(from, sendto, amount, fee, MasterSeed,
-          AvailableCoin[CurrentCoin.coin].Name);
+          coin);
         //Tthread.Synchronize(nil, procedure begin
         //  showmessage(ans);
         //end);
@@ -636,6 +636,8 @@ var
   i: Integer;
 begin
 
+  TfmxObject(Sender).TagString := ''; // set default options for next account
+
   num := false;
   low := false;
   up := false;
@@ -708,7 +710,7 @@ begin
         if Tpanel(frmhome.GenerateCoinVertScrollBox.Content.Children[i]).Tag = 7 then
           TcheckBox(Tpanel(frmhome.GenerateCoinVertScrollBox.Content.Children[i]).TagObject).IsChecked := true;
       end;
-      frmhome.NextButtonSGC.OnClick();
+      frmhome.NextButtonSGC.OnClick(nil);
     end;
 
 
@@ -1268,15 +1270,15 @@ begin
         SumFiat := SumFiat + cc.getFiat();
       end;
 
-      lbBalance.Text := BigIntegerBeautifulStr(sumConfirmed,
+      lbBalance.Text := BigIntegerBeautifulStr( currentAccount.aggregateBalances(CurrentCoin).Confirmed,
         CurrentCryptoCurrency.decimals);
-      lbBalanceLong.Text := BigIntegertoFloatStr(sumConfirmed,
+      lbBalanceLong.Text := BigIntegertoFloatStr(currentAccount.aggregateBalances(CurrentCoin).Confirmed,
         CurrentCryptoCurrency.decimals);
-      lblFiat.Text := floatToStrF(SumFiat, ffFixed, 15, 2);
+      lblFiat.Text := floatToStrF(currentAccount.aggregateFiats(CurrentCoin), ffFixed, 15, 2);
 
-      TopInfoConfirmedValue.Text := ' ' + BigIntegertoFloatStr(sumConfirmed,
+      TopInfoConfirmedValue.Text := ' ' + BigIntegertoFloatStr(currentAccount.aggregateBalances(CurrentCoin).Confirmed,
         CurrentCryptoCurrency.decimals);
-      TopInfoUnconfirmedValue.Text := ' ' + BigIntegertoFloatStr(sumUnconfirmed,
+      TopInfoUnconfirmedValue.Text := ' ' + BigIntegertoFloatStr(currentAccount.aggregateBalances(CurrentCoin).unConfirmed,
         CurrentCryptoCurrency.decimals);
 
     end
@@ -1495,6 +1497,9 @@ begin
 
   for i := 0 to length(Token.availableToken) - 1 do
   begin
+
+    if token.availableToken[i].address = '' then    // if token is no longer exist
+      Continue;
 
     with frmhome.AvailableTokensBox do
     begin
