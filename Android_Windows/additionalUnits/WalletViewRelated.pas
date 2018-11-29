@@ -424,7 +424,7 @@ begin
     end;
     if CurrentCoin.coin = 4 then
     begin
-      if not isValidEthAddress(address) then
+      {if not isValidEthAddress(address) then
       begin
         popupWindowYesNo.Create(
           procedure // yes
@@ -462,7 +462,7 @@ begin
 
           end, 'This address may be incorrect. Do you want to check again?');
         exit;
-      end;
+      end;}
     end;
 
     if ValidateBitcoinAddress(Address) then
@@ -750,6 +750,8 @@ begin
       WData: WIFAddressData;
       pub: AnsiString;
       flagElse : Boolean;
+      sorted : boolean;
+      DEBUGstring : AnsiString;
 
     begin
 
@@ -776,6 +778,8 @@ begin
         SetLength(arr, CurrentAccount.countWalletBy(newcoinID));
         for wd in CurrentAccount.myCoins do
         begin
+          if wd.x = -1 then
+            continue;
           {if wd.coin = newcoinID then
           begin
             arr[i] := wd.X;
@@ -784,6 +788,8 @@ begin
           if wd.coin = newcoinID then
           begin
             flagElse := true;
+
+
             for j := 0 to i-1 do
             begin
 
@@ -801,6 +807,34 @@ begin
 
           end;
         end;
+        SetLength(arr, i );
+        sorted := false;
+        while not sorted do
+        begin
+          sorted := true;
+          for i := 0 to length(arr) - 2  do
+          begin
+
+            if arr[i] > arr[i+1] then
+            begin
+
+              j := arr[i];
+              arr[i] := arr[i+1];
+              arr[i+1] := j;
+              sorted := false;
+            end;
+
+          end;
+
+        end;
+        DebugString := '';
+        for i := 0 to length(Arr) - 1 do
+          DebugString := DebugString + intTostr(arr[i]) + ' ';
+        tthread.Synchronize( nil , procedure
+        begin
+          showmessage(DebugString);
+        end);
+
         newID := i;
         for i := 0 to length(arr) - 1 do
         begin

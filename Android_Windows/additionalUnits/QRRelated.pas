@@ -195,7 +195,7 @@ begin
           tthread.Synchronize(nil,
             procedure
             var
-              i: Integer;
+              i,j: Integer;
 
           var
             wd: TwalletInfo;
@@ -306,7 +306,26 @@ begin
               end
               else if cameraBackTabItem = HOME_TABITEM then
               begin
-                switchTab(PageControl, cameraBackTabItem);
+                //switchTab(PageControl, cameraBackTabItem);
+                ts := parseQRCode(ReadResult.Text);
+
+                for i := 0 to frmhome.WalletList.Content.ChildrenCount -1 do
+                begin
+                  if (frmHome.WalletList.Content.Children[i].TagObject is TWalletInfo) and ( availableCoin[TWalletInfo(frmHome.WalletList.Content.Children[i].TagObject).coin].name = ts[0] ) then
+                  begin
+                    //showmessage(TWalletInfo(frmHome.WalletList.Content.Children[i].TagObject).addr);
+                    openWalletView(frmHome.WalletList.Content.Children[i]);
+                    switchTab(WVTabControl , WVSend );
+                    WVsendTO.Text := ts.Strings[1];
+                    for j := 2 to ts.Count - 2 do
+                    begin
+                      if ts.Strings[j] = 'amount' then
+                        wvAmount.Text := ts.Strings[j + 1];
+                    end;
+                  end;
+                end;
+
+
               end;
 
               CameraComponent1.Active := false;

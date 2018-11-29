@@ -139,6 +139,9 @@ inherited frmHome_Windows: TfrmHome_Windows
               Size.Width = 624.000000000000000000
             end
           end
+          inherited MainScreenQRButton: TButton
+            OnClick = nil
+          end
         end
         inherited NewCryptoLayout: TLayout
           Position.Y = 332.000000000000000000
@@ -498,7 +501,7 @@ inherited frmHome_Windows: TfrmHome_Windows
             inherited SendVertScrollBox: TVertScrollBox
               Size.Width = 624.000000000000000000
               Size.Height = 319.000000000000000000
-              Viewport.Width = 608.000000000000000000
+              Viewport.Width = 624.000000000000000000
               Viewport.Height = 319.000000000000000000
               inherited btnSend: TButton
                 Size.Width = 608.000000000000000000

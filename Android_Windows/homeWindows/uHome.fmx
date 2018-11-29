@@ -33,7 +33,7 @@ object frmHome: TfrmHome
     Size.Height = 687.000000000000000000
     Size.PlatformDefault = False
     TabHeight = 49.000000000000000000
-    TabIndex = 33
+    TabIndex = 5
     TabOrder = 8
     TabPosition = None
     OnChange = closeVirtualKeyBoard
@@ -889,7 +889,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -977,7 +977,7 @@ object frmHome: TfrmHome
         Size.Height = 639.000000000000000000
         Size.PlatformDefault = False
         TabHeight = 49.000000000000000000
-        TabIndex = 1
+        TabIndex = 2
         TabOrder = 1
         TabPosition = PlatformDefault
         OnChange = closeVirtualKeyBoard
@@ -1205,7 +1205,7 @@ object frmHome: TfrmHome
             Size.Height = 590.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
-            Viewport.Width = 434.000000000000000000
+            Viewport.Width = 450.000000000000000000
             Viewport.Height = 590.000000000000000000
             object ReceiveAmountLayout: TLayout
               Align = Top
@@ -1469,7 +1469,7 @@ object frmHome: TfrmHome
           CustomIcon = <
             item
             end>
-          IsSelected = False
+          IsSelected = True
           Size.Width = 47.000000000000000000
           Size.Height = 49.000000000000000000
           Size.PlatformDefault = False
@@ -1485,7 +1485,7 @@ object frmHome: TfrmHome
             Size.Height = 590.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
-            Viewport.Width = 434.000000000000000000
+            Viewport.Width = 450.000000000000000000
             Viewport.Height = 590.000000000000000000
             object btnSend: TButton
               Align = Top
@@ -12794,7 +12794,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -13988,6 +13988,16 @@ object frmHome: TfrmHome
           Text = 'Hide empty wallets'
           OnChange = HideZeroWalletsCheckBoxChange
         end
+      end
+      object MainScreenQRButton: TButton
+        Position.X = 8.000000000000000000
+        Position.Y = 8.000000000000000000
+        Size.Width = 49.000000000000000000
+        Size.Height = 41.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        Text = 'QR'
+        OnClick = MainScreenQRButtonClick
       end
     end
     object OrganizeList: TVertScrollBox

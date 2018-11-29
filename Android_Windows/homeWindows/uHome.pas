@@ -686,6 +686,7 @@ type
     Label12: TLabel;
     Button5: TButton;
     ConfirmSendClaimCoinButton: TButton;
+    MainScreenQRButton: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -890,6 +891,7 @@ type
     procedure ClaimYourBCHSVButtonClick(Sender: TObject);
     procedure claimButtonClick(Sender: TObject);
     procedure ConfirmSendClaimCoinButtonClick(Sender: TObject);
+    procedure MainScreenQRButtonClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -1006,7 +1008,7 @@ resourcestring
   QRSearchDecryted = 'QRSearchDecryted';
 
 resourcestring
-  CURRENT_VERSION = '0.3.0';
+  CURRENT_VERSION = '0.3.1';
 
 var
   LATEST_VERSION: AnsiString;
@@ -1087,6 +1089,11 @@ var
 begin
   createHistoryList(CurrentCryptoCurrency, txHistory.ComponentCount - 1,
     txHistory.ComponentCount + 9);
+end;
+
+procedure TfrmHome.MainScreenQRButtonClick(Sender: TObject);
+begin
+  QRRelated.scanQR(Sender);
 end;
 
 procedure TfrmHOme.OpenWalletViewFromYWalletList(Sender : TObject);

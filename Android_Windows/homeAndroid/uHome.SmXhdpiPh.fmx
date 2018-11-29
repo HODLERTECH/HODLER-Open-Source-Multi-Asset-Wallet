@@ -136,10 +136,15 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             Size.Width = 245.000000000000000000
             inherited SearchInDashBrdButton: TSpeedButton
               Position.X = 213.000000000000000000
+              Position.Y = 8.000000000000000000
+              Size.Height = 32.000000000000000000
             end
             inherited HideZeroWalletsCheckBox: TCheckBox
               Size.Width = 245.000000000000000000
             end
+          end
+          inherited MainScreenQRButton: TButton
+            OnClick = nil
           end
         end
         inherited NewCryptoLayout: TLayout
@@ -172,6 +177,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           end
           inherited PopupBox1: TPopupBox
             Position.X = 65.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited BackToBalanceViewLayout: TLayout
@@ -530,7 +537,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             inherited SendVertScrollBox: TVertScrollBox
               Size.Width = 245.000000000000000000
               Size.Height = 225.000000000000000000
-              Viewport.Width = 240.000000000000000000
+              Viewport.Width = 245.000000000000000000
               Viewport.Height = 225.000000000000000000
               inherited btnSend: TButton
                 Position.Y = 156.000000000000000000
