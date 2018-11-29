@@ -147,11 +147,16 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             Size.Width = 409.000000000000000000
             inherited SearchInDashBrdButton: TSpeedButton
               Position.X = 387.000000000000000000
+              Position.Y = 11.000000000000000000
               Size.Width = 22.000000000000000000
+              Size.Height = 26.000000000000000000
             end
             inherited HideZeroWalletsCheckBox: TCheckBox
               Size.Width = 409.000000000000000000
             end
+          end
+          inherited MainScreenQRButton: TButton
+            OnClick = nil
           end
         end
         inherited NewCryptoLayout: TLayout
@@ -185,6 +190,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           end
           inherited PopupBox1: TPopupBox
             Position.X = 229.000000000000000000
+            Position.Y = 9.000000000000000000
+            Size.Height = 30.000000000000000000
           end
         end
         inherited BackToBalanceViewLayout: TLayout

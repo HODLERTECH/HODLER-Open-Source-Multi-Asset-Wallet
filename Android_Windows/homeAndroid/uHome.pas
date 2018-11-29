@@ -679,6 +679,8 @@ type
     Button5: TButton;
     ConfirmSendClaimCoinButton: TButton;
     BCHSVBCHABCReplayProtectionLabel: TLabel;
+    MainScreenQRButton: TButton;
+    Button1: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -879,6 +881,8 @@ type
     procedure generateNewAddressClick(Sender: TObject);
     procedure PanelSelectGenerateCoinOnClick(Sender: TObject);
     procedure NewYaddressesOKButtonClick(Sender: TObject);
+    procedure MainScreenQRButtonClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -2325,6 +2329,13 @@ begin
 
 end;
 
+procedure TfrmHome.MainScreenQRButtonClick(Sender: TObject);
+begin
+
+  QRRelated.scanQR(Sender);
+  showmessage('qr');
+end;
+
 procedure TfrmHome.generateNewAddressClick(Sender: TObject);
 begin
   generateNewYAddress(Sender);
@@ -2376,6 +2387,12 @@ begin
 
   TrySendTX(Sender);
 
+end;
+
+procedure TfrmHome.Button1Click(Sender: TObject);
+begin
+  QRRelated.scanQR(Sender);
+  showmessage('qr');
 end;
 
 procedure TfrmHome.Button2Click(Sender: TObject);
