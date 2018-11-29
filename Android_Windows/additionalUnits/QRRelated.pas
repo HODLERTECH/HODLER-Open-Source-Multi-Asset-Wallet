@@ -322,10 +322,17 @@ begin
                       if ts.Strings[j] = 'amount' then
                         wvAmount.Text := ts.Strings[j + 1];
                     end;
+                    break;
                   end;
                 end;
 
 
+              end
+              else if cameraBackTabItem = AddNewCoinSettings then
+              begin
+                IsPrivKeySwitch.IsChecked := true;
+                WIFEdit.Text := ReadResult.Text;
+                switchTab( PageControl ,AddNewCoinSettings );
               end;
 
               CameraComponent1.Active := false;

@@ -827,13 +827,9 @@ begin
           end;
 
         end;
-        DebugString := '';
-        for i := 0 to length(Arr) - 1 do
-          DebugString := DebugString + intTostr(arr[i]) + ' ';
-        tthread.Synchronize( nil , procedure
-        begin
-          showmessage(DebugString);
-        end);
+        //DebugString := '';
+        //for i := 0 to length(Arr) - 1 do
+        //  DebugString := DebugString + intTostr(arr[i]) + ' ';
 
         newID := i;
         for i := 0 to length(arr) - 1 do
@@ -966,7 +962,7 @@ begin
 
         if newcoinID = 4 then
         begin
-          SearchTokens(wd.addr);
+          //SearchTokens(wd.addr);
         end;
 
         TThread.Synchronize(nil,
@@ -2265,7 +2261,7 @@ begin
     end;
     btnDecryptSeed.OnClick := ImportPrivateKey;
     decryptSeedBackTabItem := PageControl.ActiveTab;
-    PageControl.ActiveTab := descryptSeed;
+    //PageControl.ActiveTab := descryptSeed;
     btnDSBack.OnClick := backBtnDecryptSeed;
   end;
 end;

@@ -2392,7 +2392,6 @@ end;
 procedure TfrmHome.Button1Click(Sender: TObject);
 begin
   QRRelated.scanQR(Sender);
-  showmessage('qr');
 end;
 
 procedure TfrmHome.Button2Click(Sender: TObject);
@@ -2478,9 +2477,8 @@ begin
 end;
 
 procedure TfrmHome.btnOKAddNewCoinSettingsClick(Sender: TObject);
-
 begin
-          switchTab(frmhome.PageControl, HOME_TABITEM);
+  //switchTab(frmhome.PageControl, HOME_TABITEM);
   WalletViewRelated.newCoin(Sender);
 
 end;
