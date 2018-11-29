@@ -740,7 +740,7 @@ begin
       walletInfo: TwalletInfo;
       arr: array of Integer;
       wd: TwalletInfo;
-      i: Integer;
+      i,j: Integer;
       newID: Integer;
     var
       ts: TStringList;
@@ -749,6 +749,7 @@ begin
       isCompressed: Boolean;
       WData: WIFAddressData;
       pub: AnsiString;
+      flagElse : Boolean;
 
     begin
 
@@ -775,10 +776,29 @@ begin
         SetLength(arr, CurrentAccount.countWalletBy(newcoinID));
         for wd in CurrentAccount.myCoins do
         begin
-          if wd.coin = newcoinID then
+          {if wd.coin = newcoinID then
           begin
             arr[i] := wd.X;
             inc(i);
+          end; }
+          if wd.coin = newcoinID then
+          begin
+            flagElse := true;
+            for j := 0 to i-1 do
+            begin
+
+              if arr[j] = wd.X then
+                flagElse := false;
+
+
+            end;
+            if flagelse then
+            begin
+              arr[i] := wd.X;
+              inc(i);
+            end;
+
+
           end;
         end;
         newID := i;
