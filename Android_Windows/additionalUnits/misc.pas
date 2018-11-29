@@ -92,7 +92,7 @@ uses AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA, IdSSLOpenSSL, languages,
   FMX.Controls.Presentation, FMX.Styles, System.ImageList, FMX.ImgList, FMX.Ani,
   FMX.Layouts, FMX.ExtCtrls, Velthuis.BigIntegers, FMX.ScrollBox, FMX.Memo,
   FMX.Platform,
-  FMX.TabControl, System.Sensors, System.Sensors.Components, FMX.Edit, JSON,
+  FMX.TabControl, {$IF NOT DEFINED(LINUX)}System.Sensors, System.Sensors.Components,{$ENDIF} FMX.Edit, JSON,
   JSON.Builders, JSON.Readers, DelphiZXingQRCode,
 
   System.Net.HttpClientComponent, System.Net.HttpClient, keccak_n, tokenData,
@@ -113,10 +113,10 @@ uses AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA, IdSSLOpenSSL, languages,
 
 {$ENDIF};
 
-{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS) OR DEFINED(LINUX)}
 
 const
-  StrStartIteration = 0;
+  StrStartIteration = {$IFNDEF LINUX} 0 {$ELSE}1{$ENDIF};
 
 type
   AnsiString = string;

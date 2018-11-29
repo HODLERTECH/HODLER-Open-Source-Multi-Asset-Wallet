@@ -11,7 +11,7 @@ uses
   FMX.Controls.Presentation, FMX.Styles, System.ImageList, FMX.ImgList, FMX.Ani,
   FMX.Layouts, FMX.ExtCtrls, Velthuis.BigIntegers, FMX.ScrollBox, FMX.Memo,
   FMX.Platform, System.Threading, Math, DelphiZXingQRCode,
-  FMX.TabControl, System.Sensors, System.Sensors.Components, FMX.Edit,
+  FMX.TabControl, FMX.Edit,
   FMX.Clipboard, FMX.VirtualKeyBoard, JSON,
   languages, WalletStructureData,
 
@@ -1078,7 +1078,7 @@ begin
   with frmhome do
   begin
 
-{$IFDEF MSWINDOWS}
+{$IFDEF MSWINDOWS or LINUX}
     Splitter1.Visible := true;
     PageControl.Visible := true;
     WVTabControl.ActiveTab := WVBalance;

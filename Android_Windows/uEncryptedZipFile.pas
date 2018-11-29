@@ -101,9 +101,9 @@ type
   public
     constructor Create(AStream: TStream; const APassword: string; const AZipHeader: TZipHeader);
     destructor Destroy; override;
-    function Read(var Buffer; Count: Integer): Integer; {$IFNDEF IOS64} override; {$ENDIF}
+    function Read(var Buffer; Count: Integer): Integer; {$IF NOT  (DEFINED(IOS) OR DEFINED(LINUX))} override; {$ENDIF}
     function Seek(const Offset: Int64; Origin: TSeekOrigin): Int64; override;
-    function Write(const Buffer; Count: Integer): Integer;{$IFNDEF IOS64} override; {$ENDIF}
+    function Write(const Buffer; Count: Integer): Integer;{$IF NOT  (DEFINED(IOS) OR DEFINED(LINUX))} override; {$ENDIF}
   end;
 
   TDecryptStream = class(TCryptStream)
@@ -111,15 +111,15 @@ type
     procedure InitHeader; override;
     function Skip(Value: Int64): Int64;
   public
-    function Read(var Buffer; Count: Integer): Integer; {$IFNDEF IOS64} override; {$ENDIF}
-    function Seek(const Offset: Int64; Origin: TSeekOrigin): Int64; {$IFNDEF IOS64} override; {$ENDIF}
+    function Read(var Buffer; Count: Integer): Integer; {$IF NOT  (DEFINED(IOS) OR DEFINED(LINUX))}override; {$ENDIF}
+    function Seek(const Offset: Int64; Origin: TSeekOrigin): Int64;{$IF NOT  (DEFINED(IOS) OR DEFINED(LINUX))} override; {$ENDIF}
   end;
 
   TEncryptStream = class(TCryptStream)
   protected
     procedure InitHeader; override;
   public
-    function Write(const Buffer; Count: Integer): Integer; {$IFNDEF IOS64} override; {$ENDIF}
+    function Write(const Buffer; Count: Integer): Integer; {$IF NOT  (DEFINED(IOS) OR DEFINED(LINUX))} override; {$ENDIF}
   end;
 
   TEncryptedZCompressionStream = class(TMemoryStream)

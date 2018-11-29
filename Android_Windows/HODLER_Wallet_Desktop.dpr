@@ -191,7 +191,7 @@ uses
   WIF in 'additionalUnits\WIF.pas',
   AccountData in 'additionalUnits\AccountData.pas',
   WalletStructureData in 'WalletStructureData.pas',
-  Windows,
+{$IF NOT DEFINED(LINUX)}Windows, {$ENDIF}
   FMX.Types,
   WalletViewRelated in 'additionalUnits\WalletViewRelated.pas',
   BackupRelated in 'additionalUnits\BackupRelated.pas',
@@ -213,6 +213,7 @@ begin
   GlobalUseDXInDX9Mode := true;
   GlobalUseDXSoftware := true;
   FMX.Types.GlobalDisableFocusEffect := true;
+{$IF NOT DEFINED(LINUX)}
   H := CreateMutex(nil, False, 'HODLERTECHMUTEX');
   if (H <> 0) and (GetLastError <> ERROR_ALREADY_EXISTS) then
   begin
@@ -227,5 +228,13 @@ begin
     end;
   end;
   CloseHandle(H);
+{$ENDIF}
+{$IF DEFINED(LINUX)}
+  Application.Initialize;
+
+  Application.FormFactor.Orientations := [TFormOrientation.Portrait];
+  Application.CreateForm(TfrmHome, frmHome);
+  Application.Run;
+{$ENDIF}
 
 end.

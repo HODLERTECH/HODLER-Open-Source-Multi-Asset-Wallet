@@ -8,7 +8,7 @@ uses
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
 
 const
-  StrStartIteration = 0;
+  StrStartIteration = {$IFNDEF LINUX} 0 {$ELSE}1{$ENDIF};
 
 type
   AnsiString = string;

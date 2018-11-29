@@ -11,7 +11,7 @@ uses
   FMX.Controls.Presentation, FMX.Styles, System.ImageList, FMX.ImgList, FMX.Ani,
   FMX.Layouts, FMX.ExtCtrls, Velthuis.BigIntegers, FMX.ScrollBox, FMX.Memo,
   FMX.Platform, System.Threading, Math, DelphiZXingQRCode,
-  FMX.TabControl, System.Sensors, System.Sensors.Components, FMX.Edit,
+  FMX.TabControl, FMX.Edit,
   FMX.Clipboard, FMX.VirtualKeyBoard, JSON,
   languages,
 
@@ -136,7 +136,7 @@ begin
   popupWindow.Create(
 alphaStr);
     {$ENDIF}
-{$IFDEF MSWINDOWS}
+{$IF DEFINED(MSWINDOWS) or DEFINED(LINUX)}
       Panel8.Visible := false;
       DashBrdPanel.Visible := false;
       Splitter1.Visible := false;
@@ -146,7 +146,7 @@ alphaStr);
     else
     begin
 
-{$IFDEF MSWINDOWS}
+{$IF DEFINED(MSWINDOWS) or DEFINED(LINUX)}
       Splitter1.Visible := true;
       Panel8.Visible := true;
       DashBrdPanel.Visible := true;
@@ -179,7 +179,7 @@ alphaStr);
 {$ENDIF}
     if not shown then
     begin
-{$IFDEF MSWINDOWS}
+{$IF DEFINED(MSWINDOWS) or DEFINED(LINUX)}
       frmHome.Caption := 'HODLER Open Source Multi-Asset Wallet v' + CURRENT_VERSION;
       Tthread.CreateAnonymousThread(
         procedure
@@ -255,7 +255,7 @@ begin
 
   try
 
-{$IFDEF MSWINDOWS}
+{$IF DEFINED(MSWINDOWS) or DEFINED(LINUX)}
 
 	if not(frmHome.AccountsListVertScrollBox.Content.ChildrenCount = 0) then
     begin
@@ -373,7 +373,7 @@ begin
 
   try
     refreshWalletDat;
-{$IFDEF MSWINDOWS}
+{$IF DEFINED(MSWINDOWS) or DEFINED(LINUX)}
     if frmHome.WalletList.Content.ChildrenCount > 0 then
       frmHome.OpenWalletView(frmHome.WalletList.Content.Children[0]);
 {$ENDIF}
@@ -443,7 +443,7 @@ StyloSwitch.Visible:=false;
     HOME_TABITEM := TTabItem(frmHome.FindComponent('dashbrd'));
 {$ELSE}
     HOME_PATH := IncludeTrailingPathDelimiter
-      (System.SysUtils.GetEnvironmentVariable('APPDATA'));
+      ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetDocumentsPath{$ELSE}System.SysUtils.GetEnvironmentVariable('APPDATA'){$ENDIF});
     HOME_TABITEM := walletView;
 {$ENDIF}
 
@@ -529,7 +529,7 @@ StyloSwitch.Visible:=false;
 
     end;
 {$ENDIF}
-{$IFDEF WIN32 or WIN64}
+{$IF DEFINED(MSWINDOWS) or DEFINED(LINUX)}
     btnSSys.Visible := false;
     ExportPrivKeyInfoLabel.Position.Y := 100000;
     ChangeDescriptionInfoLabel.Position.Y := 100000;

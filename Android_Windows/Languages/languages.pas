@@ -6,10 +6,10 @@ interface
 uses system.Generics.Collections , System.Classes , System.Types , SysUtils , System.IOUtils , Fmx.Dialogs, Json , FMX.TabControl
   , FMX.stdCtrls , fmx.Controls , FMX.edit;
 
-{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS) OR DEFINED(LINUX) }
 
 const
-  StrStartIteration = 0;
+  StrStartIteration = {$IFNDEF LINUX} 0 {$ELSE}1{$ENDIF};
 
 type
   AnsiString = string;

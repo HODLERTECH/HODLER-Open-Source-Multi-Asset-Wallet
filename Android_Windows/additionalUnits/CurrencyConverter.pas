@@ -4,10 +4,10 @@ interface
 
 uses
   system.Generics.Collections;
-{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS) OR DEFINED(LINUX)}
 
 const
-  StrStartIteration = 0;
+  StrStartIteration = {$IFNDEF LINUX} 0 {$ELSE}1{$ENDIF};
 
 type
   AnsiString = string;

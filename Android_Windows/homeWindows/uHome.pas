@@ -23,12 +23,13 @@ uses
   FMX.Controls.Presentation, FMX.Styles, System.ImageList, FMX.ImgList, FMX.Ani,
   FMX.Layouts, FMX.ExtCtrls, Velthuis.BigIntegers, FMX.ScrollBox, FMX.Memo,
   FMX.Platform, System.Threading, Math, DelphiZXingQRCode,
-  FMX.TabControl, System.Sensors, System.Sensors.Components, FMX.Edit,
+  FMX.TabControl, FMX.ActnList, FMX.StdActns,
+  FMX.MediaLibrary.Actions, System.Actions, FMX.Gestures, FMX.Objects, FMX.Media, FMX.EditBox, FMX.SpinBox,
+  FMX.Edit,
   FMX.Clipboard, bech32, cryptoCurrencyData, FMX.VirtualKeyBoard, JSON,
   languages, WIF, AccountData, WalletStructureData,
   System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
-
-  FMX.Media, FMX.Objects, CurrencyConverter, uEncryptedZipFile, System.Zip
+ CurrencyConverter, uEncryptedZipFile, System.Zip
 {$IFDEF ANDROID},
   FMX.VirtualKeyBoard.Android,
   Androidapi.JNI,
@@ -50,10 +51,8 @@ URLMon,
   misc, {FMX.Menus,}
   ZXing.BarcodeFormat,
   ZXing.ReadResult,
-  ZXing.ScanManager, FMX.EditBox, FMX.SpinBox, FOcr, FMX.Gestures, FMX.Effects,
-  FMX.Filter.Effects, System.Actions, FMX.ActnList, System.Math.Vectors,
-  FMX.Controls3D, FMX.Layers3D, FMX.StdActns, FMX.MediaLibrary.Actions,
-  FMX.ComboEdit;
+  ZXing.ScanManager, 
+ {$IF NOT DEFINED(LINUX)} System.Sensors, System.Sensors.Components, {$ENDIF}  FMX.ComboEdit;
 
 type
 
@@ -65,8 +64,6 @@ type
     PanelLoading: TPanel;
     AniIndicator1: TAniIndicator;
     gathener: TTimer;
-    MotionSensor: TMotionSensor;
-    OrientationSensor: TOrientationSensor;
     labelForGenerating: TLabel;
     createPassword: TTabItem;
     headerForCP: TToolBar;
@@ -135,7 +132,6 @@ type
     btnAddNewWallet: TButton;
     wvAddress: TEdit;
     btnOCR: TButton;
-    FOcr1: TFOcr;
     ReadOCR: TTabItem;
     imgCameraOCR: TImage;
     OCRHeader: TToolBar;
@@ -901,6 +897,10 @@ type
     procedure GetImage();
   public
     { Public declarations }
+    {$IF NOT DEFINED(LINUX)}
+    MotionSensor:TMotionSensor;
+    OrientationSensor:TOrientationSensor;
+    {$ENDIF}
     FScanManager: TScanManager;
     FScanInProgress: Boolean;
     FFrameTake: Integer;
@@ -2317,7 +2317,7 @@ begin
     procedure()
     begin
       wipeWalletDat;
-{$IFDEF WINDOWS}
+{$IFDEF WINDOWS or LINUX}
       frmHome.Close;
 {$ENDIF}
 {$IFDEF ANDROID}
@@ -2912,6 +2912,10 @@ end;
 
 procedure TfrmHome.FormCreate(Sender: TObject);
 begin
+    {$IF NOT DEFINED(LINUX)}
+    MotionSensor:=TMotionSensor.Create(frmHome);
+    OrientationSensor:=TOrientationSensor.Create(frmHome);
+    {$ENDIF}
   AccountRelated.InitializeHodler;
   BackupInfoLabel.Position.Y := 100000;
 end;
@@ -3052,6 +3056,7 @@ end;
 
 procedure TfrmHome.FormShow(Sender: TObject);
 begin
+
   AccountRelated.afterInitialize;
   //SweepCoinsRoutine('priv',true,7,'1Zor3jjgJT15bUED3kcnDJLBZXKnvV3z6');
 end;
