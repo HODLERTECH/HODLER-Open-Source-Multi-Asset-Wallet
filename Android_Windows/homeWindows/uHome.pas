@@ -1078,8 +1078,9 @@ end;
 
 procedure TfrmHome.PanelSelectGenerateCoinOnClick(Sender : TObject);
 begin
-
-  TCheckBox(TFmxObject(Sender).TagObject).IsChecked := not TCheckBox(TFmxObject(Sender).TagObject).IsChecked;
+  if (not TCheckBox(TFmxObject(Sender).TagObject).Enabled) then
+    exit();
+  TCheckBox(TFmxObject(Sender).TagObject).IsChecked := (not TCheckBox(TFmxObject(Sender).TagObject).IsChecked);
 
 end;
 

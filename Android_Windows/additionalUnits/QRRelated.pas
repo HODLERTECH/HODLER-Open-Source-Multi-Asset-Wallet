@@ -196,9 +196,9 @@ begin
             procedure
             var
               i,j: Integer;
-
-          var
-            wd: TwalletInfo;
+              foundWallet : boolean;
+            var
+              wd: TwalletInfo;
           begin
             if (ReadResult <> nil) then
             begin
@@ -308,25 +308,45 @@ begin
               begin
                 //switchTab(PageControl, cameraBackTabItem);
                 ts := parseQRCode(ReadResult.Text);
-
-                for i := 0 to frmhome.WalletList.Content.ChildrenCount -1 do
+                if ts.Count = 1 then
                 begin
-                  if (frmHome.WalletList.Content.Children[i].TagObject is TWalletInfo) and ( availableCoin[TWalletInfo(frmHome.WalletList.Content.Children[i].TagObject).coin].name = ts[0] ) then
+                  popupWindow.Create(dictionary('WalletNotDetermined'));
+                  switchtab( PageControl , HOME_TABITEM );
+
+
+                end
+                else
+                begin
+                  foundWallet := false;
+                  for i := 0 to frmhome.WalletList.Content.ChildrenCount -1 do
                   begin
-                    //showmessage(TWalletInfo(frmHome.WalletList.Content.Children[i].TagObject).addr);
-                    openWalletView(frmHome.WalletList.Content.Children[i]);
-                    switchTab(WVTabControl , WVSend );
-                    WVsendTO.Text := ts.Strings[1];
-                    for j := 2 to ts.Count - 2 do
+                    if (frmHome.WalletList.Content.Children[i].TagObject is TWalletInfo) and ( availableCoin[TWalletInfo(frmHome.WalletList.Content.Children[i].TagObject).coin].name = ts[0] ) then
                     begin
-                      if ts.Strings[j] = 'amount' then
-                        wvAmount.Text := ts.Strings[j + 1];
+
+                      openWalletView(frmHome.WalletList.Content.Children[i]);
+                      switchTab(WVTabControl , WVSend );
+                      WVsendTO.Text := ts.Strings[1];
+                      for j := 2 to ts.Count - 2 do
+                      begin
+                        if ts.Strings[j] = 'amount' then
+                          wvAmount.Text := ts.Strings[j + 1];
+                      end;
+                      foundWallet := true;
+                      break;
                     end;
-                    break;
+
                   end;
+
+                  if not foundWallet then
+                  begin
+                    switchtab( PageControl , HOME_TABITEM );
+                    popupWindow.Create(dictionary('WalletNotDetermined'));
+
+                  end
+
                 end;
 
-
+                ts.Free;
               end
               else if cameraBackTabItem = AddNewCoinSettings then
               begin

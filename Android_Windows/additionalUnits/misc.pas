@@ -423,6 +423,12 @@ begin
     checkBox.Visible := true;
     checkBox.Align := TAlignLayout.Right;
     checkBox.Width := 48;
+    if availableCoin[i].shortcut = 'BTC' then
+    begin
+      checkBox.Enabled := false;
+      checkBox.IsChecked := true;
+    end;
+
     panel.TagObject := checkBox;
 
     image := TImage.Create(panel);
