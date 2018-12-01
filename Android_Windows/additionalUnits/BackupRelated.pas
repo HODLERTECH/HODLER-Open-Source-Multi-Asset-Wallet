@@ -309,7 +309,7 @@ begin
   openDialog := TOpenDialog.Create(frmHome);
   openDialog.Title := 'Open File';
   openDialog.InitialDir :=
-  {$IFDEF IOS}System.IOUtils.TPath.GetSharedDocumentsPath{$ELSE}GetCurrentDir{$ENDIF};
+  GetCurrentDir;
   openDialog.Filter := 'Zip File|*.zip';
   openDialog.DefaultExt := 'zip';
   openDialog.FilterIndex := 1;

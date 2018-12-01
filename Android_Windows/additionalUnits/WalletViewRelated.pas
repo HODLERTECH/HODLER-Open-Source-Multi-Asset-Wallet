@@ -64,6 +64,9 @@ procedure SetCopyButtonPosition;
 procedure CopyTextButtonClick;
 procedure PrepareSendTabAndSend(from: TWalletInfo; sendto: AnsiString;
   Amount, Fee: BigInteger; MasterSeed: AnsiString; coin: AnsiString = 'bitcoin');
+procedure CopyParentTagStringToClipboard(Sender : TObject);
+procedure addNewWalletPanelClick(Sender : TObject);
+procedure btnCreateNewWalletClick(Sender: TObject);
 
 var
   SyncOpenWallet: TThread;
@@ -73,6 +76,66 @@ implementation
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions,  AccountRelated;
+
+
+procedure btnCreateNewWalletClick(Sender: TObject);
+begin
+
+  with frmhome do
+  begin
+    privTCAPanel2.Visible := false;
+    notPrivTCA2.IsChecked := false;
+    pass.Text := '';
+    retypePass.Text := '';
+    btnCreateWallet.Text := dictionary('OpenNewWallet');
+    procCreateWallet := btnGenSeedClick;
+    btnCreateWallet.TagString := '' ; // generate list options - '' default ( user chose coin )
+    AccountNameEdit.Text := getUnusedAccountName();
+    switchTab(PageControl, createPassword);
+  end;
+
+
+
+end;
+
+procedure addNewWalletPanelClick(Sender : TObject );
+begin
+
+  newcoinID := TComponent(Sender).Tag;
+  ImportCoinID := newcoinID;
+
+  frmhome.ownXCheckBox.IsChecked := false;
+  frmhome.IsPrivKeySwitch.IsChecked := false;
+  frmhome.OwnXCheckBox.EnableD := true;
+  frmhome.IsPrivKeySwitch.Enabled := true;
+
+
+
+  frmhome.ownXedit.Text := intToStr(getFirstUnusedYforCoin(newCoinID));
+
+  frmhome.PrivateKeySettingsLayout.Visible := false;
+  frmhome.LoadingKeyDataAniIndicator.Visible := false;
+  frmhome.NewCoinDescriptionEdit.Text := AvailableCoin[ImportCoinID].displayName + ' (' +   AvailableCoin[ImportCoinID].shortcut +  ')';
+
+  switchTab(frmhome.PageControl, frmhome.AddNewCoinSettings);
+
+end;
+
+procedure CopyParentTagStringToClipboard(Sender : TObject);
+var
+  svc: IFMXExtendedClipboardService;
+begin
+
+  if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, svc)
+  then
+  begin
+
+      svc.setClipboard(removeSpace(TfmxObject(Sender).Parent.TagString));
+      popupWindow.Create(removeSpace(TfmxObject(Sender).Parent.TagString) +
+        ' ' + dictionary('CopiedToClipboard'));
+  end;
+
+end;
 
 procedure PrepareSendTabAndSend(from: TWalletInfo; sendto: AnsiString;
   Amount, Fee: BigInteger; MasterSeed: AnsiString; coin: AnsiString = 'bitcoin');
@@ -175,10 +238,13 @@ begin
   if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, svc)
   then
   begin
+    if frmhome.CopyTextButton.Parent is TEdit then
+    begin
+      svc.setClipboard(removeSpace(TEdit(frmhome.CopyTextButton.Parent).Text));
+      popupWindow.Create(removeSpace(TEdit(frmhome.CopyTextButton.Parent).Text) +
+        ' ' + dictionary('CopiedToClipboard'));
+    end;
 
-    svc.setClipboard(removeSpace(TEdit(frmhome.CopyTextButton.Parent).Text));
-    popupWindow.Create(removeSpace(TEdit(frmhome.CopyTextButton.Parent).Text) +
-      ' ' + dictionary('CopiedToClipboard'));
 
   end;
 
@@ -775,16 +841,16 @@ begin
       if not frmhome.IsPrivKeySwitch.IsChecked then
       begin
 
-        SetLength(arr, CurrentAccount.countWalletBy(newcoinID));
+        {SetLength(arr, CurrentAccount.countWalletBy(newcoinID));
         for wd in CurrentAccount.myCoins do
         begin
           if wd.x = -1 then
             continue;
-          {if wd.coin = newcoinID then
-          begin
-            arr[i] := wd.X;
-            inc(i);
-          end; }
+          //{if wd.coin = newcoinID then
+          //begin
+            //arr[i] := wd.X;
+            //inc(i);
+          //end;
           if wd.coin = newcoinID then
           begin
             flagElse := true;
@@ -839,7 +905,8 @@ begin
             newID := i;
             break;
           end;
-        end;
+        end;  }
+        newID := getFirstUnusedYForCoin( newCoinID );
 
         if frmhome.OwnXCheckBox.IsChecked then
           newID := strtoint(frmhome.OwnXEdit.Text);
@@ -1892,7 +1959,7 @@ var
   fmxObject: TfmxObject;
   i: Integer;
   Panel: TPanel;
-  addrlbl: TLabel;
+  addrlbl: TEdit;
   valuelbl: TLabel;
   leftLayout: TLayout;
   rightLayout: TLayout;
@@ -1950,13 +2017,16 @@ begin
       Panel.Name := 'HistoryValueAddressPanel_' + IntToStr(i);
       Panel.Parent := HistoryTransactionVertScrollBox;
       Panel.Position.Y := 1000 + Panel.Height * i;
+      Panel.Margins.Left := 0;
+      panel.Margins.Right := 0;
+      panel.Margins.Bottom := 6;
 {$IFDEF ANDRIOD}
       Panel.OnGesture := CopyToClipboard;
       Panel.Touch.GestureManager := GestureManager1;
       Panel.Touch.InteractiveGestures := [TInteractiveGesture.DoubleTap,
         TInteractiveGesture.LongTap];
 {$ENDIF}
-      leftLayout := TLayout.Create(Panel);
+      {leftLayout := TLayout.Create(Panel);
       leftLayout.Visible := true;
       leftLayout.Align := TAlignLayout.Left;
       leftLayout.Width := 10;
@@ -1966,7 +2036,7 @@ begin
       rightLayout.Visible := true;
       rightLayout.Align := TAlignLayout.Right;
       rightLayout.Width := 10;
-      rightLayout.Parent := Panel;
+      rightLayout.Parent := Panel;}
 
       valuelbl := TLabel.Create(Panel);
       valuelbl.Height := 21;
@@ -1980,7 +2050,8 @@ begin
       valuelbl.TagString := th.addresses[i];
       valuelbl.HitTest := true;
 
-      addrlbl := TLabel.Create(Panel);
+      addrlbl := TEdit.Create(Panel);
+      addrlbl.StyleLookup := 'transparentedit';
       addrlbl.Height := 21;
       addrlbl.Align := TAlignLayout.Top;
       addrlbl.Visible := true;
@@ -1989,16 +2060,17 @@ begin
       addrlbl.TextSettings.HorzAlign := TTextAlign.Leading;
       addrlbl.TagString := th.addresses[i];
       addrlbl.HitTest := true;
+      addrlbl.TagString := 'copyable';
 
 {$IFDEF ANDRIOD}
       valuelbl.OnGesture := CopyToClipboard;
       valuelbl.Touch.GestureManager := GestureManager1;
       valuelbl.Touch.InteractiveGestures := [TInteractiveGesture.DoubleTap,
         TInteractiveGesture.LongTap];
-      addrlbl.OnGesture := CopyToClipboard;
-      addrlbl.Touch.GestureManager := GestureManager1;
-      addrlbl.Touch.InteractiveGestures := [TInteractiveGesture.DoubleTap,
-        TInteractiveGesture.LongTap];
+      //addrlbl.OnGesture := CopyToClipboard;
+     // addrlbl.Touch.GestureManager := GestureManager1;
+     // addrlbl.Touch.InteractiveGestures := [TInteractiveGesture.DoubleTap,
+      //  TInteractiveGesture.LongTap];
 {$ENDIF}
     end;
 

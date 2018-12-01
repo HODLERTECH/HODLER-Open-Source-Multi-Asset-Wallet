@@ -86,6 +86,8 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
       129s
       695s
       129s
+      695s
+      129s
       695s)
     inherited dashbrd: TTabItem
       ExplicitSize.cx = 8.000000000000000000
@@ -460,7 +462,7 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
           inherited SendVertScrollBox: TVertScrollBox
             Size.Width = 129.000000000000000000
             Size.Height = 598.000000000000000000
-            Viewport.Width = 124.000000000000000000
+            Viewport.Width = 129.000000000000000000
             Viewport.Height = 598.000000000000000000
             inherited btnSend: TButton
               Size.Width = 124.000000000000000000
@@ -1463,6 +1465,8 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Size.Width = 129.000000000000000000
         inherited LanguageBox: TPopupBox
           Position.X = 17.000000000000000000
+          Position.Y = 8.000000000000000000
+          Size.Height = 32.000000000000000000
         end
         inherited SettingsLanguageLabel: TLabel
           Size.Width = 0.000000000000000000
@@ -1472,6 +1476,8 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Size.Width = 129.000000000000000000
         inherited CurrencyBox: TPopupBox
           Position.X = 17.000000000000000000
+          Position.Y = 8.000000000000000000
+          Size.Height = 32.000000000000000000
         end
         inherited SettingsCurrencyLabel: TLabel
           Size.Width = 0.000000000000000000
@@ -1509,6 +1515,7 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         inherited DayNightModeSwitch: TSwitch
           Position.X = 69.000000000000000000
           Size.Width = 44.000000000000000000
+          Size.Height = 26.000000000000000000
           OnSwitch = nil
         end
       end
@@ -1815,6 +1822,8 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Size.Width = 129.000000000000000000
         inherited NewCoinDescriptionEdit: TEdit
           Position.X = -71.000000000000000000
+          Position.Y = 8.000000000000000000
+          Size.Height = 32.000000000000000000
         end
       end
       inherited btnOKAddNewCoinSettings: TButton
@@ -1829,6 +1838,8 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Size.Width = 129.000000000000000000
         inherited NewCoinDescriptionPassEdit: TEdit
           Position.X = -71.000000000000000000
+          Position.Y = 8.000000000000000000
+          Size.Height = 32.000000000000000000
         end
       end
       inherited Panel11: TPanel
@@ -1856,6 +1867,8 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         end
         inherited OwnXEdit: TEdit
           Position.X = 48.000000000000000000
+          Position.Y = 8.000000000000000000
+          Size.Height = 32.000000000000000000
         end
       end
     end
@@ -2309,6 +2322,8 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Size.Width = 129.000000000000000000
         inherited ConfirmSendPasswordEdit: TEdit
           Position.X = -137.000000000000000000
+          Position.Y = 8.000000000000000000
+          Size.Height = 32.000000000000000000
         end
       end
       inherited Panel12: TPanel
@@ -2528,6 +2543,32 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
       inherited ToolBar12: TToolBar
         Size.Width = 129.000000000000000000
         inherited Label12: TLabel
+          Size.Width = 129.000000000000000000
+        end
+      end
+    end
+    inherited WalletTransactionListTabItem: TTabItem
+      ExplicitSize.cx = 8.000000000000000000
+      ExplicitSize.cy = 8.000000000000000000
+      inherited WalletTransactionVertScrollBox: TVertScrollBox
+        Size.Width = 129.000000000000000000
+        Size.Height = 534.000000000000000000
+        Viewport.Width = 129.000000000000000000
+        Viewport.Height = 534.000000000000000000
+      end
+      inherited Button6: TButton
+        Position.Y = 647.000000000000000000
+        Size.Width = 129.000000000000000000
+      end
+      inherited Panel10: TPanel
+        Size.Width = 129.000000000000000000
+        inherited Label10: TLabel
+          Size.Width = 129.000000000000000000
+        end
+      end
+      inherited ToolBar13: TToolBar
+        Size.Width = 129.000000000000000000
+        inherited Label13: TLabel
           Size.Width = 129.000000000000000000
         end
       end

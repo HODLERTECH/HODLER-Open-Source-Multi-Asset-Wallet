@@ -96,6 +96,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         409s
         711s
         409s
+        711s
+        409s
         711s)
       inherited dashbrd: TTabItem
         Size.Width = 11.000000000000000000
@@ -253,12 +255,16 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Size.Width = 409.000000000000000000
           inherited pass: TEdit
             Position.X = 209.000000000000000000
+            Position.Y = 9.000000000000000000
+            Size.Height = 30.000000000000000000
           end
         end
         inherited PanelRetypePassword: TPanel
           Size.Width = 409.000000000000000000
           inherited retypePass: TEdit
             Position.X = 209.000000000000000000
+            Position.Y = 9.000000000000000000
+            Size.Height = 30.000000000000000000
           end
         end
         inherited btnGenSeed: TButton
@@ -299,6 +305,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Size.Width = 409.000000000000000000
           inherited AccountNameEdit: TEdit
             Position.X = 209.000000000000000000
+            Position.Y = 9.000000000000000000
+            Size.Height = 30.000000000000000000
           end
         end
         inherited privTCAPanel2: TPanel
@@ -412,7 +420,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             409s
             570s)
           inherited WVBalance: TTabItem
-            Size.Width = 39.000000000000000000
+            Size.Width = 102.000000000000000000
             ExplicitSize.cx = 414.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited BalancePanel: TPanel
@@ -513,7 +521,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             end
           end
           inherited WVReceive: TTabItem
-            Size.Width = 41.000000000000000000
+            Size.Width = 102.000000000000000000
             ExplicitSize.cx = 207.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited ReceiveVertScrollBox: TVertScrollBox
@@ -595,7 +603,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             end
           end
           inherited WVSend: TTabItem
-            Size.Width = 30.000000000000000000
+            Size.Width = 102.000000000000000000
             ExplicitSize.cx = 103.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited SendVertScrollBox: TVertScrollBox
@@ -648,13 +656,16 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
                   Size.Width = 409.000000000000000000
                   inherited FeeSpin: TSpinBox
                     Position.X = 115.000000000000000000
+                    Position.Y = 1.000000000000000000
                     Size.Width = 294.000000000000000000
+                    Size.Height = 30.000000000000000000
                   end
                 end
                 inherited FixedFeeLayout: TLayout
                   Size.Width = 409.000000000000000000
                   inherited wvFee: TEdit
                     Size.Width = 289.000000000000000000
+                    Size.Height = 30.000000000000000000
                   end
                 end
                 inherited LayoutPresentationFee: TLayout
@@ -697,6 +708,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
                   Size.Width = 409.000000000000000000
                   inherited PerByteFeeEdit: TEdit
                     Size.Width = 289.000000000000000000
+                    Size.Height = 30.000000000000000000
                   end
                 end
               end
@@ -712,13 +724,14 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
                   end
                   inherited WVsendTO: TEdit
                     Size.Width = 361.000000000000000000
+                    Size.Height = 30.000000000000000000
                   end
                 end
               end
             end
           end
           inherited WVSettings: TTabItem
-            Size.Width = 43.000000000000000000
+            Size.Width = 103.000000000000000000
             ExplicitSize.cx = 105.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited btnExportPrivKey: TButton
@@ -1574,6 +1587,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Size.Width = 409.000000000000000000
           inherited WelcomeTabLanguageBox: TPopupBox
             Position.X = 321.000000000000000000
+            Position.Y = 6.000000000000000000
+            Size.Height = 30.000000000000000000
           end
           inherited WTIChangeLanguageLabel: TLabel
             Size.Width = 321.000000000000000000
@@ -2281,6 +2296,37 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             Size.Height = 44.000000000000000000
           end
           inherited Button5: TButton
+            Size.Height = 44.000000000000000000
+          end
+        end
+      end
+      inherited WalletTransactionListTabItem: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited WalletTransactionVertScrollBox: TVertScrollBox
+          Size.Width = 409.000000000000000000
+          Size.Height = 554.000000000000000000
+          Viewport.Width = 409.000000000000000000
+          Viewport.Height = 554.000000000000000000
+        end
+        inherited Button6: TButton
+          Position.Y = 663.000000000000000000
+          Size.Width = 409.000000000000000000
+        end
+        inherited Panel10: TPanel
+          Size.Width = 409.000000000000000000
+          inherited Label10: TLabel
+            Size.Width = 409.000000000000000000
+          end
+        end
+        inherited ToolBar13: TToolBar
+          Size.Width = 409.000000000000000000
+          Size.Height = 44.000000000000000000
+          inherited Label13: TLabel
+            Size.Width = 409.000000000000000000
+            Size.Height = 44.000000000000000000
+          end
+          inherited Button7: TButton
             Size.Height = 44.000000000000000000
           end
         end

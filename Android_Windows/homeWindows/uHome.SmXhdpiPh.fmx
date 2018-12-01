@@ -86,6 +86,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
       0s
       375s
       0s
+      375s
+      0s
       375s)
     inherited dashbrd: TTabItem
       ExplicitSize.cx = 8.000000000000000000
@@ -2458,6 +2460,17 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         inherited Label12: TLabel
           Size.Width = 200.000000000000000000
         end
+      end
+    end
+    inherited WalletTransactionListTabItem: TTabItem
+      ExplicitSize.cx = 8.000000000000000000
+      ExplicitSize.cy = 8.000000000000000000
+      inherited WalletTransactionVertScrollBox: TVertScrollBox
+        Viewport.Width = 450.000000000000000000
+        Viewport.Height = 526.000000000000000000
+      end
+      inherited ToolBar13: TToolBar
+        Position.Y = 8.000000000000000000
       end
     end
   end

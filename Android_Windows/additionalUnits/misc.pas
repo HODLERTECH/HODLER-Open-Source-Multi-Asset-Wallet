@@ -95,7 +95,7 @@ uses AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA, IdSSLOpenSSL, languages,
   FMX.TabControl, {$IF NOT DEFINED(LINUX)}System.Sensors, System.Sensors.Components,{$ENDIF} FMX.Edit, JSON,
   JSON.Builders, JSON.Readers, DelphiZXingQRCode,
 
-  System.Net.HttpClientComponent, System.Net.HttpClient, keccak_n, tokenData,
+  System.Net.HttpClientComponent, System.Net.HttpClient, keccak_n, tokenData, bech32,
   cryptoCurrencyData, WalletStructureData, AccountData
 
 {$IFDEF ANDROID},
@@ -132,6 +132,8 @@ const
   StrStartIteration = 1;
 {$ENDIF}
 
+//type
+//  TIntegerArray = array of Integer;
 type
   THistoryHolder = class(TObject)
   public
@@ -339,6 +341,11 @@ procedure EnlargeQRCode(img: TBitmap);
 function elevateCheckPermission(name: string): integer;
 procedure AskForBackup(delay: integer = 0; afterChange: Boolean = false);
 procedure createSelectGenerateCoinView();
+function getCoinsIDFromAddress( address : AnsiString ):TIntegerArray;
+procedure createTransactionWalletList(arr : TIntegerArray);
+function getFirstUnusedYForCoin(id : integer):Integer;
+function getUnusedAccountName(): AnsiString;
+
 
 
 // procedure refresh
@@ -367,10 +374,12 @@ var
   HOME_PATH: AnsiString;
   HOME_TABITEM: TTabItem;
   cutAddressEveryNChar: integer = -1;
+  addressFromQR : AnsiString;
+  amountFromQR : AnsiString;
 
 implementation
 
-uses Bitcoin, uHome, base58, bech32, Ethereum, coinData, strutils, secp256k1
+uses Bitcoin, uHome, base58,  Ethereum, coinData, strutils, secp256k1
 {$IFDEF ANDROID}
 {$ELSE}
 {$ENDIF};
@@ -379,6 +388,207 @@ var
   bitmapData: TBitmapData;
 
   /// ////////////////////////////////////////////////////////////////
+
+function getUnusedAccountName(): AnsiString;
+var
+  i , nr:Integer;
+  found : boolean;
+begin
+  found := false;
+  nr := 1;
+  while not found do
+  begin
+    found := true;
+    for i := 0 to length(AccountsNames) - 1 do
+    begin
+
+      if AccountsNames[i] = 'Wallet'+intToStr(nr) then
+      begin
+        nr := nr + 1;
+        found := false;
+      end;
+
+    end;
+
+  end;
+  result := 'Wallet'+intToStr(nr);
+end;
+
+function getFirstUnusedYForCoin(id : integer):Integer;
+var
+  arr : Array of integer;
+  wd : TWalletinfo;
+  flagElse , sorted : boolean;
+  i,j :Integer;
+  debugString : AnsiString;
+begin
+i := 0;
+    SetLength(arr, CurrentAccount.countWalletBy(id));
+        for wd in CurrentAccount.myCoins do
+        begin
+          if wd.x = -1 then
+            continue;
+          {if wd.coin = newcoinID then
+          begin
+            arr[i] := wd.X;
+            inc(i);
+          end; }
+          if wd.coin = id then
+          begin
+            flagElse := true;
+
+
+            for j := 0 to i-1 do
+            begin
+
+              if arr[j] = wd.X then
+                flagElse := false;
+
+
+            end;
+            if flagelse then
+            begin
+              arr[i] := wd.X;
+              inc(i);
+            end;
+
+
+          end;
+        end;
+        SetLength(arr, i );
+        sorted := false;
+        while not sorted do
+        begin
+          sorted := true;
+          for i := 0 to length(arr) - 2  do
+          begin
+
+            if arr[i] > arr[i+1] then
+            begin
+
+              j := arr[i];
+              arr[i] := arr[i+1];
+              arr[i+1] := j;
+              sorted := false;
+            end;
+
+          end;
+
+        end;
+       { DebugString := '';
+        for i := 0 to length(Arr) - 1 do
+          DebugString := DebugString + intTostr(arr[i]) + ' ';
+          tthread.Synchronize(nil , procedure
+          begin
+            showmessage(debugString);
+          end); }
+
+        result := length(arr);
+        for i := 0 to length(arr) - 1 do
+        begin
+          if arr[i] <> i then
+          begin
+            result := i;
+            break;
+          end;
+        end;
+end;
+procedure createTransactionWalletList(arr : TIntegerArray);
+var
+  i, j :integer;
+  panel : TPanel;
+  child : TFmxObject;
+  temp : TfmxObject;
+  existIN : boolean;
+
+begin
+
+  clearVertScrollBox( frmhome.WalletTransactionVertScrollBox );
+
+  for i := 0 to frmhome.walletList.Content.ChildrenCount -1 do
+  begin
+    if not (TfmxObject(frmhome.walletList.Content.Children[i]).TagObject is TwalletInfo) then
+      continue;
+
+    existIN := false;
+    for j := 0 to length(arr) -1  do
+    begin
+      if arr[j] = TwalletInfo(TfmxObject(frmhome.walletList.Content.Children[i]).TagObject).coin then
+      begin
+        existIn := true;
+        break;
+      end;
+
+    end;
+
+    if existIN then
+    begin
+
+      panel := TPanel.create(frmhome.WalletTransactionVertScrollBox);
+      panel.parent := frmhome.WalletTransactionVertScrollBox;
+      panel.Visible := true;
+      panel.EnableD := true;
+      panel.Align := TAlignLayout.top;
+      panel.Height := 48;
+      panel.TagObject := frmhome.walletList.Content.Children[i].TagObject;
+      panel.OnClick := frmhome.TransactionWalletListClick;
+
+      for child in frmhome.walletList.Content.Children[i].Children do
+      begin
+
+        temp := child.Clone(Panel);
+        temp.Parent := Panel;
+
+      end;
+
+    end;
+  end;
+
+  if frmhome.WalletTransactionVertScrollBox.Content.ChildrenCount = 1 then
+  begin
+    frmhome.TransactionWalletListClick(frmhome.WalletTransactionVertScrollBox.Content.Children[0]);
+  end
+  else
+    switchTab(frmhome.pageControl , frmhome.WalletTransactionListTabItem);
+
+end;
+
+function getCoinsIDFromAddress( address : AnsiString ):TIntegerArray;
+var
+  i,j : integer;
+  existIn :boolean;
+begin
+  address := removeSpace(address);
+  if ContainsStr(address , ':') then
+  begin
+    address := RightStr(address , length(address) - Pos(':' , address) );
+  end;
+
+
+
+  result := [];
+  for i := 0 to length ( availableCoin )-1 do
+  begin
+    existIn := false;
+    for j := low(address) to high( availableCoin[i].availableFirstLetter ) do
+    begin
+      if lowercase(address[low(address)]) = lowercase(availableCoin[i].availableFirstLetter[j]) then
+      begin
+        existIn := true;
+      end
+
+    end;
+
+    try
+      if existIn and isValidForCoin(i , address)  then
+      begin
+        result := result +[i];
+      end;
+    except on E: Exception do
+    end;
+
+  end;
+end;
 
 procedure createSelectGenerateCoinView();
 var
@@ -394,7 +604,8 @@ begin
 
     for i := 0 to frmhome.GenerateCoinVertScrollBox.Content.ChildrenCount -1 do
     begin
-       TcheckBox(Tpanel(frmhome.GenerateCoinVertScrollBox.Content.Children[i]).TagObject).IsChecked := false;
+
+       TcheckBox(Tpanel(frmhome.GenerateCoinVertScrollBox.Content.Children[i]).TagObject).IsChecked := not TcheckBox(Tpanel(frmhome.GenerateCoinVertScrollBox.Content.Children[i]).TagObject).Enabled;
     end;
 
     exit;

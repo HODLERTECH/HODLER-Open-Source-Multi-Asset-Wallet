@@ -681,6 +681,14 @@ type
     BCHSVBCHABCReplayProtectionLabel: TLabel;
     MainScreenQRButton: TButton;
     Button1: TButton;
+    WalletTransactionListTabItem: TTabItem;
+    WalletTransactionVertScrollBox: TVertScrollBox;
+    Button6: TButton;
+    Panel10: TPanel;
+    Label10: TLabel;
+    ToolBar13: TToolBar;
+    Label13: TLabel;
+    Button7: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -930,6 +938,8 @@ type
     procedure CoinListCreateFromSeed(Sender: TObject);
     procedure CoinListCreateFromQR(Sender: TObject);
     procedure ClaimCoinSelectInListClick(Sender : TObject);
+    procedure TransactionWalletListClick(Sender : TObject);
+    procedure CopyParentTagStringToClipboard(Sender : TObject);
 
   var
     cpTimeout: int64;
@@ -1007,6 +1017,22 @@ uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
 {$R *.Windows.fmx MSWINDOWS}
 {$R *.Surface.fmx MSWINDOWS}
 
+procedure Tfrmhome.CopyParentTagStringToClipboard(Sender : TObject);
+begin
+  WalletViewRelated.CopyParentTagStringToClipboard(Sender);
+end;
+
+procedure Tfrmhome.TransactionWalletListClick(Sender : TObject);
+begin
+  openWalletView(sender);
+  switchTab(WVTabControl, WVSend);
+  WVsendTO.Text := addressfromQR;
+  wvAmount.Text := amountFromQR;
+  WVRealCurrency.Text :=
+        floatToStrF(CurrencyConverter.calculate(strToFloatDef(wvAmount.Text, 0))
+        * (CurrentCryptoCurrency.rate), ffFixed, 18, 2);
+end;
+
 procedure TfrmHome.ClaimCoinSelectInListClick(Sender : TObject);
 begin
 
@@ -1062,7 +1088,7 @@ end;
 
 procedure TfrmHome.deleteYaddress(Sender: TObject);
 begin
-  deleteYaddress(Sender);
+  AccountRelated.deleteYaddress(Sender);
 end;
 
 procedure TfrmHome.YAddressClick(Sender: TObject);
@@ -1200,7 +1226,8 @@ begin
   onFileManagerSelectClick := onSelect;
 
 {$IFDEF ANDROID}
-  DrawDirectoriesAndFiles(System.IOUtils.TPath.GetSharedDocumentsPath);
+  //showmessage(System.IOUtils.TPath.GetSharedDownloadsPath);
+  DrawDirectoriesAndFiles(System.IOUtils.TPath.GetSharedDownloadsPath);
 {$ELSE}
   DrawDirectoriesAndFiles('C:\');
 {$ENDIF}
@@ -1560,6 +1587,7 @@ end;
 procedure TfrmHome.SelectFileInBackupFileList(Sender: TObject);
 begin
   RFFPathEdit.Text := TFmxObject(Sender).TagString;
+  RestoreFromFileAccountNameEdit.Text := getUnusedAccountName();
   switchTab(PageControl, HSBPassword);
 end;
 
@@ -1609,6 +1637,7 @@ begin
   retypePass.Text := '';
   btnCreateWallet.Text := dictionary('StartRecoveringWallet');
   procCreateWallet := btnImpSeedClick;
+  AccountNameEdit.Text := getunusedAccountName();
   switchTab(PageControl, createPassword);
 
 end;
@@ -1861,9 +1890,7 @@ end;
 
 procedure TfrmHome.addNewWalletPanelClick(Sender: TObject);
 begin
-  newcoinID := TComponent(Sender).Tag;
-
-  switchTab(PageControl, AddNewCoinSettings);
+  WalletViewRelated.addNewWalletPanelClick(Sender);
 end;
 
 procedure TfrmHome.TrackBar1Change(Sender: TObject);
@@ -2509,13 +2536,18 @@ end;
 
 procedure TfrmHome.btnCreateNewWalletClick(Sender: TObject);
 begin
-  privTCAPanel2.Visible := false;
+
+  walletViewRelated.btnCreateNewWalletClick(Sender);
+  {privTCAPanel2.Visible := false;
   notPrivTCA2.IsChecked := false;
   pass.Text := '';
   retypePass.Text := '';
   btnCreateWallet.Text := dictionary('OpenNewWallet');
   procCreateWallet := btnGenSeedClick;
-  switchTab(PageControl, createPassword);
+
+
+  AccountNameEdit.Text := getUnusedAccountName();
+  switchTab(PageControl, createPassword); }
 
 end;
 

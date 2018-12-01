@@ -687,6 +687,14 @@ type
     Button5: TButton;
     ConfirmSendClaimCoinButton: TButton;
     MainScreenQRButton: TButton;
+    WalletTransactionListTabItem: TTabItem;
+    WalletTransactionVertScrollBox: TVertScrollBox;
+    Button6: TButton;
+    Panel10: TPanel;
+    Label10: TLabel;
+    ToolBar13: TToolBar;
+    Label13: TLabel;
+    Button7: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -943,6 +951,8 @@ type
     procedure CoinListCreateFromSeed(Sender : TObject);
     procedure CoinListCreateFromQR(Sender : TObject);
     procedure ClaimCoinSelectInListClick(Sender : TObject);
+    procedure TransactionWalletListClick(Sender : TObject);
+    procedure CopyParentTagStringToClipboard(Sender : TObject);
 
   var
     HistoryMaxLength : Integer;
@@ -1038,6 +1048,23 @@ end;
 
 {$ENDIF}
 
+
+procedure Tfrmhome.CopyParentTagStringToClipboard(Sender : TObject);
+begin
+  WalletViewRelated.CopyParentTagStringToClipboard(Sender);
+end;
+
+procedure Tfrmhome.TransactionWalletListClick(Sender : TObject);
+begin
+  openWalletView(sender);
+  switchTab(WVTabControl, WVSend);
+  WVsendTO.Text := addressfromQR;
+  wvAmount.Text := amountFromQR;
+  WVRealCurrency.Text :=
+        floatToStrF(CurrencyConverter.calculate(strToFloatDef(wvAmount.Text, 0))
+        * (CurrentCryptoCurrency.rate), ffFixed, 18, 2);
+end;
+
 procedure TfrmHome.ClaimCoinSelectInListClick(Sender : TObject);
 begin
 
@@ -1106,7 +1133,7 @@ end;
 
 procedure TfrmHome.deleteYaddress(Sender: TObject);
 begin
-  deleteYaddress(Sender);
+  accountRelated.deleteYAddress(Sender);
 end;
 
 procedure TfrmHome.YAddressClick(Sender: TObject);
@@ -1605,6 +1632,7 @@ end;
 procedure TfrmHome.SelectFileInBackupFileList(Sender: TObject);
 begin
   RFFPathEdit.Text := TfmxObject(Sender).TagString;
+  RestoreFromFileAccountNameEdit.Text := getUnusedAccountName();
   switchTab(PageControl, HSBPassword);
 end;
 
@@ -1663,6 +1691,7 @@ begin
   retypePass.Text := '';
   btnCreateWallet.Text := dictionary('StartRecoveringWallet');
   procCreateWallet := btnImpSeedClick;
+  AccountNameEdit.Text := getunusedAccountName();
   switchTab(PageControl, createPassword);
 
 end;
@@ -2019,18 +2048,7 @@ end;
 
 procedure TfrmHome.addNewWalletPanelClick(Sender: TObject);
 begin
-  newcoinID := TComponent(Sender).Tag;
-  ImportCoinID := newcoinID;
-
-  ownXCheckBox.IsChecked := false;
-  IsPrivKeySwitch.IsChecked := false;
-  OwnXCheckBox.EnableD := true;
-  IsPrivKeySwitch.Enabled := true;
-
-  PrivateKeySettingsLayout.Visible := false;
-  LoadingKeyDataAniIndicator.Visible := false;
-
-  switchTab(PageControl, AddNewCoinSettings);
+  WalletViewRelated.addNewWalletPanelClick(Sender);
 end;
 
 procedure TfrmHome.TrackBar1Change(Sender: TObject);
@@ -2572,9 +2590,12 @@ var
   bigInt: BigInteger;
 begin
 
-  createSelectGenerateCoinView();
-  frmhome.NextButtonSGC.OnClick := frmhome.CoinListCreateFromSeed;
-  switchTab( pageControl , SelectGenetareCoin );
+  intarr := getCoinsIDFromAddress(edit1.Text);
+  createTransactionWalletList(intArr);
+  //switchTab(pageControl , WalletTransactionListTabItem);
+  addressFromQR := 'DUPA';
+
+
 
 end;
 
@@ -2668,14 +2689,17 @@ end;
 
 procedure TfrmHome.btnCreateNewWalletClick(Sender: TObject);
 begin
-  privTCAPanel2.Visible := false;
+
+  walletViewRelated.btnCreateNewWalletClick(Sender);
+  {privTCAPanel2.Visible := false;
   notPrivTCA2.IsChecked := false;
   pass.Text := '';
   retypePass.Text := '';
   btnCreateWallet.Text := dictionary('OpenNewWallet');
   procCreateWallet := btnGenSeedClick;
   btnCreateWallet.TagString := '' ; // generate list options - '' default ( user chose coin )
-  switchTab(PageControl, createPassword);
+  AccountNameEdit.Text := getUnusedAccountName();
+  switchTab(PageControl, createPassword);}
 
 end;
 

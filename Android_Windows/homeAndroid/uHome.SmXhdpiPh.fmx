@@ -96,6 +96,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         245s
         370s
         245s
+        370s
+        245s
         370s)
       inherited dashbrd: TTabItem
         ExplicitSize.cx = 8.000000000000000000
@@ -215,12 +217,16 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited pass: TEdit
             Position.X = 45.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited PanelRetypePassword: TPanel
           Size.Width = 245.000000000000000000
           inherited retypePass: TEdit
             Position.X = 45.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited btnGenSeed: TButton
@@ -261,6 +267,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited AccountNameEdit: TEdit
             Position.X = 45.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited privTCAPanel2: TPanel
@@ -351,6 +359,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             245s
             225s)
           inherited WVBalance: TTabItem
+            Size.Width = 61.000000000000000000
             ExplicitSize.cx = 250.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited BalancePanel: TPanel
@@ -454,13 +463,12 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             end
           end
           inherited WVReceive: TTabItem
-            Size.Width = 56.000000000000000000
             ExplicitSize.cx = 125.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited ReceiveVertScrollBox: TVertScrollBox
               Size.Width = 245.000000000000000000
               Size.Height = 225.000000000000000000
-              Viewport.Width = 245.000000000000000000
+              Viewport.Width = 240.000000000000000000
               Viewport.Height = 225.000000000000000000
               inherited ReceiveAmountLayout: TLayout
                 Size.Width = 240.000000000000000000
@@ -528,7 +536,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             end
           end
           inherited WVSend: TTabItem
-            Size.Width = 39.000000000000000000
+            Size.Width = 61.000000000000000000
             ExplicitSize.cx = 62.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited SendVertScrollBox: TVertScrollBox
@@ -623,7 +631,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             end
           end
           inherited WVSettings: TTabItem
-            Size.Width = 65.000000000000000000
+            Size.Width = 62.000000000000000000
             ExplicitSize.cx = 64.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited btnExportPrivKey: TButton
@@ -1339,6 +1347,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited WelcomeTabLanguageBox: TPopupBox
             Position.X = 157.000000000000000000
+            Position.Y = 4.000000000000000000
+            Size.Height = 32.000000000000000000
           end
           inherited WTIChangeLanguageLabel: TLabel
             Size.Width = 157.000000000000000000
@@ -1904,6 +1914,32 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         inherited ToolBar12: TToolBar
           Size.Width = 245.000000000000000000
           inherited Label12: TLabel
+            Size.Width = 245.000000000000000000
+          end
+        end
+      end
+      inherited WalletTransactionListTabItem: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited WalletTransactionVertScrollBox: TVertScrollBox
+          Size.Width = 245.000000000000000000
+          Size.Height = 209.000000000000000000
+          Viewport.Width = 245.000000000000000000
+          Viewport.Height = 209.000000000000000000
+        end
+        inherited Button6: TButton
+          Position.Y = 322.000000000000000000
+          Size.Width = 245.000000000000000000
+        end
+        inherited Panel10: TPanel
+          Size.Width = 245.000000000000000000
+          inherited Label10: TLabel
+            Size.Width = 245.000000000000000000
+          end
+        end
+        inherited ToolBar13: TToolBar
+          Size.Width = 245.000000000000000000
+          inherited Label13: TLabel
             Size.Width = 245.000000000000000000
           end
         end

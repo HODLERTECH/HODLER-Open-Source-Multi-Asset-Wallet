@@ -256,11 +256,13 @@ object frmHome: TfrmHome
       Size.Height = 551.000000000000000000
       Size.PlatformDefault = False
       TabHeight = 49.000000000000000000
-      TabIndex = 19
+      TabIndex = 5
       TabOrder = 0
       TabPosition = None
       OnChange = closeVirtualKeyBoard
       Sizes = (
+        368s
+        551s
         368s
         551s
         368s
@@ -1395,7 +1397,7 @@ object frmHome: TfrmHome
         CustomIcon = <
           item
           end>
-        IsSelected = False
+        IsSelected = True
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -1480,7 +1482,7 @@ object frmHome: TfrmHome
           Size.Height = 455.000000000000000000
           Size.PlatformDefault = False
           TabHeight = 49.000000000000000000
-          TabIndex = 2
+          TabIndex = 1
           TabOrder = 1
           TabPosition = PlatformDefault
           OnChange = closeVirtualKeyBoard
@@ -1694,7 +1696,7 @@ object frmHome: TfrmHome
             CustomIcon = <
               item
               end>
-            IsSelected = False
+            IsSelected = True
             Size.Width = 61.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
@@ -1970,7 +1972,7 @@ object frmHome: TfrmHome
             CustomIcon = <
               item
               end>
-            IsSelected = True
+            IsSelected = False
             Size.Width = 47.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
@@ -10149,7 +10151,7 @@ object frmHome: TfrmHome
         CustomIcon = <
           item
           end>
-        IsSelected = True
+        IsSelected = False
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -10207,7 +10209,9 @@ object frmHome: TfrmHome
             Align = Right
             TabOrder = 0
             MaxLength = 40
-            FilterChar = '1234567890 qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM'
+            FilterChar = 
+              '1234567890 qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM(' +
+              ')'
             Position.X = 168.000000000000000000
             Size.Width = 200.000000000000000000
             Size.Height = 48.000000000000000000
@@ -13268,6 +13272,80 @@ object frmHome: TfrmHome
             Text = 'Select Coin'
           end
           object Button5: TButton
+            Align = Left
+            Size.Width = 64.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'buttonstyle'
+            TabOrder = 1
+            Text = 'Back'
+            OnClick = btnSBackClick
+          end
+        end
+      end
+      object WalletTransactionListTabItem: TTabItem
+        CustomIcon = <
+          item
+          end>
+        IsSelected = False
+        Size.Width = 8.000000000000000000
+        Size.Height = 8.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = ''
+        TabOrder = 0
+        Text = 'WalletTransactionListTabItem'
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        object WalletTransactionVertScrollBox: TVertScrollBox
+          Align = Client
+          Size.Width = 368.000000000000000000
+          Size.Height = 390.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 3
+          Viewport.Width = 368.000000000000000000
+          Viewport.Height = 390.000000000000000000
+        end
+        object Button6: TButton
+          Align = Bottom
+          Position.Y = 503.000000000000000000
+          Size.Width = 368.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Text = 'Next'
+        end
+        object Panel10: TPanel
+          Align = Top
+          Position.Y = 48.000000000000000000
+          Size.Width = 368.000000000000000000
+          Size.Height = 65.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          object Label10: TLabel
+            Align = Client
+            Size.Width = 368.000000000000000000
+            Size.Height = 65.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.HorzAlign = Center
+            Text = 'Transaction to this address can be made from several accounts'
+            TabOrder = 0
+          end
+        end
+        object ToolBar13: TToolBar
+          Size.Width = 368.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object Label13: TLabel
+            Align = Contents
+            Size.Width = 368.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'calendarlabelstyle'
+            TextSettings.HorzAlign = Center
+            Text = 'Select Wallet'
+          end
+          object Button7: TButton
             Align = Left
             Size.Width = 64.000000000000000000
             Size.Height = 48.000000000000000000

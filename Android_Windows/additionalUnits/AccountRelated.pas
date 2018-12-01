@@ -701,6 +701,10 @@ begin
       if ((cc.confirmed + cc.unconfirmed) = 0) and (length(cc.history) = 0) and
         (TwalletInfo(cc).y < minY) then
       begin
+
+        if TwalletInfo(cc).y <= CurrentCoin.Y then
+          continue;
+
         minY := TwalletInfo(cc).y;
         TfmxObject(Sender).TagObject := cc;
       end;
@@ -708,16 +712,10 @@ begin
 
     if TfmxObject(Sender).TagObject = CurrentCoin then
     begin
-      if ((CurrentCoin.confirmed + CurrentCoin.unconfirmed) = 0) and
-        (length(CurrentCoin.history) = 0) then
-      begin
-        popupWindow.Create('Current address was not used');
-      end
-      else
-      begin
+
         generateNewAddressesClick(Sender);
         exit;
-      end;
+
     end;
 
     OpenWalletView(Sender);
@@ -889,6 +887,7 @@ var
   addrLbl: TLabel;
   deleteBtn: TButton;
   generateNewAddresses: TButton;
+  copyBtn : Tbutton;
 begin
   with frmHome do
   begin
@@ -906,6 +905,7 @@ begin
       Panel.Align := TAlignLayout.Top;
       Panel.Height := 48;
       Panel.TagObject := cc;
+      panel.TagString := cc.addr;
       Panel.OnClick := OpenWalletViewFromYWalletList;
 
       addrLbl := TLabel.Create(Panel);
@@ -923,7 +923,7 @@ begin
       bilanceLbl.Margins.Right := 15;
       bilanceLbl.Text := bigintegerbeautifulStr(cc.confirmed, cc.decimals);
       bilanceLbl.Align := TAlignLayout.Right;
-      bilanceLbl.Width := frmHome.Width / 6;
+      bilanceLbl.Width := 96;
       bilanceLbl.TextSettings.HorzAlign := TTextAlign.Trailing;
 
       deleteBtn := TButton.Create(Panel);
@@ -934,6 +934,17 @@ begin
       deleteBtn.Text := 'X';
       deleteBtn.TagObject := cc;
       deleteBtn.OnClick := deleteYAddress;
+
+      copyBtn := TButton.Create(Panel);
+      copyBtn.Parent := Panel;
+      copyBtn.Visible := true;
+      copyBtn.Align := TAlignLayout.MostRight;
+      copyBtn.Width := 48;
+      copyBtn.Text := 'Copy';
+      copyBtn.TagObject := cc;
+      copyBtn.OnClick := CopyParentTagStringToClipboard;
+
+
 
     end;
 

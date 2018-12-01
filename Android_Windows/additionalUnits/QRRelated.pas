@@ -1,6 +1,7 @@
 unit QRRelated;
 
 interface
+
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, strUtils,
   System.Generics.Collections, System.character,
@@ -49,106 +50,105 @@ uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   transactions, WalletStructureData, AccountRelated;
 
 procedure changeQR(Sender: TObject);
-	var
-	  vPixelB: Integer;
-	  vPixelW: Integer;
-	  QRCode: TDelphiZXingQRCode;
-	  QRCodeBitmap: TBitmapData;
-	  Row: Integer;
-	  bmp: FMX.Graphics.TBitmap;
-	  Column: Integer;
-	  j: Integer;
-	  currentRow: Int64;
-	  k: Int64;
-	  currentCol: Int64;
-	  X, Y: Integer;
-	  PP: Pointer;
-	  s: AnsiString;
+var
+  vPixelB: Integer;
+  vPixelW: Integer;
+  QRCode: TDelphiZXingQRCode;
+  QRCodeBitmap: TBitmapData;
+  Row: Integer;
+  bmp: FMX.Graphics.TBitmap;
+  Column: Integer;
+  j: Integer;
+  currentRow: Int64;
+  k: Int64;
+  currentCol: Int64;
+  X, Y: Integer;
+  PP: Pointer;
+  s: AnsiString;
 begin
 
-  if CurrentCoin=nil then exit;
-  
-    vPixelB := TAlphaColorRec.Black;
-    vPixelW := TAlphaColorRec.white;
-    QRCode := TDelphiZXingQRCode.Create();
+  if CurrentCoin = nil then
+    exit;
 
+  vPixelB := TAlphaColorRec.Black;
+  vPixelW := TAlphaColorRec.white;
+  QRCode := TDelphiZXingQRCode.Create();
 
-    try
+  try
 
-      bmp := FMX.Graphics.TBitmap.Create();
+    bmp := FMX.Graphics.TBitmap.Create();
 
-      s := {$IFDEF ANDROID}'  ' +
+    s := {$IFDEF ANDROID}'  ' +
 {$ENDIF}AvailableCoin[CurrentCoin.coin].name + ':' +
-        StringReplace(frmhome.receiveAddress.Text, ' ', '', [rfReplaceAll]) + '?amount='
-        + frmhome.ReceiveValue.Text + '&message=hodler';
+      StringReplace(frmhome.receiveAddress.Text, ' ', '', [rfReplaceAll]) +
+      '?amount=' + frmhome.ReceiveValue.Text + '&message=hodler';
 
-      if currentCoin.coin in [3,7] then
-        s := {$IFDEF ANDROID}'  ' +
-{$ENDIF}'bitcoincash' + ':' +
-        StringReplace(frmhome.receiveAddress.Text, ' ', '', [rfReplaceAll]) + '?amount='
-        + frmhome.ReceiveValue.Text + '&message=hodler';
+    if CurrentCoin.coin in [3, 7] then
+      s := {$IFDEF ANDROID}'  ' +
+{$ENDIF}'bitcoincash' + ':' + StringReplace(frmhome.receiveAddress.Text, ' ',
+        '', [rfReplaceAll]) + '?amount=' + frmhome.ReceiveValue.Text +
+        '&message=hodler';
 
-      QRCode.Encoding := TQRCodeEncoding(0);
-      QRCode.QuietZone := 6;
-      QRCode.Data := s;
-      QRCode.Data := s;
-      QRCode.Data := s;
-      bmp.SetSize(QRCode.Rows, QRCode.Columns);
+    QRCode.Encoding := TQRCodeEncoding(0);
+    QRCode.QuietZone := 6;
+    QRCode.Data := s;
+    QRCode.Data := s;
+    QRCode.Data := s;
+    bmp.SetSize(QRCode.Rows, QRCode.Columns);
 
-      if bmp.Map(TMapAccess.maReadWrite, QRCodeBitmap) then
-        bmp.Unmap(QRCodeBitmap);
-      bmp.Canvas.Clear(TAlphaColorRec.white);
-      if bmp.Map(TMapAccess.maReadWrite, QRCodeBitmap) then
-      begin
-        PP := QRCodeBitmap.Data;
-        for Y := 0 to QRCode.Rows - 1 do
-        begin
-          for X := 0 to QRCode.Columns - 1 do
-          begin
-
-            if (QRCode.IsBlack[Y, X]) then
-            begin
-              QRCodeBitmap.SetPixel(Y, X, vPixelB);
-            end
-            else
-            begin
-              QRCodeBitmap.SetPixel(Y, X, vPixelW);
-            end;
-
-          end;
-        end;
-
-        QRCodeBitmap.Data := PP;
-        if QRCodeBitmap.Data <> nil then
-        begin
-          bmp.Assign(BitmapDataToScaledBitmap(QRCodeBitmap, 6));
-          //bmp := ;
-          //bmp.Unmap(QRCodeBitmap);
-        end;
-      end
-      else
-        showmessage('Could map data for qrcode');
-    finally
-      QRCode.free;
-    end;
-
-
-    if frmhome.QRCodeImage.Bitmap <> nil then
-      frmhome.QRCodeImage.Bitmap.Assign(bmp)
-    else
+    if bmp.Map(TMapAccess.maReadWrite, QRCodeBitmap) then
+      bmp.Unmap(QRCodeBitmap);
+    bmp.Canvas.Clear(TAlphaColorRec.white);
+    if bmp.Map(TMapAccess.maReadWrite, QRCodeBitmap) then
     begin
-      frmhome.QRCodeImage.Bitmap := bmp;
-      exit;
-    end;
+      PP := QRCodeBitmap.Data;
+      for Y := 0 to QRCode.Rows - 1 do
+      begin
+        for X := 0 to QRCode.Columns - 1 do
+        begin
 
-    try
-      
-      if assigned(bmp) then
-        bmp.free;
-     
-    except
+          if (QRCode.IsBlack[Y, X]) then
+          begin
+            QRCodeBitmap.SetPixel(Y, X, vPixelB);
+          end
+          else
+          begin
+            QRCodeBitmap.SetPixel(Y, X, vPixelW);
+          end;
 
-    end;
+        end;
+      end;
+
+      QRCodeBitmap.Data := PP;
+      if QRCodeBitmap.Data <> nil then
+      begin
+        bmp.Assign(BitmapDataToScaledBitmap(QRCodeBitmap, 6));
+        // bmp := ;
+        // bmp.Unmap(QRCodeBitmap);
+      end;
+    end
+    else
+      showmessage('Could map data for qrcode');
+  finally
+    QRCode.free;
+  end;
+
+  if frmhome.QRCodeImage.Bitmap <> nil then
+    frmhome.QRCodeImage.Bitmap.Assign(bmp)
+  else
+  begin
+    frmhome.QRCodeImage.Bitmap := bmp;
+    exit;
+  end;
+
+  try
+
+    if assigned(bmp) then
+      bmp.free;
+
+  except
+
+  end;
 
 end;
 
@@ -175,200 +175,214 @@ begin
     scanBitmap := TBitmap.Create();
     scanBitmap.Assign(imgCamera.Bitmap);
     ReadResult := nil;
-    {$IFDEF IOS} if not FScanInProgress then {$ENDIF}                 
-    tthread.CreateAnonymousThread(
-      procedure
-      begin
+{$IFDEF IOS} if not FScanInProgress then {$ENDIF}
+      tthread.CreateAnonymousThread(
+        procedure
+        begin
 
-      try
-          FScanInProgress := true;
           try
-            ReadResult := FScanManager.Scan(scanBitmap);
-          except
-            on E: Exception do
-            begin
-
-              exit;
-            end;
-          end;
-
-          tthread.Synchronize(nil,
-            procedure
-            var
-              i,j: Integer;
-              foundWallet : boolean;
-            var
-              wd: TwalletInfo;
-          begin
-            if (ReadResult <> nil) then
-            begin
-              if cameraBackTabItem = walletView then
+            FScanInProgress := true;
+            try
+              ReadResult := FScanManager.Scan(scanBitmap);
+            except
+              on E: Exception do
               begin
 
-                ts := parseQRCode(ReadResult.Text);
+                exit;
+              end;
+            end;
 
-                if ts.Count = 1 then
+            tthread.Synchronize(nil,
+              procedure
+              var
+                i, j: Integer;
+                foundWallet: boolean;
+              var
+                wd: TwalletInfo;
+              begin
+                if (ReadResult <> nil) then
                 begin
-                  WVsendTO.Text := ts.Strings[0];
-                end
-                else
-                begin
-                  if lowercase(ts.Strings[0]) <> lowercase(AvailableCoin[CurrentCoin.coin].name)
-                  then
+                  if cameraBackTabItem = walletView then
                   begin
-                    if CurrentCoin.coin in [3,7] then
+
+                    ts := parseQRCode(ReadResult.Text);
+
+                    if ts.Count = 1 then
                     begin
+                      WVsendTO.Text := ts.Strings[0];
+                    end
+                    else
+                    begin
+                      if lowercase(ts.Strings[0]) <>
+                        lowercase(AvailableCoin[CurrentCoin.coin].name) then
+                      begin
+                        if CurrentCoin.coin in [3, 7] then
+                        begin
+
+                        end
+                        else
+                        begin
+                          popupWindow.Create(dictionary('QRCodeFor') + ' ' +
+                            ts.Strings[0]);
+                          ts.free;
+                          exit;
+                        end;
+
+                      end;
+                      WVsendTO.Text := ts.Strings[1];
+                      for i := 2 to ts.Count - 2 do
+                      begin
+                        if ts.Strings[i] = 'amount' then
+                        begin
+                          wvAmount.Text := ts.Strings[i + 1];
+                          WVRealCurrency.Text :=
+                            floatToStrF(CurrencyConverter.calculate(strToFloatDef(wvAmount.Text, 0))
+                            * (CurrentCryptoCurrency.rate), ffFixed, 18, 2);
+                        end;
+                      end;
+                    end;
+                    ts.free;
+
+                    switchTab(PageControl, cameraBackTabItem);
+                  end
+                  else if cameraBackTabItem = ManuallyToken then
+                  begin
+                    ContractAddress.Text := trim(ReadResult.Text);
+                    switchTab(PageControl, cameraBackTabItem);
+                  end
+                  else if cameraBackTabItem = checkSeed then
+                  begin
+                    if tempMasterSeed = trim(ReadResult.Text) then
+                    begin
+
+                      tempMasterSeed := '';
+
+                      userSavedSeed := true;
+                      refreshWalletDat();
+
+                      switchTab(PageControl, HOME_TABITEM);
 
                     end
                     else
                     begin
-                      popupWindow.Create(dictionary('QRCodeFor') + ' ' +
-                      ts.Strings[0]);
-                      ts.free;
-                      exit;
+                      switchTab(PageControl, HOME_TABITEM);
                     end;
-
-                    
-                  end;
-                  WVsendTO.Text := ts.Strings[1];
-                  for i := 2 to ts.Count - 2 do
-                  begin
-                    if ts.Strings[i] = 'amount' then
-                      wvAmount.Text := ts.Strings[i + 1];
-                  end;
-                end;
-                ts.free;
-
-                switchTab(PageControl, cameraBackTabItem);
-              end
-              else if cameraBackTabItem = ManuallyToken then
-              begin
-                ContractAddress.Text := trim(ReadResult.Text);
-                switchTab(PageControl, cameraBackTabItem);
-              end
-              else if cameraBackTabItem = checkSeed then
-              begin
-                if tempMasterSeed = trim(ReadResult.Text) then
-                begin
-
-                  tempMasterSeed := '';
-
-                  userSavedSeed := true;
-                  refreshWalletDat();
-
-                  switchTab(PageControl , HOME_TABITEM);
-
-                end
-                else
-                begin
-                  switchTab(PageControl,HOME_TABITEM);
-                end;
-
-              end
-              else if (cameraBackTabItem = RestoreOptions) or
-                (cameraBackTabItem = AddAccount) then
-              begin
-
-                if QRFind = QRSearchEncryted then
-                begin
-
-                  QRFind := '';
-                  tempQRFindEncryptedSeed := trim(ReadResult.Text);
-                  RestoreWalletOKButton.OnClick := RestoreFromEncryptedQR;
-                  decryptSeedBackTabItem := PageControl.ActiveTab;
-                  PageControl.ActiveTab := RestoreWalletWithPassword;
-                  RWWPBackButton.OnClick := backBtnDecryptSeed;
-                  RestoreNameEdit.Text := '';
-                  RestorePasswordEdit.Text := '';
-                  switchTab(PageControl, RestoreWalletWithPassword);
-
-                end;
-
-              end
-              else if cameraBackTabItem = createPassword then
-              begin
-
-                if (QRFind = QRSearchDecryted) then
-                begin
-
-                  QRFind := '';
-
-                  CreateNewAccountAndSave(AccountNameEdit.Text, pass.Text,
-                    trim(ReadResult.Text), true);
-
-                end;
-
-              end
-              else if cameraBackTabItem = ImportPrivKeyTabItem then
-              begin
-                WIFEdit.Text := ReadResult.Text;
-                switchTab(PageControl, ImportPrivKeyTabItem);
-              end
-              else if cameraBackTabItem = HOME_TABITEM then
-              begin
-                //switchTab(PageControl, cameraBackTabItem);
-                ts := parseQRCode(ReadResult.Text);
-                if ts.Count = 1 then
-                begin
-                  popupWindow.Create(dictionary('WalletNotDetermined'));
-                  switchtab( PageControl , HOME_TABITEM );
-
-
-                end
-                else
-                begin
-                  foundWallet := false;
-                  for i := 0 to frmhome.WalletList.Content.ChildrenCount -1 do
-                  begin
-                    if (frmHome.WalletList.Content.Children[i].TagObject is TWalletInfo) and ( availableCoin[TWalletInfo(frmHome.WalletList.Content.Children[i].TagObject).coin].name = ts[0] ) then
-                    begin
-
-                      openWalletView(frmHome.WalletList.Content.Children[i]);
-                      switchTab(WVTabControl , WVSend );
-                      WVsendTO.Text := ts.Strings[1];
-                      for j := 2 to ts.Count - 2 do
-                      begin
-                        if ts.Strings[j] = 'amount' then
-                          wvAmount.Text := ts.Strings[j + 1];
-                      end;
-                      foundWallet := true;
-                      break;
-                    end;
-
-                  end;
-
-                  if not foundWallet then
-                  begin
-                    switchtab( PageControl , HOME_TABITEM );
-                    popupWindow.Create(dictionary('WalletNotDetermined'));
 
                   end
+                  else if (cameraBackTabItem = RestoreOptions) or
+                    (cameraBackTabItem = AddAccount) then
+                  begin
+
+                    if QRFind = QRSearchEncryted then
+                    begin
+
+                      QRFind := '';
+                      tempQRFindEncryptedSeed := trim(ReadResult.Text);
+                      RestoreWalletOKButton.OnClick := RestoreFromEncryptedQR;
+                      decryptSeedBackTabItem := PageControl.ActiveTab;
+                      PageControl.ActiveTab := RestoreWalletWithPassword;
+                      RWWPBackButton.OnClick := backBtnDecryptSeed;
+                      RestoreNameEdit.Text := getUnusedAccountName();
+                      RestorePasswordEdit.Text := '';
+                      switchTab(PageControl, RestoreWalletWithPassword);
+
+                    end;
+
+                  end
+                  else if cameraBackTabItem = createPassword then
+                  begin
+
+                    if (QRFind = QRSearchDecryted) then
+                    begin
+
+                      QRFind := '';
+
+                      CreateNewAccountAndSave(AccountNameEdit.Text, pass.Text,
+                        trim(ReadResult.Text), true);
+
+                    end;
+
+                  end
+                  else if cameraBackTabItem = ImportPrivKeyTabItem then
+                  begin
+                    WIFEdit.Text := ReadResult.Text;
+                    switchTab(PageControl, ImportPrivKeyTabItem);
+                  end
+                  else if cameraBackTabItem = HOME_TABITEM then
+                  begin
+                    amountFromQR := '';
+                    ts := parseQRCode(ReadResult.Text);
+                    if ts.Count = 1 then
+                    begin
+                      addressFromQR := ts[0];
+                      createTransactionWalletList( getCoinsIDFromAddress(addressFromQR) );
+                      //switchTab(pageControl , WalletTransactionListTabItem);
+                    end
+                    else
+                    begin
+                      foundWallet := false;
+                      for i := 0 to frmhome.WalletList.Content.
+                        ChildrenCount - 1 do
+                      begin
+                        if (frmhome.WalletList.Content.Children[i]
+                          .TagObject is TwalletInfo) and
+                          (AvailableCoin
+                          [TwalletInfo(frmhome.WalletList.Content.Children[i]
+                          .TagObject).coin].name = ts[0]) then
+                        begin
+
+                          addressFromQR := ts[1];
+                          createTransactionWalletList( [TwalletInfo(frmhome.WalletList.Content.Children[i]
+                          .TagObject).coin] );
+                          //switchTab(pageControl , WalletTransactionListTabItem);
+
+                          {openWalletView(frmhome.WalletList.Content.
+                            Children[i]);
+                          switchTab(WVTabControl, WVSend);
+                          WVsendTO.Text := ts.Strings[1];  }
+                          for j := 2 to ts.Count - 2 do
+                          begin
+                            if ts.Strings[j] = 'amount' then
+                              amountFromQR := ts.Strings[j + 1];
+                          end;
+                          foundWallet := true;
+                          break;
+                        end;
+
+                      end;
+
+                      if not foundWallet then
+                      begin
+                        switchTab(PageControl, HOME_TABITEM);
+                        popupWindow.Create(dictionary('WalletNotDetermined'));
+
+                      end
+
+                    end;
+
+                    ts.free;
+                  end
+                  else if cameraBackTabItem = AddNewCoinSettings then
+                  begin
+                    IsPrivKeySwitch.IsChecked := true;
+                    WIFEdit.Text := ReadResult.Text;
+                    switchTab(PageControl, AddNewCoinSettings);
+                  end;
+
+                  CameraComponent1.Active := false;
 
                 end;
+              end);
 
-                ts.Free;
-              end
-              else if cameraBackTabItem = AddNewCoinSettings then
-              begin
-                IsPrivKeySwitch.IsChecked := true;
-                WIFEdit.Text := ReadResult.Text;
-                switchTab( PageControl ,AddNewCoinSettings );
-              end;
+          finally
+            ReadResult.free;
+            scanBitmap.free;
+            FScanInProgress := false;
+          end;
 
-              CameraComponent1.Active := false;
+        end).Start;
 
-            end;
-          end);
-
-      finally
-        ReadResult.free;
-        scanBitmap.free;
-        FScanInProgress := false;
-      end;
-
-    end).Start;
-
-    end;
+  end;
 
 end;
 
@@ -378,31 +392,33 @@ const
   camPerm = 'android.permission.CAMERA';
   procedure doQR;
   begin
-  with frmHome do begin
-    try
+    with frmhome do
+    begin
+      try
 
-      cameraBackTabItem := PageControl.ActiveTab;
-      CameraComponent1.Active := false;
-      CameraComponent1.Kind := FMX.Media.TCameraKind.BackCamera;
-      CameraComponent1.Quality := FMX.Media.TVideoCaptureQuality.MediumQuality;
-      if QRHeight = -1 then
-      begin
-        QRHeight := CameraComponent1.GetCaptureSetting.Height;
-        QRWidth := CameraComponent1.GetCaptureSetting.Width;
-      end;
+        cameraBackTabItem := PageControl.ActiveTab;
+        CameraComponent1.Active := false;
+        CameraComponent1.Kind := FMX.Media.TCameraKind.BackCamera;
+        CameraComponent1.Quality :=
+          FMX.Media.TVideoCaptureQuality.MediumQuality;
+        if QRHeight = -1 then
+        begin
+          QRHeight := CameraComponent1.GetCaptureSetting.Height;
+          QRWidth := CameraComponent1.GetCaptureSetting.Width;
+        end;
 
-      CameraComponent1.SetCaptureSetting(TVideoCaptureSetting.Create(QRWidth,
-        QRHeight, 30));
-      CameraComponent1.FocusMode := FMX.Media.TFocusMode.ContinuousAutoFocus;
-      CameraComponent1.Active := true;
-      switchTab(PageControl, TTabItem(frmHome.FindComponent('qrreader')));
+        CameraComponent1.SetCaptureSetting(TVideoCaptureSetting.Create(QRWidth,
+          QRHeight, 30));
+        CameraComponent1.FocusMode := FMX.Media.TFocusMode.ContinuousAutoFocus;
+        CameraComponent1.Active := true;
+        switchTab(PageControl, TTabItem(frmhome.FindComponent('qrreader')));
 
-    except
-      on E: Exception do
-      begin
+      except
+        on E: Exception do
+        begin
+        end;
       end;
     end;
-  end;
   end;
 
 var
@@ -421,7 +437,7 @@ begin
   begin
     requestForPermission(camPerm);
 
-    Tthread.CreateAnonymousThread(
+    tthread.CreateAnonymousThread(
       procedure
       var
         i: Integer;
@@ -436,10 +452,10 @@ begin
           end
           else
           begin
-            Tthread.Synchronize(nil,
+            tthread.Synchronize(nil,
               procedure
               begin
-                frmHome.btnQRClick(nil);
+                frmhome.btnQRClick(nil);
               end);
 
             break;
