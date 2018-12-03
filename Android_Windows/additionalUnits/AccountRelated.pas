@@ -427,7 +427,60 @@ var
   Lang, style: AnsiString;
   JSON: TJsonObject;
   WData: AnsiString;
+  appdataPath : AnsiString;
+  newDataPath : AnsiString;
+  ts : TStringList;
+  JsonObject: TJSONObject;
+  JSONArray: TJsonArray;
+  JsonValue: TJsonvalue;
 begin
+
+  // %appdata% to %appdata%/hodlertech
+  appdataPath := System.SysUtils.GetEnvironmentVariable('APPDATA');
+  newDataPath := System.IOUtils.TPath.combine(System.SysUtils.GetEnvironmentVariable('APPDATA') , 'hodlertech' );
+
+  if not DirectoryExists( newDataPath ) then
+  begin
+    CreateDir( newDataPath );
+  end;
+
+
+  if FileExists( System.IOUtils.TPath.combine( appdataPath ,  'hodler.wallet.dat') ) then
+  begin
+    TFile.Move( System.IOUtils.TPath.combine( appdataPath ,  'hodler.wallet.dat') , System.IOUtils.TPath.combine( newDataPath ,  'hodler.wallet.dat') );
+
+    ts := TStringList.Create;
+    ts.LoadFromFile(System.IOUtils.TPath.Combine(newdataPath, 'hodler.wallet.dat'));
+
+    if ts.Text[low(ts.Text)] = '{' then
+    begin
+      JsonObject := TJSONObject(TJSONObject.ParseJSONValue(ts.Text));
+      JSONArray := TJsonArray(JsonObject.GetValue('accounts'));
+      for JsonValue in JSONArray do
+      begin
+        if JsonValue.Value = '' then
+          continue;
+
+        if DirectoryExists( System.IOUtils.TPath.combine( appdataPath , JsonValue.Value ) ) then
+        begin
+          TDirectory.Move(System.IOUtils.TPath.combine( appdataPath , JsonValue.Value ) , System.IOUtils.TPath.combine( newdataPath , JsonValue.Value ) );
+        end;
+
+      end;
+
+      JsonObject.Free;
+    end;
+
+  end;
+  if FileExists( System.IOUtils.TPath.combine( appdataPath ,  'hodler.fiat.dat') ) then
+  begin
+    TFile.Move( System.IOUtils.TPath.combine( appdataPath ,  'hodler.fiat.dat') , System.IOUtils.TPath.combine( newDataPath ,  'hodler.fiat.dat') );
+  end;
+
+
+
+
+
 
 try
 
@@ -443,7 +496,7 @@ StyloSwitch.Visible:=false;
     HOME_TABITEM := TTabItem(frmHome.FindComponent('dashbrd'));
 {$ELSE}
     HOME_PATH := IncludeTrailingPathDelimiter
-      ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetDocumentsPath{$ELSE}System.SysUtils.GetEnvironmentVariable('APPDATA'){$ENDIF});
+      ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetDocumentsPath{$ELSE}System.IOUtils.TPath.combine(System.SysUtils.GetEnvironmentVariable('APPDATA') , 'hodlertech' ){$ENDIF});
     HOME_TABITEM := walletView;
 {$ENDIF}
 

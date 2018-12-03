@@ -197,19 +197,19 @@ constructor Account.Create(_name: AnsiString);
 begin
   name := _name;
 
-  if not DirectoryExists(TPath.Combine(HOME_PATH, name)) then
-    CreateDir(TPath.Combine(HOME_PATH, name));
+  DirPath := TPath.Combine( HOME_PATH , name );
 
-  DirPath := TPath.Combine(HOME_PATH, name);
+  if not DirectoryExists( dirPath ) then
+    CreateDir( dirPath );
 
-  CoinFilePath := TPath.Combine(HOME_PATH, name);
-  CoinFilePath := TPath.Combine(CoinFilePath, 'hodler.coin.dat');
+  //CoinFilePath := TPath.Combine(HOME_PATH, name);
+  CoinFilePath := TPath.Combine(DirPath, 'hodler.coin.dat');
 
-  TokenFilePath := TPath.Combine(HOME_PATH, name);
-  TokenFilePath := TPath.Combine(TokenFilePath, 'hodler.erc20.dat');
+  //TokenFilePath := TPath.Combine(HOME_PATH, name);
+  TokenFilePath := TPath.Combine(DirPath, 'hodler.erc20.dat');
 
-  SeedFilePath := TPath.Combine(HOME_PATH, name);
-  SeedFilePath := TPath.Combine(SeedFilePath, 'hodler.masterseed.dat');
+  //SeedFilePath := TPath.Combine(HOME_PATH, name);
+  SeedFilePath := TPath.Combine(DirPath, 'hodler.masterseed.dat');
 
   SetLength(Paths, 3);
   Paths[0] := CoinFilePath;
