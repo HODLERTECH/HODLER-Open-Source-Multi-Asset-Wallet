@@ -1261,7 +1261,7 @@ begin
     adrLabel.AutoSize := false;
     adrLabel.Visible := true;
     adrLabel.TextSettings.WordWrap := false;
-    adrLabel.Width := 150;
+    adrLabel.Width := {$IF (DEFINED(MSWINDOWS) OR DEFINED(LINUX))}250{$ELSE}150{$ENDIF};
     adrLabel.Height := 48;
     adrLabel.Position.x := 52;
     adrLabel.Position.Y := 0;

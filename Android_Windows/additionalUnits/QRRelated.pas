@@ -320,6 +320,11 @@ begin
                     end
                     else
                     begin
+                    if ts[0]='bitcoincash' then begin
+                                          addressFromQR := ts[1];
+                      createTransactionWalletList( getCoinsIDFromAddress(addressFromQR) );
+                      exit;
+                    end;
                       foundWallet := false;
                       for i := 0 to frmhome.WalletList.Content.
                         ChildrenCount - 1 do
@@ -328,7 +333,7 @@ begin
                           .TagObject is TwalletInfo) and
                           (AvailableCoin
                           [TwalletInfo(frmhome.WalletList.Content.Children[i]
-                          .TagObject).coin].name = ts[0]) then
+                          .TagObject).coin].qrname = ts[0]) then
                         begin
 
                           addressFromQR := ts[1];

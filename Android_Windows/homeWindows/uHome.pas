@@ -366,14 +366,10 @@ type
     TransactionDetailsBackButton: TButton;
     HistoryTransactionVertScrollBox: TVertScrollBox;
     HistoryTransactionSendReceive: TLabel;
-    HistoryTransactionValue: TLabel;
     Label6: TLabel;
-    historyTransactionConfirmation: TLabel;
     Label8: TLabel;
-    HistoryTransactionDate: TLabel;
     Layout16: TLayout;
     Label11: TLabel;
-    HistoryTransactionID: TLabel;
     Layout17: TLayout;
     Layout18: TLayout;
     Layout19: TLayout;
@@ -695,6 +691,10 @@ type
     ToolBar13: TToolBar;
     Label13: TLabel;
     Button7: TButton;
+    historyTransactionConfirmation: TEdit;
+    HistoryTransactionDate: TEdit;
+    HistoryTransactionValue: TEdit;
+    HistoryTransactionID: TEdit;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -3087,8 +3087,17 @@ begin
 end;
 
 procedure TfrmHome.FormShow(Sender: TObject);
+procedure LabelEditApplyStyleLookup(Sender: TObject);
+var
+  Obj: TFmxObject;
 begin
-
+  Obj := (Sender as TCustomEdit).FindStyleResource('background');
+  if Obj is TControl then TControl(Obj).Opacity := 0;
+end;
+begin
+  LabelEditApplyStyleLookup(HistoryTransactionValue);
+  LabelEditApplyStyleLookup(HistoryTransactionDate);
+    LabelEditApplyStyleLookup(HistoryTransactionCOnfirmation);
   AccountRelated.afterInitialize;
   //SweepCoinsRoutine('priv',true,7,'1Zor3jjgJT15bUED3kcnDJLBZXKnvV3z6');
 end;

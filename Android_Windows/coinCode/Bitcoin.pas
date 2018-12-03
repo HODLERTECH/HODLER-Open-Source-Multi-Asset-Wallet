@@ -23,7 +23,7 @@ function generatep2wpkh(pub: AnsiString ; hrp : AnsiString = 'bc'): AnsiString;
 
 implementation
 
-uses uHome, transactions, tokenData, bech32, misc;
+uses uHome, transactions, tokenData, bech32, misc,SyncThr;
 
 function Bitcoin_createHD(coinid, x, y: integer; MasterSeed: AnsiString)
   : TWalletInfo;
@@ -265,6 +265,8 @@ begin
       coin:=coin+'&mode=instant';
     result := getDataOverHTTP(HODLER_URL + 'sendTX.php?coin=' + coin +
       '&tx=' + TX);
+      syncthr.SynchronizeCryptoCurrency(currentcoin);
+
   end;
 end;
 

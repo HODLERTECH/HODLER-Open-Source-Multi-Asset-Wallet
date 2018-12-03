@@ -1120,7 +1120,7 @@ var
   a: BigInteger;
   Control: TComponent;
 begin
-
+ frmHome.AutomaticFeeRadio.IsChecked:=true;
   frmhome.TopInfoConfirmedValue.Text := ' Calculating...';
   frmhome.TopInfoUnconfirmedValue.Text := ' Calculating...';
   lastHistCC := 10;
@@ -1336,7 +1336,10 @@ begin
       lblBlockInfo.Text := dictionary('ConfirmInNext') + ' ' +
         IntToStr(round(FeeSpin.Value)) + ' ' + dictionary('Blocks');
     end;
-
+    if (TwalletInfo(CurrentCryptoCurrency).coin=3) or (TwalletInfo(CurrentCryptoCurrency).coin=7) then
+ begin
+  frmHome.BCHCashAddrButtonClick(Sender);
+end;
     // changeYbutton.Text := 'Change address (' + intToStr(CurrentCoin.x) +','+inttoStr(CurrentCoin.y) + ')';
     if PageControl.ActiveTab = HOME_TABITEM then
       WVTabControl.ActiveTab := WVBalance;
