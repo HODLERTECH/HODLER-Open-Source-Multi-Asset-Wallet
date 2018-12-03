@@ -1627,6 +1627,10 @@ begin
       Panel.Tag := i;
       Panel.Parent := frmhome.AvailableTokensBox;
       Panel.OnClick := frmhome.choseTokenClick;
+      if i = 0 then
+        Panel.TagString := ''  // hodler.tech must be first in list
+      else
+        Panel.TagString := token.AvailableToken[i].name;
 
       coinName := TLabel.Create(frmhome.AvailableTokensBox);
       coinName.Parent := Panel;
@@ -1651,7 +1655,18 @@ begin
 
     end;
   end;
+
+  frmhome.AvailableTokensBox.Sort( function(item1, item2: TFmxObject):integer
+  begin
+    if item1.TagString > item2.TagString then
+      exit(1);
+    if item1.TagString < item2.TagString then
+      exit(-1);
+    exit(0);
+  end );
+
 end;
+
 
 procedure chooseToken(Sender: TObject);
 var
