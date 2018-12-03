@@ -3731,6 +3731,8 @@ begin
 
     for i := 0 to length(AccountsNames) - 1 do
     begin
+      if AccountsNames[i] = '' then
+        continue;
       JSONArray.AddElement(TJSONString.Create(AccountsNames[i]));
     end;
 
@@ -3768,6 +3770,9 @@ begin
 
   for i := 0 to length(AccountsNames) - 1 do
   begin
+    if AccountsNames[i] = '' then
+      continue;
+
     JSONArray.AddElement(TJSONString.Create(AccountsNames[i]));
   end;
 
@@ -4064,6 +4069,7 @@ begin
     i := 0;
     for JsonValue in JSONArray do
     begin
+
       AccountsNames[i] := JsonValue.Value;
       inc(i);
     end;
