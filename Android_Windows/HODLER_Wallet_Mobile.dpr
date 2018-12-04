@@ -123,7 +123,8 @@ uses
   QRRelated in 'additionalUnits\QRRelated.pas',
   FileManagerRelated in 'additionalUnits\FileManagerRelated.pas',
   WalletViewRelated in 'additionalUnits\WalletViewRelated.pas',
-  BackupRelated in 'additionalUnits\BackupRelated.pas';
+  BackupRelated in 'additionalUnits\BackupRelated.pas',
+  TCopyableEditData in 'components\TCopyableEditData.pas';
 
 {$R *.res}
 

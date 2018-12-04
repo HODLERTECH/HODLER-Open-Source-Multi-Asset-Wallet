@@ -345,6 +345,7 @@ function getCoinsIDFromAddress( address : AnsiString ):TIntegerArray;
 procedure createTransactionWalletList(arr : TIntegerArray);
 function getFirstUnusedYForCoin(id : integer):Integer;
 function getUnusedAccountName(): AnsiString;
+function getComponentsWithTagString( tag : AnsiString ; From : TfmxObject  ):TArray<TfmxObject>;
 
 
 
@@ -388,6 +389,29 @@ var
   bitmapData: TBitmapData;
 
   /// ////////////////////////////////////////////////////////////////
+
+function getComponentsWithTagString( tag : AnsiString ; From : TfmxObject ):TArray<TfmxObject>;
+var
+  fmxObj : TfmxObject;
+  tmp : TArray<TfmxObject>;
+begin
+
+  result :=  [];
+  if from.ChildrenCount <> 0 then
+
+  for fmxObj in From.Children do
+  begin
+    if fmxObj.TagString = tag then
+      result := result + [fmxobj];
+
+    tmp := getComponentsWithTagString(tag , fmxObj);
+    if length(tmp) <> 0 then
+
+      result := result + tmp;
+
+  end;
+
+end;
 
 function getUnusedAccountName(): AnsiString;
 var
@@ -768,6 +792,12 @@ begin
 end;
 
 procedure LoadStyle(name: AnsiString);
+var
+  i : integer;
+  fmxObj : TfmxObject;
+  tmp : TArray<TfmxObject>;
+var
+  Stream: TResourceStream;
 begin
 {$IFDEF IOS}
   exit;
@@ -781,6 +811,23 @@ begin
 {$ENDIF}
   stylo.TrySetStyleFromResource(name);
   currentStyle := name;
+
+  tmp := getComponentsWithTagString('copy_image' , frmhome);
+  if length(tmp) <> 0 then
+    for fmxobj in tmp do
+    begin
+
+        Stream := TResourceStream.Create(HInstance, 'COPY_IMG_' + RightStr( CurrentStyle , length(CurrentStyle)-3 ), RT_RCDATA);
+        try
+          //showmessage( RightStr( CurrentStyle , length(CurrentStyle)-3 ) );
+          TImage(fmxObj).Bitmap.LoadFromStream(Stream);
+
+        finally
+          Stream.Free;
+        end;
+
+
+    end;
 end;
 
 procedure DeleteAccount(name: AnsiString);

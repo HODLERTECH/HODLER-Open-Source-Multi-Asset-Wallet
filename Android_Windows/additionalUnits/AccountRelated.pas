@@ -55,7 +55,7 @@ implementation
 
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
-  transactions, WalletStructureData;
+  transactions, WalletStructureData, TcopyableEditData , walletViewRelated;
 
 procedure afterInitialize;
 var
@@ -600,12 +600,17 @@ StyloSwitch.Visible:=false;
     DebugBtn.Visible := false;
 {$ENDIF}
 
-
+    //wvAddress := TCopyableEdit.CreateFrom(wvAddress);
     wvAddress.TagString := 'copyable';
     receiveAddress.TagString := 'copyable';
     lblPrivateKey.TagString := 'copyable';
     lblWIFKey.TagString := 'copyable';
 
+    HistoryTransactionID.TagString := 'copyable';
+    HistoryTransactionDate .TagString := 'copyable';
+    HistoryTransactionValue.TagString := 'copyable';
+    historyTransactionConfirmation.TagString := 'copyable';
+    CreateCopyImageButtonOnTEdits();
   end;
 
 except on E: Exception do

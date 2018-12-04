@@ -649,6 +649,7 @@
         <DCCReference Include="additionalUnits\FileManagerRelated.pas"/>
         <DCCReference Include="additionalUnits\WalletViewRelated.pas"/>
         <DCCReference Include="additionalUnits\BackupRelated.pas"/>
+        <DCCReference Include="components\TCopyableEditData.pas"/>
         <RcItem Include="Languages\PT.lang">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>

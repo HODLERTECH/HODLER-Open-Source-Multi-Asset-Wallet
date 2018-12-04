@@ -953,6 +953,7 @@ type
     procedure ClaimCoinSelectInListClick(Sender : TObject);
     procedure TransactionWalletListClick(Sender : TObject);
     procedure CopyParentTagStringToClipboard(Sender : TObject);
+    procedure CopyParentTextToClipboard(Sender : TObject);
 
   var
     HistoryMaxLength : Integer;
@@ -1048,6 +1049,11 @@ end;
 
 {$ENDIF}
 
+
+procedure Tfrmhome.CopyParentTextToClipboard(Sender : TObject);
+begin
+  WalletViewRelated.CopyParentTextToClipboard(Sender);
+end;
 
 procedure Tfrmhome.CopyParentTagStringToClipboard(Sender : TObject);
 begin
@@ -2950,6 +2956,7 @@ begin
     {$ENDIF}
   AccountRelated.InitializeHodler;
   BackupInfoLabel.Position.Y := 100000;
+
 end;
 
 procedure TfrmHome.FormFocusChanged(Sender: TObject);

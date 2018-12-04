@@ -940,6 +940,7 @@ type
     procedure ClaimCoinSelectInListClick(Sender : TObject);
     procedure TransactionWalletListClick(Sender : TObject);
     procedure CopyParentTagStringToClipboard(Sender : TObject);
+    procedure CopyParentTextToClipboard(Sender : TObject);
 
   var
     cpTimeout: int64;
@@ -1017,6 +1018,11 @@ uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
 {$R *.Windows.fmx MSWINDOWS}
 {$R *.Surface.fmx MSWINDOWS}
 
+procedure Tfrmhome.CopyParentTextToClipboard(Sender : TObject);
+begin
+  WalletViewRelated.CopyParentTextToClipboard(Sender);
+end;
+
 procedure Tfrmhome.CopyParentTagStringToClipboard(Sender : TObject);
 begin
   WalletViewRelated.CopyParentTagStringToClipboard(Sender);
@@ -1074,8 +1080,9 @@ end;
 procedure TfrmHome.PanelSelectGenerateCoinOnClick(Sender: TObject);
 begin
 
-  TCheckBox(TFmxObject(Sender).TagObject).IsChecked :=
-    not TCheckBox(TFmxObject(Sender).TagObject).IsChecked;
+ if (not TCheckBox(TFmxObject(Sender).TagObject).Enabled) then
+    exit();
+  TCheckBox(TFmxObject(Sender).TagObject).IsChecked := (not TCheckBox(TFmxObject(Sender).TagObject).IsChecked);
 
 end;
 
