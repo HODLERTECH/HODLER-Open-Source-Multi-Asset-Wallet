@@ -47,7 +47,7 @@ type
     pub: AnsiString;
     coin: integer;
     x: integer;
-    y: integer;
+    Y: integer;
     // addr: AnsiString;
     wid: integer;
     // confirmed: BigInteger;     //// AnsiString;
@@ -77,7 +77,7 @@ begin
   inherited Create();
   coin := id;
   x := _x;
-  y := _y;
+  Y := _y;
   addr := _addr;
   decimals := availablecoin[id].decimals;
   description := _description;

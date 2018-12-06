@@ -497,4 +497,3 @@ initialization
 TITFReader.ClassInit();
 
 end.
-

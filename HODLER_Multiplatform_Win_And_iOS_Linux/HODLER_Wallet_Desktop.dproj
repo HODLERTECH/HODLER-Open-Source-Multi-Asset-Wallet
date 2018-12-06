@@ -5,7 +5,7 @@
         <FrameworkType>FMX</FrameworkType>
         <MainSource>HODLER_Wallet_Desktop.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1247</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -918,6 +918,16 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="Win32\Debug\HODLER_Wallet_Desktop.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="All Platforms">
+                        <RemoteName>HODLER_Core</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                    <Platform Name="Win32">
+                        <RemoteName>HODLER_Wallet_Desktop.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_750x1334.png" Configuration="Debug" Class="iPhone_Launch750">
                     <Platform Name="iOSDevice32">
                         <RemoteName>Default-667h@2x.png</RemoteName>
@@ -1395,6 +1405,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="gfx\splash470x320.png" Configuration="Release" Class="Android_SplashImage470"/>
+                <DeployFile LocalName="Languages\DE.lang" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_180x180.png" Configuration="Debug" Class="iPhone_AppIcon180">
                     <Platform Name="iOSDevice32">
                         <Overwrite>true</Overwrite>
@@ -1406,12 +1422,6 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="Languages\PT.lang" Configuration="Release" Class="ProjectFile">
-                    <Platform Name="Linux64">
-                        <RemoteDir>.\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="Languages\ZHX.lang" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -1439,14 +1449,14 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Languages\POLlang.json" Configuration="Release" Class="ProjectFile">
+                <DeployFile LocalName="Languages\ZHX.lang" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="token_icons\copy-content_white.png" Configuration="Release" Class="ProjectFile">
-                    <Platform Name="Win32">
+                <DeployFile LocalName="Languages\POLlang.json" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -1454,6 +1464,12 @@
                 <DeployFile LocalName="Languages\ENG.lang" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\copy-content_white.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1551,6 +1567,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="Languages\POL.lang" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Win10ModernDark.Style" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
@@ -1626,7 +1648,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win32\Debug\HODLER_Wallet_Desktop.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="All Platforms\Debug\HODLER_Wallet_Desktop.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="All Platforms">
                         <RemoteName>HODLER_Core</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -1832,6 +1854,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="Languages\ENG.lang" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\lib\android\release\mips\libnative-activity.so" Configuration="Release" Class="AndroidLibnativeMipsFile">
                     <Platform Name="All Platforms">
                         <Overwrite>true</Overwrite>
@@ -1891,6 +1919,12 @@
                 </DeployFile>
                 <DeployFile LocalName="OKSterling.style" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Languages\DKK.lang" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -2437,12 +2471,6 @@
                 <DeployFile LocalName="Languages\DEU.lang" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="Win32\Debug\HODLER_Wallet_Desktop.rsm" Configuration="Debug" Class="DebugSymbols">
-                    <Platform Name="Win32">
-                        <RemoteName>HODLER_Wallet_Desktop.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

@@ -4,7 +4,7 @@ unit base58;
 
 interface
 
-uses System.SysUtils , FMX.Dialogs;
+uses System.SysUtils, FMX.Dialogs;
 {$IF DEFINED(ANDROID) OR DEFINED(IOS) OR DEFINED(LINUX)}
 
 type

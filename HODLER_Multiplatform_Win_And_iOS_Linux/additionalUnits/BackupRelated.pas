@@ -11,7 +11,7 @@ uses
   FMX.Controls.Presentation, FMX.Styles, System.ImageList, FMX.ImgList, FMX.Ani,
   FMX.Layouts, FMX.ExtCtrls, Velthuis.BigIntegers, FMX.ScrollBox, FMX.Memo,
   FMX.Platform, System.Threading, Math, DelphiZXingQRCode,
-  FMX.TabControl,  FMX.Edit,
+  FMX.TabControl, FMX.Edit,
   FMX.Clipboard, FMX.VirtualKeyBoard, JSON,
   languages,
 
@@ -52,9 +52,9 @@ procedure SendHSB;
 procedure SendEQR;
 procedure RestoreFromFile(Sender: TObject);
 function SweepCoinsRoutine(priv: AnsiString; isCompressed: Boolean;
-coin: Integer; targetAddr: AnsiString):AnsiString;
+  coin: Integer; targetAddr: AnsiString): AnsiString;
 procedure ClaimSV();
-procedure createClaimCoinList(id : Integer);
+procedure createClaimCoinList(id: Integer);
 
 implementation
 
@@ -62,30 +62,28 @@ uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, WalletStructureData, AccountRelated, walletViewRelated;
 
-
-
-procedure createClaimCoinList(id : Integer);
+procedure createClaimCoinList(id: Integer);
 var
-  i : Integer;
-  panel : TPanel;
-  lbl : TLabel;
-  image : TImage;
+  i: Integer;
+  panel: TPanel;
+  lbl: TLabel;
+  image: TImage;
 begin
 
   clearVertScrollBox(frmhome.ClaimCoinListvertScrollBox);
 
-  for I := 0 to (length(currentAccount.myCoins) -1)  do
+  for i := 0 to (length(currentAccount.myCoins) - 1) do
   begin
 
-    if (currentAccount.mycoins[i].coin = id) then
+    if (currentAccount.myCoins[i].coin = id) then
     begin
 
-      panel := Tpanel.create(frmhome.claimCoinListVertScrollbox);
-      panel.parent := frmhome.claimcoinListVertScrollBox;
+      panel := TPanel.create(frmhome.ClaimCoinListvertScrollBox);
+      panel.parent := frmhome.ClaimCoinListvertScrollBox;
       panel.visible := true;
       panel.align := TAlignLayout.Top;
       panel.height := 48;
-      panel.tagObject := currentAccount.mycoins[i];
+      panel.tagObject := currentAccount.myCoins[i];
       panel.onclick := frmhome.ClaimCoinSelectInListClick;
 
       lbl := TLabel.create(panel);
@@ -94,22 +92,14 @@ begin
       lbl.margins.left := 15;
       lbl.margins.right := 15;
       lbl.visible := true;
-      lbl.Text := currentAccount.mycoins[i].addr;
+      lbl.Text := currentAccount.myCoins[i].addr;
 
-      image := Timage.create(panel);
+      image := TImage.create(panel);
       image.parent := panel;
-      image.bitmap := currentAccount.mycoins[i].getIcon();
+      image.bitmap := currentAccount.myCoins[i].getIcon();
       image.align := TAlignLayout.left;
-      image.width := 32 + 2*15;
+      image.width := 32 + 2 * 15;
       image.visible := true;
-
-
-
-
-
-
-
-
 
     end;
   end;
@@ -118,29 +108,29 @@ end;
 
 procedure ClaimSV();
 var
-  ans : AnsiString;
-  tempPriv , out , pub: AnsiString;
-  isCompressed : Boolean;
+  ans: AnsiString;
+  tempPriv, out , pub: AnsiString;
+  isCompressed: Boolean;
   WData: WIFAddressData;
-  tmp : Integer;
- // targetAddr : AnsiString;
+  tmp: Integer;
+  // targetAddr : AnsiString;
 
 begin
-  if ((frmhome.PrivateKeyEditSV.text = '')) then
+  if ((frmhome.PrivateKeyEditSV.Text = '')) then
   begin
-    popupWindow.Create('Missing Values');
+    popupWindow.create('Missing Values');
     exit();
   end;
 
-  temppriv := removeSpace(frmhome.PrivateKeyEditSV.Text);
+  tempPriv := removeSpace(frmhome.PrivateKeyEditSV.Text);
 
-  if isHex(temppriv) and (length(temppriv) = 64) then
+  if isHex(tempPriv) and (length(tempPriv) = 64) then
   begin
-    out := temppriv;
+    out := tempPriv;
   end
   else
   begin
-    WData := wifToPrivKey(temppriv);
+    WData := wifToPrivKey(tempPriv);
     isCompressed := WData.isCompressed;
     out := WData.PrivKey;
   end;
@@ -149,72 +139,75 @@ begin
   if fromClaimWD <> nil then
     fromClaimWD.Free;
 
-  fromClaimWD := TWalletInfo.Create(7, -1, -1, Bitcoin_PublicAddrToWallet(pub,
+  fromClaimWD := TWalletInfo.create(7, -1, -1, Bitcoin_PublicAddrToWallet(pub,
     AvailableCoin[ImportCoinID].p2pk), 'Imported');
   fromClaimWD.pub := pub;
   fromClaimWD.EncryptedPrivKey := out;
   fromClaimWD.isCompressed := isCompressed;
   parseBalances(getDataOverHTTP(HODLER_URL + 'getBalance.php?coin=' +
     AvailableCoin[7].name + '&address=' + fromClaimWD.addr), fromClaimWD);
-  fromClaimWD.UTXO := parseUTXO(getDataOverHTTP(HODLER_URL + 'getUTXO.php?coin=' +
-    AvailableCoin[7].name + '&address=' + fromClaimWD.addr), -1);
+  fromClaimWD.UTXO := parseUTXO(getDataOverHTTP(HODLER_URL + 'getUTXO.php?coin='
+    + AvailableCoin[7].name + '&address=' + fromClaimWD.addr), -1);
 
- // tmp:=CurrentCoin.coin;
-  ///CurrentCoin.coin:=7;
+  // tmp:=CurrentCoin.coin;
+  /// CurrentCoin.coin:=7;
 
-  if (toClaimWD.addr = fromClaimWD.addr) or ( bitcoinCashAddressToCashAddress(fromClaimWD.addr) = rightStr(toClaimWD.addr , Length(bitcoinCashAddressToCashAddress(fromClaimWD.addr))) ) then
+  if (toClaimWD.addr = fromClaimWD.addr) or
+    (bitcoinCashAddressToCashAddress(fromClaimWD.addr)
+    = rightStr(toClaimWD.addr,
+    length(bitcoinCashAddressToCashAddress(fromClaimWD.addr)))) then
   begin
-    raise Exception.Create('Use different destination address');
+    raise Exception.create('Use different destination address');
   end;
 
-  if not isValidForCoin( 7 , toClaimWD.addr ) then
+  if not isValidForCoin(7, toClaimWD.addr) then
   begin
-    raise Exception.Create('Wrong Target Address');
+    raise Exception.create('Wrong Target Address');
   end;
 
   if fromClaimWD.confirmed <= BigInteger(1700) then
   begin
-    raise Exception.Create('Amount too small');
+    raise Exception.create('Amount too small');
   end;
 
 
 
-  //WalletViewRelated.PrepareSendTabAndSend(wd, targetAddr, wd.confirmed-BigInteger(1700), BigInteger(1700), '', AvailableCoin[coin].name);
-  //CurrentCoin.coin:=tmp;
+  // WalletViewRelated.PrepareSendTabAndSend(wd, targetAddr, wd.confirmed-BigInteger(1700), BigInteger(1700), '', AvailableCoin[coin].name);
+  // CurrentCoin.coin:=tmp;
 
   frmhome.SendFromLabel.Text := Bitcoin_PublicAddrToWallet(pub,
     AvailableCoin[7].p2pk);
-  frmhome.SendToLabel.Text := ToClaimWD.addr;
+  frmhome.SendToLabel.Text := toClaimWD.addr;
   frmhome.SendFeeLabel.Text := '0.00001700';
-  frmhome.SendValueLabel.Text := BigIntegerToFloatStr(FromClaimWD.confirmed - BigInteger(1700) , 8);
+  frmhome.SendValueLabel.Text := BigIntegerToFloatStr(fromClaimWD.confirmed -
+    BigInteger(1700), 8);
 
-  {try
+  { try
 
     ans := SweepCoinsRoutine(frmhome.PrivateKeyEditSV.text ,frmhome.CompressedPrivKeySVCheckBox.ischecked,7,frmhome.AddressSVEdit.text);
     if ans <> '' then
 
 
-  except on E: Exception do
-  begin
+    except on E: Exception do
+    begin
     popupWindow.Create( E.Message );
-  end;
-  end; }
+    end;
+    end; }
 
-  frmhome.ConfirmSendPasswordPanel.Visible := false;
+  frmhome.ConfirmSendPasswordPanel.visible := false;
   frmhome.SendTransactionButton.visible := false;
-  frmhome.ConfirmSendClaimCoinButton.Visible := true;
+  frmhome.ConfirmSendClaimCoinButton.visible := true;
 
-  switchTab(frmhome.pageControl , frmhome.ConfirmSendTabItem );
+  switchTab(frmhome.pageControl, frmhome.ConfirmSendTabItem);
 
 end;
-
 
 procedure RestoreFromFile(Sender: TObject);
 var
   openDialog: TOpenDialog;
 begin
 {$IFDEF ANDROID}
-  with frmHome do
+  with frmhome do
   begin
     clearVertScrollBox(BackupFileListVertScrollBox);
 
@@ -246,7 +239,7 @@ begin
                 Tthread.Synchronize(nil,
                   procedure
                   begin
-                    LoadBackupFileAniIndicator.Visible := true;
+                    LoadBackupFileAniIndicator.visible := true;
                     LoadBackupFileAniIndicator.Enabled := true;
                   end);
 
@@ -262,26 +255,26 @@ begin
 
                     for i := 0 to length(strArr) - 1 do
                     begin
-                      Button := TButton.Create(BackupFileListVertScrollBox);
-                      Button.Visible := true;
-                      Button.Align := TAlignLayout.Top;
-                      Button.Height := 48;
+                      Button := TButton.create(BackupFileListVertScrollBox);
+                      Button.visible := true;
+                      Button.align := TAlignLayout.Top;
+                      Button.height := 48;
                       if LeftStr(strArr[i],
                         length(TDirectory.GetParent(System.IOUtils.TPath.
                         GetSharedDownloadsPath()))) = TDirectory.GetParent
                         (System.IOUtils.TPath.GetSharedDownloadsPath()) then
-                        Button.Text := RightStr(strArr[i],
+                        Button.Text := rightStr(strArr[i],
                           length(strArr[i]) -
                           length(TDirectory.GetParent
                           (System.IOUtils.TPath.GetSharedDownloadsPath())))
                       else
                         Button.Text := strArr[i];
                       Button.TagString := strArr[i];
-                      Button.Parent := BackupFileListVertScrollBox;
-                      Button.OnClick := SelectFileInBackupFileList;
+                      Button.parent := BackupFileListVertScrollBox;
+                      Button.onclick := SelectFileInBackupFileList;
                     end;
 
-                    LoadBackupFileAniIndicator.Visible := false;
+                    LoadBackupFileAniIndicator.visible := false;
                     LoadBackupFileAniIndicator.Enabled := false;
 
                   end);
@@ -293,11 +286,11 @@ begin
               begin
 
                 RFFPathEdit.Text := System.IOUtils.TPath.GetDownloadsPath();
-                switchTab(PageControl, RestoreFromFileTabitem);
+                switchTab(pageControl, RestoreFromFileTabitem);
 
               end);
             RFFPathEdit.Text := 'C:\';
-            switchTab(PageControl, RestoreFromFileTabitem);
+            switchTab(pageControl, RestoreFromFileTabitem);
             break;
           end;
         end;
@@ -306,10 +299,9 @@ begin
   end;
 {$ENDIF}
 {$IF DEFINED(MSWINDOWS) OR DEFINED(LINUX)}
-  openDialog := TOpenDialog.Create(frmHome);
+  openDialog := TOpenDialog.create(frmhome);
   openDialog.Title := 'Open File';
-  openDialog.InitialDir :=
-  GetCurrentDir;
+  openDialog.InitialDir := GetCurrentDir;
   openDialog.Filter := 'Zip File|*.zip';
   openDialog.DefaultExt := 'zip';
   openDialog.FilterIndex := 1;
@@ -317,12 +309,12 @@ begin
   if openDialog.Execute then
   begin
 
-    frmHome.RFFPathEdit.Text := openDialog.FileName;
-    switchTab(frmHome.PageControl, frmHome.HSBPassword);
+    frmhome.RFFPathEdit.Text := openDialog.FileName;
+    switchTab(frmhome.pageControl, frmhome.HSBPassword);
 
   end;
 
-  openDialog.free;
+  openDialog.Free;
 
 {$ENDIF}
 end;
@@ -344,21 +336,21 @@ var
   MasterSeed, tced: AnsiString;
   Y, m, d: Word;
 begin
-  with frmHome do
+  with frmhome do
   begin
 
     tced := TCA(passwordForDecrypt.Text);
 
-    MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
+    MasterSeed := SpeckDecrypt(tced, currentAccount.EncryptedMasterSeed);
     if not isHex(MasterSeed) then
     begin
-      popupWindow.Create(dictionary('FailedToDecrypt'));
+      popupWindow.create(dictionary('FailedToDecrypt'));
       passwordForDecrypt.Text := '';
       exit;
     end;
 
     DecodeDate(Now, Y, m, d);
-    FileName := CurrentAccount.name + '_' + Format('%d.%d.%d', [Y, m, d]) + '.'
+    FileName := currentAccount.name + '_' + Format('%d.%d.%d', [Y, m, d]) + '.'
       + IntToStr(DateTimeToUnix(Now));
 
     zipPath := System.IOUtils.TPath.Combine
@@ -367,45 +359,45 @@ begin
 
     if FileExists(zipPath) then
       DeleteFile(zipPath);
-    Zip := TEncryptedZipFile.Create('');
+    Zip := TEncryptedZipFile.create('');
     Zip.Open(zipPath, TZipMode.zmWrite);
 
-    img := StrToQRBitmap(CurrentAccount.EncryptedMasterSeed);
+    img := StrToQRBitmap(currentAccount.EncryptedMasterSeed);
     ImgPath := System.IOUtils.TPath.Combine(HOME_PATH, 'QREncryptedSeed.png');
     img.SaveToFile(ImgPath);
 
-    for it in CurrentAccount.Paths do
+    for it in currentAccount.Paths do
     begin
 
-      ts := TStringList.Create();
+      ts := TStringList.create();
       ts.LoadFromFile(it);
       tempText := ts.Text;
       ts.Text := speckEncrypt(tced, speckStrPadding(ts.Text));
       ts.SaveToFile(LeftStr(it, length(it) - 3) + 'hsb');
       ts.SaveToFile(it);
-      ts.free;
+      ts.Free;
       Zip.Add(it);
-      ts := TStringList.Create();
+      ts := TStringList.create();
       ts.LoadFromFile(it);
       ts.Text := tempText;
       ts.SaveToFile(it);
-      ts.free;
+      ts.Free;
     end;
     tced := '';
     MasterSeed := '';
-    for it in CurrentAccount.Paths do
+    for it in currentAccount.Paths do
     begin
       Zip.Add(LeftStr(it, length(it) - 3) + 'hsb');
     end;
     Zip.Add(ImgPath);
     Zip.Close;
     shareFile(zipPath);
-    CurrentAccount.userSaveSeed := true;
-    CurrentAccount.SaveFiles();
+    currentAccount.userSaveSeed := true;
+    currentAccount.SaveFiles();
     DeleteFile(ImgPath);
-    img.free;
-    Zip.free;
-    switchTab(PageControl, decryptSeedBackTabItem);
+    img.Free;
+    Zip.Free;
+    switchTab(pageControl, decryptSeedBackTabItem);
     passwordForDecrypt.Text := '';
   end;
 end;
@@ -423,18 +415,18 @@ var
   MasterSeed, tced: AnsiString;
   Y, m, d: Word;
 begin
-  with frmHome do
+  with frmhome do
   begin
     tced := TCA(passwordForDecrypt.Text);
-    MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
+    MasterSeed := SpeckDecrypt(tced, currentAccount.EncryptedMasterSeed);
     if not isHex(MasterSeed) then
     begin
-      popupWindow.Create(dictionary('FailedToDecrypt'));
+      popupWindow.create(dictionary('FailedToDecrypt'));
       passwordForDecrypt.Text := '';
       exit;
     end;
 
-    img := StrToQRBitmap(CurrentAccount.EncryptedMasterSeed);
+    img := StrToQRBitmap(currentAccount.EncryptedMasterSeed);
 
     ImgPath := System.IOUtils.TPath.Combine(HOME_PATH, 'QREncryptedSeed.png');
     DecodeDate(Now, Y, m, d);
@@ -444,7 +436,7 @@ begin
       IntToStr(DateTimeToUnix(Now)) + '.zip');
 
     img.SaveToFile(ImgPath);
-    Zip := TEncryptedZipFile.Create('');
+    Zip := TEncryptedZipFile.create('');
     if FileExists(zipPath) then
       DeleteFile(zipPath);
 
@@ -454,15 +446,15 @@ begin
     shareFile(zipPath);
 
     DeleteFile(ImgPath);
-    img.free;
-    Zip.free;
+    img.Free;
+    Zip.Free;
     MasterSeed := '';
     tced := '';
     passwordForDecrypt.Text := '';
     userSavedSeed := true;
     refreshWalletDat();
 
-    switchTab(PageControl, BackupTabItem);
+    switchTab(pageControl, BackupTabItem);
   end;
 end;
 
@@ -472,19 +464,19 @@ var
   ac: Account;
   i: Integer;
 begin
-  with frmHome do
+  with frmhome do
   begin
     tced := TCA(RestorePasswordEdit.Text);
     MasterSeed := SpeckDecrypt(tced, tempQRFindEncryptedSeed);
     if not isHex(MasterSeed) then
     begin
-      popupWindow.Create(dictionary('FailedToDecrypt'));
+      popupWindow.create(dictionary('FailedToDecrypt'));
       exit;
     end;
 
     if (RestoreNameEdit.Text = '') or (length(RestoreNameEdit.Text) < 3) then
     begin
-      popupWindow.Create(dictionary('AccountNameTooShort'));
+      popupWindow.create(dictionary('AccountNameTooShort'));
       exit();
     end;
 
@@ -493,15 +485,15 @@ begin
 
       if AccountsNames[i] = RestoreNameEdit.Text then
       begin
-        popupWindow.Create(dictionary('AccountNameOccupied'));
+        popupWindow.create(dictionary('AccountNameOccupied'));
         exit();
       end;
 
     end;
 
     createSelectGenerateCoinView();
-    frmHome.NextButtonSGC.OnClick := frmHome.CoinListCreateFromQR;
-    switchTab(PageControl, frmHome.SelectGenetareCoin);
+    frmhome.NextButtonSGC.onclick := frmhome.CoinListCreateFromQR;
+    switchTab(pageControl, frmhome.SelectGenetareCoin);
 
     tced := '';
     MasterSeed := '';
@@ -516,7 +508,7 @@ var
   Button: TButton;
   maks, i: Integer;
 begin
-  with frmHome do
+  with frmhome do
   begin
     maks := 0;
 
@@ -537,13 +529,13 @@ begin
 
     for it in tempList do
     begin
-      Button := TButton.Create(SeedWordsFlowLayout);
+      Button := TButton.create(SeedWordsFlowLayout);
       Button.Text := it;
-      Button.Height := 36;
-      Button.Width := Button.Width + length(it) * 3;
-      Button.Visible := true;
-      Button.Parent := SeedWordsFlowLayout;
-      Button.OnClick := frmHome.WordSeedClick;
+      Button.height := 36;
+      Button.width := Button.width + length(it) * 3;
+      Button.visible := true;
+      Button.parent := SeedWordsFlowLayout;
+      Button.onclick := frmhome.WordSeedClick;
 
     end;
     for i := 0 to SeedWordsFlowLayout.ComponentCount - 1 do
@@ -552,16 +544,16 @@ begin
       if SeedWordsFlowLayout.Components[i] is TButton then
       begin
         if maks < (TButton(SeedWordsFlowLayout.Components[i]).Position.Y +
-          TButton(SeedWordsFlowLayout.Components[i]).Height) then
+          TButton(SeedWordsFlowLayout.Components[i]).height) then
           maks := ceil(TButton(SeedWordsFlowLayout.Components[i]).Position.Y +
-            TButton(SeedWordsFlowLayout.Components[i]).Height);
+            TButton(SeedWordsFlowLayout.Components[i]).height);
       end;
 
     end;
 
-    SeedWordsFlowLayout.Height := maks;
-    ConfirmedSeedFlowLayout.Height := 1;
-    tempList.free;
+    SeedWordsFlowLayout.height := maks;
+    ConfirmedSeedFlowLayout.height := 1;
+    tempList.Free;
   end;
 
 end;
@@ -572,11 +564,11 @@ var
   out , pub: AnsiString;
   WData: WIFAddressData;
   wd: TWalletInfo;
-  tmp:integer;
+  tmp: Integer;
 begin
 
   priv := removeSpace(priv);
-  targetAddr := removeSpace( targetAddr );
+  targetAddr := removeSpace(targetAddr);
 
   if isHex(priv) and (length(priv) = 64) then
   begin
@@ -590,7 +582,7 @@ begin
   end;
   pub := secp256k1_get_public(out , not isCompressed);
 
-  wd := TWalletInfo.Create(coin, -1, -1, Bitcoin_PublicAddrToWallet(pub,
+  wd := TWalletInfo.create(coin, -1, -1, Bitcoin_PublicAddrToWallet(pub,
     AvailableCoin[ImportCoinID].p2pk), 'Imported');
   wd.pub := pub;
   wd.EncryptedPrivKey := out;
@@ -599,29 +591,31 @@ begin
     AvailableCoin[coin].name + '&address=' + wd.addr), wd);
   wd.UTXO := parseUTXO(getDataOverHTTP(HODLER_URL + 'getUTXO.php?coin=' +
     AvailableCoin[coin].name + '&address=' + wd.addr), -1);
-  tmp:=CurrentCoin.coin;
-  CurrentCoin.coin:=coin;
+  tmp := CurrentCoin.coin;
+  CurrentCoin.coin := coin;
 
-  if (targetAddr = wd.addr) or ( bitcoinCashAddressToCashAddress(wd.addr) = rightStr(targetAddr , Length(bitcoinCashAddressToCashAddress(wd.addr))) ) then
+  if (targetAddr = wd.addr) or (bitcoinCashAddressToCashAddress(wd.addr)
+    = rightStr(targetAddr, length(bitcoinCashAddressToCashAddress(wd.addr))))
+  then
   begin
-    raise Exception.Create('Use different destination address');
+    raise Exception.create('Use different destination address');
   end;
 
-  if not isValidForCoin( coin , targetAddr ) then
+  if not isValidForCoin(coin, targetAddr) then
   begin
-    raise Exception.Create('Wrong Target Address');
+    raise Exception.create('Wrong Target Address');
   end;
 
   if wd.confirmed <= BigInteger(1700) then
   begin
-    raise Exception.Create('Amount too small');
+    raise Exception.create('Amount too small');
   end;
 
-
-
-  WalletViewRelated.PrepareSendTabAndSend(wd, targetAddr, wd.confirmed-BigInteger(1700), BigInteger(1700), '', AvailableCoin[coin].name);
-  CurrentCoin.coin:=tmp;
-  //free wd ?
+  walletViewRelated.PrepareSendTabAndSend(wd, targetAddr,
+    wd.confirmed - BigInteger(1700), BigInteger(1700), '',
+    AvailableCoin[coin].name);
+  CurrentCoin.coin := tmp;
+  // free wd ?
 end;
 
 procedure ImportPriv(Sender: TObject);
@@ -637,15 +631,15 @@ var
   tced: AnsiString;
   MasterSeed: AnsiString;
 begin
-  with frmHome do
+  with frmhome do
   begin
 
     tced := TCA(passwordForDecrypt.Text);
     passwordForDecrypt.Text := '';
-    MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
+    MasterSeed := SpeckDecrypt(tced, currentAccount.EncryptedMasterSeed);
     if not isHex(MasterSeed) then
     begin
-      popupWindow.Create(dictionary('FailedToDecrypt'));
+      popupWindow.create(dictionary('FailedToDecrypt'));
       exit;
     end;
 
@@ -659,7 +653,7 @@ begin
       else if HexPrivKeyNotCompressedRadioButton.IsChecked then
         isCompressed := false
       else
-        raise Exception.Create('compression not defined');
+        raise Exception.create('compression not defined');
 
     end
     else
@@ -672,7 +666,7 @@ begin
     begin
       pub := secp256k1_get_public(out , not isCompressed);
 
-      wd := TWalletInfo.Create(ImportCoinID, -1, -1,
+      wd := TWalletInfo.create(ImportCoinID, -1, -1,
         Bitcoin_PublicAddrToWallet(pub, AvailableCoin[ImportCoinID].p2pk),
         'Imported');
       wd.pub := pub;
@@ -682,13 +676,13 @@ begin
     else if ImportCoinID = 4 then
     begin
       pub := secp256k1_get_public(out , true);
-      wd := TWalletInfo.Create(ImportCoinID, -1, -1,
+      wd := TWalletInfo.create(ImportCoinID, -1, -1,
         Ethereum_PublicAddrToWallet(pub), 'Imported');
       wd.pub := pub;
       wd.EncryptedPrivKey := speckEncrypt((TCA(MasterSeed)), out);
       wd.isCompressed := false;
     end;
-    CurrentAccount.AddCoin(wd);
+    currentAccount.AddCoin(wd);
     CreatePanel(wd);
 
     MasterSeed := '';
@@ -708,16 +702,16 @@ var
   inputWordsList: TStringList;
 
 begin
-  with frmHome do
+  with frmhome do
   begin
-    withoutWhiteChar := StringReplace(frmHome.SeedField.Text, ' ', '',
+    withoutWhiteChar := StringReplace(frmhome.SeedField.Text, ' ', '',
       [rfReplaceAll]);
     withoutWhiteChar := StringReplace(withoutWhiteChar, #13, '',
       [rfReplaceAll]);
     withoutWhiteChar := StringReplace(withoutWhiteChar, #10, '',
       [rfReplaceAll]);
 
-    if (length(withoutWhiteChar) = 64) and (isHex(frmHome.SeedField.Text)) then
+    if (length(withoutWhiteChar) = 64) and (isHex(frmhome.SeedField.Text)) then
     begin
       userSavedSeed := true;
 
@@ -725,13 +719,13 @@ begin
         withoutWhiteChar, true);
 
       withoutWhiteChar := '';
-      frmHome.SeedField.Text := '';
+      frmhome.SeedField.Text := '';
 
       exit;
     end
     else
     begin
-      inputWordsList := SplitString(frmHome.SeedField.Text);
+      inputWordsList := SplitString(frmhome.SeedField.Text);
 
       seedFromWords := fromMnemonic(inputWordsList);
 
@@ -746,7 +740,7 @@ begin
         seedFromWords, true);
 
       seedFromWords := '';
-      inputWordsList.free;
+      inputWordsList.Free;
 
       {
         Dodaæ obs³ugê b³êdów
@@ -761,18 +755,18 @@ function PKCheckPassword(Sender: TObject): Boolean;
 var
   MasterSeed, tced: AnsiString;
 var
-  Bitmap: TBitmap;
+  bitmap: TBitmap;
   tempStr: AnsiString;
 {$IFDEF MSWINDOWS}lblPrivateKey: TMemo; {$ENDIF}
 begin
 
   result := true;
-  with frmHome do
+  with frmhome do
   begin
 
     tced := TCA(passwordForDecrypt.Text);
     passwordForDecrypt.Text := '';
-    MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
+    MasterSeed := SpeckDecrypt(tced, currentAccount.EncryptedMasterSeed);
     if (CurrentCoin.X = -1) and (CurrentCoin.Y = -1) then
     begin
 
@@ -780,7 +774,7 @@ begin
 
       if not isHex(tempStr) then
       begin
-        raise Exception.Create(dictionary('FailedToDecrypt'));
+        raise Exception.create(dictionary('FailedToDecrypt'));
         exit(false);
       end;
       // {$IFDEF MSWINDOWS}lblPrivateKey:=PrivateKeyMemo;{$ENDIF}
@@ -796,7 +790,7 @@ begin
 
       if not isHex(MasterSeed) then
       begin
-        raise Exception.Create(dictionary('FailedToDecrypt'));
+        raise Exception.create(dictionary('FailedToDecrypt'));
         wipeAnsiString(MasterSeed);
         exit(false);
       end;
@@ -810,9 +804,9 @@ begin
 
     end;
 
-    Bitmap := StrToQRBitmap(removeSpace(lblPrivateKey.Text));
-    PrivKeyQRImage.Bitmap.Assign(Bitmap);
-    Bitmap.free;
+    bitmap := StrToQRBitmap(removeSpace(lblPrivateKey.Text));
+    PrivKeyQRImage.bitmap.Assign(bitmap);
+    bitmap.Free;
   end;
 
 end;
@@ -827,9 +821,9 @@ var
   failure: Boolean;
 begin
   failure := false;
-  Zip := TEncryptedZipFile.Create(password);
+  Zip := TEncryptedZipFile.create(password);
   Zip.Open(path, TZipMode.zmRead);
-  ac := Account.Create(accname);
+  ac := Account.create(accname);
   ac.SaveFiles();
   for it in ac.Paths do
   begin
@@ -854,27 +848,27 @@ begin
     end;
 
   end;
-  ac.free;
+  ac.Free;
 
   Zip.Close;
-  Zip.free;
+  Zip.Free;
   if failure then
   begin
     RemoveDir(ac.DirPath);
-    popupWindow.Create('Wrong password or damaged file');
+    popupWindow.create('Wrong password or damaged file');
     // frmHome.FormShow(nil);
     exit;
   end;
-  ac := Account.Create(accname);
+  ac := Account.create(accname);
   ac.LoadFiles;
   ac.userSaveSeed := true;
   ac.SaveFiles;
   AddAccountToFile(ac);
 
-  ac.free;
+  ac.Free;
 
   LoadCurrentAccount(accname);
-  frmHome.FormShow(nil);
+  frmhome.FormShow(nil);
 end;
 
 function isPasswordZip(path: AnsiString): Boolean;
@@ -884,14 +878,14 @@ var
   ts: TStream;
 begin
   result := false;
-  Zip := TZipFile.Create;
+  Zip := TZipFile.create;
   Zip.Open(path, TZipMode.zmRead);
-  ts := TStream.Create;
+  ts := TStream.create;
   Zip.Read(0, ts, ZipHeader);
   if ZipHeader.Flag and 1 = 1 then
     result := true;
-  Zip.free;
-  ts.free;
+  Zip.Free;
+  ts.Free;
 end;
 
 procedure NewHSB(path, password, accname: AnsiString);
@@ -907,9 +901,9 @@ var
 begin
   failure := false;
   tced := TCA(password);
-  Zip := TEncryptedZipFile.Create('');
+  Zip := TEncryptedZipFile.create('');
   Zip.Open(path, TZipMode.zmRead);
-  ac := Account.Create(accname);
+  ac := Account.create(accname);
   ac.SaveFiles();
   for it in ac.Paths do
   begin
@@ -933,35 +927,35 @@ begin
         end;
     end;
     try
-      ts := TStringList.Create;
+      ts := TStringList.create;
       ts.LoadFromFile(it);
       if isHex(trim(ts.Text)) then
         ts.Text := SpeckDecrypt(tced, trim(ts.Text));
       ts.SaveToFile(it);
     finally
-      ts.free;
+      ts.Free;
     end;
   end;
-  ac.free;
+  ac.Free;
 
   Zip.Close;
-  Zip.free;
+  Zip.Free;
   if failure then
   begin
-    popupWindow.Create('Wrong password or damaged file');
+    popupWindow.create('Wrong password or damaged file');
     RemoveDir(ac.DirPath);
     // frmHome.FormShow(nil);
     // showmessage('Failed to decrypt files');
     exit;
   end;
-  ac := Account.Create(accname);
+  ac := Account.create(accname);
   try
     ac.LoadFiles;
   except
     on E: Exception do
     begin
       RemoveDir(ac.DirPath);
-      popupWindow.Create('Wrong password or damaged file');
+      popupWindow.create('Wrong password or damaged file');
       // frmHome.FormShow(nil);
       exit;
     end;
@@ -970,28 +964,28 @@ begin
   ac.SaveFiles;
   AddAccountToFile(ac);
 
-  ac.free;
+  ac.Free;
 
   LoadCurrentAccount(accname);
-  frmHome.FormShow(nil);
+  frmhome.FormShow(nil);
 end;
 
 procedure decryptSeedForRestore(Sender: TObject);
 var
   MasterSeed, tced: AnsiString;
 begin
-  with frmHome do
+  with frmhome do
   begin
 
     tced := TCA(passwordForDecrypt.Text);
     passwordForDecrypt.Text := '';
-    MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
+    MasterSeed := SpeckDecrypt(tced, currentAccount.EncryptedMasterSeed);
     if not isHex(MasterSeed) then
     begin
-      popupWindow.Create(dictionary('FailedToDecrypt'));
+      popupWindow.create(dictionary('FailedToDecrypt'));
       exit;
     end;
-    switchTab(PageControl, seedGenerated);
+    switchTab(pageControl, seedGenerated);
     BackupMemo.Lines.Clear;
     BackupMemo.Lines.Add(dictionary('MasterseedMnemonic') + ':');
     BackupMemo.Lines.Add(toMnemonic(MasterSeed));

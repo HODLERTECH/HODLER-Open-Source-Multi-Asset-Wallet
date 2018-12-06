@@ -5,7 +5,6 @@ interface
 uses tokenData, WalletStructureData, cryptoCurrencyData, System.IOUtils,
   Sysutils, Classes, FMX.Dialogs, Json, Velthuis.BigIntegers;
 
-
 procedure loadCryptoCurrencyJSONData(data: TJSONValue; cc: cryptoCurrency);
 function getCryptoCurrencyJsonData(cc: cryptoCurrency): TJSONObject;
 
@@ -69,12 +68,12 @@ var
   twi: cryptoCurrency;
 begin
 
-  if wi.x = -1 then
-    exit( wi.getfiat() );
+  if wi.X = -1 then
+    exit(wi.getfiat());
 
   result := 0.0;
   for twi in getWalletWithX(wi.X, TWalletInfo(wi).coin) do
-    result := result + TWalletInfo(twi).getFiat;
+    result := result + TWalletInfo(twi).getfiat;
 
 end;
 
@@ -86,7 +85,7 @@ var
 begin
   SetLength(result, 0);
 
-  if wi.x = -1 then
+  if wi.X = -1 then
   begin
 
     for i := 0 to Length(TWalletInfo(wi).utxo) - 1 do
@@ -97,7 +96,6 @@ begin
     exit();
 
   end;
-
 
   for twi in getWalletWithX(wi.X, TWalletInfo(wi).coin) do
   begin
@@ -117,7 +115,7 @@ var
   i: Integer;
 begin
 
-  if wi.x = -1 then
+  if wi.X = -1 then
   begin
 
     result.confirmed := wi.confirmed;
@@ -125,7 +123,6 @@ begin
 
     exit();
   end;
-
 
   result.confirmed := BigInteger.Zero;
   result.unconfirmed := BigInteger.Zero;
@@ -155,8 +152,9 @@ var
 
 begin
   result := nil;
-  if (wi.x=-1) and (wi.y=-1) then begin
-    result:=wi;
+  if (wi.X = -1) and (wi.Y = -1) then
+  begin
+    result := wi;
     exit;
 
   end;
@@ -197,18 +195,18 @@ constructor Account.Create(_name: AnsiString);
 begin
   name := _name;
 
-  DirPath := TPath.Combine( HOME_PATH , name );
+  DirPath := TPath.Combine(HOME_PATH, name);
 
-  if not DirectoryExists( dirPath ) then
-    CreateDir( dirPath );
+  if not DirectoryExists(DirPath) then
+    CreateDir(DirPath);
 
-  //CoinFilePath := TPath.Combine(HOME_PATH, name);
+  // CoinFilePath := TPath.Combine(HOME_PATH, name);
   CoinFilePath := TPath.Combine(DirPath, 'hodler.coin.dat');
 
-  //TokenFilePath := TPath.Combine(HOME_PATH, name);
+  // TokenFilePath := TPath.Combine(HOME_PATH, name);
   TokenFilePath := TPath.Combine(DirPath, 'hodler.erc20.dat');
 
-  //SeedFilePath := TPath.Combine(HOME_PATH, name);
+  // SeedFilePath := TPath.Combine(HOME_PATH, name);
   SeedFilePath := TPath.Combine(DirPath, 'hodler.masterseed.dat');
 
   SetLength(Paths, 3);
@@ -349,7 +347,7 @@ var
 
   innerID, X, Y, address, description, creationTime, panelYPosition, publicKey,
     EncryptedPrivateKey, isCompressed: AnsiString;
-   s:string;
+  s: string;
 begin
 
   if not fileExists(CoinFilePath) then
@@ -361,7 +359,7 @@ begin
 
   if ts.Text[low(ts.Text)] = '[' then
   begin
-    s:=ts.Text;
+    s := ts.Text;
     JsonArray := TJsonArray(TJSONObject.ParseJSONValue(s));
 
     for coinJson in JsonArray do
@@ -476,7 +474,8 @@ begin
 
         end;
 
-        if (T.id < 10000) or (Token.availableToken[T.id - 10000].address <> '') then     // if token.address = ''   token is no longer exist
+        if (T.id < 10000) or (Token.availableToken[T.id - 10000].address <> '')
+        then // if token.address = ''   token is no longer exist
           AddToken(T);
 
         {

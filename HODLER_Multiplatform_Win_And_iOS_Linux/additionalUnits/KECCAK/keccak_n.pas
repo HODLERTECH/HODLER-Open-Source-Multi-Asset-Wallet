@@ -160,7 +160,7 @@ const
 {$IFNDEF BIT16}
 
 type
-  TBABytes = array [0 .. $7fffffff - 1] of System.uint8;
+  TBABytes = array [0 .. $7FFFFFFF - 1] of system.uint8;
 {$ELSE}
 
 type
@@ -177,7 +177,6 @@ type
 {$ENDIF}
 {$ENDIF}
 {$ENDIF}
-
 {$IFDEF IOS}
 {$DEFINE USE_64BITCODE}
 {$ENDIF}

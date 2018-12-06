@@ -1922,6 +1922,11 @@ end;
 procedure TfrmHome.TransactionWaitForSendBackButtonClick(Sender: TObject);
 begin
   switchTab(PageControl, walletView);
+  TThread.CreateAnonymousThread(procedure   ()
+  begin
+  SyncThr.SynchronizeCryptoCurrency(CurrentCoin);
+  reloadWalletView;
+  end)
 end;
 
 procedure TfrmHome.TransactionWaitForSendLinkLabelClick(Sender: TObject);

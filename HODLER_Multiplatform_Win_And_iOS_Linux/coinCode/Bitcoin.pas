@@ -19,11 +19,11 @@ function sendCoinsTO(from: TWalletInfo; sendto: AnsiString;
 
 function generatep2sh(pub, netbyte: AnsiString): AnsiString;
 function generatep2pkh(pub, netbyte: AnsiString): AnsiString;
-function generatep2wpkh(pub: AnsiString ; hrp : AnsiString = 'bc'): AnsiString;
+function generatep2wpkh(pub: AnsiString; hrp: AnsiString = 'bc'): AnsiString;
 
 implementation
 
-uses uHome, transactions, tokenData, bech32, misc,SyncThr;
+uses uHome, transactions, tokenData, bech32, misc, SyncThr, WalletViewRelated;
 
 function Bitcoin_createHD(coinid, x, y: integer; MasterSeed: AnsiString)
   : TWalletInfo;
@@ -92,7 +92,7 @@ begin
   result := Encode58(s);
 end;
 
-function generatep2wpkh(pub: AnsiString ; hrp : AnsiString = 'bc'): AnsiString;
+function generatep2wpkh(pub: AnsiString; hrp: AnsiString = 'bc'): AnsiString;
 var
   s: AnsiString;
 begin
@@ -152,7 +152,7 @@ var
   diff: int64;
 begin
 
-  if not (from.coin in [3,7]) then
+  if not(from.coin in [3, 7]) then
   begin
     result := '';
     TX := TXBuilder.Create;
@@ -222,15 +222,16 @@ var
 begin
   if CurrentCoin.coin <> 4 then
   begin
-    if ((CurrentCoin.coin in [0,1,5,6]) ) and canSegwit(currentaccount.aggregateUTXO(from)) then
+    if ((CurrentCoin.coin in [0, 1, 5, 6])) and
+      canSegwit(currentaccount.aggregateUTXO(from)) then
     begin
-      TX := createSegwitTransaction(from, sendto, Amount, Fee, currentaccount.aggregateUTXO(from),
-        MasterSeed);
+      TX := createSegwitTransaction(from, sendto, Amount, Fee,
+        currentaccount.aggregateUTXO(from), MasterSeed);
     end
     else
     begin
-      TX := createTransaction(from, sendto, Amount, Fee, currentaccount.aggregateUTXO(from),
-        MasterSeed);
+      TX := createTransaction(from, sendto, Amount, Fee,
+        currentaccount.aggregateUTXO(from), MasterSeed);
     end;
   end
   else
@@ -260,13 +261,14 @@ begin
     TX := TXBuilder.Image;
   end;
   result := TX;
-  if TX <> '' then  begin
+  if TX <> '' then
+  begin
     if frmHome.InstantSendSwitch.isChecked then
-      coin:=coin+'&mode=instant';
-    result := getDataOverHTTP(HODLER_URL + 'sendTX.php?coin=' + coin +
-      '&tx=' + TX,false);
-      syncthr.SynchronizeCryptoCurrency(currentcoin);
-
+      coin := coin + '&mode=instant';
+    result := getDataOverHTTP(HODLER_URL + 'sendTX.php?coin=' + coin + '&tx=' +
+      TX, false);
+    SyncThr.SynchronizeCryptoCurrency(CurrentCoin);
+    reloadWalletView;
   end;
 end;
 

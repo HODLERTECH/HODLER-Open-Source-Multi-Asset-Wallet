@@ -68,7 +68,7 @@ procedure PrepareSendTabAndSend(from: TWalletInfo; sendto: AnsiString;
 procedure CopyParentTagStringToClipboard(Sender: TObject);
 procedure addNewWalletPanelClick(Sender: TObject);
 procedure btnCreateNewWalletClick(Sender: TObject);
-procedure CopyParentTextToClipboard(Sender : TObject);
+procedure CopyParentTextToClipboard(Sender: TObject);
 procedure CreateCopyImageButtonOnTEdits();
 
 var
@@ -78,16 +78,16 @@ implementation
 
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
-  transactions,  AccountRelated , TCopyableEditData;
+  transactions, AccountRelated, TCopyableEditData;
 
 procedure CreateCopyImageButtonOnTEdits();
 var
-  fmxObj , cp : Tcomponent;
-  i : Integer;
+  fmxObj, cp: Tcomponent;
+  i: Integer;
 begin
-  for I := 0 to frmhome.ComponentCount -1 do
+  for i := 0 to frmhome.ComponentCount - 1 do
   begin
-    fmxObj := frmHome.Components[i];
+    fmxObj := frmhome.Components[i];
     if (fmxObj is Tedit) and (TfmxObject(fmxObj).TagString = 'copyable') then
     begin
 
@@ -119,7 +119,7 @@ end;
 procedure addNewWalletPanelClick(Sender: TObject);
 begin
 
-  newcoinID := TComponent(Sender).Tag;
+  newcoinID := Tcomponent(Sender).Tag;
   ImportCoinID := newcoinID;
 
   frmhome.ownXCheckBox.IsChecked := false;
@@ -153,7 +153,8 @@ begin
   end;
 
 end;
-procedure CopyParentTextToClipboard(Sender : TObject);
+
+procedure CopyParentTextToClipboard(Sender: TObject);
 var
   svc: IFMXExtendedClipboardService;
 begin
@@ -162,21 +163,20 @@ begin
   then
   begin
 
-    if TfmxObject(Sender).Parent is TEdit then
+    if TfmxObject(Sender).Parent is Tedit then
     begin
       svc.setClipboard(removeSpace(Tedit(TfmxObject(Sender).Parent).Text));
-      popupWindow.Create(removeSpace(Tedit(TfmxObject(Sender).parent).Text) +
+      popupWindow.Create(removeSpace(Tedit(TfmxObject(Sender).Parent).Text) +
         ' ' + dictionary('CopiedToClipboard'));
-        exit;
+      exit;
     end;
     if TfmxObject(Sender).Parent is TButton then
     begin
-      svc.setClipboard(removeSpace(Tedit(TfmxObject(Sender).Parent.Parent).Text));
-      popupWindow.Create(removeSpace(Tedit(TfmxObject(Sender).Parent.parent).Text) +
-        ' ' + dictionary('CopiedToClipboard'));
+      svc.setClipboard
+        (removeSpace(Tedit(TfmxObject(Sender).Parent.Parent).Text));
+      popupWindow.Create(removeSpace(Tedit(TfmxObject(Sender).Parent.Parent)
+        .Text) + ' ' + dictionary('CopiedToClipboard'));
     end;
-
-
 
   end;
 
@@ -281,10 +281,10 @@ begin
   if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, svc)
   then
   begin
-    if frmhome.CopyTextButton.Parent is TEdit then
+    if frmhome.CopyTextButton.Parent is Tedit then
     begin
-      svc.setClipboard(removeSpace(TEdit(frmhome.CopyTextButton.Parent).Text));
-      popupWindow.Create(removeSpace(TEdit(frmhome.CopyTextButton.Parent).Text)
+      svc.setClipboard(removeSpace(Tedit(frmhome.CopyTextButton.Parent).Text));
+      popupWindow.Create(removeSpace(Tedit(frmhome.CopyTextButton.Parent).Text)
         + ' ' + dictionary('CopiedToClipboard'));
     end;
 
@@ -295,11 +295,11 @@ end;
 
 procedure SetCopyButtonPosition;
 begin
-  if (frmhome.focused <> nil) and (frmhome.focused is TEdit) and
-    (TEdit(frmhome.focused).TagString = 'copyable') then
+  if (frmhome.focused <> nil) and (frmhome.focused is Tedit) and
+    (Tedit(frmhome.focused).TagString = 'copyable') then
   begin
 
-    frmhome.CopyTextButton.Parent := TEdit(frmhome.focused);
+    frmhome.CopyTextButton.Parent := Tedit(frmhome.focused);
 
   end
   else if (frmhome.focused is TButton) and
@@ -1096,7 +1096,7 @@ procedure OpenWallet(Sender: TObject);
 var
   wd: TWalletInfo;
   a: BigInteger;
-  Control: TComponent;
+  Control: Tcomponent;
 begin
   frmhome.AutomaticFeeRadio.IsChecked := true;
   frmhome.TopInfoConfirmedValue.Text := ' Calculating...';
@@ -1672,7 +1672,7 @@ begin
   begin
 
     if (t.addr = walletAddressForNewToken) and
-      (t.id = (TComponent(Sender).Tag + 10000)) then
+      (t.id = (Tcomponent(Sender).Tag + 10000)) then
     begin
 
       mess := popupWindow.Create(dictionary('TokenExist'));
@@ -1682,7 +1682,7 @@ begin
 
   end;
 
-  t := Token.Create(TComponent(Sender).Tag, walletAddressForNewToken);
+  t := Token.Create(Tcomponent(Sender).Tag, walletAddressForNewToken);
 
   t.idInWallet := length(CurrentAccount.myTokens) + 10000;
 
@@ -1991,7 +1991,7 @@ begin
     HistoryTransactionDate.Text := FormatDateTime('dd mmm yyyy hh:mm',
       UnixToDateTime(strToIntdef(th.Data, 0)));
     HistoryTransactionID.Text := th.TransactionID;
-	if th.typ = 'IN' then
+    if th.typ = 'IN' then
       HistoryTransactionSendReceive.Text := 'Receive'
     else if th.typ = 'OUT' then
       HistoryTransactionSendReceive.Text := 'Send'
@@ -2059,7 +2059,7 @@ begin
       valuelbl.HitTest := true;
 
       addrlbl := TCopyableEdit.Create(Panel);
-      //addrlbl.StyleLookup := 'transparentedit';
+      // addrlbl.StyleLookup := 'transparentedit';
       addrlbl.Height := 21;
       addrlbl.Align := TAlignLayout.Top;
       addrlbl.Visible := true;
@@ -2068,7 +2068,7 @@ begin
       addrlbl.TextSettings.HorzAlign := TTextAlign.Leading;
       addrlbl.TagString := th.addresses[i];
       addrlbl.HitTest := true;
-      //addrlbl.TagString := 'copyable';
+      // addrlbl.TagString := 'copyable';
 
 {$IFDEF ANDRIOD}
       valuelbl.OnGesture := CopyToClipboard;

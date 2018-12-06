@@ -3,7 +3,7 @@ unit SyncThr;
 interface
 
 uses System.classes, System.sysutils, FMX.Controls, FMX.StdCtrls, FMX.dialogs,
-  StrUtils, WalletStructureData, CryptoCurrencyData, tokenData , System.SyncObjs;
+  StrUtils, WalletStructureData, CryptoCurrencyData, tokenData, System.SyncObjs;
 
 type
   SynchronizeBalanceThread = class(TThread)
@@ -43,19 +43,17 @@ procedure SynchronizeAll();
 procedure parseDataForERC20(s: string; var wd: Token);
 
 var
-  semaphore : TLightweightSemaphore;
-  mutex : TSemaphore;
-
+  semaphore: TLightweightSemaphore;
+  mutex: TSemaphore;
 
 implementation
 
 uses uhome, misc, coinData, Velthuis.BigIntegers, Bitcoin, WalletViewRelated;
 
-
 procedure SynchronizeAll();
 var
-  i : integer;
-  licz : integer;
+  i: integer;
+  licz: integer;
 begin
   if semaphore = nil then
   begin
@@ -66,82 +64,89 @@ begin
     mutex := TSemaphore.Create();
   end;
 
-  TThread.Synchronize(nil, procedure
-  begin
-    frmHome.DashBrdProgressBar.Max :=  length(CurrentAccount.myCoins) + length(CurrentAccount.myTokens);
-    frmHome.DashBrdProgressBar.Value := 0;
-  end);
-
-
-
-  for i := 0 to length(CurrentAccount.myCoins)-1 do
-  begin
-
-    mutex.Acquire();
-
-    TThread.CreateAnonymousThread(procedure
-    var
-      id : integer;
+  TThread.Synchronize(nil,
+    procedure
     begin
+      frmHome.DashBrdProgressBar.Max := length(CurrentAccount.myCoins) +
+        length(CurrentAccount.myTokens);
+      frmHome.DashBrdProgressBar.Value := 0;
+    end);
 
-      id := i;
-      mutex.Release();
-
-      semaphore.WaitFor();
-      try
-      SynchronizeCryptoCurrency(CurrentAccount.myCoins[id]);
-      except on E:Exception do begin
-
-      end;
-      end;
-      semaphore.Release();
-
-      TThread.Synchronize(nil, procedure
-      begin
-        frmHome.DashBrdProgressBar.Value := frmHome.RefreshProgressBar.Value + 1;
-      end);
-
-    end).Start();
-
-    mutex.Acquire();
-    mutex.Release();
-
-
-  end;
-  for i := 0 to length(CurrentAccount.myTokens)-1 do
+  for i := 0 to length(CurrentAccount.myCoins) - 1 do
   begin
 
     mutex.Acquire();
 
-    TThread.CreateAnonymousThread(procedure
-    var
-      id : integer;
-    begin
-
-      id := i;
-      mutex.Release();
-
-      semaphore.WaitFor();
-      try
-      SynchronizeCryptoCurrency(CurrentAccount.myTokens[id]);
-      except on E:Exception do begin
-      end;
-      end;
-      semaphore.Release();
-
-      TThread.Synchronize(nil, procedure
+    TThread.CreateAnonymousThread(
+      procedure
+      var
+        id: integer;
       begin
-        frmHome.DashBrdProgressBar.Value := frmHome.RefreshProgressBar.Value + 1;
-      end);
 
-    end).Start();
+        id := i;
+        mutex.Release();
+
+        semaphore.WaitFor();
+        try
+          SynchronizeCryptoCurrency(CurrentAccount.myCoins[id]);
+        except
+          on E: Exception do
+          begin
+
+          end;
+        end;
+        semaphore.Release();
+
+        TThread.Synchronize(nil,
+          procedure
+          begin
+            frmHome.DashBrdProgressBar.Value :=
+              frmHome.RefreshProgressBar.Value + 1;
+          end);
+
+      end).Start();
 
     mutex.Acquire();
     mutex.Release();
 
   end;
+  for i := 0 to length(CurrentAccount.myTokens) - 1 do
+  begin
 
+    mutex.Acquire();
 
+    TThread.CreateAnonymousThread(
+      procedure
+      var
+        id: integer;
+      begin
+
+        id := i;
+        mutex.Release();
+
+        semaphore.WaitFor();
+        try
+          SynchronizeCryptoCurrency(CurrentAccount.myTokens[id]);
+        except
+          on E: Exception do
+          begin
+          end;
+        end;
+        semaphore.Release();
+
+        TThread.Synchronize(nil,
+          procedure
+          begin
+            frmHome.DashBrdProgressBar.Value :=
+              frmHome.RefreshProgressBar.Value + 1;
+          end);
+
+      end).Start();
+
+    mutex.Acquire();
+    mutex.Release();
+
+  end;
 
   while semaphore.CurrentCount <> 4 do
   begin
@@ -152,8 +157,6 @@ begin
   CurrentAccount.SaveFiles();
   firstSync := false;
 
-
-
 end;
 
 procedure SynchronizeCryptoCurrency(cc: cryptoCurrency);
@@ -161,24 +164,24 @@ var
   data: AnsiString;
 begin
 
-  {TThread.Synchronize(nil,
+  { TThread.Synchronize(nil,
     procedure
     begin
-      frmHome.RefreshProgressBar.Visible := true;
-    end);}
+    frmHome.RefreshProgressBar.Visible := true;
+    end); }
 
   if cc is TWalletInfo then
   begin
 
-    {TThread.Synchronize(nil,
+    { TThread.Synchronize(nil,
       procedure
       begin
-        frmHome.RefreshProgressBar.Value := 10;
+      frmHome.RefreshProgressBar.Value := 10;
       end); }
 
     case TWalletInfo(cc).coin of
 
-      0,1,5,6:
+      0, 1, 5, 6:
         begin
           data := getDataOverHTTP(HODLER_URL + 'getSegwitBalance.php?coin=' +
             availablecoin[TWalletInfo(cc).coin].name + '&' +
@@ -232,10 +235,10 @@ begin
       end;
     end;
 
-    {TThread.Synchronize(nil,
+    { TThread.Synchronize(nil,
       procedure
       begin
-        frmHome.RefreshProgressBar.Value := 30;
+      frmHome.RefreshProgressBar.Value := 30;
       end); }
 
   end
@@ -250,10 +253,11 @@ begin
     if Token(cc).lastBlock = 0 then
       Token(cc).lastBlock := getHighestBlockNumber(Token(cc));
 
-    TThread.Synchronize(nil ,procedure
-    begin
-      frmHome.RefreshProgressBar.Value:=30;
-    end);
+    TThread.Synchronize(nil,
+      procedure
+      begin
+        frmHome.RefreshProgressBar.Value := 30;
+      end);
 
     parseDataForERC20(data, Token(cc));
   end
@@ -266,14 +270,14 @@ begin
   if cc is TWalletInfo then
   begin
 
-    {TThread.Synchronize(nil,
+    { TThread.Synchronize(nil,
       procedure
       begin
-        frmHome.RefreshProgressBar.Value := 70;
+      frmHome.RefreshProgressBar.Value := 70;
       end); }
 
     case TWalletInfo(cc).coin of
-      0,1,5,6:
+      0, 1, 5, 6:
         begin
           data := getDataOverHTTP(HODLER_URL + 'getSegwitHistory.php?coin=' +
             availablecoin[TWalletInfo(cc).coin].name + '&' +
@@ -325,11 +329,11 @@ begin
     parseTokenHistory(data, Token(cc));
 
   end;
-  {TThread.Synchronize(nil,
+  { TThread.Synchronize(nil,
     procedure
     begin
-      frmHome.RefreshProgressBar.Value := 0;
-      frmHome.RefreshProgressBar.Visible := false;
+    frmHome.RefreshProgressBar.Value := 0;
+    frmHome.RefreshProgressBar.Visible := false;
     end); }
 
 end;
@@ -360,22 +364,21 @@ begin
   with frmHome do
   begin
 
-
-     { if synchronizeHistory() then
+    { if synchronizeHistory() then
       begin
 
 
-        if assigned(Self) and (not Terminated) then
-          TThread.Synchronize(nil,
-            procedure
-            begin
+      if assigned(Self) and (not Terminated) then
+      TThread.Synchronize(nil,
+      procedure
+      begin
 
-              if PageControl.ActiveTab = walletView then
-                createHistoryList(CurrentCryptoCurrency, 0, lastHistCC);
+      if PageControl.ActiveTab = walletView then
+      createHistoryList(CurrentCryptoCurrency, 0, lastHistCC);
 
-            end);
+      end);
 
-      end;   }
+      end; }
 
   end;
 
@@ -426,16 +429,17 @@ begin
 
       end);
     try
-    SynchronizeAll();
-    except on E:Exception do
-    begin
+      SynchronizeAll();
+    except
+      on E: Exception do
+      begin
+      end;
     end;
-    end;
-    //synchronizeAddresses;
+    // synchronizeAddresses;
     refreshGlobalFiat();
 
     if TThread.CurrentThread.CheckTerminated then
-          exit();
+      exit();
 
     TThread.Synchronize(nil,
       procedure
@@ -490,8 +494,9 @@ var
   tempts: TStringList;
 begin
   sum := 0;
-  if text='' then exit;
-  
+  if text = '' then
+    exit;
+
   ts := TStringList.Create();
   try
     ts.text := text;
@@ -644,17 +649,17 @@ function segwitParameters(wi: TWalletInfo): AnsiString;
 var
   segwit, compatible, legacy: AnsiString;
 begin
-  segwit := generatep2wpkh(wi.pub, availableCoin[wi.coin].hrp );
+  segwit := generatep2wpkh(wi.pub, availablecoin[wi.coin].hrp);
   compatible := generatep2sh(wi.pub, availablecoin[wi.coin].p2sh);
   legacy := generatep2pkh(wi.pub, availablecoin[wi.coin].p2pk);
-  if wi.coin in [0,1] then
+  if wi.coin in [0, 1] then
   begin
     result := '&segwit=' + segwit + '&segwithash=' + decodeAddressInfo(segwit,
-    wi.coin).scriptHash ;
+      wi.coin).scriptHash;
   end
   else
-    result :=  '&segwit=' + '0' + '&segwithash=' + '0' ;
-  result :=result + '&compatible=' + compatible + '&compatiblehash=' +
+    result := '&segwit=' + '0' + '&segwithash=' + '0';
+  result := result + '&compatible=' + compatible + '&compatiblehash=' +
     decodeAddressInfo(compatible, wi.coin).scriptHash + '&legacy=' + legacy;
 
 end;
@@ -684,7 +689,9 @@ begin
     wd.rate := StrToFloatDef(ts.Strings[9], 0);
 
   except
-    on E: Exception do  begin end;
+    on E: Exception do
+    begin
+    end;
   end;
 
   ts.Free;
@@ -731,7 +738,8 @@ begin
 
     // wd.efee[0]:=ts.Strings[0];//floattostrF(strtointdef(ts.Strings[0],11000000000) /1000000000000000000,ffFixed,18,18);
     wd.confirmed := BigInteger.Parse(ts.Strings[1]);
-    if (wd.id < 10000) or (not Token.AvailableToken[wd.id - 10000].stableCoin) then
+    if (wd.id < 10000) or (not Token.AvailableToken[wd.id - 10000].stableCoin)
+    then
 
       wd.rate := strToFloat(ts[2])
     else
@@ -760,17 +768,16 @@ var
   tempts: TStringList;
 begin
 
-
   ts := TStringList.Create();
 
   ts.text := text;
 
- { Tthread.Synchronize(nil,procedure
-  begin
+  { Tthread.Synchronize(nil,procedure
+    begin
 
     showmessage(wallet.pub);
     showmessage(text);
-  end); }
+    end); }
 
   i := 0;
 
@@ -853,7 +860,7 @@ begin
           exit();
 
         case CurrentAccount.myCoins[i].coin of
-          0,1,5,6:
+          0, 1, 5, 6:
             begin
               CoinDataArray[counter] := getDataOverHTTP(HODLER_URL +
                 'getSegwitHistory.php?coin=' + availablecoin
@@ -903,7 +910,7 @@ begin
     if TThread.CurrentThread.CheckTerminated then
     begin
       getDataThread.Terminate;
-      //getDataThread.WaitFor;
+      // getDataThread.WaitFor;
       getDataThread.Free;
       exit(false);
 
@@ -973,7 +980,7 @@ begin
 
     case CurrentAccount.myCoins[i].coin of
 
-      0,1,5,6:
+      0, 1, 5, 6:
         begin
           CoinDataArray[counter] :=
             getDataOverHTTP(HODLER_URL + 'getSegwitBalance.php?coin=' +
