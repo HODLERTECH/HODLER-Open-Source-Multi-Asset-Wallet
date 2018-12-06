@@ -379,8 +379,6 @@ var
   HOME_PATH: AnsiString;
   HOME_TABITEM: TTabItem;
   cutAddressEveryNChar: integer = -1;
-  addressFromQR: AnsiString;
-  amountFromQR: AnsiString;
   addressFromQR : AnsiString;
   amountFromQR : AnsiString;
   newCoinListNextTabItem : TTabItem;
