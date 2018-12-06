@@ -79,7 +79,7 @@ implementation
 
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
-  transactions, AccountRelated, TCopyableEditData;
+  transactions, AccountRelated, TCopyableEditData ,BackupRelated;
 
 procedure CreateCopyImageButtonOnTEdits();
 var
@@ -134,6 +134,12 @@ begin
   frmhome.LoadingKeyDataAniIndicator.Visible := false;
   frmhome.NewCoinDescriptionEdit.Text := AvailableCoin[ImportCoinID].displayName
     + ' (' + AvailableCoin[ImportCoinID].shortcut + ')';
+
+  if backTabItem = frmhome.PrivOptionsTabItem then
+  begin
+    createClaimCoinList(newcoinID);
+  end;
+
 
   switchTab(frmhome.PageControl, newCOinListneXtTabItem {frmhome.AddNewCoinSettings});
 

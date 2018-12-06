@@ -1541,7 +1541,7 @@ end;
 
 procedure switchTab(TabControl: TTabControl; TabItem: TTabItem);
 begin
-
+  backTabItem :=  frmhome.PageControl.ActiveTab;
   if not frmHome.shown then
   begin
     TabControl.ActiveTab := TabItem;

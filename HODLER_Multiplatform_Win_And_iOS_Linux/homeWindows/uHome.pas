@@ -706,6 +706,13 @@ type
     CoinPrivKeyPassEdit: TEdit;
     Label17: TLabel;
     NewCoinPrivKeyOKButton: TButton;
+    PrivOptionsTabItem: TTabItem;
+    ToolBar15: TToolBar;
+    Label18: TLabel;
+    Button10: TButton;
+    ImportPrivateKeyInPrivButton: TButton;
+    SweepButton: TButton;
+    ExportPrivateKeyButton: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -912,6 +919,9 @@ type
     procedure ConfirmSendClaimCoinButtonClick(Sender: TObject);
     procedure MainScreenQRButtonClick(Sender: TObject);
     procedure PrivateKeyManageButtonClick(Sender: TObject);
+    procedure Button10Click(Sender: TObject);
+    procedure ImportPrivateKeyInPrivButtonClick(Sender: TObject);
+    procedure SweepButtonClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -1491,22 +1501,7 @@ begin
  end;
 procedure TfrmHome.PrivateKeyManageButtonClick(Sender: TObject);
 begin
-  createAddWalletView();
-
-  HexPrivKeyDefaultRadioButton.IsChecked := true;
-  Layout31.Visible := false;
-  WIFEdit.Text := '';
-  //PrivateKeySettingsLayout.Visible := false;
-  NewCoinDescriptionEdit.Text := '';
-  OwnXEdit.Text := '';
-  OwnXCheckBox.IsChecked := false;
-  IsPrivKeySwitch.IsChecked := false;
-  IsPrivKeySwitch.Enabled := false;
-  NewCoinDescriptionPassEdit.Text := '';
-  NewCoinDescriptionEdit.Text := '';
-  newCoinListNextTabItem := AddCoinFromPrivKeyTabItem;
-
-  switchTab(PageControl, AddNewCoin );
+  switchTab( pageControl , PrivOptionsTabItem );
 end;
 
 procedure TfrmHome.PopupBox1Click(Sender: TObject);
@@ -1596,7 +1591,7 @@ end;
 
 procedure switchTab(TabControl: TTabControl; TabItem: TTabItem);
 begin
-
+  backTabItem := frmhome.PageControl.ActiveTab;
   if not frmHome.shown then
   begin
     TabControl.ActiveTab := TabItem;
@@ -1994,7 +1989,7 @@ procedure TfrmHome.ClaimYourBCHSVButtonClick(Sender: TObject);
 begin
 
   try
-    claimsv();
+    claim(NewcoinID);
   except
     on e: Exception do
     begin
@@ -2620,6 +2615,11 @@ begin
 
 end;
 
+procedure TfrmHome.Button10Click(Sender: TObject);
+begin
+  switchtab(pageControl , Settings );
+end;
+
 procedure TfrmHome.Button2Click(Sender: TObject);
 var
   List: TStringList;
@@ -2829,6 +2829,7 @@ begin
   NewCoinDescriptionPassEdit.Text := '';
   NewCoinDescriptionEdit.Text := '';
   newCoinListNextTAbItem := frmhome.AddNewCoinSettings;
+  backTabItem :=  HOME_TABITEM;
 
   switchTab(PageControl, AddNewCoin);
 end;
@@ -3337,6 +3338,26 @@ begin
   switchTab(PageControl, ImportPrivKeyCoinList);
 end;
 
+procedure TfrmHome.ImportPrivateKeyInPrivButtonClick(Sender: TObject);
+begin
+  createAddWalletView();
+
+  HexPrivKeyDefaultRadioButton.IsChecked := true;
+  Layout31.Visible := false;
+  WIFEdit.Text := '';
+  //PrivateKeySettingsLayout.Visible := false;
+  NewCoinDescriptionEdit.Text := '';
+  OwnXEdit.Text := '';
+  OwnXCheckBox.IsChecked := false;
+  IsPrivKeySwitch.IsChecked := false;
+  IsPrivKeySwitch.Enabled := false;
+  NewCoinDescriptionPassEdit.Text := '';
+  NewCoinDescriptionEdit.Text := '';
+  newCoinListNextTabItem := AddCoinFromPrivKeyTabItem;
+
+  switchTab(PageControl, AddNewCoin );
+end;
+
 procedure TfrmHome.LinkLayoutClick(Sender: TObject);
 var
   wd: TwalletInfo;
@@ -3663,6 +3684,15 @@ begin
       TrackBar1.Value := SpinBox1.Value;
 
   end;
+end;
+
+procedure TfrmHome.SweepButtonClick(Sender: TObject);
+begin
+  createAddWalletView();
+
+  newCoinListNextTabItem := ClaimWalletListTabItem;
+
+  switchTab(PageControl, AddNewCoin );
 end;
 
 procedure TfrmHome.IsPrivKeySwitchSwitch(Sender: TObject);

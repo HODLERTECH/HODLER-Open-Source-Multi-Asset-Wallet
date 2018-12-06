@@ -382,6 +382,7 @@ var
   addressFromQR : AnsiString;
   amountFromQR : AnsiString;
   newCoinListNextTabItem : TTabItem;
+  backTabItem : TTabItem;
 
 implementation
 

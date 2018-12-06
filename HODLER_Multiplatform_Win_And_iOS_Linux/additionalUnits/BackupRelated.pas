@@ -53,7 +53,7 @@ procedure SendEQR;
 procedure RestoreFromFile(Sender: TObject);
 function SweepCoinsRoutine(priv: AnsiString; isCompressed: Boolean;
   coin: Integer; targetAddr: AnsiString): AnsiString;
-procedure ClaimSV();
+procedure Claim(CoinID : Integer);
 procedure createClaimCoinList(id: Integer);
 
 implementation
@@ -106,7 +106,7 @@ begin
 
 end;
 
-procedure ClaimSV();
+procedure Claim(CoinID : Integer);
 var
   ans: AnsiString;
   tempPriv, out , pub: AnsiString;
@@ -139,15 +139,15 @@ begin
   if fromClaimWD <> nil then
     fromClaimWD.Free;
 
-  fromClaimWD := TWalletInfo.create(7, -1, -1, Bitcoin_PublicAddrToWallet(pub,
-    AvailableCoin[ImportCoinID].p2pk), 'Imported');
+  fromClaimWD := TWalletInfo.create(CoinID, -1, -1, Bitcoin_PublicAddrToWallet(pub,
+    AvailableCoin[CoinID].p2pk), 'Imported');
   fromClaimWD.pub := pub;
   fromClaimWD.EncryptedPrivKey := out;
   fromClaimWD.isCompressed := isCompressed;
   parseBalances(getDataOverHTTP(HODLER_URL + 'getBalance.php?coin=' +
-    AvailableCoin[7].name + '&address=' + fromClaimWD.addr), fromClaimWD);
+    AvailableCoin[CoinID].name + '&address=' + fromClaimWD.addr), fromClaimWD);
   fromClaimWD.UTXO := parseUTXO(getDataOverHTTP(HODLER_URL + 'getUTXO.php?coin='
-    + AvailableCoin[7].name + '&address=' + fromClaimWD.addr), -1);
+    + AvailableCoin[CoinID].name + '&address=' + fromClaimWD.addr), -1);
 
   // tmp:=CurrentCoin.coin;
   /// CurrentCoin.coin:=7;
@@ -160,7 +160,7 @@ begin
     raise Exception.create('Use different destination address');
   end;
 
-  if not isValidForCoin(7, toClaimWD.addr) then
+  if not isValidForCoin(CoinID, toClaimWD.addr) then
   begin
     raise Exception.create('Wrong Target Address');
   end;
@@ -176,11 +176,11 @@ begin
   // CurrentCoin.coin:=tmp;
 
   frmhome.SendFromLabel.Text := Bitcoin_PublicAddrToWallet(pub,
-    AvailableCoin[7].p2pk);
+    AvailableCoin[CoinID].p2pk);
   frmhome.SendToLabel.Text := toClaimWD.addr;
   frmhome.SendFeeLabel.Text := '0.00001700';
   frmhome.SendValueLabel.Text := BigIntegerToFloatStr(fromClaimWD.confirmed -
-    BigInteger(1700), 8);
+    BigInteger(1700),AvailableCoin[CoinID].decimals );
 
   { try
 
