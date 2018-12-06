@@ -2351,7 +2351,7 @@ begin
     procedure()
     begin
       wipeWalletDat;
-{$IFDEF WINDOWS or LINUX}
+{$IF  (DEFINED(MSWINDOWS) OR DEFINED(LINUX) OR DEFINED(IOS))}
       frmHome.Close;
 {$ENDIF}
 {$IFDEF ANDROID}
