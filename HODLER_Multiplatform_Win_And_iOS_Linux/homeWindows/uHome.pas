@@ -410,7 +410,6 @@ type
     Layout24: TLayout;
     DirectoryImage: TImage;
     HSBIcon: TImage;
-    RestoreDecryptedSeedQRButton: TButton;
     SendDecryptedSeedButton: TButton;
     RestoreFromStringSeedButton: TButton;
     RestoreSeedEncryptedQRButton: TButton;

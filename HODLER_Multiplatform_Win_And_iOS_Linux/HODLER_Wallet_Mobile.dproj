@@ -707,6 +707,14 @@
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>RT_WHITE</ResourceId>
         </RcItem>
+        <RcItem Include="token_icons\copy-content.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>COPY_IMG_WHITE</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\copy-content_white.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>COPY_IMG_DARK</ResourceId>
+        </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -1118,6 +1126,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="gfx\splash960x720.png" Configuration="Debug" Class="Android_SplashImage960"/>
+                <DeployFile LocalName="token_icons\copy-content_white.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\FRA.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
@@ -1246,6 +1260,12 @@
                 </DeployFile>
                 <DeployFile LocalName="iOS_icons\FM_ApplicationIcon_58x58.png" Configuration="Release" Class="iPhone_Spotlight58">
                     <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\copy-content.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

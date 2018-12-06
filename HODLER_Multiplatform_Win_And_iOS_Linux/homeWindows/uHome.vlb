@@ -1,5 +1,5 @@
 ﻿[]
-Coordinates=64,1136,68,33
+Coordinates=1258,463,176,51
 
 [WVReceive]
 Coordinates=404,270,69,33
@@ -946,9 +946,6 @@ Coordinates=1500,925,59,51
 
 [MnemonicSeedDescriptionLabel]
 Coordinates=2288,1,173,51
-
-[RestoreDecryptedSeedQRButton]
-Coordinates=1258,463,176,51
 
 [ChangeDescryptionEdit]
 Coordinates=2033,232,131,51
