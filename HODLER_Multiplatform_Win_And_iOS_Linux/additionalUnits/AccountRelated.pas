@@ -941,7 +941,7 @@ var
   cc: cryptoCurrency;
   Panel: TPanel;
   bilanceLbl: TLabel;
-  addrLbl: TEdit;
+  addrLbl: TCopyableEdit;
   deleteBtn: TButton;
   generateNewAddresses: TButton;
   copyBtn : Tbutton;
@@ -965,7 +965,8 @@ begin
       panel.TagString := cc.addr;
       Panel.OnClick := OpenWalletViewFromYWalletList;
       Panel.Margins.Bottom:=1;
-      addrLbl := TEdit.Create(Panel);
+      addrLbl := TCopyableEdit.Create(Panel);
+      addrLbl.button.Align := TAlignLayout.Right;
       addrLbl.Align:=TAlignLayout.MostTop;
       addrLbl.Parent := Panel;
       addrLbl.Visible := true;

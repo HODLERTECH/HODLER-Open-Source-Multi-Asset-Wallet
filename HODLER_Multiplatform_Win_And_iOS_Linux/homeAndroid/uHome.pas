@@ -573,17 +573,6 @@ type
     IsPrivKeySwitch: TSwitch;
     ImportPrivKeyStaticLabel: TLabel;
     Layout52: TLayout;
-    PrivateKeySettingsLayout: TLayout;
-    Layout31: TLayout;
-    StaticLabelPriveteKetInfo: TLabel;
-    Layout34: TLayout;
-    HexPrivKeyDefaultRadioButton: TRadioButton;
-    HexPrivKeyCompressedRadioButton: TRadioButton;
-    HexPrivKeyNotCompressedRadioButton: TRadioButton;
-    Layout51: TLayout;
-    ImportPrivKeyLabel: TLabel;
-    WIFEdit: TEdit;
-    LoadingKeyDataAniIndicator: TAniIndicator;
     ImportPrivateKeyButton: TButton;
     StatusBarFixer: TRectangle;
     privTCAPanel1: TPanel;
@@ -690,6 +679,28 @@ type
     Label13: TLabel;
     Button7: TButton;
     TokenIcons: TImageList;
+    AddCoinFromPrivKeyTabItem: TTabItem;
+    ToolBar14: TToolBar;
+    Label14: TLabel;
+    Button9: TButton;
+    Panel21: TPanel;
+    CoinPrivKeyDescriptionEdit: TEdit;
+    Label2: TLabel;
+    Panel22: TPanel;
+    CoinPrivKeyPassEdit: TEdit;
+    Label17: TLabel;
+    NewCoinPrivKeyOKButton: TButton;
+    ImportPrivKeyLabel: TLabel;
+    Layout31: TLayout;
+    StaticLabelPriveteKetInfo: TLabel;
+    Layout34: TLayout;
+    HexPrivKeyDefaultRadioButton: TRadioButton;
+    HexPrivKeyCompressedRadioButton: TRadioButton;
+    HexPrivKeyNotCompressedRadioButton: TRadioButton;
+    Layout51: TLayout;
+    LoadingKeyDataAniIndicator: TAniIndicator;
+    WIFEdit: TEdit;
+    PrivateKeyManageButton: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -892,6 +903,7 @@ type
     procedure NewYaddressesOKButtonClick(Sender: TObject);
     procedure MainScreenQRButtonClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure PrivateKeyManageButtonClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -1428,6 +1440,26 @@ end;
 procedure TfrmHome.PopupBox1Change(Sender: TObject);
 begin
   WalletViewRelated.changeViewOrder(Sender);
+end;
+
+procedure TfrmHome.PrivateKeyManageButtonClick(Sender: TObject);
+begin
+  createAddWalletView();
+
+  HexPrivKeyDefaultRadioButton.IsChecked := true;
+  Layout31.Visible := false;
+  WIFEdit.Text := '';
+  //PrivateKeySettingsLayout.Visible := false;
+  NewCoinDescriptionEdit.Text := '';
+  OwnXEdit.Text := '';
+  OwnXCheckBox.IsChecked := false;
+  IsPrivKeySwitch.IsChecked := false;
+  IsPrivKeySwitch.Enabled := false;
+  NewCoinDescriptionPassEdit.Text := '';
+  NewCoinDescriptionEdit.Text := '';
+  newCoinListNextTabItem := AddCoinFromPrivKeyTabItem;
+
+  switchTab(PageControl, AddNewCoin );
 end;
 
 procedure TfrmHome.LanguageBoxChange(Sender: TObject);
@@ -2631,11 +2663,15 @@ begin
   HexPrivKeyDefaultRadioButton.IsChecked := true;
   Layout31.Visible := false;
   WIFEdit.Text := '';
-  PrivateKeySettingsLayout.Visible := false;
+  //PrivateKeySettingsLayout.Visible := false;
   NewCoinDescriptionEdit.Text := '';
   OwnXEdit.Text := '';
   OwnXCheckBox.IsChecked := false;
   IsPrivKeySwitch.IsChecked := false;
+  IsPrivKeySwitch.Enabled := false;
+  NewCoinDescriptionPassEdit.Text := '';
+  NewCoinDescriptionEdit.Text := '';
+  newCoinListNextTAbItem := frmhome.AddNewCoinSettings;
 
   switchTab(PageControl, AddNewCoin);
 end;
@@ -3394,7 +3430,7 @@ end;
 
 procedure TfrmHome.IsPrivKeySwitchSwitch(Sender: TObject);
 begin
-  PrivateKeySettingsLayout.Visible := IsPrivKeySwitch.IsChecked;
+  //PrivateKeySettingsLayout.Visible := IsPrivKeySwitch.IsChecked;
 end;
 
 procedure TfrmHome.SearchInDashBrdButtonClick(Sender: TObject);

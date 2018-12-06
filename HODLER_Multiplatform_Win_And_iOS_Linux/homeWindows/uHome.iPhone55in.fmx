@@ -88,6 +88,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
       93s
       716s
       93s
+      716s
+      93s
       716s)
     inherited dashbrd: TTabItem
       Size.Width = 11.000000000000000000
@@ -1566,6 +1568,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited LanguageBox: TPopupBox
           Position.X = -19.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
         end
         inherited SettingsLanguageLabel: TLabel
           Size.Width = 0.000000000000000000
@@ -1576,6 +1580,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited CurrencyBox: TPopupBox
           Position.X = -19.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
         end
         inherited SettingsCurrencyLabel: TLabel
           Size.Width = 0.000000000000000000
@@ -1598,23 +1604,23 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
       end
       inherited WipeWalletDataInfoLabel: TLabel
-        Position.Y = 381.000000000000000000
+        Position.Y = 429.000000000000000000
         Size.Width = 63.000000000000000000
       end
       inherited OrganizeInfoLabel: TLabel
-        Position.Y = 437.000000000000000000
+        Position.Y = 485.000000000000000000
         Size.Width = 63.000000000000000000
       end
       inherited CreateBackupInfoLabel: TLabel
-        Position.Y = 502.000000000000000000
+        Position.Y = 550.000000000000000000
         Size.Width = 63.000000000000000000
       end
       inherited CheckUpdateInfoLabel: TLabel
-        Position.Y = 624.000000000000000000
+        Position.Y = 672.000000000000000000
         Size.Width = 63.000000000000000000
       end
       inherited Panel16: TPanel
-        Position.Y = 567.000000000000000000
+        Position.Y = 615.000000000000000000
         Size.Width = 93.000000000000000000
         inherited DayNightModeStaticLabel: TLabel
           Size.Width = 0.000000000000000000
@@ -1622,8 +1628,13 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         inherited DayNightModeSwitch: TSwitch
           Position.X = 22.000000000000000000
           Size.Width = 55.000000000000000000
+          Size.Height = 35.000000000000000000
           OnSwitch = nil
         end
+      end
+      inherited PrivateKeyManageButton: TButton
+        Position.Y = 381.000000000000000000
+        Size.Width = 93.000000000000000000
       end
     end
     inherited descryptSeed: TTabItem
@@ -2032,6 +2043,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited NewCoinDescriptionEdit: TEdit
           Position.X = -107.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
         end
       end
       inherited btnOKAddNewCoinSettings: TButton
@@ -2047,6 +2060,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited NewCoinDescriptionPassEdit: TEdit
           Position.X = -107.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
         end
       end
       inherited Panel11: TPanel
@@ -2063,19 +2078,16 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Size.Width = 0.000000000000000000
         end
       end
-      inherited PrivateKeySettingsLayout: TLayout
-        inherited WIFEdit: TEdit
-          Size.Height = 30.000000000000000000
-        end
-      end
       inherited Panel15: TPanel
-        Position.Y = 189.000000000000000000
+        Position.Y = 140.000000000000000000
         Size.Width = 93.000000000000000000
         inherited OwnXCheckBox: TCheckBox
           Size.Width = 0.000000000000000000
         end
         inherited OwnXEdit: TEdit
           Position.X = 12.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
         end
       end
     end
@@ -2931,6 +2943,52 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         inherited Button7: TButton
           Size.Height = 44.000000000000000000
         end
+      end
+    end
+    inherited AddCoinFromPrivKeyTabItem: TTabItem
+      ExplicitSize.cx = 8.000000000000000000
+      ExplicitSize.cy = 8.000000000000000000
+      inherited ToolBar14: TToolBar
+        Size.Width = 93.000000000000000000
+        Size.Height = 44.000000000000000000
+        inherited Label14: TLabel
+          Size.Width = 93.000000000000000000
+          Size.Height = 44.000000000000000000
+        end
+        inherited Button9: TButton
+          Size.Height = 44.000000000000000000
+        end
+      end
+      inherited Panel21: TPanel
+        Position.Y = 44.000000000000000000
+        Size.Width = 93.000000000000000000
+        inherited CoinPrivKeyDescriptionEdit: TEdit
+          Position.X = -107.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
+        end
+      end
+      inherited Panel22: TPanel
+        Position.Y = 92.000000000000000000
+        Size.Width = 93.000000000000000000
+        inherited CoinPrivKeyPassEdit: TEdit
+          Position.X = -107.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
+        end
+      end
+      inherited NewCoinPrivKeyOKButton: TButton
+        Position.Y = 668.000000000000000000
+        Size.Width = 93.000000000000000000
+      end
+      inherited ImportPrivKeyLabel: TLabel
+        Position.Y = 140.000000000000000000
+        Size.Width = 93.000000000000000000
+      end
+      inherited WIFEdit: TEdit
+        Position.Y = 188.000000000000000000
+        Size.Width = 93.000000000000000000
+        Size.Height = 30.000000000000000000
       end
     end
   end

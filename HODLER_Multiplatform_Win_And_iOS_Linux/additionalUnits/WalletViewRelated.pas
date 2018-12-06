@@ -70,6 +70,7 @@ procedure addNewWalletPanelClick(Sender: TObject);
 procedure btnCreateNewWalletClick(Sender: TObject);
 procedure CopyParentTextToClipboard(Sender : TObject);
 procedure CreateCopyImageButtonOnTEdits();
+procedure newCoinFromPrivateKey(Sender: TObject);
 
 var
   SyncOpenWallet: TThread;
@@ -129,12 +130,12 @@ begin
 
   frmhome.ownXedit.Text := intToStr(getFirstUnusedYforCoin(newcoinID));
 
-  frmhome.PrivateKeySettingsLayout.Visible := false;
+  //frmhome.PrivateKeySettingsLayout.Visible := false;
   frmhome.LoadingKeyDataAniIndicator.Visible := false;
   frmhome.NewCoinDescriptionEdit.Text := AvailableCoin[ImportCoinID].displayName
     + ' (' + AvailableCoin[ImportCoinID].shortcut + ')';
 
-  switchTab(frmhome.PageControl, frmhome.AddNewCoinSettings);
+  switchTab(frmhome.PageControl, newCOinListneXtTabItem {frmhome.AddNewCoinSettings});
 
 end;
 
@@ -839,10 +840,171 @@ begin
   end;
 end;
 
-procedure newCoin(Sender: TObject);
+procedure newCoinFromPrivateKey(Sender: TObject);
 begin
-  TThread.CreateAnonymousThread(
-    procedure
+TThread.CreateAnonymousThread( procedure
+
+var
+      MasterSeed, tced: AnsiString;
+      walletInfo: TWalletInfo;
+      arr: array of Integer;
+      wd: TWalletInfo;
+      i, j: Integer;
+      newID: Integer;
+    var
+      ts: TStringList;
+      path: AnsiString;
+      out : AnsiString;
+      isCompressed: Boolean;
+      WData: WIFAddressData;
+      pub: AnsiString;
+      flagElse: Boolean;
+      sorted: Boolean;
+      DEBUGstring: AnsiString;
+begin
+
+
+  i := 0;
+      with frmhome do
+        tced := TCA(CoinPrivKeyPassEdit.Text);
+      // CoinPrivKeyDescriptionEdit NewCoinDescriptionPassEdit.Text := '';
+      MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
+      if not isHex(MasterSeed) then
+      begin
+
+        TThread.Synchronize(nil,
+          procedure
+          begin
+            popupWindow.Create(dictionary('FailedToDecrypt'));
+          end);
+
+        exit;
+      end;
+
+
+
+
+        if isHex(frmhome.WIFEdit.Text) then
+        begin
+
+          TThread.Synchronize(nil,
+          procedure
+          begin
+            frmhome.NewCoinPrivKeyOKButton.enabled := false;
+          end);
+
+          frmhome.APICheckCompressed(Sender);
+
+          TThread.Synchronize(nil,
+          procedure
+          begin
+            frmhome.NewCoinPrivKeyOKButton.enabled := true;
+          end);
+
+          if (length(frmhome.WIFEdit.Text) = 64) then
+          begin
+
+
+                if not(frmhome.HexPrivKeyCompressedRadioButton.IsChecked or
+                  frmhome.HexPrivKeyNotCompressedRadioButton.IsChecked) then
+                  exit;
+                out := frmhome.WIFEdit.Text;
+                if frmhome.HexPrivKeyCompressedRadioButton.IsChecked then
+                  isCompressed := true
+                else if frmhome.HexPrivKeyNotCompressedRadioButton.IsChecked
+                then
+                  isCompressed := false
+                else
+                  raise Exception.Create('compression not defined');
+
+
+          end
+          else
+          begin
+
+
+                popupWindow.Create('Private Key must have 64 characters');
+
+
+            exit;
+          end;
+
+        end
+        else
+        begin
+          if frmhome.WIFEdit.Text <>
+            privKeyToWif(wifToPrivKey(frmhome.WIFEdit.Text)) then
+          begin
+
+            TThread.Synchronize(nil,
+              procedure
+              begin
+                popupWindow.Create('Wrong WIF');
+              end);
+
+            exit;
+          end;
+          WData := wifToPrivKey(frmhome.WIFEdit.Text);
+          isCompressed := WData.isCompressed;
+          out := WData.PrivKey;
+        end;
+
+        pub := secp256k1_get_public(out , not isCompressed);
+        if newcoinID = 4 then
+        begin
+
+          wd := TWalletInfo.Create(newcoinID, -1, -1,
+            Ethereum_PublicAddrToWallet(pub),
+            frmhome.CoinPrivKeyDescriptionEdit.Text);
+          wd.pub := pub;
+          wd.EncryptedPrivKey := speckEncrypt((TCA(MasterSeed)), out);
+          wd.isCompressed := isCompressed;
+        end
+        else
+        begin
+          wd := TWalletInfo.Create(newcoinID, -1, -1,
+            Bitcoin_PublicAddrToWallet(pub, AvailableCoin[newcoinID].p2pk),
+            frmhome.CoinPrivKeyDescriptionEdit.Text);
+          wd.pub := pub;
+          wd.EncryptedPrivKey := speckEncrypt((TCA(MasterSeed)), out);
+          wd.isCompressed := isCompressed;
+
+        end;
+
+        CurrentAccount.userSaveSeed := false;
+        CurrentAccount.SaveFiles();
+
+        askforBackup(1000);
+
+        TThread.Synchronize(nil,
+          procedure
+          begin
+            CurrentAccount.AddCoin(wd);
+            CreatePanel(wd);
+          end);
+        CurrentAccount.SaveFiles();
+        MasterSeed := '';
+
+        if newcoinID = 4 then
+        begin
+          // SearchTokens(wd.addr);
+        end;
+
+        TThread.Synchronize(nil,
+          procedure
+          begin
+            switchTab(frmhome.PageControl, HOME_TABITEM);
+          end);
+    wipeAnsiString(masterSeed);
+
+  end).Start;
+
+
+end;
+procedure newCoin(Sender: TObject);
+//begin
+  //TThread.CreateAnonymousThread(
+   // procedure
     var
       MasterSeed, tced: AnsiString;
       walletInfo: TWalletInfo;
@@ -880,8 +1042,7 @@ begin
         exit;
       end;
 
-      if not frmhome.IsPrivKeySwitch.IsChecked then
-      begin
+
 
         newID := getFirstUnusedYforCoin(newcoinID);
 
@@ -908,123 +1069,13 @@ begin
             switchTab(frmhome.PageControl, HOME_TABITEM);
           end);
 
-      end
-      else
-      begin
-
-        if isHex(frmhome.WIFEdit.Text) then
-        begin
-
-          frmhome.APICheckCompressed(Sender);
-
-          if (length(frmhome.WIFEdit.Text) = 64) then
-          begin
-
-            TThread.Synchronize(nil,
-              procedure
-              begin
-                if not(frmhome.HexPrivKeyCompressedRadioButton.IsChecked or
-                  frmhome.HexPrivKeyNotCompressedRadioButton.IsChecked) then
-                  exit;
-                out := frmhome.WIFEdit.Text;
-                if frmhome.HexPrivKeyCompressedRadioButton.IsChecked then
-                  isCompressed := true
-                else if frmhome.HexPrivKeyNotCompressedRadioButton.IsChecked
-                then
-                  isCompressed := false
-                else
-                  raise Exception.Create('compression not defined');
-              end);
-
-          end
-          else
-          begin
-
-            TThread.Synchronize(nil,
-              procedure
-              begin
-                popupWindow.Create('Private Key must have 64 characters');
-              end);
-
-            exit;
-          end;
-
-        end
-        else
-        begin
-          if frmhome.WIFEdit.Text <>
-            privKeyToWif(wifToPrivKey(frmhome.WIFEdit.Text)) then
-          begin
-
-            TThread.Synchronize(nil,
-              procedure
-              begin
-                popupWindow.Create('Wrong WIF');
-              end);
-
-            exit;
-          end;
-          WData := wifToPrivKey(frmhome.WIFEdit.Text);
-          isCompressed := WData.isCompressed;
-          out := WData.PrivKey;
-        end;
-
-        pub := secp256k1_get_public(out , not isCompressed);
-        if newcoinID = 4 then
-        begin
-
-          wd := TWalletInfo.Create(newcoinID, -1, -1,
-            Ethereum_PublicAddrToWallet(pub),
-            frmhome.NewCoinDescriptionEdit.Text);
-          wd.pub := pub;
-          wd.EncryptedPrivKey := speckEncrypt((TCA(MasterSeed)), out);
-          wd.isCompressed := isCompressed;
-        end
-        else
-        begin
-          wd := TWalletInfo.Create(newcoinID, -1, -1,
-            Bitcoin_PublicAddrToWallet(pub, AvailableCoin[newcoinID].p2pk),
-            frmhome.NewCoinDescriptionEdit.Text);
-          wd.pub := pub;
-          wd.EncryptedPrivKey := speckEncrypt((TCA(MasterSeed)), out);
-          wd.isCompressed := isCompressed;
-
-        end;
-
-        CurrentAccount.userSaveSeed := false;
-        CurrentAccount.SaveFiles();
-
-        askforBackup(1000);
-
-        TThread.Synchronize(nil,
-          procedure
-          begin
-            CurrentAccount.AddCoin(wd);
-            CreatePanel(wd);
-          end);
-        CurrentAccount.SaveFiles();
-        MasterSeed := '';
-
-        if newcoinID = 4 then
-        begin
-          // SearchTokens(wd.addr);
-        end;
-
-        TThread.Synchronize(nil,
-          procedure
-          begin
-            switchTab(frmhome.PageControl, HOME_TABITEM);
-          end);
-
-      end;
-
       TThread.Synchronize(nil,
         procedure
         begin
           frmhome.btnSyncClick(nil);
         end);
 
-    end).Start();
+   // end).Start();
 end;
 
 procedure organizeView(Sender: TObject);
