@@ -488,7 +488,6 @@ type
     btnImportLadgerNanoS: TButton;
     RestoreHSBButton: TButton;
     Layout35: TLayout;
-    btnRestoreDecryptedQR: TButton;
     btnRestoreSeed: TButton;
     btnRestoreEncQR: TButton;
     ImportPrivKeyCoinList: TTabItem;
@@ -695,6 +694,7 @@ type
     HistoryTransactionDate: TEdit;
     HistoryTransactionValue: TEdit;
     HistoryTransactionID: TEdit;
+    ShowInAnim: TFloatAnimation;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1577,6 +1577,9 @@ begin
   end;
   frmHome.passwordForDecrypt.Text := '';
   frmHome.DecryptSeedMessage.Text := '';
+
+  if TabControl.ActiveTab=frmHome.ChangeDescryptionScreen then frmHome.NewCoinDescriptionPassEdit.SetFocus;
+  if TabControl.ActiveTab=frmHome.DescryptSeed then frmHome.passwordForDecrypt.SetFocus;
 end;
 
 procedure TfrmHome.WVRealCurrencyChange(Sender: TObject);
@@ -3637,6 +3640,7 @@ begin
 end;
 
 procedure TfrmHome.SearchTokenButtonClick(Sender: TObject);
+var found:integer;
 begin
 
   if ((CurrentCoin.coin <> 4) or (CurrentCryptoCurrency is Token)) then
@@ -3647,7 +3651,8 @@ begin
 
   end;
 
-  SearchTokens(CurrentCoin.addr);
+found:= SearchTokens(CurrentCoin.addr,nil);
+ popupWindow.Create('New tokens found: '+inttostr(found));
 end;
 
 procedure TfrmHome.SeedMnemonicBackupButtonClick(Sender: TObject);

@@ -1137,6 +1137,33 @@
         </DeployFile>
     </ItemGroup>
     <ItemGroup Condition="'$(Platform)'=='Linux64'">
+        <DeployFile Include="Languages\DEU.lang" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>DEU.lang</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Languages\PT.lang" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>PT.lang</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Win10ModernDark.Style" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>Win10ModernDark.Style</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="Languages\ENGlang.json" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>ENGlang.json</RemoteName>
@@ -1146,9 +1173,36 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="Jet.style" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>Jet.style</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="Languages\JPN.lang" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>JPN.lang</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Languages\DUT.lang" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>DUT.lang</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Languages\FRA.lang" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>FRA.lang</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -1209,6 +1263,24 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="Languages\SPA.lang" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>SPA.lang</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Languages\ZHX.lang" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>ZHX.lang</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="Languages\DUT.lang" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>DUT.lang</RemoteName>
@@ -1218,7 +1290,34 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="public_key.key" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>public_key.key</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OKSterling.style" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>OKSterling.style</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="private_key.key" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>private_key.key</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="private_key.key" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>private_key.key</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
@@ -1235,6 +1334,16 @@
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Linux64\Debug\HODLER_Wallet_Desktop" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>HODLER_Wallet_Desktop</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
         </DeployFile>
         <DeployFile Include="Linux64\Release\HODLER_Wallet_Desktop" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
@@ -1255,9 +1364,36 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="Languages\POLlang.json" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>POLlang.json</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="public_key.key" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>public_key.key</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Languages\ENGlang.json" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>ENGlang.json</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Languages\JPN.lang" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>JPN.lang</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>

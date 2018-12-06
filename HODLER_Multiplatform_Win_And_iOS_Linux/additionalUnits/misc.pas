@@ -252,7 +252,7 @@ function speckDecrypt(tcaKey, data: AnsiString): AnsiString;
 function hexatotbytes(H: AnsiString): Tbytes;
 procedure updateNameLabels();
 function getUTXO(wallet: TWalletInfo): TUTXOS;
-function getDataOverHTTP(aURL: String; useCache: Boolean = true): AnsiString;
+function getDataOverHTTP(aURL: String; useCache: Boolean = true;noTimeout:boolean=false): AnsiString;
 function parseUTXO(utxos: AnsiString; Y: integer): TUTXOS;
 function IntToTX(data: System.uint64; Padding: integer): AnsiString; overload;
 function IntToTX(data: BigInteger; Padding: integer): AnsiString; overload;
@@ -329,7 +329,7 @@ procedure CreatePanel(crypto: cryptoCurrency);
 // procedure creatImportPrivKeyCoinList();
 function getETHValidAddress(address: AnsiString): AnsiString;
 function isValidETHAddress(address: AnsiString): Boolean;
-procedure searchTokens(InAddress: AnsiString; ac: Account = nil);
+function searchTokens(InAddress: AnsiString; ac: Account = nil):integer;
 function inputType(input: TBitcoinOutput): integer;
 
 procedure DeleteAccount(name: AnsiString);
@@ -662,6 +662,7 @@ begin
     begin
       checkBox.Enabled := false;
       checkBox.IsChecked := true;
+      checkbox.Lock;
     end;
 
     panel.TagObject := checkBox;
@@ -1026,7 +1027,7 @@ begin
   req.Free;
 end;
 
-procedure searchTokens(InAddress: AnsiString; ac: Account = nil);
+function searchTokens(InAddress: AnsiString; ac: Account = nil):integer;
 var
   data: AnsiString;
   JsonValue: TJsonvalue;
@@ -1038,8 +1039,9 @@ var
   createToken: Boolean;
   createFromList: Boolean;
   CreateFromListIndex: integer;
+  added:integer;
 begin
-
+  added:=0;
   if ac = nil then
   begin
     if CurrentAccount = nil then
@@ -1099,7 +1101,7 @@ begin
 
         if createToken then
         begin
-
+        inc(added);
           createFromList := false;
           for i := 0 to length(Token.availableToken) - 1 do
           begin
@@ -1136,7 +1138,7 @@ begin
       end;
 
   end;
-
+ result:=added;
 end;
 
 function isValidETHAddress(address: AnsiString): Boolean;
@@ -1286,7 +1288,8 @@ begin
     panel.TagObject := crypto;
     setBlackBackground(panel);
     panel.Position.Y := crypto.orderInWallet;
-
+    panel.Opacity:=0;
+    panel.AnimateFloat('Opacity',1,3);
     panel.Touch.InteractiveGestures := [TInteractiveGesture.LongTap];
     panel.OnGesture := frmhome.SwitchViewToOrganize;
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
@@ -2817,7 +2820,7 @@ function cutEveryNChar(n: integer; Str: AnsiString; sep: AnsiChar = ' ')
 var
   i, j: integer;
 begin
-
+ result:=str; exit;
   if n < 0 then
     exit(Str);
   inc(n);
@@ -3306,7 +3309,7 @@ begin
   result := aURL;
 end;
 
-function getDataOverHTTP(aURL: String; useCache: Boolean = true): AnsiString;
+function getDataOverHTTP(aURL: String; useCache: Boolean = true;noTimeout:boolean=false): AnsiString;
 var
   req: THTTPClient;
   LResponse: IHTTPResponse;
@@ -3323,8 +3326,11 @@ begin
     begin
 
       req := THTTPClient.Create();
+      if not noTimeout then begin
+
       req.ConnectionTimeout := 1000;
       req.ResponseTimeout := 1000;
+      end;
       aURL := aURL + buildAuth(aURL);
       LResponse := req.get(aURL);
       result := apiStatus(aURL, LResponse.ContentAsString());
@@ -3436,7 +3442,7 @@ var
   bb: Tbytes;
 begin
   setLength(bb, (length(H) div 2));
-{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
+{$IF (DEFINED(ANDROID) OR DEFINED(IOS))}
   for i := 0 to (length(H) div 2) - 1 do
   begin
     b := System.UInt8(strToInt('$' + Copy(H, ((i) * 2) + 1, 2)));
@@ -3575,8 +3581,9 @@ begin
   speck.IVMode := TSPECKIVMode.userdefined;
   speck.IV := '0123456789abcdef';
   cipher := speck.Encrypt(data);
+  result:=cipher;
   speck.Free;
-  result := cipher;
+
 end;
 
 function speckDecrypt(tcaKey, data: AnsiString): AnsiString;
@@ -3589,6 +3596,7 @@ begin
   speck.WordSizeBits := TSPECKWordSizeBits.wsb64;
   speck.KeySizeWords := TSPECKKeySizeWords.ksw4;
   speck.Key := TBytesToString(hexatotbytes(tcaKey));;
+
   speck.OutputFormat := hexa;
   speck.Unicode := noUni;
   speck.PaddingMode := TSPECKPaddingMode.nopadding;

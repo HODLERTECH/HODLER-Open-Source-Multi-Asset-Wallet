@@ -155,7 +155,7 @@ type
     lblANWHeader: TLabel;
     btnANWBack: TButton;
     coinIconsList: TImageList;
-    TokenIcons: TImageList;
+    TokenIcons3: TImageList;
     checkSeed: TTabItem;
     btnConfirm: TButton;
     CSHeader: TToolBar;
@@ -689,6 +689,7 @@ type
     ToolBar13: TToolBar;
     Label13: TLabel;
     Button7: TButton;
+    TokenIcons: TImageList;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1579,7 +1580,9 @@ begin
 end;
 
 procedure TfrmHome.SearchTokenButtonClick(Sender: TObject);
+var found:integer;
 begin
+
   if ((CurrentCoin.coin <> 4) or (CurrentCryptoCurrency is Token)) then
   begin
 
@@ -1588,7 +1591,8 @@ begin
 
   end;
 
-  SearchTokens(CurrentCoin.addr);
+found:= SearchTokens(CurrentCoin.addr,nil);
+ popupWindow.Create('New tokens found: '+inttostr(found));
 end;
 
 procedure TfrmHome.SelectFileInBackupFileList(Sender: TObject);

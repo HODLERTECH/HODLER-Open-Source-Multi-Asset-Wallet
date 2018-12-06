@@ -374,6 +374,8 @@
         <AUP_VIBRATE>true</AUP_VIBRATE>
         <PF_KeyStorePass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D497F76E2718773C8C2FA9FC366BAA2367E043F22DA163545DEE5E022DEC958F30ED54CFA80BFF8AF10075B1D02922F3E6A1DAB0938E3AF16A0447B789E65AF9A9822ED7D054670E82362FD570A38D4679D57CC9CFA29D027DC3A91F24FFDA40DFA8D2DBF8C2DA48F2392E6B68F10B9995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_KeyStorePass>
         <BT_BuildType>Debug</BT_BuildType>
+        <DCC_UnitSearchPath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <Debugger_DebugSourcePath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_iOSDevice32)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
@@ -428,20 +430,20 @@
         <DCC_DebugInformation>false</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Android)'!=''">
-        <VerInfo_Build>22</VerInfo_Build>
+        <VerInfo_Build>23</VerInfo_Build>
         <AUP_READ_CALENDAR>false</AUP_READ_CALENDAR>
         <AUP_WRITE_CALENDAR>false</AUP_WRITE_CALENDAR>
         <AUP_CALL_PHONE>false</AUP_CALL_PHONE>
         <AUP_VIBRATE>true</AUP_VIBRATE>
-        <PF_KeyStorePass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D497F761C61C1BD5765FAB3C363BAB3361C04652294162B458CE5F52284C946F35DD545FA95BFA2AF3F072C1D0A92003E071DBA097BE3FD16D14425789365CA9A8422F1834000E1779D62FD570A38D4679D57CC9CFA29D027DC3A91F24FFDA40DFA8D2DBF8C2DA48F2392E6B68F10B9995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_KeyStorePass>
+        <PF_KeyStorePass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A9A3D4E3461C7AC1CC5726FA95C375BABB361604372280162A45D6E5EA228CC90BF304D51EFAE2BFD6AF4307031D1B92423E061DE8090BE3F016FF446E788F659D641BBE9E834000E1779D62FD570A38D4679D57CC9CFA29D027DC3A91F24FFDA40DFA8D2DBF8C2DA48F2392E6B68F10B9995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_KeyStorePass>
         <PF_AliasKey>hodler.tech</PF_AliasKey>
-        <PF_AliasKeyPass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D497F76E2718773C8C20A3767CA1473B87E8DA47E658CFDA0A978428620DC94ADB50B791AE0A6B9AF13075D1D41922F3E1E1DF10975E3EC16A5446B78DD65CE9A8C22BD7D524671E87A920DF3D79632E9E1DE0CC00EB317C2E9A76456D1E826530E53475FA034E58F2392E6B68F10B9995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_AliasKeyPass>
+        <PF_AliasKeyPass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D497F76E2718773C8C20A3767CA1473B87E8DA47E658CFDA0A978428620DC94ADB50B791AE0A6B9DF513A073AF345323E461DA60920E3C216B9443178C3659D9AC222A37D004623E82B921BF3F9961DE9EADE57C063B37AC2F9A77456A0E879535053015F9234F9FF7FAFB49124C78A995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_AliasKeyPass>
         <AUP_READ_PHONE_STATE>false</AUP_READ_PHONE_STATE>
         <AUP_ACCESS_COARSE_LOCATION>false</AUP_ACCESS_COARSE_LOCATION>
         <AUP_ACCESS_FINE_LOCATION>false</AUP_ACCESS_FINE_LOCATION>
         <AUP_CAMERA>false</AUP_CAMERA>
         <BT_BuildType>AppStore</BT_BuildType>
-        <VerInfo_Keys>package=tech.hodler.core;label=HODLER Multi-Asset Wallet;versionCode=22;versionName=0.3.1;persistent=False;restoreAnyVersion=False;installLocation=preferExternal;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
+        <VerInfo_Keys>package=tech.hodler.core;label=HODLER Multi-Asset Wallet;versionCode=23;versionName=0.3.1;persistent=False;restoreAnyVersion=False;installLocation=preferExternal;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <Debugger_RunParams>-debugport=13376</Debugger_RunParams>
         <DCC_UnitSearchPath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
@@ -2765,12 +2767,6 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="iOSJet.style" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="Android">
-                        <RemoteDir>.\assets\internal\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_640x960.png" Configuration="Debug" Class="iPhone_Launch640">
                     <Platform Name="iOSDevice64">
                         <RemoteName>Default@2x.png</RemoteName>
@@ -2948,12 +2944,6 @@
                 <DeployFile LocalName="Languages\PT.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSSimulator">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="iOSSterling.style" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="Android">
-                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

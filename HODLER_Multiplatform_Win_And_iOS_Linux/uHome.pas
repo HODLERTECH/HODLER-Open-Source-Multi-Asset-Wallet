@@ -2936,9 +2936,9 @@ var
 {$ENDIF}
 begin
 {$IFDEF ANDROID}
-  Intent := TJIntent.Create;
+  {Intent := TJIntent.Create;
   Intent := TJIntent.JavaClass.init(TJSettings.JavaClass.ACTION_SETTINGS);
-  TAndroidHelper.Activity.startActivity(Intent);
+  TAndroidHelper.Activity.startActivity(Intent);         }
 {$ENDIF}
 end;
 

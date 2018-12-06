@@ -2649,15 +2649,6 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="iOSJet.style" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
-            <RemoteName>iOSJet.style</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
         <DeployFile Include="Languages\ZHX.lang" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
             <RemoteName>ZHX.lang</RemoteName>
@@ -2681,15 +2672,6 @@
             <RemoteName>styles.xml</RemoteName>
             <DeployClass>AndroidSplashStyles</DeployClass>
             <Operation>1</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="iOSSterling.style" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
-            <RemoteName>iOSSterling.style</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>

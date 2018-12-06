@@ -98,13 +98,12 @@ var
     comp: TComponent;
     i: integer;
   begin
-{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
+{$IF DEFINED(ANDROID)}
     for i := 0 to frmHome.ComponentCount - 1 do
       if frmHome.Components[i] is TEdit then
         SetEditControlColor(TEdit(frmHome.Components[i]), TAlphaColors.Gray);
 {$ENDIF}
   end;
-
 begin
   with frmHome do
   begin
@@ -942,7 +941,7 @@ var
   cc: cryptoCurrency;
   Panel: TPanel;
   bilanceLbl: TLabel;
-  addrLbl: TLabel;
+  addrLbl: TEdit;
   deleteBtn: TButton;
   generateNewAddresses: TButton;
   copyBtn : Tbutton;
@@ -965,35 +964,42 @@ begin
       Panel.TagObject := cc;
       panel.TagString := cc.addr;
       Panel.OnClick := OpenWalletViewFromYWalletList;
-
-      addrLbl := TLabel.Create(Panel);
+      Panel.Margins.Bottom:=1;
+      addrLbl := TEdit.Create(Panel);
+      addrLbl.Align:=TAlignLayout.MostTop;
       addrLbl.Parent := Panel;
       addrLbl.Visible := true;
-      addrLbl.Margins.Left := 15;
-      addrLbl.Margins.Right := 15;
+      //addrLbl.Margins.Left := 15;
+      //addrLbl.Margins.Right := 15;
+      addrLbl.Height:=24;
+      if TwalletInfo(cc).coin in [3,7] then
+      addrLbl.Text:=bitcoinCashAddressToCashAddress(cc.addr) else
       addrLbl.Text := cc.addr;
-      addrLbl.Align := TAlignLayout.Client;
+      addrLbl.TagString:='copyable';
+      //addrLbl.Align := TAlignLayout.Client;
 
       bilanceLbl := TLabel.Create(Panel);
       bilanceLbl.Parent := Panel;
       bilanceLbl.Visible := true;
       bilanceLbl.Margins.Left := 0;
       bilanceLbl.Margins.Right := 15;
-      bilanceLbl.Text := bigintegerbeautifulStr(cc.confirmed, cc.decimals);
+      bilanceLbl.Text := bigintegerbeautifulStr(cc.confirmed, cc.decimals)+' '+CurrentCoin.ShortCut;
       bilanceLbl.Align := TAlignLayout.Right;
-      bilanceLbl.Width := 96;
+      bilanceLbl.Width := 200;
       bilanceLbl.TextSettings.HorzAlign := TTextAlign.Trailing;
+      bilanceLbl.Align:=TAlignLayout.Right;
 
-      deleteBtn := TButton.Create(Panel);
-      deleteBtn.Parent := Panel;
+      deleteBtn := TButton.Create(addrLbl);
+      deleteBtn.Parent := addrLbl;
       deleteBtn.Visible := true;
       deleteBtn.Align := TAlignLayout.MostRight;
-      deleteBtn.Width := 48;
-      deleteBtn.Text := 'X';
+      deleteBtn.Width := 15;
+      deleteBtn.Text := 'x';
       deleteBtn.TagObject := cc;
       deleteBtn.OnClick := deleteYAddress;
+      //deleteBtn.Align:=TAlignLayout.Left;
 
-      copyBtn := TButton.Create(Panel);
+      {copyBtn := TButton.Create(Panel);
       copyBtn.Parent := Panel;
       copyBtn.Visible := true;
       copyBtn.Align := TAlignLayout.MostRight;
@@ -1001,7 +1007,7 @@ begin
       copyBtn.Text := 'Copy';
       copyBtn.TagObject := cc;
       copyBtn.OnClick := CopyParentTagStringToClipboard;
-
+      copyBtn.Align:=TAlignLayout.Left; }
 
 
     end;

@@ -264,7 +264,7 @@ begin
     if frmHome.InstantSendSwitch.isChecked then
       coin:=coin+'&mode=instant';
     result := getDataOverHTTP(HODLER_URL + 'sendTX.php?coin=' + coin +
-      '&tx=' + TX);
+      '&tx=' + TX,false);
       syncthr.SynchronizeCryptoCurrency(currentcoin);
 
   end;

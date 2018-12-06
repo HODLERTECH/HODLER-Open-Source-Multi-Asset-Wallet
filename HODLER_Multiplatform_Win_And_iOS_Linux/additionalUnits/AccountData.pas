@@ -249,11 +249,11 @@ begin
 
   ts.LoadFromFile(SeedFilePath);
 
-  TCAIterations := strtoInt(ts[0]);
-  EncryptedMasterSeed := ts[1];
-  userSaveSeed := strToBool(ts[2]);
+  TCAIterations := strtoInt(ts.Strings[0]);
+  EncryptedMasterSeed := ts.Strings[1];
+  userSaveSeed := strToBool(ts.Strings[2]);
   if ts.Count > 3 then
-    privTCA := strToBoolDef(ts[3], false)
+    privTCA := strToBoolDef(ts.Strings[3], false)
   else
     privTCA := false;
   ts.Free;

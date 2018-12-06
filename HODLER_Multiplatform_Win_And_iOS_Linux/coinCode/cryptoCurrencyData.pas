@@ -67,6 +67,7 @@ end;
 constructor cryptoCurrency.Create();
 begin
   deleted := false;
+  orderInWallet:=maxint;
 end;
 
 function cryptoCurrency.getFiat: Double;
