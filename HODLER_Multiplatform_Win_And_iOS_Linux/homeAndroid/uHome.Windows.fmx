@@ -98,6 +98,8 @@ inherited frmHome_Windows: TfrmHome_Windows
         624s
         464s
         624s
+        464s
+        624s
         464s)
       inherited dashbrd: TTabItem
         ExplicitSize.cx = 8.000000000000000000
@@ -869,6 +871,9 @@ inherited frmHome_Windows: TfrmHome_Windows
             Position.X = 536.000000000000000000
           end
         end
+        inherited PrivateKeyManageButton: TButton
+          Size.Width = 624.000000000000000000
+        end
       end
       inherited descryptSeed: TTabItem
         ExplicitSize.cx = 8.000000000000000000
@@ -1143,9 +1148,6 @@ inherited frmHome_Windows: TfrmHome_Windows
           inherited lblACHeader: TLabel
             Size.Width = 624.000000000000000000
           end
-          inherited Button1: TButton
-            Position.X = 575.000000000000000000
-          end
         end
         inherited NewCoinDescriptionPanel: TPanel
           Size.Width = 624.000000000000000000
@@ -1174,20 +1176,6 @@ inherited frmHome_Windows: TfrmHome_Windows
           end
           inherited ImportPrivKeyStaticLabel: TLabel
             Size.Width = 533.000000000000000000
-          end
-        end
-        inherited PrivateKeySettingsLayout: TLayout
-          inherited Layout31: TLayout
-            Size.Width = 640.000000000000000000
-            inherited Layout34: TLayout
-              Size.Width = 381.000000000000000000
-              inherited HexPrivKeyCompressedRadioButton: TRadioButton
-                Size.Width = 381.000000000000000000
-              end
-              inherited HexPrivKeyNotCompressedRadioButton: TRadioButton
-                Size.Width = 381.000000000000000000
-              end
-            end
           end
         end
         inherited Panel15: TPanel
@@ -1869,6 +1857,38 @@ inherited frmHome_Windows: TfrmHome_Windows
           inherited Label13: TLabel
             Size.Width = 624.000000000000000000
           end
+        end
+      end
+      inherited AddCoinFromPrivKeyTabItem: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited ToolBar14: TToolBar
+          Size.Width = 624.000000000000000000
+          inherited Label14: TLabel
+            Size.Width = 624.000000000000000000
+          end
+        end
+        inherited Panel21: TPanel
+          Size.Width = 624.000000000000000000
+          inherited CoinPrivKeyDescriptionEdit: TEdit
+            Position.X = 424.000000000000000000
+          end
+        end
+        inherited Panel22: TPanel
+          Size.Width = 624.000000000000000000
+          inherited CoinPrivKeyPassEdit: TEdit
+            Position.X = 424.000000000000000000
+          end
+        end
+        inherited NewCoinPrivKeyOKButton: TButton
+          Position.Y = 416.000000000000000000
+          Size.Width = 624.000000000000000000
+        end
+        inherited ImportPrivKeyLabel: TLabel
+          Size.Width = 624.000000000000000000
+        end
+        inherited WIFEdit: TEdit
+          Size.Width = 624.000000000000000000
         end
       end
     end

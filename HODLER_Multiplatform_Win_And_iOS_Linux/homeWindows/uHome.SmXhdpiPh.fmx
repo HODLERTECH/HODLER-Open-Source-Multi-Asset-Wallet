@@ -88,6 +88,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
       0s
       375s
       0s
+      375s
+      0s
       375s)
     inherited dashbrd: TTabItem
       ExplicitSize.cx = 8.000000000000000000
@@ -1814,9 +1816,6 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 89.000000000000000000
         end
       end
-      inherited PrivateKeySettingsLayout: TLayout
-        Position.X = 32.000000000000000000
-      end
       inherited Panel15: TPanel
         Size.Width = 200.000000000000000000
         inherited OwnXCheckBox: TCheckBox
@@ -2483,6 +2482,13 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         inherited Label13: TLabel
           Size.Width = 200.000000000000000000
         end
+      end
+    end
+    inherited AddCoinFromPrivKeyTabItem: TTabItem
+      ExplicitSize.cx = 8.000000000000000000
+      ExplicitSize.cy = 8.000000000000000000
+      inherited ToolBar14: TToolBar
+        Position.Y = 8.000000000000000000
       end
     end
   end

@@ -88,6 +88,8 @@ inherited frmHome_Windows: TfrmHome_Windows
       500s
       671s
       500s
+      671s
+      500s
       671s)
     inherited dashbrd: TTabItem
       ExplicitSize.cx = 8.000000000000000000
@@ -354,7 +356,7 @@ inherited frmHome_Windows: TfrmHome_Windows
           inherited ReceiveVertScrollBox: TVertScrollBox
             Size.Width = 500.000000000000000000
             Size.Height = 574.000000000000000000
-            Viewport.Width = 484.000000000000000000
+            Viewport.Width = 500.000000000000000000
             Viewport.Height = 574.000000000000000000
             inherited ReceiveAmountLayout: TLayout
               Size.Width = 484.000000000000000000
@@ -1456,6 +1458,9 @@ inherited frmHome_Windows: TfrmHome_Windows
           OnSwitch = nil
         end
       end
+      inherited PrivateKeyManageButton: TButton
+        Size.Width = 500.000000000000000000
+      end
     end
     inherited descryptSeed: TTabItem
       ExplicitSize.cx = 8.000000000000000000
@@ -2452,6 +2457,32 @@ inherited frmHome_Windows: TfrmHome_Windows
         inherited Label13: TLabel
           Size.Width = 500.000000000000000000
         end
+      end
+    end
+    inherited AddCoinFromPrivKeyTabItem: TTabItem
+      ExplicitSize.cx = 8.000000000000000000
+      ExplicitSize.cy = 8.000000000000000000
+      inherited ToolBar14: TToolBar
+        Size.Width = 500.000000000000000000
+        inherited Label14: TLabel
+          Size.Width = 500.000000000000000000
+        end
+      end
+      inherited Panel21: TPanel
+        Size.Width = 500.000000000000000000
+      end
+      inherited Panel22: TPanel
+        Size.Width = 500.000000000000000000
+      end
+      inherited NewCoinPrivKeyOKButton: TButton
+        Position.Y = 623.000000000000000000
+        Size.Width = 500.000000000000000000
+      end
+      inherited ImportPrivKeyLabel: TLabel
+        Size.Width = 500.000000000000000000
+      end
+      inherited WIFEdit: TEdit
+        Size.Width = 500.000000000000000000
       end
     end
   end

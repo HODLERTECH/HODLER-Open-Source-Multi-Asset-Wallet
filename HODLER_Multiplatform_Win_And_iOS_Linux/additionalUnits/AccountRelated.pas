@@ -961,9 +961,11 @@ begin
       Panel.TagObject := cc;
       Panel.TagString := cc.addr;
       Panel.OnClick := OpenWalletViewFromYWalletList;
-      Panel.Margins.Bottom := 1;
+
+      Panel.Margins.Bottom:=1;
       addrLbl := TCopyableEdit.Create(Panel);
-      addrLbl.Align := TAlignLayout.MostTop;
+      addrLbl.button.Align := TAlignLayout.Right;
+      addrLbl.Align:=TAlignLayout.MostTop;
       addrLbl.Parent := Panel;
       addrLbl.Visible := true;
       // addrLbl.Margins.Left := 15;

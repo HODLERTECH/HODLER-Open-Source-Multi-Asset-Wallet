@@ -88,6 +88,8 @@ inherited frmHome_Surface: TfrmHome_Surface
       759s
       1920s
       759s
+      1920s
+      759s
       1920s)
     inherited dashbrd: TTabItem
       ExplicitSize.cx = 8.000000000000000000
@@ -1446,6 +1448,9 @@ inherited frmHome_Surface: TfrmHome_Surface
           OnSwitch = nil
         end
       end
+      inherited PrivateKeyManageButton: TButton
+        Size.Width = 759.000000000000000000
+      end
     end
     inherited descryptSeed: TTabItem
       ExplicitSize.cx = 8.000000000000000000
@@ -2436,6 +2441,32 @@ inherited frmHome_Surface: TfrmHome_Surface
         inherited Label13: TLabel
           Size.Width = 759.000000000000000000
         end
+      end
+    end
+    inherited AddCoinFromPrivKeyTabItem: TTabItem
+      ExplicitSize.cx = 8.000000000000000000
+      ExplicitSize.cy = 8.000000000000000000
+      inherited ToolBar14: TToolBar
+        Size.Width = 759.000000000000000000
+        inherited Label14: TLabel
+          Size.Width = 759.000000000000000000
+        end
+      end
+      inherited Panel21: TPanel
+        Size.Width = 759.000000000000000000
+      end
+      inherited Panel22: TPanel
+        Size.Width = 759.000000000000000000
+      end
+      inherited NewCoinPrivKeyOKButton: TButton
+        Position.Y = 1872.000000000000000000
+        Size.Width = 759.000000000000000000
+      end
+      inherited ImportPrivKeyLabel: TLabel
+        Size.Width = 759.000000000000000000
+      end
+      inherited WIFEdit: TEdit
+        Size.Width = 759.000000000000000000
       end
     end
   end

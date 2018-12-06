@@ -381,6 +381,9 @@ var
   cutAddressEveryNChar: integer = -1;
   addressFromQR: AnsiString;
   amountFromQR: AnsiString;
+  addressFromQR : AnsiString;
+  amountFromQR : AnsiString;
+  newCoinListNextTabItem : TTabItem;
 
 implementation
 

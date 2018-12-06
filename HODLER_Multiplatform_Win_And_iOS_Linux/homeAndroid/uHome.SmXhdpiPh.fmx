@@ -98,6 +98,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         245s
         370s
         245s
+        370s
+        245s
         370s)
       inherited dashbrd: TTabItem
         ExplicitSize.cx = 8.000000000000000000
@@ -141,6 +143,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             Size.Width = 245.000000000000000000
             inherited SearchInDashBrdButton: TSpeedButton
               Position.X = 213.000000000000000000
+              Position.Y = 8.000000000000000000
+              Size.Height = 32.000000000000000000
             end
             inherited HideZeroWalletsCheckBox: TCheckBox
               Size.Width = 245.000000000000000000
@@ -177,6 +181,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           end
           inherited PopupBox1: TPopupBox
             Position.X = 65.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited BackToBalanceViewLayout: TLayout
@@ -882,6 +888,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited LanguageBox: TPopupBox
             Position.X = 133.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
           inherited SettingsLanguageLabel: TLabel
             Size.Width = 103.000000000000000000
@@ -891,6 +899,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited CurrencyBox: TPopupBox
             Position.X = 133.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
           inherited SettingsCurrencyLabel: TLabel
             Size.Width = 103.000000000000000000
@@ -913,6 +923,9 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           inherited DayNightModeSwitch: TSwitch
             Position.X = 157.000000000000000000
           end
+        end
+        inherited PrivateKeyManageButton: TButton
+          Size.Width = 245.000000000000000000
         end
       end
       inherited descryptSeed: TTabItem
@@ -1218,14 +1231,13 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           inherited lblACHeader: TLabel
             Size.Width = 245.000000000000000000
           end
-          inherited Button1: TButton
-            Position.X = 196.000000000000000000
-          end
         end
         inherited NewCoinDescriptionPanel: TPanel
           Size.Width = 245.000000000000000000
           inherited NewCoinDescriptionEdit: TEdit
             Position.X = 45.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited btnOKAddNewCoinSettings: TButton
@@ -1240,6 +1252,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited NewCoinDescriptionPassEdit: TEdit
             Position.X = 45.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited Panel11: TPanel
@@ -1255,24 +1269,6 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             Size.Width = 154.000000000000000000
           end
         end
-        inherited PrivateKeySettingsLayout: TLayout
-          inherited Layout31: TLayout
-            Position.Y = 128.000000000000000000
-            Size.Width = 250.000000000000000000
-            inherited Layout34: TLayout
-              Size.Width = 0.000000000000000000
-              inherited HexPrivKeyCompressedRadioButton: TRadioButton
-                Size.Width = 1.000000000000000000
-              end
-              inherited HexPrivKeyNotCompressedRadioButton: TRadioButton
-                Size.Width = 1.000000000000000000
-              end
-            end
-          end
-          inherited WIFEdit: TEdit
-            Size.Height = 32.000000000000000000
-          end
-        end
         inherited Panel15: TPanel
           Size.Width = 245.000000000000000000
           inherited OwnXCheckBox: TCheckBox
@@ -1280,6 +1276,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           end
           inherited OwnXEdit: TEdit
             Position.X = 164.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
       end
@@ -1957,6 +1955,43 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           inherited Label13: TLabel
             Size.Width = 245.000000000000000000
           end
+        end
+      end
+      inherited AddCoinFromPrivKeyTabItem: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited ToolBar14: TToolBar
+          Size.Width = 245.000000000000000000
+          inherited Label14: TLabel
+            Size.Width = 245.000000000000000000
+          end
+        end
+        inherited Panel21: TPanel
+          Size.Width = 245.000000000000000000
+          inherited CoinPrivKeyDescriptionEdit: TEdit
+            Position.X = 45.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
+          end
+        end
+        inherited Panel22: TPanel
+          Size.Width = 245.000000000000000000
+          inherited CoinPrivKeyPassEdit: TEdit
+            Position.X = 45.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
+          end
+        end
+        inherited NewCoinPrivKeyOKButton: TButton
+          Position.Y = 322.000000000000000000
+          Size.Width = 245.000000000000000000
+        end
+        inherited ImportPrivKeyLabel: TLabel
+          Size.Width = 245.000000000000000000
+        end
+        inherited WIFEdit: TEdit
+          Size.Width = 245.000000000000000000
+          Size.Height = 32.000000000000000000
         end
       end
     end
