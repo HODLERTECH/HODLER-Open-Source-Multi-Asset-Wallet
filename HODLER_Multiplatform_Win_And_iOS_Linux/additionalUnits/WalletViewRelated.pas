@@ -971,7 +971,7 @@ begin
 
         end;
 
-        CurrentAccount.userSaveSeed := false;
+       //Issue 112 CurrentAccount.userSaveSeed := false;
         CurrentAccount.SaveFiles();
 
         askforBackup(1000);
@@ -1059,7 +1059,7 @@ procedure newCoin(Sender: TObject);
             CreatePanel(walletInfo);
           end);
 
-        CurrentAccount.userSaveSeed := false;
+        //Issue 112 CurrentAccount.userSaveSeed := false;
         CurrentAccount.SaveFiles();
         askforBackup(1000);
         MasterSeed := '';

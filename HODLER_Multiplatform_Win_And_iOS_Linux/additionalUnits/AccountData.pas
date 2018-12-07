@@ -22,6 +22,7 @@ type
     TCAIterations: Integer;
     EncryptedMasterSeed: AnsiString;
     userSaveSeed: boolean;
+    hideEmpties:Boolean;
     privTCA: boolean;
     DirPath: AnsiString;
     CoinFilePath: AnsiString;
@@ -61,7 +62,7 @@ type
 implementation
 
 uses
-  misc;
+  misc,uHome;
 
 function Account.aggregateFiats(wi: TWalletInfo): double;
 var
@@ -234,6 +235,7 @@ begin
   ts.Add(EncryptedMasterSeed);
   ts.Add(booltoStr(userSaveSeed));
   ts.Add(booltoStr(privTCA));
+  ts.Add(booltoStr(frmHome.HideZeroWalletsCheckBox.isChecked));
   ts.SaveToFile(SeedFilePath);
   ts.Free;
 
@@ -250,10 +252,14 @@ begin
   TCAIterations := strtoInt(ts.Strings[0]);
   EncryptedMasterSeed := ts.Strings[1];
   userSaveSeed := strToBool(ts.Strings[2]);
-  if ts.Count > 3 then
-    privTCA := strToBoolDef(ts.Strings[3], false)
-  else
+  if ts.Count > 4 then  begin
+    privTCA := strToBoolDef(ts.Strings[3], false) ;
+    hideEmpties := strToBoolDef(ts.Strings[4], false)
+  end
+  else  begin
     privTCA := false;
+    hideEmpties := false;
+  end;
   ts.Free;
 
 end;

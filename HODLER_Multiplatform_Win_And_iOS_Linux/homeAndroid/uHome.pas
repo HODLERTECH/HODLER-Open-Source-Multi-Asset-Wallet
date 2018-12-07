@@ -77,8 +77,6 @@ type
     btnGenSeed: TButton;
     pass: TEdit;
     retypePass: TEdit;
-    lblEnterPass: TLabel;
-    lblRetypePass: TLabel;
     seedGenerated: TTabItem;
     headerForSG: TToolBar;
     labelHeaderForSG: TLabel;
@@ -471,7 +469,6 @@ type
     Action1: TAction;
     AccountNamePanel: TPanel;
     AccountNameEdit: TEdit;
-    AccountNameLabel: TLabel;
     RestoreWalletWithPassword: TTabItem;
     RestoreWalletOKButton: TButton;
     Panel6: TPanel;
@@ -1274,6 +1271,7 @@ end;
 procedure TfrmHome.HideZeroWalletsCheckBoxChange(Sender: TObject);
 begin
   WalletViewRelated.HideEmptyWallets(Sender);
+    CurrentAccount.SaveFiles;
 end;
 
 {$IFDEF ANDROID}
