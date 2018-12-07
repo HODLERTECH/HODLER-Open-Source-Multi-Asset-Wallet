@@ -701,6 +701,20 @@ type
     LoadingKeyDataAniIndicator: TAniIndicator;
     WIFEdit: TEdit;
     PrivateKeyManageButton: TButton;
+    ExportPrivCoinListTabItem: TTabItem;
+    Panel23: TPanel;
+    Label19: TLabel;
+    ToolBar16: TToolBar;
+    Label21: TLabel;
+    Button11: TButton;
+    ExportPrivKeyListVertScrollBox: TVertScrollBox;
+    PrivOptionsTabItem: TTabItem;
+    ToolBar15: TToolBar;
+    Label18: TLabel;
+    Button10: TButton;
+    ImportPrivateKeyInPrivButton: TButton;
+    SweepButton: TButton;
+    ExportPrivateKeyButton: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -904,6 +918,12 @@ type
     procedure MainScreenQRButtonClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure PrivateKeyManageButtonClick(Sender: TObject);
+    procedure ImportPrivateKeyInPrivButtonClick(Sender: TObject);
+    procedure SweepButtonClick(Sender: TObject);
+    procedure ExportPrivateKeyButtonClick(Sender: TObject);
+    procedure Button10Click(Sender: TObject);
+    procedure Button11Click(Sender: TObject);
+    procedure CTIHeaderBackButtonClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -954,6 +974,7 @@ type
     procedure TransactionWalletListClick(Sender : TObject);
     procedure CopyParentTagStringToClipboard(Sender : TObject);
     procedure CopyParentTextToClipboard(Sender : TObject);
+    procedure ExportPrivKeyListButtonClick(Sender : TObject);
 
   var
     cpTimeout: int64;
@@ -1030,6 +1051,18 @@ uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
 {$R *.iPhone55in.fmx IOS}
 {$R *.Windows.fmx MSWINDOWS}
 {$R *.Surface.fmx MSWINDOWS}
+
+procedure TfrmHome.ExportPrivateKeyButtonClick(Sender: TObject);
+begin
+  createExportPrivateKeyList();
+  switchTab( pageControl , ExportPrivCoinListTabItem );
+end;
+
+procedure Tfrmhome.ExportPrivKeyListButtonClick(Sender : TObject);
+begin
+  walletViewRelated.ExportPrivKeyListButtonClick(Sender);
+end;
+
 
 procedure Tfrmhome.CopyParentTextToClipboard(Sender : TObject);
 begin
@@ -1444,22 +1477,9 @@ end;
 
 procedure TfrmHome.PrivateKeyManageButtonClick(Sender: TObject);
 begin
-  createAddWalletView();
 
-  HexPrivKeyDefaultRadioButton.IsChecked := true;
-  Layout31.Visible := false;
-  WIFEdit.Text := '';
-  //PrivateKeySettingsLayout.Visible := false;
-  NewCoinDescriptionEdit.Text := '';
-  OwnXEdit.Text := '';
-  OwnXCheckBox.IsChecked := false;
-  IsPrivKeySwitch.IsChecked := false;
-  IsPrivKeySwitch.Enabled := false;
-  NewCoinDescriptionPassEdit.Text := '';
-  NewCoinDescriptionEdit.Text := '';
-  newCoinListNextTabItem := AddCoinFromPrivKeyTabItem;
+switchTab( pageControl , PrivOptionsTabItem );
 
-  switchTab(PageControl, AddNewCoin );
 end;
 
 procedure TfrmHome.LanguageBoxChange(Sender: TObject);
@@ -2457,11 +2477,26 @@ begin
   switchTab(PageControl, walletView);
 end;
 
+procedure TfrmHome.CTIHeaderBackButtonClick(Sender: TObject);
+begin
+  switchTab(PageControl,ClaimWalletListTabItem );
+end;
+
 procedure TfrmHome.SendTransactionButtonClick(Sender: TObject);
 begin
 
   TrySendTX(Sender);
 
+end;
+
+procedure TfrmHome.Button10Click(Sender: TObject);
+begin
+  switchtab(pageControl , Settings );
+end;
+
+procedure TfrmHome.Button11Click(Sender: TObject);
+begin
+  switchTab(PageControl, PrivOptionsTabItem );
 end;
 
 procedure TfrmHome.Button1Click(Sender: TObject);
@@ -3172,6 +3207,11 @@ begin
   switchTab(PageControl, ImportPrivKeyCoinList);
 end;
 
+procedure TfrmHome.ImportPrivateKeyInPrivButtonClick(Sender: TObject);
+begin
+  WalletViewRelated.ImportPrivateKeyInPrivButtonClick(Sender);
+end;
+
 procedure TfrmHome.LinkLayoutClick(Sender: TObject);
 var
   wd: TwalletInfo;
@@ -3431,6 +3471,11 @@ begin
       TrackBar1.Value := SpinBox1.Value;
 
   end;
+end;
+
+procedure TfrmHome.SweepButtonClick(Sender: TObject);
+begin
+  WalletViewRelated.SweepButtonClick(Sender);
 end;
 
 procedure TfrmHome.IsPrivKeySwitchSwitch(Sender: TObject);

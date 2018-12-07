@@ -383,6 +383,7 @@ var
   amountFromQR : AnsiString;
   newCoinListNextTabItem : TTabItem;
   backTabItem : TTabItem;
+  WDToExportPrivKey : TWalletInfo;
 
 implementation
 
@@ -667,8 +668,9 @@ begin
     checkBox := TCheckBox.Create(panel);
     checkBox.parent := panel;
     checkBox.Visible := true;
-    checkBox.Align := TAlignLayout.Right;
-    checkBox.Width := 48;
+    checkBox.Align := TAlignLayout.MostLeft;
+    checkBox.Width := 15;
+    checkBox.Margins.Left := 15;
     if availableCoin[i].shortcut = 'BTC' then
     begin
       checkBox.EnableD := false;
@@ -714,7 +716,8 @@ begin
     checkBox := TCheckBox.Create(panel);
     checkBox.parent := panel;
     checkBox.Visible := true;
-    checkBox.Align := TAlignLayout.Right;
+    checkBox.Align := TAlignLayout.Mostleft;
+    checkBox.Margins.Left := 15;
     checkBox.Width := 48;
     panel.TagObject := checkBox;
 
@@ -741,13 +744,13 @@ begin
     var
       msg: AnsiString;
     begin
-
-      sleep(delay);
-
       if afterChange then
         msg := dictionary('CreateBackupAfterChange')
       else
         msg := dictionary('CreateBackupWallet');
+      sleep(delay);
+
+      
 
       Tthread.Synchronize(nil,
         procedure

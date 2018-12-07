@@ -92,6 +92,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
       93s
       716s
       93s
+      716s
+      93s
       716s)
     inherited dashbrd: TTabItem
       Size.Width = 11.000000000000000000
@@ -321,7 +323,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           93s
           619s)
         inherited WVBalance: TTabItem
-          Size.Width = 39.000000000000000000
+          Size.Width = 23.000000000000000000
           ExplicitSize.cx = 414.000000000000000000
           ExplicitSize.cy = 49.000000000000000000
           inherited BalancePanel: TPanel
@@ -428,7 +430,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           end
         end
         inherited WVReceive: TTabItem
-          Size.Width = 41.000000000000000000
+          Size.Width = 23.000000000000000000
           ExplicitSize.cx = 207.000000000000000000
           ExplicitSize.cy = 49.000000000000000000
           inherited ReceiveVertScrollBox: TVertScrollBox
@@ -515,7 +517,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           end
         end
         inherited WVSend: TTabItem
-          Size.Width = 30.000000000000000000
+          Size.Width = 23.000000000000000000
           ExplicitSize.cx = 103.000000000000000000
           ExplicitSize.cy = 49.000000000000000000
           inherited SendVertScrollBox: TVertScrollBox
@@ -649,7 +651,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           end
         end
         inherited WVSettings: TTabItem
-          Size.Width = 43.000000000000000000
+          Size.Width = 24.000000000000000000
           ExplicitSize.cx = 105.000000000000000000
           ExplicitSize.cy = 49.000000000000000000
           inherited btnExportPrivKey: TButton
@@ -2960,6 +2962,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited CoinPrivKeyDescriptionEdit: TEdit
           Position.X = -107.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
         end
       end
       inherited Panel22: TPanel
@@ -2967,6 +2971,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited CoinPrivKeyPassEdit: TEdit
           Position.X = -107.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
         end
       end
       inherited NewCoinPrivKeyOKButton: TButton
@@ -2975,7 +2981,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
       end
       inherited ImportPrivKeyLabel: TLabel
         Position.Y = 140.000000000000000000
-        Size.Width = 93.000000000000000000
+        Size.Width = 78.000000000000000000
       end
       inherited WIFEdit: TEdit
         Position.Y = 188.000000000000000000
@@ -3008,6 +3014,33 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
       inherited ExportPrivateKeyButton: TButton
         Position.Y = 140.000000000000000000
         Size.Width = 93.000000000000000000
+      end
+    end
+    inherited ExportPrivCoinListTabItem: TTabItem
+      ExplicitSize.cx = 8.000000000000000000
+      ExplicitSize.cy = 8.000000000000000000
+      inherited Panel23: TPanel
+        Size.Width = 93.000000000000000000
+        inherited Label19: TLabel
+          Size.Width = 93.000000000000000000
+        end
+      end
+      inherited ToolBar16: TToolBar
+        Size.Width = 93.000000000000000000
+        Size.Height = 44.000000000000000000
+        inherited Label21: TLabel
+          Size.Width = 93.000000000000000000
+          Size.Height = 44.000000000000000000
+        end
+        inherited Button11: TButton
+          Size.Height = 44.000000000000000000
+        end
+      end
+      inherited ExportPrivKeyListVertScrollBox: TVertScrollBox
+        Size.Width = 93.000000000000000000
+        Size.Height = 607.000000000000000000
+        Viewport.Width = 93.000000000000000000
+        Viewport.Height = 607.000000000000000000
       end
     end
   end

@@ -124,7 +124,8 @@ uses
   FileManagerRelated in 'additionalUnits\FileManagerRelated.pas',
   WalletViewRelated in 'additionalUnits\WalletViewRelated.pas',
   BackupRelated in 'additionalUnits\BackupRelated.pas',
-  TCopyableEditData in 'components\TCopyableEditData.pas';
+  TCopyableEditData in 'components\TCopyableEditData.pas',
+  TCopyableLabelData in 'components\TCopyableLabelData.pas';
 
 {$R *.res}
 

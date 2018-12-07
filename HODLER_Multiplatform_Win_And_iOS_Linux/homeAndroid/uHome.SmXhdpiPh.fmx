@@ -100,6 +100,10 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         245s
         370s
         245s
+        370s
+        245s
+        370s
+        245s
         370s)
       inherited dashbrd: TTabItem
         ExplicitSize.cx = 8.000000000000000000
@@ -883,6 +887,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited LanguageBox: TPopupBox
             Position.X = 133.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
           inherited SettingsLanguageLabel: TLabel
             Size.Width = 103.000000000000000000
@@ -892,6 +898,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited CurrencyBox: TPopupBox
             Position.X = 133.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
           inherited SettingsCurrencyLabel: TLabel
             Size.Width = 103.000000000000000000
@@ -1958,12 +1966,16 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited CoinPrivKeyDescriptionEdit: TEdit
             Position.X = 45.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited Panel22: TPanel
           Size.Width = 245.000000000000000000
           inherited CoinPrivKeyPassEdit: TEdit
             Position.X = 45.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited NewCoinPrivKeyOKButton: TButton
@@ -1971,11 +1983,55 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
         end
         inherited ImportPrivKeyLabel: TLabel
-          Size.Width = 245.000000000000000000
+          Size.Width = 230.000000000000000000
         end
         inherited WIFEdit: TEdit
           Size.Width = 245.000000000000000000
           Size.Height = 32.000000000000000000
+        end
+      end
+      inherited ExportPrivCoinListTabItem: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited Panel23: TPanel
+          Size.Width = 245.000000000000000000
+          inherited Label19: TLabel
+            Size.Width = 245.000000000000000000
+          end
+        end
+        inherited ToolBar16: TToolBar
+          Size.Width = 245.000000000000000000
+          inherited Label21: TLabel
+            Size.Width = 245.000000000000000000
+          end
+        end
+        inherited ExportPrivKeyListVertScrollBox: TVertScrollBox
+          Size.Width = 245.000000000000000000
+          Size.Height = 257.000000000000000000
+          Viewport.Width = 245.000000000000000000
+          Viewport.Height = 257.000000000000000000
+        end
+      end
+      inherited PrivOptionsTabItem: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited ToolBar15: TToolBar
+          Size.Width = 245.000000000000000000
+          inherited Label18: TLabel
+            Size.Width = 245.000000000000000000
+          end
+          inherited Button10: TButton
+            OnClick = nil
+          end
+        end
+        inherited ImportPrivateKeyInPrivButton: TButton
+          Size.Width = 245.000000000000000000
+        end
+        inherited SweepButton: TButton
+          Size.Width = 245.000000000000000000
+        end
+        inherited ExportPrivateKeyButton: TButton
+          Size.Width = 245.000000000000000000
         end
       end
     end

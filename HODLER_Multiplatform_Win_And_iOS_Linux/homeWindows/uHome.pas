@@ -713,6 +713,13 @@ type
     ImportPrivateKeyInPrivButton: TButton;
     SweepButton: TButton;
     ExportPrivateKeyButton: TButton;
+    ExportPrivCoinListTabItem: TTabItem;
+    Panel23: TPanel;
+    Label19: TLabel;
+    ToolBar16: TToolBar;
+    Label21: TLabel;
+    Button11: TButton;
+    ExportPrivKeyListVertScrollBox: TVertScrollBox;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -922,6 +929,8 @@ type
     procedure Button10Click(Sender: TObject);
     procedure ImportPrivateKeyInPrivButtonClick(Sender: TObject);
     procedure SweepButtonClick(Sender: TObject);
+    procedure ExportPrivateKeyButtonClick(Sender: TObject);
+    procedure CTIHeaderBackButtonClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -976,6 +985,8 @@ type
     procedure TransactionWalletListClick(Sender: TObject);
     procedure CopyParentTagStringToClipboard(Sender: TObject);
     procedure CopyParentTextToClipboard(Sender: TObject);
+    procedure ExportPrivKeyListButtonClick(Sender : TObject);
+    //procedure PrivateKeyPasswordCheck
 
   var
     HistoryMaxLength: Integer;
@@ -1070,6 +1081,10 @@ begin
 end;
 
 {$ENDIF}
+procedure Tfrmhome.ExportPrivKeyListButtonClick(Sender : TObject);
+begin
+  walletViewRelated.ExportPrivKeyListButtonClick(Sender);
+end;
 
 procedure TfrmHome.CopyParentTextToClipboard(Sender: TObject);
 begin
@@ -1267,6 +1282,12 @@ end;
 procedure TfrmHome.DirectoryPanelClick(Sender: TObject; const Point: TPointF);
 begin
   DirectoryPanelClick(Sender);
+end;
+
+procedure TfrmHome.ExportPrivateKeyButtonClick(Sender: TObject);
+begin
+  createExportPrivateKeyList();
+  switchTab( pageControl , ExportPrivCoinListTabItem );
 end;
 
 procedure TfrmHome.FileManagerPathUpButtonClick(Sender: TObject);
@@ -2054,7 +2075,7 @@ end;
 procedure TfrmHome.privateKeyPasswordCheck(Sender: TObject);
 begin
   try
-    if BackupRelated.PKCheckPassword(Sender) then
+    if BackupRelated.PKCheckPassword(Sender , WDToExportPrivKey) then
       switchTab(PageControl, ExportKeyScreen);
   except
     on e: Exception do
@@ -2469,7 +2490,7 @@ end;
 
 procedure TfrmHome.btnSBackClick(Sender: TObject);
 begin
-  switchTab(PageControl, walletView);
+  switchTab(PageControl, PrivOptionsTabItem );
 end;
 
 procedure TfrmHome.btnSCBackClick(Sender: TObject);
@@ -2606,6 +2627,12 @@ procedure TfrmHome.CSBackButtonClick(Sender: TObject);
 begin
 
   switchTab(PageControl, walletView);
+end;
+
+procedure TfrmHome.CTIHeaderBackButtonClick(Sender: TObject);
+begin
+  switchTab(PageControl,ClaimWalletListTabItem );
+
 end;
 
 procedure TfrmHome.SendTransactionButtonClick(Sender: TObject);
@@ -2774,6 +2801,7 @@ begin
   switchTab(PageControl, descryptSeed);
   btnDSBack.OnClick := backBtnDecryptSeed;
   btnDecryptSeed.OnClick := privateKeyPasswordCheck;
+  WDToExportPrivKey := currentCoin;
 
 end;
 
@@ -3340,22 +3368,7 @@ end;
 
 procedure TfrmHome.ImportPrivateKeyInPrivButtonClick(Sender: TObject);
 begin
-  createAddWalletView();
-
-  HexPrivKeyDefaultRadioButton.IsChecked := true;
-  Layout31.Visible := false;
-  WIFEdit.Text := '';
-  //PrivateKeySettingsLayout.Visible := false;
-  NewCoinDescriptionEdit.Text := '';
-  OwnXEdit.Text := '';
-  OwnXCheckBox.IsChecked := false;
-  IsPrivKeySwitch.IsChecked := false;
-  IsPrivKeySwitch.Enabled := false;
-  NewCoinDescriptionPassEdit.Text := '';
-  NewCoinDescriptionEdit.Text := '';
-  newCoinListNextTabItem := AddCoinFromPrivKeyTabItem;
-
-  switchTab(PageControl, AddNewCoin );
+  WalletViewRelated.ImportPrivateKeyInPrivButtonClick(Sender);
 end;
 
 procedure TfrmHome.LinkLayoutClick(Sender: TObject);
@@ -3688,11 +3701,7 @@ end;
 
 procedure TfrmHome.SweepButtonClick(Sender: TObject);
 begin
-  createAddWalletView();
-
-  newCoinListNextTabItem := ClaimWalletListTabItem;
-
-  switchTab(PageControl, AddNewCoin );
+  walletViewRelated.SweepButtonClick(Sender);
 end;
 
 procedure TfrmHome.IsPrivKeySwitchSwitch(Sender: TObject);

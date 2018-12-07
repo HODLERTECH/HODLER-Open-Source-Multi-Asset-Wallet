@@ -33,11 +33,13 @@ object frmHome: TfrmHome
     Size.Height = 687.000000000000000000
     Size.PlatformDefault = False
     TabHeight = 49.000000000000000000
-    TabIndex = 38
+    TabIndex = 5
     TabOrder = 8
     TabPosition = None
     OnChange = closeVirtualKeyBoard
     Sizes = (
+      450s
+      687s
       450s
       687s
       450s
@@ -834,8 +836,8 @@ object frmHome: TfrmHome
         Size.Height = 544.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 2
-        Viewport.Width = 450.000000000000000000
-        Viewport.Height = 544.000000000000000000
+        Viewport.Width = 446.000000000000000000
+        Viewport.Height = 540.000000000000000000
       end
       object btnSeedGeneratedProceed: TButton
         Align = Bottom
@@ -903,7 +905,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -5449,8 +5451,8 @@ object frmHome: TfrmHome
           Size.Height = 145.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 5
-          Viewport.Width = 97.000000000000000000
-          Viewport.Height = 145.000000000000000000
+          Viewport.Width = 77.000000000000000000
+          Viewport.Height = 141.000000000000000000
         end
         object WarningImage: TImage
           MultiResBitmap = <
@@ -9615,8 +9617,8 @@ object frmHome: TfrmHome
         Size.Height = 543.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 5
-        Viewport.Width = 450.000000000000000000
-        Viewport.Height = 543.000000000000000000
+        Viewport.Width = 446.000000000000000000
+        Viewport.Height = 539.000000000000000000
       end
     end
     object AddNewCoin: TTabItem
@@ -9813,8 +9815,8 @@ object frmHome: TfrmHome
         StyleLookup = 'memostyle'
         TabOrder = 6
         Visible = False
-        Viewport.Width = 384.000000000000000000
-        Viewport.Height = 88.000000000000000000
+        Viewport.Width = 380.000000000000000000
+        Viewport.Height = 84.000000000000000000
       end
       object lblRetypeSeed: TLabel
         Align = Top
@@ -13314,7 +13316,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -13335,7 +13337,7 @@ object frmHome: TfrmHome
           Size.PlatformDefault = False
           StyleLookup = 'calendarlabelstyle'
           TextSettings.HorzAlign = Center
-          Text = 'Claim Bitcoin SV'
+          Text = 'Transfer the coins to HODLER'
           ParentShowHint = False
           ShowHint = False
         end
@@ -13347,6 +13349,7 @@ object frmHome: TfrmHome
           StyleLookup = 'buttonstyle'
           TabOrder = 1
           Text = 'Back'
+          OnClick = CTIHeaderBackButtonClick
         end
       end
       object Panel18: TPanel
@@ -13686,11 +13689,13 @@ object frmHome: TfrmHome
       end
       object ImportPrivKeyLabel: TLabel
         Align = Top
+        Margins.Left = 15.000000000000000000
+        Position.X = 15.000000000000000000
         Position.Y = 144.000000000000000000
-        Size.Width = 450.000000000000000000
+        Size.Width = 435.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
-        Text = '   Insert below private key:'
+        Text = 'Enter private key:'
         TabOrder = 7
       end
       object Layout31: TLayout
@@ -13833,6 +13838,70 @@ object frmHome: TfrmHome
         Size.PlatformDefault = False
         TabOrder = 1
         Text = 'Export Private Key'
+        OnClick = ExportPrivateKeyButtonClick
+      end
+    end
+    object ExportPrivCoinListTabItem: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 8.000000000000000000
+      Size.Height = 8.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'ExportPrivCoinListTabItem'
+      object Panel23: TPanel
+        Align = Top
+        Position.Y = 48.000000000000000000
+        Size.Width = 450.000000000000000000
+        Size.Height = 65.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        object Label19: TLabel
+          Align = Client
+          Size.Width = 450.000000000000000000
+          Size.Height = 65.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.HorzAlign = Center
+          Text = 'Select the address to export the private key'
+          TabOrder = 0
+        end
+      end
+      object ToolBar16: TToolBar
+        Size.Width = 450.000000000000000000
+        Size.Height = 48.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        object Label21: TLabel
+          Align = Contents
+          Size.Width = 450.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'calendarlabelstyle'
+          TextSettings.HorzAlign = Center
+          Text = 'Select Coin'
+        end
+        object Button11: TButton
+          Align = Left
+          Size.Width = 64.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'buttonstyle'
+          TabOrder = 1
+          Text = 'Back'
+          OnClick = btnSBackClick
+        end
+      end
+      object ExportPrivKeyListVertScrollBox: TVertScrollBox
+        Align = Client
+        Size.Width = 450.000000000000000000
+        Size.Height = 574.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        Viewport.Width = 450.000000000000000000
+        Viewport.Height = 574.000000000000000000
       end
     end
   end

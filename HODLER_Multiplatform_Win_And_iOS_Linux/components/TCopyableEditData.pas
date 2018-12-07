@@ -8,7 +8,7 @@ uses
   System.Types, StrUtils;
 
 type
-  TCopyableEdit = class(TEdit)
+  TCopyableEdit = class(Tedit)
   private
     { Private declarations }
     procedure copy(Sender: TObject);
@@ -25,6 +25,7 @@ type
     // constructor CreateFrom(edit : Tedit);
 
   end;
+
 
 Function CreateButtonWithCopyImg(AOwner: TComponent): TButton;
 
@@ -51,13 +52,13 @@ var
 begin
   button := TButton.Create(AOwner);
   button.Parent := TfmxObject(AOwner);
-  button.Visible := true;
+  button.Visible := false;;
   // Button.Text := 'CP'; // change to Image
   button.Align := TAlignLayout.MostRight;
   button.Width := 32;
   button.OnClick := frmhome.CopyParentTextToClipboard;
 
-  image := Timage.Create(button);
+  image := Timage.Create(Aowner);
   Stream := TResourceStream.Create(HInstance,
     'COPY_IMG_' + RightStr(CurrentStyle, length(CurrentStyle) - 3), RT_RCDATA);
   try
@@ -66,8 +67,9 @@ begin
     Stream.Free;
   end;
 
-  image.Parent := button;
-  image.Align := TAlignLayout.Client;
+  image.Parent := TfmxObject(AOwner);
+  image.Align := TAlignLayout.right;
+  image.Width := 32;
   image.Margins.Top := 5;
   image.Margins.Bottom := 5;
   image.Margins.Left := 5;

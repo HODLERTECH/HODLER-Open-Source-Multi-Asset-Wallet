@@ -92,6 +92,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
       0s
       375s
       0s
+      375s
+      0s
       375s)
     inherited dashbrd: TTabItem
       ExplicitSize.cx = 8.000000000000000000
@@ -2527,6 +2529,17 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
       end
       inherited ExportPrivateKeyButton: TButton
         Position.X = 32.000000000000000000
+      end
+    end
+    inherited ExportPrivCoinListTabItem: TTabItem
+      ExplicitSize.cx = 8.000000000000000000
+      ExplicitSize.cy = 8.000000000000000000
+      inherited ToolBar16: TToolBar
+        Position.Y = 8.000000000000000000
+      end
+      inherited ExportPrivKeyListVertScrollBox: TVertScrollBox
+        Viewport.Width = 450.000000000000000000
+        Viewport.Height = 574.000000000000000000
       end
     end
   end

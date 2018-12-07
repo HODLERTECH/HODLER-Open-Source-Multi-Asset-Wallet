@@ -71,6 +71,9 @@ procedure btnCreateNewWalletClick(Sender: TObject);
 procedure CopyParentTextToClipboard(Sender: TObject);
 procedure CreateCopyImageButtonOnTEdits();
 procedure newCoinFromPrivateKey(Sender: TObject);
+procedure ExportPrivKeyListButtonClick(Sender : TObject);
+procedure ImportPrivateKeyInPrivButtonClick(Sender: TObject);
+procedure SweepButtonClick(Sender: TObject);
 
 var
   SyncOpenWallet: TThread;
@@ -81,6 +84,54 @@ uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, AccountRelated, TCopyableEditData ,BackupRelated;
 
+procedure SweepButtonClick(Sender: TObject);
+begin
+  with frmhome do
+  begin
+    createAddWalletView();
+
+    newCoinListNextTabItem := ClaimWalletListTabItem;
+
+    switchTab(PageControl, AddNewCoin );
+  end;
+
+end;
+
+procedure ImportPrivateKeyInPrivButtonClick(Sender: TObject);
+begin
+  createAddWalletView();
+  with frmhome do
+  begin
+    HexPrivKeyDefaultRadioButton.IsChecked := true;
+    Layout31.Visible := false;
+    WIFEdit.Text := '';
+    //PrivateKeySettingsLayout.Visible := false;
+    NewCoinDescriptionEdit.Text := '';
+    OwnXEdit.Text := '';
+    OwnXCheckBox.IsChecked := false;
+    IsPrivKeySwitch.IsChecked := false;
+    IsPrivKeySwitch.Enabled := false;
+    NewCoinDescriptionPassEdit.Text := '';
+    NewCoinDescriptionEdit.Text := '';
+    newCoinListNextTabItem := AddCoinFromPrivKeyTabItem;
+
+    switchTab(PageControl, AddNewCoin );
+
+  end;
+end;
+
+procedure ExportPrivKeyListButtonClick(Sender : TObject);
+begin
+  with frmhome do
+  begin
+    decryptSeedBackTabItem := PageControl.ActiveTab;
+    switchTab(PageControl, descryptSeed);
+    btnDSBack.OnClick := backBtnDecryptSeed;
+    btnDecryptSeed.OnClick := privateKeyPasswordCheck;
+    WDToExportPrivKey := TwalletInfo(TfmxObject(Sender).TagObject);
+  end;
+
+end;
 procedure CreateCopyImageButtonOnTEdits();
 var
   fmxObj, cp: Tcomponent;
@@ -910,18 +961,21 @@ begin
           if (length(frmhome.WIFEdit.Text) = 64) then
           begin
 
+                //Tthread.Synchronize(nil , procedure
+                //begin
+                  if not(frmhome.HexPrivKeyCompressedRadioButton.IsChecked or
+                    frmhome.HexPrivKeyNotCompressedRadioButton.IsChecked) then
+                    exit;
+                  out := frmhome.WIFEdit.Text;
+                  if frmhome.HexPrivKeyCompressedRadioButton.IsChecked then
+                    isCompressed := true
+                  else if frmhome.HexPrivKeyNotCompressedRadioButton.IsChecked
+                  then
+                    isCompressed := false
+                  else
+                    raise Exception.Create('compression not defined');
+                //end);
 
-                if not(frmhome.HexPrivKeyCompressedRadioButton.IsChecked or
-                  frmhome.HexPrivKeyNotCompressedRadioButton.IsChecked) then
-                  exit;
-                out := frmhome.WIFEdit.Text;
-                if frmhome.HexPrivKeyCompressedRadioButton.IsChecked then
-                  isCompressed := true
-                else if frmhome.HexPrivKeyNotCompressedRadioButton.IsChecked
-                then
-                  isCompressed := false
-                else
-                  raise Exception.Create('compression not defined');
 
 
           end

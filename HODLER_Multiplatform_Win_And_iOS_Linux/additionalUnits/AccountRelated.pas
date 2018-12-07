@@ -55,7 +55,7 @@ implementation
 
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
-  transactions, WalletStructureData, TcopyableEditData, walletViewRelated;
+  transactions, WalletStructureData, TcopyableEditData, TCopyableLabelData, walletViewRelated;
 
 procedure afterInitialize;
 var
@@ -938,8 +938,8 @@ var
   cc: cryptoCurrency;
   Panel: TPanel;
   bilanceLbl: TLabel;
-  addrLbl: TCopyableEdit;
-  deleteBtn: TButton;
+  addrLbl: TCopyableLabel;
+  deleteBtn: TLabel;
   generateNewAddresses: TButton;
   copyBtn: TButton;
 begin
@@ -963,14 +963,15 @@ begin
       Panel.OnClick := OpenWalletViewFromYWalletList;
 
       Panel.Margins.Bottom:=1;
-      addrLbl := TCopyableEdit.Create(Panel);
-      addrLbl.button.Align := TAlignLayout.Right;
+      addrLbl := TCopyableLabel.Create(Panel);
+      addrLbl.image.Align := TAlignLayout.Right;
       addrLbl.Align:=TAlignLayout.MostTop;
       addrLbl.Parent := Panel;
       addrLbl.Visible := true;
       // addrLbl.Margins.Left := 15;
       // addrLbl.Margins.Right := 15;
       addrLbl.Height := 24;
+      addrLbl.Margins.left := 15;
       if TwalletInfo(cc).coin in [3, 7] then
         addrLbl.Text := bitcoinCashAddressToCashAddress(cc.addr)
       else
@@ -990,14 +991,17 @@ begin
       bilanceLbl.TextSettings.HorzAlign := TTextAlign.Trailing;
       bilanceLbl.Align := TAlignLayout.Right;
 
-      deleteBtn := TButton.Create(addrLbl);
+      deleteBtn := TLabel.Create(addrLbl);
       deleteBtn.Parent := addrLbl;
       deleteBtn.Visible := true;
       deleteBtn.Align := TAlignLayout.MostRight;
-      deleteBtn.Width := 15;
-      deleteBtn.Text := 'x';
+      deleteBtn.Width := 24;
+      deleteBtn.Text := 'X';
+      deleteBtn.Margins.Bottom := 6;
+      deleteBtn.TextAlign := TTextAlign.Center;
       deleteBtn.TagObject := cc;
       deleteBtn.OnClick := deleteYAddress;
+      deleteBtn.HitTest := true;
       // deleteBtn.Align:=TAlignLayout.Left;
 
       { copyBtn := TButton.Create(Panel);

@@ -92,6 +92,8 @@ inherited frmHome_Surface: TfrmHome_Surface
       759s
       1920s
       759s
+      1920s
+      759s
       1920s)
     inherited dashbrd: TTabItem
       ExplicitSize.cx = 8.000000000000000000
@@ -2473,7 +2475,7 @@ inherited frmHome_Surface: TfrmHome_Surface
         Size.Width = 759.000000000000000000
       end
       inherited ImportPrivKeyLabel: TLabel
-        Size.Width = 759.000000000000000000
+        Size.Width = 744.000000000000000000
       end
       inherited WIFEdit: TEdit
         Size.Width = 759.000000000000000000
@@ -2496,6 +2498,28 @@ inherited frmHome_Surface: TfrmHome_Surface
       end
       inherited ExportPrivateKeyButton: TButton
         Size.Width = 759.000000000000000000
+      end
+    end
+    inherited ExportPrivCoinListTabItem: TTabItem
+      ExplicitSize.cx = 8.000000000000000000
+      ExplicitSize.cy = 8.000000000000000000
+      inherited Panel23: TPanel
+        Size.Width = 759.000000000000000000
+        inherited Label19: TLabel
+          Size.Width = 759.000000000000000000
+        end
+      end
+      inherited ToolBar16: TToolBar
+        Size.Width = 759.000000000000000000
+        inherited Label21: TLabel
+          Size.Width = 759.000000000000000000
+        end
+      end
+      inherited ExportPrivKeyListVertScrollBox: TVertScrollBox
+        Size.Width = 759.000000000000000000
+        Size.Height = 1807.000000000000000000
+        Viewport.Width = 759.000000000000000000
+        Viewport.Height = 1807.000000000000000000
       end
     end
   end

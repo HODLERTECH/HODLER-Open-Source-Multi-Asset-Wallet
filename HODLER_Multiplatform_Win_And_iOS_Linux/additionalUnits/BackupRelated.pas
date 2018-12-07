@@ -13,7 +13,7 @@ uses
   FMX.Platform, System.Threading, Math, DelphiZXingQRCode,
   FMX.TabControl, FMX.Edit,
   FMX.Clipboard, FMX.VirtualKeyBoard, JSON,
-  languages,
+  languages, WalletStructureData,
 
   FMX.Media, FMX.Objects, uEncryptedZipFile, System.Zip
 {$IFDEF ANDROID},
@@ -43,7 +43,7 @@ procedure decryptSeedForRestore(Sender: TObject);
 procedure NewHSB(path, password, accname: AnsiString);
 procedure oldHSB(path, password, accname: AnsiString);
 function isPasswordZip(path: AnsiString): Boolean;
-function PKCheckPassword(Sender: TObject): Boolean;
+function PKCheckPassword(Sender: TObject ; wd : TWalletInfo = nil): Boolean;
 procedure CheckSeed(Sender: TObject);
 procedure ImportPriv(Sender: TObject);
 procedure splitWords(Sender: TObject);
@@ -55,12 +55,71 @@ function SweepCoinsRoutine(priv: AnsiString; isCompressed: Boolean;
   coin: Integer; targetAddr: AnsiString): AnsiString;
 procedure Claim(CoinID : Integer);
 procedure createClaimCoinList(id: Integer);
+procedure createExportPrivateKeyList();
 
 implementation
 
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
-  transactions, WalletStructureData, AccountRelated, walletViewRelated;
+  transactions,  AccountRelated, walletViewRelated;
+
+procedure createExportPrivateKeyList();
+var
+  i: Integer;
+  panel: TPanel;
+  lbl: TLabel;
+  image: TImage;
+  bilancelbl : TLabel;
+begin
+
+   clearVertScrollBox(frmhome.ExportPrivKeyListVertScrollBox);
+
+  for i := 0 to (length(currentAccount.myCoins) - 1) do
+  begin
+
+    if ( ( currentAccount.myCoins[i].confirmed + currentAccount.myCoins[i].unconfirmed ) <> 0 ) then
+    begin
+
+      panel := TPanel.create(frmhome.ExportPrivKeyListVertScrollBox);
+      panel.parent := frmhome.ExportPrivKeyListVertScrollBox;
+      panel.visible := true;
+      panel.align := TAlignLayout.Top;
+      panel.height := 48;
+      panel.tagObject := currentAccount.myCoins[i];
+      panel.onclick := frmhome.ExportPrivKeyListButtonClick;
+      panel.Position.Y := -1;
+
+      lbl := TLabel.create(panel);
+      lbl.parent := panel;
+      lbl.align := TAlignLayout.client;
+      lbl.margins.left := 15;
+      lbl.margins.right := 15;
+      lbl.visible := true;
+      lbl.Text := currentAccount.myCoins[i].addr;
+
+      image := TImage.create(panel);
+      image.parent := panel;
+      image.bitmap := currentAccount.myCoins[i].getIcon();
+      image.align := TAlignLayout.left;
+      image.width := 32 + 2 * 15;
+      image.visible := true;
+      image.Margins.top := 8;
+      image.Margins.Bottom := 8;
+
+      bilanceLbl := TLabel.Create(panel);
+      bilancelbl.Parent := panel;
+      bilancelbl.align := TAlignLayout.Right;
+      bilancelbl.Width := 96;
+      bilancelbl.visible := true;
+      bilancelbl.Margins.Right := 15;
+      bilancelbl.Text := BigIntegerBeautifulStr( (currentAccount.myCoins[i].confirmed + currentAccount.myCoins[i].unconfirmed) , currentAccount.myCoins[i].decimals );
+      bilancelbl.TextSettings.HorzAlign := TTextAlign.Trailing;
+
+    end;
+  end;
+
+
+end;
 
 procedure createClaimCoinList(id: Integer);
 var
@@ -85,6 +144,7 @@ begin
       panel.height := 48;
       panel.tagObject := currentAccount.myCoins[i];
       panel.onclick := frmhome.ClaimCoinSelectInListClick;
+      panel.Position.Y := -1;
 
       lbl := TLabel.create(panel);
       lbl.parent := panel;
@@ -100,7 +160,8 @@ begin
       image.align := TAlignLayout.left;
       image.width := 32 + 2 * 15;
       image.visible := true;
-
+      image.Margins.top := 8;
+      image.Margins.Bottom := 8;
     end;
   end;
 
@@ -751,7 +812,7 @@ begin
   end;
 end;
 
-function PKCheckPassword(Sender: TObject): Boolean;
+function PKCheckPassword(Sender: TObject ; wd : TWalletInfo = nil): Boolean;
 var
   MasterSeed, tced: AnsiString;
 var
@@ -759,6 +820,8 @@ var
   tempStr: AnsiString;
 {$IFDEF MSWINDOWS}lblPrivateKey: TMemo; {$ENDIF}
 begin
+  if wd = nil then
+    wd := currentCoin;
 
   result := true;
   with frmhome do
@@ -767,10 +830,10 @@ begin
     tced := TCA(passwordForDecrypt.Text);
     passwordForDecrypt.Text := '';
     MasterSeed := SpeckDecrypt(tced, currentAccount.EncryptedMasterSeed);
-    if (CurrentCoin.X = -1) and (CurrentCoin.Y = -1) then
+    if (wd.X = -1) and (wd.Y = -1) then
     begin
 
-      tempStr := SpeckDecrypt(TCA(MasterSeed), CurrentCoin.EncryptedPrivKey);
+      tempStr := SpeckDecrypt(TCA(MasterSeed), wd.EncryptedPrivKey);
 
       if not isHex(tempStr) then
       begin
@@ -779,8 +842,8 @@ begin
       end;
       // {$IFDEF MSWINDOWS}lblPrivateKey:=PrivateKeyMemo;{$ENDIF}
       lblPrivateKey.Text := cutEveryNChar(4, tempStr);
-      lblWIFKey.Text := PrivKeyToWIF(tempStr, CurrentCoin.isCompressed,
-        AvailableCoin[TWalletInfo(CurrentCoin).coin].wifByte);
+      lblWIFKey.Text := PrivKeyToWIF(tempStr, wd.isCompressed,
+        AvailableCoin[TWalletInfo(wd).coin].wifByte);
       tempStr := '';
       MasterSeed := '';
 
@@ -795,10 +858,10 @@ begin
         exit(false);
       end;
       // {$IFDEF MSWINDOWS}lblPrivateKey:=PrivateKeyMemo;{$ENDIF}
-      lblPrivateKey.Text := priv256forhd(CurrentCoin.coin, CurrentCoin.X,
-        CurrentCoin.Y, MasterSeed);
-      lblWIFKey.Text := PrivKeyToWIF(lblPrivateKey.Text, CurrentCoin.coin <> 4,
-        AvailableCoin[TWalletInfo(CurrentCoin).coin].wifByte);
+      lblPrivateKey.Text := priv256forhd(wd.coin, wd.X,
+        wd.Y, MasterSeed);
+      lblWIFKey.Text := PrivKeyToWIF(lblPrivateKey.Text, wd.coin <> 4,
+        AvailableCoin[TWalletInfo(wd).coin].wifByte);
 
       wipeAnsiString(MasterSeed);
 

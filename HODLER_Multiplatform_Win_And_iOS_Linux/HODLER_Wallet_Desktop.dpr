@@ -125,7 +125,8 @@ uses
   AccountRelated in 'additionalUnits\AccountRelated.pas',
   QRRelated in 'additionalUnits\QRRelated.pas',
   FileManagerRelated in 'additionalUnits\FileManagerRelated.pas',
-  TCopyableEditData in 'components\TCopyableEditData.pas';
+  TCopyableEditData in 'components\TCopyableEditData.pas',
+  TCopyableLabelData in 'components\TCopyableLabelData.pas';
 
 {$R *.res}
 
