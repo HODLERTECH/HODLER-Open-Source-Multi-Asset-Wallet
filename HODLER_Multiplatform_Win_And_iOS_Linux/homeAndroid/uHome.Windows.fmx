@@ -207,15 +207,13 @@ inherited frmHome_Windows: TfrmHome_Windows
         inherited panelPassword: TPanel
           Size.Width = 624.000000000000000000
           inherited pass: TEdit
-            Position.X = 200.000000000000000000
-            Size.Width = 424.000000000000000000
+            Size.Width = 624.000000000000000000
           end
         end
         inherited PanelRetypePassword: TPanel
           Size.Width = 624.000000000000000000
           inherited retypePass: TEdit
-            Position.X = 200.000000000000000000
-            Size.Width = 424.000000000000000000
+            Size.Width = 624.000000000000000000
           end
         end
         inherited passwordMessage: TLabel
@@ -249,8 +247,7 @@ inherited frmHome_Windows: TfrmHome_Windows
         inherited AccountNamePanel: TPanel
           Size.Width = 624.000000000000000000
           inherited AccountNameEdit: TEdit
-            Position.X = 200.000000000000000000
-            Size.Width = 424.000000000000000000
+            Size.Width = 624.000000000000000000
           end
         end
         inherited privTCAPanel2: TPanel

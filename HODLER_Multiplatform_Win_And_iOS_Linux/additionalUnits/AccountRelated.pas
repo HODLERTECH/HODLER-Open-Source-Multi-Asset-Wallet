@@ -265,6 +265,7 @@ begin
     end;
 {$ENDIF}
     clearVertScrollBox(frmHome.WalletList);
+
     if (SyncBalanceThr <> nil) and (not SyncBalanceThr.Finished) then
     begin
 
@@ -302,7 +303,7 @@ begin
     lastClosedAccount := name;
     currentAccount := Account.Create(name);
     currentAccount.LoadFiles;
-
+    frmHome.HideZeroWalletsCheckBox.IsChecked:=CurrentAccount.hideEmpties;
     for cc in currentAccount.myCoins do
     begin
 

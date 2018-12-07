@@ -256,7 +256,7 @@ object frmHome: TfrmHome
       Size.Height = 551.000000000000000000
       Size.PlatformDefault = False
       TabHeight = 49.000000000000000000
-      TabIndex = 43
+      TabIndex = 0
       TabOrder = 0
       TabPosition = None
       OnChange = closeVirtualKeyBoard
@@ -355,7 +355,7 @@ object frmHome: TfrmHome
         CustomIcon = <
           item
           end>
-        IsSelected = False
+        IsSelected = True
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -783,23 +783,13 @@ object frmHome: TfrmHome
           TabOrder = 4
           object pass: TEdit
             Touch.InteractiveGestures = [LongTap, DoubleTap]
-            Align = Right
-            Anchors = [akLeft, akTop, akRight, akBottom]
+            Align = Client
             TabOrder = 0
             Password = True
-            Position.X = 168.000000000000000000
-            Size.Width = 200.000000000000000000
+            Size.Width = 368.000000000000000000
             Size.Height = 48.000000000000000000
             Size.PlatformDefault = False
-          end
-          object lblEnterPass: TLabel
-            Align = Left
-            Margins.Left = 10.000000000000000000
-            Position.X = 10.000000000000000000
-            Size.Width = 161.000000000000000000
-            Size.Height = 48.000000000000000000
-            Size.PlatformDefault = False
-            Text = 'Enter password'
+            TextPrompt = 'Enter password'
           end
         end
         object PanelRetypePassword: TPanel
@@ -811,23 +801,13 @@ object frmHome: TfrmHome
           TabOrder = 6
           object retypePass: TEdit
             Touch.InteractiveGestures = [LongTap, DoubleTap]
-            Align = Right
-            Anchors = [akLeft, akTop, akRight, akBottom]
+            Align = Client
             TabOrder = 0
             Password = True
-            Position.X = 168.000000000000000000
-            Size.Width = 200.000000000000000000
+            Size.Width = 368.000000000000000000
             Size.Height = 48.000000000000000000
             Size.PlatformDefault = False
-          end
-          object lblRetypePass: TLabel
-            Align = Left
-            Margins.Left = 10.000000000000000000
-            Position.X = 10.000000000000000000
-            Size.Width = 153.000000000000000000
-            Size.Height = 48.000000000000000000
-            Size.PlatformDefault = False
-            Text = 'Retype password'
+            TextPrompt = 'Retype password'
           end
         end
         object btnGenSeed: TButton
@@ -1214,22 +1194,12 @@ object frmHome: TfrmHome
           TabOrder = 3
           object AccountNameEdit: TEdit
             Touch.InteractiveGestures = [LongTap, DoubleTap]
-            Align = Right
-            Anchors = [akLeft, akTop, akRight, akBottom]
+            Align = Client
             TabOrder = 0
-            Position.X = 168.000000000000000000
-            Size.Width = 200.000000000000000000
+            Size.Width = 368.000000000000000000
             Size.Height = 48.000000000000000000
             Size.PlatformDefault = False
-          end
-          object AccountNameLabel: TLabel
-            Align = Left
-            Margins.Left = 10.000000000000000000
-            Position.X = 10.000000000000000000
-            Size.Width = 161.000000000000000000
-            Size.Height = 48.000000000000000000
-            Size.PlatformDefault = False
-            Text = 'Account Name'
+            TextPrompt = 'Account name'
           end
         end
         object privTCAPanel2: TPanel
@@ -1878,12 +1848,11 @@ object frmHome: TfrmHome
                   MultiResBitmap = <
                     item
                     end>
-                  Align = Top
+                  Align = Client
                   Margins.Top = 16.000000000000000000
                   Margins.Bottom = 16.000000000000000000
-                  Position.Y = 32.000000000000000000
                   Size.Width = 368.000000000000000000
-                  Size.Height = 256.000000000000000000
+                  Size.Height = 46.000000000000000000
                   Size.PlatformDefault = False
                   OnClick = QRCodeImageClick
                 end
@@ -10977,7 +10946,7 @@ object frmHome: TfrmHome
                 TabOrder = 0
               end
               object HistoryTransactionDate: TLabel
-                Align = Top
+                Position.Y = 36.000000000000000000
                 Size.Width = 187.000000000000000000
                 Size.Height = 36.000000000000000000
                 Size.PlatformDefault = False
@@ -10985,9 +10954,9 @@ object frmHome: TfrmHome
                 TabOrder = 1
               end
               object historyTransactionConfirmation: TLabel
-                Position.Y = 36.000000000000000000
+                Position.Y = 72.000000000000000000
                 Size.Width = 187.000000000000000000
-                Size.Height = 76.000000000000000000
+                Size.Height = 36.000000000000000000
                 Size.PlatformDefault = False
                 Text = '1000500100900 Confirmation'
                 TabOrder = 2

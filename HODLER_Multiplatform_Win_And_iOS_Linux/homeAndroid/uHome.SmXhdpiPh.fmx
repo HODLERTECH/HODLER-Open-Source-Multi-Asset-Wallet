@@ -221,13 +221,15 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         inherited panelPassword: TPanel
           Size.Width = 245.000000000000000000
           inherited pass: TEdit
-            Position.X = 45.000000000000000000
+            Size.Width = 245.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited PanelRetypePassword: TPanel
           Size.Width = 245.000000000000000000
           inherited retypePass: TEdit
-            Position.X = 45.000000000000000000
+            Size.Width = 245.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited btnGenSeed: TButton
@@ -267,7 +269,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         inherited AccountNamePanel: TPanel
           Size.Width = 245.000000000000000000
           inherited AccountNameEdit: TEdit
-            Position.X = 45.000000000000000000
+            Size.Width = 245.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited privTCAPanel2: TPanel
@@ -887,8 +890,6 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited LanguageBox: TPopupBox
             Position.X = 133.000000000000000000
-            Position.Y = 8.000000000000000000
-            Size.Height = 32.000000000000000000
           end
           inherited SettingsLanguageLabel: TLabel
             Size.Width = 103.000000000000000000
@@ -898,8 +899,6 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited CurrencyBox: TPopupBox
             Position.X = 133.000000000000000000
-            Position.Y = 8.000000000000000000
-            Size.Height = 32.000000000000000000
           end
           inherited SettingsCurrencyLabel: TLabel
             Size.Width = 103.000000000000000000
@@ -1966,16 +1965,12 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited CoinPrivKeyDescriptionEdit: TEdit
             Position.X = 45.000000000000000000
-            Position.Y = 8.000000000000000000
-            Size.Height = 32.000000000000000000
           end
         end
         inherited Panel22: TPanel
           Size.Width = 245.000000000000000000
           inherited CoinPrivKeyPassEdit: TEdit
             Position.X = 45.000000000000000000
-            Position.Y = 8.000000000000000000
-            Size.Height = 32.000000000000000000
           end
         end
         inherited NewCoinPrivKeyOKButton: TButton

@@ -37,7 +37,9 @@ uses
   ZXing.ScanManager, FMX.EditBox, FMX.SpinBox, FMX.Gestures, FMX.Effects,
   FMX.Filter.Effects, System.Actions, FMX.ActnList, System.Math.Vectors,
   FMX.Controls3D, FMX.Layers3D, FMX.StdActns, FMX.MediaLibrary.Actions,
-  FMX.ComboEdit;
+  FMX.ComboEdit{$IFDEF MSWINDOWS}
+    , Winapi.ShellAPI
+{$ENDIF};
 
 procedure decryptSeedForRestore(Sender: TObject);
 procedure NewHSB(path, password, accname: AnsiString);
@@ -467,11 +469,14 @@ procedure SendEQR;
 var
   i: Integer;
   Zip: TEncryptedZipFile;
-  img: TBitmap;
+  img, qrimg: TBitmap;
+
   tempStr: TStream;
   ImgPath: AnsiString;
   zipPath: AnsiString;
-
+  FileName: string;
+var
+  Stream: TResourceStream;
 var
   MasterSeed, tced: AnsiString;
   Y, m, d: Word;
@@ -487,35 +492,43 @@ begin
       exit;
     end;
 
-    img := StrToQRBitmap(currentAccount.EncryptedMasterSeed);
-
-    ImgPath := System.IOUtils.TPath.Combine(HOME_PATH, 'QREncryptedSeed.png');
+    qrimg := StrToQRBitmap(currentAccount.EncryptedMasterSeed);
+    img := TBitmap.create();
+    Stream := TResourceStream.create(HInstance, 'IMG_EQR', RT_RCDATA);
+    try
+      img.LoadFromStream(Stream);
+    finally
+      Stream.Free;
+    end;
+    img.Canvas.BeginScene;
+    img.Canvas.DrawBitmap(qrimg, RectF(0, 0, 294, 294),
+      RectF(19, 79, 294 + 19, 294 + 79), 1);
+    img.Canvas.EndScene;
     DecodeDate(Now, Y, m, d);
-    zipPath := System.IOUtils.TPath.Combine
-      ({$IFDEF IOS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
-      (){$ENDIF}, 'QREncryptedSeed' + Format('%d.%d.%d', [Y, m, d]) + '.' +
-      IntToStr(DateTimeToUnix(Now)) + '.zip');
+    FileName := currentAccount.name + '_' + Format('%d.%d.%d', [Y, m, d]) + '.'
+      + IntToStr(DateTimeToUnix(Now));
+    ImgPath := System.IOUtils.TPath.Combine(HOME_PATH, FileName + '.png');
 
     img.SaveToFile(ImgPath);
-    Zip := TEncryptedZipFile.create('');
-    if FileExists(zipPath) then
-      DeleteFile(zipPath);
 
-    Zip.Open(zipPath, TZipMode.zmWrite);
-    Zip.Add(ImgPath);
-    Zip.Close;
-    shareFile(zipPath);
-
-    DeleteFile(ImgPath);
+    shareFile(ImgPath);
+{$IFDEF  MSWINDOWS}
+    repeat
+    Application.ProcessMessages;
+    Sleep(100);
+    until FileExists(ImgPath);
+    ShellExecute(0, 'open', PWideChar(ImgPath), nil, nil,5);
+{$ENDIF}
+    // DeleteFile(ImgPath);
     img.Free;
-    Zip.Free;
     MasterSeed := '';
     tced := '';
+    qrimg.Free;
     passwordForDecrypt.Text := '';
     userSavedSeed := true;
     refreshWalletDat();
-
     switchTab(pageControl, BackupTabItem);
+
   end;
 end;
 

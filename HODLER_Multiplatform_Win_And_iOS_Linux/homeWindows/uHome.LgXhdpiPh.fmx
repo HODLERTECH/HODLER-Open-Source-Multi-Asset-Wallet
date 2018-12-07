@@ -281,7 +281,6 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
           129s
           598s)
         inherited WVBalance: TTabItem
-          Size.Width = 32.000000000000000000
           ExplicitSize.cx = 450.000000000000000000
           ExplicitSize.cy = 49.000000000000000000
           inherited BalancePanel: TPanel
@@ -386,7 +385,7 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
           end
         end
         inherited WVReceive: TTabItem
-          Size.Width = 32.000000000000000000
+          Size.Width = 55.000000000000000000
           ExplicitSize.cx = 225.000000000000000000
           ExplicitSize.cy = 49.000000000000000000
           inherited ReceiveVertScrollBox: TVertScrollBox
@@ -464,7 +463,7 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
           end
         end
         inherited WVSend: TTabItem
-          Size.Width = 32.000000000000000000
+          Size.Width = 39.000000000000000000
           ExplicitSize.cx = 112.000000000000000000
           ExplicitSize.cy = 49.000000000000000000
           inherited SendVertScrollBox: TVertScrollBox
@@ -569,7 +568,7 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
           end
         end
         inherited WVSettings: TTabItem
-          Size.Width = 33.000000000000000000
+          Size.Width = 64.000000000000000000
           ExplicitSize.cx = 114.000000000000000000
           ExplicitSize.cy = 49.000000000000000000
           inherited btnExportPrivKey: TButton
@@ -1472,8 +1471,6 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Size.Width = 129.000000000000000000
         inherited LanguageBox: TPopupBox
           Position.X = 17.000000000000000000
-          Position.Y = 8.000000000000000000
-          Size.Height = 32.000000000000000000
         end
         inherited SettingsLanguageLabel: TLabel
           Size.Width = 0.000000000000000000
@@ -1483,8 +1480,6 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Size.Width = 129.000000000000000000
         inherited CurrencyBox: TPopupBox
           Position.X = 17.000000000000000000
-          Position.Y = 8.000000000000000000
-          Size.Height = 32.000000000000000000
         end
         inherited SettingsCurrencyLabel: TLabel
           Size.Width = 0.000000000000000000
@@ -1522,7 +1517,6 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         inherited DayNightModeSwitch: TSwitch
           Position.X = 69.000000000000000000
           Size.Width = 44.000000000000000000
-          Size.Height = 26.000000000000000000
           OnSwitch = nil
         end
       end
@@ -2588,16 +2582,12 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Size.Width = 129.000000000000000000
         inherited CoinPrivKeyDescriptionEdit: TEdit
           Position.X = -71.000000000000000000
-          Position.Y = 8.000000000000000000
-          Size.Height = 32.000000000000000000
         end
       end
       inherited Panel22: TPanel
         Size.Width = 129.000000000000000000
         inherited CoinPrivKeyPassEdit: TEdit
           Position.X = -71.000000000000000000
-          Position.Y = 8.000000000000000000
-          Size.Height = 32.000000000000000000
         end
       end
       inherited NewCoinPrivKeyOKButton: TButton

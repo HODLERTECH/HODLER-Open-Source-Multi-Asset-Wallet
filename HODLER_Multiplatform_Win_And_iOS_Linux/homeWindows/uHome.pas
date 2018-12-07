@@ -1348,6 +1348,7 @@ end;
 procedure TfrmHome.HideZeroWalletsCheckBoxChange(Sender: TObject);
 begin
   WalletViewRelated.HideEmptyWallets(Sender);
+  CurrentAccount.SaveFiles
 end;
 
 {$IFDEF ANDROID}
@@ -3031,7 +3032,7 @@ end;
 
 procedure TfrmHome.FormFocusChanged(Sender: TObject);
 begin
-  SetCopyButtonPosition;
+//  SetCopyButtonPosition;
 end;
 
 {$IFDEF ANDROID}
