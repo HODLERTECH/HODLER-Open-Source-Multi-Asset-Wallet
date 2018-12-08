@@ -77,8 +77,6 @@ type
     btnGenSeed: TButton;
     pass: TEdit;
     retypePass: TEdit;
-    lblEnterPass: TLabel;
-    lblRetypePass: TLabel;
     seedGenerated: TTabItem;
     headerForSG: TToolBar;
     labelHeaderForSG: TLabel;
@@ -368,11 +366,8 @@ type
     TransactionDetailsBackButton: TButton;
     HistoryTransactionVertScrollBox: TVertScrollBox;
     HistoryTransactionSendReceive: TLabel;
-    HistoryTransactionValue: TLabel;
     HistoryStatusStaticLabel: TLabel;
-    historyTransactionConfirmation: TLabel;
     HistoryDateStaticLabel: TLabel;
-    HistoryTransactionDate: TLabel;
     Layout16: TLayout;
     TransactionIDStaticLabel: TLabel;
     HistoryTransactionID: TLabel;
@@ -471,7 +466,6 @@ type
     Action1: TAction;
     AccountNamePanel: TPanel;
     AccountNameEdit: TEdit;
-    AccountNameLabel: TLabel;
     RestoreWalletWithPassword: TTabItem;
     RestoreWalletOKButton: TButton;
     Panel6: TPanel;
@@ -573,17 +567,6 @@ type
     IsPrivKeySwitch: TSwitch;
     ImportPrivKeyStaticLabel: TLabel;
     Layout52: TLayout;
-    PrivateKeySettingsLayout: TLayout;
-    Layout31: TLayout;
-    StaticLabelPriveteKetInfo: TLabel;
-    Layout34: TLayout;
-    HexPrivKeyDefaultRadioButton: TRadioButton;
-    HexPrivKeyCompressedRadioButton: TRadioButton;
-    HexPrivKeyNotCompressedRadioButton: TRadioButton;
-    Layout51: TLayout;
-    ImportPrivKeyLabel: TLabel;
-    WIFEdit: TEdit;
-    LoadingKeyDataAniIndicator: TAniIndicator;
     ImportPrivateKeyButton: TButton;
     StatusBarFixer: TRectangle;
     privTCAPanel1: TPanel;
@@ -690,6 +673,45 @@ type
     Label13: TLabel;
     Button7: TButton;
     TokenIcons: TImageList;
+    AddCoinFromPrivKeyTabItem: TTabItem;
+    ToolBar14: TToolBar;
+    Label14: TLabel;
+    Button9: TButton;
+    Panel21: TPanel;
+    CoinPrivKeyDescriptionEdit: TEdit;
+    Label2: TLabel;
+    Panel22: TPanel;
+    CoinPrivKeyPassEdit: TEdit;
+    Label17: TLabel;
+    NewCoinPrivKeyOKButton: TButton;
+    ImportPrivKeyLabel: TLabel;
+    Layout31: TLayout;
+    StaticLabelPriveteKetInfo: TLabel;
+    Layout34: TLayout;
+    HexPrivKeyDefaultRadioButton: TRadioButton;
+    HexPrivKeyCompressedRadioButton: TRadioButton;
+    HexPrivKeyNotCompressedRadioButton: TRadioButton;
+    Layout51: TLayout;
+    LoadingKeyDataAniIndicator: TAniIndicator;
+    WIFEdit: TEdit;
+    PrivateKeyManageButton: TButton;
+    ExportPrivCoinListTabItem: TTabItem;
+    Panel23: TPanel;
+    Label19: TLabel;
+    ToolBar16: TToolBar;
+    Label21: TLabel;
+    Button11: TButton;
+    ExportPrivKeyListVertScrollBox: TVertScrollBox;
+    PrivOptionsTabItem: TTabItem;
+    ToolBar15: TToolBar;
+    Label18: TLabel;
+    Button10: TButton;
+    ImportPrivateKeyInPrivButton: TButton;
+    SweepButton: TButton;
+    ExportPrivateKeyButton: TButton;
+    historyTransactionConfirmation: TEdit;
+    HistoryTransactionDate: TEdit;
+    HistoryTransactionValue: TEdit;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -892,6 +914,13 @@ type
     procedure NewYaddressesOKButtonClick(Sender: TObject);
     procedure MainScreenQRButtonClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
+    procedure PrivateKeyManageButtonClick(Sender: TObject);
+    procedure ImportPrivateKeyInPrivButtonClick(Sender: TObject);
+    procedure SweepButtonClick(Sender: TObject);
+    procedure ExportPrivateKeyButtonClick(Sender: TObject);
+    procedure Button10Click(Sender: TObject);
+    procedure Button11Click(Sender: TObject);
+    procedure CTIHeaderBackButtonClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -941,6 +970,8 @@ type
     procedure ClaimCoinSelectInListClick(Sender : TObject);
     procedure TransactionWalletListClick(Sender : TObject);
     procedure CopyParentTagStringToClipboard(Sender : TObject);
+    procedure CopyParentTextToClipboard(Sender : TObject);
+    procedure ExportPrivKeyListButtonClick(Sender : TObject);
 
   var
     cpTimeout: int64;
@@ -1018,6 +1049,23 @@ uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
 {$R *.Windows.fmx MSWINDOWS}
 {$R *.Surface.fmx MSWINDOWS}
 
+procedure TfrmHome.ExportPrivateKeyButtonClick(Sender: TObject);
+begin
+  createExportPrivateKeyList();
+  switchTab( pageControl , ExportPrivCoinListTabItem );
+end;
+
+procedure Tfrmhome.ExportPrivKeyListButtonClick(Sender : TObject);
+begin
+  walletViewRelated.ExportPrivKeyListButtonClick(Sender);
+end;
+
+
+procedure Tfrmhome.CopyParentTextToClipboard(Sender : TObject);
+begin
+  WalletViewRelated.CopyParentTextToClipboard(Sender);
+end;
+
 procedure Tfrmhome.CopyParentTagStringToClipboard(Sender : TObject);
 begin
   WalletViewRelated.CopyParentTagStringToClipboard(Sender);
@@ -1067,6 +1115,8 @@ begin
 
   CreateNewAccountAndSave(RestoreNameEdit.Text, RestorePasswordEdit.Text,
     MasterSeed, true);
+  LoadCurrentAccount(RestoreNameEdit.Text);
+  frmhome.FormShow(nil);
   tced := '';
   MasterSeed := '';
   RestorePasswordEdit.Text := '';
@@ -1075,8 +1125,9 @@ end;
 procedure TfrmHome.PanelSelectGenerateCoinOnClick(Sender: TObject);
 begin
 
-  TCheckBox(TFmxObject(Sender).TagObject).IsChecked :=
-    not TCheckBox(TFmxObject(Sender).TagObject).IsChecked;
+ if (not TCheckBox(TFmxObject(Sender).TagObject).Enabled) then
+    exit();
+  TCheckBox(TFmxObject(Sender).TagObject).IsChecked := (not TCheckBox(TFmxObject(Sender).TagObject).IsChecked);
 
 end;
 
@@ -1255,6 +1306,7 @@ end;
 procedure TfrmHome.HideZeroWalletsCheckBoxChange(Sender: TObject);
 begin
   WalletViewRelated.HideEmptyWallets(Sender);
+    CurrentAccount.SaveFiles;
 end;
 
 {$IFDEF ANDROID}
@@ -1423,6 +1475,13 @@ begin
   WalletViewRelated.changeViewOrder(Sender);
 end;
 
+procedure TfrmHome.PrivateKeyManageButtonClick(Sender: TObject);
+begin
+
+switchTab( pageControl , PrivOptionsTabItem );
+
+end;
+
 procedure TfrmHome.LanguageBoxChange(Sender: TObject);
 begin
   WalletViewRelated.changeLanguage(Sender);
@@ -1502,7 +1561,7 @@ end;
 
 procedure switchTab(TabControl: TTabControl; TabItem: TTabItem);
 begin
-
+  backTabItem :=  frmhome.PageControl.ActiveTab;
   if not frmHome.shown then
   begin
     TabControl.ActiveTab := TabItem;
@@ -1806,7 +1865,7 @@ end;
 procedure TfrmHome.choseTokenClick(Sender: TObject);
 begin
   WalletViewRelated.chooseToken(Sender);
-  switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
+  //switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
   btnSyncClick(nil);
 end;
 
@@ -1915,6 +1974,11 @@ end;
 procedure TfrmHome.TransactionWaitForSendBackButtonClick(Sender: TObject);
 begin
   switchTab(PageControl, walletView);
+  TThread.CreateAnonymousThread(procedure   ()
+  begin
+  SyncThr.SynchronizeCryptoCurrency(CurrentCoin);
+  reloadWalletView;
+  end)
 end;
 
 procedure TfrmHome.TransactionWaitForSendLinkLabelClick(Sender: TObject);
@@ -2413,11 +2477,26 @@ begin
   switchTab(PageControl, walletView);
 end;
 
+procedure TfrmHome.CTIHeaderBackButtonClick(Sender: TObject);
+begin
+  switchTab(PageControl,ClaimWalletListTabItem );
+end;
+
 procedure TfrmHome.SendTransactionButtonClick(Sender: TObject);
 begin
 
   TrySendTX(Sender);
 
+end;
+
+procedure TfrmHome.Button10Click(Sender: TObject);
+begin
+  switchtab(pageControl , Settings );
+end;
+
+procedure TfrmHome.Button11Click(Sender: TObject);
+begin
+  switchTab(PageControl, PrivOptionsTabItem );
 end;
 
 procedure TfrmHome.Button1Click(Sender: TObject);
@@ -2624,11 +2703,15 @@ begin
   HexPrivKeyDefaultRadioButton.IsChecked := true;
   Layout31.Visible := false;
   WIFEdit.Text := '';
-  PrivateKeySettingsLayout.Visible := false;
+  //PrivateKeySettingsLayout.Visible := false;
   NewCoinDescriptionEdit.Text := '';
   OwnXEdit.Text := '';
   OwnXCheckBox.IsChecked := false;
   IsPrivKeySwitch.IsChecked := false;
+  IsPrivKeySwitch.Enabled := false;
+  NewCoinDescriptionPassEdit.Text := '';
+  NewCoinDescriptionEdit.Text := '';
+  newCoinListNextTAbItem := frmhome.AddNewCoinSettings;
 
   switchTab(PageControl, AddNewCoin);
 end;
@@ -3124,6 +3207,11 @@ begin
   switchTab(PageControl, ImportPrivKeyCoinList);
 end;
 
+procedure TfrmHome.ImportPrivateKeyInPrivButtonClick(Sender: TObject);
+begin
+  WalletViewRelated.ImportPrivateKeyInPrivButtonClick(Sender);
+end;
+
 procedure TfrmHome.LinkLayoutClick(Sender: TObject);
 var
   wd: TwalletInfo;
@@ -3385,9 +3473,14 @@ begin
   end;
 end;
 
+procedure TfrmHome.SweepButtonClick(Sender: TObject);
+begin
+  WalletViewRelated.SweepButtonClick(Sender);
+end;
+
 procedure TfrmHome.IsPrivKeySwitchSwitch(Sender: TObject);
 begin
-  PrivateKeySettingsLayout.Visible := IsPrivKeySwitch.IsChecked;
+  //PrivateKeySettingsLayout.Visible := IsPrivKeySwitch.IsChecked;
 end;
 
 procedure TfrmHome.SearchInDashBrdButtonClick(Sender: TObject);

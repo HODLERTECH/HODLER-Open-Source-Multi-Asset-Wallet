@@ -348,7 +348,6 @@ begin
   end;
   Result[Length(hrp)] := 0;
 
-
 end;
 
 function ExpandHRP(hrp: String): TIntegerArray;
@@ -479,7 +478,6 @@ begin
       exit;
     end;
   end;
-
 
   if (upper and lower) then
     exit;
@@ -678,8 +676,6 @@ begin
   intarr := Copy(intValues, 0, Length(intValues) - 8);
 
   checkArr := CreateChecksum8(hrp, intarr);
-
-  
 
   for i := 0 to 7 do
   begin

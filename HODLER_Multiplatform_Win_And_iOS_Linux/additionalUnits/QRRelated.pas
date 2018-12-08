@@ -236,8 +236,9 @@ begin
                         begin
                           wvAmount.Text := ts.Strings[i + 1];
                           WVRealCurrency.Text :=
-                            floatToStrF(CurrencyConverter.calculate(strToFloatDef(wvAmount.Text, 0))
-                            * (CurrentCryptoCurrency.rate), ffFixed, 18, 2);
+                            floatToStrF(CurrencyConverter.calculate
+                            (strToFloatDef(wvAmount.Text, 0)) *
+                            (CurrentCryptoCurrency.rate), ffFixed, 18, 2);
                         end;
                       end;
                     end;
@@ -315,16 +316,19 @@ begin
                     if ts.Count = 1 then
                     begin
                       addressFromQR := ts[0];
-                      createTransactionWalletList( getCoinsIDFromAddress(addressFromQR) );
-                      //switchTab(pageControl , WalletTransactionListTabItem);
+                      createTransactionWalletList(getCoinsIDFromAddress
+                        (addressFromQR));
+                      // switchTab(pageControl , WalletTransactionListTabItem);
                     end
                     else
                     begin
-                    if ts[0]='bitcoincash' then begin
-                                          addressFromQR := ts[1];
-                      createTransactionWalletList( getCoinsIDFromAddress(addressFromQR) );
-                      exit;
-                    end;
+                      if ts[0] = 'bitcoincash' then
+                      begin
+                        addressFromQR := ts[1];
+                        createTransactionWalletList(getCoinsIDFromAddress
+                          (addressFromQR));
+                        exit;
+                      end;
                       foundWallet := false;
                       for i := 0 to frmhome.WalletList.Content.
                         ChildrenCount - 1 do
@@ -337,14 +341,15 @@ begin
                         begin
 
                           addressFromQR := ts[1];
-                          createTransactionWalletList( [TwalletInfo(frmhome.WalletList.Content.Children[i]
-                          .TagObject).coin] );
-                          //switchTab(pageControl , WalletTransactionListTabItem);
+                          createTransactionWalletList
+                            ([TwalletInfo(frmhome.WalletList.Content.Children[i]
+                            .TagObject).coin]);
+                          // switchTab(pageControl , WalletTransactionListTabItem);
 
-                          {openWalletView(frmhome.WalletList.Content.
+                          { openWalletView(frmhome.WalletList.Content.
                             Children[i]);
-                          switchTab(WVTabControl, WVSend);
-                          WVsendTO.Text := ts.Strings[1];  }
+                            switchTab(WVTabControl, WVSend);
+                            WVsendTO.Text := ts.Strings[1]; }
                           for j := 2 to ts.Count - 2 do
                           begin
                             if ts.Strings[j] = 'amount' then

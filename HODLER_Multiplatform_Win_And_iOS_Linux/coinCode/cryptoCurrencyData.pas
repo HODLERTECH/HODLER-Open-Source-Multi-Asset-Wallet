@@ -21,10 +21,13 @@ type
     function toString(): AnsiString;
     procedure FromString(str: AnsiString);
     function toJsonValue(): TJsonValue;
-    procedure fromJsonValue( JsonValue : TJsonValue);
+    procedure fromJsonValue(JsonValue: TJsonValue);
 
   end;
-type TxHistory=array of transactionHistory;
+
+type
+  TxHistory = array of transactionHistory;
+
 type
   cryptoCurrency = class
 
@@ -48,7 +51,9 @@ type
 
     function getFiat: Double;
   end;
-type TCryptoCurrencyArray = array of cryptocurrency;
+
+type
+  TCryptoCurrencyArray = array of cryptoCurrency;
 
 implementation
 
@@ -67,94 +72,95 @@ end;
 constructor cryptoCurrency.Create();
 begin
   deleted := false;
-  orderInWallet:=maxint;
+  orderInWallet := maxint;
 end;
 
 function cryptoCurrency.getFiat: Double;
-var d:double;
+var
+  d: Double;
 begin
-  d:=confirmed.asDouble+unconfirmed.AsDouble;
-  if d<0 then d:=0.0;
+  d := confirmed.asDouble + unconfirmed.asDouble;
+  if d < 0 then
+    d := 0.0;
   result := frmHome.currencyConverter.calculate(d) * rate /
     Math.power(10, decimals);
 
 end;
 
-
-function  transactionHistory.toJsonValue(): TJsonValue;
+function transactionHistory.toJsonValue(): TJsonValue;
 var
-  HistJson : TJsonObject;
-  addrArray : TjsonArray;
-  addrValJson : TjsonObject;
-  i : Integer;
+  HistJson: TJsonObject;
+  addrArray: TjsonArray;
+  addrValJson: TJsonObject;
+  i: Integer;
 begin
   HistJson := TJsonObject.Create();
 
-  HistJson.AddPair('type' , typ );
-  HistJson.AddPair('transactionID' , TransactionID );
-  HistJson.AddPair('timeStamp' , data );
-  HistJson.AddPair('countValues' , CountValues.toString() );
-  HistJson.AddPair('lastBlock' , inttostr(lastBlock) );
-  HistJson.AddPair('confirmation' , IntToStr(confirmation) );
+  HistJson.AddPair('type', typ);
+  HistJson.AddPair('transactionID', TransactionID);
+  HistJson.AddPair('timeStamp', data);
+  HistJson.AddPair('countValues', CountValues.toString());
+  HistJson.AddPair('lastBlock', inttostr(lastBlock));
+  HistJson.AddPair('confirmation', inttostr(confirmation));
 
-  addrArray := TJSONArray.Create();
+  addrArray := TjsonArray.Create();
 
-  for i := 0 to Length(addresses)-1 do
+  for i := 0 to Length(addresses) - 1 do
   begin
 
     addrValJson := TJsonObject.Create;
-    addrValJson.AddPair('address' , addresses[i]);
-    addrValJson.AddPair('value'  , values[i].ToString() );
+    addrValJson.AddPair('address', addresses[i]);
+    addrValJson.AddPair('value', values[i].toString());
 
-    addrArray.Add( addrValJson );
+    addrArray.Add(addrValJson);
 
   end;
 
-  HistJson.AddPair('addressList' , addrArray );
+  HistJson.AddPair('addressList', addrArray);
   result := HistJson;
 
 end;
 
-procedure  transactionHistory.fromJsonValue( JsonValue : TJsonValue);
+procedure transactionHistory.fromJsonValue(JsonValue: TJsonValue);
 var
-  i : Integer;
-  conf , lastB, temp, countVal : AnsiString;
-  addrlist : TJsonArray;
-  JsonIt : TJsonValue;
+  i: Integer;
+  conf, lastB, temp, countVal: AnsiString;
+  addrlist: TjsonArray;
+  JsonIt: TJsonValue;
 
 begin
 
-  JsonValue.TryGetValue<AnsiString>('type' , typ);
-  JsonValue.TryGetValue<AnsiString>('transactionID' , TransactionID );
-  JsonValue.TryGetValue<AnsiString>('timeStamp' , data );
-  if JsonValue.TryGetValue<AnsiString>('confirmation' , conf ) then
+  JsonValue.TryGetValue<AnsiString>('type', typ);
+  JsonValue.TryGetValue<AnsiString>('transactionID', TransactionID);
+  JsonValue.TryGetValue<AnsiString>('timeStamp', data);
+  if JsonValue.TryGetValue<AnsiString>('confirmation', conf) then
   begin
-    confirmation := strToIntDef(conf , 0);
+    confirmation := strToIntDef(conf, 0);
   end;
-  if JsonValue.TryGetValue<AnsiString>('countValues' , CountVal ) then
+  if JsonValue.TryGetValue<AnsiString>('countValues', countVal) then
   begin
-    BigInteger.TryParse( countVal , 10 , CountValues);
+    BigInteger.TryParse(countVal, 10, CountValues);
   end;
-  if JsonValue.TryGetValue<AnsiString>('lastBlock' ,lastB ) then
+  if JsonValue.TryGetValue<AnsiString>('lastBlock', lastB) then
   begin
-    lastBlock := strToIntDef( lastB , 0 );
+    lastBlock := strToIntDef(lastB, 0);
   end;
 
-  if JsonValue.TryGetValue<TJsonArray>('addressList' , addrlist ) then
+  if JsonValue.TryGetValue<TjsonArray>('addressList', addrlist) then
   begin
-    SetLength( addresses , addrList.Count);
-    setLength( values , addrlist.Count );
+    SetLength(addresses, addrlist.Count);
+    SetLength(values, addrlist.Count);
 
     i := 0;
-    for JsonIt in addrList do
+    for JsonIt in addrlist do
     begin
 
-      JsonIt.TryGetValue<AnsiString>( 'address' , addresses[i] );
+      JsonIt.TryGetValue<AnsiString>('address', addresses[i]);
 
-      if JsonIt.TryGetValue<AnsiString>('value' , temp ) then
+      if JsonIt.TryGetValue<AnsiString>('value', temp) then
       begin
 
-        BigInteger.TryParse( temp , 10 , values[i] );
+        BigInteger.TryParse(temp, 10, values[i]);
 
       end;
 
@@ -175,8 +181,8 @@ begin
   list.Add(typ);
   list.Add(TransactionID);
   list.Add(data);
-  list.Add(inttostr(length(addresses)));
-  for i := 0 to length(addresses) - 1 do
+  list.Add(inttostr(Length(addresses)));
+  for i := 0 to Length(addresses) - 1 do
   begin
 
     list.Add(addresses[i]);
@@ -204,7 +210,7 @@ begin
   typ := list.Strings[0];
   TransactionID := list.Strings[1];
   data := list.Strings[2];
-  size := strtoIntDef(list.Strings[3], 0);
+  size := strToIntDef(list.Strings[3], 0);
 
   SetLength(addresses, size);
   SetLength(values, size);

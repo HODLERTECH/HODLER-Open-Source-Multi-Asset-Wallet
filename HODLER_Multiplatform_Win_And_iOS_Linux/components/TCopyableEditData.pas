@@ -3,72 +3,73 @@ unit TCopyableEditData;
 interface
 
 uses
-  System.SysUtils, System.Classes, FMX.Types, FMX.Controls, FMX.Layouts , FMX.Edit , FMX.StdCtrls, FMX.Clipboard,  FMX.Platform , FMX.Objects
-  , System.Types , StrUtils;
+  System.SysUtils, System.Classes, FMX.Types, FMX.Controls, FMX.Layouts,
+  FMX.Edit, FMX.StdCtrls, FMX.Clipboard, FMX.Platform, FMX.Objects,
+  System.Types, StrUtils;
 
 type
-  TCopyableEdit = class(TEdit)
+  TCopyableEdit = class(Tedit)
   private
     { Private declarations }
-    procedure copy(Sender : TObject);
+    procedure copy(Sender: TObject);
   protected
     { Protected declarations }
   public
     { Public declarations }
-    button : TButton;
-    image : Timage;
-    //destructor Destroy; override;
-
-
-
+    button: TButton;
+    image: Timage;
+    // destructor Destroy; override;
 
   published
     constructor Create(AOwner: TComponent); override;
-    //constructor CreateFrom(edit : Tedit);
+    // constructor CreateFrom(edit : Tedit);
 
   end;
 
-Function CreateButtonWithCopyImg(AOwner : TComponent):Tbutton;
+
+Function CreateButtonWithCopyImg(AOwner: TComponent): TButton;
 
 procedure Register;
 
 implementation
 
-uses misc , languages , uhome ;
+uses misc, languages, uhome;
 
-//destructor TCopyableEdit.Destroy;
-//begin
+// destructor TCopyableEdit.Destroy;
+// begin
 
-  //button.DisposeOf;
-  //button := nil;
+// button.DisposeOf;
+// button := nil;
 
-//end;
+// end;
 
-Function CreateButtonWithCopyImg(AOwner : TComponent):Tbutton;
+Function CreateButtonWithCopyImg(AOwner: TComponent): TButton;
 var
-  button : TButton;
-  image : Timage;
+  button: TButton;
+  image: Timage;
 var
   Stream: TResourceStream;
 begin
-  button := TButton.Create( AOwner );
+  button := TButton.Create(AOwner);
   button.Parent := TfmxObject(AOwner);
-  button.Visible := true;
-  //Button.Text := 'CP'; // change to Image
-  Button.Align := TAlignLayout.MostRight;
-  Button.Width := 32;
-  Button.OnClick := frmhome.CopyParentTextToClipboard;
+  button.Visible := false;;
+  // Button.Text := 'CP'; // change to Image
+  button.Align := TAlignLayout.MostRight;
+  button.Width := 32;
+  button.OnClick := frmhome.CopyParentTextToClipboard;
 
-  image := TImage.Create(button);
-  Stream := TResourceStream.Create(HInstance, 'COPY_IMG_' + RightStr( CurrentStyle , length(CurrentStyle)-3 ), RT_RCDATA);
+  image := Timage.Create(Aowner);
+  Stream := TResourceStream.Create(HInstance,
+    'COPY_IMG_' + RightStr(CurrentStyle, length(CurrentStyle) - 3), RT_RCDATA);
   try
     image.Bitmap.LoadFromStream(Stream);
   finally
     Stream.Free;
   end;
 
-  image.Parent := button;
-  image.Align := TAlignLayout.Client;
+  image.Parent := TfmxObject(AOwner);
+  image.Align := TAlignLayout.right;
+  image.Width := 32;
   image.Margins.Top := 5;
   image.Margins.Bottom := 5;
   image.Margins.Left := 5;
@@ -84,7 +85,8 @@ procedure Register;
 begin
   RegisterComponents('Samples', [TCopyableEdit]);
 end;
-procedure TCopyableEdit.copy(Sender : TObject);
+
+procedure TCopyableEdit.copy(Sender: TObject);
 var
   svc: IFMXExtendedClipboardService;
 begin
@@ -93,9 +95,9 @@ begin
   then
   begin
 
-      svc.setClipboard( Tedit(TfmxObject(Sender).Parent).Text );
-      popupWindow.Create( Tedit(TfmxObject(Sender).Parent).Text +
-        ' ' + dictionary('CopiedToClipboard'));
+    svc.setClipboard(TEdit(TfmxObject(Sender).Parent).Text);
+    popupWindow.Create(TEdit(TfmxObject(Sender).Parent).Text + ' ' +
+      dictionary('CopiedToClipboard'));
 
   end;
 
@@ -104,14 +106,13 @@ end;
 constructor TCopyableEdit.Create(AOwner: TComponent);
 
 begin
-  Inherited create(AOwner);
+  Inherited Create(AOwner);
 
   button := CreateButtonWithCopyImg(self);
 
-
 end;
-{constructor TCopyableEdit.CreateFrom(edit : Tedit);
-begin
+{ constructor TCopyableEdit.CreateFrom(edit : Tedit);
+  begin
   inherited;
   //self.Assign(  TCopyAbleEdit( edit )  );
   edit.DisposeOf;
@@ -123,6 +124,6 @@ begin
   Button.Width := 32;
   Button.OnClick := copy;
   self.Padding.Right := -Button.Width;
-end;}
+  end; }
 
 end.

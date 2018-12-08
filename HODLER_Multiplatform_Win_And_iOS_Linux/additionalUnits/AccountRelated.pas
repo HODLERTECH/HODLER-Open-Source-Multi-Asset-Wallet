@@ -55,7 +55,7 @@ implementation
 
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
-  transactions, WalletStructureData;
+  transactions, WalletStructureData, TcopyableEditData, TCopyableLabelData, walletViewRelated;
 
 procedure afterInitialize;
 var
@@ -64,7 +64,7 @@ var
   fmxObj: TfmxObject;
   Settings: ITextSettings;
   Instance: TComponent;
-   alphaStr:string;
+  alphaStr: string;
   procedure SetEditControlColor(AEditControl: TEdit; AColor: TAlphaColor);
   var
     t: TfmxObject;
@@ -104,6 +104,7 @@ var
         SetEditControlColor(TEdit(frmHome.Components[i]), TAlphaColors.Gray);
 {$ENDIF}
   end;
+
 begin
   with frmHome do
   begin
@@ -130,11 +131,10 @@ begin
         #13#10 + dictionary('ChooseOption') + ':';
       switchTab(PageControl, WelcomeTabItem);
 {$IFDEF IOS}
-  alphaStr := dictionary('AlphaVersionWarning');
+      alphaStr := dictionary('AlphaVersionWarning');
 
-  popupWindow.Create(
-alphaStr);
-    {$ENDIF}
+      popupWindow.Create(alphaStr);
+{$ENDIF}
 {$IF DEFINED(MSWINDOWS) or DEFINED(LINUX)}
       Panel8.Visible := false;
       DashBrdPanel.Visible := false;
@@ -170,7 +170,6 @@ alphaStr);
         end;
       end;
 
-
       switchTab(PageControl, HOME_TABITEM);
     end;
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
@@ -179,7 +178,8 @@ alphaStr);
     if not shown then
     begin
 {$IF DEFINED(MSWINDOWS) or DEFINED(LINUX)}
-      frmHome.Caption := 'HODLER Open Source Multi-Asset Wallet v' + CURRENT_VERSION;
+      frmHome.Caption := 'HODLER Open Source Multi-Asset Wallet v' +
+        CURRENT_VERSION;
       Tthread.CreateAnonymousThread(
         procedure
         begin
@@ -204,7 +204,7 @@ alphaStr);
                   ('https://hodler2.nq.pl/analitics.php?hash=' +
                   GetSTrHashSHA256(currentAccount.EncryptedMasterSeed + API_PUB)
                   + {$IFDEF MSWINDOWS}'&os=win' {$ELSE}'&os=android'
-                  {$ENDIF}, false));
+{$ENDIF}, false));
 
               end);
 
@@ -225,7 +225,7 @@ alphaStr);
           TEdit(frmHome.Components[i]).KillFocusByReturn := true;
           TEdit(frmHome.Components[i]).ReturnKeyType := TReturnKeyType.Done;
         end;
-        AccountsListPanel.Visible := false;
+      AccountsListPanel.Visible := false;
 {$ENDIF}
     end;
     shown := true;
@@ -241,22 +241,20 @@ var
   i: integer;
 begin
 
-  frmhome.AccountsListPanel.enabled := false;
-  //TThread.Synchronize(nil,procedure
-  //begin
+  frmHome.AccountsListPanel.Enabled := false;
+  // TThread.Synchronize(nil,procedure
+  // begin
   Application.ProcessMessages;
-    TLabel(frmHome.FindComponent('globalBalance')).Text := 'Calculating...';
+  TLabel(frmHome.FindComponent('globalBalance')).Text := 'Calculating...';
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
-
-  frmhome.AccountsListPanel.visible := false;
+  frmHome.AccountsListPanel.Visible := false;
 {$ENDIF}
-  //end);
+  // end);
 
   try
 
 {$IF DEFINED(MSWINDOWS) or DEFINED(LINUX)}
-
-	if not(frmHome.AccountsListVertScrollBox.Content.ChildrenCount = 0) then
+    if not(frmHome.AccountsListVertScrollBox.Content.ChildrenCount = 0) then
     begin
 
       for fmxObj in frmHome.AccountsListVertScrollBox.Content.Children do
@@ -266,16 +264,15 @@ begin
           TButton(fmxObj).Enabled := true;
     end;
 {$ENDIF}
-	
-
     clearVertScrollBox(frmHome.WalletList);
+
     if (SyncBalanceThr <> nil) and (not SyncBalanceThr.Finished) then
     begin
 
       SyncBalanceThr.Terminate;
       while not(SyncBalanceThr.Finished) do
       begin
-        application.ProcessMessages();
+        Application.ProcessMessages();
         sleep(50);
       end;
       SyncBalanceThr.WaitFor;
@@ -289,7 +286,7 @@ begin
       SyncHistoryThr.Terminate;
       while not(SyncHistoryThr.Finished) do
       begin
-        application.ProcessMessages();
+        Application.ProcessMessages();
         sleep(50);
       end;
       SyncHistoryThr.WaitFor;
@@ -306,10 +303,9 @@ begin
     lastClosedAccount := name;
     currentAccount := Account.Create(name);
     currentAccount.LoadFiles;
-
+    frmHome.HideZeroWalletsCheckBox.IsChecked:=CurrentAccount.hideEmpties;
     for cc in currentAccount.myCoins do
     begin
-    
 
       exist := false;
 
@@ -317,13 +313,14 @@ begin
         for i := 0 to frmHome.WalletList.Content.ChildrenCount - 1 do
         begin
 
-          if (frmHome.WalletList.Content.Children[i].TagObject is TWalletInfo)then
+          if (frmHome.WalletList.Content.Children[i].TagObject is TwalletInfo)
+          then
           begin
 
-            if (TWalletInfo(frmHome.WalletList.Content.Children[i].TagObject)
-              .x = TWalletInfo(cc).x) and
-              (TWalletInfo(frmHome.WalletList.Content.Children[i].TagObject)
-              .coin = TWalletInfo(cc).coin) then
+            if (TwalletInfo(frmHome.WalletList.Content.Children[i].TagObject)
+              .x = TwalletInfo(cc).x) and
+              (TwalletInfo(frmHome.WalletList.Content.Children[i].TagObject)
+              .coin = TwalletInfo(cc).coin) then
             begin
               exist := true;
               break;
@@ -348,7 +345,7 @@ begin
     frmHome.CurrencyBox.ItemIndex := frmHome.CurrencyBox.Items.IndexOf
       (frmHome.CurrencyConverter.symbol);
 
-    //globalFiat := 0;
+    // globalFiat := 0;
     refreshGlobalFiat();
     refreshCurrencyValue;
 
@@ -359,7 +356,7 @@ begin
     begin
 
       showmessage(E.Message);
-      frmhome.AccountsListPanel.enabled := true;
+      frmHome.AccountsListPanel.Enabled := true;
     end;
   end;
   if (currentAccount.userSaveSeed = false) then
@@ -380,12 +377,11 @@ begin
     on E: Exception do
     begin
       showmessage('XX' + E.Message);
-      frmhome.AccountsListPanel.enabled := true;
+      frmHome.AccountsListPanel.Enabled := true;
     end;
   end;
-  frmhome.AccountsListPanel.enabled := true;
+  frmHome.AccountsListPanel.Enabled := true;
 end;
-
 
 procedure syncFont;
 var
@@ -393,14 +389,14 @@ var
   l: TLabel;
   i: integer;
 begin
-exit;
+  exit;
   for i := 0 to frmHome.ComponentCount - 1 do
   begin
     comp := frmHome.Components[i];
 
     if comp is TLabel then
     begin
-      application.ProcessMessages;
+      Application.ProcessMessages;
       l := TLabel(comp);
       if length(l.Text) > 20 then
         continue;
@@ -426,91 +422,100 @@ var
   Lang, style: AnsiString;
   JSON: TJsonObject;
   WData: AnsiString;
-  appdataPath : AnsiString;
-  newDataPath : AnsiString;
-  ts : TStringList;
-  JsonObject: TJSONObject;
+  appdataPath: AnsiString;
+  newDataPath: AnsiString;
+  ts: TStringList;
+  JsonObject: TJsonObject;
   JSONArray: TJsonArray;
   JsonValue: TJsonvalue;
 begin
 
   // %appdata% to %appdata%/hodlertech
   appdataPath := System.SysUtils.GetEnvironmentVariable('APPDATA');
-  newDataPath := System.IOUtils.TPath.combine(System.SysUtils.GetEnvironmentVariable('APPDATA') , 'hodlertech' );
+  newDataPath := System.IOUtils.TPath.combine
+    (System.SysUtils.GetEnvironmentVariable('APPDATA'), 'hodlertech');
 
-  if not DirectoryExists( newDataPath ) then
+  if not DirectoryExists(newDataPath) then
   begin
-    CreateDir( newDataPath );
+    CreateDir(newDataPath);
   end;
 
-
-  if FileExists( System.IOUtils.TPath.combine( appdataPath ,  'hodler.wallet.dat') ) then
+  if FileExists(System.IOUtils.TPath.combine(appdataPath, 'hodler.wallet.dat'))
+  then
   begin
-    TFile.Move( System.IOUtils.TPath.combine( appdataPath ,  'hodler.wallet.dat') , System.IOUtils.TPath.combine( newDataPath ,  'hodler.wallet.dat') );
+    TFile.Move(System.IOUtils.TPath.combine(appdataPath, 'hodler.wallet.dat'),
+      System.IOUtils.TPath.combine(newDataPath, 'hodler.wallet.dat'));
 
     ts := TStringList.Create;
-    ts.LoadFromFile(System.IOUtils.TPath.Combine(newdataPath, 'hodler.wallet.dat'));
+    ts.LoadFromFile(System.IOUtils.TPath.combine(newDataPath,
+      'hodler.wallet.dat'));
 
     if ts.Text[low(ts.Text)] = '{' then
     begin
-      JsonObject := TJSONObject(TJSONObject.ParseJSONValue(ts.Text));
+      JsonObject := TJsonObject(TJsonObject.ParseJSONValue(ts.Text));
       JSONArray := TJsonArray(JsonObject.GetValue('accounts'));
       for JsonValue in JSONArray do
       begin
         if JsonValue.Value = '' then
           continue;
 
-        if DirectoryExists( System.IOUtils.TPath.combine( appdataPath , JsonValue.Value ) ) then
+        if DirectoryExists(System.IOUtils.TPath.combine(appdataPath,
+          JsonValue.Value)) then
         begin
-          TDirectory.Move(System.IOUtils.TPath.combine( appdataPath , JsonValue.Value ) , System.IOUtils.TPath.combine( newdataPath , JsonValue.Value ) );
+          TDirectory.Move(System.IOUtils.TPath.combine(appdataPath,
+            JsonValue.Value), System.IOUtils.TPath.combine(newDataPath,
+            JsonValue.Value));
         end;
 
       end;
 
-      JsonObject.Free;
+      JsonObject.free;
     end;
 
   end;
-  if FileExists( System.IOUtils.TPath.combine( appdataPath ,  'hodler.fiat.dat') ) then
+  if FileExists(System.IOUtils.TPath.combine(appdataPath, 'hodler.fiat.dat'))
+  then
   begin
-    TFile.Move( System.IOUtils.TPath.combine( appdataPath ,  'hodler.fiat.dat') , System.IOUtils.TPath.combine( newDataPath ,  'hodler.fiat.dat') );
+    TFile.Move(System.IOUtils.TPath.combine(appdataPath, 'hodler.fiat.dat'),
+      System.IOUtils.TPath.combine(newDataPath, 'hodler.fiat.dat'));
   end;
 
+  try
 
-
-
-
-
-try
-
-
-
-  with frmHome do
-  begin
+    with frmHome do
+    begin
 {$IFDEF IOS}
-StyloSwitch.Visible:=false;
+      StyloSwitch.Visible := false;
 {$ENDIF}
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
-    HOME_PATH := System.IOUtils.TPath.GetDocumentsPath;
-    HOME_TABITEM := TTabItem(frmHome.FindComponent('dashbrd'));
+      HOME_PATH := System.IOUtils.TPath.GetDocumentsPath;
+      HOME_TABITEM := TTabItem(frmHome.FindComponent('dashbrd'));
 {$ELSE}
-    HOME_PATH := IncludeTrailingPathDelimiter
-      ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetDocumentsPath{$ELSE}System.IOUtils.TPath.combine(System.SysUtils.GetEnvironmentVariable('APPDATA') , 'hodlertech' ){$ENDIF});
-    HOME_TABITEM := walletView;
+      HOME_PATH := IncludeTrailingPathDelimiter
+        ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetDocumentsPath{$ELSE}System.
+        IOUtils.TPath.combine(System.SysUtils.GetEnvironmentVariable('APPDATA'),
+        'hodlertech'){$ENDIF});
+      HOME_TABITEM := walletView;
 {$ENDIF}
-
-    syncFont;
-    if FileExists(System.IOUtils.TPath.Combine(HOME_PATH, 'hodler.wallet.dat'))
-    then
-    begin
-      WData := Tfile.ReadAllText(System.IOUtils.TPath.Combine(HOME_PATH,
-        'hodler.wallet.dat'));
-      if WData[low(WData)] = '{' then
+      syncFont;
+      if FileExists(System.IOUtils.TPath.combine(HOME_PATH, 'hodler.wallet.dat'))
+      then
       begin
-        JSON := TJsonObject(TJsonObject.ParseJSONValue(WData));
-        Lang := JSON.GetValue<string>('languageIndex');
-        style := JSON.GetValue<string>('styleName');
-        JSON.free;
+        WData := TFile.ReadAllText(System.IOUtils.TPath.combine(HOME_PATH,
+          'hodler.wallet.dat'));
+        if WData[low(WData)] = '{' then
+        begin
+          JSON := TJsonObject(TJsonObject.ParseJSONValue(WData));
+          Lang := JSON.GetValue<string>('languageIndex');
+          style := JSON.GetValue<string>('styleName');
+          JSON.free;
+        end
+        else
+        begin
+          Lang := '0';
+          style := 'RT_WHITE';
+        end;
+
       end
       else
       begin
@@ -518,99 +523,97 @@ StyloSwitch.Visible:=false;
         style := 'RT_WHITE';
       end;
 
-    end
-    else
-    begin
-      Lang := '0';
-      style := 'RT_WHITE';
-    end;
-
-    cpTimeout := 0;
-    DebugBtn.Visible := false;
-    bpmnemonicLayout.Position.y := 386;
-    loadDictionary(loadLanguageFile('ENG'));
-    refreshComponentText();
-
-    Randomize;
-
-    saveSeedInfoShowed := false;
-    FormatSettings.DecimalSeparator := '.';
-    shown := false;
-    CurrentCoin := nil;
-    CurrentCryptoCurrency := nil;
-    QRChangeTimer.Enabled := true;
-    TCAIterations := 5000;
-
-    FFrameTake := 0;
-    stylo := TStyleManager.Create;
-    LoadStyle(style);
-    if style = 'RT_DARK' then
-      DayNightModeSwitch.IsChecked := true
-    else
-      DayNightModeSwitch.IsChecked := false;
-
-    FScanManager := TScanManager.Create(TBarcodeFormat.QR_CODE, nil);
-    duringSync := false;
-
-    WVsendTO.Caret.Width := 2;
-    LanguageBox.ItemIndex := 0;
-
-    CurrencyConverter := tCurrencyConverter.Create();
-
-    if FileExists(System.IOUtils.TPath.Combine(HOME_PATH, 'hodler.fiat.dat'))
-    then
-      LoadCurrencyFiatFromFile();
-
-    for symbol in CurrencyConverter.availableCurrency.Keys do
-    begin
-      CurrencyBox.Items.Add(symbol);
-    end;
-
-    CurrencyBox.ItemIndex := CurrencyBox.Items.IndexOf('USD');
-    refreshCurrencyValue;
-    SystemTimer.Enabled := SYSTEM_APP;
-    linkLabel.Visible := not SYSTEM_APP;
-{$IFDEF ANDROID}
-    if SYSTEM_APP then
-    begin
-      updateBtn.Visible := true;
+      cpTimeout := 0;
       DebugBtn.Visible := false;
-      executeAndroid('settings put global setup_wizard_has_run 1');
-      executeAndroid('settings put secure user_setup_complete 1');
-      executeAndroid('settings put global device_provisioned 1');
+      bpmnemonicLayout.Position.y := 386;
+      loadDictionary(loadLanguageFile('ENG'));
+      refreshComponentText();
 
-    end;
+      Randomize;
+
+      saveSeedInfoShowed := false;
+      FormatSettings.DecimalSeparator := '.';
+      shown := false;
+      CurrentCoin := nil;
+      CurrentCryptoCurrency := nil;
+      QRChangeTimer.Enabled := true;
+      TCAIterations := 5000;
+
+      FFrameTake := 0;
+      stylo := TStyleManager.Create;
+      LoadStyle(style);
+      if style = 'RT_DARK' then
+        DayNightModeSwitch.IsChecked := true
+      else
+        DayNightModeSwitch.IsChecked := false;
+
+      FScanManager := TScanManager.Create(TBarcodeFormat.QR_CODE, nil);
+      duringSync := false;
+
+      WVsendTO.Caret.Width := 2;
+      LanguageBox.ItemIndex := 0;
+
+      CurrencyConverter := tCurrencyConverter.Create();
+
+      if FileExists(System.IOUtils.TPath.combine(HOME_PATH, 'hodler.fiat.dat'))
+      then
+        LoadCurrencyFiatFromFile();
+
+      for symbol in CurrencyConverter.availableCurrency.Keys do
+      begin
+        CurrencyBox.Items.Add(symbol);
+      end;
+
+      CurrencyBox.ItemIndex := CurrencyBox.Items.IndexOf('USD');
+      refreshCurrencyValue;
+      SystemTimer.Enabled := SYSTEM_APP;
+      linkLabel.Visible := not SYSTEM_APP;
+{$IFDEF ANDROID}
+      if SYSTEM_APP then
+      begin
+        updateBtn.Visible := true;
+        DebugBtn.Visible := false;
+        executeAndroid('settings put global setup_wizard_has_run 1');
+        executeAndroid('settings put secure user_setup_complete 1');
+        executeAndroid('settings put global device_provisioned 1');
+
+      end;
 {$ENDIF}
 {$IF DEFINED(MSWINDOWS) or DEFINED(LINUX)}
-    btnSSys.Visible := false;
-    ExportPrivKeyInfoLabel.Position.Y := 100000;
-    ChangeDescriptionInfoLabel.Position.Y := 100000;
+      btnSSys.Visible := false;
+      ExportPrivKeyInfoLabel.Position.y := 100000;
+      ChangeDescriptionInfoLabel.Position.y := 100000;
 {$ELSE}
-    btnSend.Position.y := 1000;
-    setBlackBackground(AccountsListVertScrollBox.Content);
+      btnSend.Position.y := 1000;
+      setBlackBackground(AccountsListVertScrollBox.Content);
 
 {$ENDIF}
-    DeleteAccountLayout.Visible := false;
-    BackToBalanceViewLayout.Visible := false;
-    TransactionFeeLayout.Visible := false;
+      DeleteAccountLayout.Visible := false;
+      BackToBalanceViewLayout.Visible := false;
+      TransactionFeeLayout.Visible := false;
 {$IFDEF DEBUG}
-    DebugBtn.Visible := true;
+      DebugBtn.Visible := true;
 {$ELSE}
-    DebugBtn.Visible := false;
+      DebugBtn.Visible := false;
 {$ENDIF}
+      // wvAddress := TCopyableEdit.CreateFrom(wvAddress);
+      wvAddress.TagString := 'copyable';
+      receiveAddress.TagString := 'copyable';
+      lblPrivateKey.TagString := 'copyable';
+      lblWIFKey.TagString := 'copyable';
 
+      HistoryTransactionID.TagString := 'copyable';
+      HistoryTransactionDate.TagString := 'copyable';
+      HistoryTransactionValue.TagString := 'copyable';
+      historyTransactionConfirmation.TagString := 'copyable';
+      CreateCopyImageButtonOnTEdits();
+    end;
 
-    wvAddress.TagString := 'copyable';
-    receiveAddress.TagString := 'copyable';
-    lblPrivateKey.TagString := 'copyable';
-    lblWIFKey.TagString := 'copyable';
+  except
+    on E: Exception do
+      showmessage(E.Message);
 
   end;
-
-except on E: Exception do
-  showmessage(E.Message);
-
-end;
 
 end;
 
@@ -745,16 +748,16 @@ var
 begin
   with frmHome do
   begin
-    minY := 2147483647{MAXINT};
+    minY := 2147483647 { MAXINT };
     TfmxObject(Sender).TagObject := CurrentCoin;
 
-    for cc in currentAccount.getWalletWithX(CurrentCoin.X, CurrentCoin.coin) do
+    for cc in currentAccount.getWalletWithX(CurrentCoin.x, CurrentCoin.coin) do
     begin
       if ((cc.confirmed + cc.unconfirmed) = 0) and (length(cc.history) = 0) and
         (TwalletInfo(cc).y < minY) then
       begin
 
-        if TwalletInfo(cc).y <= CurrentCoin.Y then
+        if TwalletInfo(cc).y <= CurrentCoin.y then
           continue;
 
         minY := TwalletInfo(cc).y;
@@ -765,8 +768,8 @@ begin
     if TfmxObject(Sender).TagObject = CurrentCoin then
     begin
 
-        generateNewAddressesClick(Sender);
-        exit;
+      generateNewAddressesClick(Sender);
+      exit;
 
     end;
 
@@ -860,7 +863,7 @@ begin
 
         SetLength(indexArray, 0);
 
-        CCarray := currentAccount.getWalletWithX(wd.X, wd.coin);
+        CCarray := currentAccount.getWalletWithX(wd.x, wd.coin);
         SetLength(Yarray, length(CCarray));
         i := 0;
         for cc in CCarray do
@@ -898,7 +901,7 @@ begin
         for i := 0 to length(indexArray) - 1 do
         begin
           // showmessage(inttoStr(indexArray[i]));
-          newWD := Bitcoin_createHD(wd.coin, wd.X, indexArray[i], MasterSeed);
+          newWD := Bitcoin_createHD(wd.coin, wd.x, indexArray[i], MasterSeed);
 
           currentAccount.AddCoin(newWD);
 
@@ -936,17 +939,17 @@ var
   cc: cryptoCurrency;
   Panel: TPanel;
   bilanceLbl: TLabel;
-  addrLbl: TEdit;
-  deleteBtn: TButton;
+  addrLbl: TCopyableLabel;
+  deleteBtn: TLabel;
   generateNewAddresses: TButton;
-  copyBtn : Tbutton;
+  copyBtn: TButton;
 begin
   with frmHome do
   begin
 
     clearVertScrollBox(YaddressesVertScrollBox);
 
-    for cc in currentAccount.getWalletWithX(CurrentCoin.X, CurrentCoin.coin) do
+    for cc in currentAccount.getWalletWithX(CurrentCoin.x, CurrentCoin.coin) do
     begin
       if cc.deleted = true then
         continue;
@@ -957,53 +960,60 @@ begin
       Panel.Align := TAlignLayout.Top;
       Panel.Height := 48;
       Panel.TagObject := cc;
-      panel.TagString := cc.addr;
+      Panel.TagString := cc.addr;
       Panel.OnClick := OpenWalletViewFromYWalletList;
+
       Panel.Margins.Bottom:=1;
-      addrLbl := TEdit.Create(Panel);
+      addrLbl := TCopyableLabel.Create(Panel);
+      addrLbl.image.Align := TAlignLayout.Right;
       addrLbl.Align:=TAlignLayout.MostTop;
       addrLbl.Parent := Panel;
       addrLbl.Visible := true;
-      //addrLbl.Margins.Left := 15;
-      //addrLbl.Margins.Right := 15;
-      addrLbl.Height:=24;
-      if TwalletInfo(cc).coin in [3,7] then
-      addrLbl.Text:=bitcoinCashAddressToCashAddress(cc.addr) else
-      addrLbl.Text := cc.addr;
-      addrLbl.TagString:='copyable';
-      //addrLbl.Align := TAlignLayout.Client;
+      // addrLbl.Margins.Left := 15;
+      // addrLbl.Margins.Right := 15;
+      addrLbl.Height := 24;
+      addrLbl.Margins.left := 15;
+      if TwalletInfo(cc).coin in [3, 7] then
+        addrLbl.Text := bitcoinCashAddressToCashAddress(cc.addr)
+      else
+        addrLbl.Text := cc.addr;
+      addrLbl.TagString := 'copyable';
+      // addrLbl.Align := TAlignLayout.Client;
 
       bilanceLbl := TLabel.Create(Panel);
       bilanceLbl.Parent := Panel;
       bilanceLbl.Visible := true;
       bilanceLbl.Margins.Left := 0;
       bilanceLbl.Margins.Right := 15;
-      bilanceLbl.Text := bigintegerbeautifulStr(cc.confirmed, cc.decimals)+' '+CurrentCoin.ShortCut;
+      bilanceLbl.Text := bigintegerbeautifulStr(cc.confirmed, cc.decimals) + ' '
+        + CurrentCoin.ShortCut;
       bilanceLbl.Align := TAlignLayout.Right;
       bilanceLbl.Width := 200;
       bilanceLbl.TextSettings.HorzAlign := TTextAlign.Trailing;
-      bilanceLbl.Align:=TAlignLayout.Right;
+      bilanceLbl.Align := TAlignLayout.Right;
 
-      deleteBtn := TButton.Create(addrLbl);
+      deleteBtn := TLabel.Create(addrLbl);
       deleteBtn.Parent := addrLbl;
       deleteBtn.Visible := true;
       deleteBtn.Align := TAlignLayout.MostRight;
-      deleteBtn.Width := 15;
-      deleteBtn.Text := 'x';
+      deleteBtn.Width := 24;
+      deleteBtn.Text := 'X';
+      deleteBtn.Margins.Bottom := 6;
+      deleteBtn.TextAlign := TTextAlign.Center;
       deleteBtn.TagObject := cc;
       deleteBtn.OnClick := deleteYAddress;
-      //deleteBtn.Align:=TAlignLayout.Left;
+      deleteBtn.HitTest := true;
+      // deleteBtn.Align:=TAlignLayout.Left;
 
-      {copyBtn := TButton.Create(Panel);
-      copyBtn.Parent := Panel;
-      copyBtn.Visible := true;
-      copyBtn.Align := TAlignLayout.MostRight;
-      copyBtn.Width := 48;
-      copyBtn.Text := 'Copy';
-      copyBtn.TagObject := cc;
-      copyBtn.OnClick := CopyParentTagStringToClipboard;
-      copyBtn.Align:=TAlignLayout.Left; }
-
+      { copyBtn := TButton.Create(Panel);
+        copyBtn.Parent := Panel;
+        copyBtn.Visible := true;
+        copyBtn.Align := TAlignLayout.MostRight;
+        copyBtn.Width := 48;
+        copyBtn.Text := 'Copy';
+        copyBtn.TagObject := cc;
+        copyBtn.OnClick := CopyParentTagStringToClipboard;
+        copyBtn.Align:=TAlignLayout.Left; }
 
     end;
 

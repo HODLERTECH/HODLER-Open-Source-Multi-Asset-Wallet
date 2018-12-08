@@ -23,8 +23,8 @@ type
     flag: System.UInt32;
     decimals: smallint;
     availableFirstLetter: AnsiString;
-    hrp : AnsiString;
-    qrname:AnsiString;
+    hrp: AnsiString;
+    qrname: AnsiString;
   end;
 
 const
@@ -32,36 +32,40 @@ const
   availableCoin: array [0 .. 7] of coinInfo = ((id: 0; displayName: 'Bitcoin';
     name: 'bitcoin'; shortcut: 'BTC'; WifByte: '80'; p2sh: '05'; p2pk: '00';
 
-    flag: 0; decimals: 8; availableFirstLetter: '13b'; hrp : 'bc'; qrname: 'bitcoin';
+    flag: 0; decimals: 8; availableFirstLetter: '13b'; hrp: 'bc';
+    qrname: 'bitcoin';
 
     ), (id: 1; displayName: 'Litecoin'; name: 'litecoin'; shortcut: 'LTC';
-    WifByte: 'B0'; p2sh: '32'{'05'}; p2pk: '30';
+    WifByte: 'B0'; p2sh: '32' { '05' }; p2pk: '30';
 
-    flag: 0; decimals: 8; availableFirstLetter: 'lm'; hrp :'ltc'; qrname: 'litecoin';
+    flag: 0; decimals: 8; availableFirstLetter: 'lm'; hrp: 'ltc';
+    qrname: 'litecoin';
 
     ), (id: 2; displayName: 'DASH'; name: 'dash'; shortcut: 'DASH';
     WifByte: 'CC'; p2sh: '10'; p2pk: '4c'; flag: 0; decimals: 8;
     availableFirstLetter: 'X'; qrname: 'dash';
 
-    ), (id: 3; displayName: 'Bitcoin Cash'; name: 'bitcoinabc';
-    shortcut: 'BCH'; WifByte: '80'; p2sh: '05'; p2pk: '00';
+    ), (id: 3; displayName: 'Bitcoin Cash'; name: 'bitcoinabc'; shortcut: 'BCH';
+    WifByte: '80'; p2sh: '05'; p2pk: '00';
 
     flag: 0; decimals: 8; availableFirstLetter: '13pq'; qrname: 'bitcoincash';
 
     ), (id: 4; displayName: 'Ethereum'; name: 'ethereum'; shortcut: 'ETH';
-    WifByte: ''; p2pk: '00'; flag: 1; decimals: 18; availableFirstLetter: '0'; qrname: 'ethereum';
+    WifByte: ''; p2pk: '00'; flag: 1; decimals: 18; availableFirstLetter: '0';
+    qrname: 'ethereum';
 
     ), (id: 5; displayName: 'Ravencoin'; name: 'ravencoin'; shortcut: 'RVN';
-    WifByte: '80';p2sh :'7a'; p2pk: '3c'; flag: 0; decimals: 8; availableFirstLetter: 'Rr';  qrname: 'ravencoin';
+    WifByte: '80'; p2sh: '7a'; p2pk: '3c'; flag: 0; decimals: 8;
+    availableFirstLetter: 'Rr'; qrname: 'ravencoin';
 
-    ),
-    (id:6; displayName: 'Digibyte'; name: 'digibyte'; shortcut: 'DGB';
-    WifByte: '80';p2sh :'3f'; p2pk: '1e'; flag: 0; decimals: 8; availableFirstLetter: 'SD'; qrname: 'digibyte';
+    ), (id: 6; displayName: 'Digibyte'; name: 'digibyte'; shortcut: 'DGB';
+    WifByte: '80'; p2sh: '3f'; p2pk: '1e'; flag: 0; decimals: 8;
+    availableFirstLetter: 'SD'; qrname: 'digibyte';
 
-    ), (id: 7; displayName: 'Bitcoin SV'; name: 'bitcoinsv';
-    shortcut: 'BSV'; WifByte: '80'; p2sh: '05'; p2pk: '00';
+    ), (id: 7; displayName: 'Bitcoin SV'; name: 'bitcoinsv'; shortcut: 'BSV';
+    WifByte: '80'; p2sh: '05'; p2pk: '00';
 
-    flag: 0; decimals: 8; availableFirstLetter: '13pq';   qrname: 'bitcoincash';
+    flag: 0; decimals: 8; availableFirstLetter: '13pq'; qrname: 'bitcoincash';
 
     )
 
@@ -93,7 +97,7 @@ begin
       URL := 'https://digiexplorer.info/tx/';
     7:
       URL := 'https://bsvexplorer.info//#/tx/';
-    end;
+  end;
 
   result := URL + hash;
 end;
@@ -125,17 +129,16 @@ end;
 
 function checkFirstLetter(id: Integer; address: AnsiString): Boolean;
 var
-  c : Ansichar;
-  position : integer;
+  c: Ansichar;
+  position: Integer;
 begin
 
   address := removeSpace(address);
-  if containsText( address , ':') then
+  if containsText(address, ':') then
   begin
-    position := pos( ':' ,address );
-    address  := rightStr( address , length(address) - position );
+    position := pos(':', address);
+    address := rightStr(address, length(address) - position);
   end;
-
 
   for c in availableCoin[id].availableFirstLetter do
   begin
@@ -145,7 +148,7 @@ begin
 
   end;
 
-  result := false;  
+  result := false;
 end;
 
 // check if given address is of given coin
@@ -159,7 +162,7 @@ begin
   if availableCoin[id].flag = 0 then
   begin
 
-    if (id in [3,7]) then
+    if (id in [3, 7]) then
     begin
 
       str := StringReplace(address, ' ', '', [rfReplaceAll]);
@@ -180,17 +183,17 @@ begin
     end
     else
     begin
-    
+
       try
         info := decodeAddressInfo(address, id);
-      except on E: Exception do
+      except
+        on E: Exception do
         begin
-
 
           exit(false);
         end;
       end;
-      
+
       if info.scriptType >= 0 then
         result := true;
 
@@ -204,7 +207,7 @@ begin
     result := ((isHex(rightStr(address, 40))) and (length(address) = 42));
   end;
 
-  result := result and checkFirstLetter( id, address );
+  result := result and checkFirstLetter(id, address);
 
 end;
 

@@ -2,8 +2,8 @@ unit Ethereum;
 
 interface
 
-uses  secp256k1, HashObj, base58, SysUtils, FMX.Dialogs,
-  Velthuis.BigIntegers , WalletStructureData;
+uses secp256k1, HashObj, base58, SysUtils, FMX.Dialogs,
+  Velthuis.BigIntegers, WalletStructureData;
 
 function Ethereum_PublicAddrToWallet(pub: AnsiString;
   netbyte: AnsiString = '00'): AnsiString;
@@ -11,6 +11,7 @@ function Ethereum_createHD(coinid, x, y: integer; MasterSeed: AnsiString)
   : TWalletInfo;
 
 implementation
+
 uses misc;
 
 function Ethereum_createHD(coinid, x, y: integer; MasterSeed: AnsiString)
@@ -36,7 +37,7 @@ begin
   delete(pub, 1, 2);
   s := Keccak256Hex(pub);
   delete(s, 1, 24);
-  result := getETHValidAddress( Lowercase('0x' + s) );
+  result := getETHValidAddress(Lowercase('0x' + s));
 end;
 
 end.

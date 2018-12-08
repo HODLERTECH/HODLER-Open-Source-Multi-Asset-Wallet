@@ -1,7 +1,7 @@
 unit FileManagerRelated;
 
-
 interface
+
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, strUtils,
   System.Generics.Collections, System.character,
@@ -39,11 +39,15 @@ uses
   FMX.Controls3D, FMX.Layers3D, FMX.StdActns, FMX.MediaLibrary.Actions,
   FMX.ComboEdit;
 
+procedure DrawFM(InputPath: AnsiString);
 
-procedure DrawFM(InputPath:AnsiString);
 implementation
-uses uHome,misc,AccountData,base58,bech32,CurrencyConverter,SyncThr,WIF,Bitcoin,coinData,cryptoCurrencyData,Ethereum,secp256k1,tokenData,transactions,WalletStructureData,AccountRelated;
-procedure DrawFM(InputPath:AnsiString);
+
+uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
+  Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
+  transactions, WalletStructureData, AccountRelated;
+
+procedure DrawFM(InputPath: AnsiString);
 var
   fmxObj: TfmxObject;
   Panel: TPanel;
@@ -55,12 +59,12 @@ var
 begin
   clearVertScrollBox(frmHome.FilesManagerScrollBox);
 
-  frmHome.FileManagerPathLabel.Text := Inputpath;
+  frmHome.FileManagerPathLabel.Text := InputPath;
 
-  if Inputpath <> '' then
+  if InputPath <> '' then
   begin
-    Dir := TDirectory.GetDirectories(Inputpath);
-    Files := TDirectory.GetFiles(Inputpath);
+    Dir := TDirectory.GetDirectories(InputPath);
+    Files := TDirectory.GetFiles(InputPath);
   end
   else
   begin
