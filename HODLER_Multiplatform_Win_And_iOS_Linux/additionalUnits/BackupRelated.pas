@@ -507,7 +507,7 @@ begin
     DecodeDate(Now, Y, m, d);
     FileName := currentAccount.name + '_' + Format('%d.%d.%d', [Y, m, d]) + '.'
       + IntToStr(DateTimeToUnix(Now));
-    ImgPath := System.IOUtils.TPath.Combine(HOME_PATH, FileName + '.png');
+    ImgPath := System.IOUtils.TPath.Combine(System.IOUtils.TPath.GetDownloadsPath, FileName + '.png');
 
     img.SaveToFile(ImgPath);
 
@@ -794,7 +794,8 @@ begin
 
       withoutWhiteChar := '';
       frmhome.SeedField.Text := '';
-
+  LoadCurrentAccount(AccountNameEdit.Text);
+  frmhome.FormShow(nil);
       exit;
     end
     else
@@ -815,7 +816,8 @@ begin
 
       seedFromWords := '';
       inputWordsList.Free;
-
+  LoadCurrentAccount(AccountNameEdit.Text);
+  frmhome.FormShow(nil);
       {
         Dodaæ obs³ugê b³êdów
       }

@@ -1298,8 +1298,6 @@ begin
     panel := TPanel.Create(frmhome.walletList);
     panel.Align := panel.Align.alTop;
     panel.Height := 48;
-    panel.Visible :=
-      (ccEmpty or (not frmhome.HideZeroWalletsCheckBox.IsChecked));
     panel.parent := frmhome.walletList;
     panel.TagObject := crypto;
     setBlackBackground(panel);
@@ -1389,6 +1387,8 @@ begin
     price.TagString := 'price';
     price.StyledSettings := balLabel.StyledSettings - [TStyledSetting.size];
     price.TextSettings.Font.size := 9;
+        panel.Visible :=
+      (ccEmpty or (not frmhome.HideZeroWalletsCheckBox.IsChecked));
   end;
 end;
 

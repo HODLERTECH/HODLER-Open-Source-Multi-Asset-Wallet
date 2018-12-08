@@ -1140,6 +1140,8 @@ begin
 
   CreateNewAccountAndSave(RestoreNameEdit.Text, RestorePasswordEdit.Text,
     MasterSeed, true);
+  LoadCurrentAccount(RestoreNameEdit.Text);
+  frmhome.FormShow(nil);
   tced := '';
   MasterSeed := '';
   RestorePasswordEdit.Text := '';
@@ -1348,7 +1350,7 @@ end;
 procedure TfrmHome.HideZeroWalletsCheckBoxChange(Sender: TObject);
 begin
   WalletViewRelated.HideEmptyWallets(Sender);
-  CurrentAccount.SaveFiles
+  CurrentAccount.SaveFiles;
 end;
 
 {$IFDEF ANDROID}
@@ -1981,7 +1983,7 @@ end;
 procedure TfrmHome.choseTokenClick(Sender: TObject);
 begin
   WalletViewRelated.chooseToken(Sender);
-  switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
+//  switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
   btnSyncClick(nil);
 end;
 
@@ -2732,7 +2734,7 @@ procedure TfrmHome.btnOKAddNewCoinSettingsClick(Sender: TObject);
 
 begin
 
-  WalletViewRelated.newCoinFromPrivateKey(Sender);
+  WalletViewRelated.newCoin{FromPrivateKey}(Sender);
 
 end;
 

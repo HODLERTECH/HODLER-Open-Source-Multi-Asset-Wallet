@@ -366,11 +366,8 @@ type
     TransactionDetailsBackButton: TButton;
     HistoryTransactionVertScrollBox: TVertScrollBox;
     HistoryTransactionSendReceive: TLabel;
-    HistoryTransactionValue: TLabel;
     HistoryStatusStaticLabel: TLabel;
-    historyTransactionConfirmation: TLabel;
     HistoryDateStaticLabel: TLabel;
-    HistoryTransactionDate: TLabel;
     Layout16: TLayout;
     TransactionIDStaticLabel: TLabel;
     HistoryTransactionID: TLabel;
@@ -712,6 +709,9 @@ type
     ImportPrivateKeyInPrivButton: TButton;
     SweepButton: TButton;
     ExportPrivateKeyButton: TButton;
+    historyTransactionConfirmation: TEdit;
+    HistoryTransactionDate: TEdit;
+    HistoryTransactionValue: TEdit;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1115,6 +1115,8 @@ begin
 
   CreateNewAccountAndSave(RestoreNameEdit.Text, RestorePasswordEdit.Text,
     MasterSeed, true);
+  LoadCurrentAccount(RestoreNameEdit.Text);
+  frmhome.FormShow(nil);
   tced := '';
   MasterSeed := '';
   RestorePasswordEdit.Text := '';
@@ -1863,7 +1865,7 @@ end;
 procedure TfrmHome.choseTokenClick(Sender: TObject);
 begin
   WalletViewRelated.chooseToken(Sender);
-  switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
+  //switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
   btnSyncClick(nil);
 end;
 
