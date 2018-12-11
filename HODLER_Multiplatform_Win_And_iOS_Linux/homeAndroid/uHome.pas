@@ -2593,8 +2593,7 @@ end;
 
 procedure TfrmHome.btnChangeDescriptionClick(Sender: TObject);
 begin
-  ChangeDescryptionEdit.Text := CurrentCryptoCurrency.description;
-  switchTab(PageControl, ChangeDescryptionScreen);
+  WalletViewRelated.btnChangeDescriptionClick(Sender);
 end;
 
 procedure TfrmHome.Button8Click(Sender: TObject);

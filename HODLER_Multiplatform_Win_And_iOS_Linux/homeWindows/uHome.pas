@@ -30,7 +30,7 @@ uses
   FMX.Clipboard, bech32, cryptoCurrencyData, FMX.VirtualKeyBoard, JSON,
   languages, WIF, AccountData, WalletStructureData,
   System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
-  CurrencyConverter, uEncryptedZipFile, System.Zip
+  CurrencyConverter, uEncryptedZipFile, System.Zip , TRotateImageData
 {$IFDEF ANDROID},
   FMX.VirtualKeyBoard.Android,
   Androidapi.JNI,
@@ -338,7 +338,6 @@ type
     lblSetPassword: TLabel;
     btnCreateWallet: TButton;
     btnCreateNewWallet: TButton;
-    Layout12: TLayout;
     RefreshProgressBar: TProgressBar;
     ConfirmedSeedVertScrollBox: TVertScrollBox;
     ConfirmedSeedFlowLayout: TFlowLayout;
@@ -390,8 +389,6 @@ type
     BackupHeaderLabel: TLabel;
     BackupBackButton: TButton;
     SendEncryptedSeedButton: TButton;
-    SendWalletFileButton: TButton;
-    SeedMnemonicBackupButton: TButton;
     CreateBackupButton: TButton;
     RestoreFromFileButton: TButton;
     fileManager: TTabItem;
@@ -418,9 +415,9 @@ type
     linkLabel: TLabel;
     bpmnemonicLayout: TLayout;
     MnemonicSeedDescriptionLabel: TLabel;
-    Layout26: TLayout;
+    HSBbackupLayout: TLayout;
     HSBDescriptionLabel: TLabel;
-    Layout27: TLayout;
+    EncrypredQRBackupLayout: TLayout;
     EncryptedQRDescriptionLabel: TLabel;
     Layout28: TLayout;
     DecryptedQRDescriptionLabel: TLabel;
@@ -720,6 +717,26 @@ type
     Label21: TLabel;
     Button11: TButton;
     ExportPrivKeyListVertScrollBox: TVertScrollBox;
+    WVTabItemLayout: TLayout;
+    RefreshLayout: TLayout;
+    ShortcutFiatLabel: TLabel;
+    FiatShortcutLayout: TLayout;
+    ShortcutFiatShortcutLabel: TLabel;
+    NameShortcutLabel: TLabel;
+    NameShortcutLayout: TLayout;
+    BilanceStaticLabel: TLabel;
+    GlobalRefreshLayout: TLayout;
+    Layout25: TLayout;
+    Layout12: TLayout;
+    Layout40: TLayout;
+    Layout43: TLayout;
+    Layout45: TLayout;
+    TopInfoConfirmedFiatLabel: TLabel;
+    TopInfoUnconfirmedFiatLabel: TLabel;
+    Image9: TImage;
+    SendWalletFileButton: TButton;
+    Image8: TImage;
+    SeedMnemonicBackupButton: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -986,7 +1003,11 @@ type
     procedure CopyParentTagStringToClipboard(Sender: TObject);
     procedure CopyParentTextToClipboard(Sender: TObject);
     procedure ExportPrivKeyListButtonClick(Sender : TObject);
+    procedure RefreshCurrentWallet(Sender : TObject);
     //procedure PrivateKeyPasswordCheck
+  var
+    refreshLocalImage : TRotateImage;
+    refreshGlobalImage : TRotateImage;
 
   var
     HistoryMaxLength: Integer;
@@ -1026,7 +1047,7 @@ var
   decryptSeedBackTabItem: TTabItem;
   cameraBackTabItem: TTabItem;
   dashboardDecimalsPrecision: Integer = 6;
-  dashBoardFontSize: Integer = 18;
+  dashBoardFontSize: Integer = 14;
   flagWVPrecision: Boolean = true;
   CurrentCryptoCurrency: CryptoCurrency;
   CurrentCoin: TwalletInfo;
@@ -1081,6 +1102,12 @@ begin
 end;
 
 {$ENDIF}
+
+procedure TFrmHome.RefreshCurrentWallet(Sender : TObject);
+begin
+  WalletViewRelated.RefreshCurrentWallet(Sender);
+end;
+
 procedure Tfrmhome.ExportPrivKeyListButtonClick(Sender : TObject);
 begin
   walletViewRelated.ExportPrivKeyListButtonClick(Sender);
@@ -2738,8 +2765,7 @@ end;
 
 procedure TfrmHome.btnChangeDescriptionClick(Sender: TObject);
 begin
-  ChangeDescryptionEdit.Text := CurrentCryptoCurrency.description;
-  switchTab(PageControl, ChangeDescryptionScreen);
+  WalletViewRelated.btnChangeDescriptionClick(Sender);
 end;
 
 procedure TfrmHome.Button8Click(Sender: TObject);
@@ -2832,7 +2858,9 @@ end;
 
 procedure TfrmHome.btnSyncClick(Sender: TObject);
 begin
+
   WalletViewRelated.Synchro;
+
 end;
 
 // Show available ETH wallet during adding new Token
@@ -3025,9 +3053,30 @@ begin
   MotionSensor := TMotionSensor.Create(frmHome);
   OrientationSensor := TOrientationSensor.Create(frmHome);
 {$ENDIF}
+
+  refreshLocalImage := TRotateImage.Create(RefreshLayout);
+  refreshLocalImage.parent := RefreshLayout;
+  refreshLocalImage.Visible := true;
+  refreshLocalImage.Align := TAlignLayout.Right;
+  refreshLocalImage.Width :=32;
+  refreshLocalImage.OnClick := RefreshCurrentWallet;
+  refreshLocalImage.Margins.Right := 15;
+  refreshLocalImage.Margins.Top := 8;
+  refreshLocalImage.Margins.Bottom := 8;
+
+
+  refreshGlobalImage := TRotateImage.Create(GlobalRefreshLayout);
+  refreshGlobalImage.parent := GlobalRefreshLayout;
+  refreshGlobalImage.Visible := true;
+  refreshGlobalImage.Align := TAlignLayout.Top;
+  refreshGlobalImage.height :=32;
+  refreshGlobalImage.OnClick := btnSyncClick;
+  //refreshGlobalImage.Margins.Right := 15;
+  refreshGlobalImage.Margins.Top := 8;
+  refreshGlobalImage.Margins.Bottom := 8;
+
   AccountRelated.InitializeHodler;
   BackupInfoLabel.Position.Y := 100000;
-
 end;
 
 procedure TfrmHome.FormFocusChanged(Sender: TObject);

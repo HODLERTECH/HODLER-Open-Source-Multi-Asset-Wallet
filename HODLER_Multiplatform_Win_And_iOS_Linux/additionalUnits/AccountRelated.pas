@@ -55,7 +55,7 @@ implementation
 
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
-  transactions, WalletStructureData, TcopyableEditData, TCopyableLabelData, walletViewRelated;
+  transactions, WalletStructureData, TcopyableEditData, TCopyableLabelData, walletViewRelated, TImageTextButtonData;
 
 procedure afterInitialize;
 var
@@ -428,6 +428,7 @@ var
   JsonObject: TJsonObject;
   JSONArray: TJsonArray;
   JsonValue: TJsonvalue;
+  btn : TImageTextButton;
 begin
 
   // %appdata% to %appdata%/hodlertech
@@ -480,6 +481,10 @@ begin
       System.IOUtils.TPath.combine(newDataPath, 'hodler.fiat.dat'));
   end;
 
+
+
+
+
   try
 
     with frmHome do
@@ -497,6 +502,17 @@ begin
         'hodlertech'){$ENDIF});
       HOME_TABITEM := walletView;
 {$ENDIF}
+
+{$IF DEFINED(ANDROID)}
+      SYSTEM_NAME := 'android';
+{$ELSE IF DEFINED(MSWINDOWS)}
+      SYSTEM_NAME := 'windows';
+{$ELSE IF DEFINED(LINUX)}
+      SYSTEM_NAME := 'linux';
+{$ELSE IF DEFINED(IOS)}
+      SYSTEM_NAME := 'ios';
+{$ENDIF}
+
       syncFont;
       if FileExists(System.IOUtils.TPath.combine(HOME_PATH, 'hodler.wallet.dat'))
       then
@@ -603,10 +619,32 @@ begin
       lblWIFKey.TagString := 'copyable';
 
       HistoryTransactionID.TagString := 'copyable';
-      HistoryTransactionDate.TagString := 'copyable';
-      HistoryTransactionValue.TagString := 'copyable';
-      historyTransactionConfirmation.TagString := 'copyable';
+      //HistoryTransactionDate.TagString := 'copyable';
+      //HistoryTransactionValue.TagString := 'copyable';
+      //historyTransactionConfirmation.TagString := 'copyable';
       CreateCopyImageButtonOnTEdits();
+
+      btn := TImageTextButton.Create(HSBbackupLayout);
+      btn.parent := HSBbackupLayout;
+      btn.Visible := true;
+      btn.Align := TAlignLayout.Left;
+      btn.Width := 160;
+      btn.LoadImage('HSB_DARK');
+      btn.lbl.Text := 'Hodler Secure Backup';
+
+      btn.OnClick := SendWalletFileButtonClick;
+
+      btn := TImageTextButton.Create(EncrypredQRBackupLayout);
+      btn.parent := EncrypredQRBackupLayout;
+      btn.Visible := true;
+      btn.Align := TAlignLayout.Left;
+      btn.Width := 160;
+      btn.LoadImage('ENCRYPTED_SEED_DARK' );
+      btn.lbl.Text := 'Encrypted QR';
+      btn.img.Margins.Top := 20;
+      btn.img.Margins.Bottom := 20;
+      btn.OnClick := SendEncryptedSeedButtonClick;
+
     end;
 
   except

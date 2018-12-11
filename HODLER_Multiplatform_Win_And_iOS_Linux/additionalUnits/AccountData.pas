@@ -44,6 +44,8 @@ type
     function aggregateBalances(wi: TWalletInfo): TBalances;
     function aggregateUTXO(wi: TWalletInfo): TUTXOS;
     function aggregateFiats(wi: TWalletInfo): double;
+    function aggregateConfirmedFiats(wi: TWalletInfo): double;
+    function aggregateUnconfirmedFiats(wi: TWalletInfo): double;
   private
     procedure SaveTokenFile();
     procedure SaveCoinFile();
@@ -63,6 +65,35 @@ implementation
 
 uses
   misc,uHome;
+
+
+function Account.aggregateConfirmedFiats(wi: TWalletInfo): double;
+var
+  twi: cryptoCurrency;
+begin
+
+  if wi.X = -1 then
+    exit(wi.getConfirmedFiat());
+
+  result := 0.0;
+  for twi in getWalletWithX(wi.X, TWalletInfo(wi).coin) do
+    result := result + TWalletInfo(twi).getConfirmedFiat;
+
+end;
+
+function Account.aggregateUnconfirmedFiats(wi: TWalletInfo): double;
+var
+  twi: cryptoCurrency;
+begin
+
+  if wi.X = -1 then
+    exit(wi.getUnconfirmedFiat());
+
+  result := 0.0;
+  for twi in getWalletWithX(wi.X, TWalletInfo(wi).coin) do
+    result := result + TWalletInfo(twi).getUnconfirmedFiat;
+
+end;
 
 function Account.aggregateFiats(wi: TWalletInfo): double;
 var

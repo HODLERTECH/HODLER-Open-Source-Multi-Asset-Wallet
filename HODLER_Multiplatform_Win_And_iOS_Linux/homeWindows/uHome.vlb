@@ -1,5 +1,5 @@
 ﻿[]
-Coordinates=1258,463,176,51
+Coordinates=1857,771,160,51
 
 [WVReceive]
 Coordinates=404,270,69,33
@@ -450,9 +450,6 @@ Coordinates=1616,867,95,33
 [Layout10]
 Coordinates=1261,1040,59,33
 
-[Layout12]
-Coordinates=1192,1040,59,33
-
 [StyleBook1]
 Coordinates=1103,1040,70,33
 
@@ -761,9 +758,6 @@ Coordinates=1725,540,97,51
 [ANTHeader]
 Coordinates=1713,1136,70,33
 
-[Layout26]
-Coordinates=1644,1136,59,33
-
 [RestoreFromFileTabitem]
 Coordinates=2673,111,135,33
 
@@ -776,9 +770,6 @@ Coordinates=2559,1057,102,33
 [SeedField]
 Coordinates=144,270,62,51
 
-[SeedMnemonicBackupButton]
-Coordinates=1857,771,160,51
-
 [Layout18]
 Coordinates=1496,1136,59,33
 
@@ -790,9 +781,6 @@ Coordinates=2350,232,130,51
 
 [lblContractAddress]
 Coordinates=1500,463,109,51
-
-[Layout27]
-Coordinates=1338,1136,59,33
 
 [lblMessageText]
 Coordinates=1391,790,91,51
@@ -817,9 +805,6 @@ Coordinates=2331,1059,91,33
 
 [btnRFFBack]
 Coordinates=846,540,74,51
-
-[SendWalletFileButton]
-Coordinates=1857,1,120,51
 
 [lblRetypeSeed]
 Coordinates=1294,694,85,51
@@ -1185,4 +1170,10 @@ Coordinates=122,828,46,51
 
 [TokenIcons3]
 Coordinates=2177,1057,71,33
+
+[HSBbackupLayout]
+Coordinates=1644,1136,59,33
+
+[EncrypredQRBackupLayout]
+Coordinates=1338,1136,59,33
 

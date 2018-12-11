@@ -126,7 +126,9 @@ uses
   QRRelated in 'additionalUnits\QRRelated.pas',
   FileManagerRelated in 'additionalUnits\FileManagerRelated.pas',
   TCopyableEditData in 'components\TCopyableEditData.pas',
-  TCopyableLabelData in 'components\TCopyableLabelData.pas';
+  TCopyableLabelData in 'components\TCopyableLabelData.pas',
+  TRotateImageData in 'components\TRotateImageData.pas',
+  TImageTextButtonData in 'components\TImageTextButtonData.pas';
 
 {$R *.res}
 

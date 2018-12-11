@@ -74,6 +74,8 @@ procedure newCoinFromPrivateKey(Sender: TObject);
 procedure ExportPrivKeyListButtonClick(Sender : TObject);
 procedure ImportPrivateKeyInPrivButtonClick(Sender: TObject);
 procedure SweepButtonClick(Sender: TObject);
+procedure RefreshCurrentWallet(Sender : TObject);
+procedure btnChangeDescriptionClick(Sender: TObject);
 
 var
   SyncOpenWallet: TThread;
@@ -83,6 +85,49 @@ implementation
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, AccountRelated, TCopyableEditData ,BackupRelated;
+
+
+procedure btnChangeDescriptionClick(Sender: TObject);
+begin
+  with frmhome do
+  begin
+    if CurrentCryptoCurrency.description = '' then
+    begin
+      ChangeDescryptionEdit.Text := AvailableCoin[CurrentCoin.coin].displayName + ' (' + AvailableCoin[CurrentCoin.coin].shortcut + ')';
+    end
+    else
+    begin
+      ChangeDescryptionEdit.Text := CurrentCryptoCurrency.description;
+    end;
+
+
+
+    switchTab(PageControl, ChangeDescryptionScreen);
+  end;
+
+end;
+procedure RefreshCurrentWallet(Sender : TObject);
+var
+  th : TThread;
+
+begin
+  th := TThread.CreateAnonymousThread(procedure
+  var
+    cc : cryptoCurrency;
+  begin
+    frmHome.refreshLocalImage.Start();
+
+    for cc in currentAccount.getWalletWithX(CurrentCoin.x, CurrentCoin.coin) do
+    begin
+      SynchronizeCryptoCurrency(cc);
+    end;
+
+    frmHome.refreshLocalImage.Stop();
+  end);
+
+  th.FreeOnTerminate := true;
+  th.Start;
+end;
 
 procedure SweepButtonClick(Sender: TObject);
 begin
@@ -1497,11 +1542,16 @@ begin
 
       TopInfoConfirmedValue.Text := ' ' + BigIntegertoFloatStr
         (CurrentAccount.aggregateBalances(CurrentCoin).confirmed,
-        CurrentCryptoCurrency.decimals);
+        CurrentCryptoCurrency.decimals) + ' ' + CurrentCryptoCurrency.ShortCut  ;
+      TopInfoConfirmedFiatLabel.Text := FloatToStrF( CurrentAccount.aggregateConfirmedFiats(currentCoin), ffFixed, 15, 2 ) + ' ' + CurrencyConverter.symbol;
+
       TopInfoUnconfirmedValue.Text := ' ' + BigIntegertoFloatStr
         (CurrentAccount.aggregateBalances(CurrentCoin).unconfirmed,
-        CurrentCryptoCurrency.decimals);
+        CurrentCryptoCurrency.decimals) + ' ' + CurrentCryptoCurrency.ShortCut  ;
+      TopInfoUnconfirmedFiatLabel.Text := FloatToStrF( CurrentAccount.aggregateUNConfirmedFiats(currentCoin), ffFixed, 15, 2 )+ ' ' + CurrencyConverter.symbol;
 
+      ShortcutFiatLabel.Text := floatToStrF( CurrentAccount.aggregateFiats(CurrentCoin),
+        ffFixed, 15, 2);
     end
     else
     begin
@@ -1515,10 +1565,35 @@ begin
         ffFixed, 15, 2);
 
       TopInfoConfirmedValue.Text := ' ' + BigIntegertoFloatStr
-        (CurrentCryptoCurrency.confirmed, CurrentCryptoCurrency.decimals);
+        (CurrentCryptoCurrency.confirmed, CurrentCryptoCurrency.decimals)+ ' ' + CurrentCryptoCurrency.ShortCut;
+      TopInfoConfirmedFiatLabel.Text := FloatToStrF( CurrentCryptoCurrency.getConfirmedFiat, ffFixed, 15, 2 ) + ' ' + CurrencyConverter.symbol;
+
       TopInfoUnconfirmedValue.Text := ' ' + BigIntegertoFloatStr
-        (CurrentCryptoCurrency.unconfirmed, CurrentCryptoCurrency.decimals);
+        (CurrentCryptoCurrency.unconfirmed, CurrentCryptoCurrency.decimals)+ ' ' + CurrentCryptoCurrency.ShortCut;
+      TopInfoUnconfirmedFiatLabel.Text := FloatToStrF( CurrentCryptoCurrency.getUNConfirmedFiat, ffFixed, 15, 2 ) + ' ' + CurrencyConverter.symbol;
+
+      ShortcutFiatLabel.Text := floatToStrF( CurrentCryptoCurrency.getFiat(),
+        ffFixed, 15, 2);
     end;
+
+    FiatShortcutLayout.Width := ShortcutFiatLabel.Canvas.TextWidth(ShortcutFiatLabel.Text) * ShortcutFiatLabel.TextSettings.Font.Size / 12 + 20;
+    ShortcutFiatShortcutLabel.Text := CurrencyConverter.symbol;
+
+    TopInfoUnconfirmedFiatLabel.Width := Max( TopInfoUnconfirmedFiatLabel.Canvas.TextWidth(TopInfoUnconfirmedFiatLabel.Text) * TopInfoUnconfirmedFiatLabel.Font.Size / 12 ,
+    TopInfoconfirmedFiatLabel.Canvas.TextWidth(TopInfoconfirmedFiatLabel.Text) * TopInfoconfirmedFiatLabel.Font.Size / 12 ) + 6;
+    TopInfoconfirmedFiatLabel.Width := TopInfoUnconfirmedFiatLabel.Width;
+
+
+    if CurrentCryptoCurrency.description = '' then
+    begin
+       NameShortcutLabel.Text := CurrentCryptoCurrency.name + ' (' + CurrentCryptoCurrency.ShortCut + ')';
+    end
+    else
+    begin
+      NameShortcutLabel.Text := CurrentCryptoCurrency.description;
+    end;
+
+
 
   end;
 end;

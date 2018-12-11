@@ -428,6 +428,9 @@ begin
         btnSync.Repaint();
 
       end);
+
+    refreshGlobalImage.Start;
+
     try
       SynchronizeAll();
     except
@@ -436,7 +439,10 @@ begin
       end;
     end;
     // synchronizeAddresses;
+
     refreshGlobalFiat();
+
+    refreshGlobalImage.Stop();
 
     if TThread.CurrentThread.CheckTerminated then
       exit();

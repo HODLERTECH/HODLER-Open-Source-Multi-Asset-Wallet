@@ -378,6 +378,7 @@ var
   lastHistCC: integer;
   HOME_PATH: AnsiString;
   HOME_TABITEM: TTabItem;
+  SYSTEM_NAME : AnsiString;
   cutAddressEveryNChar: integer = -1;
   addressFromQR : AnsiString;
   amountFromQR : AnsiString;
@@ -1339,7 +1340,7 @@ begin
     //
     balLabel := TLabel.Create(frmhome.walletList);
     balLabel.StyledSettings := balLabel.StyledSettings - [TStyledSetting.size];
-    balLabel.TextSettings.Font.size := dashBoardFontSize;
+
     balLabel.parent := panel;
     if crypto is TWalletInfo then
     begin
@@ -1361,7 +1362,7 @@ begin
     balLabel.Width := 200;
     balLabel.Height := 48;
     balLabel.Align := TAlignLayout.FitRight;
-    balLabel.TextSettings.Font.size := adrLabel.TextSettings.Font.size - 3;
+    balLabel.TextSettings.Font.size := dashBoardFontSize;
     balLabel.Margins.Right := 15;
     balLabel.TagString := 'balance';
     //
@@ -1389,6 +1390,7 @@ begin
     price.TagString := 'price';
     price.StyledSettings := balLabel.StyledSettings - [TStyledSetting.size];
     price.TextSettings.Font.size := 9;
+    price.Margins.Bottom := 2;
   end;
 end;
 
