@@ -963,6 +963,7 @@ var
       flagElse: Boolean;
       sorted: Boolean;
       DEBUGstring: AnsiString;
+holder:TFMXObject;
 begin
 
 
@@ -1098,7 +1099,10 @@ begin
         TThread.Synchronize(nil,
           procedure
           begin
-            switchTab(frmhome.PageControl, HOME_TABITEM);
+             Holder:=TFmxObject.Create(nil);
+            holder.TagObject:=walletInfo;
+            frmHome.OpenWalletView(holder,PointF(0,0));
+            holder.DisposeOf;
           end);
     wipeAnsiString(masterSeed);
 
@@ -1127,13 +1131,12 @@ procedure newCoin(Sender: TObject);
       flagElse: Boolean;
       sorted: Boolean;
       DEBUGstring: AnsiString;
-
+      holder:TFmxObject;
     begin
 
       i := 0;
       with frmhome do
         tced := TCA(NewCoinDescriptionPassEdit.Text);
-      // NewCoinDescriptionPassEdit.Text := '';
       MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
       if not isHex(MasterSeed) then
       begin
@@ -1171,7 +1174,10 @@ procedure newCoin(Sender: TObject);
         TThread.Synchronize(nil,
           procedure
           begin
-            switchTab(frmhome.PageControl, HOME_TABITEM);
+            Holder:=TFmxObject.Create(nil);
+            holder.TagObject:=walletInfo;
+            frmHome.OpenWalletView(holder,PointF(0,0));
+            holder.DisposeOf;
           end);
 
       TThread.Synchronize(nil,
@@ -1692,85 +1698,7 @@ begin
       end;
     end;
 
-    { TThread.CreateAnonymousThread(
-      procedure
-      var
-      ans: AnsiString;
-      begin
 
-      TThread.Synchronize(nil,
-      procedure
-      begin
-      TransactionWaitForSendAniIndicator.Visible := true;
-      TransactionWaitForSendAniIndicator.Enabled := true;
-      TransactionWaitForSendDetailsLabel.Visible := true;
-      TransactionWaitForSendDetailsLabel.Text :=
-      'Sending... It may take a few seconds';
-      TransactionWaitForSendLinkLabel.Visible := false;
-
-      switchTab(PageControl, TransactionWaitForSend);
-      end);
-
-      ans := sendCoinsTO(CurrentCoin, Address, amount, fee, MasterSeed,
-      AvailableCoin[CurrentCoin.coin].Name);
-      //Tthread.Synchronize(nil, procedure begin
-      //  showmessage(ans);
-      //end);
-      SynchronizeCryptoCurrency(CurrentCryptoCurrency);
-
-      TThread.Synchronize(nil,
-      procedure
-      var
-      ts: TStringList;
-      i: Integer;
-      begin
-      TransactionWaitForSendAniIndicator.Visible := false;
-      TransactionWaitForSendAniIndicator.Enabled := false;
-      TransactionWaitForSendDetailsLabel.Visible := false;
-      TransactionWaitForSendLinkLabel.Visible := true;
-      if LeftStr(ans, length('Transaction sent')) = 'Transaction sent'
-      then
-      begin
-      TThread.CreateAnonymousThread(
-      procedure
-      begin
-      SynchronizeCryptoCurrency(CurrentCryptoCurrency);
-      end).Start;
-      TransactionWaitForSendLinkLabel.Text :=
-      'Click here to see details in Explorer';
-      TransactionWaitForSendDetailsLabel.Text := 'Transaction sent';
-
-      StringReplace(ans, #$A, ' ', [rfReplaceAll]);
-      ts := SplitString(ans, ' ');
-      TransactionWaitForSendLinkLabel.TagString :=
-      getURLToExplorer(CurrentCoin.coin, ts[ts.Count - 1]);
-      TransactionWaitForSendLinkLabel.Text :=
-      TransactionWaitForSendLinkLabel.TagString;
-      ts.free;
-      TransactionWaitForSendDetailsLabel.Visible := true;
-      TransactionWaitForSendLinkLabel.Visible := true;
-      end
-      else
-      begin
-      TransactionWaitForSendDetailsLabel.Visible := true;
-      TransactionWaitForSendLinkLabel.Visible := false;
-      ts := SplitString(ans, #$A);
-      TransactionWaitForSendDetailsLabel.Text := ts[0];
-      for i := 1 to ts.Count - 1 do
-      if ts[i] <> '' then
-      begin
-      TransactionWaitForSendDetailsLabel.Text :=
-      TransactionWaitForSendDetailsLabel.Text + #13#10 +
-      'Error: ' + ts[i];
-      break;
-      end;
-
-      ts.free;
-      end;
-
-      end);
-
-      end).Start; }
     PrepareSendTabAndSend(CurrentCoin, Address, Amount, Fee, MasterSeed,
       AvailableCoin[CurrentCoin.coin].Name);
 
@@ -1853,6 +1781,7 @@ var
   popup: TPopup;
   Panel: TPanel;
   mess: popupWindow;
+Holder:TFmxObject;
 begin
   for t in CurrentAccount.myTokens do
   begin
@@ -1874,7 +1803,10 @@ begin
 
   CurrentAccount.addToken(t);
   CreatePanel(t);
-
+  Holder:=TFmxObject.Create(nil);
+            holder.TagObject:=t;
+            frmHome.OpenWalletView(holder,PointF(0,0));
+            holder.DisposeOf;
 end;
 
 procedure backToBalance(Sender: TObject);

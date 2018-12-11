@@ -716,6 +716,10 @@
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>COPY_IMG_DARK</ResourceId>
         </RcItem>
+        <RcItem Include="gfx\eqr.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>IMG_EQR</ResourceId>
+        </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -2400,6 +2404,12 @@
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_1125x2436.png" Configuration="Debug" Class="iPhone_Launch1125">
                     <Platform Name="iOSDevice32">
                         <RemoteName>Default-812h@3x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="gfx\eqr.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

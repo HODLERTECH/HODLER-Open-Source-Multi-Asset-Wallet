@@ -33,7 +33,7 @@ object frmHome: TfrmHome
     Size.Height = 687.000000000000000000
     Size.PlatformDefault = False
     TabHeight = 49.000000000000000000
-    TabIndex = 5
+    TabIndex = 19
     TabOrder = 8
     TabPosition = None
     OnChange = closeVirtualKeyBoard
@@ -905,7 +905,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -10618,7 +10618,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -13348,7 +13348,7 @@ object frmHome: TfrmHome
             Position.X = 15.000000000000000000
             Position.Y = 14.000000000000000000
             Size.Width = 300.000000000000000000
-            Size.Height = 20.000000000000000000
+            Size.Height = 19.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
             Value = 10.000000000000000000
