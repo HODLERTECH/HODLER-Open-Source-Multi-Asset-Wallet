@@ -1,51 +1,52 @@
-{ --------------------------------------------------------------------------- }
-{ }
-{ File:       Velthuis.ExactFloatStrings.pas }
-{ Function:   Routines to generate strings that contain the exact values }
-{ of Singles, Doubles or Extendeds. }
-{ Language:   Delphi version XE3 or later }
-{ Author:     Rudy Velthuis }
-{ Copyright:  (c) 2015, Rudy Velthuis }
-{ Notes:      Requires the Velthuis.BigIntegers unit }
-{ Requires record helpers for intrinsic types }
-{ }
-{ License:    Redistribution and use in source and binary forms, with or }
-{ without modification, are permitted provided that the }
-{ following conditions are met: }
-{ }
-{ * Redistributions of source code must retain the above }
-{ copyright notice, this list of conditions and the following }
-{ disclaimer. }
-{ * Redistributions in binary form must reproduce the above }
-{ copyright notice, this list of conditions and the following }
-{ disclaimer in the documentation and/or other materials }
-{ provided with the distribution. }
-{ }
-{ Disclaimer: THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" }
-{ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT }
-{ LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND }
-{ FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO }
-{ EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE }
-{ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, }
-{ OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, }
-{ PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, }
-{ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED }
-{ AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT }
-{ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) }
-{ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF }
-{ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. }
-{ }
-{ --------------------------------------------------------------------------- }
+{---------------------------------------------------------------------------}
+{                                                                           }
+{ File:       Velthuis.ExactFloatStrings.pas                                }
+{ Function:   Routines to generate strings that contain the exact values    }
+{             of Singles, Doubles or Extendeds.                             }
+{ Language:   Delphi version XE3 or later                                   }
+{ Author:     Rudy Velthuis                                                 }
+{ Copyright:  (c) 2015, Rudy Velthuis                                       }
+{ Notes:      Requires the Velthuis.BigIntegers unit                        }
+{             Requires record helpers for intrinsic types                   }
+{                                                                           }
+{ License:    Redistribution and use in source and binary forms, with or    }
+{             without modification, are permitted provided that the         }
+{             following conditions are met:                                 }
+{                                                                           }
+{             * Redistributions of source code must retain the above        }
+{               copyright notice, this list of conditions and the following }
+{               disclaimer.                                                 }
+{             * Redistributions in binary form must reproduce the above     }
+{               copyright notice, this list of conditions and the following }
+{               disclaimer in the documentation and/or other materials      }
+{               provided with the distribution.                             }
+{                                                                           }
+{ Disclaimer: THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS"     }
+{             AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT     }
+{             LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND     }
+{             FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO        }
+{             EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE     }
+{             FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,     }
+{             OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,      }
+{             PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,     }
+{             DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED    }
+{             AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   }
+{             LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)        }
+{             ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF   }
+{             ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                    }
+{                                                                           }
+{---------------------------------------------------------------------------}
 
 unit Velthuis.ExactFloatStrings;
 
 interface
 
 {$IF CompilerVersion >= 24.0}
-{$LEGACYIFEND ON}
+  {$LEGACYIFEND ON}
 {$IFEND}
+
 {$IF SizeOf(Extended) > SizeOf(Double)}
-{$DEFINE HASEXTENDED}
+  {$DEFINE HASEXTENDED}
 {$IFEND}
 
 uses
@@ -69,7 +70,6 @@ uses
 // Record helpers for intrinsics are used to get info out of the floating point types, e.g. IsNan, Mantissa, etc.
 
 {$IFDEF HASEXTENDED}
-
 function ExactString(const F: Extended): string;
 var
   Mantissa: UInt64;
@@ -120,13 +120,11 @@ begin
   // Now we insert zeroes and the decimal point into the plain big integer value to get a nice output.
 
   if DecimalPoint = 0 then
-    Result := Result // e.g. 123.0
+    Result := Result                                             // e.g. 123.0
   else if DecimalPoint >= Len then
-    Result := '0.' + StringOfChar('0', DecimalPoint - Len) + Result
-    // e.g. 0.00123
+    Result := '0.' + StringOfChar('0', DecimalPoint - Len) + Result       // e.g. 0.00123
   else
-    Result := Copy(Result, 1, Len - DecimalPoint) + '.' +
-      Copy(Result, Len - DecimalPoint + 1, Len); // e.g. 12.3
+    Result := Copy(Result, 1, Len - DecimalPoint) + '.' + Copy(Result, Len - DecimalPoint + 1, Len); // e.g. 12.3
 
   if Sign then
     Result := '-' + Result;
@@ -185,13 +183,11 @@ begin
   // Now we insert zeroes and the decimal point into the plain big integer value to get a nice output.
 
   if DecimalPoint = 0 then
-    Result := Result // e.g. 123.0
+    Result := Result                                             // e.g. 123.0
   else if DecimalPoint >= Len then
-    Result := '0.' + StringOfChar('0', DecimalPoint - Len) + Result
-    // e.g. 0.00123
+    Result := '0.' + StringOfChar('0', DecimalPoint - Len) + Result     // e.g. 0.00123
   else
-    Result := Copy(Result, 1, Len - DecimalPoint) + '.' +
-      Copy(Result, Len - DecimalPoint + 1, Len); // e.g. 12.3
+    Result := Copy(Result, 1, Len - DecimalPoint) + '.' + Copy(Result, Len - DecimalPoint + 1, Len); // e.g. 12.3
 
   if Sign then
     Result := '-' + Result;
@@ -206,7 +202,7 @@ var
   DecimalPoint: Integer;
   Len: Integer;
 begin
-  if System.Math.IsNaN(F) then
+  if System.Math.IsNan(F) then
     Exit('NaN')
   else if IsNegativeInfinity(F) then
     Exit('NegInfinity')
@@ -249,13 +245,11 @@ begin
   // Now we insert zeroes and the decimal point into the plain big integer value to get a nice output.
 
   if DecimalPoint = 0 then
-    Result := Result // e.g. 123.0
+    Result := Result                                             // e.g. 123.0
   else if DecimalPoint >= Len then
-    Result := '0.' + StringOfChar('0', DecimalPoint - Len) + Result
-    // e.g. 0.00123
+    Result := '0.' + StringOfChar('0', DecimalPoint - Len) + Result       // e.g. 0.00123
   else
-    Result := Copy(Result, 1, Len - DecimalPoint) + '.' +
-      Copy(Result, Len - DecimalPoint + 1, Len); // e.g. 12.3
+    Result := Copy(Result, 1, Len - DecimalPoint) + '.' + Copy(Result, Len - DecimalPoint + 1, Len); // e.g. 12.3
 
   if Sign then
     Result := '-' + Result;

@@ -502,7 +502,7 @@ begin
         CurrentCoin.decimals)) div 1024;
       if (CurrentCoin.coin = 0) or (CurrentCoin.coin = 1) then
         a := a * 4;
-      a := Max(a, 500);
+      a := Max(a.asInteger, 500);
       wvFee.Text := BigIntegertoFloatStr(a, CurrentCoin.decimals);
       // CurrentCoin.efee[round(FeeSpin.Value) - 1] ;
       lblBlockInfo.Text := dictionary('ConfirmInNext') + ' ' +
@@ -1427,7 +1427,7 @@ begin
         CurrentCoin.decimals)) div 1024;
       if (CurrentCoin.coin = 0) or (CurrentCoin.coin = 1) then
         a := a * 4;
-      a := Max(a, 500);
+      a := Max(a.asInteger, 500);
       wvFee.Text := BigIntegertoFloatStr(a, CurrentCoin.decimals);
       // CurrentCoin.efee[round(FeeSpin.Value) - 1] ;
       lblBlockInfo.Text := dictionary('ConfirmInNext') + ' ' +

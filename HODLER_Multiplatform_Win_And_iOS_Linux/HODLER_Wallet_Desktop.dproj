@@ -5,7 +5,7 @@
         <FrameworkType>FMX</FrameworkType>
         <MainSource>HODLER_Wallet_Desktop.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1247</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -444,17 +444,6 @@
         <DCCReference Include="additionalUnits\misc.pas"/>
         <DCCReference Include="additionalUnits\base58.pas"/>
         <DCCReference Include="coinCode\secp256k1.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.BigDecimals.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.BigIntegers.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.BigIntegers.Primes.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.BigRationals.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.ExactFloatStrings.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.FloatUtils.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.Loggers.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.Numerics.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.RandomNumbers.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.Sizes.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.StrConsts.pas"/>
         <DCCReference Include="coinCode\Bitcoin.pas"/>
         <DCCReference Include="additionalUnits\ZXING\Lib\Classes\1D Barcodes\ZXing.OneD.Code93Reader.pas"/>
         <DCCReference Include="additionalUnits\ZXING\Lib\Classes\1D Barcodes\ZXing.OneD.Code128Reader.pas"/>
@@ -556,6 +545,19 @@
         <DCCReference Include="additionalUnits\FileManagerRelated.pas"/>
         <DCCReference Include="components\TCopyableEditData.pas"/>
         <DCCReference Include="components\TCopyableLabelData.pas"/>
+        <DCCReference Include="additionalUnits\bi\CompilerAndRTLVersions.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.BigDecimals.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.BigIntegers.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.BigIntegers.Primes.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.BigRationals.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.ExactFloatStrings.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.FloatUtils.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.Loggers.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.Numerics.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.RandomNumbers.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.Sizes.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.StrConsts.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.XorShifts.pas"/>
         <RcItem Include="Jet.style">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
@@ -626,9 +628,13 @@
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>COPY_IMG_DARK</ResourceId>
         </RcItem>
-        <RcItem Include="gfx\eqr.png">
+        <RcItem Include="gfx\paperwallet\eqrbig.png">
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>IMG_EQR</ResourceId>
+        </RcItem>
+        <RcItem Include="gfx\paperwallet\eqrsmall.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>IMG_EQR_SMALL</ResourceId>
         </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
@@ -971,12 +977,6 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="gfx\eqr.png" Configuration="Release" Class="ProjectFile">
-                    <Platform Name="Win32">
-                        <RemoteDir>.\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="Languages\ZHX.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSSimulator">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -999,6 +999,12 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_ApplicationIcon_76x76.png" Configuration="Debug" Class="iPad_AppIcon76">
                     <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="gfx\paperwallet\eqrsmall.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1935,6 +1941,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="Languages\DKK.lang" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="gfx\paperwallet\eqrbig.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
