@@ -502,14 +502,14 @@ begin
     if not FileExists(ImgPath) then
     begin
 
-      tced := TCA(passwordForDecrypt.Text);
+      {tced := TCA(passwordForDecrypt.Text);
       MasterSeed := SpeckDecrypt(tced, currentAccount.EncryptedMasterSeed);
       if not isHex(MasterSeed) then
       begin
         popupWindow.create(dictionary('FailedToDecrypt'));
         passwordForDecrypt.Text := '';
         exit;
-      end;
+      end; }
 
       qrimg := StrToQRBitmap(currentAccount.EncryptedMasterSeed, 16);
       img := TBitmap.create();
@@ -528,7 +528,6 @@ begin
     end;
     img.Free;
     qrimg.Free;
-    Stream.Free;
     FileName := currentAccount.name + '_EQR_SMALL';
     ImgPath := System.IOUtils.TPath.Combine( {$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
       (){$ENDIF}, FileName + '.png');
@@ -540,14 +539,11 @@ begin
       img.SaveToFile(ImgPath);
     end;
 
-    MasterSeed := '';
-    tced := '';
-    Stream.Free;
-    passwordForDecrypt.Text := '';
+
     userSavedSeed := true;
     refreshWalletDat();
     // switchTab(pageControl, BackupTabItem);
-    frmhome.SendEncryptedSeedButtonClick(nil);
+    //frmhome.SendEncryptedSeedButtonClick(nil);
   end;
 end;
 

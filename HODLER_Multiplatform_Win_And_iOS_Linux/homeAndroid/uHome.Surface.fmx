@@ -9,8 +9,8 @@ inherited frmHome_Surface: TfrmHome_Surface
   inherited ScrollBox: TVertScrollBox
     Size.Width = 1080.000000000000000000
     Size.Height = 1920.000000000000000000
-    Viewport.Width = 1080.000000000000000000
-    Viewport.Height = 1920.000000000000000000
+    Viewport.Width = 1064.000000000000000000
+    Viewport.Height = 1904.000000000000000000
     inherited PageControl: TTabControl
       Size.Width = 1064.000000000000000000
       Size.Height = 1904.000000000000000000
@@ -312,7 +312,7 @@ inherited frmHome_Surface: TfrmHome_Surface
             Position.X = 1016.000000000000000000
           end
           inherited RefreshLayout: TLayout
-            Position.X = 919.000000000000000000
+            Position.X = 872.000000000000000000
           end
         end
         inherited WVTabControl: TTabControl
@@ -1300,6 +1300,12 @@ inherited frmHome_Surface: TfrmHome_Surface
           Size.Height = 1856.000000000000000000
           Viewport.Width = 1064.000000000000000000
           Viewport.Height = 1856.000000000000000000
+          inherited bpmnemonicLayout: TLayout
+            Size.Width = 1064.000000000000000000
+            inherited MnemonicSeedDescriptionLabel: TLabel
+              Size.Width = 904.000000000000000000
+            end
+          end
           inherited HSBbackupLayout: TLayout
             Size.Width = 1064.000000000000000000
             inherited HSBDescriptionLabel: TLabel
@@ -1631,9 +1637,18 @@ inherited frmHome_Surface: TfrmHome_Surface
         ExplicitSize.cy = 8.000000000000000000
         inherited YaddressesVertScrollBox: TVertScrollBox
           Size.Width = 1064.000000000000000000
-          Size.Height = 1904.000000000000000000
+          Size.Height = 1856.000000000000000000
           Viewport.Width = 1064.000000000000000000
-          Viewport.Height = 1904.000000000000000000
+          Viewport.Height = 1856.000000000000000000
+        end
+        inherited ToolBar17: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited SYWLHeaderLabel: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+          inherited SYWLBackButton: TButton
+            OnClick = nil
+          end
         end
       end
       inherited PasswordForGenerateYAddressesTabItem: TTabItem

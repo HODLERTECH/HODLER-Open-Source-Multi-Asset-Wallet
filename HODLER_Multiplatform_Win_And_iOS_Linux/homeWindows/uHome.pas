@@ -715,7 +715,7 @@ type
     Label19: TLabel;
     ToolBar16: TToolBar;
     Label21: TLabel;
-    Button11: TButton;
+    EPCLTIBackButton: TButton;
     ExportPrivKeyListVertScrollBox: TVertScrollBox;
     WVTabItemLayout: TLayout;
     RefreshLayout: TLayout;
@@ -746,6 +746,9 @@ type
     EQRPreview: TImage;
     EQRInstrction: TMemo;
     lblEQRDescription: TLabel;
+    ToolBar17: TToolBar;
+    SYWLHeaderLabel: TLabel;
+    SYWLBackButton: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -961,6 +964,9 @@ type
     procedure EQRShareBtnClick(Sender: TObject);
     procedure EQRPreviewClick(Sender: TObject);
     procedure EQRBackBtnClick(Sender: TObject);
+    procedure AAccBackButtonClick(Sender: TObject);
+    procedure EPCLTIBackButtonClick(Sender: TObject);
+    procedure SYWLBackButtonClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -2137,6 +2143,11 @@ begin
 
 end;
 
+procedure TfrmHome.AAccBackButtonClick(Sender: TObject);
+begin
+  switchTab(PageControl, HOME_TABITEM);
+end;
+
 procedure TfrmHome.AccountsListPanelExit(Sender: TObject);
 begin
   AccountsListPanel.Visible := false;
@@ -2543,7 +2554,7 @@ end;
 
 procedure TfrmHome.btnSBackClick(Sender: TObject);
 begin
-  switchTab(PageControl, PrivOptionsTabItem);
+  switchTab(PageControl, HOME_TABITEM);
 end;
 
 procedure TfrmHome.btnSCBackClick(Sender: TObject);
@@ -2704,6 +2715,11 @@ end;
 procedure TfrmHome.Button10Click(Sender: TObject);
 begin
   switchTab(PageControl, Settings);
+end;
+
+procedure TfrmHome.EPCLTIBackButtonClick(Sender: TObject);
+begin
+  switchTab(PageControl, PrivOptionsTabItem );
 end;
 
 procedure TfrmHome.EQRBackBtnClick(Sender: TObject);
@@ -3567,6 +3583,11 @@ begin
 {$ENDIF}
 end;
 
+procedure TfrmHome.SYWLBackButtonClick(Sender: TObject);
+begin
+  switchTab(PageControl , WalletView );
+end;
+
 procedure TfrmHome.receiveAddressChange(Sender: TObject);
 begin
   //
@@ -3761,7 +3782,9 @@ end;
 procedure TfrmHome.SendEncryptedSeedButtonClick(Sender: TObject);
 var pngName:string;
 begin
-  if not isEQRGenerated then
+
+  WalletViewRelated.SendEncryptedSeedButtonClick(sender);
+  {if not isEQRGenerated then
   begin
 
     btnDecryptSeed.OnClick := SendEncryptedSeed;
@@ -3770,8 +3793,11 @@ begin
     btnDSBack.OnClick := backBtnDecryptSeed;
   end
   else
-  begin
+  begin  }
   //if EQRPreview.MultiResBitmap[0]=nil then EQRPreview.MultiResBitmap[0].CreateBitmap()
+
+  {
+  BackupRelated.SendEQR;
   pngname:=System.IOUtils.TPath.Combine(HOME_PATH,
       currentAccount.name + '_EQR_SMALL' + '.png');
       EQRPreview.Visible:=True;
@@ -3780,8 +3806,8 @@ begin
    EQRPreview.Repaint;
    EQRPreview.Align:=TAlignLayout.Center;
    EQRPreview.Height:=294;
-      EQRPreview.Width:=294;
-  end;
+      EQRPreview.Width:=294;}
+  //end;
 
 end;
 

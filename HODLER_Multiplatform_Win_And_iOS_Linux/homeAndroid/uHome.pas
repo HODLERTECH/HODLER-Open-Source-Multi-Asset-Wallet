@@ -731,6 +731,9 @@ type
     Layout25: TLayout;
     Layout26: TLayout;
     Layout27: TLayout;
+    ToolBar17: TToolBar;
+    SYWLHeaderLabel: TLabel;
+    SYWLBackButton: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -3484,7 +3487,9 @@ procedure TfrmHome.SendEncryptedSeedButtonClick(Sender: TObject);
 var
   pngName: string;
 begin
-  if not isEQRGenerated then
+  WalletViewRelated.SendEncryptedSeedButtonClick(sender);
+
+ { if not isEQRGenerated then
   begin
 
     btnDecryptSeed.OnClick := SendEncryptedSeed;
@@ -3493,19 +3498,19 @@ begin
     btnDSBack.OnClick := backBtnDecryptSeed;
   end
   else
-  begin
+  begin    }
     // if EQRPreview.MultiResBitmap[0]=nil then EQRPreview.MultiResBitmap[0].CreateBitmap()
-    pngName := System.IOUtils.TPath.Combine( {$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
-      (){$ENDIF},
-      CurrentAccount.name + '_EQR_SMALL' + '.png');
-    EQRPreview.Visible := true;
+   // pngName := System.IOUtils.TPath.Combine( {$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
+   //   (){$ENDIF},
+    //  CurrentAccount.name + '_EQR_SMALL' + '.png');
+  {  EQRPreview.Visible := true;
     PageControl.ActiveTab := EQRView;
     EQRPreview.Bitmap.LoadFromFile(pngName);
     EQRPreview.Repaint;
     EQRPreview.Align := TAlignLayout.Center;
     EQRPreview.Height := 294;
     EQRPreview.Width := 294;
-  end;
+  end;   }
 
 end;
 

@@ -3,7 +3,7 @@ unit AccountData;
 interface
 
 uses tokenData, WalletStructureData, cryptoCurrencyData, System.IOUtils,
-  Sysutils, Classes, FMX.Dialogs, Json, Velthuis.BigIntegers;
+  Sysutils, Classes, FMX.Dialogs, Json, Velthuis.BigIntegers , math;
 
 procedure loadCryptoCurrencyJSONData(data: TJSONValue; cc: cryptoCurrency);
 function getCryptoCurrencyJsonData(cc: cryptoCurrency): TJSONObject;
@@ -105,7 +105,7 @@ begin
 
   result := 0.0;
   for twi in getWalletWithX(wi.X, TWalletInfo(wi).coin) do
-    result := result + TWalletInfo(twi).getfiat;
+    result := result + max( 0 , TWalletInfo(twi).getfiat);
 
 end;
 

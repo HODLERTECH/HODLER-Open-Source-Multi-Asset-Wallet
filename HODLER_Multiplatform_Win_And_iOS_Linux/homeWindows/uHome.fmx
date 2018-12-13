@@ -33,7 +33,7 @@ object frmHome: TfrmHome
     Size.Height = 687.000000000000000000
     Size.PlatformDefault = False
     TabHeight = 49.000000000000000000
-    TabIndex = 5
+    TabIndex = 24
     TabOrder = 8
     TabPosition = None
     OnChange = closeVirtualKeyBoard
@@ -838,8 +838,8 @@ object frmHome: TfrmHome
         Size.Height = 544.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 2
-        Viewport.Width = 446.000000000000000000
-        Viewport.Height = 540.000000000000000000
+        Viewport.Width = 450.000000000000000000
+        Viewport.Height = 544.000000000000000000
       end
       object btnSeedGeneratedProceed: TButton
         Align = Bottom
@@ -907,7 +907,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -5587,8 +5587,8 @@ object frmHome: TfrmHome
           Size.Height = 145.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 5
-          Viewport.Width = 77.000000000000000000
-          Viewport.Height = 141.000000000000000000
+          Viewport.Width = 97.000000000000000000
+          Viewport.Height = 145.000000000000000000
         end
         object WarningImage: TImage
           MultiResBitmap = <
@@ -9753,8 +9753,8 @@ object frmHome: TfrmHome
         Size.Height = 543.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 5
-        Viewport.Width = 446.000000000000000000
-        Viewport.Height = 539.000000000000000000
+        Viewport.Width = 450.000000000000000000
+        Viewport.Height = 543.000000000000000000
       end
     end
     object AddNewCoin: TTabItem
@@ -9951,8 +9951,8 @@ object frmHome: TfrmHome
         StyleLookup = 'memostyle'
         TabOrder = 6
         Visible = False
-        Viewport.Width = 380.000000000000000000
-        Viewport.Height = 84.000000000000000000
+        Viewport.Width = 384.000000000000000000
+        Viewport.Height = 88.000000000000000000
       end
       object lblRetypeSeed: TLabel
         Align = Top
@@ -10288,9 +10288,9 @@ object frmHome: TfrmHome
           Size.PlatformDefault = False
         end
         object lblContractAddress: TLabel
-          Align = Top
+          Align = Client
           Size.Width = 450.000000000000000000
-          Size.Height = 17.000000000000000000
+          Size.Height = 33.000000000000000000
           Size.PlatformDefault = False
           TextSettings.HorzAlign = Center
           Text = 'Contract Address'
@@ -10314,9 +10314,9 @@ object frmHome: TfrmHome
           Size.PlatformDefault = False
         end
         object lblDecimals: TLabel
-          Align = Top
+          Align = Client
           Size.Width = 450.000000000000000000
-          Size.Height = 17.000000000000000000
+          Size.Height = 33.000000000000000000
           Size.PlatformDefault = False
           TextSettings.HorzAlign = Center
           Text = 'Decimals'
@@ -10340,9 +10340,9 @@ object frmHome: TfrmHome
           Size.PlatformDefault = False
         end
         object lblSymbol: TLabel
-          Align = Top
+          Align = Client
           Size.Width = 450.000000000000000000
-          Size.Height = 17.000000000000000000
+          Size.Height = 33.000000000000000000
           Size.PlatformDefault = False
           TextSettings.HorzAlign = Center
           Text = 'Symbol'
@@ -10366,9 +10366,9 @@ object frmHome: TfrmHome
           Size.PlatformDefault = False
         end
         object lblTokenName: TLabel
-          Align = Top
+          Align = Client
           Size.Width = 450.000000000000000000
-          Size.Height = 17.000000000000000000
+          Size.Height = 33.000000000000000000
           Size.PlatformDefault = False
           TextSettings.HorzAlign = Center
           Text = 'Name'
@@ -10387,8 +10387,11 @@ object frmHome: TfrmHome
       end
       object AddERC20InfoLabel: TLabel
         Align = Top
+        Margins.Left = 15.000000000000000000
+        Margins.Right = 15.000000000000000000
+        Position.X = 15.000000000000000000
         Position.Y = 308.000000000000000000
-        Size.Width = 450.000000000000000000
+        Size.Width = 420.000000000000000000
         Size.Height = 85.000000000000000000
         Size.PlatformDefault = False
         Text = 
@@ -10855,7 +10858,7 @@ object frmHome: TfrmHome
         Align = Top
         Position.Y = 48.000000000000000000
         Size.Width = 450.000000000000000000
-        Size.Height = 65.000000000000000000
+        Size.Height = 64.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 4
         object ChangeDescryptionEdit: TEdit
@@ -10863,16 +10866,18 @@ object frmHome: TfrmHome
           Align = Bottom
           TabOrder = 0
           MaxLength = 40
-          FilterChar = '1234567890 qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM_'
-          Position.Y = 33.000000000000000000
+          FilterChar = 
+            '1234567890 qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM_' +
+            '()'
+          Position.Y = 32.000000000000000000
           Size.Width = 450.000000000000000000
           Size.Height = 32.000000000000000000
           Size.PlatformDefault = False
         end
         object lblChangeDescryption: TLabel
-          Align = Top
+          Align = Client
           Size.Width = 450.000000000000000000
-          Size.Height = 17.000000000000000000
+          Size.Height = 32.000000000000000000
           Size.PlatformDefault = False
           TextSettings.HorzAlign = Center
           Text = 'New Description'
@@ -12015,7 +12020,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -12469,7 +12474,7 @@ object frmHome: TfrmHome
           StyleLookup = 'buttonstyle'
           TabOrder = 1
           Text = 'Back'
-          OnClick = btnSBackClick
+          OnClick = AAccBackButtonClick
         end
       end
       object ConfirmNewAccountButton: TButton
@@ -12815,8 +12820,11 @@ object frmHome: TfrmHome
           Touch.InteractiveGestures = [LongTap, DoubleTap]
           Align = Bottom
           TabOrder = 0
+          Position.X = 15.000000000000000000
           Position.Y = 48.000000000000000000
-          Size.Width = 450.000000000000000000
+          Margins.Left = 15.000000000000000000
+          Margins.Right = 15.000000000000000000
+          Size.Width = 420.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
         end
@@ -12844,8 +12852,11 @@ object frmHome: TfrmHome
           Align = Bottom
           TabOrder = 0
           Password = True
+          Position.X = 15.000000000000000000
           Position.Y = 48.000000000000000000
-          Size.Width = 450.000000000000000000
+          Margins.Left = 15.000000000000000000
+          Margins.Right = 15.000000000000000000
+          Size.Width = 420.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
         end
@@ -13378,11 +13389,38 @@ object frmHome: TfrmHome
       object YaddressesVertScrollBox: TVertScrollBox
         Align = Client
         Size.Width = 450.000000000000000000
-        Size.Height = 687.000000000000000000
+        Size.Height = 639.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
         Viewport.Width = 450.000000000000000000
-        Viewport.Height = 687.000000000000000000
+        Viewport.Height = 639.000000000000000000
+      end
+      object ToolBar17: TToolBar
+        Size.Width = 450.000000000000000000
+        Size.Height = 48.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object SYWLHeaderLabel: TLabel
+          Align = Contents
+          Size.Width = 450.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'calendarlabelstyle'
+          TextSettings.HorzAlign = Center
+          Text = 'Choose the address to which you want to receive coins'
+          ParentShowHint = False
+          ShowHint = False
+        end
+        object SYWLBackButton: TButton
+          Align = Left
+          Size.Width = 64.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'buttonstyle'
+          TabOrder = 1
+          Text = 'Back'
+          OnClick = SYWLBackButtonClick
+        end
       end
     end
     object SelectGenetareCoin: TTabItem
@@ -14036,7 +14074,7 @@ object frmHome: TfrmHome
           TextSettings.HorzAlign = Center
           Text = 'Select Coin'
         end
-        object Button11: TButton
+        object EPCLTIBackButton: TButton
           Align = Left
           Size.Width = 64.000000000000000000
           Size.Height = 48.000000000000000000
@@ -14044,7 +14082,7 @@ object frmHome: TfrmHome
           StyleLookup = 'buttonstyle'
           TabOrder = 1
           Text = 'Back'
-          OnClick = btnSBackClick
+          OnClick = EPCLTIBackButtonClick
         end
       end
       object ExportPrivKeyListVertScrollBox: TVertScrollBox
@@ -14146,8 +14184,8 @@ object frmHome: TfrmHome
           Size.PlatformDefault = False
           StyleLookup = 'EQRInstrctionStyle1'
           TabOrder = 1
-          Viewport.Width = 446.000000000000000000
-          Viewport.Height = 69.000000000000000000
+          Viewport.Width = 450.000000000000000000
+          Viewport.Height = 73.000000000000000000
         end
         object lblEQRDescription: TLabel
           Align = Bottom

@@ -76,6 +76,7 @@ procedure ImportPrivateKeyInPrivButtonClick(Sender: TObject);
 procedure SweepButtonClick(Sender: TObject);
 procedure RefreshCurrentWallet(Sender : TObject);
 procedure btnChangeDescriptionClick(Sender: TObject);
+procedure SendEncryptedSeedButtonClick(Sender: TObject);
 
 var
   SyncOpenWallet: TThread;
@@ -86,6 +87,33 @@ uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, AccountRelated, TCopyableEditData ,BackupRelated;
 
+
+procedure SendEncryptedSeedButtonClick(Sender: TObject);
+var
+  pngName : string;
+begin
+
+  with frmhome do
+  begin
+    BackupRelated.SendEQR;
+    pngName := System.IOUtils.TPath.Combine( {$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
+      (){$ENDIF},
+      CurrentAccount.name + '_EQR_SMALL' + '.png');
+        EQRPreview.Visible:=True;
+     // PageControl.ActiveTab := EQRView;
+     EQRPreview.Bitmap.LoadFromFile(pngname);
+     EQRPreview.Repaint;
+     EQRPreview.Align:=TAlignLayout.Center;
+     EQRPreview.Height:=294;
+        EQRPreview.Width:=294;
+
+     switchTab(pageControl , EQRView);
+  end;
+
+
+
+
+end;
 
 procedure btnChangeDescriptionClick(Sender: TObject);
 begin
@@ -2116,9 +2144,9 @@ begin
       UnixToDateTime(strToIntdef(th.Data, 0)));
     HistoryTransactionID.Text := th.TransactionID;
     if th.typ = 'IN' then
-      HistoryTransactionSendReceive.Text := 'Receive'
+      HistoryTransactionSendReceive.Text := dictionary('Receive')
     else if th.typ = 'OUT' then
-      HistoryTransactionSendReceive.Text := 'Send'
+      HistoryTransactionSendReceive.Text :=  dictionary('Sent')
     else
     begin
       showmessage('History Transaction type error');

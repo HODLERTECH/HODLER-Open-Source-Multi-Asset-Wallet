@@ -724,6 +724,22 @@
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>IMG_EQR</ResourceId>
         </RcItem>
+        <RcItem Include="token_icons\Encrypted_512_Dark.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>HSB_DARK</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\Encrypted_512_White.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>HSB_WHITE</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\Encrypted_seed_Dark.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>ENCRYPTED_SEED_DARK</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\Encrypted_seed_White.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>ENCRYPTED_SEED_WHITE</ResourceId>
+        </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -1581,6 +1597,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\Encrypted_512_White.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\lib\android\release\mips\libnative-activity.so" Configuration="Release" Class="AndroidLibnativeMipsFile">
                     <Platform Name="All Platforms">
                         <Overwrite>true</Overwrite>
@@ -2117,6 +2139,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\Encrypted_seed_Dark.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\lib\android\release\mips\libnative-activity.so" Configuration="Debug" Class="AndroidLibnativeMipsFile">
                     <Platform Name="All Platforms">
                         <Overwrite>true</Overwrite>
@@ -2314,6 +2342,12 @@
                 <DeployFile LocalName="iOSDevice64\Debug\HODLER_Core_Android.dSYM" Configuration="Debug" Class="ProjectiOSDeviceDebug">
                     <Platform Name="iOSDevice64">
                         <RemoteName>HODLER_Core_Android</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\Encrypted_512_Dark.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -3095,6 +3129,12 @@
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_640x960.png" Configuration="Debug" Class="iPhone_Launch640">
                     <Platform Name="iOSDevice32">
                         <RemoteName>Default@2x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\Encrypted_seed_White.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

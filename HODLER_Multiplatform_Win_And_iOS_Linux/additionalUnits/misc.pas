@@ -389,7 +389,7 @@ var
 
 implementation
 
-uses Bitcoin, uHome, base58, Ethereum, coinData, strutils, secp256k1 ,AccountRelated
+uses Bitcoin, uHome, base58, Ethereum, coinData, strutils, secp256k1 ,AccountRelated , TImageTextButtonData
 {$IFDEF ANDROID}
 {$ELSE}
 {$ENDIF};
@@ -879,6 +879,48 @@ begin
       end;
 
     end;
+
+  for fmxObj in frmhome.EncrypredQRBackupLayout.Children do
+  begin
+    if fmxObj.TagString = 'encrypted_qr_image' then
+    begin
+
+    Stream := TResourceStream.Create(HInstance,
+        'ENCRYPTED_SEED_' + RightStr(currentStyle, length(currentStyle) - 3),
+        RT_RCDATA);
+      try
+        // showmessage( RightStr( CurrentStyle , length(CurrentStyle)-3 ) );
+        TimagetextButton(fmxObj).img.Bitmap.LoadFromStream(Stream);
+
+      finally
+        Stream.Free;
+      end;
+
+    end;
+
+
+  end;
+  for fmxObj in frmhome.HSBbackupLayout.Children do
+  begin
+    if fmxObj.TagString = 'hodler_secure_backup_image' then
+    begin
+
+    Stream := TResourceStream.Create(HInstance,
+        'HSB_' + RightStr(currentStyle, length(currentStyle) - 3),
+        RT_RCDATA);
+      try
+        // showmessage( RightStr( CurrentStyle , length(CurrentStyle)-3 ) );
+        TimagetextButton(fmxObj).img.Bitmap.LoadFromStream(Stream);
+
+      finally
+        Stream.Free;
+      end;
+
+    end;
+
+
+  end;
+
 end;
 
 procedure DeleteAccount(name: AnsiString);
@@ -2048,7 +2090,7 @@ begin
 
     panel := TPanel.Create(frmhome.TxHistory);
     panel.Align := TAlignLayout.MostTop;
-    panel.Height := 36;
+    panel.Height := 40;
     panel.Visible := true;
     panel.tag := i;
     panel.parent := frmhome.TxHistory;
@@ -2064,6 +2106,8 @@ begin
 {$ENDIF}
     panel.TagObject := holder;
     (panel.TagObject as THistoryHolder).history := hist[i];
+    panel.Margins.Bottom := 2;
+    panel.Margins.Top := 2;
 
     addrLbl := TLabel.Create(panel);
     addrLbl.Visible := true;
@@ -2109,6 +2153,7 @@ begin
     lbl.Visible := true;
     lbl.parent := panel;
     lbl.Text := BigIntegerBeautifulStr(hist[i].CountValues, wallet.decimals);
+    lbl.Margins.Right := 5;
 
     if hist[i].confirmation = 0 then
     begin

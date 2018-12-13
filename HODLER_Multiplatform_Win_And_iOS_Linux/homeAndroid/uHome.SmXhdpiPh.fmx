@@ -9,8 +9,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
   inherited ScrollBox: TVertScrollBox
     Size.Width = 250.000000000000000000
     Size.Height = 375.000000000000000000
-    Viewport.Width = 250.000000000000000000
-    Viewport.Height = 375.000000000000000000
+    Viewport.Width = 245.000000000000000000
+    Viewport.Height = 370.000000000000000000
     inherited PageControl: TTabControl
       Size.Width = 245.000000000000000000
       Size.Height = 370.000000000000000000
@@ -338,7 +338,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             Position.X = 197.000000000000000000
           end
           inherited RefreshLayout: TLayout
-            Position.X = 100.000000000000000000
+            Position.X = 53.000000000000000000
             inherited RefreshWalletView: TButton
               ImageIndex = 1
             end
@@ -823,6 +823,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited LanguageBox: TPopupBox
             Position.X = 133.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
           inherited SettingsLanguageLabel: TLabel
             Size.Width = 103.000000000000000000
@@ -832,6 +834,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited CurrencyBox: TPopupBox
             Position.X = 133.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
           inherited SettingsCurrencyLabel: TLabel
             Size.Width = 103.000000000000000000
@@ -872,6 +876,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited passwordForDecrypt: TEdit
             Position.X = 45.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited btnDecryptSeed: TButton
@@ -1397,6 +1403,12 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Height = 322.000000000000000000
           Viewport.Width = 245.000000000000000000
           Viewport.Height = 322.000000000000000000
+          inherited bpmnemonicLayout: TLayout
+            Size.Width = 245.000000000000000000
+            inherited MnemonicSeedDescriptionLabel: TLabel
+              Size.Width = 85.000000000000000000
+            end
+          end
           inherited HSBbackupLayout: TLayout
             Size.Width = 245.000000000000000000
             inherited HSBDescriptionLabel: TLabel
@@ -1728,9 +1740,18 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         ExplicitSize.cy = 8.000000000000000000
         inherited YaddressesVertScrollBox: TVertScrollBox
           Size.Width = 245.000000000000000000
-          Size.Height = 370.000000000000000000
+          Size.Height = 322.000000000000000000
           Viewport.Width = 245.000000000000000000
-          Viewport.Height = 370.000000000000000000
+          Viewport.Height = 322.000000000000000000
+        end
+        inherited ToolBar17: TToolBar
+          Size.Width = 245.000000000000000000
+          inherited SYWLHeaderLabel: TLabel
+            Size.Width = 245.000000000000000000
+          end
+          inherited SYWLBackButton: TButton
+            OnClick = nil
+          end
         end
       end
       inherited PasswordForGenerateYAddressesTabItem: TTabItem

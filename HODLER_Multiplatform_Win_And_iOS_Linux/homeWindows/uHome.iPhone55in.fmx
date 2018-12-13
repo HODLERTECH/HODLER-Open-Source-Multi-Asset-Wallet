@@ -559,7 +559,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             inherited ReceiveVertScrollBox: TVertScrollBox
               Size.Width = 93.000000000000000000
               Size.Height = 591.000000000000000000
-              Viewport.Width = 88.000000000000000000
+              Viewport.Width = 93.000000000000000000
               Viewport.Height = 591.000000000000000000
               inherited ReceiveAmountLayout: TLayout
                 inherited ReceiveValue: TEdit
@@ -588,74 +588,39 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             inherited SendVertScrollBox: TVertScrollBox
               Size.Width = 93.000000000000000000
               Size.Height = 591.000000000000000000
-              Viewport.Width = 88.000000000000000000
+              Viewport.Width = 93.000000000000000000
               Viewport.Height = 591.000000000000000000
-              inherited btnSend: TButton
-                Size.Width = 88.000000000000000000
-              end
               inherited SendAmountLayout: TLayout
-                Size.Width = 88.000000000000000000
                 inherited lblAmount: TLabel
-                  Size.Width = 88.000000000000000000
                   Size.Height = 22.000000000000000000
                 end
                 inherited wvAmount: TEdit
                   Position.Y = 62.000000000000000000
-                  Size.Width = 88.000000000000000000
                   Size.Height = 30.000000000000000000
                   inherited lblCoinShort: TLabel
-                    Position.X = 5.499984741210938000
-                    Size.Width = 72.500015258789060000
+                    Position.X = 317.825012207031300000
+                    Size.Width = 106.174987792968800000
                     Size.Height = 30.000000000000000000
                   end
                 end
                 inherited WVRealCurrency: TEdit
                   Position.Y = 32.000000000000000000
-                  Size.Width = 88.000000000000000000
                   Size.Height = 30.000000000000000000
                   inherited lblCoinFiat: TLabel
-                    Position.X = 5.500000000000000000
-                    Size.Width = 72.500000000000000000
+                    Position.X = 310.250000000000000000
+                    Size.Width = 113.750000000000000000
                     Size.Height = 30.000000000000000000
-                  end
-                end
-              end
-              inherited Layout3: TLayout
-                Size.Width = 88.000000000000000000
-                inherited ShowHideAdvancedButton: TButton
-                  Size.Width = 88.000000000000000000
-                  inherited Layout2: TLayout
-                    Position.X = 40.000000000000000000
                   end
                 end
               end
               inherited TransactionFeeLayout: TLayout
-                Size.Width = 88.000000000000000000
                 inherited AutomaticFeeLayout: TLayout
-                  Size.Width = 88.000000000000000000
                   inherited FeeSpin: TSpinBox
-                    Position.X = 8.000000000000000000
                     Position.Y = 1.000000000000000000
                     Size.Height = 30.000000000000000000
                   end
                 end
-                inherited FixedFeeLayout: TLayout
-                  Size.Width = 88.000000000000000000
-                  inherited wvFee: TEdit
-                    Size.Width = 0.000000000000000000
-                  end
-                end
-                inherited Layout5: TLayout
-                  Size.Width = 88.000000000000000000
-                  inherited lblFee: TLabel
-                    Size.Width = 88.000000000000000000
-                  end
-                  inherited lblFeeHeader: TLabel
-                    Size.Width = 88.000000000000000000
-                  end
-                end
                 inherited SendSettingsFlowLayout: TFlowLayout
-                  Size.Width = 88.000000000000000000
                   inherited FeeFromAmountLayout: TLayout
                     inherited SwitchFromFeeLayout: TLayout
                       inherited FeeFromAmountSwitch: TSwitch
@@ -681,31 +646,13 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
                     end
                   end
                 end
-                inherited PerByteFeeLayout: TLayout
-                  Size.Width = 88.000000000000000000
-                  inherited PerByteFeeEdit: TEdit
-                    Size.Width = 0.000000000000000000
-                  end
-                end
               end
               inherited SendToLayout: TLayout
-                Size.Width = 88.000000000000000000
-                inherited lblSendTo: TLabel
-                  Size.Width = 88.000000000000000000
-                end
                 inherited AddressQRLayout: TLayout
-                  Size.Width = 88.000000000000000000
-                  inherited btnAddressQR: TButton
-                    Position.X = 40.000000000000000000
-                  end
                   inherited WVsendTO: TEdit
-                    Size.Width = 40.000000000000000000
                     Size.Height = 30.000000000000000000
                   end
                 end
-              end
-              inherited SendInfoLabel: TLabel
-                Size.Width = 58.000000000000000000
               end
             end
           end
@@ -1537,6 +1484,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited LanguageBox: TPopupBox
           Position.X = -19.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
         end
         inherited SettingsLanguageLabel: TLabel
           Size.Width = 0.000000000000000000
@@ -1547,6 +1496,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited CurrencyBox: TPopupBox
           Position.X = -19.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
         end
         inherited SettingsCurrencyLabel: TLabel
           Size.Width = 0.000000000000000000
@@ -1593,6 +1544,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         inherited DayNightModeSwitch: TSwitch
           Position.X = 22.000000000000000000
           Size.Width = 55.000000000000000000
+          Size.Height = 35.000000000000000000
           OnSwitch = nil
         end
       end
@@ -1912,6 +1864,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         end
         inherited lblContractAddress: TLabel
           Size.Width = 93.000000000000000000
+          Size.Height = 35.000000000000000000
         end
       end
       inherited DecimalsPanel: TPanel
@@ -1924,6 +1877,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         end
         inherited lblDecimals: TLabel
           Size.Width = 93.000000000000000000
+          Size.Height = 35.000000000000000000
         end
       end
       inherited SymbolPanel: TPanel
@@ -1936,6 +1890,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         end
         inherited lblSymbol: TLabel
           Size.Width = 93.000000000000000000
+          Size.Height = 35.000000000000000000
         end
       end
       inherited TokenNamePanel: TPanel
@@ -1948,6 +1903,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         end
         inherited lblTokenName: TLabel
           Size.Width = 93.000000000000000000
+          Size.Height = 35.000000000000000000
         end
       end
       inherited btnAddContract: TButton
@@ -1956,7 +1912,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
       end
       inherited AddERC20InfoLabel: TLabel
         Position.Y = 304.000000000000000000
-        Size.Width = 93.000000000000000000
+        Size.Width = 63.000000000000000000
       end
     end
     inherited ShowMsgView: TTabItem
@@ -2069,12 +2025,13 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Position.Y = 44.000000000000000000
         Size.Width = 93.000000000000000000
         inherited ChangeDescryptionEdit: TEdit
-          Position.Y = 35.000000000000000000
+          Position.Y = 34.000000000000000000
           Size.Width = 93.000000000000000000
           Size.Height = 30.000000000000000000
         end
         inherited lblChangeDescryption: TLabel
           Size.Width = 93.000000000000000000
+          Size.Height = 34.000000000000000000
         end
       end
       inherited btnChangeDescryptionOK: TButton
@@ -2475,6 +2432,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited RestoreNameEdit: TEdit
           Position.X = -107.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
         end
       end
       inherited Panel7: TPanel
@@ -2482,6 +2441,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited RestorePasswordEdit: TEdit
           Position.X = -107.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
         end
       end
       inherited ToolBar6: TToolBar
@@ -2548,7 +2509,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited RestoreFromFileAccountNameEdit: TEdit
           Position.Y = 66.000000000000000000
-          Size.Width = 93.000000000000000000
+          Size.Width = 63.000000000000000000
           Size.Height = 30.000000000000000000
         end
         inherited RestoreFromFileAccountNameLabel: TLabel
@@ -2559,10 +2520,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Position.Y = 188.000000000000000000
         Size.Width = 93.000000000000000000
         inherited RFFPassword: TEdit
-          Position.X = 15.000000000000000000
           Position.Y = 66.000000000000000000
-          Margins.Left = 15.000000000000000000
-          Size.Width = 78.000000000000000000
+          Size.Width = 63.000000000000000000
           Size.Height = 30.000000000000000000
         end
         inherited RFFPasswordInfo: TLabel
@@ -2740,9 +2699,20 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
       ExplicitSize.cy = 8.000000000000000000
       inherited YaddressesVertScrollBox: TVertScrollBox
         Size.Width = 93.000000000000000000
-        Size.Height = 716.000000000000000000
+        Size.Height = 672.000000000000000000
         Viewport.Width = 93.000000000000000000
-        Viewport.Height = 716.000000000000000000
+        Viewport.Height = 672.000000000000000000
+      end
+      inherited ToolBar17: TToolBar
+        Size.Width = 93.000000000000000000
+        Size.Height = 44.000000000000000000
+        inherited SYWLHeaderLabel: TLabel
+          Size.Width = 93.000000000000000000
+          Size.Height = 44.000000000000000000
+        end
+        inherited SYWLBackButton: TButton
+          Size.Height = 44.000000000000000000
+        end
       end
     end
     inherited SelectGenetareCoin: TTabItem
@@ -2918,6 +2888,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited CoinPrivKeyDescriptionEdit: TEdit
           Position.X = -107.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
         end
       end
       inherited Panel22: TPanel
@@ -2925,6 +2897,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited CoinPrivKeyPassEdit: TEdit
           Position.X = -107.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
         end
       end
       inherited NewCoinPrivKeyOKButton: TButton
@@ -2989,7 +2963,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Size.Width = 93.000000000000000000
           Size.Height = 44.000000000000000000
         end
-        inherited Button11: TButton
+        inherited EPCLTIBackButton: TButton
           Size.Height = 44.000000000000000000
         end
       end

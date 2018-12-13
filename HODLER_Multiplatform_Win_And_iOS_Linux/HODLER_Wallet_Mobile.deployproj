@@ -2386,6 +2386,15 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="token_icons\Encrypted_512_White.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
+            <RemoteName>Encrypted_512_White.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="$(BDS)\lib\android\release\mips\libnative-activity.so" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile\library\lib\mips\</RemoteDir>
             <RemoteName>libHODLER_Core.so</RemoteName>
@@ -2557,6 +2566,15 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="token_icons\Encrypted_seed_Dark.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
+            <RemoteName>Encrypted_seed_Dark.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="$(BDS)\lib\android\release\mips\libnative-activity.so" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile\library\lib\mips\</RemoteDir>
             <RemoteName>libHODLER_Core.so</RemoteName>
@@ -2616,6 +2634,15 @@
         <DeployFile Include="Languages\DUT.lang" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
             <RemoteName>DUT.lang</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="token_icons\Encrypted_512_Dark.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
+            <RemoteName>Encrypted_512_Dark.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -2751,6 +2778,15 @@
         <DeployFile Include="Languages\JPN.lang" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
             <RemoteName>JPN.lang</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="token_icons\Encrypted_seed_White.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
+            <RemoteName>Encrypted_seed_White.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>

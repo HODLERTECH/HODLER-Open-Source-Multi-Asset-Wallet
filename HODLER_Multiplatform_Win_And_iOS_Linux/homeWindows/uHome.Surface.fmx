@@ -496,75 +496,6 @@ inherited frmHome_Surface: TfrmHome_Surface
               Size.Height = 1795.000000000000000000
               Viewport.Width = 759.000000000000000000
               Viewport.Height = 1795.000000000000000000
-              inherited btnSend: TButton
-                Size.Width = 759.000000000000000000
-              end
-              inherited SendAmountLayout: TLayout
-                Size.Width = 759.000000000000000000
-                inherited lblAmount: TLabel
-                  Size.Width = 759.000000000000000000
-                end
-                inherited wvAmount: TEdit
-                  Size.Width = 759.000000000000000000
-                end
-                inherited WVRealCurrency: TEdit
-                  Size.Width = 759.000000000000000000
-                end
-              end
-              inherited Layout3: TLayout
-                Size.Width = 759.000000000000000000
-                inherited ShowHideAdvancedButton: TButton
-                  Size.Width = 759.000000000000000000
-                  inherited Layout2: TLayout
-                    Position.X = 711.000000000000000000
-                  end
-                end
-              end
-              inherited TransactionFeeLayout: TLayout
-                Size.Width = 759.000000000000000000
-                inherited AutomaticFeeLayout: TLayout
-                  Size.Width = 759.000000000000000000
-                end
-                inherited FixedFeeLayout: TLayout
-                  Size.Width = 759.000000000000000000
-                  inherited wvFee: TEdit
-                    Size.Width = 639.000000000000000000
-                  end
-                end
-                inherited Layout5: TLayout
-                  Size.Width = 759.000000000000000000
-                  inherited lblFee: TLabel
-                    Size.Width = 759.000000000000000000
-                  end
-                  inherited lblFeeHeader: TLabel
-                    Size.Width = 759.000000000000000000
-                  end
-                end
-                inherited SendSettingsFlowLayout: TFlowLayout
-                  Size.Width = 759.000000000000000000
-                end
-                inherited PerByteFeeLayout: TLayout
-                  Size.Width = 759.000000000000000000
-                  inherited PerByteFeeEdit: TEdit
-                    Size.Width = 639.000000000000000000
-                  end
-                end
-              end
-              inherited SendToLayout: TLayout
-                Size.Width = 759.000000000000000000
-                inherited lblSendTo: TLabel
-                  Size.Width = 759.000000000000000000
-                end
-                inherited AddressQRLayout: TLayout
-                  Size.Width = 759.000000000000000000
-                  inherited WVsendTO: TEdit
-                    Size.Width = 711.000000000000000000
-                  end
-                end
-              end
-              inherited SendInfoLabel: TLabel
-                Size.Width = 729.000000000000000000
-              end
             end
           end
           inherited WVSettings: TTabItem
@@ -1652,7 +1583,7 @@ inherited frmHome_Surface: TfrmHome_Surface
         Size.Width = 759.000000000000000000
       end
       inherited AddERC20InfoLabel: TLabel
-        Size.Width = 759.000000000000000000
+        Size.Width = 729.000000000000000000
       end
     end
     inherited ShowMsgView: TTabItem
@@ -2119,7 +2050,7 @@ inherited frmHome_Surface: TfrmHome_Surface
       inherited Layout23: TLayout
         Size.Width = 759.000000000000000000
         inherited RestoreFromFileAccountNameEdit: TEdit
-          Size.Width = 759.000000000000000000
+          Size.Width = 729.000000000000000000
         end
         inherited RestoreFromFileAccountNameLabel: TLabel
           Size.Width = 729.000000000000000000
@@ -2128,9 +2059,7 @@ inherited frmHome_Surface: TfrmHome_Surface
       inherited Layout36: TLayout
         Size.Width = 759.000000000000000000
         inherited RFFPassword: TEdit
-          Position.X = 15.000000000000000000
-          Margins.Left = 15.000000000000000000
-          Size.Width = 744.000000000000000000
+          Size.Width = 729.000000000000000000
         end
         inherited RFFPasswordInfo: TLabel
           Size.Width = 729.000000000000000000
@@ -2282,9 +2211,15 @@ inherited frmHome_Surface: TfrmHome_Surface
       ExplicitSize.cy = 8.000000000000000000
       inherited YaddressesVertScrollBox: TVertScrollBox
         Size.Width = 759.000000000000000000
-        Size.Height = 1920.000000000000000000
+        Size.Height = 1872.000000000000000000
         Viewport.Width = 759.000000000000000000
-        Viewport.Height = 1920.000000000000000000
+        Viewport.Height = 1872.000000000000000000
+      end
+      inherited ToolBar17: TToolBar
+        Size.Width = 759.000000000000000000
+        inherited SYWLHeaderLabel: TLabel
+          Size.Width = 759.000000000000000000
+        end
       end
     end
     inherited SelectGenetareCoin: TTabItem

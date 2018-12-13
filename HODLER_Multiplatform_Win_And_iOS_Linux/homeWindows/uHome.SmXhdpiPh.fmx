@@ -2093,7 +2093,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         Size.Width = 200.000000000000000000
         inherited RestoreFromFileAccountNameEdit: TEdit
           Position.Y = 64.000000000000000000
-          Size.Width = 200.000000000000000000
+          Size.Width = 170.000000000000000000
           Size.Height = 32.000000000000000000
         end
         inherited RestoreFromFileAccountNameLabel: TLabel
@@ -2103,10 +2103,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
       inherited Layout36: TLayout
         Size.Width = 200.000000000000000000
         inherited RFFPassword: TEdit
-          Position.X = 15.000000000000000000
           Position.Y = 64.000000000000000000
-          Margins.Left = 15.000000000000000000
-          Size.Width = 185.000000000000000000
+          Size.Width = 170.000000000000000000
           Size.Height = 32.000000000000000000
         end
         inherited RFFPasswordInfo: TLabel
@@ -2846,10 +2844,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         Size.Width = 83.000000000000000000
         inherited globalBalance: TLabel
           Size.Width = 83.000000000000000000
-          Size.Height = 58.000000000000000000
         end
         inherited globalCurrency: TLabel
-          Position.Y = 58.000000000000000000
           Size.Width = 83.000000000000000000
         end
         inherited SearchLayout: TLayout
