@@ -653,6 +653,7 @@
         <RcItem Include="token_icons\Encrypted_seed_White.png">
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>ENCRYPTED_SEED_WHITE</ResourceId>
+        </RcItem>
         <RcItem Include="gfx\paperwallet\eqrsmall.png">
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>IMG_EQR_SMALL</ResourceId>

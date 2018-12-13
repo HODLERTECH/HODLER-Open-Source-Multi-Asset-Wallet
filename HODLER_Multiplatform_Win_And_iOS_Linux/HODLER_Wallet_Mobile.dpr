@@ -127,7 +127,9 @@ uses
   Velthuis.RandomNumbers in 'additionalUnits\bi\Velthuis.RandomNumbers.pas',
   Velthuis.Sizes in 'additionalUnits\bi\Velthuis.Sizes.pas',
   Velthuis.StrConsts in 'additionalUnits\bi\Velthuis.StrConsts.pas',
-  Velthuis.XorShifts in 'additionalUnits\bi\Velthuis.XorShifts.pas';
+  Velthuis.XorShifts in 'additionalUnits\bi\Velthuis.XorShifts.pas',
+  TImageTextButtonData in 'components\TImageTextButtonData.pas',
+  TRotateImageData in 'components\TRotateImageData.pas';
 
 {$R *.res}
 

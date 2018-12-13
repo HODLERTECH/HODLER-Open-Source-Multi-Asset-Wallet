@@ -629,7 +629,7 @@ begin
       btn.Visible := true;
       btn.Align := TAlignLayout.Left;
       btn.Width := 160;
-      btn.LoadImage('HSB_DARK');
+      btn.LoadImage('HSB_WHITE');
       btn.lbl.Text := 'HODLER SECURE BACKUP';
 
       btn.OnClick := SendWalletFileButtonClick;
@@ -639,7 +639,7 @@ begin
       btn.Visible := true;
       btn.Align := TAlignLayout.Left;
       btn.Width := 160;
-      btn.LoadImage('ENCRYPTED_SEED_DARK' );
+      btn.LoadImage('ENCRYPTED_SEED_WHITE' );
       btn.lbl.Text := 'ENCRYPTED QR CODE BACKUP';
       btn.img.Margins.Top := 20;
       btn.img.Margins.Bottom := 20;

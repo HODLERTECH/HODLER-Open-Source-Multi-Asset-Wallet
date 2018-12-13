@@ -28,7 +28,7 @@ uses
   languages, WIF, AccountData, WalletStructureData,
   System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
 
-  FMX.Media, FMX.Objects, CurrencyConverter, uEncryptedZipFile, System.Zip
+  FMX.Media, FMX.Objects, CurrencyConverter, uEncryptedZipFile, System.Zip ,TRotateImageData
 {$IFDEF ANDROID},
   FMX.VirtualKeyBoard.Android,
   Androidapi.JNI,
@@ -308,7 +308,7 @@ type
     NewTokenButton: TButton;
     NewCryptoLayout: TLayout;
     ColorAnimation1: TColorAnimation;
-    Layout4: TLayout;
+    RefreshLayout: TLayout;
     RefreshWalletView: TButton;
     LayoutPresentationFee: TLayout;
     lblFeeHeader: TLabel;
@@ -418,9 +418,9 @@ type
     linkLabel: TLabel;
     bpmnemonicLayout: TLayout;
     MnemonicSeedDescriptionLabel: TLabel;
-    Layout26: TLayout;
+    HSBbackupLayout: TLayout;
     HSBDescriptionLabel: TLabel;
-    Layout27: TLayout;
+    EncrypredQRBackupLayout: TLayout;
     EncryptedQRDescriptionLabel: TLabel;
     Layout28: TLayout;
     DecryptedQRDescriptionLabel: TLabel;
@@ -721,6 +721,16 @@ type
     EQRPreview: TImage;
     EQRInstrction: TMemo;
     lblEQRDescription: TLabel;
+    FiatShortcutLayout: TLayout;
+    ShortcutFiatLabel: TLabel;
+    ShortcutFiatShortcutLabel: TLabel;
+    Layout4: TLayout;
+    NameShortcutLabel: TLabel;
+    TopInfoConfirmedFiatLabel: TLabel;
+    TopInfoUnconfirmedFiatLabel: TLabel;
+    Layout25: TLayout;
+    Layout26: TLayout;
+    Layout27: TLayout;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -984,6 +994,9 @@ type
     procedure CopyParentTagStringToClipboard(Sender: TObject);
     procedure CopyParentTextToClipboard(Sender: TObject);
     procedure ExportPrivKeyListButtonClick(Sender: TObject);
+  var
+    refreshLocalImage : TRotateImage;
+    refreshGlobalImage : TRotateImage;
 
   var
     cpTimeout: int64;

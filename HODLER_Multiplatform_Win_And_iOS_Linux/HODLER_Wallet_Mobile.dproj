@@ -655,6 +655,8 @@
         <DCCReference Include="additionalUnits\bi\Velthuis.Sizes.pas"/>
         <DCCReference Include="additionalUnits\bi\Velthuis.StrConsts.pas"/>
         <DCCReference Include="additionalUnits\bi\Velthuis.XorShifts.pas"/>
+        <DCCReference Include="components\TImageTextButtonData.pas"/>
+        <DCCReference Include="components\TRotateImageData.pas"/>
         <RcItem Include="Languages\PT.lang">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>

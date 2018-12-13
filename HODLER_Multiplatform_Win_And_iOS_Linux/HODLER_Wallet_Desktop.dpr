@@ -117,7 +117,7 @@ uses
   TCopyableEditData in 'components\TCopyableEditData.pas',
   TCopyableLabelData in 'components\TCopyableLabelData.pas',
   TRotateImageData in 'components\TRotateImageData.pas',
-  TImageTextButtonData in 'components\TImageTextButtonData.pas';
+  TImageTextButtonData in 'components\TImageTextButtonData.pas',
   CompilerAndRTLVersions in 'additionalUnits\bi\CompilerAndRTLVersions.pas',
   Velthuis.BigDecimals in 'additionalUnits\bi\Velthuis.BigDecimals.pas',
   Velthuis.BigIntegers in 'additionalUnits\bi\Velthuis.BigIntegers.pas',
@@ -131,6 +131,7 @@ uses
   Velthuis.Sizes in 'additionalUnits\bi\Velthuis.Sizes.pas',
   Velthuis.StrConsts in 'additionalUnits\bi\Velthuis.StrConsts.pas',
   Velthuis.XorShifts in 'additionalUnits\bi\Velthuis.XorShifts.pas';
+
 
 {$R *.res}
 

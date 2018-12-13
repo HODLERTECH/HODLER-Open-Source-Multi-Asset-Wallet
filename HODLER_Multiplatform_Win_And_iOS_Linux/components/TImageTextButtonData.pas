@@ -5,7 +5,7 @@ interface
 uses
  System.SysUtils, System.Classes, FMX.Types, FMX.Controls, FMX.Layouts,
   FMX.Edit, FMX.StdCtrls, FMX.Clipboard, FMX.Platform, FMX.Objects,
-  System.Types, StrUtils , FMX.Dialogs;
+  System.Types, StrUtils , FMX.Dialogs , misc;
 
 type
   TImageTextButton = class(TButton)
