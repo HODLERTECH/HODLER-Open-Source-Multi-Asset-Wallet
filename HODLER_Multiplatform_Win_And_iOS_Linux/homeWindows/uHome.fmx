@@ -125,6 +125,8 @@ object frmHome: TfrmHome
       450s
       687s
       450s
+      687s
+      450s
       687s)
     object ShowInAnim: TFloatAnimation
       Duration = 0.500000000000000000
@@ -836,8 +838,8 @@ object frmHome: TfrmHome
         Size.Height = 544.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 2
-        Viewport.Width = 450.000000000000000000
-        Viewport.Height = 544.000000000000000000
+        Viewport.Width = 446.000000000000000000
+        Viewport.Height = 540.000000000000000000
       end
       object btnSeedGeneratedProceed: TButton
         Align = Bottom
@@ -5586,8 +5588,8 @@ object frmHome: TfrmHome
           Size.Height = 145.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 5
-          Viewport.Width = 97.000000000000000000
-          Viewport.Height = 145.000000000000000000
+          Viewport.Width = 77.000000000000000000
+          Viewport.Height = 141.000000000000000000
         end
         object WarningImage: TImage
           MultiResBitmap = <
@@ -9752,8 +9754,8 @@ object frmHome: TfrmHome
         Size.Height = 543.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 5
-        Viewport.Width = 450.000000000000000000
-        Viewport.Height = 543.000000000000000000
+        Viewport.Width = 446.000000000000000000
+        Viewport.Height = 539.000000000000000000
       end
     end
     object AddNewCoin: TTabItem
@@ -9950,8 +9952,8 @@ object frmHome: TfrmHome
         StyleLookup = 'memostyle'
         TabOrder = 6
         Visible = False
-        Viewport.Width = 384.000000000000000000
-        Viewport.Height = 88.000000000000000000
+        Viewport.Width = 380.000000000000000000
+        Viewport.Height = 84.000000000000000000
       end
       object lblRetypeSeed: TLabel
         Align = Top
@@ -14054,6 +14056,116 @@ object frmHome: TfrmHome
         TabOrder = 3
         Viewport.Width = 450.000000000000000000
         Viewport.Height = 574.000000000000000000
+      end
+    end
+    object EQRView: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = True
+      Size.Width = 8.000000000000000000
+      Size.Height = 8.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'EQRView'
+      ExplicitSize.cx = 8.000000000000000000
+      ExplicitSize.cy = 8.000000000000000000
+      object EQRHeader: TToolBar
+        Size.Width = 450.000000000000000000
+        Size.Height = 48.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        object eqrHeaderLabel: TLabel
+          Align = Contents
+          Size.Width = 450.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'calendarlabelstyle'
+          TextSettings.HorzAlign = Center
+          Text = 'Encrypted QR'
+          ParentShowHint = False
+          ShowHint = False
+        end
+        object EQRBackBtn: TButton
+          Align = Left
+          Size.Width = 64.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'buttonstyle'
+          TabOrder = 1
+          Text = 'Back'
+          OnClick = EQRBackBtnClick
+        end
+      end
+      object EQRShareBtn: TButton
+        Align = Top
+        Position.Y = 48.000000000000000000
+        Size.Width = 450.000000000000000000
+        Size.Height = 48.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        Text = 'Save the Paper Wallet'
+        OnClick = EQRShareBtnClick
+      end
+      object eqrVertScrollBox: TVertScrollBox
+        Align = Client
+        Size.Width = 450.000000000000000000
+        Size.Height = 591.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        Viewport.Width = 450.000000000000000000
+        Viewport.Height = 591.000000000000000000
+        object EQRPreview: TImage
+          MultiResBitmap = <
+            item
+            end>
+          Hint = 'Your Encrypted QR'
+          Position.X = 70.000000000000000000
+          Position.Y = 8.000000000000000000
+          Size.Width = 294.000000000000000000
+          Size.Height = 313.000000000000000000
+          Size.PlatformDefault = False
+          ParentShowHint = False
+          ShowHint = True
+          OnClick = EQRPreviewClick
+        end
+        object EQRInstrction: TMemo
+          Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+          DataDetectorTypes = []
+          Lines.Strings = (
+            'Download and run the HODLER Wallet: www.hodler.tech'
+            'Scan the QR code above and enter the password to the wallet'
+            'Restore your wallet safety to your new device and use your'
+            'HODLER multiplatform wallet!')
+          ReadOnly = True
+          TextSettings.HorzAlign = Center
+          Align = Bottom
+          Position.Y = 518.000000000000000000
+          Size.Width = 450.000000000000000000
+          Size.Height = 73.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'EQRInstrctionStyle1'
+          TabOrder = 1
+          Viewport.Width = 446.000000000000000000
+          Viewport.Height = 69.000000000000000000
+        end
+        object lblEQRDescription: TLabel
+          Align = Bottom
+          AutoSize = True
+          StyledSettings = [Family, FontColor]
+          Margins.Top = 8.000000000000000000
+          Margins.Bottom = 8.000000000000000000
+          Position.Y = 462.000000000000000000
+          Size.Width = 450.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 18.000000000000000000
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.HorzAlign = Center
+          Text = 'Encrypted QR Code Backup'#13#10'pair this wallet with other device'
+          TabOrder = 2
+        end
       end
     end
   end

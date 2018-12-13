@@ -1,38 +1,38 @@
-﻿{ --------------------------------------------------------------------------- }
-{ }
-{ File:       Velthuis.Numerics.pas }
-{ Function:   Integer tool functions. }
-{ Language:   Delphi version XE3 or later }
-{ Author:     Rudy Velthuis }
-{ Copyright:  (c) 2016 Rudy Velthuis }
-{ }
-{ License:    Redistribution and use in source and binary forms, with or }
-{ without modification, are permitted provided that the }
-{ following conditions are met: }
-{ }
-{ * Redistributions of source code must retain the above }
-{ copyright notice, this list of conditions and the following }
-{ disclaimer. }
-{ * Redistributions in binary form must reproduce the above }
-{ copyright notice, this list of conditions and the following }
-{ disclaimer in the documentation and/or other materials }
-{ provided with the distribution. }
-{ }
-{ Disclaimer: THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" }
-{ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT }
-{ LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND }
-{ FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO }
-{ EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE }
-{ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, }
-{ OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, }
-{ PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, }
-{ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED }
-{ AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT }
-{ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) }
-{ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF }
-{ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. }
-{ }
-{ --------------------------------------------------------------------------- }
+﻿{---------------------------------------------------------------------------}
+{                                                                           }
+{ File:       Velthuis.Numerics.pas                                         }
+{ Function:   Integer tool functions.                                       }
+{ Language:   Delphi version XE3 or later                                   }
+{ Author:     Rudy Velthuis                                                 }
+{ Copyright:  (c) 2016 Rudy Velthuis                                        }
+{                                                                           }
+{ License:    Redistribution and use in source and binary forms, with or    }
+{             without modification, are permitted provided that the         }
+{             following conditions are met:                                 }
+{                                                                           }
+{             * Redistributions of source code must retain the above        }
+{               copyright notice, this list of conditions and the following }
+{               disclaimer.                                                 }
+{             * Redistributions in binary form must reproduce the above     }
+{               copyright notice, this list of conditions and the following }
+{               disclaimer in the documentation and/or other materials      }
+{               provided with the distribution.                             }
+{                                                                           }
+{ Disclaimer: THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS"     }
+{             AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT     }
+{             LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND     }
+{             FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO        }
+{             EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE     }
+{             FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,     }
+{             OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,      }
+{             PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,     }
+{             DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED    }
+{             AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   }
+{             LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)        }
+{             ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF   }
+{             ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                    }
+{                                                                           }
+{---------------------------------------------------------------------------}
 
 unit Velthuis.Numerics;
 
@@ -40,13 +40,15 @@ interface
 
 // For Delphi XE3 and up:
 {$IF CompilerVersion >= 24.0 }
-{$LEGACYIFEND ON}
+  {$LEGACYIFEND ON}
 {$IFEND}
+
 // For Delphi XE and up:
 {$IF CompilerVersion >= 22.0}
-{$CODEALIGN 16}
-{$ALIGN 16}
+  {$CODEALIGN 16}
+  {$ALIGN 16}
 {$IFEND}
+
 {$INLINE AUTO}
 
 uses
@@ -149,6 +151,7 @@ function HashCode(Value: UInt64): UInt32; overload;
 
 implementation
 
+
 uses
   System.SysUtils, Velthuis.StrConsts;
 
@@ -157,17 +160,20 @@ uses
 const
   // Currently not used.
   NLZDeBruijn32Mult = $07C4ACDD;
-  NLZDeBruijn32: array [0 .. 31] of Byte = (31, 22, 30, 21, 18, 10, 29, 2, 20,
-    17, 15, 13, 9, 6, 28, 1, 23, 19, 11, 3, 16, 14, 7, 24, 12, 4, 8, 25, 5,
-    26, 27, 0);
+  NLZDeBruijn32: array[0..31] of Byte =
+  (
+    31, 22, 30, 21, 18, 10, 29,  2, 20, 17, 15, 13,  9,  6, 28,  1,
+    23, 19, 11,  3, 16, 14,  7, 24, 12,  4,  8, 25,  5, 26, 27,  0
+  );
 
   NTZDeBruijn32Mult = $077CB531;
-  NTZDeBruijn32: array [0 .. 31] of Byte = (0, 1, 28, 2, 29, 14, 24, 3, 30, 22,
-    20, 15, 25, 17, 4, 8, 31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11,
-    5, 10, 9);
+  NTZDeBruijn32: array[0..31] of Byte =
+  (
+     0,  1, 28,  2, 29, 14, 24,  3, 30, 22, 20, 15, 25, 17,  4,  8,
+    31, 27, 13, 23, 21, 19, 16,  7, 26, 12, 18,  6, 11,  5, 10,  9
+  );
 
-  BitCounts: array [0 .. 15] of Byte = (0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3,
-    2, 3, 3, 4);
+  BitCounts: array[0..15] of Byte = (0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4);
 
 function BitCount(U: UInt8): Integer;
 begin
@@ -177,45 +183,45 @@ end;
 function BitCount(U: UInt16): Integer;
 {$IF DEFINED(WIN32)}
 asm
-  MOV     DX,AX
-  SHR     DX,1
-  AND     DX,$5555
-  SUB     AX,DX
-  MOV     DX,AX
-  AND     AX,$3333
-  SHR     DX,2
-  AND     DX,$3333
-  ADD     AX,DX
-  MOV     DX,AX
-  SHR     DX,4
-  ADD     AX,DX
-  AND     AX,$0F0F
-  MOV     DX,AX
-  SHR     AX,8
-  ADD     AX,DX
-  AND     EAX,$7F
+        MOV     DX,AX
+        SHR     DX,1
+        AND     DX,$5555
+        SUB     AX,DX
+        MOV     DX,AX
+        AND     AX,$3333
+        SHR     DX,2
+        AND     DX,$3333
+        ADD     AX,DX
+        MOV     DX,AX
+        SHR     DX,4
+        ADD     AX,DX
+        AND     AX,$0F0F
+        MOV     DX,AX
+        SHR     AX,8
+        ADD     AX,DX
+        AND     EAX,$7F
 end;
 {$ELSEIF DEFINED(WIN64)}
 asm
-  .NOFRAME
+        .NOFRAME
 
-  MOV     AX,CX
-  SHR     CX,1
-  AND     CX,$5555
-  SUB     AX,CX
-  MOV     CX,AX
-  AND     AX,$3333
-  SHR     CX,2
-  AND     CX,$3333
-  ADD     AX,CX
-  MOV     CX,AX
-  SHR     CX,4
-  ADD     AX,CX
-  AND     AX,$0F0F
-  MOV     CX,AX
-  SHR     AX,8
-  ADD     AX,CX
-  AND     EAX,$7F
+        MOV     AX,CX
+        SHR     CX,1
+        AND     CX,$5555
+        SUB     AX,CX
+        MOV     CX,AX
+        AND     AX,$3333
+        SHR     CX,2
+        AND     CX,$3333
+        ADD     AX,CX
+        MOV     CX,AX
+        SHR     CX,4
+        ADD     AX,CX
+        AND     AX,$0F0F
+        MOV     CX,AX
+        SHR     AX,8
+        ADD     AX,CX
+        AND     EAX,$7F
 end;
 {$ELSE PUREPASCAL}
 begin
@@ -236,51 +242,51 @@ end;
 function BitCount(U: UInt32): Integer;
 {$IF DEFINED(WIN32)}
 asm
-  MOV     EDX,EAX
-  SHR     EDX,1
-  AND     EDX,$55555555
-  SUB     EAX,EDX
-  MOV     EDX,EAX
-  AND     EAX,$33333333
-  SHR     EDX,2
-  AND     EDX,$33333333
-  ADD     EAX,EDX
-  MOV     EDX,EAX
-  SHR     EDX,4
-  ADD     EAX,EDX
-  AND     EAX,$0F0F0F0F
-  MOV     EDX,EAX
-  SHR     EAX,8
-  ADD     EAX,EDX
-  MOV     EDX,EAX
-  SHR     EDX,16
-  ADD     EAX,EDX
-  AND     EAX,$7F
+        MOV     EDX,EAX
+        SHR     EDX,1
+        AND     EDX,$55555555
+        SUB     EAX,EDX
+        MOV     EDX,EAX
+        AND     EAX,$33333333
+        SHR     EDX,2
+        AND     EDX,$33333333
+        ADD     EAX,EDX
+        MOV     EDX,EAX
+        SHR     EDX,4
+        ADD     EAX,EDX
+        AND     EAX,$0F0F0F0F
+        MOV     EDX,EAX
+        SHR     EAX,8
+        ADD     EAX,EDX
+        MOV     EDX,EAX
+        SHR     EDX,16
+        ADD     EAX,EDX
+        AND     EAX,$7F
 end;
 {$ELSEIF DEFINED(WIN64)}
 asm
-  .NOFRAME
+        .NOFRAME
 
-  MOV     EAX,ECX
-  SHR     ECX,1
-  AND     ECX,$55555555
-  SUB     EAX,ECX
-  MOV     ECX,EAX
-  AND     EAX,$33333333
-  SHR     ECX,2
-  AND     ECX,$33333333
-  ADD     EAX,ECX
-  MOV     ECX,EAX
-  SHR     ECX,4
-  ADD     EAX,ECX
-  AND     EAX,$0F0F0F0F
-  MOV     ECX,EAX
-  SHR     EAX,8
-  ADD     EAX,ECX
-  MOV     ECX,EAX
-  SHR     ECX,16
-  ADD     EAX,ECX
-  AND     EAX,$7F
+        MOV     EAX,ECX
+        SHR     ECX,1
+        AND     ECX,$55555555
+        SUB     EAX,ECX
+        MOV     ECX,EAX
+        AND     EAX,$33333333
+        SHR     ECX,2
+        AND     ECX,$33333333
+        ADD     EAX,ECX
+        MOV     ECX,EAX
+        SHR     ECX,4
+        ADD     EAX,ECX
+        AND     EAX,$0F0F0F0F
+        MOV     ECX,EAX
+        SHR     EAX,8
+        ADD     EAX,ECX
+        MOV     ECX,EAX
+        SHR     ECX,16
+        ADD     EAX,ECX
+        AND     EAX,$7F
 end;
 {$ELSE PUREPASCAL}
 begin
@@ -344,7 +350,7 @@ begin
     Inc(Result, 4);
     U := U div 10000;
   end;
-  if U >= 100 then
+  if U >= 100  then
   begin
     Inc(Result, 2);
     U := U div 100;
@@ -356,7 +362,7 @@ end;
 function IsPowerOfTwo(S: Int32): Boolean;
 begin
   if S <> Low(Int32) then
-    Result := IsPowerOfTwo(UInt32(Abs(S)))
+    Result := IsPowerofTwo(UInt32(Abs(S)))
   else
     Result := True;
 end;
@@ -392,31 +398,31 @@ end;
 function NumberOfLeadingZeros(U: UInt16): Integer;
 {$IF DEFINED(WIN32)}
 asm
-  MOVZX   EAX,AX
-  BSR     EDX,EAX
-  JNZ     @Invert
-  MOV     EAX,16
-  RET
+        MOVZX   EAX,AX
+        BSR     EDX,EAX
+        JNZ     @Invert
+        MOV     EAX,16
+        RET
 
 @Invert:
 
-  MOV     EAX,15
-  SUB     EAX,EDX
+        MOV     EAX,15
+        SUB     EAX,EDX
 end;
 {$ELSEIF DEFINED(WIN64)}
 asm
-  .NOFRAME
+        .NOFRAME
 
-  MOVZX   EAX,CX
-  BSR     ECX,EAX
-  JNZ     @Invert
-  MOV     EAX,16
-  RET
+        MOVZX   EAX,CX
+        BSR     ECX,EAX
+        JNZ     @Invert
+        MOV     EAX,16
+        RET
 
 @Invert:
 
-  MOV     EAX,15
-  SUB     EAX,ECX
+        MOV     EAX,15
+        SUB     EAX,ECX
 end;
 {$ELSE PUREPASCAL}
 begin
@@ -454,35 +460,36 @@ end;
 function NumberOfLeadingZeros(U: UInt32): Integer;
 {$IF DEFINED(WIN32)}
 asm
-  BSR     EDX,EAX
-  JNZ     @Invert
-  MOV     EAX,32
-  RET
+        BSR     EDX,EAX
+        JNZ     @Invert
+        MOV     EAX,32
+        RET
 
 @Invert:
 
-  MOV     EAX,31
-  SUB     EAX,EDX
+        MOV     EAX,31
+        SUB     EAX,EDX
 
 @Exit:
 end;
 {$ELSEIF DEFINED(WIN64)}
 asm
-  .NOFRAME
+         .NOFRAME
 
-  BSR    EDX,ECX
-  JNZ    @Invert
-  MOV    EAX,32
-  RET
+         BSR    EDX,ECX
+         JNZ    @Invert
+         MOV    EAX,32
+         RET
 
 @Invert:
 
-  MOV    EAX,31
-  SUB    EAX,EDX
+         MOV    EAX,31
+         SUB    EAX,EDX
 
 @Exit:
 end;
 {$ELSE PUREPASCAL}
+
 // Faster than X := X or X shr 1..16; Result := NLZDeBruijn32[...];
 
 begin
@@ -536,19 +543,19 @@ end;
 function NumberOfTrailingZeros(U: UInt32): Integer;
 {$IF DEFINED(WIN32)}
 asm
-  BSF     EAX,EAX
-  JNZ     @Exit
-  MOV     EAX,32
+        BSF     EAX,EAX
+        JNZ     @Exit
+        MOV     EAX,32
 
 @Exit:
 end;
 {$ELSEIF DEFINED(WIN64)}
 asm
-  .NOFRAME
+        .NOFRAME
 
-  BSF     EAX,ECX
-  JNZ     @Exit
-  MOV     EAX,32
+        BSF     EAX,ECX
+        JNZ     @Exit
+        MOV     EAX,32
 
 @Exit:
 end;
@@ -564,23 +571,23 @@ end;
 function NumberOfTrailingZeros(U: UInt64): Integer;
 {$IF DEFINED(WIN32)}
 asm
-  BSF    EAX,DWORD PTR [U]
-  JNZ    @Exit
-  BSF    EAX,DWORD PTR [U+TYPE DWORD]
-  JZ     @Ret64
-  ADD    EAX,32
-  JMP    @Exit
+        BSF    EAX,DWORD PTR [U]
+        JNZ    @Exit
+        BSF    EAX,DWORD PTR [U+TYPE DWORD]
+        JZ     @Ret64
+        ADD    EAX,32
+        JMP    @Exit
 @Ret64:
-  MOV    EAX,64
+        MOV    EAX,64
 @Exit:
 end;
 {$ELSEIF DEFINED(WIN64)}
 asm
-  .NOFRAME
+        .NOFRAME
 
-  BSF    RAX,RCX
-  JNZ    @Exit
-  MOV    EAX,64
+        BSF    RAX,RCX
+        JNZ    @Exit
+        MOV    EAX,64
 @Exit:
 end;
 {$ELSE PUREPASCAL}
@@ -588,7 +595,6 @@ type
   TUInt64 = packed record
     Lo, Hi: UInt32;
   end;
-
 begin
   if UInt32(U) = 0 then
     Result := 32 + NumberOfTrailingZeros(TUInt64(U).Hi)
@@ -623,13 +629,11 @@ end;
 // http://stackoverflow.com/a/9144870/95954
 function Reverse(U: UInt32): UInt32;
 begin
-  U := ((U shr 1) and $55555555) or ((U and $55555555) shl 1);
-  // Swap adjacent bits.
-  U := ((U shr 2) and $33333333) or ((U and $33333333) shl 2);
-  // Swap adjacent bit pairs.
-  U := ((U shr 4) and $0F0F0F0F) or ((U and $0F0F0F0F) shl 4); // Swap nibbles.
-  U := ((U shr 8) and $00FF00FF) or ((U and $00FF00FF) shl 8); // Swap bytes.
-  U := (U shr 16) or (U shl 16); // Swap words.
+  U := ((U shr 1) and $55555555) or ((U and $55555555) shl 1);  // Swap adjacent bits.
+  U := ((U shr 2) and $33333333) or ((U and $33333333) shl 2);  // Swap adjacent bit pairs.
+  U := ((U shr 4) and $0F0F0F0F) or ((U and $0F0F0F0F) shl 4);  // Swap nibbles.
+  U := ((U shr 8) and $00FF00FF) or ((U and $00FF00FF) shl 8);  // Swap bytes.
+  U := (U shr 16) or (U shl 16);                                // Swap words.
   Result := U;
 end;
 
@@ -641,8 +645,8 @@ end;
 // Byte and word swaps of Reverse(U).
 function ReverseBytes(U: UInt32): UInt32;
 begin
-  U := ((U shr 8) and $00FF00FF) or ((U and $00FF00FF) shl 8); // Swap bytes.
-  U := (U shr 16) or (U shl 16); // Swap words.
+  U := ((U shr 8) and $00FF00FF) or ((U and $00FF00FF) shl 8);  // Swap bytes.
+  U := (U shr 16) or (U shl 16);                                // Swap words.
   Result := U;
 end;
 
@@ -665,7 +669,7 @@ end;
 function RotateRight(U: UInt32; Distance: Integer): UInt32;
 begin
   Distance := Distance and 31;
-  Result := (U shr Distance) or (U shl (32 - Distance));
+  Result := (U shr Distance) or (U shl (32- Distance));
 end;
 
 function Sign(S: Int32): TValueSign;
@@ -704,7 +708,7 @@ begin
 end;
 
 const
-  Digits: array [0 .. 35] of Char = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  Digits: array[0..35] of Char = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 function ToString(S: Int32; Base: Byte): string;
 begin
@@ -716,7 +720,7 @@ end;
 
 function ToString(U: UInt32; Base: Byte): string;
 begin
-  if not(Base in [2 .. 36]) then
+  if not (Base in [2..36]) then
     raise EInvalidArgument.Create(SInvalidArgumentBase);
 
   if U = 0 then

@@ -104,6 +104,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         409s
         711s
         409s
+        711s
+        409s
         711s)
       inherited dashbrd: TTabItem
         Size.Width = 11.000000000000000000
@@ -1597,7 +1599,13 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             Size.Width = 389.000000000000000000
             inherited Layout21: TLayout
               Size.Width = 228.000000000000000000
-              inherited HistoryTransactionDate: TLabel
+              inherited historyTransactionConfirmation: TEdit
+                Size.Width = 228.000000000000000000
+              end
+              inherited HistoryTransactionDate: TEdit
+                Size.Width = 228.000000000000000000
+              end
+              inherited HistoryTransactionValue: TEdit
                 Size.Width = 228.000000000000000000
               end
             end
@@ -2431,6 +2439,45 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         inherited ExportPrivateKeyButton: TButton
           Position.Y = 140.000000000000000000
           Size.Width = 409.000000000000000000
+        end
+      end
+      inherited EQRView: TTabItem
+        Size.Width = 11.000000000000000000
+        Size.Height = 11.000000000000000000
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited EQRHeader: TToolBar
+          Size.Width = 409.000000000000000000
+          Size.Height = 44.000000000000000000
+          inherited eqrHeaderLabel: TLabel
+            Size.Width = 409.000000000000000000
+            Size.Height = 44.000000000000000000
+          end
+          inherited EQRBackBtn: TButton
+            Size.Height = 44.000000000000000000
+          end
+        end
+        inherited EQRShareBtn: TButton
+          Position.Y = 44.000000000000000000
+          Size.Width = 409.000000000000000000
+          OnClick = nil
+        end
+        inherited eqrVertScrollBox: TVertScrollBox
+          Size.Width = 409.000000000000000000
+          Size.Height = 619.000000000000000000
+          Viewport.Width = 409.000000000000000000
+          Viewport.Height = 619.000000000000000000
+          inherited EQRInstrction: TMemo
+            Position.Y = 536.000000000000000000
+            Size.Width = 409.000000000000000000
+            Viewport.Width = 409.000000000000000000
+            Viewport.Height = 83.000000000000000000
+          end
+          inherited lblEQRDescription: TLabel
+            Position.Y = 480.000000000000000000
+            Size.Width = 409.000000000000000000
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+          end
         end
       end
     end

@@ -350,6 +350,8 @@ object frmHome: TfrmHome
         368s
         551s
         368s
+        551s
+        368s
         551s)
       object dashbrd: TTabItem
         CustomIcon = <
@@ -2026,7 +2028,7 @@ object frmHome: TfrmHome
                     Align = FitRight
                     StyledSettings = [Family, Style, FontColor]
                     Margins.Right = 10.000000000000000000
-                    Position.X = 228.080017089843800000
+                    Position.X = 228.080017089843700000
                     Size.Width = 113.919982910156300000
                     Size.Height = 31.999998092651370000
                     Size.PlatformDefault = False
@@ -13588,6 +13590,117 @@ object frmHome: TfrmHome
           TabOrder = 3
           Text = 'Export Private Key'
           OnClick = ExportPrivateKeyButtonClick
+        end
+      end
+      object EQRView: TTabItem
+        CustomIcon = <
+          item
+          end>
+        IsSelected = True
+        Size.Width = 8.000000000000000000
+        Size.Height = 8.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = ''
+        TabOrder = 0
+        Text = 'EQRView'
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        object EQRHeader: TToolBar
+          Size.Width = 368.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object eqrHeaderLabel: TLabel
+            Align = Contents
+            Size.Width = 368.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'calendarlabelstyle'
+            TextSettings.HorzAlign = Center
+            Text = 'Encrypted QR'
+            ParentShowHint = False
+            ShowHint = False
+          end
+          object EQRBackBtn: TButton
+            Align = Left
+            Size.Width = 64.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'buttonstyle'
+            TabOrder = 1
+            Text = 'Back'
+            OnClick = EQRBackBtnClick
+          end
+        end
+        object EQRShareBtn: TButton
+          OnTap = EQRShareBtnTap
+          Align = Top
+          Position.Y = 48.000000000000000000
+          Size.Width = 368.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          Text = 'Backup or Share the Paper Wallet'
+          OnClick = EQRShareBtnClick
+        end
+        object eqrVertScrollBox: TVertScrollBox
+          Align = Client
+          Size.Width = 368.000000000000000000
+          Size.Height = 455.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Viewport.Width = 368.000000000000000000
+          Viewport.Height = 455.000000000000000000
+          object EQRPreview: TImage
+            MultiResBitmap = <
+              item
+              end>
+            Hint = 'Your Encrypted QR'
+            Position.X = 30.000000000000000000
+            Position.Y = 96.000000000000000000
+            Size.Width = 294.000000000000000000
+            Size.Height = 57.000000000000000000
+            Size.PlatformDefault = False
+            ParentShowHint = False
+            ShowHint = False
+          end
+          object EQRInstrction: TMemo
+            Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+            DataDetectorTypes = []
+            Lines.Strings = (
+              'Download and run the HODLER Wallet: www.hodler.tech'
+              'Scan the QR code above and enter the password to the wallet'
+              'Restore your wallet safety to your new device and use your'
+              'HODLER multiplatform wallet!')
+            ReadOnly = True
+            StyledSettings = [Family, Style, FontColor]
+            TextSettings.Font.Size = 10.000000000000000000
+            TextSettings.HorzAlign = Center
+            Align = MostBottom
+            Position.Y = 372.000000000000000000
+            Size.Width = 368.000000000000000000
+            Size.Height = 83.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            Viewport.Width = 364.000000000000000000
+            Viewport.Height = 79.000000000000000000
+          end
+          object lblEQRDescription: TLabel
+            Align = Bottom
+            AutoSize = True
+            StyledSettings = [Family, FontColor]
+            Margins.Top = 8.000000000000000000
+            Margins.Bottom = 8.000000000000000000
+            Position.Y = 316.000000000000000000
+            Size.Width = 368.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 18.000000000000000000
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+            TextSettings.HorzAlign = Center
+            Text = 'Encrypted QR Code Backup'#13#10'pair this wallet with other device'
+            TabOrder = 2
+          end
         end
       end
     end

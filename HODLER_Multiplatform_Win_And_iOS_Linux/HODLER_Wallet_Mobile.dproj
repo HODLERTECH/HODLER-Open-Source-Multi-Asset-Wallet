@@ -540,17 +540,6 @@
         <DCCReference Include="additionalUnits\misc.pas"/>
         <DCCReference Include="additionalUnits\base58.pas"/>
         <DCCReference Include="coinCode\secp256k1.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.BigDecimals.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.BigIntegers.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.BigIntegers.Primes.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.BigRationals.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.ExactFloatStrings.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.FloatUtils.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.Loggers.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.Numerics.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.RandomNumbers.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.Sizes.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.StrConsts.pas"/>
         <DCCReference Include="coinCode\Bitcoin.pas"/>
         <DCCReference Include="additionalUnits\ZXING\Lib\Classes\1D Barcodes\ZXing.OneD.Code93Reader.pas"/>
         <DCCReference Include="additionalUnits\ZXING\Lib\Classes\1D Barcodes\ZXing.OneD.Code128Reader.pas"/>
@@ -653,6 +642,19 @@
         <DCCReference Include="additionalUnits\BackupRelated.pas"/>
         <DCCReference Include="components\TCopyableEditData.pas"/>
         <DCCReference Include="components\TCopyableLabelData.pas"/>
+        <DCCReference Include="additionalUnits\bi\CompilerAndRTLVersions.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.BigDecimals.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.BigIntegers.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.BigIntegers.Primes.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.BigRationals.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.ExactFloatStrings.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.FloatUtils.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.Loggers.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.Numerics.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.RandomNumbers.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.Sizes.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.StrConsts.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.XorShifts.pas"/>
         <RcItem Include="Languages\PT.lang">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
@@ -716,7 +718,7 @@
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>COPY_IMG_DARK</ResourceId>
         </RcItem>
-        <RcItem Include="gfx\eqr.png">
+        <RcItem Include="gfx\paperwallet\eqrbig.png">
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>IMG_EQR</ResourceId>
         </RcItem>
@@ -1471,6 +1473,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="gfx\paperwallet\eqrbig.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\POLlang.json" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSDevice32">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -1785,6 +1793,12 @@
                 <DeployFile LocalName="OKSterling.style" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSDevice32">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="gfx\paperwallet\eqrbig.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -2404,12 +2418,6 @@
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_1125x2436.png" Configuration="Debug" Class="iPhone_Launch1125">
                     <Platform Name="iOSDevice32">
                         <RemoteName>Default-812h@3x.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="gfx\eqr.png" Configuration="Release" Class="ProjectFile">
-                    <Platform Name="Android">
-                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

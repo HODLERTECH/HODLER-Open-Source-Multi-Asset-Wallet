@@ -316,7 +316,7 @@ procedure refreshCurrencyValue();
 procedure updateBalanceLabels();
 
 Function StrToQRBitmap(Str: AnsiString; pixelSize: integer = 6): TBitmap;
-procedure shareFile(path: AnsiString);
+procedure shareFile(path: AnsiString;deleteSourceFile:Boolean=true);
 procedure synchronizeCurrencyValue();
 procedure LoadCurrencyFiatFromFile();
 function bitcoinCashAddressToCashAddress(address: AnsiString): AnsiString;
@@ -389,7 +389,7 @@ var
 
 implementation
 
-uses Bitcoin, uHome, base58, Ethereum, coinData, strutils, secp256k1
+uses Bitcoin, uHome, base58, Ethereum, coinData, strutils, secp256k1 ,AccountRelated
 {$IFDEF ANDROID}
 {$ELSE}
 {$ENDIF};
@@ -1251,7 +1251,9 @@ begin
       Tthread.Synchronize(nil,
         procedure
         begin
-          frmhome.FormShow(nil);
+           frmhome.FormShow(nil);
+        AccountRelated.LoadCurrentAccount(name);
+
         end);
 
     end);
@@ -1663,7 +1665,7 @@ begin
   result.scriptHash := reverseHexOrder(GetSHA256FromHex((result.outputScript)));
 end;
 
-procedure shareFile(path: AnsiString);
+procedure shareFile(path: AnsiString;deleteSourceFile:Boolean=true);
 var
   i: integer;
 {$IFDEF ANDROID}
@@ -1719,7 +1721,7 @@ begin
   if saveDialog.Execute then
   begin
     TFile.Copy(path, saveDialog.FileName);
-    DeleteFile(path);
+    if deleteSourceFile then DeleteFile(path);
 
   end;
   saveDialog.Free;
@@ -1792,7 +1794,7 @@ begin
       if QRCodeBitmap.data <> nil then
       begin
         bmp.Free;
-        bmp := BitmapDataToScaledBitmap(QRCodeBitmap, 6);
+        bmp := BitmapDataToScaledBitmap(QRCodeBitmap, pixelSize);
         bmp.Unmap(QRCodeBitmap);
       end;
     end;

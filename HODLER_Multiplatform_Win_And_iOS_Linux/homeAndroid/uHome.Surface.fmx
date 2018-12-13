@@ -104,6 +104,8 @@ inherited frmHome_Surface: TfrmHome_Surface
         1064s
         1904s
         1064s
+        1904s
+        1064s
         1904s)
       inherited dashbrd: TTabItem
         ExplicitSize.cx = 8.000000000000000000
@@ -1264,7 +1266,13 @@ inherited frmHome_Surface: TfrmHome_Surface
             Size.Width = 1044.000000000000000000
             inherited Layout21: TLayout
               Size.Width = 883.000000000000000000
-              inherited HistoryTransactionDate: TLabel
+              inherited historyTransactionConfirmation: TEdit
+                Size.Width = 883.000000000000000000
+              end
+              inherited HistoryTransactionDate: TEdit
+                Size.Width = 883.000000000000000000
+              end
+              inherited HistoryTransactionValue: TEdit
                 Size.Width = 883.000000000000000000
               end
             end
@@ -1921,6 +1929,37 @@ inherited frmHome_Surface: TfrmHome_Surface
         end
         inherited ExportPrivateKeyButton: TButton
           Size.Width = 1064.000000000000000000
+        end
+      end
+      inherited EQRView: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited EQRHeader: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited eqrHeaderLabel: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited EQRShareBtn: TButton
+          Size.Width = 1064.000000000000000000
+          OnClick = nil
+        end
+        inherited eqrVertScrollBox: TVertScrollBox
+          Size.Width = 1064.000000000000000000
+          Size.Height = 1808.000000000000000000
+          Viewport.Width = 1064.000000000000000000
+          Viewport.Height = 1808.000000000000000000
+          inherited EQRInstrction: TMemo
+            Position.Y = 1725.000000000000000000
+            Size.Width = 1064.000000000000000000
+            Viewport.Width = 1064.000000000000000000
+            Viewport.Height = 83.000000000000000000
+          end
+          inherited lblEQRDescription: TLabel
+            Position.Y = 1669.000000000000000000
+            Size.Width = 1064.000000000000000000
+            TextSettings.Font.StyleExt = {00070000000000000004000000}
+          end
         end
       end
     end
