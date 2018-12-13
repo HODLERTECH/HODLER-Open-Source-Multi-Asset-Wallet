@@ -630,7 +630,7 @@ begin
       btn.Align := TAlignLayout.Left;
       btn.Width := 160;
       btn.LoadImage('HSB_DARK');
-      btn.lbl.Text := 'Hodler Secure Backup';
+      btn.lbl.Text := 'HODLER SECURE BACKUP';
 
       btn.OnClick := SendWalletFileButtonClick;
 
@@ -640,7 +640,7 @@ begin
       btn.Align := TAlignLayout.Left;
       btn.Width := 160;
       btn.LoadImage('ENCRYPTED_SEED_DARK' );
-      btn.lbl.Text := 'Encrypted QR';
+      btn.lbl.Text := 'ENCRYPTED QR CODE BACKUP';
       btn.img.Margins.Top := 20;
       btn.img.Margins.Bottom := 20;
       btn.OnClick := SendEncryptedSeedButtonClick;
@@ -715,7 +715,7 @@ begin
 
         Button := TButton.Create(frmHome.AccountsListVertScrollBox);
         Button.Align := TAlignLayout.Top;
-        Button.Height := 48;
+        Button.Height := 36;
         Button.Visible := true;
         Button.Parent := frmHome.AccountsListVertScrollBox;
         Button.TagString := accname;

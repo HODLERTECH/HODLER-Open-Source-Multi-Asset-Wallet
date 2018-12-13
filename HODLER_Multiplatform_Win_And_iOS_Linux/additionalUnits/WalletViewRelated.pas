@@ -122,6 +122,11 @@ begin
       SynchronizeCryptoCurrency(cc);
     end;
 
+    tthread.Synchronize(nil, procedure
+    begin
+      reloadWalletView;
+    end);
+
     frmHome.refreshLocalImage.Stop();
   end);
 
@@ -316,7 +321,7 @@ begin
         // Tthread.Synchronize(nil, procedure begin
         // showmessage(ans);
         // end);
-        SynchronizeCryptoCurrency(CurrentCryptoCurrency);
+        //SynchronizeCryptoCurrency(CurrentCryptoCurrency);
 
         TThread.Synchronize(nil,
           procedure
@@ -331,11 +336,11 @@ begin
             if LeftStr(ans, length('Transaction sent')) = 'Transaction sent'
             then
             begin
-              TThread.CreateAnonymousThread(
+              {TThread.CreateAnonymousThread(
                 procedure
                 begin
                   SynchronizeCryptoCurrency(CurrentCryptoCurrency);
-                end).Start;
+                end).Start; }
               TransactionWaitForSendLinkLabel.Text :=
                 'Click here to see details in Explorer';
               TransactionWaitForSendDetailsLabel.Text := 'Transaction sent';
@@ -1080,7 +1085,7 @@ begin
        //Issue 112 CurrentAccount.userSaveSeed := false;
         CurrentAccount.SaveFiles();
 
-        askforBackup(1000);
+        //askforBackup(1000);
 
         TThread.Synchronize(nil,
           procedure
@@ -1099,10 +1104,11 @@ begin
         TThread.Synchronize(nil,
           procedure
           begin
-             Holder:=TFmxObject.Create(nil);
-            holder.TagObject:=walletInfo;
+            Holder:=TFmxObject.Create(nil);
+            holder.TagObject:=wd;
             frmHome.OpenWalletView(holder,PointF(0,0));
             holder.DisposeOf;
+            holder := nil;
           end);
     wipeAnsiString(masterSeed);
 
@@ -1169,7 +1175,7 @@ procedure newCoin(Sender: TObject);
 
         //Issue 112 CurrentAccount.userSaveSeed := false;
         CurrentAccount.SaveFiles();
-        askforBackup(1000);
+        //askforBackup(1000);
         MasterSeed := '';
         TThread.Synchronize(nil,
           procedure

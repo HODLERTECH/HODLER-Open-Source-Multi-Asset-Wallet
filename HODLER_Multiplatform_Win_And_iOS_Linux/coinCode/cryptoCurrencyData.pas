@@ -82,8 +82,7 @@ var
   d: Double;
 begin
   d := unconfirmed.asDouble;
-  if d < 0 then
-    d := 0.0;
+
   result := frmHome.currencyConverter.calculate(d) * rate /
     Math.power(10, decimals);
 end;
@@ -93,8 +92,8 @@ var
   d: Double;
 begin
   d := confirmed.asDouble;
-  if d < 0 then
-    d := 0.0;
+  {if d < 0 then
+    d := 0.0;}
   result := frmHome.currencyConverter.calculate(d) * rate /
     Math.power(10, decimals);
 end;

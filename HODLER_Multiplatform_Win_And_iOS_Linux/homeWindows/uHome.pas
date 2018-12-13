@@ -948,6 +948,7 @@ type
     procedure SweepButtonClick(Sender: TObject);
     procedure ExportPrivateKeyButtonClick(Sender: TObject);
     procedure CTIHeaderBackButtonClick(Sender: TObject);
+    procedure NewCoinPrivKeyOKButtonClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -1965,7 +1966,7 @@ var
   X: Integer;
 begin
 
-  if (LATEST_VERSION <> '') and (LATEST_VERSION <> CURRENT_VERSION) then
+  if (LATEST_VERSION <> '') and (compareVersion(LATEST_VERSION , CURRENT_VERSION) > 0 ) then
   begin
     frmHome.Caption := 'HODLER Open Source Multi-Asset Wallet v' +
       CURRENT_VERSION + ' (New version is available)';
@@ -1992,6 +1993,12 @@ begin
           end;
         end);
 
+  end
+  else if (LATEST_VERSION <> '') and (compareVersion(LATEST_VERSION , CURRENT_VERSION) < 0 ) then
+  begin
+    frmHome.Caption := 'HODLER Open Source Multi-Asset Wallet v' +
+      CURRENT_VERSION + ' ( Unofficial Version )';
+    popupWindow.Create(' Unofficial Version ');
   end
   else
   begin
@@ -2157,9 +2164,10 @@ begin
   switchTab(PageControl, walletView);
   TThread.CreateAnonymousThread(procedure   ()
   begin
-  SyncThr.SynchronizeCryptoCurrency(CurrentCoin);
-  reloadWalletView;
-  end)
+    //SyncThr.SynchronizeCryptoCurrency(CurrentCoin);
+    RefreshCurrentWallet(Sender);
+
+  end).Start();
 end;
 
 procedure TfrmHome.TransactionWaitForSendLinkLabelClick(Sender: TObject);
@@ -2621,6 +2629,12 @@ end;
 procedure TfrmHome.notPrivTCA2Change(Sender: TObject);
 begin
   notPrivTCA1.IsChecked := notPrivTCA2.IsChecked;
+end;
+
+procedure TfrmHome.NewCoinPrivKeyOKButtonClick(Sender: TObject);
+begin
+  WalletViewRelated.newCoinFromPrivateKey(Sender);
+
 end;
 
 procedure TfrmHome.NextButtonSGCClick(Sender: TObject);

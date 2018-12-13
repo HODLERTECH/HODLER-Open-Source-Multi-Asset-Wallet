@@ -350,6 +350,7 @@ function getFirstUnusedYForCoin(id: integer): integer;
 function getUnusedAccountName(): AnsiString;
 function getComponentsWithTagString(tag: AnsiString; From: TfmxObject)
   : TArray<TfmxObject>;
+function compareVersion( a , b : AnsiString ) : integer;
 
 
 
@@ -397,6 +398,39 @@ var
   bitmapData: TBitmapData;
 
   /// ////////////////////////////////////////////////////////////////
+
+function compareVersion( a , b : AnsiString ) : integer;
+var
+  a_arr , b_arr : TStringList;
+
+begin
+  result := 0;
+  a_arr := SplitString( a , '.');
+  b_arr := SplitString( b , '.');
+
+  for i := 0 to min( a_arr.Count , b_arr.Count ) -1 do
+  begin
+    if StrToInt(a_arr[i]) > StrToInt(B_arr[i]) then
+    begin
+      result := 1;
+      break;
+    end ;
+    if StrToInt(a_arr[i]) < StrToInt(B_arr[i]) then
+    begin
+      result := -1;
+      break;
+    end;
+
+  end;
+
+  a_arr.DisposeOf;
+  a_arr := nil;
+
+  b_arr.DisposeOf;
+  b_arr := nil;
+
+
+end;
 
 function getComponentsWithTagString(tag: AnsiString; From: TfmxObject)
   : TArray<TfmxObject>;

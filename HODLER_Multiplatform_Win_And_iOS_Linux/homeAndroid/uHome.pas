@@ -2589,7 +2589,7 @@ end;
 procedure TfrmHome.btnOKAddNewCoinSettingsClick(Sender: TObject);
 begin
   //switchTab(frmhome.PageControl, HOME_TABITEM);
-  WalletViewRelated.newCoin(Sender);
+  WalletViewRelated.newCoinFromPrivateKey(Sender);
 
 end;
 
