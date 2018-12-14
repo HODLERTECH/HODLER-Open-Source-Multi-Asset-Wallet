@@ -137,24 +137,24 @@ inherited frmHome_Windows: TfrmHome_Windows
         end
         inherited Layout1: TLayout
           Size.Width = 624.000000000000000000
-          inherited globalBalance: TLabel
+          inherited Layout32: TLayout
             Size.Width = 624.000000000000000000
-          end
-          inherited globalCurrency: TLabel
-            Size.Width = 624.000000000000000000
-          end
-          inherited SearchLayout: TLayout
-            Size.Width = 624.000000000000000000
-            inherited SearchInDashBrdButton: TSpeedButton
-              Position.X = 592.000000000000000000
-            end
-            inherited HideZeroWalletsCheckBox: TCheckBox
+            inherited globalBalance: TLabel
               Size.Width = 624.000000000000000000
+            end
+            inherited globalCurrency: TLabel
+              Size.Width = 624.000000000000000000
+            end
+            inherited SearchLayout: TLayout
+              Size.Width = 624.000000000000000000
+              inherited HideZeroWalletsCheckBox: TCheckBox
+                Size.Width = 624.000000000000000000
+              end
             end
           end
         end
         inherited NewCryptoLayout: TLayout
-          Position.Y = 332.000000000000000000
+          Position.Y = 380.000000000000000000
           Size.Width = 624.000000000000000000
           inherited NewTokenButton: TButton
             Position.X = 432.000000000000000000
@@ -162,9 +162,9 @@ inherited frmHome_Windows: TfrmHome_Windows
         end
         inherited WalletList: TVertScrollBox
           Size.Width = 624.000000000000000000
-          Size.Height = 110.000000000000000000
+          Size.Height = 158.000000000000000000
           Viewport.Width = 624.000000000000000000
-          Viewport.Height = 110.000000000000000000
+          Viewport.Height = 158.000000000000000000
         end
         inherited OrganizeList: TVertScrollBox
           Viewport.Width = 384.000000000000000000
@@ -186,7 +186,7 @@ inherited frmHome_Windows: TfrmHome_Windows
           end
         end
         inherited BackToBalanceViewLayout: TLayout
-          Position.Y = 368.000000000000000000
+          Position.Y = 416.000000000000000000
           Size.Width = 624.000000000000000000
           inherited BackToBalanceViewButton: TButton
             Position.X = 440.000000000000000000
@@ -1316,16 +1316,10 @@ inherited frmHome_Windows: TfrmHome_Windows
           Size.Height = 416.000000000000000000
           Viewport.Width = 624.000000000000000000
           Viewport.Height = 416.000000000000000000
-          inherited bpmnemonicLayout: TLayout
-            Size.Width = 624.000000000000000000
-            inherited MnemonicSeedDescriptionLabel: TLabel
-              Size.Width = 464.000000000000000000
-            end
-          end
           inherited HSBbackupLayout: TLayout
             Size.Width = 624.000000000000000000
             inherited HSBDescriptionLabel: TLabel
-              Size.Width = 624.000000000000000000
+              Size.Width = 594.000000000000000000
             end
             inherited SendWalletFileButton: TButton
               Size.Width = 624.000000000000000000
@@ -1337,7 +1331,7 @@ inherited frmHome_Windows: TfrmHome_Windows
               Size.Width = 624.000000000000000000
             end
             inherited EncryptedQRDescriptionLabel: TLabel
-              Size.Width = 624.000000000000000000
+              Size.Width = 594.000000000000000000
             end
           end
           inherited Layout28: TLayout
@@ -1660,7 +1654,7 @@ inherited frmHome_Windows: TfrmHome_Windows
         inherited ToolBar17: TToolBar
           Size.Width = 624.000000000000000000
           inherited SYWLHeaderLabel: TLabel
-            Size.Width = 624.000000000000000000
+            Size.Width = 560.000000000000000000
           end
           inherited SYWLBackButton: TButton
             OnClick = nil
@@ -1881,9 +1875,6 @@ inherited frmHome_Windows: TfrmHome_Windows
           Size.Width = 624.000000000000000000
           inherited Label18: TLabel
             Size.Width = 624.000000000000000000
-          end
-          inherited Button10: TButton
-            OnClick = nil
           end
         end
         inherited ImportPrivateKeyInPrivButton: TButton

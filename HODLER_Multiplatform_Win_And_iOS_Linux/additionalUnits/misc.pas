@@ -346,11 +346,12 @@ procedure AskForBackup(delay: integer = 0; afterChange: Boolean = false);
 procedure createSelectGenerateCoinView();
 function getCoinsIDFromAddress(address: AnsiString): TIntegerArray;
 procedure createTransactionWalletList(arr: TIntegerArray);
-function getFirstUnusedYForCoin(id: integer): integer;
+function getFirstUnusedXForCoin(id: integer): integer;
 function getUnusedAccountName(): AnsiString;
 function getComponentsWithTagString(tag: AnsiString; From: TfmxObject)
   : TArray<TfmxObject>;
 function compareVersion( a , b : AnsiString ) : integer;
+
 
 
 
@@ -386,6 +387,7 @@ var
   newCoinListNextTabItem : TTabItem;
   backTabItem : TTabItem;
   WDToExportPrivKey : TWalletInfo;
+  AddCoinBackTabItem  : TTabitem;
 
 implementation
 
@@ -481,7 +483,7 @@ begin
   result := 'Wallet' + intToStr(nr);
 end;
 
-function getFirstUnusedYForCoin(id: integer): integer;
+function getFirstUnusedXForCoin(id: integer): integer;
 var
   arr: Array of integer;
   wd: TWalletInfo;

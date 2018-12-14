@@ -256,7 +256,7 @@ object frmHome: TfrmHome
       Size.Height = 551.000000000000000000
       Size.PlatformDefault = False
       TabHeight = 49.000000000000000000
-      TabIndex = 24
+      TabIndex = 43
       TabOrder = 0
       TabPosition = None
       OnChange = closeVirtualKeyBoard
@@ -373,6 +373,7 @@ object frmHome: TfrmHome
           Size.PlatformDefault = False
           StyleLookup = 'bottomtoolbar'
           TabOrder = 1
+          Visible = False
           object ImageControl4: TImageControl
             Position.X = 16.000000000000000000
             TabOrder = 1
@@ -449,78 +450,92 @@ object frmHome: TfrmHome
           Size.Height = 126.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 2
-          object globalBalance: TLabel
-            Align = Top
-            AutoSize = True
-            StyledSettings = [Family, Style, FontColor]
-            Size.Width = 368.000000000000000000
-            Size.Height = 64.000000000000000000
+          object GlobalRefreshLayout: TLayout
+            Align = Left
+            Size.Width = 57.000000000000000000
+            Size.Height = 126.000000000000000000
             Size.PlatformDefault = False
-            StyleLookup = 'labelstyle'
-            TextSettings.Font.Size = 48.000000000000000000
-            TextSettings.HorzAlign = Center
-            TextSettings.WordWrap = False
-            Text = '0.00'
             TabOrder = 0
           end
-          object globalCurrency: TLabel
-            Align = Top
-            AutoSize = True
-            StyledSettings = [FontColor]
-            Position.Y = 64.000000000000000000
+          object Layout32: TLayout
+            Align = Contents
             Size.Width = 368.000000000000000000
-            Size.Height = 24.000000000000000000
+            Size.Height = 126.000000000000000000
             Size.PlatformDefault = False
-            StyleLookup = 'buttonstylelabel'
-            TextSettings.Font.Size = 18.000000000000000000
-            TextSettings.HorzAlign = Center
-            TextSettings.WordWrap = False
-            Text = '         USD'
             TabOrder = 1
-          end
-          object SearchLayout: TLayout
-            Align = Bottom
-            Position.Y = 62.000000000000000000
-            Size.Width = 368.000000000000000000
-            Size.Height = 64.000000000000000000
-            Size.PlatformDefault = False
-            TabOrder = 2
-            object SearchEdit: TEdit
-              Touch.InteractiveGestures = [LongTap, DoubleTap]
-              Align = Client
-              TabOrder = 0
-              Size.Width = 336.000000000000000000
-              Size.Height = 32.000000000000000000
-              Size.PlatformDefault = False
-              Visible = False
-              OnChange = SearchEditChange
-              OnChangeTracking = SearchEditChangeTracking
-              OnExit = SearchEditExit
-            end
-            object SearchInDashBrdButton: TSpeedButton
-              Align = Right
-              Position.X = 336.000000000000000000
-              Size.Width = 32.000000000000000000
-              Size.Height = 48.000000000000000000
-              Size.PlatformDefault = False
-              StyleLookup = 'searcheditbutton'
-              OnClick = SearchInDashBrdButtonClick
-            end
-            object HideZeroWalletsCheckBox: TCheckBox
-              Align = Bottom
-              Position.Y = 48.000000000000000000
+            object globalBalance: TLabel
+              Align = Top
+              AutoSize = True
+              StyledSettings = [Family, Style, FontColor]
               Size.Width = 368.000000000000000000
-              Size.Height = 16.000000000000000000
+              Size.Height = 64.000000000000000000
               Size.PlatformDefault = False
+              StyleLookup = 'labelstyle'
+              TextSettings.Font.Size = 48.000000000000000000
+              TextSettings.HorzAlign = Center
+              TextSettings.WordWrap = False
+              Text = '0.00'
+              TabOrder = 0
+            end
+            object globalCurrency: TLabel
+              Align = Top
+              AutoSize = True
+              StyledSettings = [FontColor]
+              Position.Y = 64.000000000000000000
+              Size.Width = 368.000000000000000000
+              Size.Height = 24.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'buttonstylelabel'
+              TextSettings.Font.Size = 18.000000000000000000
+              TextSettings.HorzAlign = Center
+              TextSettings.WordWrap = False
+              Text = '         USD'
               TabOrder = 1
-              Text = 'Hide empty wallets'
-              OnChange = HideZeroWalletsCheckBoxChange
+            end
+            object SearchLayout: TLayout
+              Align = Bottom
+              Position.Y = 62.000000000000000000
+              Size.Width = 368.000000000000000000
+              Size.Height = 64.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 2
+              object SearchEdit: TEdit
+                Touch.InteractiveGestures = [LongTap, DoubleTap]
+                Align = Client
+                TabOrder = 0
+                Size.Width = 336.000000000000000000
+                Size.Height = 32.000000000000000000
+                Size.PlatformDefault = False
+                Visible = False
+                OnChange = SearchEditChange
+                OnChangeTracking = SearchEditChangeTracking
+                OnExit = SearchEditExit
+              end
+              object SearchInDashBrdButton: TSpeedButton
+                Align = Right
+                Position.X = 336.000000000000000000
+                Size.Width = 32.000000000000000000
+                Size.Height = 48.000000000000000000
+                Size.PlatformDefault = False
+                StyleLookup = 'searcheditbutton'
+                OnClick = SearchInDashBrdButtonClick
+              end
+              object HideZeroWalletsCheckBox: TCheckBox
+                Align = Bottom
+                Position.Y = 48.000000000000000000
+                Size.Width = 368.000000000000000000
+                Size.Height = 16.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 1
+                Text = 'Hide empty wallets'
+                OnChange = HideZeroWalletsCheckBoxChange
+              end
             end
           end
         end
         object NewCryptoLayout: TLayout
           Align = Bottom
-          Position.Y = 419.000000000000000000
+          Position.Y = 467.000000000000000000
           Size.Width = 368.000000000000000000
           Size.Height = 36.000000000000000000
           Size.PlatformDefault = False
@@ -548,11 +563,11 @@ object frmHome: TfrmHome
         object WalletList: TVertScrollBox
           Align = Client
           Size.Width = 368.000000000000000000
-          Size.Height = 197.000000000000000000
+          Size.Height = 245.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 6
           Viewport.Width = 368.000000000000000000
-          Viewport.Height = 197.000000000000000000
+          Viewport.Height = 245.000000000000000000
         end
         object OrganizeList: TVertScrollBox
           Align = Client
@@ -628,7 +643,7 @@ object frmHome: TfrmHome
         end
         object BackToBalanceViewLayout: TLayout
           Align = Bottom
-          Position.Y = 455.000000000000000000
+          Position.Y = 503.000000000000000000
           Size.Width = 368.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
@@ -1435,6 +1450,7 @@ object frmHome: TfrmHome
               Size.PlatformDefault = False
               TabOrder = 0
               Text = 'Refresh'
+              Visible = False
               OnClick = btnSyncClick
               object RefreshProgressBar: TProgressBar
                 Align = Center
@@ -10461,7 +10477,7 @@ object frmHome: TfrmHome
             StyleLookup = 'buttonstyle'
             TabOrder = 1
             Text = 'Back'
-            OnClick = btnANWBackClick
+            OnClick = btnChangeDescryptionBackClick
           end
         end
         object ChangeDescryptionPanel: TPanel
@@ -11608,7 +11624,7 @@ object frmHome: TfrmHome
         CustomIcon = <
           item
           end>
-        IsSelected = True
+        IsSelected = False
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -11670,7 +11686,9 @@ object frmHome: TfrmHome
             end
             object MnemonicSeedDescriptionLabel: TLabel
               Align = Client
-              Size.Width = 208.000000000000000000
+              Margins.Left = 15.000000000000000000
+              Margins.Right = 15.000000000000000000
+              Size.Width = 178.000000000000000000
               Size.Height = 96.000000000000000000
               Size.PlatformDefault = False
               TextSettings.HorzAlign = Center
@@ -11686,7 +11704,9 @@ object frmHome: TfrmHome
             TabOrder = 1
             object HSBDescriptionLabel: TLabel
               Align = Client
-              Size.Width = 368.000000000000000000
+              Margins.Left = 15.000000000000000000
+              Margins.Right = 15.000000000000000000
+              Size.Width = 338.000000000000000000
               Size.Height = 96.000000000000000000
               Size.PlatformDefault = False
               TextSettings.HorzAlign = Center
@@ -11727,7 +11747,9 @@ object frmHome: TfrmHome
             end
             object EncryptedQRDescriptionLabel: TLabel
               Align = Client
-              Size.Width = 368.000000000000000000
+              Margins.Left = 15.000000000000000000
+              Margins.Right = 15.000000000000000000
+              Size.Width = 338.000000000000000000
               Size.Height = 96.000000000000000000
               Size.PlatformDefault = False
               TextSettings.HorzAlign = Center
@@ -12821,8 +12843,8 @@ object frmHome: TfrmHome
           Size.PlatformDefault = False
           TabOrder = 0
           object SYWLHeaderLabel: TLabel
-            Align = Contents
-            Size.Width = 368.000000000000000000
+            Align = Client
+            Size.Width = 304.000000000000000000
             Size.Height = 48.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = 'calendarlabelstyle'
@@ -12839,6 +12861,7 @@ object frmHome: TfrmHome
             StyleLookup = 'buttonstyle'
             TabOrder = 1
             Text = 'Back'
+            OnClick = SYWLBackButtonClick
           end
         end
       end
@@ -13151,6 +13174,16 @@ object frmHome: TfrmHome
             Text = 'Back'
             OnClick = CTIHeaderBackButtonClick
           end
+          object SweepQRButton: TButton
+            Align = MostRight
+            Position.X = 320.000000000000000000
+            Size.Width = 48.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 2
+            Text = 'QR'
+            OnClick = SweepQRButtonClick
+          end
         end
         object Panel18: TPanel
           Align = Top
@@ -13291,7 +13324,7 @@ object frmHome: TfrmHome
             TextSettings.HorzAlign = Center
             Text = 'Select Coin'
           end
-          object Button5: TButton
+          object ClaimListBackButton: TButton
             Align = Left
             Size.Width = 64.000000000000000000
             Size.Height = 48.000000000000000000
@@ -13299,7 +13332,7 @@ object frmHome: TfrmHome
             StyleLookup = 'buttonstyle'
             TabOrder = 1
             Text = 'Back'
-            OnClick = btnSBackClick
+            OnClick = ClaimListBackButtonClick
           end
         end
       end
@@ -13494,7 +13527,7 @@ object frmHome: TfrmHome
           Size.PlatformDefault = False
           TabOrder = 4
           Text = 'OK'
-          OnClick = btnOKAddNewCoinSettingsClick
+          OnClick = NewCoinPrivKeyOKButtonClick
         end
         object ImportPrivKeyLabel: TLabel
           Align = Top
@@ -13587,7 +13620,7 @@ object frmHome: TfrmHome
         CustomIcon = <
           item
           end>
-        IsSelected = False
+        IsSelected = True
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False

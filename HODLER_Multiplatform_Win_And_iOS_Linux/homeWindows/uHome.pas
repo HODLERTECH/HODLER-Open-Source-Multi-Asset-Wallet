@@ -2950,7 +2950,7 @@ begin
   NewCoinDescriptionEdit.Text := '';
   newCoinListNextTAbItem := frmHome.AddNewCoinSettings;
   backTabItem := HOME_TABITEM;
-
+  AddCoinBackTabItem := pageControl.ActiveTab;
   switchTab(PageControl, AddNewCoin);
 end;
 
@@ -3117,26 +3117,6 @@ begin
   OrientationSensor := TOrientationSensor.Create(frmHome);
 {$ENDIF}
 
-  refreshLocalImage := TRotateImage.Create(RefreshLayout);
-  refreshLocalImage.parent := RefreshLayout;
-  refreshLocalImage.Visible := true;
-  refreshLocalImage.Align := TAlignLayout.Right;
-  refreshLocalImage.Width :=32;
-  refreshLocalImage.OnClick := RefreshCurrentWallet;
-  refreshLocalImage.Margins.Right := 15;
-  refreshLocalImage.Margins.Top := 8;
-  refreshLocalImage.Margins.Bottom := 8;
-
-
-  refreshGlobalImage := TRotateImage.Create(GlobalRefreshLayout);
-  refreshGlobalImage.parent := GlobalRefreshLayout;
-  refreshGlobalImage.Visible := true;
-  refreshGlobalImage.Align := TAlignLayout.Top;
-  refreshGlobalImage.height :=32;
-  refreshGlobalImage.OnClick := btnSyncClick;
-  //refreshGlobalImage.Margins.Right := 15;
-  refreshGlobalImage.Margins.Top := 8;
-  refreshGlobalImage.Margins.Bottom := 8;
 
   AccountRelated.InitializeHodler;
   BackupInfoLabel.Position.Y := 100000;

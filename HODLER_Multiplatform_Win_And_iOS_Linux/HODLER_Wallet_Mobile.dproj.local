@@ -124,25 +124,26 @@
     <Transaction>1899-12-30 00:00:00.000.641,C:\Users\HODL\Desktop\Hodler\Androidapi.JNI.Interfaces.pas=</Transaction>
     <Transaction>1899-12-30 00:00:00.000.064,=C:\Users\PC\Desktop\HODLER Core Alpha\029rc\gfx\paperwallet\eqrbig.png</Transaction>
     <Transaction>1899-12-30 00:00:00.000.868,=C:\Users\HODL\Desktop\Hodler_git\new\Languages\DE.lang</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.693,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.429,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.795,C:\Users\PC\Desktop\HODLER Core Alpha\0.2.7andk\additionalUnits\GUIRelated.pas=C:\Users\PC\Desktop\HODLER Core Alpha\0.2.7andk\Unit1.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.897,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.932,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.829,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.603,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.557,C:\Users\hodlerapp\Desktop\Hodler\additionalUnits\SynchronizeThread.pas=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.068,C:\Users\hodlerapp\Desktop\Hodler\coinCode\CryptoCurrency.pas=</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.606,C:\Users\PC\Desktop\HODLER Core Alpha\0.2.7andk\additionalUnits\WalletViewRelated.pas=C:\Users\PC\Desktop\HODLER Core Alpha\0.2.7andk\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.795,C:\Users\PC\Desktop\HODLER Core Alpha\0.2.7andk\additionalUnits\GUIRelated.pas=C:\Users\PC\Desktop\HODLER Core Alpha\0.2.7andk\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.821,=C:\Users\PC\Desktop\HODLER_APP_ALPHA\VM_Snapshots\HodlerVM_160518\Hodler\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.308,=C:\Users\hodlerapp\Desktop\Hodler\FMX.Ani.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.336,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.693,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.932,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.429,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.821,=C:\Users\PC\Desktop\HODLER_APP_ALPHA\VM_Snapshots\HodlerVM_160518\Hodler\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.606,C:\Users\PC\Desktop\HODLER Core Alpha\0.2.7andk\additionalUnits\WalletViewRelated.pas=C:\Users\PC\Desktop\HODLER Core Alpha\0.2.7andk\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.068,C:\Users\hodlerapp\Desktop\Hodler\coinCode\CryptoCurrency.pas=</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.308,=C:\Users\hodlerapp\Desktop\Hodler\FMX.Ani.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.557,C:\Users\hodlerapp\Desktop\Hodler\additionalUnits\SynchronizeThread.pas=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
     <Transaction>2018-12-13 15:20:58.093,=C:\Users\HODL\Desktop\Hodler_git\AW_04_12\HODLER_Multiplatform_Win_And_iOS_Linux\components\TImageTextButtonData.pas</Transaction>
     <Transaction>2018-12-13 15:21:04.360,=C:\Users\HODL\Desktop\Hodler_git\AW_04_12\HODLER_Multiplatform_Win_And_iOS_Linux\components\TRotateImageData.pas</Transaction>
     <Transaction>2018-12-13 16:52:48.436,=C:\Users\HODL\Desktop\Hodler_git\AW_04_12\HODLER_Multiplatform_Win_And_iOS_Linux\token_icons\Encrypted_512_Dark.png</Transaction>
     <Transaction>2018-12-13 16:52:55.052,=C:\Users\HODL\Desktop\Hodler_git\AW_04_12\HODLER_Multiplatform_Win_And_iOS_Linux\token_icons\Encrypted_512_White.png</Transaction>
     <Transaction>2018-12-13 16:53:01.681,=C:\Users\HODL\Desktop\Hodler_git\AW_04_12\HODLER_Multiplatform_Win_And_iOS_Linux\token_icons\Encrypted_seed_Dark.png</Transaction>
     <Transaction>2018-12-13 16:53:08.502,=C:\Users\HODL\Desktop\Hodler_git\AW_04_12\HODLER_Multiplatform_Win_And_iOS_Linux\token_icons\Encrypted_seed_White.png</Transaction>
+    <Transaction>2018-12-14 10:23:24.317,=C:\Users\HODL\Desktop\Hodler_git\AW_04_12\HODLER_Multiplatform_Win_And_iOS_Linux\token_icons\Refresh-PNG-Transparent-Image.png</Transaction>
   </Transactions>
 	<BT_BuildType>AppStore</BT_BuildType>
 	<ProjectSortOrder AutoSort="0" SortType="0">
@@ -308,6 +309,7 @@
     <File Path="token_icons\Encrypted_512_White.png"/>
     <File Path="token_icons\Encrypted_seed_Dark.png"/>
     <File Path="token_icons\Encrypted_seed_White.png"/>
+    <File Path="token_icons\Refresh-PNG-Transparent-Image.png"/>
     <File Path="DW.ThreadedTimer.pas"/>
     <File Path="FMX.Ani.pas"/>
     <File Path="Jet.style"/>

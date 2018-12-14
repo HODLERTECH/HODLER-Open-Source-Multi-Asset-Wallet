@@ -137,26 +137,29 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         end
         inherited Layout1: TLayout
           Size.Width = 245.000000000000000000
-          inherited globalBalance: TLabel
+          inherited Layout32: TLayout
             Size.Width = 245.000000000000000000
-            Size.Height = 58.000000000000000000
-          end
-          inherited globalCurrency: TLabel
-            Position.Y = 58.000000000000000000
-            Size.Width = 245.000000000000000000
-          end
-          inherited SearchLayout: TLayout
-            Size.Width = 245.000000000000000000
-            inherited SearchInDashBrdButton: TSpeedButton
-              Position.X = 213.000000000000000000
-            end
-            inherited HideZeroWalletsCheckBox: TCheckBox
+            inherited globalBalance: TLabel
               Size.Width = 245.000000000000000000
+            end
+            inherited globalCurrency: TLabel
+              Size.Width = 245.000000000000000000
+            end
+            inherited SearchLayout: TLayout
+              Size.Width = 245.000000000000000000
+              inherited SearchInDashBrdButton: TSpeedButton
+                Position.X = 213.000000000000000000
+                Position.Y = 8.000000000000000000
+                Size.Height = 32.000000000000000000
+              end
+              inherited HideZeroWalletsCheckBox: TCheckBox
+                Size.Width = 245.000000000000000000
+              end
             end
           end
         end
         inherited NewCryptoLayout: TLayout
-          Position.Y = 238.000000000000000000
+          Position.Y = 286.000000000000000000
           Size.Width = 245.000000000000000000
           inherited NewTokenButton: TButton
             Position.X = 53.000000000000000000
@@ -164,9 +167,9 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         end
         inherited WalletList: TVertScrollBox
           Size.Width = 245.000000000000000000
-          Size.Height = 16.000000000000000000
+          Size.Height = 64.000000000000000000
           Viewport.Width = 245.000000000000000000
-          Viewport.Height = 16.000000000000000000
+          Viewport.Height = 64.000000000000000000
         end
         inherited OrganizeList: TVertScrollBox
           Viewport.Width = 384.000000000000000000
@@ -185,10 +188,12 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           end
           inherited PopupBox1: TPopupBox
             Position.X = 65.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited BackToBalanceViewLayout: TLayout
-          Position.Y = 274.000000000000000000
+          Position.Y = 322.000000000000000000
           Size.Width = 245.000000000000000000
           inherited BackToBalanceViewButton: TButton
             Position.X = 61.000000000000000000
@@ -1173,6 +1178,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited NewCoinDescriptionEdit: TEdit
             Position.X = 45.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited btnOKAddNewCoinSettings: TButton
@@ -1187,6 +1194,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited NewCoinDescriptionPassEdit: TEdit
             Position.X = 45.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited Panel11: TPanel
@@ -1209,6 +1218,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           end
           inherited OwnXEdit: TEdit
             Position.X = 164.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
       end
@@ -1403,16 +1414,10 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Height = 322.000000000000000000
           Viewport.Width = 245.000000000000000000
           Viewport.Height = 322.000000000000000000
-          inherited bpmnemonicLayout: TLayout
-            Size.Width = 245.000000000000000000
-            inherited MnemonicSeedDescriptionLabel: TLabel
-              Size.Width = 85.000000000000000000
-            end
-          end
           inherited HSBbackupLayout: TLayout
             Size.Width = 245.000000000000000000
             inherited HSBDescriptionLabel: TLabel
-              Size.Width = 245.000000000000000000
+              Size.Width = 215.000000000000000000
             end
             inherited SendWalletFileButton: TButton
               Size.Width = 245.000000000000000000
@@ -1424,7 +1429,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
               Size.Width = 245.000000000000000000
             end
             inherited EncryptedQRDescriptionLabel: TLabel
-              Size.Width = 245.000000000000000000
+              Size.Width = 215.000000000000000000
             end
           end
           inherited Layout28: TLayout
@@ -1747,7 +1752,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         inherited ToolBar17: TToolBar
           Size.Width = 245.000000000000000000
           inherited SYWLHeaderLabel: TLabel
-            Size.Width = 245.000000000000000000
+            Size.Width = 181.000000000000000000
           end
           inherited SYWLBackButton: TButton
             OnClick = nil
@@ -1774,6 +1779,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited GenerateYAddressPasswordEdit: TEdit
             Position.X = 45.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited Panel14: TPanel
@@ -1783,6 +1790,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           end
           inherited SpinBox1: TSpinBox
             Position.X = 125.000000000000000000
+            Position.Y = 56.000000000000000000
+            Size.Height = 32.000000000000000000
           end
           inherited Layout57: TLayout
             Size.Width = 125.000000000000000000
@@ -1925,12 +1934,16 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited CoinPrivKeyDescriptionEdit: TEdit
             Position.X = 45.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited Panel22: TPanel
           Size.Width = 245.000000000000000000
           inherited CoinPrivKeyPassEdit: TEdit
             Position.X = 45.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited NewCoinPrivKeyOKButton: TButton
@@ -1974,9 +1987,6 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited Label18: TLabel
             Size.Width = 245.000000000000000000
-          end
-          inherited Button10: TButton
-            OnClick = nil
           end
         end
         inherited ImportPrivateKeyInPrivButton: TButton

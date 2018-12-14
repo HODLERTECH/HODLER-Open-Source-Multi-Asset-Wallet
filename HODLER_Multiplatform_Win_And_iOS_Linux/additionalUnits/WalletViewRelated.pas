@@ -170,6 +170,7 @@ begin
 
     newCoinListNextTabItem := ClaimWalletListTabItem;
 
+    AddCoinBackTabItem := pageControl.ActiveTab;
     switchTab(PageControl, AddNewCoin );
   end;
 
@@ -192,7 +193,7 @@ begin
     NewCoinDescriptionPassEdit.Text := '';
     NewCoinDescriptionEdit.Text := '';
     newCoinListNextTabItem := AddCoinFromPrivKeyTabItem;
-
+    AddCoinBackTabItem := pageControl.ActiveTab;
     switchTab(PageControl, AddNewCoin );
 
   end;
@@ -257,7 +258,7 @@ begin
   frmhome.ownXCheckBox.EnableD := true;
   frmhome.IsPrivKeySwitch.EnableD := true;
 
-  frmhome.ownXedit.Text := intToStr(getFirstUnusedYforCoin(newcoinID));
+  frmhome.ownXedit.Text := intToStr(getFirstUnusedXforCoin(newcoinID));
 
   //frmhome.PrivateKeySettingsLayout.Visible := false;
   frmhome.LoadingKeyDataAniIndicator.Visible := false;
@@ -1186,7 +1187,7 @@ procedure newCoin(Sender: TObject);
 
 
 
-        newID := getFirstUnusedYforCoin(newcoinID);
+        newID := getFirstUnusedXforCoin(newcoinID);
 
         if frmhome.ownXCheckBox.IsChecked then
           newID := strtoint(frmhome.ownXedit.Text);

@@ -15,7 +15,7 @@ uses
   FMX.Clipboard, FMX.VirtualKeyBoard, JSON,
   languages,
 
-  FMX.Media, FMX.Objects, uEncryptedZipFile, System.Zip
+  FMX.Media, FMX.Objects, uEncryptedZipFile, System.Zip , TRotateImageData
 {$IFDEF ANDROID},
   FMX.VirtualKeyBoard.Android,
   Androidapi.JNI,
@@ -647,6 +647,28 @@ begin
       btn.img.Margins.Bottom := 20;
       btn.OnClick := SendEncryptedSeedButtonClick;
 
+      refreshLocalImage := TRotateImage.Create(RefreshLayout);
+      refreshLocalImage.parent := RefreshLayout;
+      refreshLocalImage.Visible := true;
+      refreshLocalImage.Align := TAlignLayout.Right;
+      refreshLocalImage.Width :=32;
+      refreshLocalImage.OnClick := RefreshCurrentWallet;
+      refreshLocalImage.Margins.Right := 15;
+      refreshLocalImage.Margins.Top := 8;
+      refreshLocalImage.Margins.Bottom := 8;
+
+
+      refreshGlobalImage := TRotateImage.Create(GlobalRefreshLayout);
+      refreshGlobalImage.parent := GlobalRefreshLayout;
+      refreshGlobalImage.Visible := true;
+      refreshGlobalImage.Align := TAlignLayout.Top;
+      refreshGlobalImage.height :=32;
+      refreshGlobalImage.OnClick := btnSyncClick;
+      //refreshGlobalImage.Margins.Right := 15;
+      refreshGlobalImage.Margins.Top := 8;
+      refreshGlobalImage.Margins.Bottom := 8;
+
+
     end;
 
   except
@@ -730,7 +752,7 @@ begin
 
     AccountsListPanel.Height :=
       min(PageControl.Height - ChangeAccountButton.Height,
-      length(AccountsNames) * 48 + 48);
+      length(AccountsNames) * 36 + 48);
   end;
 end;
 

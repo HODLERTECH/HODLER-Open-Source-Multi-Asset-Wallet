@@ -309,6 +309,11 @@ begin
                     WIFEdit.Text := ReadResult.Text;
                     switchTab(PageControl, ImportPrivKeyTabItem);
                   end
+                  else if cameraBackTabItem = ClaimTabItem then
+                  begin
+                    PrivateKeyEditSV.Text := ReadResult.Text;
+                    switchTab(PageControl, ClaimTabItem );
+                  end
                   else if cameraBackTabItem = HOME_TABITEM then
                   begin
                     amountFromQR := '';

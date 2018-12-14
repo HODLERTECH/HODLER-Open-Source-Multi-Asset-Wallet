@@ -740,6 +740,10 @@
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>ENCRYPTED_SEED_WHITE</ResourceId>
         </RcItem>
+        <RcItem Include="token_icons\Refresh-PNG-Transparent-Image.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>RELOAD_IMAGE</ResourceId>
+        </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -3248,6 +3252,12 @@
                 <DeployFile LocalName="iOSDevice32\Release\HODLER_Wallet_Mobile" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="iOSDevice32">
                         <RemoteName>HODLER_Wallet_Mobile</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\Refresh-PNG-Transparent-Image.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
