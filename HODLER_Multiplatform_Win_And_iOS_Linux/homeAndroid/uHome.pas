@@ -736,12 +736,23 @@ type
     Layout32: TLayout;
     Button10: TButton;
     SweepQRButton: TButton;
-    Layout33: TLayout;
+    GridPanelLayout1: TGridPanelLayout;
+    FiatStaticLabel: TLabel;
+    WelcometabFiatPopupBox: TPopupBox;
+    ThankStaticLabel: TLabel;
+    SuggestionsStaticLabel: TLabel;
+    ContactAddressStaticLabel: TLabel;
+    BTCNoTransactionLayout: TLayout;
+    motransactionStaticLabel: TLabel;
+    BuyBTCOnLabel: TLabel;
+    Image1: TImage;
+    coinbaseImage: TImage;
     Layout37: TLayout;
-    PopupBox2: TPopupBox;
-    Label6: TLabel;
-    FlowLayout1: TFlowLayout;
-    Layout3D1: TLayout3D;
+    emptyAddressesLayout: TLayout;
+    NoPrivateKeyToExportLabel: TLabel;
+    Layout58: TLayout;
+    exportemptyaddressesSwitch: TSwitch;
+    exportemptyAddressesLabel: TLabel;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -959,6 +970,8 @@ type
     procedure SweepQRButtonClick(Sender: TObject);
     procedure NewCoinPrivKeyOKButtonClick(Sender: TObject);
     procedure btnChangeDescryptionBackClick(Sender: TObject);
+    procedure coinbaseImageClick(Sender: TObject);
+    procedure exportemptyaddressesSwitchClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -1051,7 +1064,7 @@ var
   decryptSeedBackTabItem: TTabItem;
   cameraBackTabItem: TTabItem;
   dashboardDecimalsPrecision: Integer = 6;
-  dashBoardFontSize: Integer = 18;
+
   flagWVPrecision: Boolean = true;
   CurrentCryptoCurrency: CryptoCurrency;
   CurrentCoin: TwalletInfo;
@@ -1119,9 +1132,15 @@ shareFile(System.IOUtils.TPath.Combine( {$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System
       currentAccount.name + '_EQR_BIG' + '.png'),false);
 end;
 
+procedure TfrmHome.exportemptyaddressesSwitchClick(Sender: TObject);
+begin
+  createExportPrivateKeyList
+end;
+
 procedure TfrmHome.ExportPrivateKeyButtonClick(Sender: TObject);
 begin
   createExportPrivateKeyList();
+  exportemptyaddressesSwitch.IsChecked := false;
   switchTab(PageControl, ExportPrivCoinListTabItem);
 end;
 
@@ -3344,8 +3363,54 @@ begin
 end;
 
 procedure TfrmHome.Image1Click(Sender: TObject);
+var
+  wd: TwalletInfo;
+  tt: Token;
+  myURI: AnsiString;
+  URL: WideString;
+{$IFDEF ANDROID}
+  Intent: JIntent;
+
+{$ENDIF}
 begin
+  myURI := 'https://www.coinbase.com/';
+{$IFDEF ANDROID}
+  Intent := TJIntent.Create;
+  Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
+  Intent.setData(StrToJURI(myURI));
+  SharedActivity.startActivity(Intent);
+
+{$ELSE}
+  URL := myURI;
+  ShellExecute(0, 'OPEN', PWideChar(URL), '', '', { SW_SHOWNORMAL } 1);
+{$ENDIF}
+end;
+{begin
   btnSyncClick(nil);
+end;   }
+
+procedure TfrmHome.coinbaseImageClick(Sender: TObject);
+var
+  wd: TwalletInfo;
+  tt: Token;
+  myURI: AnsiString;
+  URL: WideString;
+{$IFDEF ANDROID}
+  Intent: JIntent;
+
+{$ENDIF}
+begin
+  myURI := 'https://www.coinbase.com/';
+{$IFDEF ANDROID}
+  Intent := TJIntent.Create;
+  Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
+  Intent.setData(StrToJURI(myURI));
+  SharedActivity.startActivity(Intent);
+
+{$ELSE}
+  URL := myURI;
+  ShellExecute(0, 'OPEN', PWideChar(URL), '', '', { SW_SHOWNORMAL } 1);
+{$ENDIF}
 end;
 
 procedure TfrmHome.ImageControl4Click(Sender: TObject);

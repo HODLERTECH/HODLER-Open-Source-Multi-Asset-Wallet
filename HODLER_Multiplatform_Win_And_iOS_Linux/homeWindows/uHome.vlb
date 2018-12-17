@@ -1,5 +1,7 @@
 ﻿[]
-Coordinates=1857,771,160,51
+Coordinates=1670,1210,71,69
+Visible=True
+ExplicitSubNodes=ItemIndex;Items.Text
 
 [WVReceive]
 Coordinates=404,270,69,33
@@ -1153,11 +1155,6 @@ Coordinates=1984,1210,110,51
 
 [Layout30]
 Coordinates=1846,1210,59,33
-
-[WelcomeTabLanguageBox]
-Coordinates=1670,1210,71,69
-Visible=True
-ExplicitSubNodes=ItemIndex;Items.Text
 
 [bpmnemonicLayout]
 Coordinates=1802,1136,59,33

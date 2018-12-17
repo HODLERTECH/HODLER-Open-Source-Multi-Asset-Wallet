@@ -367,6 +367,8 @@ const
   API_PRIV = {$I 'private_key.key' };
 
 var
+  dashBoardFontSize: Integer =
+  {$IF (DEFINED(MSWINDOWS) OR DEFINED(LINUX))}14{$ELSE}8{$ENDIF};
   TCAIterations: integer;
   userSavedSeed: Boolean;
   saveSeedInfoShowed: Boolean = false;
@@ -1606,11 +1608,15 @@ begin
   ts.Free;
 
   frmhome.CurrencyBox.Items.Clear;
+  frmhome.WelcometabFiatPopupBox.Items.Clear;
   for symbol in frmhome.CurrencyConverter.availableCurrency.Keys do
   begin
     frmhome.CurrencyBox.Items.Add(symbol);
+    frmhome.WelcometabFiatPopupBox.Items.Add(symbol);
   end;
   frmhome.CurrencyBox.ItemIndex := frmhome.CurrencyBox.Items.IndexOf
+    (frmhome.CurrencyConverter.symbol);
+  frmhome.WelcometabFiatPopupBox.ItemIndex := frmhome.CurrencyBox.Items.IndexOf
     (frmhome.CurrencyConverter.symbol);
 
   ts := TStringList.Create();

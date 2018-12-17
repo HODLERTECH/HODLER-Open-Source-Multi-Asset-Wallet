@@ -1527,6 +1527,15 @@ begin
     begin
       frmhome.BCHCashAddrButtonClick(Sender);
     end;
+
+    if ( currentCoin.coin = 0 ) and ( length(currentCoin.history) = 0 ) then
+    begin
+      frmhome.BTCNoTransactionLayout.visible := true;
+    end
+    else
+    begin
+      frmhome.BTCNoTransactionLayout.visible := false;
+    end;
     // changeYbutton.Text := 'Change address (' + intToStr(CurrentCoin.x) +','+inttoStr(CurrentCoin.y) + ')';
     if PageControl.ActiveTab = HOME_TABITEM then
       WVTabControl.ActiveTab := WVBalance;

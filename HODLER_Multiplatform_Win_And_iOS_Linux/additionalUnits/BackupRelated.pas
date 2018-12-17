@@ -81,7 +81,7 @@ begin
   begin
 
     if ((currentAccount.myCoins[i].confirmed + currentAccount.myCoins[i]
-      .unconfirmed) <> 0) then
+      .unconfirmed) <> 0) or frmhome.exportemptyaddressesSwitch.ischecked then
     begin
 
       panel := TPanel.create(frmhome.ExportPrivKeyListVertScrollBox);
@@ -127,6 +127,8 @@ begin
 
     end;
   end;
+  //showmessage( inttoStr(frmhome.ExportPrivKeyListVertScrollBox.Content.ChildrenCount) ) ;
+  frmhome.emptyAddressesLayout.visible := ( frmhome.ExportPrivKeyListVertScrollBox.Content.ChildrenCount <= 1 );
 
 end;
 

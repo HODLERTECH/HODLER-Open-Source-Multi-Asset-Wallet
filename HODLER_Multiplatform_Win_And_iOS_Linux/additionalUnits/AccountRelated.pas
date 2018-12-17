@@ -578,9 +578,11 @@ begin
       for symbol in CurrencyConverter.availableCurrency.Keys do
       begin
         CurrencyBox.Items.Add(symbol);
+        WelcometabFiatPopupBox.Items.Add(symbol);
       end;
 
       CurrencyBox.ItemIndex := CurrencyBox.Items.IndexOf('USD');
+      WelcometabFiatPopupBox.ItemIndex := CurrencyBox.Items.IndexOf('USD');
       refreshCurrencyValue;
       SystemTimer.Enabled := SYSTEM_APP;
       linkLabel.Visible := not SYSTEM_APP;

@@ -434,8 +434,6 @@ type
     Layout30: TLayout;
     OtherOptionsImage: TImage;
     Layout29: TLayout;
-    WelcomeTabLanguageBox: TPopupBox;
-    WTIChangeLanguageLabel: TLabel;
     switchLegacyp2pkhButton: TButton;
     switchCompatiblep2shButton: TButton;
     SwitchSegwitp2wpkhButton: TButton;
@@ -749,6 +747,26 @@ type
     ToolBar17: TToolBar;
     SYWLHeaderLabel: TLabel;
     SYWLBackButton: TButton;
+    BTCNoTransactionLayout: TLayout;
+    motransactionStaticLabel: TLabel;
+    BuyBTCOnLabel: TLabel;
+    Layout26: TLayout;
+    Image10: TImage;
+    GridPanelLayout1: TGridPanelLayout;
+    WTIChangeLanguageLabel: TLabel;
+    WelcomeTabLanguageBox: TPopupBox;
+    FiatStaticLabel: TLabel;
+    WelcometabFiatPopupBox: TPopupBox;
+    Layout27: TLayout;
+    ContactAddressStaticLabel: TLabel;
+    SuggestionsStaticLabel: TLabel;
+    ThankStaticLabel: TLabel;
+    coinbaseImage: TImage;
+    emptyAddressesLayout: TLayout;
+    NoPrivateKeyToExportLabel: TLabel;
+    Layout58: TLayout;
+    exportemptyaddressesSwitch: TSwitch;
+    exportemptyAddressesLabel: TLabel;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -967,6 +985,8 @@ type
     procedure AAccBackButtonClick(Sender: TObject);
     procedure EPCLTIBackButtonClick(Sender: TObject);
     procedure SYWLBackButtonClick(Sender: TObject);
+    procedure coinbaseImageClick(Sender: TObject);
+    procedure exportemptyaddressesSwitchSwitch(Sender: TObject);
 
   private
     { Private declarations }
@@ -1066,7 +1086,8 @@ var
   decryptSeedBackTabItem: TTabItem;
   cameraBackTabItem: TTabItem;
   dashboardDecimalsPrecision: Integer = 6;
-  dashBoardFontSize: Integer = 14;
+  //dashBoardFontSize: Integer =
+  //{$IF (DEFINED(MSWINDOWS) OR DEFINED(LINUX))}14{$ELSE}8{$ENDIF};
   flagWVPrecision: Boolean = true;
   CurrentCryptoCurrency: CryptoCurrency;
   CurrentCoin: TwalletInfo;
@@ -1336,6 +1357,7 @@ end;
 procedure TfrmHome.ExportPrivateKeyButtonClick(Sender: TObject);
 begin
   createExportPrivateKeyList();
+  exportemptyaddressesSwitch.IsChecked := false;
   switchTab(PageControl, ExportPrivCoinListTabItem);
 end;
 
@@ -2742,6 +2764,11 @@ shareFile(System.IOUtils.TPath.Combine(HOME_PATH,
       currentAccount.name + '_EQR_BIG' + '.png'),false);
 end;
 
+procedure TfrmHome.exportemptyaddressesSwitchSwitch(Sender: TObject);
+begin
+  createExportPrivateKeyList();
+end;
+
 procedure TfrmHome.Button2Click(Sender: TObject);
 var
   List: TStringList;
@@ -3512,6 +3539,30 @@ begin
     FService.HideVirtualKeyboard();
   end;
 
+end;
+
+procedure TfrmHome.coinbaseImageClick(Sender: TObject);
+var
+  wd: TwalletInfo;
+  tt: Token;
+  myURI: AnsiString;
+  URL: WideString;
+{$IFDEF ANDROID}
+  Intent: JIntent;
+
+{$ENDIF}
+begin
+  myURI := 'https://www.coinbase.com/';
+{$IFDEF ANDROID}
+  Intent := TJIntent.Create;
+  Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
+  Intent.setData(StrToJURI(myURI));
+  SharedActivity.startActivity(Intent);
+
+{$ELSE}
+  URL := myURI;
+  ShellExecute(0, 'OPEN', PWideChar(URL), '', '', { SW_SHOWNORMAL } 1);
+{$ENDIF}
 end;
 
 procedure TfrmHome.Panel1Click(Sender: TObject);
