@@ -388,6 +388,8 @@ var
   backTabItem : TTabItem;
   WDToExportPrivKey : TWalletInfo;
   AddCoinBackTabItem  : TTabitem;
+  createPasswordBackTabItem : TTabItem;
+  RestoreFromFileBackTabItem : TTabItem;
 
 implementation
 

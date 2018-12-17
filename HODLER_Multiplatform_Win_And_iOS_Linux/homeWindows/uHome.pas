@@ -1734,6 +1734,7 @@ begin
   retypePass.Text := '';
   btnCreateWallet.Text := dictionary('StartRecoveringWallet');
   procCreateWallet := btnQRClick;
+  createPasswordBackTabItem := PageControl.ActiveTab;
   switchTab(PageControl, createPassword);
 
 end;
@@ -1799,6 +1800,7 @@ begin
   btnCreateWallet.Text := dictionary('StartRecoveringWallet');
   procCreateWallet := btnImpSeedClick;
   AccountNameEdit.Text := getUnusedAccountName();
+  createPasswordBackTabItem := PageControl.ActiveTab;
   switchTab(PageControl, createPassword);
 
 end;
@@ -2054,6 +2056,7 @@ begin
     procCreateWallet := btnGenSeedClick;
     btnCreateWallet.TagString := 'claim';
     // generate list options - '' default ( user chose coin )
+    createPasswordBackTabItem := PageControl.ActiveTab;
     switchTab(PageControl, createPassword);
     exit();
   end;
@@ -2324,6 +2327,7 @@ begin
   retypePass.Text := '';
   btnCreateWallet.Text := dictionary('OpenNewWallet');
   procCreateWallet := btnGenSeedClick;
+  createPasswordBackTabItem := PageControl.ActiveTab;
   switchTab(PageControl, createPassword);
 
 end;
@@ -3184,9 +3188,12 @@ begin
     end
     else
     begin
-
-      if (PageControl.ActiveTab = createPassword) or
-        (PageControl.ActiveTab = SeedCreation) then
+          //  (PageControl.ActiveTab = createPassword) or
+      if (PageControl.ActiveTab = createPassword) then
+      begin
+        switchTab( PageControl, createPasswordBackTabItem );
+      end
+      else if (PageControl.ActiveTab = SeedCreation) then
       begin
         switchTab(PageControl, WelcomeTabItem);
       end

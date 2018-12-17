@@ -1657,7 +1657,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Size.Width = 409.000000000000000000
           Size.Height = 44.000000000000000000
           inherited BackupHeaderLabel: TLabel
-            Size.Width = 409.000000000000000000
+            Size.Width = 345.000000000000000000
             Size.Height = 44.000000000000000000
           end
           inherited BackupBackButton: TButton
@@ -1669,6 +1669,12 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Size.Height = 667.000000000000000000
           Viewport.Width = 409.000000000000000000
           Viewport.Height = 667.000000000000000000
+          inherited bpmnemonicLayout: TLayout
+            Size.Width = 409.000000000000000000
+            inherited MnemonicSeedDescriptionLabel: TLabel
+              Size.Width = 219.000000000000000000
+            end
+          end
           inherited HSBbackupLayout: TLayout
             Size.Width = 409.000000000000000000
             inherited HSBDescriptionLabel: TLabel

@@ -438,7 +438,6 @@ type
     OtherOptionsImage: TImage;
     Layout29: TLayout;
     WelcomeTabLanguageBox: TPopupBox;
-    WTIChangeLanguageLabel: TLabel;
     switchLegacyp2pkhButton: TButton;
     switchCompatiblep2shButton: TButton;
     SwitchSegwitp2wpkhButton: TButton;
@@ -737,6 +736,12 @@ type
     Layout32: TLayout;
     Button10: TButton;
     SweepQRButton: TButton;
+    Layout33: TLayout;
+    Layout37: TLayout;
+    PopupBox2: TPopupBox;
+    Label6: TLabel;
+    FlowLayout1: TFlowLayout;
+    Layout3D1: TLayout3D;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -942,7 +947,7 @@ type
     procedure PrivateKeyManageButtonClick(Sender: TObject);
     procedure ImportPrivateKeyInPrivButtonClick(Sender: TObject);
     procedure SweepButtonClick(Sender: TObject);
-    procedure ExportPrivateKeyButtonClick(Sender: TObject);
+    procedure ExportPrivateKeyButtonClick(Sender: TObject);overload;
     procedure Button10Click(Sender: TObject);
     procedure Button11Click(Sender: TObject);
     procedure CTIHeaderBackButtonClick(Sender: TObject);
@@ -967,6 +972,9 @@ type
 {$IFDEF ANDROID}
     procedure RegisterDelphiNativeMethods();
 {$ENDIF}
+    procedure ExportPrivKeyListButtonClick(Sender: TObject); overload;
+    procedure ExportPrivKeyListButtonClick(Sender: TObject; const Point: TPointF); overload;
+    //procedure ExportPrivateKeyButtonClick(Sender: TObject; const Point: TPointF);overload;
     procedure OpenWalletView(Sender: TObject; const Point: TPointF); overload;
     procedure OpenWalletView(Sender: TObject); overload;
     procedure OpenWalletViewFromYWalletList(Sender: TObject);
@@ -1004,7 +1012,7 @@ type
     procedure TransactionWalletListClick(Sender: TObject);
     procedure CopyParentTagStringToClipboard(Sender: TObject);
     procedure CopyParentTextToClipboard(Sender: TObject);
-    procedure ExportPrivKeyListButtonClick(Sender: TObject);
+
     procedure RefreshCurrentWallet(Sender : TObject);
   var
     refreshLocalImage : TRotateImage;
@@ -1086,6 +1094,7 @@ uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
 {$R *.Windows.fmx MSWINDOWS}
 {$R *.Surface.fmx MSWINDOWS}
 
+
 procedure TFrmHome.RefreshCurrentWallet(Sender : TObject);
 begin
   WalletViewRelated.RefreshCurrentWallet(Sender);
@@ -1114,6 +1123,11 @@ procedure TfrmHome.ExportPrivateKeyButtonClick(Sender: TObject);
 begin
   createExportPrivateKeyList();
   switchTab(PageControl, ExportPrivCoinListTabItem);
+end;
+
+procedure TfrmHome.ExportPrivKeyListButtonClick(Sender: TObject; const Point: TPointF);
+begin
+  WalletViewRelated.ExportPrivKeyListButtonClick(Sender);
 end;
 
 procedure TfrmHome.ExportPrivKeyListButtonClick(Sender: TObject);
@@ -1768,6 +1782,7 @@ begin
   btnCreateWallet.Text := dictionary('StartRecoveringWallet');
   procCreateWallet := btnImpSeedClick;
   AccountNameEdit.Text := getUnusedAccountName();
+  createPasswordBackTabItem := pageControl.ActiveTab;
   switchTab(PageControl, createPassword);
 
 end;
@@ -2687,7 +2702,7 @@ end;
 
 procedure TfrmHome.btnRFFBackClick(Sender: TObject);
 begin
-  switchTab(PageControl, RestoreOptions);
+  switchTab(PageControl, RestoreFromFileBackTabItem );
 end;
 
 procedure TfrmHome.btnCreateNewWalletClick(Sender: TObject);
@@ -3022,8 +3037,11 @@ begin
     else
     begin
 
-      if (PageControl.ActiveTab = createPassword) or
-        (PageControl.ActiveTab = SeedCreation) then
+      if (PageControl.ActiveTab = createPassword) then
+      begin
+        switchTab( PageControl, createPasswordBackTabItem );
+      end
+      else if (PageControl.ActiveTab = SeedCreation) then
       begin
         switchTab(PageControl, WelcomeTabItem);
       end
@@ -3032,14 +3050,22 @@ begin
 {$IFDEF ANDROID}
         SharedActivity.moveTaskToBack(true);
 {$ENDIF}
-      end   // switchTab(PageControl, PrivOptionsTabItem);
+      end   // switchTab(PageControl, PrivOptionsTabItem); fileManager
       else if PageControl.ActiveTab = ClaimTabItem then
       begin
         switchTab(PageControl, ClaimWalletListTabItem);
       end
+      else if PageControl.ActiveTab = RestoreFromFileTabitem then
+      begin
+        switchTab(PageControl, RestoreFromFileBackTabItem);
+      end
       else if PageControl.ActiveTab = ExportPrivCoinListTabItem then
       begin
         switchTab(PageControl, PrivOptionsTabItem);
+      end
+      else if ( PageControl.ActiveTab = fileManager ) or ( PageControl.ActiveTab = HSBPassword ) then
+      begin
+        switchTab(PageControl, RestoreFromFileTabitem );
       end
       else if PageControl.ActiveTab = PasswordForGenerateYAddressesTabItem then
       begin
@@ -3057,7 +3083,7 @@ begin
       begin
         switchTab(PageControl, AddNewCoin);
       end
-      else if PageControl.ActiveTab = EQRView then
+      else if ( PageControl.ActiveTab = EQRView ) or ( PageControl.ActiveTab = seedGenerated )then
       begin
         switchTab(PageControl, backupTabItem );
       end
@@ -3084,8 +3110,12 @@ begin
       else if PageControl.ActiveTab = QRReader then
       begin
         switchTab(PageControl, cameraBackTabItem);
+      end //
+      else if PageControl.ActiveTab = checkSeed then
+      begin
+        switchTab(PageControl, seedGenerated);
       end
-      else if PageControl.ActiveTab = BackupTabItem then
+      else if ( PageControl.ActiveTab = BackupTabItem ) or ( PageControl.ActiveTab = PrivOptionsTabItem ) then
       begin
         switchTab(PageControl, Settings);
       end

@@ -1292,7 +1292,7 @@ inherited frmHome_Surface: TfrmHome_Surface
         inherited ToolBar3: TToolBar
           Size.Width = 1064.000000000000000000
           inherited BackupHeaderLabel: TLabel
-            Size.Width = 1064.000000000000000000
+            Size.Width = 1000.000000000000000000
           end
         end
         inherited VertScrollBox1: TVertScrollBox
@@ -1300,6 +1300,12 @@ inherited frmHome_Surface: TfrmHome_Surface
           Size.Height = 1856.000000000000000000
           Viewport.Width = 1064.000000000000000000
           Viewport.Height = 1856.000000000000000000
+          inherited bpmnemonicLayout: TLayout
+            Size.Width = 1064.000000000000000000
+            inherited MnemonicSeedDescriptionLabel: TLabel
+              Size.Width = 874.000000000000000000
+            end
+          end
           inherited HSBbackupLayout: TLayout
             Size.Width = 1064.000000000000000000
             inherited HSBDescriptionLabel: TLabel

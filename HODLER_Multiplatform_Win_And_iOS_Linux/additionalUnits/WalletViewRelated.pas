@@ -208,6 +208,14 @@ begin
     btnDSBack.OnClick := backBtnDecryptSeed;
     btnDecryptSeed.OnClick := privateKeyPasswordCheck;
     WDToExportPrivKey := TwalletInfo(TfmxObject(Sender).TagObject);
+    {if WDToExportPrivKey <> nil then
+    begin
+      showmessage( WDToExportPrivKey.addr );
+    end
+    else
+    begin
+      showmessage( WDToExportPrivKey.addr );
+    end;  }
   end;
 
 end;
@@ -242,6 +250,7 @@ begin
     btnCreateWallet.TagString := '';
     // generate list options - '' default ( user chose coin )
     AccountNameEdit.Text := getUnusedAccountName();
+    createPasswordBackTabItem := PageControl.ActiveTab;
     switchTab(PageControl, createPassword);
   end;
 

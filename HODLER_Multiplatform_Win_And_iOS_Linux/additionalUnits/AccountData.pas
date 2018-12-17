@@ -168,7 +168,8 @@ begin
     try
 
       result.confirmed := result.confirmed + twi.confirmed;
-      result.unconfirmed := result.unconfirmed + twi.unconfirmed;
+      if twi.unconfirmed > 0 then
+        result.unconfirmed := result.unconfirmed + twi.unconfirmed;
     except
 
     end;

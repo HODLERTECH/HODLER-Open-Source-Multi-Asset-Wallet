@@ -415,6 +415,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             200s
             75s)
           inherited WVBalance: TTabItem
+            Size.Width = 59.000000000000000000
             ExplicitSize.cx = 61.000000000000000000
             ExplicitSize.cy = 26.000000000000000000
             inherited BalancePanel: TPanel

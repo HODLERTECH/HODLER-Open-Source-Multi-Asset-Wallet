@@ -90,7 +90,11 @@ begin
       panel.align := TAlignLayout.Top;
       panel.height := 48;
       panel.tagObject := currentAccount.myCoins[i];
+      {$IF defined(ANDROID) or defined(IOS)}
+      panel.OnTap := frmhome.ExportPrivKeyListButtonClick;
+      {$ELSE}
       panel.onclick := frmhome.ExportPrivKeyListButtonClick;
+      {$ENDIF}
       panel.Position.Y := -1;
 
       lbl := TLabel.create(panel);
@@ -351,12 +355,16 @@ begin
               procedure
               begin
 
+
+                restoreFromFileBackTabItem := PageControl.ActiveTab;
                 RFFPathEdit.Text := System.IOUtils.TPath.GetDownloadsPath();
                 switchTab(pageControl, RestoreFromFileTabitem);
 
               end);
-            RFFPathEdit.Text := 'C:\';
-            switchTab(pageControl, RestoreFromFileTabitem);
+            //RFFPathEdit.Text := 'C:\';
+            //ResotreFromFileBackTabItem
+            //restoreFromFileBackTabItem := PageControl.ActiveTab;
+            //switchTab(pageControl, RestoreFromFileTabitem);
             break;
           end;
         end;
@@ -851,7 +859,14 @@ var
 {$IFDEF MSWINDOWS}lblPrivateKey: TMemo; {$ENDIF}
 begin
   if wd = nil then
-    wd := CurrentCoin;
+  begin
+    //{$IFDEF MSWINDOWS}
+    //wd := CurrentCoin;
+    //{$ELSE}
+    showmessage(' ERROR wd empty ');
+    //{$ENDIF}
+    exit
+  end;
 
   result := true;
   with frmhome do
