@@ -759,7 +759,7 @@ begin
     checkBox.Visible := true;
     checkBox.Align := TAlignLayout.Mostleft;
     checkBox.Margins.Left := 15;
-    checkBox.Width := 48;
+    checkBox.Width := 15;
     panel.TagObject := checkBox;
 
     image := TImage.Create(panel);
@@ -2106,6 +2106,7 @@ begin
     panel.Height := 40;
     panel.Visible := true;
     panel.tag := i;
+    panel.TagFloat := strTofloatDEF(hist[i].data , 0);
     panel.parent := frmhome.TxHistory;
     panel.Position.Y := (((i * 36) div 36) * 36) + 0.1;
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
@@ -2178,6 +2179,16 @@ begin
     end;
 
   end;
+
+  {frmhome.TxHistory.Sort( function (a , b : TfmxObject) : integer
+  begin
+    if a.TagFloat > b.TagFloat then
+      exit(1);
+    if a.TagFloat < b.TagFloat then
+      exit(-1);
+    if a.TagFloat = b.TagFloat then
+      exit(0);
+  end);    }
 
   // frmHome.txHistory.RecalcAbsolute;
   // frmHome.txHistory.RealignContent;

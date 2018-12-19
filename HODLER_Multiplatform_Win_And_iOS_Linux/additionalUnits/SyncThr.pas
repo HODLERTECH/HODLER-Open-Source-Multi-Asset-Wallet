@@ -164,20 +164,148 @@ var
   data: AnsiString;
 begin
 
-  { TThread.Synchronize(nil,
-    procedure
+   /// ////////////////HISTORY//////////////////////////
+  if cc is TWalletInfo then
+  begin
+
+
+    case TWalletInfo(cc).coin of
+      0, 1, 5, 6:
+        begin
+          data := getDataOverHTTP(HODLER_URL + 'getSegwitHistory.php?coin=' +
+            availablecoin[TWalletInfo(cc).coin].name + '&' +
+            segwitParameters(TWalletInfo(cc)));
+
+          if TThread.CurrentThread.CheckTerminated then
+            exit();
+
+          parseCoinHistory(data, TWalletInfo(cc));
+        end;
+      4:
+        begin
+          data := getDataOverHTTP(HODLER_URL + 'getHistory.php?coin=' +
+            availablecoin[TWalletInfo(cc).coin].name + '&address=' +
+            TWalletInfo(cc).addr);
+
+          if TThread.CurrentThread.CheckTerminated then
+            exit();
+
+          parseETHHistory(data, TWalletInfo(cc));
+        end;
+    else
+      begin
+        data := getDataOverHTTP(HODLER_URL + 'getHistory.php?coin=' +
+          availablecoin[TWalletInfo(cc).coin].name + '&address=' +
+          TWalletInfo(cc).addr);
+
+        if TThread.CurrentThread.CheckTerminated then
+          exit();
+
+        parseCoinHistory(data, TWalletInfo(cc));
+      end;
+    end;
+
+  end
+  else
+  begin
+
+    if Token(cc).lastBlock = 0 then
+      Token(cc).lastBlock := getHighestBlockNumber(Token(cc));
+
+    data := getDataOverHTTP(HODLER_ETH + '/?cmd=tokenHistory&addr=' + Token(cc)
+      .addr + '&contract=' + Token(cc).ContractAddress + '&bno=' +
+      inttostr(Token(cc).lastBlock));
+
+    if TThread.CurrentThread.CheckTerminated then
+      exit();
+
+    parseTokenHistory(data, Token(cc));
+
+  end;
+
+  //////////////// BALANCE //////////////////
+  if length(cc.history) = 0 then
+  begin
+    if cc is TWalletInfo then
     begin
-    frmHome.RefreshProgressBar.Visible := true;
-    end); }
+
+
+
+      case TWalletInfo(cc).coin of
+
+        0, 1, 5, 6:
+          begin
+            data := getDataOverHTTP(HODLER_URL + 'getSegwitBalance.php?coin=' +
+              availablecoin[TWalletInfo(cc).coin].name + '&' +
+              segwitParameters(TWalletInfo(cc)));
+
+            if TThread.CurrentThread.CheckTerminated then
+              exit();
+
+            parseBalances(data, TWalletInfo(cc));
+
+          end;
+
+        4:
+          begin
+            data := getDataOverHTTP(HODLER_ETH + '/?cmd=accInfo&addr=' +
+              TWalletInfo(cc).addr);
+
+            if TThread.CurrentThread.CheckTerminated then
+              exit();
+
+            parseDataForETH(data, TWalletInfo(cc));
+          end
+      else
+        begin
+          data := getDataOverHTTP(HODLER_URL + 'getBalance.php?coin=' +
+            availablecoin[TWalletInfo(cc).coin].name + '&address=' +
+            TWalletInfo(cc).addr);
+
+          if TThread.CurrentThread.CheckTerminated then
+            exit();
+
+          parseBalances(data, TWalletInfo(cc));
+
+        end;
+      end;
+
+
+
+    end
+    else if cc is Token then
+    begin
+      data := getDataOverHTTP(HODLER_ETH + '/?cmd=tokenInfo&addr=' + cc.addr +
+        '&contract=' + Token(cc).ContractAddress);
+
+      if TThread.CurrentThread.CheckTerminated then
+        exit();
+
+      if Token(cc).lastBlock = 0 then
+        Token(cc).lastBlock := getHighestBlockNumber(Token(cc));
+
+      TThread.Synchronize(nil,
+        procedure
+        begin
+          frmHome.RefreshProgressBar.Value := 30;
+        end);
+
+      parseDataForERC20(data, Token(cc));
+    end
+    else
+    begin
+      raise Exception.Create('CryptoCurrency Type Error');
+    end;
+
+    exit();
+
+  end;
+
 
   if cc is TWalletInfo then
   begin
 
-    { TThread.Synchronize(nil,
-      procedure
-      begin
-      frmHome.RefreshProgressBar.Value := 10;
-      end); }
+
 
     case TWalletInfo(cc).coin of
 
@@ -235,11 +363,7 @@ begin
       end;
     end;
 
-    { TThread.Synchronize(nil,
-      procedure
-      begin
-      frmHome.RefreshProgressBar.Value := 30;
-      end); }
+
 
   end
   else if cc is Token then
@@ -266,69 +390,7 @@ begin
     raise Exception.Create('CryptoCurrency Type Error');
   end;
 
-  /// ////////////////HISTORY//////////////////////////
-  if cc is TWalletInfo then
-  begin
 
-    { TThread.Synchronize(nil,
-      procedure
-      begin
-      frmHome.RefreshProgressBar.Value := 70;
-      end); }
-
-    case TWalletInfo(cc).coin of
-      0, 1, 5, 6:
-        begin
-          data := getDataOverHTTP(HODLER_URL + 'getSegwitHistory.php?coin=' +
-            availablecoin[TWalletInfo(cc).coin].name + '&' +
-            segwitParameters(TWalletInfo(cc)));
-
-          if TThread.CurrentThread.CheckTerminated then
-            exit();
-
-          parseCoinHistory(data, TWalletInfo(cc));
-        end;
-      4:
-        begin
-          data := getDataOverHTTP(HODLER_URL + 'getHistory.php?coin=' +
-            availablecoin[TWalletInfo(cc).coin].name + '&address=' +
-            TWalletInfo(cc).addr);
-
-          if TThread.CurrentThread.CheckTerminated then
-            exit();
-
-          parseETHHistory(data, TWalletInfo(cc));
-        end;
-    else
-      begin
-        data := getDataOverHTTP(HODLER_URL + 'getHistory.php?coin=' +
-          availablecoin[TWalletInfo(cc).coin].name + '&address=' +
-          TWalletInfo(cc).addr);
-
-        if TThread.CurrentThread.CheckTerminated then
-          exit();
-
-        parseCoinHistory(data, TWalletInfo(cc));
-      end;
-    end;
-
-  end
-  else
-  begin
-
-    if Token(cc).lastBlock = 0 then
-      Token(cc).lastBlock := getHighestBlockNumber(Token(cc));
-
-    data := getDataOverHTTP(HODLER_ETH + '/?cmd=tokenHistory&addr=' + Token(cc)
-      .addr + '&contract=' + Token(cc).ContractAddress + '&bno=' +
-      inttostr(Token(cc).lastBlock));
-
-    if TThread.CurrentThread.CheckTerminated then
-      exit();
-
-    parseTokenHistory(data, Token(cc));
-
-  end;
   { TThread.Synchronize(nil,
     procedure
     begin
