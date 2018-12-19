@@ -319,7 +319,7 @@ Function StrToQRBitmap(Str: AnsiString; pixelSize: integer = 6): TBitmap;
 procedure shareFile(path: AnsiString;deleteSourceFile:Boolean=true);
 procedure synchronizeCurrencyValue();
 procedure LoadCurrencyFiatFromFile();
-function bitcoinCashAddressToCashAddress(address: AnsiString): AnsiString;
+function bitcoinCashAddressToCashAddress(address: AnsiString ; showName : boolean = true): AnsiString;
 function BCHCashAddrToLegacyAddr(address: AnsiString): AnsiString;
 function CreateNewAccount(name, pass, seed: AnsiString): Account;
 procedure AddAccountToFile(ac: Account);
@@ -368,7 +368,7 @@ const
 
 var
   dashBoardFontSize: Integer =
-  {$IF (DEFINED(MSWINDOWS) OR DEFINED(LINUX))}14{$ELSE}8{$ENDIF};
+  {$IF (DEFINED(MSWINDOWS) OR DEFINED(LINUX))}14{$ELSE}14{$ENDIF};
   TCAIterations: integer;
   userSavedSeed: Boolean;
   saveSeedInfoShowed: Boolean = false;
@@ -1539,7 +1539,7 @@ begin
 
 end;
 
-function bitcoinCashAddressToCashAddress(address: AnsiString): AnsiString;
+function bitcoinCashAddressToCashAddress(address: AnsiString ; showName : boolean = true): AnsiString;
 var
   intarr: TIntegerArray;
   checksum: TIntegerArray;
@@ -1574,7 +1574,10 @@ begin
   checksum := CreateChecksum8('bitcoincash', intarr);
 
   temparr := concat(intarr, checksum);
-  result := 'bitcoincash:' + bech32.rawencode(temparr);
+  if showname then
+    result := 'bitcoincash:' + bech32.rawencode(temparr)
+  else
+    result := bech32.rawencode(temparr)
 
 end;
 

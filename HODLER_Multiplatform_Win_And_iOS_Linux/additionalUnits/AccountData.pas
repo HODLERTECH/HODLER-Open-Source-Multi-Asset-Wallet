@@ -91,7 +91,10 @@ begin
 
   result := 0.0;
   for twi in getWalletWithX(wi.X, TWalletInfo(wi).coin) do
-    result := result + TWalletInfo(twi).getUnconfirmedFiat;
+  begin
+    if TWalletInfo(twi).unconfirmed > 0 then
+      result := result + TWalletInfo(twi).getUnconfirmedFiat;
+  end;
 
 end;
 

@@ -972,6 +972,7 @@ type
     procedure btnChangeDescryptionBackClick(Sender: TObject);
     procedure coinbaseImageClick(Sender: TObject);
     procedure exportemptyaddressesSwitchClick(Sender: TObject);
+    procedure SYWLBackButtonTap(Sender: TObject; const Point: TPointF);
 
   private
     { Private declarations }
@@ -2025,7 +2026,7 @@ end;
 procedure TfrmHome.privateKeyPasswordCheck(Sender: TObject);
 begin
   try
-    if BackupRelated.PKCheckPassword(Sender) then
+    if BackupRelated.PKCheckPassword( Sender , WDToExportPrivKey ) then
       switchTab(PageControl, ExportKeyScreen);
   except
     on E: Exception do
@@ -2078,9 +2079,10 @@ begin
   TThread.CreateAnonymousThread(
     procedure()
     begin
-      SyncThr.SynchronizeCryptoCurrency(CurrentCoin);
-      reloadWalletView;
-    end)
+      //SyncThr.SynchronizeCryptoCurrency(CurrentCoin);
+      //reloadWalletView;
+      RefreshCurrentWallet(Sender);
+    end).start();
 end;
 
 procedure TfrmHome.TransactionWaitForSendLinkLabelClick(Sender: TObject);
@@ -3532,6 +3534,11 @@ begin
 end;
 
 procedure TfrmHome.SYWLBackButtonClick(Sender: TObject);
+begin
+  switchTab(pagecontrol , WalletView);
+end;
+
+procedure TfrmHome.SYWLBackButtonTap(Sender: TObject; const Point: TPointF);
 begin
   switchTab(pagecontrol , WalletView);
 end;

@@ -1572,7 +1572,7 @@ begin
 
     if TWalletInfo(CurrentCryptoCurrency).coin in [3, 7] then
       frmhome.wvAddress.Text := bitcoinCashAddressToCashAddress
-        (CurrentCryptoCurrency.addr)
+        (CurrentCryptoCurrency.addr , false)
     else
       frmhome.wvAddress.Text := CurrentCryptoCurrency.addr;
 
