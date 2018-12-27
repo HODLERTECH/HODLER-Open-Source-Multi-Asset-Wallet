@@ -80,8 +80,7 @@ begin
   for i := 0 to (length(currentAccount.myCoins) - 1) do
   begin
 
-    if ((currentAccount.myCoins[i].confirmed + currentAccount.myCoins[i]
-      .unconfirmed) <> 0) or frmhome.exportemptyaddressesSwitch.ischecked then
+    if ((currentAccount.myCoins[i].confirmed) <> 0) or frmhome.exportemptyaddressesSwitch.ischecked then
     begin
 
       panel := TPanel.create(frmhome.ExportPrivKeyListVertScrollBox);
@@ -121,8 +120,7 @@ begin
       bilancelbl.visible := true;
       bilancelbl.margins.right := 15;
       bilancelbl.Text := BigIntegerBeautifulStr
-        ((currentAccount.myCoins[i].confirmed + currentAccount.myCoins[i]
-        .unconfirmed), currentAccount.myCoins[i].decimals);
+        ((currentAccount.myCoins[i].confirmed), currentAccount.myCoins[i].decimals);
       bilancelbl.TextSettings.HorzAlign := TTextAlign.Trailing;
 
     end;
@@ -199,6 +197,7 @@ begin
   if isHex(tempPriv) and (length(tempPriv) = 64) then
   begin
     out := tempPriv;
+    isCompressed := frmHome.CompressedPrivKeySVCheckBox.isChecked;
   end
   else
   begin

@@ -92,8 +92,7 @@ begin
   result := 0.0;
   for twi in getWalletWithX(wi.X, TWalletInfo(wi).coin) do
   begin
-    if TWalletInfo(twi).unconfirmed > 0 then
-      result := result + TWalletInfo(twi).getUnconfirmedFiat;
+          result := result + TWalletInfo(twi).getUnconfirmedFiat;
   end;
 
 end;
@@ -171,8 +170,7 @@ begin
     try
 
       result.confirmed := result.confirmed + twi.confirmed;
-      if twi.unconfirmed > 0 then
-        result.unconfirmed := result.unconfirmed + twi.unconfirmed;
+      result.unconfirmed := result.unconfirmed + twi.unconfirmed;
     except
 
     end;
@@ -430,7 +428,7 @@ begin
       wd.orderInWallet := strtoInt(panelYPosition);
       wd.EncryptedPrivKey := EncryptedPrivateKey;
       wd.isCompressed := strToBool(isCompressed);
-
+      wd.uniq:=Random($4ffffff);
       wd.wid := Length(myCoins);
 
       // coinJson.TryGetValue<TJsonObject>('CryptoCurrencyData', ccData);

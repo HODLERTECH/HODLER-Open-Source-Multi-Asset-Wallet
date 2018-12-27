@@ -2356,14 +2356,14 @@ end;
 
 procedure TfrmHome.ConfirmSendClaimCoinButtonClick(Sender: TObject);
 var
-  temp: Integer;
+  temp: twalletinfo;
 begin
-  temp := CurrentCoin.coin;
-  CurrentCoin.coin := 7;
+  temp := CurrentCoin;
+  CurrentCoin.coin := FromClaimWD.coin;
   WalletViewRelated.PrepareSendTabAndSend(FromClaimWD, ToClaimWD.addr,
     FromClaimWD.confirmed - BigInteger(1700), BigInteger(1700), '',
-    AvailableCoin[7].name);
-  CurrentCoin.coin := temp;
+    AvailableCoin[FromClaimWD.coin].name);
+  CurrentCoin := temp;
 end;
 
 procedure TfrmHome.CopyPrivateKeyButtonClick(Sender: TObject);

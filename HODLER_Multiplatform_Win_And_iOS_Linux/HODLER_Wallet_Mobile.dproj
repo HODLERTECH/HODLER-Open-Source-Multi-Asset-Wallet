@@ -372,9 +372,9 @@
         <AUP_CALL_PHONE>false</AUP_CALL_PHONE>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <AUP_VIBRATE>true</AUP_VIBRATE>
-        <PF_KeyStorePass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D497F76E2718773C8C2FA9FC366BAA2367E043F22DA163545DEE5E022DEC958F30ED54CFA80BFF8AF10075B1D02922F3E6A1DAB0938E3AF16A0447B789E65AF9A9822ED7D054670E82362FD570A38D4679D57CC9CFA29D027DC3A91F24FFDA40DFA8D2DBF8C2DA48F2392E6B68F10B9995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_KeyStorePass>
+        <PF_KeyStorePass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D497F76E2718773C8C20A3767CA1473B87E8DA47E658CFDA0A978428620DC94ADB50B79FACEBFA7AF08072C1D0292093E081DF9097FE3BE16B1446A788765D19A8422F07D0B462AE80D9279F3AB961DE9F0DE4EC00FB345C299A76956FFE86D53125310BF8C2DA48F2392E6B68F10B9995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_KeyStorePass>
         <BT_BuildType>Debug</BT_BuildType>
-        <DCC_UnitSearchPath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;CryptoLib_output\Android\Release;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <Debugger_DebugSourcePath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_iOSDevice32)'!=''">
@@ -435,9 +435,9 @@
         <AUP_WRITE_CALENDAR>false</AUP_WRITE_CALENDAR>
         <AUP_CALL_PHONE>false</AUP_CALL_PHONE>
         <AUP_VIBRATE>true</AUP_VIBRATE>
-        <PF_KeyStorePass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A9A3D4E3461C7AC1CC5726FA95C375BABB361604372280162A45D6E5EA228CC90BF304D51EFAE2BFD6AF4307031D1B92423E061DE8090BE3F016FF446E788F659D641BBE9E834000E1779D62FD570A38D4679D57CC9CFA29D027DC3A91F24FFDA40DFA8D2DBF8C2DA48F2392E6B68F10B9995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_KeyStorePass>
+        <PF_KeyStorePass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D497F76E2718773C8C20A3767CA1473B87E8DA47E658CFDA0A978428620DC94ADB50B791AE0A6B9DF513A073AF34532BDE11DFB0966E3F516CD4463788765D19A8422B77D004622E870925FF3B5961CE9B2DE54C017B37AC285A72756E2E879535153525FB134D7FF7FAFFF9173C78A1AF9CAB95EB85162F8B9A9DE4A6F03A4A648</PF_KeyStorePass>
         <PF_AliasKey>hodler.tech</PF_AliasKey>
-        <PF_AliasKeyPass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D497F76E2718773C8C20A3767CA1473B87E8DA47E658CFDA0A978428620DC94ADB50B791AE0A6B9DF513A073AF345323E461DA60920E3C216B9443178C3659D9AC222A37D004623E82B921BF3F9961DE9EADE57C063B37AC2F9A77456A0E879535053015F9234F9FF7FAFB49124C78A995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_AliasKeyPass>
+        <PF_AliasKeyPass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D497F76E2718773C8C20A3767CA1473B87E8DA47E658CFDA0A978428620DC94ADB50B791AE0A6B9DF513A073AF34532BDE10DC90C94A7BA16E14466789665B39ADE22F97D1E4670E8659205F3AB964FE9BBDE41C04DB355C2F2A72F56CDE814534053115FE334A6FF21AFF29116C7961AE5DADE5B151534F8B9A9DE4A6F03A4A648</PF_AliasKeyPass>
         <AUP_READ_PHONE_STATE>false</AUP_READ_PHONE_STATE>
         <AUP_ACCESS_COARSE_LOCATION>false</AUP_ACCESS_COARSE_LOCATION>
         <AUP_ACCESS_FINE_LOCATION>false</AUP_ACCESS_FINE_LOCATION>
@@ -446,7 +446,7 @@
         <VerInfo_Keys>package=tech.hodler.core;label=HODLER Multi-Asset Wallet;versionCode=23;versionName=0.3.1;persistent=False;restoreAnyVersion=False;installLocation=preferExternal;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <Debugger_RunParams>-debugport=13376</Debugger_RunParams>
-        <DCC_UnitSearchPath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;CryptoLib_output\Android\Release;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_iOSDevice32)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
@@ -657,581 +657,6 @@
         <DCCReference Include="additionalUnits\bi\Velthuis.XorShifts.pas"/>
         <DCCReference Include="components\TImageTextButtonData.pas"/>
         <DCCReference Include="components\TRotateImageData.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\CryptoPro\ClpECGost3410NamedCurves.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\CryptoPro\ClpCryptoProObjectIdentifiers.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\Nist\ClpNistObjectIdentifiers.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\Oiw\ClpOiwObjectIdentifiers.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\Pkcs\ClpPkcsObjectIdentifiers.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\RossStandart\ClpRosstandartObjectIdentifiers.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\Sec\ClpSecNamedCurves.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\Sec\ClpSecObjectIdentifiers.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\TeleTrust\ClpTeleTrusTObjectIdentifiers.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\X9\ClpECNamedCurveTable.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\X9\ClpX9Curve.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\X9\ClpX9ECParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\X9\ClpX9ECParametersHolder.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\X9\ClpX9ECPoint.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\X9\ClpX9FieldElement.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\X9\ClpX9FieldID.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\X9\ClpX9IntegerConverter.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\X9\ClpX9ObjectIdentifiers.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpAsn1Encodable.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpAsn1EncodableVector.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpAsn1InputStream.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpAsn1Null.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpAsn1Object.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpAsn1OctetString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpAsn1OutputStream.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpAsn1Sequence.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpAsn1Set.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpAsn1StreamParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpAsn1TaggedObject.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpAsn1Tags.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpBerApplicationSpecific.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpBerApplicationSpecificParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpBerBitString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpBerNull.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpBerOctetString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpBerOctetStringParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpBerOutputStream.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpBerSequence.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpBerSequenceParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpBerSet.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpBerSetParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpBerTaggedObject.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpBerTaggedObjectParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpConstructedOctetStream.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDefiniteLengthInputStream.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerApplicationSpecific.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerBitString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerBmpString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerBoolean.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerEnumerated.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerExternal.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerExternalParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerGeneralString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerGraphicString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerIA5String.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerInteger.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerNull.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerNumericString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerObjectIdentifier.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerOctetString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerOctetStringParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerOutputStream.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerPrintableString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerSequence.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerSequenceParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerSet.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerSetParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerStringBase.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerT61String.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerTaggedObject.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerUniversalString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerUtf8String.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerVideotexString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerVisibleString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpIndefiniteLengthInputStream.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpLimitedInputStream.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpOidTokenizer.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Generators\ClpECKeyPairGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Parameters\ClpECDomainParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Parameters\ClpECKeyGenerationParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Parameters\ClpECKeyParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Parameters\ClpECPrivateKeyParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Parameters\ClpECPublicKeyParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Prng\ClpCryptoApiRandomGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Prng\ClpDigestRandomGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\ClpAsymmetricCipherKeyPair.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\ClpAsymmetricKeyParameter.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\ClpKeyGenerationParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIAbstractECMultiplier.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIAsn1ApplicationSpecificParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIAsn1Choice.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIAsn1EncodableVector.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIAsn1Null.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIAsn1OctetString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIAsn1OctetStringParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIAsn1Sequence.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIAsn1SequenceParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIAsn1Set.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIAsn1SetParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIAsn1StreamParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIAsn1String.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIAsn1TaggedObject.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIAsn1TaggedObjectParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIAsymmetricCipherKeyPair.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIAsymmetricCipherKeyPairGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIAsymmetricKeyParameter.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIBerApplicationSpecific.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIBerApplicationSpecificParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIBerBitString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIBerNull.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIBerOctetString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIBerOctetStringParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIBerSequence.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIBerSequenceParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIBerSet.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIBerSetParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIBerTaggedObject.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIBerTaggedObjectParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpICipherParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpICryptoApiRandomGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerApplicationSpecific.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerBitString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerBmpString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerBoolean.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerEnumerated.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerExternal.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerExternalParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerGeneralString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerGraphicString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerIA5String.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerInteger.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerNull.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerNumericString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerObjectIdentifier.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerOctetString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerOctetStringParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerPrintableString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerSequence.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerSequenceParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerSet.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerSetParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerStringBase.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerT61String.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerTaggedObject.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerUniversalString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerUtf8String.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerVideotexString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerVisibleString.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDigestRandomGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIECDomainParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIECFieldElement.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIECInterface.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIECKeyGenerationParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIECKeyPairGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIECKeyParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIECPrivateKeyParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIECPublicKeyParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIExtensionField.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIFiniteField.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIFixedPointCombMultiplier.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIFixedPointPreCompInfo.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIGlvEndomorphism.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIGlvTypeBEndomorphism.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIGlvTypeBParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIKeyGenerationParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIOidTokenizer.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIPCGRandomNumberGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIPolynomial.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIPolynomialExtensionField.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIPreCompInfo.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIProxiedInterface.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIRandom.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIRandomGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIRandomNumberGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIScaleXPointMap.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISecureRandom.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIWNafPreCompInfo.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIX9Curve.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIX9ECParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIX9ECParametersHolder.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIX9ECPoint.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIX9FieldElement.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIX9FieldID.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Endo\ClpGlvTypeBEndomorphism.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Endo\ClpGlvTypeBParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Multiplier\ClpAbstractECMultiplier.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Multiplier\ClpFixedPointCombMultiplier.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Multiplier\ClpFixedPointPreCompInfo.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Multiplier\ClpFixedPointUtilities.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Multiplier\ClpWNafPreCompInfo.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\ClpECAlgorithms.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\ClpECCurve.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\ClpECFieldElement.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\ClpECPoint.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\ClpLongArray.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\ClpScaleXPointMap.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\ClpBigInteger.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Security\ClpDigestUtilities.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Security\ClpRandom.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Security\ClpSecureRandom.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\Collections\ClpCollectionUtilities.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\Encoders\ClpBase64.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\Encoders\ClpHex.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\Helpers\ClpStreamHelper.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\IO\ClpBaseInputStream.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\IO\ClpFilterStream.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\IO\ClpStreams.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\Randoms\ClpPcgRandomMinimal.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\Rng\ClpPCGRandomNumberGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\Rng\ClpRandomNumberGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\ClpArrayUtils.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\ClpBitConverter.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\ClpBits.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\ClpConverters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\ClpCryptoLibTypes.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\ClpTimes.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Multiplier\ClpWNafUtilities.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\ClpBigIntegers.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\Raw\ClpMod.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\Raw\ClpNat.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\ClpNumberStyles.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Parameters\ClpParametersWithRandom.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIParametersWithRandom.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDsa.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDsaKCalculator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISigner.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Signers\ClpRandomDsaKCalculator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIRandomDsaKCalculator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Signers\ClpECDsaSigner.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIECDsaSigner.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Signers\ClpDsaDigestSigner.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDsaDigestSigner.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Security\ClpSignerUtilities.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Abc\ClpZTauElement.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIZTauElement.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Abc\ClpSimpleBigDecimal.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Abc\ClpTnaf.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Multiplier\ClpGlvMultiplier.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIGlvMultiplier.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Multiplier\ClpWTauNafMultiplier.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIWTauNafMultiplier.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Multiplier\ClpWTauNafPreCompInfo.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIWTauNafPreCompInfo.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Multiplier\ClpWNafL2RMultiplier.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIWNafL2RMultiplier.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\Field\ClpGF2Polynomial.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIGF2Polynomial.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\Field\ClpGenericPolynomialExtensionField.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIGenericPolynomialExtensionField.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\Field\ClpPrimeField.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIPrimeField.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\Field\ClpFiniteFields.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\Rng\ClpOSRandomNumberGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIOSRandomNumberGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\Randoms\ClpOSRandom.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\ClpStreamSorter.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpAsn1Generator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIAsn1Generator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpDerSequenceGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerSequenceGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpBerGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIBerGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIBerSequenceGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\ClpBerSequenceGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\ClpSetWeakRef.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Security\ClpCipherUtilities.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIBufferedCipher.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIBlockCipher.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIBlockCipherPadding.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Paddings\ClpPkcs7Padding.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIPkcs7Padding.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Modes\ClpCbcBlockCipher.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpICbcBlockCipher.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Parameters\ClpParametersWithIV.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIParametersWithIV.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Parameters\ClpKeyParameter.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIKeyParameter.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\ClpBufferedCipherBase.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIBufferedCipherBase.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\ClpBufferedBlockCipher.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIBufferedBlockCipher.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\ClpCheck.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Paddings\ClpPaddedBufferedBlockCipher.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIPaddedBufferedBlockCipher.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Security\ClpGeneratorUtilities.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Security\ClpParameterUtilities.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Engines\ClpAesEngine.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIAesEngine.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Agreement\ClpECDHBasicAgreement.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIBasicAgreement.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIECDHBasicAgreement.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Parameters\ClpIESParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIIESParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Parameters\ClpIESWithCipherParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIIESWithCipherParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerivationParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDerivationFunction.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Parameters\ClpKdfParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIKdfParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Parameters\ClpIso18033KdfParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIIso18033KdfParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Generators\ClpBaseKdfBytesGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIBaseKdfBytesGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Generators\ClpKdf2BytesGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIKdf2BytesGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIKeyParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\ClpEphemeralKeyPair.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIEphemeralKeyPair.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Generators\ClpEphemeralKeyPairGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIEphemeralKeyPairGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\ClpKeyEncoder.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIKeyEncoder.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\ClpIESCipher.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIIESCipher.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Parsers\ClpECIESPublicKeyParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIECIESPublicKeyParser.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Paddings\ClpZeroBytePadding.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIZeroBytePadding.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Engines\ClpIESEngine.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIIESEngine.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Engines\ClpPascalCoinIESEngine.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIPascalCoinIESEngine.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Generators\ClpPascalCoinECIESKdfBytesGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIPascalCoinECIESKdfBytesGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Paddings\ClpISO10126d2Padding.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIISO10126d2Padding.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Paddings\ClpISO7816d4Padding.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIISO7816d4Padding.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Paddings\ClpTTBCPadding.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpITBCPadding.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Paddings\ClpX923Padding.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIX923Padding.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Modes\ClpCfbBlockCipher.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpICfbBlockCipher.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Modes\ClpOfbBlockCipher.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIOfbBlockCipher.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Modes\ClpSicBlockCipher.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISicBlockCipher.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDigest.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIMac.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\ClpStringUtils.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Generators\ClpCipherKeyGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpICipherKeyGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Macs\ClpHMac.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIHMac.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Security\ClpMacUtilities.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\Iana\ClpIanaObjectIdentifiers.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\Misc\ClpMiscObjectIdentifiers.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Generators\ClpPbeParametersGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIPbeParametersGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Generators\ClpPkcs5S2ParametersGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIPkcs5S2ParametersGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Signers\ClpECNRSigner.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIECNRSigner.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Parameters\ClpDsaValidationParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDsaValidationParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Parameters\ClpDsaParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDsaParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Parameters\ClpDsaPublicKeyParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDsaPublicKeyParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Parameters\ClpDsaKeyParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDsaKeyParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Parameters\ClpDsaKeyGenerationParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDsaKeyGenerationParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Parameters\ClpDsaPrivateKeyParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDsaPrivateKeyParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Generators\ClpDsaKeyPairGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDsaKeyPairGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Signers\ClpDsaSigner.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\Encoders\ClpBase58.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDsaSigner.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Digests\ClpDigest.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Agreement\ClpECDHCBasicAgreement.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIECDHCBasicAgreement.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Signers\ClpHMacDsaKCalculator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIHMacDsaKCalculator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Generators\ClpHkdfBytesGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIHkdfBytesGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Parameters\ClpHkdfParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIHkdfParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Parameters\ClpDsaParameterGenerationParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDsaParameterGenerationParameters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\ClpValidityPrecompInfo.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIValidityPrecompInfo.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Generators\ClpDsaParametersGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDsaParametersGenerator.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\X509\ClpDsaParameter.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDsaParameter.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIPreCompCallBack.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\Nist\ClpNistNamedCurves.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\Raw\ClpNat320.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\Raw\ClpNat256.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Engines\ClpAesLightEngine.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIAesLightEngine.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\EC\ClpCustomNamedCurves.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Custom\Sec\ClpSecP256K1Field.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Custom\Sec\ClpSecP256K1FieldElement.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISecP256K1FieldElement.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Custom\Sec\ClpSecP256K1Point.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISecP256K1Point.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Custom\Sec\ClpSecP256K1Curve.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISecP256K1Curve.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Custom\Sec\ClpSecP384R1Field.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\Raw\ClpNat384.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Custom\Sec\ClpSecP384R1FieldElement.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISecP384R1FieldElement.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Custom\Sec\ClpSecP384R1Point.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISecP384R1Point.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Custom\Sec\ClpSecP384R1Curve.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISecP384R1Curve.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\Raw\ClpNat192.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Custom\Sec\ClpSecP521R1Field.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\Raw\ClpNat512.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Custom\Sec\ClpSecP521R1FieldElement.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISecP521R1FieldElement.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Custom\Sec\ClpSecP521R1Point.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISecP521R1Point.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Custom\Sec\ClpSecP521R1Curve.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISecP521R1Curve.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\Raw\ClpInterleave.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Custom\Sec\ClpSecT283Field.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Custom\Sec\ClpSecT283FieldElement.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISecT283FieldElement.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Custom\Sec\ClpSecT283K1Point.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISecT283K1Point.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISecT283K1Curve.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Custom\Sec\ClpSecT283K1Curve.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Custom\Sec\ClpSecP256R1Field.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Custom\Sec\ClpSecP256R1FieldElement.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISecP256R1FieldElement.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISecP256R1Point.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Custom\Sec\ClpSecP256R1Point.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISecP256R1Curve.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Math\EC\Custom\Sec\ClpSecP256R1Curve.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDsaEncoding.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIDsaExt.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Signers\ClpStandardDsaEncoding.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIStandardDsaEncoding.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIPlainDsaEncoding.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Signers\ClpPlainDsaEncoding.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\Bsi\ClpBsiObjectIdentifiers.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Asn1\Eac\ClpEacObjectIdentifiers.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Signers\ClpSchnorrDigestSigner.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISchnorrDigestSigner.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISchnorr.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Signers\ClpECSchnorrSipaSigner.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIECSchnorrSipaSigner.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISchnorrExt.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpISchnorrEncoding.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\ClpIPlainSchnorrEncoding.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Signers\ClpPlainSchnorrEncoding.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Base\HlpHash.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Base\HlpHashBuffer.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Base\HlpHashCryptoNotBuildIn.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Base\HlpHashFactory.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Base\HlpHashResult.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Base\HlpHashRounds.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Base\HlpHashSize.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Base\HlpHMACNotBuildInAdapter.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Base\HlpKDF.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Base\HlpMultipleTransformNonBlock.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Checksum\HlpAdler32.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Checksum\HlpCRC.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Checksum\HlpCRC16.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Checksum\HlpCRC32.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Checksum\HlpCRC64.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpBlake2B.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpBlake2S.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpGost.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpGOST3411_2012.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpGrindahl256.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpGrindahl512.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpHAS160.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpHaval.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpMD2.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpMD4.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpMD5.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpMDBase.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpPanama.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpRadioGatun32.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpRadioGatun64.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpRIPEMD.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpRIPEMD128.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpRIPEMD160.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpRIPEMD256.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpRIPEMD320.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpSHA0.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpSHA1.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpSHA2_224.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpSHA2_256.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpSHA2_256Base.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpSHA2_384.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpSHA2_512.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpSHA2_512_224.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpSHA2_512_256.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpSHA2_512Base.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpSHA3.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpSnefru.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpTiger.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpTiger2.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\HlpWhirlPool.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Blake2BConfigurations\HlpBlake2BConfig.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Blake2BConfigurations\HlpBlake2BIvBuilder.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Blake2BConfigurations\HlpBlake2BTreeConfig.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Blake2SConfigurations\HlpBlake2SConfig.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Blake2SConfigurations\HlpBlake2SIvBuilder.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Crypto\Blake2SConfigurations\HlpBlake2STreeConfig.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\NullDigest\HlpNullDigest.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash32\HlpAP.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash32\HlpBernstein.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash32\HlpBernstein1.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash32\HlpBKDR.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash32\HlpDEK.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash32\HlpDJB.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash32\HlpELF.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash32\HlpFNV.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash32\HlpFNV1a.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash32\HlpJenkins3.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash32\HlpJS.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash32\HlpMurmur2.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash32\HlpMurmurHash3_x86_32.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash32\HlpOneAtTime.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash32\HlpPJW.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash32\HlpRotating.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash32\HlpRS.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash32\HlpSDBM.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash32\HlpShiftAndXor.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash32\HlpSuperFast.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash32\HlpXXHash32.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash64\HlpFNV1a64.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash64\HlpFNV64.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash64\HlpMurmur2_64.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash64\HlpSipHash.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash64\HlpXXHash64.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash128\HlpMurmurHash3_x64_128.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Hash128\HlpMurmurHash3_x86_128.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\HlpICRC.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\HlpIHash.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\HlpIHashInfo.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\HlpIHashResult.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\HlpIKDF.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\IBlake2BConfigurations\HlpIBlake2BConfig.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\IBlake2BConfigurations\HlpIBlake2BTreeConfig.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\IBlake2SConfigurations\HlpIBlake2SConfig.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\IBlake2SConfigurations\HlpIBlake2STreeConfig.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\KDF\HlpPBKDF2_HMACNotBuildInAdapter.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Nullable\HlpNullable.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\HlpConverters.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\HlpBitConverter.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\HlpBits.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\HlpHashLibTypes.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Bases\SbpBase16.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Bases\SbpBase32.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Bases\SbpBase32Alphabet.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Bases\SbpBase58.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Bases\SbpBase58Alphabet.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Bases\SbpBase64.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Bases\SbpBase64Alphabet.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Bases\SbpBase85.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Bases\SbpBase85Alphabet.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Bases\SbpEncodingAlphabet.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\SbpIBase32.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\SbpIBase32Alphabet.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\SbpIBase58.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\SbpIBase58Alphabet.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\SbpIBase64.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\SbpIBase64Alphabet.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\SbpIBase85.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\SbpIBase85Alphabet.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Interfaces\SbpIEncodingAlphabet.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\SbpBits.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\SbpSimpleBaseLibTypes.pas"/>
-        <DCCReference Include="additionalUnits\CryptoLib\src\Utils\SbpUtilities.pas"/>
         <RcItem Include="Languages\PT.lang">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
@@ -1529,6 +954,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\Encrypted_512_Dark.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Jet.style" Configuration="Release" Class="ProjectFile">
                     <Platform Name="iOSDevice64">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -1666,6 +1097,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\Encrypted_seed_Dark.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="gfx\Icon36x36.png" Configuration="Debug" Class="Android_LauncherIcon36"/>
                 <DeployFile LocalName="gfx\Icon144x144.png" Configuration="Debug" Class="Android_LauncherIcon144">
                     <Platform Name="All Platforms">
@@ -1680,6 +1117,12 @@
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageLandscape_2048x1496.png" Configuration="Debug" Class="iPad_Launch2048">
                     <Platform Name="iOSDevice32">
                         <RemoteName>Default-Landscape@2x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\Encrypted_512_White.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1952,6 +1395,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="token_icons\copy-content_white.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\Refresh-PNG-Transparent-Image.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -2314,6 +1763,12 @@
                 <DeployFile LocalName="iOS_icons\FM_LaunchImage_1125x2436.png" Configuration="Release" Class="iPhone_Launch1125">
                     <Platform Name="iOSDevice64">
                         <RemoteName>Default-812h@3x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\Encrypted_seed_White.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -3259,6 +2714,11 @@
                 <DeployFile LocalName="OKSterling.style" Configuration="Release" Class="ProjectFile">
                     <Platform Name="iOSDevice64">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(NDKBasePath)\prebuilt\android-arm\gdbserver\gdbserver" Configuration="Debug" Class="AndroidGDBServer">
+                    <Platform Name="Android">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

@@ -351,7 +351,8 @@ function getUnusedAccountName(): AnsiString;
 function getComponentsWithTagString(tag: AnsiString; From: TfmxObject)
   : TArray<TfmxObject>;
 function compareVersion( a , b : AnsiString ) : integer;
-
+function postDataOverHTTP(var aURL: String;postdata:string; useCache: Boolean = true;
+noTimeout: Boolean = false): AnsiString;
 
 
 
@@ -1360,13 +1361,13 @@ begin
     if TWalletInfo(crypto).coin = 4 then
     begin
 
-      ccEmpty := (crypto.confirmed + crypto.unconfirmed > 0);
+      ccEmpty := (crypto.confirmed  > 0);
 
     end
     else
     begin
       tempBalances := CurrentAccount.aggregateBalances(TWalletInfo(crypto));
-      ccEmpty := (tempBalances.confirmed + tempBalances.unconfirmed > 0);
+      ccEmpty := (tempBalances.confirmed  > 0);
 
     end;
 
@@ -1374,7 +1375,7 @@ begin
   else
   begin
 
-    ccEmpty := (crypto.confirmed + crypto.unconfirmed > 0);
+    ccEmpty := (crypto.confirmed > 0);
   end;
 
   with frmhome.walletList do
@@ -1427,8 +1428,7 @@ begin
     if crypto is TWalletInfo then
     begin
       balLabel.Text := BigIntegerBeautifulStr
-        (CurrentAccount.aggregateBalances(TWalletInfo(crypto)).confirmed +
-        CurrentAccount.aggregateBalances(TWalletInfo(crypto)).unconfirmed,
+        (CurrentAccount.aggregateBalances(TWalletInfo(crypto)).confirmed,
         crypto.decimals) + '    ' + floatToStrF(crypto.getFiat, ffFixed, 15, 2)
         + ' ' + frmhome.CurrencyConverter.symbol;
     end
@@ -1974,14 +1974,14 @@ begin
   for ccrc in CurrentAccount.myCoins do
   begin
     globalFiat := globalFiat +
-      Max((((ccrc.confirmed.AsDouble + ccrc.unconfirmed.AsDouble) * ccrc.rate) /
+      Max((((ccrc.confirmed.AsDouble + Max(ccrc.unconfirmed.AsDouble,0)) * ccrc.rate) /
       Math.Power(10, ccrc.decimals)), 0);
   end;
 
   for ccrc in CurrentAccount.myTokens do
   begin
     globalFiat := globalFiat +
-      Max((((ccrc.confirmed.AsDouble + ccrc.unconfirmed.AsDouble) * ccrc.rate) /
+      Max((((ccrc.confirmed.AsDouble) * ccrc.rate) /
       Math.Power(10, ccrc.decimals)), 0);
   end;
 
@@ -2012,14 +2012,22 @@ function aggregateAndSortTX(CCArray: TCryptoCurrencyArray): TxHistory;
     i, j: integer;
     temp: transactionHistory;
   begin
-    if length(Tab) <= 2 then
+    if length(Tab) <= 1 then
       exit;
 
     for i := Low(Tab) to High(Tab) do
     begin
       for j := Low(Tab) + 1 to High(Tab) do
       begin
-        if strToFloatDef(Tab[j].data, 0) > strToFloatDef(Tab[j - 1].data, 0)
+        if strToFloatDef(Tab[j].data, 0) >= strToFloatDef(Tab[j - 1].data, 0)
+        then
+        begin
+          temp := Tab[j];
+          Tab[j] := Tab[j - 1];
+          Tab[j - 1] := temp;
+        end;
+        if strToFloatDef(Tab[j].data, 0) = strToFloatDef(Tab[j - 1].data, 0) then
+        if CompareStr(Tab[j].TransactionID, Tab[j - 1].TransactionID ) < 0
         then
         begin
           temp := Tab[j];
@@ -2102,13 +2110,14 @@ begin
       exit;
 
     panel := TPanel.Create(frmhome.TxHistory);
-    panel.Align := TAlignLayout.MostTop;
+
     panel.Height := 40;
     panel.Visible := true;
     panel.tag := i;
     panel.TagFloat := strTofloatDEF(hist[i].data , 0);
     panel.parent := frmhome.TxHistory;
-    panel.Position.Y := (((i * 36) div 36) * 36) + 0.1;
+    panel.Position.Y := (i*40)+ 0.1;
+        panel.Align := TAlignLayout.Top;
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     panel.OnTap := frmhome.ShowHistoryDetails;
 {$ELSE}
@@ -3454,10 +3463,11 @@ begin
       if not noTimeout then
       begin
 
-        req.ConnectionTimeout := 1000;
-        req.ResponseTimeout := 1000;
+        req.ConnectionTimeout := 5000;
+        req.ResponseTimeout := 5000;
       end;
       aURL := aURL + buildAuth(aURL);
+
       LResponse := req.get(aURL);
       result := apiStatus(aURL, LResponse.ContentAsString());
       try
@@ -3480,7 +3490,72 @@ begin
   end;
   req.Free;
 end;
+function postDataOverHTTP(var aURL: String;postdata:string; useCache: Boolean = true;
+noTimeout: Boolean = false): AnsiString;
+const waitForRequestEnd:string='##$$NORES$$##';
+var
+  req: THTTPClient;
+  LResponse: IHTTPResponse;
+  urlHash: AnsiString;
+ts:TStringList;
+asyncResponse:string;
+ares:iasyncresult;
+begin
+        if TThread.CurrentThread.CheckTerminated then
+        Exit();
+asyncResponse:= waitForRequestEnd;
+  aURL := ensureURL(aURL);
+  urlHash := GetStrHashSHA256(aURL);
+  if (firstSync and useCache) then
+  begin
+    result := loadCache(urlHash);
+  end;
+  try
+    if ((result = 'NOCACHE') or (not firstSync) or (not useCache)) then
+    begin
 
+      req := THTTPClient.Create();
+      if not noTimeout then
+      begin
+
+        req.ConnectionTimeout := 3000;
+        req.ResponseTimeout := 60000;
+      end;
+      aURL := aURL + buildAuth(aURL);
+     ts:=TStringList.Create;
+     ts.Text:=StringReplace(postdata,'&',#13#10,[rfReplaceAll]);
+    {$IFDEF  DEBUG}  ts.SaveToFile('params'+urlHash+'.json'); {$ENDIF}
+     ares:= req.BeginPost(aurl,ts);
+            while not (ares.IsCompleted or ares.isCancelled) do begin
+        Sleep(50);
+        if TThread.CurrentThread.CheckTerminated then
+        Exit();
+       end;
+      asyncResponse:=req.EndAsyncHTTP(ares).ContentAsString();
+      result := apiStatus(aURL, asyncResponse);
+      ts.Text:=asyncResponse;
+   {$IFDEF  DEBUG}   ts.SaveToFile(urlHash+'.json');   {$ENDIF}
+      ts.Free;
+      try
+        saveCache(urlHash, result);
+      except
+        on E: Exception do
+        begin
+        end
+
+      end;
+      if LResponse.StatusCode <> 200 then
+        result := apiStatus(aURL, '', true);
+    end;
+  except
+    on E: Exception do
+    begin
+      result := apiStatus(aURL, '', true);
+
+    end;
+  end;
+  req.Free;
+end;
 function hash160FromHex(H: AnsiString): AnsiString;
 var
   ripemd160: TRIPEMD160Hash;
@@ -3988,12 +4063,13 @@ var
   Position: integer;
   i, j: integer;
   panel: TPanel;
+  countwallet :Integer;
 begin
 
   // raise Exception.Create('print path');
   EthAddress := '';
   tokenCount := 0;
-
+  countWallet := 0;
   Position := 0;
 
   if ac = nil then
@@ -4002,12 +4078,33 @@ begin
   frmhome.pageControl.ActiveTab := frmhome.WaitWalletGenerate;
 
   try
+
+    for i := 0 to (frmhome.GenerateCoinVertScrollBox.Content.
+      ChildrenCount - 1) do
+    begin
+
+      panel := TPanel(frmhome.GenerateCoinVertScrollBox.Content.Children[i]);
+
+      if not TCheckBox(panel.TagObject).IsChecked then
+      begin
+        continue;
+      end;
+      if panel.tag < 10000 then
+      begin
+        if panel.Tag = 4 then
+          countWallet := countWallet + 1
+        else
+          countWallet := countWallet + 5;
+      end
+
+    end;
+
     Tthread.Synchronize(nil,
       procedure
       begin
         frmhome.WaitForGenerationProgressBar.Value := 0;
-        frmhome.WaitForGenerationProgressBar.Max := 25;
-        frmhome.WaitForGenerationLabel.Text := 'Generating BTC Wallet';
+        frmhome.WaitForGenerationProgressBar.Max := countWallet;
+        frmhome.WaitForGenerationLabel.Text := '';
       end);
 
     for i := 0 to (frmhome.GenerateCoinVertScrollBox.Content.
@@ -4112,67 +4209,6 @@ begin
       end;
 
     end;
-
-    // Put first addresses (0,0) of 4 coins
-    { for j := 0 to 3 do
-      begin
-      for i := 0 to 4 do
-      begin
-      wd := Bitcoin_createHD(j, 0, i, seed);
-      wd.orderInWallet := Position;
-      inc(Position, 48);
-      ac.AddCoin(wd);
-      TThread.Synchronize(nil,
-      procedure
-      begin
-      frmhome.WaitForGenerationLabel.text := 'Generating '+ availableCoin[j].shortcut+' Wallet';
-      frmhome.WaitForGenerationProgressBar.value := frmhome.WaitForGenerationProgressBar.Value + 1;
-      end);
-
-      end;
-      end;
-
-      for i := 0 to 0 do
-      begin
-      wd := Ethereum_createHD(j, 0, i, seed);
-      wd.orderInWallet := Position;
-      inc(Position, 48);
-      ac.AddCoin(wd);
-      TThread.Synchronize(nil,
-      procedure
-      begin
-      frmhome.WaitForGenerationLabel.text := 'Generating ETH Wallet';
-      frmhome.WaitForGenerationProgressBar.value := frmhome.WaitForGenerationProgressBar.Value + 1;
-      end);
-
-      if i = 0 then
-      EthAddress := wd.addr;
-
-      end;
-
-      TThread.Synchronize(nil,
-      procedure
-      var
-
-      ti: TokenInfo;
-      begin
-      frmhome.WaitForGenerationProgressBar.Value := 100;
-
-      for ti in Token.availableToken do
-      begin
-      T := Token.Create(ti.id - 10000, EthAddress);
-      T.orderInWallet := Position;
-      inc(Position, 48);
-
-      T.idInWallet := Length(ac.myTokens) + 10000;
-      ac.addToken(T);
-
-      end;
-
-      end); }
-
-
-    // searchTokens(EthAddress , ac);
 
   except
     on E: Exception do
@@ -4304,7 +4340,7 @@ begin
             begin
 
               TLabel(fmxObj).Text := BigIntegerBeautifulStr
-                (cc.confirmed + cc.unconfirmed, cc.decimals) + '    ' +
+                (cc.confirmed + Max(bal.unconfirmed.AsInt64,0), cc.decimals) + '    ' +
                 floatToStrF(cc.getFiat(), ffFixed, 15, 2) + ' ' +
                 frmhome.CurrencyConverter.symbol;
             end
@@ -4313,7 +4349,7 @@ begin
               bal := CurrentAccount.aggregateBalances(TWalletInfo(cc));
 
               TLabel(fmxObj).Text := BigIntegerBeautifulStr
-                (bal.confirmed + bal.unconfirmed, cc.decimals) + '    ' +
+                (bal.confirmed + Max(bal.unconfirmed.AsInt64,0), cc.decimals) + '    ' +
                 floatToStrF(CurrentAccount.aggregateFiats(TWalletInfo(cc)),
                 ffFixed, 15, 2) + ' ' + frmhome.CurrencyConverter.symbol;
             end;
@@ -4323,7 +4359,7 @@ begin
           begin
 
             TLabel(fmxObj).Text := BigIntegerBeautifulStr
-              (cc.confirmed + cc.unconfirmed, cc.decimals) + '    ' +
+              (cc.confirmed + Max(bal.unconfirmed.AsInt64,0), cc.decimals) + '    ' +
               floatToStrF(cc.getFiat(), ffFixed, 15, 2) + ' ' +
               frmhome.CurrencyConverter.symbol;
 

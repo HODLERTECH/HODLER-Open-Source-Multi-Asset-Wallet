@@ -304,15 +304,17 @@ begin
                     end;
 
                   end
-                  else if cameraBackTabItem = ImportPrivKeyTabItem then
+                  else if cameraBackTabItem = AddCoinFromPrivKeyTabItem then
                   begin
                     WIFEdit.Text := ReadResult.Text;
-                    switchTab(PageControl, ImportPrivKeyTabItem);
+                    switchTab(PageControl, AddCoinFromPrivKeyTabItem);
+                    exit;
                   end
                   else if cameraBackTabItem = ClaimTabItem then
                   begin
                     PrivateKeyEditSV.Text := ReadResult.Text;
                     switchTab(PageControl, ClaimTabItem );
+                    exit;
                   end
                   else if cameraBackTabItem = HOME_TABITEM then
                   begin

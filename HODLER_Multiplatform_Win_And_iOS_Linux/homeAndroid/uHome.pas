@@ -837,6 +837,7 @@ type
     procedure closeVirtualKeyBoard(Sender: TObject);
     procedure RefreshKeyBoard(Sender: TObject);
     procedure btnCreateNewWalletClick(Sender: TObject);
+    procedure ClaimYourBCHSVButtonClick(Sender: TObject);
     procedure btnCreateWalletClick(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
@@ -973,6 +974,8 @@ type
     procedure coinbaseImageClick(Sender: TObject);
     procedure exportemptyaddressesSwitchClick(Sender: TObject);
     procedure SYWLBackButtonTap(Sender: TObject; const Point: TPointF);
+    procedure ConfirmSendClaimCoinButtonClick(Sender: TObject);
+
 
   private
     { Private declarations }
@@ -1188,6 +1191,7 @@ procedure TfrmHome.ClaimListBackButtonClick(Sender: TObject);
 begin
   switchTab(PageControl, AddnewCoin );
 end;
+
 
 procedure TfrmHome.CoinListCreateFromSeed(Sender: TObject);
 begin
@@ -2199,6 +2203,12 @@ begin
   end;
 
 end;
+procedure TfrmHome.CopyPrivateKeyButtonClick(Sender: TObject);
+var
+  svc: IFMXExtendedClipboardService;
+begin
+
+end;
 
 procedure TfrmHome.ConfirmNewAccountButtonClick(Sender: TObject);
 var
@@ -2214,18 +2224,17 @@ begin
 
 end;
 
-procedure TfrmHome.CopyPrivateKeyButtonClick(Sender: TObject);
+
+
+procedure TfrmHome.ConfirmSendClaimCoinButtonClick(Sender: TObject);
 var
-  svc: IFMXExtendedClipboardService;
+  temp: twalletinfo;
 begin
-  (* if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, svc)
-    then
-    begin
+currentcoin:=ToClaimWD;
+  WalletViewRelated.PrepareSendTabAndSend(FromClaimWD, ToClaimWD.addr,
+    FromClaimWD.confirmed - BigInteger(1700), BigInteger(1700), '',
+    AvailableCoin[FromClaimWD.coin].name);
 
-    svc.setClipboard(removeSpace(lblPrivateKey.Text));
-    popupWindow.Create(dictionary('CopiedToClipboard'));
-
-    end; *)
 end;
 
 procedure TfrmHome.CopyTextButtonClick(Sender: TObject);
@@ -2582,8 +2591,9 @@ end;
 
 procedure TfrmHome.CSBackButtonClick(Sender: TObject);
 begin
-
-  switchTab(PageControl, walletView);
+if not ConfirmSendClaimCoinButton.visible then
+  switchTab(PageControl, walletView) else
+   switchTab(PageControl, HOME_TABITEM)
 end;
 
 procedure TfrmHome.CTIHeaderBackButtonClick(Sender: TObject);
@@ -2772,7 +2782,7 @@ begin
   switchTab(PageControl, descryptSeed);
   btnDSBack.OnClick := backBtnDecryptSeed;
   btnDecryptSeed.OnClick := privateKeyPasswordCheck;
-
+  WDToExportPrivKey := CurrentCoin;
 end;
 
 procedure TfrmHome.btnANTBackClick(Sender: TObject);
@@ -3797,5 +3807,17 @@ procedure TfrmHome.RestoreFromFileButtonClick(Sender: TObject);
 begin
   BackupRelated.RestoreFromFile(Sender);
 end;
+procedure TfrmHome.ClaimYourBCHSVButtonClick(Sender: TObject);
+begin
 
+  try
+    claim(newcoinID);
+  except
+    on e: Exception do
+    begin
+      popupWindow.Create(e.Message);
+    end;
+  end;
+
+end;
 end.

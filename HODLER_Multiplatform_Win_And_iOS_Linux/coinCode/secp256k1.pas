@@ -11,7 +11,12 @@ unit secp256k1;
 interface
 
 uses
-  Velthuis.BigIntegers, misc, System.SysUtils;
+  Velthuis.BigIntegers, misc, System.SysUtils, ClpBigInteger, ClpIX9ECParameters,
+  ClpIECDomainParameters, ClpECDomainParameters, ClpIECKeyPairGenerator,
+  ClpECKeyPairGenerator, ClpIECKeyGenerationParameters,
+  ClpIAsymmetricCipherKeyPair, ClpIECPrivateKeyParameters,
+  ClpIECPublicKeyParameters, ClpECPrivateKeyParameters, ClpIECInterface, ClpHex,
+  ClpCustomNamedCurves;
 
 type
   TBIPoint = record
@@ -91,10 +96,10 @@ var
   xp, yp, xq, yq, L, rx, ry: BigInteger;
   bitwo, biP: BigInteger;
 begin
-//Android optimalisations
+  // Android optimalisations
   bitwo := BigInteger.Parse('2');
   biP := getP;
-//////////////////////
+  /// ///////////////////
   xp := p.XCoordinate;
   yp := p.YCoordinate;
   xq := q.XCoordinate;
@@ -146,14 +151,38 @@ var
   q: TBIPoint;
   ss: AnsiString;
   sign: AnsiString;
+var
+  domain: IECDomainParameters;
+  generator: IECKeyPairGenerator;
+  keygenParams: IECKeyGenerationParameters;
+  KeyPair: IAsymmetricCipherKeyPair;
+  privParams: IECPrivateKeyParameters;
+  pubParams: IECPublicKeyParameters;
+  FCurve: IX9ECParameters;
+  PrivateKeyBytes, PayloadToDecodeBytes, DecryptedCipherText: TBytes;
+  RegeneratedPublicKey: IECPublicKeyParameters;
+  RegeneratedPrivateKey: IECPrivateKeyParameters;
+  PrivD: TBigInteger;
+  ax, ay: BigInteger;
 begin
   BigInteger.Decimal;
   BigInteger.AvoidPartialFlagsStall(True);
 
   ss := '$' + (privkey);
-  q := point_mul(getG, ss);
-  q.YCoordinate := make256bit(q.YCoordinate);
-  q.XCoordinate := make256bit(q.XCoordinate);
+  //// Hyperspeed
+  FCurve := TCustomNamedCurves.GetByName('secp256k1');
+  domain := TECDomainParameters.Create(FCurve.Curve, FCurve.G, FCurve.n, FCurve.H, FCurve.GetSeed);
+  PrivateKeyBytes := THex.Decode(privkey);
+  PrivD := TBigInteger.Create(1, PrivateKeyBytes);
+  RegeneratedPrivateKey := TECPrivateKeyParameters.Create('ECDSA', PrivD, domain);
+
+  RegeneratedPublicKey := TECKeyPairGenerator.GetCorrespondingPublicKey(RegeneratedPrivateKey);
+  ax := BigInteger.Parse('+0x00' + RegeneratedPublicKey.q.Normalize.AffineXCoord.ToBigInteger.ToString(16));
+  ay := BigInteger.Parse('+0x00' + RegeneratedPublicKey.q.Normalize.AffineYCoord.ToBigInteger.ToString(16));
+  //// Hyperspeed
+  // q := point_mul(getG, ss);
+  q.YCoordinate := make256bit(ay);
+  q.XCoordinate := make256bit(ax);
   if q.YCoordinate.isEven then
     sign := '02'
   else

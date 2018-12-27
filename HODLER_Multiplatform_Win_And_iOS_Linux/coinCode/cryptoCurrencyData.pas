@@ -102,7 +102,7 @@ function cryptoCurrency.getFiat: Double;
 var
   d: Double;
 begin
-  d := confirmed.asDouble;// + unconfirmed.asDouble;
+  d := confirmed.asDouble + Max(unconfirmed.asDouble,0);
   if d < 0 then
     d := 0.0;
   result := frmHome.currencyConverter.calculate(d) * rate /
