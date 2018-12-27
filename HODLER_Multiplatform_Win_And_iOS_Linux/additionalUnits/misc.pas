@@ -98,7 +98,12 @@ uses AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA, IdSSLOpenSSL, languages,
 
   System.Net.HttpClientComponent, System.Net.HttpClient, keccak_n, tokenData,
   bech32,
-  cryptoCurrencyData, WalletStructureData, AccountData
+  cryptoCurrencyData, WalletStructureData, AccountData,
+    ClpCryptoLibTypes,
+  ClpSecureRandom,
+  ClpISecureRandom,
+  ClpCryptoApiRandomGenerator,
+  ClpICryptoApiRandomGenerator
 
 {$IFDEF ANDROID},
 
@@ -134,8 +139,20 @@ const
   StrStartIteration = 1;
 {$ENDIF}
 
-  // type
-  // TIntegerArray = array of Integer;
+type
+
+  TSecureRandoms = class
+  private
+
+    function CheckSecureRandom(const random: ISecureRandom):boolean;
+    function RunChiSquaredTests(const random: ISecureRandom): Boolean;
+    function MeasureChiSquared(const random: ISecureRandom;
+      rounds: Int32): Double;
+
+  published
+    function GetSha256Prng():string;
+
+  end;
 type
   THistoryHolder = class(TObject)
   public
@@ -236,7 +253,7 @@ type
   TJFileProvider = class(TJavaGenericImport<JFileProviderClass, JFileProvider>)
   end;
 {$ENDIF}
-
+function ISecureRandomBuffer:AnsiString;
 function speckStrPadding(data: AnsiString): AnsiString;
 procedure setBlackBackground(Owner: TComponent);
 function isP2PKH(netbyte: AnsiString; coinid: integer): Boolean;
@@ -366,6 +383,8 @@ const
   HODLER_ETH2: string = 'https://hodlernode.net/';
   API_PUB = {$I 'public_key.key' };
   API_PRIV = {$I 'private_key.key' };
+resourcestring
+  CURRENT_VERSION = '0.3.1';
 
 var
   dashBoardFontSize: Integer =
@@ -404,6 +423,131 @@ uses Bitcoin, uHome, base58, Ethereum, coinData, strutils, secp256k1 ,AccountRel
 var
   bitmapData: TBitmapData;
 
+
+function TSecureRandoms.CheckSecureRandom(const random: ISecureRandom):boolean;
+begin
+  result:=true=RunChiSquaredTests(random);
+
+end;
+
+function TSecureRandoms.MeasureChiSquared(const random: ISecureRandom;
+  rounds: Int32): Double;
+var
+  opts, bs: TCryptoLibByteArray;
+  counts: TCryptoLibInt32Array;
+  I, b, total, k, mask, shift: Int32;
+  chi2, diff, diff2, temp: Double;
+begin
+  opts := random.GenerateSeed(2);
+  System.SetLength(counts, 256);
+  System.SetLength(bs, 256);
+
+  I := 0;
+  while I < rounds do
+  begin
+    random.NextBytes(bs);
+
+    for b := 0 to System.Pred(256) do
+    begin
+
+      counts[bs[b]] := counts[bs[b]] + 1;
+
+    end;
+
+    System.Inc(I);
+  end;
+
+  mask := opts[0];
+
+  I := 0;
+  while I < rounds do
+  begin
+    random.NextBytes(bs);
+
+    for b := 0 to System.Pred(256) do
+    begin
+
+      counts[bs[b] xor Byte(mask)] := counts[bs[b] xor Byte(mask)] + 1;
+
+    end;
+    System.Inc(mask);
+    System.Inc(I);
+  end;
+
+  shift := opts[1];
+
+  I := 0;
+  while I < rounds do
+  begin
+    random.NextBytes(bs);
+
+    for b := 0 to System.Pred(256) do
+    begin
+
+      counts[Byte(bs[b] + Byte(shift))] := counts[Byte(bs[b] + Byte(shift))] + 1;
+
+    end;
+    System.Inc(shift);
+    System.Inc(I);
+  end;
+
+  total := 3 * rounds;
+
+  chi2 := 0;
+
+  for k := 0 to System.Pred(System.Length(counts)) do
+  begin
+    temp := counts[k];
+    diff := temp - total;
+    diff2 := diff * diff;
+
+    chi2 := chi2 + diff2;
+  end;
+
+  chi2 := chi2 / total;
+
+  result := chi2;
+end;
+
+function TSecureRandoms.RunChiSquaredTests(const random
+  : ISecureRandom): Boolean;
+var
+  passes, tries: Int32;
+  chi2: Double;
+begin
+  passes := 0;
+
+  tries := 0;
+  while tries < 100 do
+  begin
+    chi2 := MeasureChiSquared(random, 1000);
+
+    // 255 degrees of freedom in test => Q ~ 10.0% for 285
+    if (chi2 < 285.0) then
+    begin
+      System.Inc(passes);
+    end;
+
+    System.Inc(tries);
+  end;
+
+  result := passes > 75;
+end;
+function TSecureRandoms.GetSha256Prng:string;
+var
+  &random: ISecureRandom;
+begin
+  random := TSecureRandom.GetInstance('SHA256PRNG');
+  result:=ToHex(random.GenerateSeed(256),256)
+end;
+
+function ISecureRandomBuffer:AnsiString;
+var SecureRandoms:TSecureRandoms;
+begin
+SecureRandoms:=TSecureRandoms.Create();
+result:=misc.GetStrHashSHA256(SecureRandoms.GetSha256Prng);
+SecureRandoms.Free;
+end;
   /// ////////////////////////////////////////////////////////////////
 
 function compareVersion( a , b : AnsiString ) : integer;
@@ -2084,7 +2228,7 @@ begin
   if start = 0 then
     clearVertScrollBox(frmhome.TxHistory);
 
-  if wallet is TWalletInfo then
+  if (wallet is TWalletInfo) and (TwalletInfo(wallet).x <> -1) then
   begin
     CCArray := CurrentAccount.getWalletWithX(TWalletInfo(wallet).x,
       TWalletInfo(wallet).coin);
@@ -3531,7 +3675,9 @@ asyncResponse:= waitForRequestEnd;
         if TThread.CurrentThread.CheckTerminated then
         Exit();
        end;
-      asyncResponse:=req.EndAsyncHTTP(ares).ContentAsString();
+       lresponse:=req.EndAsyncHTTP(ares);
+       asyncResponse:=lresponse.ContentAsString();
+      //asyncResponse:=req.EndAsyncHTTP(ares).ContentAsString();
       result := apiStatus(aURL, asyncResponse);
       ts.Text:=asyncResponse;
    {$IFDEF  DEBUG}   ts.SaveToFile(urlHash+'.json');   {$ENDIF}

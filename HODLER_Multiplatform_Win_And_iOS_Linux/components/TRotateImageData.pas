@@ -38,9 +38,13 @@ end;
 
 procedure TRotateImage.Start();
 begin
-isOn := true;
+  if isOn then
+      exit;
+  isOn := true;
   timer := TThread.CreateAnonymousThread(procedure
   begin
+
+
     while isOn do
     begin
 

@@ -1094,8 +1094,8 @@ resourcestring
   QRSearchEncryted = 'QRSearchEncryted';
   QRSearchDecryted = 'QRSearchDecryted';
 
-resourcestring
-  CURRENT_VERSION = '0.2.8';
+//resourcestring
+//  CURRENT_VERSION = '0.3.2';
 
 var
   LATEST_VERSION: AnsiString;
@@ -2085,6 +2085,7 @@ begin
     begin
       //SyncThr.SynchronizeCryptoCurrency(CurrentCoin);
       //reloadWalletView;
+      sleep(2000);
       RefreshCurrentWallet(Sender);
     end).start();
 end;
@@ -2765,9 +2766,10 @@ end;
 
 procedure TfrmHome.btnChangeDescryptionOKClick(Sender: TObject);
 begin
-  CurrentCryptoCurrency.description := ChangeDescryptionEdit.Text;
+  WalletViewRelated.btnChangeDescryptionOKClick(Sender);
+  {CurrentCryptoCurrency.description := ChangeDescryptionEdit.Text;
   CurrentAccount.SaveFiles();
-  switchTab(PageControl, walletView);
+  switchTab(PageControl, walletView);}
 end;
 
 procedure TfrmHome.btnCTBackClick(Sender: TObject);
@@ -3193,7 +3195,7 @@ begin
   if gathener.Enabled then
 
     trngBuffer := trngBuffer + floattoStr(X * random($FFFF) * trngBufferCounter)
-      + floattoStr(Y * random($FFFF)) + inttostr(random($FFFFFFFF))
+      + floattoStr(Y * random($FFFF)) + inttostr(random($FFFFFFFF)) + ISecureRandomBuffer
 end;
 
 procedure TfrmHome.FormResize(Sender: TObject);
@@ -3324,7 +3326,7 @@ begin
   inc(trngBufferCounter);
   // colecting random data for seed generator
   trngBuffer := trngBuffer + GetSTrHashSHA256(inttohex(random($FFFFFFFF), 8) +
-    DateTimeToStr(Now));
+    DateTimeToStr(Now))+ISecureRandomBuffer;
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
   if MotionSensor.Sensor <> nil then
     with MotionSensor.Sensor do
@@ -3359,7 +3361,7 @@ begin
     if trngBufferCounter mod 200 = 0 then
     begin
       // 10sec of gathering random data should be enough to get unique seed
-      trngBuffer := GetSTrHashSHA256(trngBuffer + inttostr(random($FFFFFFFF)));
+      trngBuffer := GetSTrHashSHA256(trngBuffer + inttostr(random($FFFFFFFF))+ISecureRandomBuffer);
       gathener.Enabled := false;
       if swForEncryption.IsChecked then
         TCAIterations := 10000;

@@ -77,6 +77,7 @@ procedure SweepButtonClick(Sender: TObject);
 procedure RefreshCurrentWallet(Sender: TObject);
 procedure btnChangeDescriptionClick(Sender: TObject);
 procedure SendEncryptedSeedButtonClick(Sender: TObject);
+procedure btnChangeDescryptionOKClick(Sender: TObject);
 
 var
   SyncOpenWallet: TThread;
@@ -86,6 +87,18 @@ implementation
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, AccountRelated, TCopyableEditData, BackupRelated;
+
+procedure btnChangeDescryptionOKClick(Sender: TObject);
+begin
+  with frmhome do
+  begin
+    CurrentCryptoCurrency.description := ChangeDescryptionEdit.Text;
+    CurrentAccount.SaveFiles();
+    misc.updateNameLabels();
+    switchTab(PageControl, walletView);
+  end;
+end;
+
 
 procedure SendEncryptedSeedButtonClick(Sender: TObject);
 var
@@ -1308,6 +1321,9 @@ begin
   // ShowMessage(postDataOverHTTP(HODLER_URL+'/batchSync.php?coin='+availableCoin[0].shortcut, batchSync(0),false,True));
   frmhome.InstantSendLayout.Visible :=
     TWalletInfo(CurrentCryptoCurrency).coin = 2;
+
+  reloadWalletView;     // po co  jak jest w watku ?
+
   if SyncOpenWallet <> nil then
   begin
     if not SyncOpenWallet.Finished then
@@ -1351,7 +1367,7 @@ begin
 
   end;
 
-  reloadWalletView;
+
 
   with frmhome do
   begin
@@ -1503,7 +1519,7 @@ begin
     else
       SearchTokenButton.Visible := false;
 
-    if not isEthereum then
+    if (not isEthereum) and ( currentCryptocurrency is TwalletInfo )then
     begin
 
       a := ((180 * length(TWalletInfo(CurrentCryptoCurrency).UTXO) +
@@ -1513,7 +1529,16 @@ begin
         CurrentCoin.decimals)) div 1024;
       if (CurrentCoin.coin = 0) or (CurrentCoin.coin = 1) then
         a := a * 4;
-      a := Max(a.asInteger, 500);
+      try
+        a := Max(a.asInteger, 500);
+      except on E: Exception do
+        begin
+          a := ((180 * length(TWalletInfo(CurrentCryptoCurrency).UTXO) +
+          (34 * 2) + 12)) * 10 ;
+          a := Max(a.asInteger, 500);
+        end;
+      end;
+
       wvFee.Text := BigIntegertoFloatStr(a, CurrentCoin.decimals);
       // CurrentCoin.efee[round(FeeSpin.Value) - 1] ;
       lblBlockInfo.Text := dictionary('ConfirmInNext') + ' ' +
@@ -1545,15 +1570,25 @@ begin
   begin
 
     isTokenTransfer := CurrentCryptoCurrency is Token;
-
+    currentCoin := nil;
     if isTokenTransfer then
     begin
-      for wd in CurrentAccount.myCoins do
-        if wd.addr = CurrentCryptoCurrency.addr then
+
+      if length(CurrentAccount.myCoins) <> 0 then
+      begin
+        for wd in CurrentAccount.myCoins do
+        if lowercase(wd.addr) = lowercase(CurrentCryptoCurrency.addr) then
         begin
           CurrentCoin := wd;
           break;
         end;
+      end;
+
+      if currentCoin = nil then
+        raise Exception.Create('Not found ETH account');
+
+
+     
     end
     else
       CurrentCoin := TWalletInfo(CurrentCryptoCurrency);
