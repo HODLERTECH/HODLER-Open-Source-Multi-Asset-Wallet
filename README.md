@@ -23,8 +23,8 @@ TMS Cryptography Pack, at least 3.3.1 https://www.tmssoftware.com/site/tmscrypto
 Please notice, we are using commerial solutions, but you can get above software for free or in trial. This is enough to make private builds.
 To get access to our coin API, please mail as, contact (a) hodler.tech, we will provide you public and private key which will allow to connect to our infrastructure
 
-After registering Delphi and TMS Cryptography Pack (and FMXLinux for Linux 64 bit builds), please open a HODLER_Wallet_Desktop.dproj or HODLER_Wallet_Mobile.dproj
-project file. Then just select platform and press SHIFT+CTRL+F9
+After registering Delphi and TMS Cryptography Pack (and FMXLinux for Linux 64 bit builds), please open a CryptoLib.dproj, select platform and press SHIFT+CTRL+F9.
+Now you can open a HODLER_Wallet_Desktop.dproj or HODLER_Wallet_Mobile.dproj project file. To compile just select platform and press SHIFT+CTRL+F9
 
 Useful links for beginners with Delphi:
 http://docwiki.embarcadero.com/RADStudio/Tokyo/en/Linux_Application_Development#Prerequisites
