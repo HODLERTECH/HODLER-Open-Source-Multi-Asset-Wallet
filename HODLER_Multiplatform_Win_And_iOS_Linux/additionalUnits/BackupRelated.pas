@@ -306,11 +306,11 @@ begin
   else
   begin
     parseBalances(getDataOverHTTP(HODLER_URL + 'getSegwitBalance.php?coin=' +
-      AvailableCoin[CoinID].name + '&address=' + fromClaimWD.addr), fromClaimWD);
+      AvailableCoin[CoinID].name + segwitParameters(fromClaimWD) ), fromClaimWD); // '&address=' + fromClaimWD.addr), fromClaimWD);
   end;
 
-  fromClaimWD.UTXO := parseUTXO(getDataOverHTTP(HODLER_URL + 'getUTXO.php?coin='
-    + AvailableCoin[CoinID].name + '&address=' + fromClaimWD.addr), -1);
+  fromClaimWD.UTXO := parseUTXO(getDataOverHTTP(HODLER_URL + 'getSegwitUTXO.php?coin='
+    + AvailableCoin[CoinID].name + segwitParameters(fromClaimWD){ '&address=' + fromClaimWD.addr}), -1); //  <<<<< SEGWIT!!!
 
   // tmp:=CurrentCoin.coin;
   /// CurrentCoin.coin:=7;

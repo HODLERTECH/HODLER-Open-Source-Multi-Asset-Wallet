@@ -2653,13 +2653,18 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Viewport.Width = 409.000000000000000000
           Viewport.Height = 602.000000000000000000
           inherited emptyAddressesLayout: TLayout
+            Size.Width = 379.000000000000000000
+            inherited NoPrivateKeyToExportLabel: TLabel
+              Size.Width = 379.000000000000000000
+            end
             inherited Layout58: TLayout
+              Size.Width = 379.000000000000000000
               inherited exportemptyaddressesSwitch: TSwitch
                 Size.Width = 55.000000000000000000
                 Size.Height = 35.000000000000000000
               end
               inherited exportemptyAddressesLabel: TLabel
-                Size.Width = 253.000000000000000000
+                Size.Width = 294.000000000000000000
               end
             end
           end

@@ -4456,7 +4456,7 @@ begin
       begin
         AccountsNames[i].name := name;
         try
-          AccountsNames[i].order := strToInt(JsonObject.GetValue<string>('order'));
+          AccountsNames[i].order := strToInt(JsonValue.GetValue<string>('order'));
         except on E: Exception do
           AccountsNames[i].order := i;
         end;

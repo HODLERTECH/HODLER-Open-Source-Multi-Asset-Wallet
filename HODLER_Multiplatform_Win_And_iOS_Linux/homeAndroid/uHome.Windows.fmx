@@ -2139,6 +2139,18 @@ inherited frmHome_Windows: TfrmHome_Windows
           Size.Height = 351.000000000000000000
           Viewport.Width = 624.000000000000000000
           Viewport.Height = 351.000000000000000000
+          inherited emptyAddressesLayout: TLayout
+            Size.Width = 594.000000000000000000
+            inherited NoPrivateKeyToExportLabel: TLabel
+              Size.Width = 594.000000000000000000
+            end
+            inherited Layout58: TLayout
+              Size.Width = 594.000000000000000000
+              inherited exportemptyAddressesLabel: TLabel
+                Size.Width = 475.000000000000000000
+              end
+            end
+          end
         end
       end
       inherited PrivOptionsTabItem: TTabItem

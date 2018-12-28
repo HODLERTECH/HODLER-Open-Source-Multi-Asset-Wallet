@@ -2235,14 +2235,19 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Viewport.Width = 245.000000000000000000
           Viewport.Height = 257.000000000000000000
           inherited emptyAddressesLayout: TLayout
+            Size.Width = 215.000000000000000000
+            inherited NoPrivateKeyToExportLabel: TLabel
+              Size.Width = 215.000000000000000000
+            end
             inherited Layout58: TLayout
+              Size.Width = 215.000000000000000000
               inherited exportemptyaddressesSwitch: TSwitch
                 Position.Y = 5.000000000000000000
                 Size.Width = 44.000000000000000000
                 Size.Height = 26.000000000000000000
               end
               inherited exportemptyAddressesLabel: TLabel
-                Size.Width = 264.000000000000000000
+                Size.Width = 141.000000000000000000
               end
             end
           end

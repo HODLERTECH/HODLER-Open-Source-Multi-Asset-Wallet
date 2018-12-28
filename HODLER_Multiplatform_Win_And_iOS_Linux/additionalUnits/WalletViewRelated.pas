@@ -179,6 +179,7 @@ begin
   with frmhome do
   begin
     createAddWalletView();
+    PrivateKeyEditSV.Text := '';
 
     newCoinListNextTabItem := ClaimWalletListTabItem;
 
