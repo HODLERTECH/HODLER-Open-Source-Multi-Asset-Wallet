@@ -256,11 +256,13 @@ object frmHome: TfrmHome
       Size.Height = 551.000000000000000000
       Size.PlatformDefault = False
       TabHeight = 49.000000000000000000
-      TabIndex = 39
+      TabIndex = 0
       TabOrder = 0
       TabPosition = None
       OnChange = closeVirtualKeyBoard
       Sizes = (
+        368s
+        551s
         368s
         551s
         368s
@@ -357,7 +359,7 @@ object frmHome: TfrmHome
         CustomIcon = <
           item
           end>
-        IsSelected = False
+        IsSelected = True
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -10602,7 +10604,7 @@ object frmHome: TfrmHome
             Size.PlatformDefault = False
             StyleLookup = 'calendarlabelstyle'
             TextSettings.HorzAlign = Center
-            Text = 'Settings'
+            Text = '----PROFILE SETTINGS----'
           end
           object btnSBack: TButton
             Align = Left
@@ -10615,23 +10617,13 @@ object frmHome: TfrmHome
             OnClick = btnSBackClick
           end
         end
-        object btnSWipe: TButton
-          Align = Top
-          Position.Y = 96.000000000000000000
-          Size.Width = 368.000000000000000000
-          Size.Height = 48.000000000000000000
-          Size.PlatformDefault = False
-          TabOrder = 1
-          Text = 'Wipe Wallet Data'
-          OnClick = btnSWipeClick
-        end
         object btnSSys: TButton
           Align = Top
           Position.Y = 96.000000000000000000
           Size.Width = 384.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
-          TabOrder = 2
+          TabOrder = 1
           Text = 'Open System Settings (HODLER OS)'
           Visible = False
           OnClick = btnSSysClick
@@ -10642,7 +10634,7 @@ object frmHome: TfrmHome
           Size.Width = 384.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
-          TabOrder = 3
+          TabOrder = 2
           Text = 'Add new wallet'
           Visible = False
           OnClick = btnAddNewCoinClick
@@ -10653,96 +10645,10 @@ object frmHome: TfrmHome
           Size.Width = 384.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
-          TabOrder = 4
+          TabOrder = 3
           Text = 'Add new token'
           Visible = False
           OnClick = btnAddNewTokenClick
-        end
-        object DebugBtn: TButton
-          Align = Top
-          Position.Y = 144.000000000000000000
-          Size.Width = 368.000000000000000000
-          Size.Height = 48.000000000000000000
-          Size.PlatformDefault = False
-          TabOrder = 5
-          Text = 'DebugBtn'
-          OnClick = DebugBtnClick
-        end
-        object OrganizeButton: TButton
-          Align = Top
-          Position.Y = 192.000000000000000000
-          Size.Width = 368.000000000000000000
-          Size.Height = 48.000000000000000000
-          Size.PlatformDefault = False
-          TabOrder = 6
-          Text = 'Organize'
-          OnClick = OrganizeButtonClick
-        end
-        object Panel2: TPanel
-          Align = Top
-          Position.Y = 240.000000000000000000
-          Size.Width = 368.000000000000000000
-          Size.Height = 48.000000000000000000
-          Size.PlatformDefault = False
-          TabOrder = 8
-          object LanguageBox: TPopupBox
-            Align = Right
-            Items.Strings = (
-              'ENG'
-              'POL'
-              'DEU'
-              'DUT'
-              'PT'
-              'FRA'
-              'JPN'
-              'SPA'
-              'ZHX')
-            Position.X = 256.000000000000000000
-            Size.Width = 112.000000000000000000
-            Size.Height = 48.000000000000000000
-            Size.PlatformDefault = False
-            StyleLookup = 'popupboxstyle'
-            TabOrder = 0
-            OnChange = LanguageBoxChange
-          end
-          object SettingsLanguageLabel: TLabel
-            Align = Client
-            Margins.Left = 15.000000000000000000
-            Margins.Right = 15.000000000000000000
-            Size.Width = 226.000000000000000000
-            Size.Height = 48.000000000000000000
-            Size.PlatformDefault = False
-            Text = 'Language'
-            TabOrder = 1
-          end
-        end
-        object Panel3: TPanel
-          Align = Top
-          Position.Y = 288.000000000000000000
-          Size.Width = 368.000000000000000000
-          Size.Height = 48.000000000000000000
-          Size.PlatformDefault = False
-          TabOrder = 7
-          object CurrencyBox: TPopupBox
-            Align = Right
-            Position.X = 256.000000000000000000
-            Size.Width = 112.000000000000000000
-            Size.Height = 48.000000000000000000
-            Size.PlatformDefault = False
-            StyleLookup = 'popupboxstyle'
-            TabOrder = 0
-            OnChange = CurrencyBoxChange
-          end
-          object SettingsCurrencyLabel: TLabel
-            Align = Client
-            Margins.Left = 15.000000000000000000
-            Margins.Right = 15.000000000000000000
-            Size.Width = 226.000000000000000000
-            Size.Height = 48.000000000000000000
-            Size.PlatformDefault = False
-            Text = 'Currency'
-            TabOrder = 1
-          end
         end
         object DebugSaveSeedButton: TButton
           Align = Top
@@ -10750,20 +10656,10 @@ object frmHome: TfrmHome
           Size.Width = 384.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
-          TabOrder = 9
+          TabOrder = 4
           Text = 'DebugSaveSeedButton'
           Visible = False
           OnClick = DebugSaveSeedButtonClick
-        end
-        object CreateBackupButton: TButton
-          Align = Top
-          Position.Y = 336.000000000000000000
-          Size.Width = 368.000000000000000000
-          Size.Height = 49.000000000000000000
-          Size.PlatformDefault = False
-          TabOrder = 10
-          Text = 'Create Backup'
-          OnClick = CreateBackupButtonClick
         end
         object updateBtn: TButton
           Align = Top
@@ -10771,63 +10667,211 @@ object frmHome: TfrmHome
           Size.Width = 384.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
-          TabOrder = 11
+          TabOrder = 5
           Text = 'Check for updates'
           Visible = False
           OnClick = updateBtnClick
         end
-        object DeleteAccountButton: TButton
-          Align = Top
-          Position.Y = 48.000000000000000000
+        object SettingsVertScrollBox: TVertScrollBox
+          Align = Client
           Size.Width = 368.000000000000000000
-          Size.Height = 48.000000000000000000
+          Size.Height = 503.000000000000000000
           Size.PlatformDefault = False
-          TabOrder = 12
-          Text = 'Delete this account'
-          OnClick = DeleteAccountButtonClick
-        end
-        object StyloSwitch: TPanel
-          Align = Top
-          Position.Y = 433.000000000000000000
-          Size.Width = 368.000000000000000000
-          Size.Height = 57.000000000000000000
-          Size.PlatformDefault = False
-          TabOrder = 13
-          object DayNightModeStaticLabel: TLabel
-            Align = Client
-            Margins.Left = 15.000000000000000000
-            Margins.Right = 15.000000000000000000
-            Size.Width = 234.000000000000000000
-            Size.Height = 57.000000000000000000
+          TabOrder = 6
+          Viewport.Width = 368.000000000000000000
+          Viewport.Height = 503.000000000000000000
+          object LocalSettingsLayout: TLayout
+            Align = MostTop
+            Size.Width = 368.000000000000000000
+            Size.Height = 192.000000000000000000
             Size.PlatformDefault = False
-            Text = 'Night mode'
             TabOrder = 0
+            object CreateBackupButton: TButton
+              Align = Top
+              Position.Y = 48.000000000000000000
+              Size.Width = 368.000000000000000000
+              Size.Height = 49.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 0
+              Text = 'Create Backup'
+              OnClick = CreateBackupButtonClick
+            end
+            object DeleteAccountButton: TButton
+              Align = MostBottom
+              Position.Y = 144.000000000000000000
+              Size.Width = 368.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 1
+              Text = 'Delete this account'
+              OnClick = DeleteAccountButtonClick
+            end
+            object OrganizeButton: TButton
+              Align = MostTop
+              Size.Width = 368.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 2
+              Text = 'Organize'
+              OnClick = OrganizeButtonClick
+            end
+            object PrivateKeyManageButton: TButton
+              Align = Bottom
+              Position.Y = 96.000000000000000000
+              Size.Width = 368.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 3
+              Text = 'Private Key'
+              OnClick = PrivateKeyManageButtonClick
+            end
           end
-          object DayNightModeSwitch: TSwitch
-            Align = Right
-            IsChecked = True
-            Margins.Left = 16.000000000000000000
-            Margins.Top = 16.000000000000000000
-            Margins.Right = 16.000000000000000000
-            Margins.Bottom = 16.000000000000000000
-            Position.X = 280.000000000000000000
-            Position.Y = 16.000000000000000000
-            Size.Width = 72.000000000000000000
-            Size.Height = 25.000000000000000000
+          object GlobalSettingsLayout: TLayout
+            Align = Top
+            Position.Y = 192.000000000000000000
+            Size.Width = 368.000000000000000000
+            Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
-            OnSwitch = DayNightModeSwitchSwitch
+            object btnSWipe: TButton
+              Align = Top
+              Position.Y = 192.000000000000000000
+              Size.Width = 368.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 0
+              Text = 'Wipe Wallet Data'
+              OnClick = btnSWipeClick
+            end
+            object DebugBtn: TButton
+              Align = Top
+              Position.Y = 240.000000000000000000
+              Size.Width = 368.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 1
+              Text = 'DebugBtn'
+              OnClick = DebugBtnClick
+            end
+            object Panel2: TPanel
+              Align = MostTop
+              Position.Y = 144.000000000000000000
+              Size.Width = 368.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 2
+              object LanguageBox: TPopupBox
+                Align = Right
+                Items.Strings = (
+                  'ENG'
+                  'POL'
+                  'DEU'
+                  'DUT'
+                  'PT'
+                  'FRA'
+                  'JPN'
+                  'SPA'
+                  'ZHX')
+                Position.X = 256.000000000000000000
+                Size.Width = 112.000000000000000000
+                Size.Height = 48.000000000000000000
+                Size.PlatformDefault = False
+                StyleLookup = 'popupboxstyle'
+                TabOrder = 0
+                OnChange = LanguageBoxChange
+              end
+              object SettingsLanguageLabel: TLabel
+                Align = Client
+                Margins.Left = 15.000000000000000000
+                Margins.Right = 15.000000000000000000
+                Size.Width = 226.000000000000000000
+                Size.Height = 48.000000000000000000
+                Size.PlatformDefault = False
+                Text = 'Language'
+                TabOrder = 1
+              end
+            end
+            object Panel3: TPanel
+              Align = MostTop
+              Position.Y = 96.000000000000000000
+              Size.Width = 368.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 3
+              object CurrencyBox: TPopupBox
+                Align = Right
+                Position.X = 256.000000000000000000
+                Size.Width = 112.000000000000000000
+                Size.Height = 48.000000000000000000
+                Size.PlatformDefault = False
+                StyleLookup = 'popupboxstyle'
+                TabOrder = 0
+                OnChange = CurrencyBoxChange
+              end
+              object SettingsCurrencyLabel: TLabel
+                Align = Client
+                Margins.Left = 15.000000000000000000
+                Margins.Right = 15.000000000000000000
+                Size.Width = 226.000000000000000000
+                Size.Height = 48.000000000000000000
+                Size.PlatformDefault = False
+                Text = 'Currency'
+                TabOrder = 1
+              end
+            end
+            object StyloSwitch: TPanel
+              Align = MostTop
+              Position.Y = 48.000000000000000000
+              Size.Width = 368.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 4
+              object DayNightModeStaticLabel: TLabel
+                Align = Client
+                Margins.Left = 15.000000000000000000
+                Margins.Right = 15.000000000000000000
+                Size.Width = 234.000000000000000000
+                Size.Height = 48.000000000000000000
+                Size.PlatformDefault = False
+                Text = 'Night mode'
+                TabOrder = 0
+              end
+              object DayNightModeSwitch: TSwitch
+                Align = Right
+                IsChecked = True
+                Margins.Left = 16.000000000000000000
+                Margins.Top = 12.000000000000000000
+                Margins.Right = 16.000000000000000000
+                Margins.Bottom = 12.000000000000000000
+                Position.X = 280.000000000000000000
+                Position.Y = 12.000000000000000000
+                Size.Width = 72.000000000000000000
+                Size.Height = 24.000000000000000000
+                Size.PlatformDefault = False
+                TabOrder = 1
+                OnSwitch = DayNightModeSwitchSwitch
+              end
+            end
+            object AboutHodlerButton: TButton
+              Align = Top
+              Position.Y = 288.000000000000000000
+              Size.Width = 368.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 5
+              Text = 'About HODLER Wallet'
+              OnClick = AboutHodlerButtonClick
+            end
+            object GlobalStetingsStaticLabel: TLabel
+              Align = MostTop
+              Size.Width = 368.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.HorzAlign = Center
+              Text = '----GLOBAL SETTINGS----'
+              TabOrder = 6
+            end
           end
-        end
-        object PrivateKeyManageButton: TButton
-          Align = Top
-          Position.Y = 385.000000000000000000
-          Size.Width = 368.000000000000000000
-          Size.Height = 48.000000000000000000
-          Size.PlatformDefault = False
-          TabOrder = 14
-          Text = 'Private Key'
-          OnClick = PrivateKeyManageButtonClick
         end
       end
       object descryptSeed: TTabItem
@@ -14929,7 +14973,7 @@ object frmHome: TfrmHome
         CustomIcon = <
           item
           end>
-        IsSelected = True
+        IsSelected = False
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -15708,6 +15752,182 @@ object frmHome: TfrmHome
             Text = 'Encrypted QR Code Backup'#13#10'pair this wallet with other device'
             TabOrder = 2
           end
+        end
+      end
+      object AboutHodlerTabItem: TTabItem
+        CustomIcon = <
+          item
+          end>
+        IsSelected = False
+        Size.Width = 8.000000000000000000
+        Size.Height = 8.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = ''
+        TabOrder = 0
+        Text = 'AboutHodlerTabItem'
+        object ToolBar18: TToolBar
+          Size.Width = 368.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object AHWHeaderLabel: TLabel
+            Align = Contents
+            Size.Width = 368.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'calendarlabelstyle'
+            TextSettings.HorzAlign = Center
+            Text = 'About HODLER'
+            ParentShowHint = False
+            ShowHint = False
+          end
+          object AHWBackButton: TButton
+            Align = Left
+            Size.Width = 64.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'buttonstyle'
+            TabOrder = 1
+            Text = 'Back'
+          end
+        end
+        object AboutHodlerStaticLabel: TLabel
+          Align = VertCenter
+          Position.Y = 307.000000000000000000
+          Size.Width = 368.000000000000000000
+          Size.Height = 129.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.HorzAlign = Center
+          Text = 'AboutHodlerStaticLabel'
+          TabOrder = 1
+        end
+        object AboutHodlerLogo: TImage
+          MultiResBitmap = <
+            item
+              Width = 374
+              Height = 127
+              PNG = {
+                89504E470D0A1A0A0000000D49484452000001760000007F0806000000FB26E9
+                19000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+                0E0249444154785EED9D8D95DC341B46275F03810A20150015402A20A920A182
+                900A081500159054B0A402920A0215241D2454B09FAE9997A368E519DBE3BF68
+                EF3DE739BB236BA457F2E8B146F6D8770E87C37592888834C2FF8E7F4544A411
+                34761191C6D0D845441A43631711690C8D5D44A43134761191C6D0D845441A43
+                631711690C8D5D44A43134761191C6D0D845441A43631711690C8D5D44A43134
+                761191C6D0D845441A43631711690C8D5D44A43134761191C6D0D845441A4363
+                1711690C8D5D44A43134761191C6D0D845441A43631711690C8D5D44A4313476
+                1191C6D0D845441A43631711690C8D5D44A43134761191C6D0D845441A436317
+                11690C8D5D44A43134761191C6D0D845441AE34ED2F5BFFFCA1A7CF9E597870F
+                1F3E749A9BAFBFFEFAF0D75F7F1D5F5D0EE57DF6D967C75775DEBD7BD7690986
+                D40F73C53077FF4D6568BB8329EDFFEEBBEF8EFF0D83CFEB1EFA468683B1AB95
+                F4E79F7F5E3F7BF6ACBAED12A5817A0DB56D63F4E0C183EBABABABEBF7EFDF77
+                E50DE1EDDBB7D7BFFFFEFB7532A46A9963450C943906E22506FAA156E610C125
+                EFBF44D1EF53E07DB5326BE2B33766DF9650D7567DA486CBA518E96096980E3A
+                873470BBD9D90F3FFC70B877EFDEE1CE9D3B27F5CD37DF1C7EFEF9E7EE9BC89B
+                376F0EC95C47CD364B783F31BC78F16250FD887C4F9F3EEDEAA50D88783E0598
+                39D36FD1EF0F1F3E1CDCEE10EF39077D433D4F9E3CE9FAEAF3CF3FAF96D527F2
+                530F31D2BFBFFCF2CB45FB5996A7EAF86A19ED71C6FEF8F1E3EEBDCCC6922156
+                F30C113124F3E866845366EFD106E2A96D1F22E2A71DC430B61C587336CAE700
+                2EEDF7218A99FA1CDFAA2883FD8C92B957F3A8CD554D540B696FC61EA67E8999
+                966249648A896070BCB7B66DACA6B40BD63276DA0973F6FB294D39D09D12868E
+                B1B3CF6ADBD5E6AA26AA85B42763675D1796309730F7313351F213536DDB1485
+                B90F2D13D630F61F7FFCB1AB6B2D53E7000B73CFAED9B7731F30D46CAA26AA85
+                B4176367903328978825445B516D5B4D30B7B1C612C410535BA2FE5261864BF6
+                7BA92907FDA1A21D9CE8AE6D53DBC993A7B794346BEC4E84A581794C991F4EC0
+                2653197D69DD9CD03EDA497BF7C04F3FFDB478BFAFC9F3E7CFBB13D5E95BC131
+                45F680C67E0B49B3D7EEEA08AE665912AEAD66E063665B423B692FEDDE12EA7F
+                FCF8F1E2FDBE26EC63AE6FDFF2E02D37D1D86F21310831DDA5F9EDB7DFBAFAB6
+                34D568E7D6E6F3E0C1836EB6BE46BFAF096DDAFAA0291FA3B1DF42F8DABCD6AF
+                08A39EADBFAA13C7D6317CF5D557FE7A53564163BF857CFBEDB787D7AF5F1F5F
+                2DCFAB57AF369F2DD35EDABD251C58D6ECF7B55873A220C3D0D84564322C2FB1
+                0CC3C15BF683C62E2293E1A434E70C586797FDA0B18BACC8A3478FFEBB9FCDA5
+                BABABA3A96BA0D5C42CA125B4B57F9B482C62EB2225C1EC83AFB5CDA0A2EDBE4
+                4660FC5661EC2D83651DAABF5C52CB28CDB436FFE5E95231F469687D403B6ADB
+                2E15F513476D5B68C9FAD1DAFD1E1AF3D938277E39CBFD61C05B09EC573E6863
+                65D2E0EE665A69801F53E681AFC494CD2D56CFB1540C7D0CAD0FEFB97FFFFE22
+                27E2A89BAB6228BF8F25EB87B5FB3D88CFC6254B2677EFDEEDCAE10A1866E8CC
+                D43D61BA5F5C8AB98570A28B81BA165C35B1F5C935DABB87137C6BF67B0907B6
+                31E27C00BF1A46183A461EF78BD7D4F7CF8D69BC5A4E69E6B4F9520CF513476D
+                DB1202E2AB6DCB3534DF140DE9F725EB476BF77B68CC6723573A2077B7E69DEB
+                56CA6A555513D54262602F49ADCE5231D019B8B5ED732A6E0D5CDB560A963056
+                DA39A4EC21792E51F4C51AFD9E6BAAB123CDFDD3946BEC2B938CBD5BA3E4D16F
+                73C25765AE5218B2C60E6FDFBEED62587ABD37DACB9AEC39F09E25D6B86923CB
+                0A2C219C82FA596AF8E38F3F8E29F3F3FEFDFBEEFE394BF77B4E32F66E3F0CFD
+                6C942473EFDECFAF4B87EC47D90737DC5E2D2766ECE79604A668ECAC8C2B1A86
+                DEA77CAA22A6A10FDB80B967CCB48F760EB982837D930E8ED56D73897DBF74BF
+                97BA64C61E72E6FE69C993A7B7147E2DC84C3A0DD463CABC30CBA3EC5F7FFD75
+                D3EB9C8981FA87DC51F1E5CB97DDF5D9C4BE14F407277197EAF7A52066BE4DF1
+                CDF0538BFDB652757CB58CF6326347699076B3C73450ABDBA72A667768CCCC94
+                27F1F0D8B8DAB629A25DB48F76D6B6972256F22FB17F72C5BE9ABBDFFB34C78C
+                3D14FB76ADD8D5645513D542DA93B1234EE885B98F31E13EB1EC32C5D4113160
+                EE97C6C1FBC79A7A88251B58FAC73751CF5CFD7E4A731A3B225ECD7DF7AA26AA
+                85B43763473173C754A71A1A833DD68F69E314B3E2A000FCB271AAD9113FED40
+                634D3D846101ED59D274D96797F6FB10CD6DEC4873DFB7BC2A666592E96DFECB
+                D31A69A0763F44E1C64EAC497365C8DF7FFF7D767D3C9967F70089783A10BF6E
+                BCE40941C9E0BAAB7B288BAB4786DCE79B676EF2831AFA8076F0BE58CB9E4AC4
+                01B4877D36A43CFA6BCC3905E2A51EEA1BD3EF39E7EABCF4B3D107B153AE57CB
+                EC931B6EAF9613B3D139D7914331EBAE6D1B236662C4479C94778E98B5B1A453
+                2B6F8A98B953E690FA81192FF132EB25FE5A9953147DC13790A14CFD36469BA3
+                AEA1ED0E687BADCCD05C9F8D9AE8A34BBE1DA965E48C5D44A431BCDC5144A431
+                34761191C6D0D845441A43631711690C8D5D44A43134761191C6D0D845441A43
+                631711690C8D5DE49690DF2621E09610DC1640DA426317B925704F1D8C3C87FB
+                BD702F19690B8DFD96C3CDBB9CB1C954FCFCEC138D7D039839314B2A674F2543
+                F29C83321033B31ADF7FFFFDF1BF7E6256372496C88BE622FAABAF0DA7B61333
+                DBC8738E2867485EF29D8AA915CEB573C8E747B6E1C69DC1D4324A83E3C69D02
+                B93B626C4F03A8DB9ECCE8BF3BFCC59DFB781667DF1DFAB8BB1EDBE33570B745
+                D203DECBDD0FCBF79510439E8772734EDDC9AFCC0BB439B643EDEE87B4B94C27
+                8D58E2DEE890D77B6E7BADAF6BF70E274FED0E8EBC2EF322FAB0BCFB62DCD992
+                7D59BBD3623A507C94AF26CA2CFB20DAC6FBF374F2E67708657B7E374CFEE69F
+                8710E597EDA20F214F43F465F9F998F2F9519BA99AA81610031F850131207333
+                8A41469E7280F49903AF211FFCC0E08EBC985C9F4930D0FB4C2C0E26114B9443
+                5A594EE4CDEB2CDB00638C1DE3A0BEFCE030663BFD1871124BCDF0C817714539
+                D1A7B97996E9919772E37F8C0FCA78A89358F3B452B48358F234E245791C7C5E
+                20EF7F6288DB16F33F6D81D288871A3BF1536FDEB7C400B17F43945796A976A1
+                6AA29A59610AB991978A41560EC81083B79C1132F830B03C0D6A3336CCA5666C
+                B581C980865A2C653991B734C25230D6D8F3B45CA7B6D7CC0F51078695A7514E
+                D97F914EDFE669E4ABCDC87395468C6AFD5E2A0E0AF13A3E2FC49CC7C7EB53FD
+                12AAC5CF7B49CFD36AC64EFCB53A786FD97ED2CA32D5F6728D7D2592D9747F87
+                3C1188A7E8D478F1E24577B22A1956F73A196AF79A270695F0C49F12EA8E38CE
+                712ADEB29C316D1B435F3F047DDBE9134866D93DA92AF4C5175F54D78A5FBD7A
+                75FCEF63A29F03DAC9D38D4EC1D3969E3C79727CF5EF1A35E5D4F6514EC4407E
+                E08950B40F516FC4427A5FBCB48DF723FE2FE31F4AAC9BE77D87A0D67FB23F34
+                F615E91B90257D8F606390F308B4302EFE32D06A06572BE39C29D5A899755F39
+                43DB37947FFEF9E7F85F9D53DB693F26980BA3ABC578AE9E9C736DC4C0A9270E
+                768F1E3DEAFAF0DCA3EEE2F17661ECECDB972F5FFEF7DE48E72FE939E44D33EC
+                43FAB6D03DDE104D35F59CB2FF60EE83B72C83C6BE22F92C772ACCDA6346C8CC
+                8A1962CDC46B332B9E4D3A965ACC7DE54C6DDF12B340CABC7FFF7E559770AE8D
+                9830E61FFB08D33D375B0F384063A0D48131C7019BF2D8D761EEF9C185B4ABAB
+                ABAE0E9E691A6DBCD4806947DE67A1A74F9F1E73C89ED1D857828186D95C6AEE
+                1839839E018D6960F435628695C37B860EF8C8578B97B4BC9CF83F8CA78FBE03
+                D0A57D5232349EB1506EAD5F4B62C90C41ED1B550D96CF62BF62DED15FCCD049
+                8BFD97F763B4918777E75C3263A70EF6C912075C598FEAE2BB9A5F9C044369D0
+                75AFD3C0E94E5EC576FE2F4F64D5C4092C4E6EF59D440BE2C427F570220DA2EE
+                1027F538E197C7546E8B18A39C3C7F5F5E94CCE8A33CC49DE7A10CD2E059E5E4
+                6999966BC876FA278F2799D58D93C17DE5908EF234DA03E5552A655F20DA49FD
+                E509CC53A27F83F2042CE541196B9C748DBE2696D84765FCBCB74CAB7DE68823
+                DE9FB78D3AF2FE44A73E3F6A535513D502C204182C39F95506B5415653184C9F
+                B1415CD91030F84A53430CC83C5F5926033787BCB423CF83C2F473A833CFC3FB
+                F2BA80F2795F592FFDD4D73E746E3BF1947D0DA5D1F695433A2AD3C94BBB726A
+                FD11FD561AE13945CCE5C1220E80B5F2CA765237FBBF8C9FD8CBB4BECF5C6D5F
+                41F9193AF7F951DBE8CEF11F599134183AF1953A960DC69006D72119D4E1DEBD
+                7BDD5A68491A5FDD7A285FE7D3C0EDD2CAAFF025912F5FBF0D9249765FCD87C4
+                1B79A15616B09D7CC45E8B7F4EA2AFE15C1F8CE15CBFB27FC8C33E5A83A5FA34
+                CA85BEFD09A73E3FB20D37DC5EED5BCCBACA99572E4803ADBA4D2DAF6484DDAC
+                DED9ABDA50D544B533F19517B33EF5953C746EBB5A466976DB2D93711E0563C7
+                E06BF9945A41D544B53331FB03D6336B6BE5B940635F5FB1D68DB163F2B53C4A
+                AD21D7D845441AC3EBD845441A43631711690C8D5D44A43134761191C6D0D845
+                441A43631711690C8D5D44A43134761191C6D0D845441A43631711690C8D5D44
+                A43134761191C6D0D845441A43631711690C8D5D44A43134761191C6D0D84544
+                1A43631711690C8D5D44A43134761191C6D0D845441A43631711690C8D5D44A4
+                3134761191C6D0D845441A43631711690C8D5D44A43134761191C6D0D845441A
+                43631711690C8D5D44A43134761191C6D0D845441A43631711690C8D5D44A429
+                0E87FF0322FF63264EE40B890000000049454E44AE426082}
+            end>
+          Align = Top
+          Position.Y = 48.000000000000000000
+          Size.Width = 368.000000000000000000
+          Size.Height = 145.000000000000000000
+          Size.PlatformDefault = False
         end
       end
     end

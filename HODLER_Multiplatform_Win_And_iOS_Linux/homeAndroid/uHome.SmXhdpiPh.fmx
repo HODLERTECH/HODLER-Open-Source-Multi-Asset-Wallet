@@ -106,6 +106,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         245s
         370s
         245s
+        370s
+        245s
         370s)
       inherited dashbrd: TTabItem
         ExplicitSize.cx = 8.000000000000000000
@@ -141,14 +143,18 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             Size.Width = 245.000000000000000000
             inherited globalBalance: TLabel
               Size.Width = 245.000000000000000000
+              Size.Height = 58.000000000000000000
             end
             inherited globalCurrency: TLabel
+              Position.Y = 58.000000000000000000
               Size.Width = 245.000000000000000000
             end
             inherited SearchLayout: TLayout
               Size.Width = 245.000000000000000000
               inherited SearchInDashBrdButton: TSpeedButton
                 Position.X = 213.000000000000000000
+                Position.Y = 8.000000000000000000
+                Size.Height = 32.000000000000000000
               end
               inherited HideZeroWalletsCheckBox: TCheckBox
                 Size.Width = 245.000000000000000000
@@ -186,6 +192,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           end
           inherited PopupBox1: TPopupBox
             Position.X = 65.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited BackToBalanceViewLayout: TLayout
@@ -1043,9 +1051,6 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             Size.Width = 245.000000000000000000
           end
         end
-        inherited btnSWipe: TButton
-          Size.Width = 245.000000000000000000
-        end
         inherited btnSSys: TButton
           Size.Width = 250.000000000000000000
         end
@@ -1055,50 +1060,62 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         inherited btnAddNewToken: TButton
           Size.Width = 250.000000000000000000
         end
-        inherited DebugBtn: TButton
-          Size.Width = 245.000000000000000000
-        end
-        inherited OrganizeButton: TButton
-          Size.Width = 245.000000000000000000
-        end
-        inherited Panel2: TPanel
-          Size.Width = 245.000000000000000000
-          inherited LanguageBox: TPopupBox
-            Position.X = 133.000000000000000000
-          end
-          inherited SettingsLanguageLabel: TLabel
-            Size.Width = 103.000000000000000000
-          end
-        end
-        inherited Panel3: TPanel
-          Size.Width = 245.000000000000000000
-          inherited CurrencyBox: TPopupBox
-            Position.X = 133.000000000000000000
-          end
-          inherited SettingsCurrencyLabel: TLabel
-            Size.Width = 103.000000000000000000
-          end
-        end
         inherited DebugSaveSeedButton: TButton
           Size.Width = 250.000000000000000000
         end
-        inherited CreateBackupButton: TButton
+        inherited SettingsVertScrollBox: TVertScrollBox
           Size.Width = 245.000000000000000000
-        end
-        inherited DeleteAccountButton: TButton
-          Size.Width = 245.000000000000000000
-        end
-        inherited StyloSwitch: TPanel
-          Size.Width = 245.000000000000000000
-          inherited DayNightModeStaticLabel: TLabel
-            Size.Width = 111.000000000000000000
+          Size.Height = 322.000000000000000000
+          Viewport.Width = 245.000000000000000000
+          Viewport.Height = 322.000000000000000000
+          inherited GlobalSettingsLayout: TLayout
+            Size.Width = 245.000000000000000000
+            inherited btnSWipe: TButton
+              Size.Width = 245.000000000000000000
+            end
+            inherited DebugBtn: TButton
+              Size.Width = 245.000000000000000000
+            end
+            inherited Panel2: TPanel
+              Size.Width = 245.000000000000000000
+              inherited LanguageBox: TPopupBox
+                Position.X = 133.000000000000000000
+                Position.Y = 8.000000000000000000
+                Size.Height = 32.000000000000000000
+              end
+              inherited SettingsLanguageLabel: TLabel
+                Size.Width = 103.000000000000000000
+              end
+            end
+            inherited Panel3: TPanel
+              Size.Width = 245.000000000000000000
+              inherited CurrencyBox: TPopupBox
+                Position.X = 133.000000000000000000
+                Position.Y = 8.000000000000000000
+                Size.Height = 32.000000000000000000
+              end
+              inherited SettingsCurrencyLabel: TLabel
+                Size.Width = 103.000000000000000000
+              end
+            end
+            inherited StyloSwitch: TPanel
+              Size.Width = 245.000000000000000000
+              inherited DayNightModeStaticLabel: TLabel
+                Size.Width = 139.000000000000000000
+              end
+              inherited DayNightModeSwitch: TSwitch
+                Position.X = 185.000000000000000000
+                Size.Width = 44.000000000000000000
+                Size.Height = 26.000000000000000000
+              end
+            end
+            inherited AboutHodlerButton: TButton
+              Size.Width = 245.000000000000000000
+            end
+            inherited GlobalStetingsStaticLabel: TLabel
+              Size.Width = 245.000000000000000000
+            end
           end
-          inherited DayNightModeSwitch: TSwitch
-            Position.X = 157.000000000000000000
-          end
-        end
-        inherited PrivateKeyManageButton: TButton
-          Size.Width = 245.000000000000000000
         end
       end
       inherited descryptSeed: TTabItem
@@ -2235,19 +2252,14 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Viewport.Width = 245.000000000000000000
           Viewport.Height = 257.000000000000000000
           inherited emptyAddressesLayout: TLayout
-            Size.Width = 215.000000000000000000
-            inherited NoPrivateKeyToExportLabel: TLabel
-              Size.Width = 215.000000000000000000
-            end
             inherited Layout58: TLayout
-              Size.Width = 215.000000000000000000
               inherited exportemptyaddressesSwitch: TSwitch
                 Position.Y = 5.000000000000000000
                 Size.Width = 44.000000000000000000
                 Size.Height = 26.000000000000000000
               end
               inherited exportemptyAddressesLabel: TLabel
-                Size.Width = 141.000000000000000000
+                Size.Width = 264.000000000000000000
               end
             end
           end
@@ -2301,6 +2313,23 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             Size.Width = 245.000000000000000000
             TextSettings.Font.StyleExt = {00070000000000000004000000}
           end
+        end
+      end
+      inherited AboutHodlerTabItem: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited ToolBar18: TToolBar
+          Size.Width = 245.000000000000000000
+          inherited AHWHeaderLabel: TLabel
+            Size.Width = 245.000000000000000000
+          end
+        end
+        inherited AboutHodlerStaticLabel: TLabel
+          Position.Y = 217.000000000000000000
+          Size.Width = 245.000000000000000000
+        end
+        inherited AboutHodlerLogo: TImage
+          Size.Width = 245.000000000000000000
         end
       end
     end

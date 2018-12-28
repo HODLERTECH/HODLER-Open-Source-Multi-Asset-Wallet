@@ -754,6 +754,17 @@ type
     exportemptyaddressesSwitch: TSwitch;
     exportemptyAddressesLabel: TLabel;
     LoadAddressesToImortAniIndicator: TAniIndicator;
+    GlobalSettingsLayout: TLayout;
+    SettingsVertScrollBox: TVertScrollBox;
+    LocalSettingsLayout: TLayout;
+    GlobalStetingsStaticLabel: TLabel;
+    AboutHodlerButton: TButton;
+    AboutHodlerTabItem: TTabItem;
+    ToolBar18: TToolBar;
+    AHWHeaderLabel: TLabel;
+    AHWBackButton: TButton;
+    AboutHodlerStaticLabel: TLabel;
+    AboutHodlerLogo: TImage;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -976,6 +987,7 @@ type
     procedure exportemptyaddressesSwitchClick(Sender: TObject);
     procedure SYWLBackButtonTap(Sender: TObject; const Point: TPointF);
     procedure ConfirmSendClaimCoinButtonClick(Sender: TObject);
+    procedure AboutHodlerButtonClick(Sender: TObject);
 
 
   private
@@ -2040,6 +2052,11 @@ begin
     end;
   end;
 
+end;
+
+procedure TfrmHome.AboutHodlerButtonClick(Sender: TObject);
+begin
+  switchTab(pageControl , AboutHodlerTabItem);
 end;
 
 procedure TfrmHome.AccountsListPanelExit(Sender: TObject);

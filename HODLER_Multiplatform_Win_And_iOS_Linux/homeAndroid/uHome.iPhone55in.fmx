@@ -106,6 +106,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         409s
         711s
         409s
+        711s
+        409s
         711s)
       inherited dashbrd: TTabItem
         Size.Width = 11.000000000000000000
@@ -163,7 +165,9 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
               Size.Width = 409.000000000000000000
               inherited SearchInDashBrdButton: TSpeedButton
                 Position.X = 387.000000000000000000
+                Position.Y = 11.000000000000000000
                 Size.Width = 22.000000000000000000
+                Size.Height = 26.000000000000000000
               end
               inherited HideZeroWalletsCheckBox: TCheckBox
                 Size.Width = 409.000000000000000000
@@ -202,6 +206,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           end
           inherited PopupBox1: TPopupBox
             Position.X = 229.000000000000000000
+            Position.Y = 9.000000000000000000
+            Size.Height = 30.000000000000000000
           end
         end
         inherited BackToBalanceViewLayout: TLayout
@@ -1158,10 +1164,6 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             Size.Height = 44.000000000000000000
           end
         end
-        inherited btnSWipe: TButton
-          Position.Y = 44.000000000000000000
-          Size.Width = 409.000000000000000000
-        end
         inherited btnSSys: TButton
           Position.Y = 92.000000000000000000
           Size.Width = 414.000000000000000000
@@ -1174,60 +1176,63 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Position.Y = 140.000000000000000000
           Size.Width = 414.000000000000000000
         end
-        inherited DebugBtn: TButton
-          Position.Y = 140.000000000000000000
-          Size.Width = 409.000000000000000000
-        end
-        inherited OrganizeButton: TButton
-          Position.Y = 188.000000000000000000
-          Size.Width = 409.000000000000000000
-        end
-        inherited Panel2: TPanel
-          Position.Y = 236.000000000000000000
-          Size.Width = 409.000000000000000000
-          inherited LanguageBox: TPopupBox
-            Position.X = 297.000000000000000000
-          end
-          inherited SettingsLanguageLabel: TLabel
-            Size.Width = 267.000000000000000000
-          end
-        end
-        inherited Panel3: TPanel
-          Position.Y = 284.000000000000000000
-          Size.Width = 409.000000000000000000
-          inherited CurrencyBox: TPopupBox
-            Position.X = 297.000000000000000000
-          end
-          inherited SettingsCurrencyLabel: TLabel
-            Size.Width = 267.000000000000000000
-          end
-        end
         inherited DebugSaveSeedButton: TButton
           Position.Y = 284.000000000000000000
           Size.Width = 414.000000000000000000
         end
-        inherited CreateBackupButton: TButton
-          Position.Y = 332.000000000000000000
+        inherited SettingsVertScrollBox: TVertScrollBox
           Size.Width = 409.000000000000000000
-        end
-        inherited DeleteAccountButton: TButton
-          Position.Y = 92.000000000000000000
-          Size.Width = 409.000000000000000000
-        end
-        inherited StyloSwitch: TPanel
-          Position.Y = 429.000000000000000000
-          Size.Width = 409.000000000000000000
-          inherited DayNightModeStaticLabel: TLabel
-            Size.Width = 292.000000000000000000
+          Size.Height = 667.000000000000000000
+          Viewport.Width = 409.000000000000000000
+          Viewport.Height = 667.000000000000000000
+          inherited GlobalSettingsLayout: TLayout
+            Size.Width = 409.000000000000000000
+            inherited btnSWipe: TButton
+              Size.Width = 409.000000000000000000
+            end
+            inherited DebugBtn: TButton
+              Size.Width = 409.000000000000000000
+            end
+            inherited Panel2: TPanel
+              Size.Width = 409.000000000000000000
+              inherited LanguageBox: TPopupBox
+                Position.X = 297.000000000000000000
+                Position.Y = 9.000000000000000000
+                Size.Height = 30.000000000000000000
+              end
+              inherited SettingsLanguageLabel: TLabel
+                Size.Width = 267.000000000000000000
+              end
+            end
+            inherited Panel3: TPanel
+              Size.Width = 409.000000000000000000
+              inherited CurrencyBox: TPopupBox
+                Position.X = 297.000000000000000000
+                Position.Y = 9.000000000000000000
+                Size.Height = 30.000000000000000000
+              end
+              inherited SettingsCurrencyLabel: TLabel
+                Size.Width = 267.000000000000000000
+              end
+            end
+            inherited StyloSwitch: TPanel
+              Size.Width = 409.000000000000000000
+              inherited DayNightModeStaticLabel: TLabel
+                Size.Width = 292.000000000000000000
+              end
+              inherited DayNightModeSwitch: TSwitch
+                Position.X = 338.000000000000000000
+                Size.Width = 55.000000000000000000
+                Size.Height = 35.000000000000000000
+              end
+            end
+            inherited AboutHodlerButton: TButton
+              Size.Width = 409.000000000000000000
+            end
+            inherited GlobalStetingsStaticLabel: TLabel
+              Size.Width = 409.000000000000000000
+            end
           end
-          inherited DayNightModeSwitch: TSwitch
-            Position.X = 338.000000000000000000
-            Size.Width = 55.000000000000000000
-          end
-        end
-        inherited PrivateKeyManageButton: TButton
-          Position.Y = 381.000000000000000000
-          Size.Width = 409.000000000000000000
         end
       end
       inherited descryptSeed: TTabItem
@@ -2653,18 +2658,13 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Viewport.Width = 409.000000000000000000
           Viewport.Height = 602.000000000000000000
           inherited emptyAddressesLayout: TLayout
-            Size.Width = 379.000000000000000000
-            inherited NoPrivateKeyToExportLabel: TLabel
-              Size.Width = 379.000000000000000000
-            end
             inherited Layout58: TLayout
-              Size.Width = 379.000000000000000000
               inherited exportemptyaddressesSwitch: TSwitch
                 Size.Width = 55.000000000000000000
                 Size.Height = 35.000000000000000000
               end
               inherited exportemptyAddressesLabel: TLabel
-                Size.Width = 294.000000000000000000
+                Size.Width = 253.000000000000000000
               end
             end
           end
@@ -2736,6 +2736,29 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             Size.Width = 409.000000000000000000
             TextSettings.Font.StyleExt = {00070000000000000004000000}
           end
+        end
+      end
+      inherited AboutHodlerTabItem: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited ToolBar18: TToolBar
+          Size.Width = 409.000000000000000000
+          Size.Height = 44.000000000000000000
+          inherited AHWHeaderLabel: TLabel
+            Size.Width = 409.000000000000000000
+            Size.Height = 44.000000000000000000
+          end
+          inherited AHWBackButton: TButton
+            Size.Height = 44.000000000000000000
+          end
+        end
+        inherited AboutHodlerStaticLabel: TLabel
+          Position.Y = 385.000000000000000000
+          Size.Width = 409.000000000000000000
+        end
+        inherited AboutHodlerLogo: TImage
+          Position.Y = 44.000000000000000000
+          Size.Width = 409.000000000000000000
         end
       end
     end

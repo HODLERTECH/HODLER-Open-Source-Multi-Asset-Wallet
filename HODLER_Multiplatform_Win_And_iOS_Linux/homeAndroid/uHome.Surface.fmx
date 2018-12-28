@@ -106,6 +106,8 @@ inherited frmHome_Surface: TfrmHome_Surface
         1064s
         1904s
         1064s
+        1904s
+        1064s
         1904s)
       inherited dashbrd: TTabItem
         ExplicitSize.cx = 8.000000000000000000
@@ -1003,50 +1005,53 @@ inherited frmHome_Surface: TfrmHome_Surface
             Size.Width = 1064.000000000000000000
           end
         end
-        inherited btnSWipe: TButton
+        inherited SettingsVertScrollBox: TVertScrollBox
           Size.Width = 1064.000000000000000000
-        end
-        inherited DebugBtn: TButton
-          Size.Width = 1064.000000000000000000
-        end
-        inherited OrganizeButton: TButton
-          Size.Width = 1064.000000000000000000
-        end
-        inherited Panel2: TPanel
-          Size.Width = 1064.000000000000000000
-          inherited LanguageBox: TPopupBox
-            Position.X = 952.000000000000000000
+          Size.Height = 1856.000000000000000000
+          Viewport.Width = 1064.000000000000000000
+          Viewport.Height = 1856.000000000000000000
+          inherited GlobalSettingsLayout: TLayout
+            Size.Width = 1064.000000000000000000
+            inherited btnSWipe: TButton
+              Size.Width = 1064.000000000000000000
+            end
+            inherited DebugBtn: TButton
+              Size.Width = 1064.000000000000000000
+            end
+            inherited Panel2: TPanel
+              Size.Width = 1064.000000000000000000
+              inherited LanguageBox: TPopupBox
+                Position.X = 952.000000000000000000
+              end
+              inherited SettingsLanguageLabel: TLabel
+                Size.Width = 922.000000000000000000
+              end
+            end
+            inherited Panel3: TPanel
+              Size.Width = 1064.000000000000000000
+              inherited CurrencyBox: TPopupBox
+                Position.X = 952.000000000000000000
+              end
+              inherited SettingsCurrencyLabel: TLabel
+                Size.Width = 922.000000000000000000
+              end
+            end
+            inherited StyloSwitch: TPanel
+              Size.Width = 1064.000000000000000000
+              inherited DayNightModeStaticLabel: TLabel
+                Size.Width = 930.000000000000000000
+              end
+              inherited DayNightModeSwitch: TSwitch
+                Position.X = 976.000000000000000000
+              end
+            end
+            inherited AboutHodlerButton: TButton
+              Size.Width = 1064.000000000000000000
+            end
+            inherited GlobalStetingsStaticLabel: TLabel
+              Size.Width = 1064.000000000000000000
+            end
           end
-          inherited SettingsLanguageLabel: TLabel
-            Size.Width = 922.000000000000000000
-          end
-        end
-        inherited Panel3: TPanel
-          Size.Width = 1064.000000000000000000
-          inherited CurrencyBox: TPopupBox
-            Position.X = 952.000000000000000000
-          end
-          inherited SettingsCurrencyLabel: TLabel
-            Size.Width = 922.000000000000000000
-          end
-        end
-        inherited CreateBackupButton: TButton
-          Size.Width = 1064.000000000000000000
-        end
-        inherited DeleteAccountButton: TButton
-          Size.Width = 1064.000000000000000000
-        end
-        inherited StyloSwitch: TPanel
-          Size.Width = 1064.000000000000000000
-          inherited DayNightModeStaticLabel: TLabel
-            Size.Width = 930.000000000000000000
-          end
-          inherited DayNightModeSwitch: TSwitch
-            Position.X = 976.000000000000000000
-          end
-        end
-        inherited PrivateKeyManageButton: TButton
-          Size.Width = 1064.000000000000000000
         end
       end
       inherited descryptSeed: TTabItem
@@ -2123,18 +2128,6 @@ inherited frmHome_Surface: TfrmHome_Surface
           Size.Height = 1791.000000000000000000
           Viewport.Width = 1064.000000000000000000
           Viewport.Height = 1791.000000000000000000
-          inherited emptyAddressesLayout: TLayout
-            Size.Width = 1034.000000000000000000
-            inherited NoPrivateKeyToExportLabel: TLabel
-              Size.Width = 1034.000000000000000000
-            end
-            inherited Layout58: TLayout
-              Size.Width = 1034.000000000000000000
-              inherited exportemptyAddressesLabel: TLabel
-                Size.Width = 915.000000000000000000
-              end
-            end
-          end
         end
       end
       inherited PrivOptionsTabItem: TTabItem
@@ -2185,6 +2178,23 @@ inherited frmHome_Surface: TfrmHome_Surface
             Size.Width = 1064.000000000000000000
             TextSettings.Font.StyleExt = {00070000000000000004000000}
           end
+        end
+      end
+      inherited AboutHodlerTabItem: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited ToolBar18: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited AHWHeaderLabel: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited AboutHodlerStaticLabel: TLabel
+          Position.Y = 984.000000000000000000
+          Size.Width = 1064.000000000000000000
+        end
+        inherited AboutHodlerLogo: TImage
+          Size.Width = 1064.000000000000000000
         end
       end
     end
