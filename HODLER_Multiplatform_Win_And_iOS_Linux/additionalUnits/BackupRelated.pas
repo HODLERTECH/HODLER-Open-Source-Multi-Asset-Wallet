@@ -67,17 +67,99 @@ uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   transactions, AccountRelated, walletViewRelated;
 
 procedure createExportPrivateKeyList();
-var
+{var
   i: Integer;
   panel: TPanel;
   lbl: TLabel;
   image: TImage;
-  bilancelbl: TLabel;
+  bilancelbl: TLabel;  }
 begin
 
   clearVertScrollBox(frmhome.ExportPrivKeyListVertScrollBox);
+  //LoadAddressesToImortAniIndicator
+  tthread.CreateAnonymousThread(procedure
+  var
+    i: Integer;
+    panel: TPanel;
+    lbl: TLabel;
+    image: TImage;
+    bilancelbl: TLabel;
+  begin
 
-  for i := 0 to (length(currentAccount.myCoins) - 1) do
+     tthread.Synchronize(nil , procedure
+      begin
+
+        frmhome.LoadAddressesToImortAniIndicator.visible := true;
+        frmhome.LoadAddressesToImortAniIndicator.enabled := true;
+        //frmhome.LoadAddressesToImortAniIndicator.
+
+      end);
+
+    for i := 0 to (length(currentAccount.myCoins) - 1) do
+    begin
+
+      if ((currentAccount.myCoins[i].confirmed) <> 0) or frmhome.exportemptyaddressesSwitch.ischecked then
+      begin
+        tthread.Synchronize(nil , procedure
+        begin
+
+          panel := TPanel.create(frmhome.ExportPrivKeyListVertScrollBox);
+          panel.parent := frmhome.ExportPrivKeyListVertScrollBox;
+          panel.visible := true;
+          panel.align := TAlignLayout.MostTop;
+          panel.height := 48;
+          panel.tagObject := currentAccount.myCoins[i];
+          {$IF defined(ANDROID) or defined(IOS)}
+          panel.OnTap := frmhome.ExportPrivKeyListButtonClick;
+          {$ELSE}
+          panel.onclick := frmhome.ExportPrivKeyListButtonClick;
+          {$ENDIF}
+          panel.Position.Y := -1;
+
+          lbl := TLabel.create(panel);
+          lbl.parent := panel;
+          lbl.align := TAlignLayout.client;
+          lbl.margins.left := 15;
+          lbl.margins.right := 15;
+          lbl.visible := true;
+          lbl.Text := currentAccount.myCoins[i].addr;
+
+          image := TImage.create(panel);
+          image.parent := panel;
+          image.bitmap := currentAccount.myCoins[i].getIcon();
+          image.align := TAlignLayout.left;
+          image.width := 32 + 2 * 15;
+          image.visible := true;
+          image.margins.Top := 8;
+          image.margins.Bottom := 8;
+
+          bilancelbl := TLabel.create(panel);
+          bilancelbl.parent := panel;
+          bilancelbl.align := TAlignLayout.right;
+          bilancelbl.width := 96;
+          bilancelbl.visible := true;
+          bilancelbl.margins.right := 15;
+          bilancelbl.Text := BigIntegerBeautifulStr
+            ((currentAccount.myCoins[i].confirmed), currentAccount.myCoins[i].decimals);
+          bilancelbl.TextSettings.HorzAlign := TTextAlign.Trailing;
+
+        end);
+
+
+      end;
+    end;
+
+    //showmessage( inttoStr(frmhome.ExportPrivKeyListVertScrollBox.Content.ChildrenCount) ) ;
+    tthread.Synchronize(nil , procedure
+    begin
+      frmhome.emptyAddressesLayout.visible := ( frmhome.ExportPrivKeyListVertScrollBox.Content.ChildrenCount <= 1 );
+      frmhome.LoadAddressesToImortAniIndicator.visible := false;
+      frmhome.LoadAddressesToImortAniIndicator.enabled := false;
+    end);
+
+  end).Start();
+
+  (*for i := 0 to (length(currentAccount.myCoins) - 1) do
   begin
 
     if ((currentAccount.myCoins[i].confirmed) <> 0) or frmhome.exportemptyaddressesSwitch.ischecked then
@@ -126,7 +208,7 @@ begin
     end;
   end;
   //showmessage( inttoStr(frmhome.ExportPrivKeyListVertScrollBox.Content.ChildrenCount) ) ;
-  frmhome.emptyAddressesLayout.visible := ( frmhome.ExportPrivKeyListVertScrollBox.Content.ChildrenCount <= 1 );
+  frmhome.emptyAddressesLayout.visible := ( frmhome.ExportPrivKeyListVertScrollBox.Content.ChildrenCount <= 1 ); *)
 
 end;
 
@@ -215,8 +297,18 @@ begin
   fromClaimWD.pub := pub;
   fromClaimWD.EncryptedPrivKey := out;
   fromClaimWD.isCompressed := isCompressed;
-  parseBalances(getDataOverHTTP(HODLER_URL + 'getBalance.php?coin=' +
-    AvailableCoin[CoinID].name + '&address=' + fromClaimWD.addr), fromClaimWD);
+  if coinID in [4] then
+  begin
+    exit;  // ETH can contain tokens     better import private key
+    parseBalances(getDataOverHTTP(HODLER_URL + 'getBalance.php?coin=' +
+      AvailableCoin[CoinID].name + '&address=' + fromClaimWD.addr), fromClaimWD);
+  end
+  else
+  begin
+    parseBalances(getDataOverHTTP(HODLER_URL + 'getSegwitBalance.php?coin=' +
+      AvailableCoin[CoinID].name + '&address=' + fromClaimWD.addr), fromClaimWD);
+  end;
+
   fromClaimWD.UTXO := parseUTXO(getDataOverHTTP(HODLER_URL + 'getUTXO.php?coin='
     + AvailableCoin[CoinID].name + '&address=' + fromClaimWD.addr), -1);
 
@@ -270,6 +362,7 @@ begin
   frmhome.ConfirmSendClaimCoinButton.visible := true;
 
   switchTab(frmhome.pageControl, frmhome.ConfirmSendTabItem);
+  frmhome.PrivateKeyEditSV.Text := '';
 
 end;
 
@@ -581,7 +674,7 @@ begin
     for i := 0 to length(AccountsNames) - 1 do
     begin
 
-      if AccountsNames[i] = RestoreNameEdit.Text then
+      if AccountsNames[i].name = RestoreNameEdit.Text then
       begin
         popupWindow.create(dictionary('AccountNameOccupied'));
         exit();

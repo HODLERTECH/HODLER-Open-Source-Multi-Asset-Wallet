@@ -2190,12 +2190,16 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited CoinPrivKeyDescriptionEdit: TEdit
             Position.X = 45.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited Panel22: TPanel
           Size.Width = 245.000000000000000000
           inherited CoinPrivKeyPassEdit: TEdit
             Position.X = 45.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited NewCoinPrivKeyOKButton: TButton
@@ -2233,7 +2237,9 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           inherited emptyAddressesLayout: TLayout
             inherited Layout58: TLayout
               inherited exportemptyaddressesSwitch: TSwitch
+                Position.Y = 5.000000000000000000
                 Size.Width = 44.000000000000000000
+                Size.Height = 26.000000000000000000
               end
               inherited exportemptyAddressesLabel: TLabel
                 Size.Width = 264.000000000000000000

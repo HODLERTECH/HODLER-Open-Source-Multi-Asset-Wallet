@@ -33,7 +33,7 @@ object frmHome: TfrmHome
     Size.Height = 687.000000000000000000
     Size.PlatformDefault = False
     TabHeight = 49.000000000000000000
-    TabIndex = 5
+    TabIndex = 43
     TabOrder = 8
     TabPosition = None
     OnChange = closeVirtualKeyBoard
@@ -907,7 +907,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -1290,7 +1290,7 @@ object frmHome: TfrmHome
           Size.Height = 611.000000000000000000
           Size.PlatformDefault = False
           TabHeight = 49.000000000000000000
-          TabIndex = 0
+          TabIndex = 2
           TabOrder = 0
           TabPosition = PlatformDefault
           OnChange = closeVirtualKeyBoard
@@ -1307,7 +1307,7 @@ object frmHome: TfrmHome
             CustomIcon = <
               item
               end>
-            IsSelected = True
+            IsSelected = False
             Size.Width = 58.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
@@ -3449,7 +3449,7 @@ object frmHome: TfrmHome
             CustomIcon = <
               item
               end>
-            IsSelected = False
+            IsSelected = True
             Size.Width = 47.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
@@ -15823,7 +15823,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -15840,13 +15840,22 @@ object frmHome: TfrmHome
         Size.PlatformDefault = False
         TabOrder = 2
         object Label19: TLabel
-          Align = Client
+          Align = Contents
           Size.Width = 450.000000000000000000
           Size.Height = 65.000000000000000000
           Size.PlatformDefault = False
           TextSettings.HorzAlign = Center
           Text = 'Select the address to export the private key'
           TabOrder = 0
+        end
+        object LoadAddressesToImortAniIndicator: TAniIndicator
+          Align = Left
+          Margins.Left = 6.000000000000000000
+          Position.X = 6.000000000000000000
+          Size.Width = 51.000000000000000000
+          Size.Height = 65.000000000000000000
+          Size.PlatformDefault = False
+          Visible = False
         end
       end
       object ToolBar16: TToolBar

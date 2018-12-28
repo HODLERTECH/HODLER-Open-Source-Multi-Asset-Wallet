@@ -767,6 +767,7 @@ type
     Layout58: TLayout;
     exportemptyaddressesSwitch: TSwitch;
     exportemptyAddressesLabel: TLabel;
+    LoadAddressesToImortAniIndicator: TAniIndicator;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1074,7 +1075,7 @@ const
   // Load OS.xml as manifest and place app in /system/priv-app
 
 var
-  AccountsNames: array of AnsiString;
+
   frmHome: TfrmHome;
   trngBuffer: AnsiString;
   trngBufferCounter: Integer;
@@ -1789,7 +1790,7 @@ begin
   for i := 0 to length(AccountsNames) - 1 do
   begin
 
-    if AccountsNames[i] = RestoreFromFileAccountNameEdit.Text then
+    if AccountsNames[i].name = RestoreFromFileAccountNameEdit.Text then
     begin
 
       popupWindow.Create(dictionary('AccountNameOccupied'));
@@ -2929,7 +2930,7 @@ end;
 
 procedure TfrmHome.btnANTBackClick(Sender: TObject);
 begin
-  switchTab(PageControl, walletView);
+  switchTab(PageControl, HOME_TABITEM);
 end;
 
 procedure TfrmHome.btnEKSBackClick(Sender: TObject);

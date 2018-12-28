@@ -154,6 +154,11 @@ type
 
   end;
 type
+  AccountItem = record
+    name : AnsiString;
+    order : integer;
+  end;
+type
   THistoryHolder = class(TObject)
   public
     history: transactionHistory;
@@ -387,6 +392,7 @@ resourcestring
   CURRENT_VERSION = '0.3.1';
 
 var
+  AccountsNames: array of AccountItem;
   dashBoardFontSize: Integer =
   {$IF (DEFINED(MSWINDOWS) OR DEFINED(LINUX))}14{$ELSE}14{$ENDIF};
   TCAIterations: integer;
@@ -620,7 +626,7 @@ begin
     for i := 0 to length(AccountsNames) - 1 do
     begin
 
-      if AccountsNames[i] = 'Wallet' + intToStr(nr) then
+      if AccountsNames[i].name = 'Wallet' + intToStr(nr) then
       begin
         nr := nr + 1;
         found := false;
@@ -1103,7 +1109,7 @@ begin
 
   for i := 0 to length(AccountsNames) - 1 do
   begin
-    if AccountsNames[i] = name then
+    if AccountsNames[i].name = name then
     begin
       delete(AccountsNames, i, 1);
     end;
@@ -1419,7 +1425,8 @@ begin
   ac.SaveFiles();
 
   SetLength(AccountsNames, length(AccountsNames) + 1);
-  AccountsNames[length(AccountsNames) - 1] := ac.name;
+  AccountsNames[length(AccountsNames) - 1].name := ac.name;
+  AccountsNames[length(AccountsNames) - 1].order := length(AccountsNames)-1;
   refreshWalletDat;
 
 end;
@@ -2959,7 +2966,10 @@ end;
 procedure clearVertScrollBox(VSB: TVertScrollBox);
 var
   i: integer;
+  temp : TVertScrollbox;
 begin
+  //temp := TVertScrollBox.Create(frmhome);
+
   i := VSB.ComponentCount - 1;
   while i >= 0 do
   begin
@@ -4114,7 +4124,7 @@ var
   ts { , oldFile } : TStringList;
   i: integer;
   Flock: TObject;
-  JsonObject: TJSONObject;
+  accObject , JsonObject: TJSONObject;
   JSONArray: TJsonArray;
 begin
   Flock := TObject.Create;
@@ -4133,9 +4143,14 @@ begin
 
     for i := 0 to length(AccountsNames) - 1 do
     begin
-      if AccountsNames[i] = '' then
+      if AccountsNames[i].name = '' then
         continue;
-      JSONArray.AddElement(TJSONString.Create(AccountsNames[i]));
+
+      accObject := TJSONObject.Create();
+      accObject.AddPair( 'name' , AccountsNames[i].name );
+      accObject.AddPair( 'order' , intToStr(i) );
+
+      JSONArray.AddElement(accObject);
     end;
 
     JsonObject := TJSONObject.Create();
@@ -4164,7 +4179,7 @@ procedure createWalletDat();
 var
   ts: TStringList;
   genThr: Tthread;
-  JsonObject: TJSONObject;
+  accObject,JsonObject: TJSONObject;
   JSONArray: TJsonArray;
 begin
 
@@ -4172,10 +4187,14 @@ begin
 
   for i := 0 to length(AccountsNames) - 1 do
   begin
-    if AccountsNames[i] = '' then
+    if AccountsNames[i].name = '' then
       continue;
 
-    JSONArray.AddElement(TJSONString.Create(AccountsNames[i]));
+    accObject := TJSONObject.Create();
+    accObject.AddPair( 'name' , AccountsNames[i].name );
+    accObject.AddPair( 'order' , intToStr(i) );
+
+    JSONArray.AddElement(accObject);
   end;
 
   JsonObject := TJSONObject.Create();
@@ -4367,14 +4386,14 @@ end;
 procedure wipeWalletDat;
 var
   ts: TStringList;
-  acname: AnsiString;
+  acname: accountItem;
   tempAccount: Account;
   filePath: AnsiString;
 begin
   try
     for acname in AccountsNames do
     begin
-      tempAccount := Account.Create(acname);
+      tempAccount := Account.Create(acname.name);
       try
         for filePath in tempAccount.Paths do
         begin
@@ -4409,6 +4428,7 @@ var
   JsonObject: TJSONObject;
   JSONArray: TJsonArray;
   JsonValue: TJsonvalue;
+  name , order : AnsiString;
 begin
   ts := TStringList.Create;
   ts.LoadFromFile(TPath.Combine(HOME_PATH, 'hodler.wallet.dat'));
@@ -4432,8 +4452,22 @@ begin
     i := 0;
     for JsonValue in JSONArray do
     begin
+      if jsonValue.TryGetValue<Ansistring>( 'name' , name ) then
+      begin
+        AccountsNames[i].name := name;
+        try
+          AccountsNames[i].order := strToInt(JsonObject.GetValue<string>('order'));
+        except on E: Exception do
+          AccountsNames[i].order := i;
+        end;
+        //
+      end
+      else
+      begin
+        AccountsNames[i].name := JsonValue.Value;
 
-      AccountsNames[i] := JsonValue.Value;
+      end;
+
       inc(i);
     end;
 
@@ -4450,7 +4484,7 @@ begin
     SetLength(AccountsNames, strToInt(ts[3]));
     for i := 0 to strToInt(ts[3]) - 1 do
     begin
-      AccountsNames[i] := ts[4 + i];
+      AccountsNames[i].name := ts[4 + i];
     end;
 
   end;

@@ -211,7 +211,7 @@ begin
 
         semaphore.WaitFor();
         try
-          if i = 4 then
+          if id = 4 then
           begin
             for wi in CurrentAccount.myCoins do
               if wi.coin = 4 then

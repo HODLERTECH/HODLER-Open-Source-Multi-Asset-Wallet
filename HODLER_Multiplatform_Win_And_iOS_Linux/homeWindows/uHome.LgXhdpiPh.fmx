@@ -2687,7 +2687,9 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
           inherited Layout58: TLayout
             Size.Width = 99.000000000000000000
             inherited exportemptyaddressesSwitch: TSwitch
+              Position.Y = 5.000000000000000000
               Size.Width = 44.000000000000000000
+              Size.Height = 26.000000000000000000
             end
             inherited exportemptyAddressesLabel: TLabel
               Size.Width = 25.000000000000000000

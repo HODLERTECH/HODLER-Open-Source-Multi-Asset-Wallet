@@ -156,7 +156,7 @@ begin
 {$ENDIF}
       try
         if (lastClosedAccount = '') then
-          lastClosedAccount := AccountsNames[0];
+          lastClosedAccount := AccountsNames[0].name;
 
         changeAccount(nil);
 
@@ -668,7 +668,7 @@ end;
 
 procedure changeAccount(Sender: Tobject);
 var
-  accname: AnsiString;
+  accname: AccountItem;
   fmxObj: TfmxObject;
   Panel: TPanel;
   Button: TButton;
@@ -689,7 +689,7 @@ begin
       for accname in AccountsNames do
       begin
 
-        if accname = fmxObj.TagString then
+        if accname.name = fmxObj.TagString then
         begin
           flag := true;
           break;
@@ -712,7 +712,7 @@ begin
       begin
         fmxObj := AccountsListVertScrollBox.Content.Children[i];
 
-        if accname = fmxObj.TagString then
+        if accname.name = fmxObj.TagString then
         begin
           flag := false;
           break;
@@ -729,9 +729,10 @@ begin
         Button.height := 36;
         Button.Visible := true;
         Button.Parent := frmHome.AccountsListVertScrollBox;
-        Button.TagString := accname;
+        Button.TagString := accname.name;
         Button.OnClick := LoadAccountPanelClick;
-        Button.Text := accname;
+        Button.Text := accname.name;
+        button.Position.y := 36* accname.order;
 
       end;
 

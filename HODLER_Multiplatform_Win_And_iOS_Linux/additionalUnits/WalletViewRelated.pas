@@ -204,6 +204,8 @@ begin
     IsPrivKeySwitch.Enabled := false;
     NewCoinDescriptionPassEdit.Text := '';
     NewCoinDescriptionEdit.Text := '';
+    CoinPrivKeyPassEdit.Text := '';
+    CoinPrivKeyDescriptionEdit.Text := '';
     newCoinListNextTabItem := AddCoinFromPrivKeyTabItem;
     AddCoinBackTabItem := pageControl.ActiveTab;
     switchTab(pageControl, AddNewCoin);
@@ -959,7 +961,7 @@ begin
     for i := 0 to length(AccountsNames) - 1 do
     begin
 
-      if AccountsNames[i] = AccountNameEdit.Text then
+      if AccountsNames[i].name = AccountNameEdit.Text then
       begin
         popupWindow.Create(dictionary('AccountNameOccupied'));
         exit();
@@ -2562,10 +2564,16 @@ begin
         exit;
       end;
     end;
-    btnDecryptSeed.OnClick := ImportPrivateKey;
-    decryptSeedBackTabItem := pageControl.ActiveTab;
-    // PageControl.ActiveTab := descryptSeed;
-    btnDSBack.OnClick := backBtnDecryptSeed;
+    tthread.Synchronize(nil , procedure
+    begin
+      btnDecryptSeed.OnClick := ImportPrivateKey;
+      decryptSeedBackTabItem := pageControl.ActiveTab;
+      // PageControl.ActiveTab := descryptSeed;
+      btnDSBack.OnClick := backBtnDecryptSeed;
+    end);
+
+
+    
   end;
 end;
 

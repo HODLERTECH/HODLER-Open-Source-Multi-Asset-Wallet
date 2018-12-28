@@ -753,6 +753,7 @@ type
     Layout58: TLayout;
     exportemptyaddressesSwitch: TSwitch;
     exportemptyAddressesLabel: TLabel;
+    LoadAddressesToImortAniIndicator: TAniIndicator;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1081,7 +1082,7 @@ var
 
   QRFind: AnsiString;
   tempQRFindEncryptedSeed: AnsiString;
-  AccountsNames: array of AnsiString;
+  //AccountsNames: array of AnsiString;
   lastClosedAccount: AnsiString;
   CurrentAccount: Account;
   CurrentStyle: AnsiString;
@@ -1774,7 +1775,7 @@ begin
   for i := 0 to length(AccountsNames) - 1 do
   begin
 
-    if AccountsNames[i] = RestoreFromFileAccountNameEdit.Text then
+    if AccountsNames[i].name = RestoreFromFileAccountNameEdit.Text then
     begin
 
       popupWindow.Create(dictionary('AccountNameOccupied'));
@@ -2789,7 +2790,7 @@ end;
 
 procedure TfrmHome.btnANTBackClick(Sender: TObject);
 begin
-  switchTab(PageControl, Settings );
+  switchTab(PageControl, HOME_TABITEM );
 end;
 
 procedure TfrmHome.btnEKSBackClick(Sender: TObject);

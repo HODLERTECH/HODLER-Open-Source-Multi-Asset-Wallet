@@ -744,9 +744,9 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
                   Position.Y = 62.000000000000000000
                   Size.Height = 30.000000000000000000
                   inherited lblCoinShort: TLabel
-                    Position.X = 317.825042724609400000
-                    Size.Width = 106.174957275390600000
-                    Size.Height = 30.000000000000000000
+                    Position.X = 317.825073242187500000
+                    Size.Width = 106.174926757812500000
+                    Size.Height = 29.999996185302730000
                   end
                 end
                 inherited WVRealCurrency: TEdit
@@ -760,6 +760,12 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
                 end
               end
               inherited TransactionFeeLayout: TLayout
+                inherited AutomaticFeeLayout: TLayout
+                  inherited FeeSpin: TSpinBox
+                    Position.Y = 1.000000000000000000
+                    Size.Height = 30.000000000000000000
+                  end
+                end
                 inherited SendSettingsFlowLayout: TFlowLayout
                   inherited FeeFromAmountLayout: TLayout
                     inherited SwitchFromFeeLayout: TLayout
@@ -784,6 +790,13 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
                         Size.Height = 35.000000000000000000
                       end
                     end
+                  end
+                end
+              end
+              inherited SendToLayout: TLayout
+                inherited AddressQRLayout: TLayout
+                  inherited WVsendTO: TEdit
+                    Size.Height = 30.000000000000000000
                   end
                 end
               end
@@ -3123,6 +3136,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             Size.Width = 63.000000000000000000
             inherited exportemptyaddressesSwitch: TSwitch
               Size.Width = 55.000000000000000000
+              Size.Height = 35.000000000000000000
             end
             inherited exportemptyAddressesLabel: TLabel
               Size.Width = 0.000000000000000000
