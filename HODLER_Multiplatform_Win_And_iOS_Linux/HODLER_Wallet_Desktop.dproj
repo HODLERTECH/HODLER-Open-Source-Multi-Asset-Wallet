@@ -378,7 +378,9 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <BT_BuildType>Debug</BT_BuildType>
-        <DCC_UnitSearchPath>C:\Program Files (x86)\Embarcadero\Studio\19.0\lib\win32\release;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>C:\Program Files (x86)\Embarcadero\Studio\19.0\lib\win32\release;CryptoLib_output\Win32\Release;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <VerInfo_Special>true</VerInfo_Special>
+        <VerInfo_Keys>CompanyName=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName);SpecialBuild=</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <BT_BuildType>Debug</BT_BuildType>
@@ -425,6 +427,9 @@
         <VerInfo_MinorVer>2</VerInfo_MinorVer>
         <VerInfo_Release>9</VerInfo_Release>
         <VerInfo_Keys>CompanyName=HODLER.TECH;FileVersion=0.2.9.0;InternalName=;LegalCopyright=;LegalTrademarks=hodler.tech;OriginalFilename=;ProductVersion=0.2.9.0;Comments=;ProgramID=HODLER Wallet;FileDescription=HODLER Wallet;ProductName=HODLER Wallet</VerInfo_Keys>
+        <DCC_XmlOutput>C:\Users\PC\Desktop\HODLER Core Alpha\029rc\doc\</DCC_XmlOutput>
+        <DCC_OutputDependencies>true</DCC_OutputDependencies>
+        <DCC_UnitSearchPath>CryptoLib_output\Win32\Release;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win64)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
@@ -444,17 +449,6 @@
         <DCCReference Include="additionalUnits\misc.pas"/>
         <DCCReference Include="additionalUnits\base58.pas"/>
         <DCCReference Include="coinCode\secp256k1.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.BigDecimals.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.BigIntegers.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.BigIntegers.Primes.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.BigRationals.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.ExactFloatStrings.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.FloatUtils.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.Loggers.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.Numerics.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.RandomNumbers.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.Sizes.pas"/>
-        <DCCReference Include="additionalUnits\bi\Velthuis.StrConsts.pas"/>
         <DCCReference Include="coinCode\Bitcoin.pas"/>
         <DCCReference Include="additionalUnits\ZXING\Lib\Classes\1D Barcodes\ZXing.OneD.Code93Reader.pas"/>
         <DCCReference Include="additionalUnits\ZXING\Lib\Classes\1D Barcodes\ZXing.OneD.Code128Reader.pas"/>
@@ -556,6 +550,21 @@
         <DCCReference Include="additionalUnits\FileManagerRelated.pas"/>
         <DCCReference Include="components\TCopyableEditData.pas"/>
         <DCCReference Include="components\TCopyableLabelData.pas"/>
+        <DCCReference Include="components\TRotateImageData.pas"/>
+        <DCCReference Include="components\TImageTextButtonData.pas"/>
+        <DCCReference Include="additionalUnits\bi\CompilerAndRTLVersions.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.BigDecimals.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.BigIntegers.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.BigIntegers.Primes.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.BigRationals.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.ExactFloatStrings.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.FloatUtils.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.Loggers.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.Numerics.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.RandomNumbers.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.Sizes.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.StrConsts.pas"/>
+        <DCCReference Include="additionalUnits\bi\Velthuis.XorShifts.pas"/>
         <RcItem Include="Jet.style">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
@@ -626,9 +635,33 @@
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>COPY_IMG_DARK</ResourceId>
         </RcItem>
-        <RcItem Include="gfx\eqr.png">
+        <RcItem Include="gfx\paperwallet\eqrbig.png">
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>IMG_EQR</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\Refresh-PNG-Transparent-Image.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>RELOAD_IMAGE</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\Encrypted_512_Dark.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>HSB_DARK</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\Encrypted_512_White.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>HSB_WHITE</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\Encrypted_seed_Dark.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>ENCRYPTED_SEED_DARK</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\Encrypted_seed_White.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>ENCRYPTED_SEED_WHITE</ResourceId>
+        </RcItem>
+        <RcItem Include="gfx\paperwallet\eqrsmall.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>IMG_EQR_SMALL</ResourceId>
         </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
@@ -651,11 +684,6 @@
                     <Source Name="MainSource">HODLER_Wallet_Desktop.dpr</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclBindCompFireDAC250.bpl">LiveBinding Expression Components FireDac</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclbindcomp250.bpl">Embarcadero LiveBindings Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclbindcompvcl250.bpl">Embarcadero LiveBindings Components VCL</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclbindcompdbx250.bpl">LiveBindings Expression Components DbExpress</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclbindcompfmx250.bpl">Embarcadero LiveBindings Components FireMonkey</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k250.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp250.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
@@ -718,6 +746,12 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_ApplicationIcon_144x144.png" Configuration="Debug" Class="iPad_AppIcon144">
                     <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\Refresh-PNG-Transparent-Image.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -971,12 +1005,6 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="gfx\eqr.png" Configuration="Release" Class="ProjectFile">
-                    <Platform Name="Win32">
-                        <RemoteDir>.\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="Languages\ZHX.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSSimulator">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -999,6 +1027,12 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_ApplicationIcon_76x76.png" Configuration="Debug" Class="iPad_AppIcon76">
                     <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="gfx\paperwallet\eqrsmall.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1194,6 +1228,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\Encrypted_seed_White.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\ZHX.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSDevice32">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -1250,6 +1290,12 @@
                 </DeployFile>
                 <DeployFile LocalName="Languages\PT.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="All Platforms">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\Encrypted_512_White.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -1544,6 +1590,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\Encrypted_seed_Dark.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\DUT.lang" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
@@ -1816,6 +1868,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="gfx\Icon96x96.png" Configuration="Release" Class="Android_LauncherIcon96"/>
+                <DeployFile LocalName="token_icons\Encrypted_512_Dark.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Android\Release\styles.xml" Configuration="Release" Class="AndroidSplashStyles">
                     <Platform Name="All Platforms">
                         <Overwrite>true</Overwrite>
@@ -1935,6 +1993,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="Languages\DKK.lang" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="gfx\paperwallet\eqrbig.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>

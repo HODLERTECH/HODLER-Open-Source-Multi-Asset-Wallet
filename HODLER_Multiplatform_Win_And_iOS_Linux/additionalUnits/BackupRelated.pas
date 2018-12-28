@@ -45,7 +45,7 @@ procedure decryptSeedForRestore(Sender: TObject);
 procedure NewHSB(path, password, accname: AnsiString);
 procedure oldHSB(path, password, accname: AnsiString);
 function isPasswordZip(path: AnsiString): Boolean;
-function PKCheckPassword(Sender: TObject ; wd : TWalletInfo = nil): Boolean;
+function PKCheckPassword(Sender: TObject; wd: TWalletInfo = nil): Boolean;
 procedure CheckSeed(Sender: TObject);
 procedure ImportPriv(Sender: TObject);
 procedure splitWords(Sender: TObject);
@@ -55,31 +55,114 @@ procedure SendEQR;
 procedure RestoreFromFile(Sender: TObject);
 function SweepCoinsRoutine(priv: AnsiString; isCompressed: Boolean;
   coin: Integer; targetAddr: AnsiString): AnsiString;
-procedure Claim(CoinID : Integer);
+procedure Claim(CoinID: Integer);
 procedure createClaimCoinList(id: Integer);
 procedure createExportPrivateKeyList();
+function isEQRGenerated: Boolean;
 
 implementation
 
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
-  transactions,  AccountRelated, walletViewRelated;
+  transactions, AccountRelated, walletViewRelated;
 
 procedure createExportPrivateKeyList();
-var
+{var
   i: Integer;
   panel: TPanel;
   lbl: TLabel;
   image: TImage;
-  bilancelbl : TLabel;
+  bilancelbl: TLabel;  }
 begin
 
-   clearVertScrollBox(frmhome.ExportPrivKeyListVertScrollBox);
-
-  for i := 0 to (length(currentAccount.myCoins) - 1) do
+  clearVertScrollBox(frmhome.ExportPrivKeyListVertScrollBox);
+  //LoadAddressesToImortAniIndicator
+  tthread.CreateAnonymousThread(procedure
+  var
+    i: Integer;
+    panel: TPanel;
+    lbl: TLabel;
+    image: TImage;
+    bilancelbl: TLabel;
   begin
 
-    if ( ( currentAccount.myCoins[i].confirmed + currentAccount.myCoins[i].unconfirmed ) <> 0 ) then
+     tthread.Synchronize(nil , procedure
+      begin
+
+        frmhome.LoadAddressesToImortAniIndicator.visible := true;
+        frmhome.LoadAddressesToImortAniIndicator.enabled := true;
+        //frmhome.LoadAddressesToImortAniIndicator.
+
+      end);
+
+    for i := 0 to (length(currentAccount.myCoins) - 1) do
+    begin
+
+      if ((currentAccount.myCoins[i].confirmed) <> 0) or frmhome.exportemptyaddressesSwitch.ischecked then
+      begin
+        tthread.Synchronize(nil , procedure
+        begin
+
+          panel := TPanel.create(frmhome.ExportPrivKeyListVertScrollBox);
+          panel.parent := frmhome.ExportPrivKeyListVertScrollBox;
+          panel.visible := true;
+          panel.align := TAlignLayout.MostTop;
+          panel.height := 48;
+          panel.tagObject := currentAccount.myCoins[i];
+          {$IF defined(ANDROID) or defined(IOS)}
+          panel.OnTap := frmhome.ExportPrivKeyListButtonClick;
+          {$ELSE}
+          panel.onclick := frmhome.ExportPrivKeyListButtonClick;
+          {$ENDIF}
+          panel.Position.Y := -1;
+
+          lbl := TLabel.create(panel);
+          lbl.parent := panel;
+          lbl.align := TAlignLayout.client;
+          lbl.margins.left := 15;
+          lbl.margins.right := 15;
+          lbl.visible := true;
+          lbl.Text := currentAccount.myCoins[i].addr;
+
+          image := TImage.create(panel);
+          image.parent := panel;
+          image.bitmap := currentAccount.myCoins[i].getIcon();
+          image.align := TAlignLayout.left;
+          image.width := 32 + 2 * 15;
+          image.visible := true;
+          image.margins.Top := 8;
+          image.margins.Bottom := 8;
+
+          bilancelbl := TLabel.create(panel);
+          bilancelbl.parent := panel;
+          bilancelbl.align := TAlignLayout.right;
+          bilancelbl.width := 96;
+          bilancelbl.visible := true;
+          bilancelbl.margins.right := 15;
+          bilancelbl.Text := BigIntegerBeautifulStr
+            ((currentAccount.myCoins[i].confirmed), currentAccount.myCoins[i].decimals);
+          bilancelbl.TextSettings.HorzAlign := TTextAlign.Trailing;
+
+        end);
+
+
+      end;
+    end;
+
+    //showmessage( inttoStr(frmhome.ExportPrivKeyListVertScrollBox.Content.ChildrenCount) ) ;
+    tthread.Synchronize(nil , procedure
+    begin
+      frmhome.emptyAddressesLayout.visible := ( frmhome.ExportPrivKeyListVertScrollBox.Content.ChildrenCount <= 1 );
+      frmhome.LoadAddressesToImortAniIndicator.visible := false;
+      frmhome.LoadAddressesToImortAniIndicator.enabled := false;
+    end);
+
+  end).Start();
+
+  (*for i := 0 to (length(currentAccount.myCoins) - 1) do
+  begin
+
+    if ((currentAccount.myCoins[i].confirmed) <> 0) or frmhome.exportemptyaddressesSwitch.ischecked then
     begin
 
       panel := TPanel.create(frmhome.ExportPrivKeyListVertScrollBox);
@@ -88,7 +171,11 @@ begin
       panel.align := TAlignLayout.Top;
       panel.height := 48;
       panel.tagObject := currentAccount.myCoins[i];
+      {$IF defined(ANDROID) or defined(IOS)}
+      panel.OnTap := frmhome.ExportPrivKeyListButtonClick;
+      {$ELSE}
       panel.onclick := frmhome.ExportPrivKeyListButtonClick;
+      {$ENDIF}
       panel.Position.Y := -1;
 
       lbl := TLabel.create(panel);
@@ -105,21 +192,23 @@ begin
       image.align := TAlignLayout.left;
       image.width := 32 + 2 * 15;
       image.visible := true;
-      image.Margins.top := 8;
-      image.Margins.Bottom := 8;
+      image.margins.Top := 8;
+      image.margins.Bottom := 8;
 
-      bilanceLbl := TLabel.Create(panel);
-      bilancelbl.Parent := panel;
-      bilancelbl.align := TAlignLayout.Right;
-      bilancelbl.Width := 96;
+      bilancelbl := TLabel.create(panel);
+      bilancelbl.parent := panel;
+      bilancelbl.align := TAlignLayout.right;
+      bilancelbl.width := 96;
       bilancelbl.visible := true;
-      bilancelbl.Margins.Right := 15;
-      bilancelbl.Text := BigIntegerBeautifulStr( (currentAccount.myCoins[i].confirmed + currentAccount.myCoins[i].unconfirmed) , currentAccount.myCoins[i].decimals );
+      bilancelbl.margins.right := 15;
+      bilancelbl.Text := BigIntegerBeautifulStr
+        ((currentAccount.myCoins[i].confirmed), currentAccount.myCoins[i].decimals);
       bilancelbl.TextSettings.HorzAlign := TTextAlign.Trailing;
 
     end;
   end;
-
+  //showmessage( inttoStr(frmhome.ExportPrivKeyListVertScrollBox.Content.ChildrenCount) ) ;
+  frmhome.emptyAddressesLayout.visible := ( frmhome.ExportPrivKeyListVertScrollBox.Content.ChildrenCount <= 1 ); *)
 
 end;
 
@@ -162,14 +251,14 @@ begin
       image.align := TAlignLayout.left;
       image.width := 32 + 2 * 15;
       image.visible := true;
-      image.Margins.top := 8;
-      image.Margins.Bottom := 8;
+      image.margins.Top := 8;
+      image.margins.Bottom := 8;
     end;
   end;
 
 end;
 
-procedure Claim(CoinID : Integer);
+procedure Claim(CoinID: Integer);
 var
   ans: AnsiString;
   tempPriv, out , pub: AnsiString;
@@ -190,6 +279,7 @@ begin
   if isHex(tempPriv) and (length(tempPriv) = 64) then
   begin
     out := tempPriv;
+    isCompressed := frmHome.CompressedPrivKeySVCheckBox.isChecked;
   end
   else
   begin
@@ -202,15 +292,25 @@ begin
   if fromClaimWD <> nil then
     fromClaimWD.Free;
 
-  fromClaimWD := TWalletInfo.create(CoinID, -1, -1, Bitcoin_PublicAddrToWallet(pub,
-    AvailableCoin[CoinID].p2pk), 'Imported');
+  fromClaimWD := TWalletInfo.create(CoinID, -1, -1,
+    Bitcoin_PublicAddrToWallet(pub, AvailableCoin[CoinID].p2pk), 'Imported');
   fromClaimWD.pub := pub;
   fromClaimWD.EncryptedPrivKey := out;
   fromClaimWD.isCompressed := isCompressed;
-  parseBalances(getDataOverHTTP(HODLER_URL + 'getBalance.php?coin=' +
-    AvailableCoin[CoinID].name + '&address=' + fromClaimWD.addr), fromClaimWD);
-  fromClaimWD.UTXO := parseUTXO(getDataOverHTTP(HODLER_URL + 'getUTXO.php?coin='
-    + AvailableCoin[CoinID].name + '&address=' + fromClaimWD.addr), -1);
+  if coinID in [4] then
+  begin
+    exit;  // ETH can contain tokens     better import private key
+    parseBalances(getDataOverHTTP(HODLER_URL + 'getBalance.php?coin=' +
+      AvailableCoin[CoinID].name + '&address=' + fromClaimWD.addr), fromClaimWD);
+  end
+  else
+  begin
+    parseBalances(getDataOverHTTP(HODLER_URL + 'getSegwitBalance.php?coin=' +
+      AvailableCoin[CoinID].name + segwitParameters(fromClaimWD) ), fromClaimWD); // '&address=' + fromClaimWD.addr), fromClaimWD);
+  end;
+
+  fromClaimWD.UTXO := parseUTXO(getDataOverHTTP(HODLER_URL + 'getSegwitUTXO.php?coin='
+    + AvailableCoin[CoinID].name + segwitParameters(fromClaimWD){ '&address=' + fromClaimWD.addr}), -1); //  <<<<< SEGWIT!!!
 
   // tmp:=CurrentCoin.coin;
   /// CurrentCoin.coin:=7;
@@ -243,7 +343,7 @@ begin
   frmhome.SendToLabel.Text := toClaimWD.addr;
   frmhome.SendFeeLabel.Text := '0.00001700';
   frmhome.SendValueLabel.Text := BigIntegerToFloatStr(fromClaimWD.confirmed -
-    BigInteger(1700),AvailableCoin[CoinID].decimals );
+    BigInteger(1700), AvailableCoin[CoinID].decimals);
 
   { try
 
@@ -262,6 +362,7 @@ begin
   frmhome.ConfirmSendClaimCoinButton.visible := true;
 
   switchTab(frmhome.pageControl, frmhome.ConfirmSendTabItem);
+  frmhome.PrivateKeyEditSV.Text := '';
 
 end;
 
@@ -348,12 +449,16 @@ begin
               procedure
               begin
 
+
+                restoreFromFileBackTabItem := PageControl.ActiveTab;
                 RFFPathEdit.Text := System.IOUtils.TPath.GetDownloadsPath();
                 switchTab(pageControl, RestoreFromFileTabitem);
 
               end);
-            RFFPathEdit.Text := 'C:\';
-            switchTab(pageControl, RestoreFromFileTabitem);
+            //RFFPathEdit.Text := 'C:\';
+            //ResotreFromFileBackTabItem
+            //restoreFromFileBackTabItem := PageControl.ActiveTab;
+            //switchTab(pageControl, RestoreFromFileTabitem);
             break;
           end;
         end;
@@ -465,6 +570,16 @@ begin
   end;
 end;
 
+function isEQRGenerated: Boolean;
+begin
+  result := FileExists(System.IOUtils.TPath.Combine( {$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
+      (){$ENDIF},
+    currentAccount.name + '_EQR_BIG' + '.png')) and
+    FileExists(System.IOUtils.TPath.Combine( {$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
+      (){$ENDIF},
+    currentAccount.name + '_EQR_SMALL' + '.png'));
+end;
+
 procedure SendEQR;
 var
   i: Integer;
@@ -483,52 +598,54 @@ var
 begin
   with frmhome do
   begin
-    tced := TCA(passwordForDecrypt.Text);
-    MasterSeed := SpeckDecrypt(tced, currentAccount.EncryptedMasterSeed);
-    if not isHex(MasterSeed) then
+    FileName := currentAccount.name + '_EQR_BIG';
+    ImgPath := System.IOUtils.TPath.Combine( {$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
+      (){$ENDIF}, FileName + '.png');
+    if not FileExists(ImgPath) then
     begin
-      popupWindow.create(dictionary('FailedToDecrypt'));
-      passwordForDecrypt.Text := '';
-      exit;
+
+      {tced := TCA(passwordForDecrypt.Text);
+      MasterSeed := SpeckDecrypt(tced, currentAccount.EncryptedMasterSeed);
+      if not isHex(MasterSeed) then
+      begin
+        popupWindow.create(dictionary('FailedToDecrypt'));
+        passwordForDecrypt.Text := '';
+        exit;
+      end; }
+
+      qrimg := StrToQRBitmap(currentAccount.EncryptedMasterSeed, 16);
+      img := TBitmap.create();
+      Stream := TResourceStream.create(HInstance, 'IMG_EQR', RT_RCDATA);
+      try
+        img.LoadFromStream(Stream);
+      finally
+        Stream.Free;
+      end;
+      img.Canvas.BeginScene;
+      img.Canvas.DrawBitmap(qrimg, RectF(0, 0, 797, 797),
+        RectF(294, 514, 797 + 294, 797 + 514), 1);
+      img.Canvas.EndScene;
+
+      img.SaveToFile(ImgPath);
     end;
-
-    qrimg := StrToQRBitmap(currentAccount.EncryptedMasterSeed);
-    img := TBitmap.create();
-    Stream := TResourceStream.create(HInstance, 'IMG_EQR', RT_RCDATA);
-    try
-      img.LoadFromStream(Stream);
-    finally
-      Stream.Free;
-    end;
-    img.Canvas.BeginScene;
-    img.Canvas.DrawBitmap(qrimg, RectF(0, 0, 294, 294),
-      RectF(19, 79, 294 + 19, 294 + 79), 1);
-    img.Canvas.EndScene;
-    DecodeDate(Now, Y, m, d);
-    FileName := currentAccount.name + '_' + Format('%d.%d.%d', [Y, m, d]) + '.'
-      + IntToStr(DateTimeToUnix(Now));
-    ImgPath := System.IOUtils.TPath.Combine(System.IOUtils.TPath.GetDownloadsPath, FileName + '.png');
-
-    img.SaveToFile(ImgPath);
-
-    shareFile(ImgPath);
-{$IFDEF  MSWINDOWS}
-    repeat
-    Application.ProcessMessages;
-    Sleep(100);
-    until FileExists(ImgPath);
-    ShellExecute(0, 'open', PWideChar(ImgPath), nil, nil,5);
-{$ENDIF}
-    // DeleteFile(ImgPath);
     img.Free;
-    MasterSeed := '';
-    tced := '';
     qrimg.Free;
-    passwordForDecrypt.Text := '';
+    FileName := currentAccount.name + '_EQR_SMALL';
+    ImgPath := System.IOUtils.TPath.Combine( {$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
+      (){$ENDIF}, FileName + '.png');
+    if not FileExists(ImgPath) then
+    begin
+      img := StrToQRBitmap(currentAccount.EncryptedMasterSeed);
+
+
+      img.SaveToFile(ImgPath);
+    end;
+
+
     userSavedSeed := true;
     refreshWalletDat();
-    switchTab(pageControl, BackupTabItem);
-
+    // switchTab(pageControl, BackupTabItem);
+    //frmhome.SendEncryptedSeedButtonClick(nil);
   end;
 end;
 
@@ -557,7 +674,7 @@ begin
     for i := 0 to length(AccountsNames) - 1 do
     begin
 
-      if AccountsNames[i] = RestoreNameEdit.Text then
+      if AccountsNames[i].name = RestoreNameEdit.Text then
       begin
         popupWindow.create(dictionary('AccountNameOccupied'));
         exit();
@@ -794,8 +911,8 @@ begin
 
       withoutWhiteChar := '';
       frmhome.SeedField.Text := '';
-  LoadCurrentAccount(AccountNameEdit.Text);
-  frmhome.FormShow(nil);
+      LoadCurrentAccount(AccountNameEdit.Text);
+      frmhome.FormShow(nil);
       exit;
     end
     else
@@ -816,8 +933,8 @@ begin
 
       seedFromWords := '';
       inputWordsList.Free;
-  LoadCurrentAccount(AccountNameEdit.Text);
-  frmhome.FormShow(nil);
+      LoadCurrentAccount(AccountNameEdit.Text);
+      frmhome.FormShow(nil);
       {
         Dodaæ obs³ugê b³êdów
       }
@@ -827,7 +944,7 @@ begin
   end;
 end;
 
-function PKCheckPassword(Sender: TObject ; wd : TWalletInfo = nil): Boolean;
+function PKCheckPassword(Sender: TObject; wd: TWalletInfo = nil): Boolean;
 var
   MasterSeed, tced: AnsiString;
 var
@@ -836,7 +953,14 @@ var
 {$IFDEF MSWINDOWS}lblPrivateKey: TMemo; {$ENDIF}
 begin
   if wd = nil then
-    wd := currentCoin;
+  begin
+    //{$IFDEF MSWINDOWS}
+    //wd := CurrentCoin;
+    //{$ELSE}
+    showmessage(' ERROR wd empty ');
+    //{$ENDIF}
+    exit
+  end;
 
   result := true;
   with frmhome do
@@ -873,8 +997,7 @@ begin
         exit(false);
       end;
       // {$IFDEF MSWINDOWS}lblPrivateKey:=PrivateKeyMemo;{$ENDIF}
-      lblPrivateKey.Text := priv256forhd(wd.coin, wd.X,
-        wd.Y, MasterSeed);
+      lblPrivateKey.Text := priv256forhd(wd.coin, wd.X, wd.Y, MasterSeed);
       lblWIFKey.Text := PrivKeyToWIF(lblPrivateKey.Text, wd.coin <> 4,
         AvailableCoin[TWalletInfo(wd).coin].wifByte);
 

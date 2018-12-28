@@ -3,7 +3,7 @@ unit AccountData;
 interface
 
 uses tokenData, WalletStructureData, cryptoCurrencyData, System.IOUtils,
-  Sysutils, Classes, FMX.Dialogs, Json, Velthuis.BigIntegers;
+  Sysutils, Classes, FMX.Dialogs, Json, Velthuis.BigIntegers , math;
 
 procedure loadCryptoCurrencyJSONData(data: TJSONValue; cc: cryptoCurrency);
 function getCryptoCurrencyJsonData(cc: cryptoCurrency): TJSONObject;
@@ -44,6 +44,8 @@ type
     function aggregateBalances(wi: TWalletInfo): TBalances;
     function aggregateUTXO(wi: TWalletInfo): TUTXOS;
     function aggregateFiats(wi: TWalletInfo): double;
+    function aggregateConfirmedFiats(wi: TWalletInfo): double;
+    function aggregateUnconfirmedFiats(wi: TWalletInfo): double;
   private
     procedure SaveTokenFile();
     procedure SaveCoinFile();
@@ -64,6 +66,37 @@ implementation
 uses
   misc,uHome;
 
+
+function Account.aggregateConfirmedFiats(wi: TWalletInfo): double;
+var
+  twi: cryptoCurrency;
+begin
+
+  if wi.X = -1 then
+    exit(wi.getConfirmedFiat());
+
+  result := 0.0;
+  for twi in getWalletWithX(wi.X, TWalletInfo(wi).coin) do
+    result := result + TWalletInfo(twi).getConfirmedFiat;
+
+end;
+
+function Account.aggregateUnconfirmedFiats(wi: TWalletInfo): double;
+var
+  twi: cryptoCurrency;
+begin
+
+  if wi.X = -1 then
+    exit(wi.getUnconfirmedFiat());
+
+  result := 0.0;
+  for twi in getWalletWithX(wi.X, TWalletInfo(wi).coin) do
+  begin
+          result := result + TWalletInfo(twi).getUnconfirmedFiat;
+  end;
+
+end;
+
 function Account.aggregateFiats(wi: TWalletInfo): double;
 var
   twi: cryptoCurrency;
@@ -74,7 +107,7 @@ begin
 
   result := 0.0;
   for twi in getWalletWithX(wi.X, TWalletInfo(wi).coin) do
-    result := result + TWalletInfo(twi).getfiat;
+    result := result + max( 0 , TWalletInfo(twi).getfiat);
 
 end;
 
@@ -395,7 +428,7 @@ begin
       wd.orderInWallet := strtoInt(panelYPosition);
       wd.EncryptedPrivKey := EncryptedPrivateKey;
       wd.isCompressed := strToBool(isCompressed);
-
+      wd.uniq:=Random($4ffffff);
       wd.wid := Length(myCoins);
 
       // coinJson.TryGetValue<TJsonObject>('CryptoCurrencyData', ccData);

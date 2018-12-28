@@ -48,6 +48,7 @@ type
     coin: integer;
     x: integer;
     Y: integer;
+    uniq: System.UInt64;
     // addr: AnsiString;
     wid: integer;
     // confirmed: BigInteger;     //// AnsiString;

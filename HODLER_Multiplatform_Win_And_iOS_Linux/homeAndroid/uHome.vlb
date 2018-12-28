@@ -740,9 +740,6 @@ Coordinates=1802,1136,59,33
 [ShortcutValetInfoImage]
 Coordinates=989,298,129,51
 
-[Layout4]
-Coordinates=2177,133,53,33
-
 [Layout8]
 Coordinates=2177,188,53,33
 
@@ -754,9 +751,6 @@ Coordinates=1725,540,97,51
 
 [ANTHeader]
 Coordinates=1713,1136,70,33
-
-[Layout26]
-Coordinates=1644,1136,59,33
 
 [RestoreFromFileTabitem]
 Coordinates=2673,111,135,33
@@ -787,9 +781,6 @@ Coordinates=1500,463,109,51
 
 [lblPrivateKey]
 Coordinates=1725,1002,79,51
-
-[Layout27]
-Coordinates=1338,1136,59,33
 
 [lblMessageText]
 Coordinates=1391,790,91,51
@@ -1200,4 +1191,13 @@ Coordinates=122,828,46,51
 
 [coinIconsList]
 Coordinates=64,1136,68,33
+
+[HSBbackupLayout]
+Coordinates=1644,1136,59,33
+
+[EncrypredQRBackupLayout]
+Coordinates=1338,1136,59,33
+
+[RefreshLayout]
+Coordinates=2177,133,53,33
 

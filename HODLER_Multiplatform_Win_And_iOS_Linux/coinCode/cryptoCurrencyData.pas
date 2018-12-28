@@ -50,6 +50,8 @@ type
     function getIcon(): TBitmap; virtual;
 
     function getFiat: Double;
+    function getUnconfirmedFiat() : Double;
+    function getConfirmedFiat() : Double;
   end;
 
 type
@@ -75,11 +77,32 @@ begin
   orderInWallet := maxint;
 end;
 
+function cryptoCurrency.getUnconfirmedFiat() : Double;
+var
+  d: Double;
+begin
+  d := unconfirmed.asDouble;
+
+  result := frmHome.currencyConverter.calculate(d) * rate /
+    Math.power(10, decimals);
+end;
+
+function cryptoCurrency.getConfirmedFiat() : Double;
+var
+  d: Double;
+begin
+  d := confirmed.asDouble;
+  {if d < 0 then
+    d := 0.0;}
+  result := frmHome.currencyConverter.calculate(d) * rate /
+    Math.power(10, decimals);
+end;
+
 function cryptoCurrency.getFiat: Double;
 var
   d: Double;
 begin
-  d := confirmed.asDouble + unconfirmed.asDouble;
+  d := confirmed.asDouble + Max(unconfirmed.asDouble,0);
   if d < 0 then
     d := 0.0;
   result := frmHome.currencyConverter.calculate(d) * rate /

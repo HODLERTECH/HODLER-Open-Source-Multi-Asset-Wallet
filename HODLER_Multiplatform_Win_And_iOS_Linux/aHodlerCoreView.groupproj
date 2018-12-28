@@ -9,6 +9,9 @@
         <Projects Include="HODLER_Wallet_Mobile.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="CryptoLib.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +38,23 @@
     <Target Name="HODLER_Wallet_Mobile:Make">
         <MSBuild Projects="HODLER_Wallet_Mobile.dproj" Targets="Make"/>
     </Target>
+    <Target Name="CryptoLib">
+        <MSBuild Projects="CryptoLib.dproj"/>
+    </Target>
+    <Target Name="CryptoLib:Clean">
+        <MSBuild Projects="CryptoLib.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CryptoLib:Make">
+        <MSBuild Projects="CryptoLib.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="HODLER_Wallet_Desktop;HODLER_Wallet_Mobile"/>
+        <CallTarget Targets="HODLER_Wallet_Desktop;HODLER_Wallet_Mobile;CryptoLib"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="HODLER_Wallet_Desktop:Clean;HODLER_Wallet_Mobile:Clean"/>
+        <CallTarget Targets="HODLER_Wallet_Desktop:Clean;HODLER_Wallet_Mobile:Clean;CryptoLib:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="HODLER_Wallet_Desktop:Make;HODLER_Wallet_Mobile:Make"/>
+        <CallTarget Targets="HODLER_Wallet_Desktop:Make;HODLER_Wallet_Mobile:Make;CryptoLib:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

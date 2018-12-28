@@ -15,7 +15,7 @@ uses
   FMX.Clipboard, FMX.VirtualKeyBoard, JSON,
   languages,
 
-  FMX.Media, FMX.Objects, uEncryptedZipFile, System.Zip
+  FMX.Media, FMX.Objects, uEncryptedZipFile, System.Zip, TRotateImageData
 {$IFDEF ANDROID},
   FMX.VirtualKeyBoard.Android,
   Androidapi.JNI,
@@ -55,7 +55,8 @@ implementation
 
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
-  transactions, WalletStructureData, TcopyableEditData, TCopyableLabelData, walletViewRelated;
+  transactions, WalletStructureData, TcopyableEditData, TCopyableLabelData,
+  walletViewRelated, TImageTextButtonData;
 
 procedure afterInitialize;
 var
@@ -155,7 +156,7 @@ begin
 {$ENDIF}
       try
         if (lastClosedAccount = '') then
-          lastClosedAccount := AccountsNames[0];
+          lastClosedAccount := AccountsNames[0].name;
 
         changeAccount(nil);
 
@@ -268,32 +269,22 @@ begin
 
     if (SyncBalanceThr <> nil) and (not SyncBalanceThr.Finished) then
     begin
-
+      SyncBalanceThr.Suspend;
       SyncBalanceThr.Terminate;
-      while not(SyncBalanceThr.Finished) do
+  //    SyncBalanceThr.Destroy;
+    {  while not(SyncBalanceThr.Finished) do
       begin
         Application.ProcessMessages();
         sleep(50);
-      end;
-      SyncBalanceThr.WaitFor;
+      end;}
+   //   SyncBalanceThr.WaitFor;
+   TThread.CreateAnonymousThread(procedure begin
       SyncBalanceThr.DisposeOf;
+      end).Start();
       SyncBalanceThr := nil;
 
     end;
-    if (SyncHistoryThr <> nil) and (not SyncHistoryThr.Finished) then
-    begin
 
-      SyncHistoryThr.Terminate;
-      while not(SyncHistoryThr.Finished) do
-      begin
-        Application.ProcessMessages();
-        sleep(50);
-      end;
-      SyncHistoryThr.WaitFor;
-      SyncHistoryThr.DisposeOf;
-      SyncHistoryThr := nil;
-
-    end;
 
     frmHome.ChangeAccountButton.Text := name;
 
@@ -303,7 +294,8 @@ begin
     lastClosedAccount := name;
     currentAccount := Account.Create(name);
     currentAccount.LoadFiles;
-    frmHome.HideZeroWalletsCheckBox.IsChecked:=CurrentAccount.hideEmpties;
+    frmHome.HideZeroWalletsCheckBox.IsChecked := currentAccount.hideEmpties;
+
     for cc in currentAccount.myCoins do
     begin
 
@@ -428,6 +420,7 @@ var
   JsonObject: TJsonObject;
   JSONArray: TJsonArray;
   JsonValue: TJsonvalue;
+  btn: TImageTextButton;
 begin
 
   // %appdata% to %appdata%/hodlertech
@@ -497,6 +490,15 @@ begin
         'hodlertech'){$ENDIF});
       HOME_TABITEM := walletView;
 {$ENDIF}
+{$IF DEFINED(ANDROID)}
+      SYSTEM_NAME := 'android';
+{$ELSE IF DEFINED(MSWINDOWS)}
+      SYSTEM_NAME := 'windows';
+{$ELSE IF DEFINED(LINUX)}
+      SYSTEM_NAME := 'linux';
+{$ELSE IF DEFINED(IOS)}
+      SYSTEM_NAME := 'ios';
+{$ENDIF}
       syncFont;
       if FileExists(System.IOUtils.TPath.combine(HOME_PATH, 'hodler.wallet.dat'))
       then
@@ -562,9 +564,11 @@ begin
       for symbol in CurrencyConverter.availableCurrency.Keys do
       begin
         CurrencyBox.Items.Add(symbol);
+        WelcometabFiatPopupBox.Items.Add(symbol);
       end;
 
       CurrencyBox.ItemIndex := CurrencyBox.Items.IndexOf('USD');
+      WelcometabFiatPopupBox.ItemIndex := CurrencyBox.Items.IndexOf('USD');
       refreshCurrencyValue;
       SystemTimer.Enabled := SYSTEM_APP;
       linkLabel.Visible := not SYSTEM_APP;
@@ -603,10 +607,55 @@ begin
       lblWIFKey.TagString := 'copyable';
 
       HistoryTransactionID.TagString := 'copyable';
-      HistoryTransactionDate.TagString := 'copyable';
-      HistoryTransactionValue.TagString := 'copyable';
-      historyTransactionConfirmation.TagString := 'copyable';
+      // HistoryTransactionDate.TagString := 'copyable';
+      // HistoryTransactionValue.TagString := 'copyable';
+      // historyTransactionConfirmation.TagString := 'copyable';
       CreateCopyImageButtonOnTEdits();
+
+      btn := TImageTextButton.Create(HSBbackupLayout);
+      btn.Parent := HSBbackupLayout;
+      btn.Visible := true;
+      btn.Align := TAlignLayout.Left;
+      btn.Width := 160;
+      btn.LoadImage('HSB_' + RightStr(currentStyle, length(currentStyle) - 3));
+      btn.lbl.Text := 'HODLER SECURE BACKUP';
+      btn.TagString := 'hodler_secure_backup_image';
+
+      btn.OnClick := SendWalletFileButtonClick;
+
+      btn := TImageTextButton.Create(EncrypredQRBackupLayout);
+      btn.Parent := EncrypredQRBackupLayout;
+      btn.Visible := true;
+      btn.Align := TAlignLayout.Left;
+      btn.Width := 160;
+      btn.LoadImage('ENCRYPTED_SEED_' + RightStr(currentStyle,
+        length(currentStyle) - 3));
+      btn.lbl.Text := 'ENCRYPTED QR CODE BACKUP';
+      btn.TagString := 'encrypted_qr_image';
+      btn.img.Margins.Top := 20;
+      btn.img.Margins.Bottom := 20;
+      btn.OnClick := SendEncryptedSeedButtonClick;
+
+      refreshLocalImage := TRotateImage.Create(RefreshLayout);
+      refreshLocalImage.Parent := RefreshLayout;
+      refreshLocalImage.Visible := true;
+      refreshLocalImage.Align := TAlignLayout.Right;
+      refreshLocalImage.Width := 32;
+      refreshLocalImage.OnClick := RefreshCurrentWallet;
+      refreshLocalImage.Margins.Right := 15;
+      refreshLocalImage.Margins.Top := 8;
+      refreshLocalImage.Margins.Bottom := 8;
+
+      refreshGlobalImage := TRotateImage.Create(GlobalRefreshLayout);
+      refreshGlobalImage.Parent := GlobalRefreshLayout;
+      refreshGlobalImage.Visible := true;
+      refreshGlobalImage.Align := TAlignLayout.Top;
+      refreshGlobalImage.height := 32;
+      refreshGlobalImage.OnClick := btnSyncClick;
+      // refreshGlobalImage.Margins.Right := 15;
+      refreshGlobalImage.Margins.Top := 8;
+      refreshGlobalImage.Margins.Bottom := 8;
+
     end;
 
   except
@@ -619,7 +668,7 @@ end;
 
 procedure changeAccount(Sender: Tobject);
 var
-  accname: AnsiString;
+  accname: AccountItem;
   fmxObj: TfmxObject;
   Panel: TPanel;
   Button: TButton;
@@ -640,7 +689,7 @@ begin
       for accname in AccountsNames do
       begin
 
-        if accname = fmxObj.TagString then
+        if accname.name = fmxObj.TagString then
         begin
           flag := true;
           break;
@@ -663,7 +712,7 @@ begin
       begin
         fmxObj := AccountsListVertScrollBox.Content.Children[i];
 
-        if accname = fmxObj.TagString then
+        if accname.name = fmxObj.TagString then
         begin
           flag := false;
           break;
@@ -677,20 +726,21 @@ begin
 
         Button := TButton.Create(frmHome.AccountsListVertScrollBox);
         Button.Align := TAlignLayout.Top;
-        Button.Height := 48;
+        Button.height := 36;
         Button.Visible := true;
         Button.Parent := frmHome.AccountsListVertScrollBox;
-        Button.TagString := accname;
+        Button.TagString := accname.name;
         Button.OnClick := LoadAccountPanelClick;
-        Button.Text := accname;
+        Button.Text := accname.name;
+        button.Position.y := 36* accname.order;
 
       end;
 
     end;
 
-    AccountsListPanel.Height :=
-      min(PageControl.Height - ChangeAccountButton.Height,
-      length(AccountsNames) * 48 + 48);
+    AccountsListPanel.height :=
+      min(PageControl.height - ChangeAccountButton.height,
+      length(AccountsNames) * 36 + 48);
   end;
 end;
 
@@ -787,13 +837,12 @@ begin
 
       TwalletInfo(TfmxObject(Sender).TagObject).deleted := true;
 
+      TPanel(TfmxObject(Sender).Parent.Parent).Visible := false;
+
       currentAccount.SaveFiles;
-{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
-      changeY(nil);
+
       frmHome.PageControl.ActiveTab := frmHome.SameYWalletList;
-{$ELSE}
-      frmHome.changeYbuttonClick(nil);
-{$ENDIF}
+
     end,
     procedure
     begin
@@ -936,97 +985,110 @@ end;
 
 procedure changeY(Sender: Tobject);
 var
-  cc: cryptoCurrency;
   Panel: TPanel;
   bilanceLbl: TLabel;
   addrLbl: TCopyableLabel;
   deleteBtn: TLabel;
   generateNewAddresses: TButton;
   copyBtn: TButton;
+  thr: Tthread;
 begin
   with frmHome do
   begin
 
     clearVertScrollBox(YaddressesVertScrollBox);
+    thr := Tthread.CreateAnonymousThread(
+      procedure
+      begin
+        Tthread.Synchronize(thr,
+          procedure
+          var
+            cc: cryptoCurrency;
+            i: integer;
+          begin
+            i := 0;
+            for cc in currentAccount.getWalletWithX(CurrentCoin.x,
+              CurrentCoin.coin) do
+            begin
+              if cc.deleted = true then
+                continue;
+              i := i + 1;
+              Application.ProcessMessages;
+              Panel := TPanel.Create(YaddressesVertScrollBox);
+              Panel.Parent := YaddressesVertScrollBox;
+              Panel.Visible := true;
+              Panel.Align := TAlignLayout.Top;
+              Panel.height := 48;
+              Panel.TagObject := cc;
+              Panel.TagString := cc.addr;
+              Panel.OnClick := OpenWalletViewFromYWalletList;
+              Panel.Position.y := i * Panel.height;
+              Panel.Margins.Bottom := 1;
+              addrLbl := TCopyableLabel.Create(Panel);
+              addrLbl.image.Align := TAlignLayout.Right;
+              addrLbl.Align := TAlignLayout.MostTop;
+              addrLbl.Parent := Panel;
+              addrLbl.Visible := true;
+              // addrLbl.Margins.Left := 15;
+              // addrLbl.Margins.Right := 15;
+              addrLbl.height := 24;
+              addrLbl.Margins.Left := 15;
+              if TwalletInfo(cc).coin in [3, 7] then
+                addrLbl.Text := bitcoinCashAddressToCashAddress(cc.addr)
+              else
+                addrLbl.Text := cc.addr;
+              addrLbl.TagString := 'copyable';
+              // addrLbl.Align := TAlignLayout.Client;
 
-    for cc in currentAccount.getWalletWithX(CurrentCoin.x, CurrentCoin.coin) do
-    begin
-      if cc.deleted = true then
-        continue;
+              bilanceLbl := TLabel.Create(Panel);
+              bilanceLbl.Parent := Panel;
+              bilanceLbl.Visible := true;
+              bilanceLbl.Margins.Left := 0;
+              bilanceLbl.Margins.Right := 15;
+              bilanceLbl.Text := bigintegerbeautifulStr(cc.confirmed,
+                cc.decimals) + ' ' + CurrentCoin.ShortCut;
+              bilanceLbl.Align := TAlignLayout.Right;
+              bilanceLbl.Width := 200;
+              bilanceLbl.TextSettings.HorzAlign := TTextAlign.Trailing;
+              bilanceLbl.Align := TAlignLayout.Right;
 
-      Panel := TPanel.Create(YaddressesVertScrollBox);
-      Panel.Parent := YaddressesVertScrollBox;
-      Panel.Visible := true;
-      Panel.Align := TAlignLayout.Top;
-      Panel.Height := 48;
-      Panel.TagObject := cc;
-      Panel.TagString := cc.addr;
-      Panel.OnClick := OpenWalletViewFromYWalletList;
+              deleteBtn := TLabel.Create(addrLbl);
+              deleteBtn.Parent := addrLbl;
+              deleteBtn.Visible := true;
+              deleteBtn.Align := TAlignLayout.MostRight;
+              deleteBtn.Width := 24;
+              deleteBtn.Text := 'X';
+              deleteBtn.Margins.Bottom := 6;
+              deleteBtn.TextAlign := TTextAlign.Center;
+              deleteBtn.TagObject := cc;
+              deleteBtn.OnClick := deleteYAddress;
+              deleteBtn.HitTest := true;
+              // deleteBtn.Align:=TAlignLayout.Left;
 
-      Panel.Margins.Bottom:=1;
-      addrLbl := TCopyableLabel.Create(Panel);
-      addrLbl.image.Align := TAlignLayout.Right;
-      addrLbl.Align:=TAlignLayout.MostTop;
-      addrLbl.Parent := Panel;
-      addrLbl.Visible := true;
-      // addrLbl.Margins.Left := 15;
-      // addrLbl.Margins.Right := 15;
-      addrLbl.Height := 24;
-      addrLbl.Margins.left := 15;
-      if TwalletInfo(cc).coin in [3, 7] then
-        addrLbl.Text := bitcoinCashAddressToCashAddress(cc.addr)
-      else
-        addrLbl.Text := cc.addr;
-      addrLbl.TagString := 'copyable';
-      // addrLbl.Align := TAlignLayout.Client;
+              { copyBtn := TButton.Create(Panel);
+                copyBtn.Parent := Panel;
+                copyBtn.Visible := true;
+                copyBtn.Align := TAlignLayout.MostRight;
+                copyBtn.Width := 48;
+                copyBtn.Text := 'Copy';
+                copyBtn.TagObject := cc;
+                copyBtn.OnClick := CopyParentTagStringToClipboard;
+                copyBtn.Align:=TAlignLayout.Left; }
 
-      bilanceLbl := TLabel.Create(Panel);
-      bilanceLbl.Parent := Panel;
-      bilanceLbl.Visible := true;
-      bilanceLbl.Margins.Left := 0;
-      bilanceLbl.Margins.Right := 15;
-      bilanceLbl.Text := bigintegerbeautifulStr(cc.confirmed, cc.decimals) + ' '
-        + CurrentCoin.ShortCut;
-      bilanceLbl.Align := TAlignLayout.Right;
-      bilanceLbl.Width := 200;
-      bilanceLbl.TextSettings.HorzAlign := TTextAlign.Trailing;
-      bilanceLbl.Align := TAlignLayout.Right;
-
-      deleteBtn := TLabel.Create(addrLbl);
-      deleteBtn.Parent := addrLbl;
-      deleteBtn.Visible := true;
-      deleteBtn.Align := TAlignLayout.MostRight;
-      deleteBtn.Width := 24;
-      deleteBtn.Text := 'X';
-      deleteBtn.Margins.Bottom := 6;
-      deleteBtn.TextAlign := TTextAlign.Center;
-      deleteBtn.TagObject := cc;
-      deleteBtn.OnClick := deleteYAddress;
-      deleteBtn.HitTest := true;
-      // deleteBtn.Align:=TAlignLayout.Left;
-
-      { copyBtn := TButton.Create(Panel);
-        copyBtn.Parent := Panel;
-        copyBtn.Visible := true;
-        copyBtn.Align := TAlignLayout.MostRight;
-        copyBtn.Width := 48;
-        copyBtn.Text := 'Copy';
-        copyBtn.TagObject := cc;
-        copyBtn.OnClick := CopyParentTagStringToClipboard;
-        copyBtn.Align:=TAlignLayout.Left; }
-
-    end;
-
+            end;
+          end);
+      end);
+      thr.Start;
     generateNewAddresses := TButton.Create(YaddressesVertScrollBox);
     generateNewAddresses.Parent := YaddressesVertScrollBox;
     generateNewAddresses.Visible := true;
     generateNewAddresses.Align := TAlignLayout.Top;
     generateNewAddresses.Text := 'Add new addresses';
     generateNewAddresses.OnClick := generateNewAddressesClick;
-    generateNewAddresses.Height := 48;
+    generateNewAddresses.height := 48;
     generateNewAddresses.TagObject := CurrentCoin;
     generateNewAddresses.Position.y := 1000000000;
-  end;
+  end
 
 end;
 
