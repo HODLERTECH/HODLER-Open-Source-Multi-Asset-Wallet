@@ -2211,7 +2211,9 @@ end;
 
 procedure TfrmHome.TransactionWaitForSendBackButtonClick(Sender: TObject);
 begin
-  switchTab(PageControl, walletView);
+if CurrentCoin.description<>'__dashbrd__' then
+  switchTab(PageControl, walletView) else
+switchTab(PageControl, HOME_TABITEM);
   
   TThread.CreateAnonymousThread(procedure   ()
   begin
@@ -2360,11 +2362,11 @@ var
   temp: twalletinfo;
 begin
   temp := CurrentCoin;
-  CurrentCoin.coin := FromClaimWD.coin;
+  CurrentCoin:= FromClaimWD;
   WalletViewRelated.PrepareSendTabAndSend(FromClaimWD, ToClaimWD.addr,
     FromClaimWD.confirmed - BigInteger(1700), BigInteger(1700), '',
     AvailableCoin[FromClaimWD.coin].name);
-  CurrentCoin := temp;
+  //CurrentCoin := temp;
 end;
 
 procedure TfrmHome.CopyPrivateKeyButtonClick(Sender: TObject);

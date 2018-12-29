@@ -290,7 +290,7 @@ begin
   frmhome.NewCoinDescriptionEdit.Text := AvailableCoin[ImportCoinID].displayName
     + ' (' + AvailableCoin[ImportCoinID].shortcut + ')';
 
-  if backTabItem = frmhome.PrivOptionsTabItem then
+if newCoinListNextTabItem = frmhome.ClaimWalletListTabItem then
   begin
     createClaimCoinList(newcoinID);
   end;

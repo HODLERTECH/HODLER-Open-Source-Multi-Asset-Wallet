@@ -5,7 +5,7 @@
         <FrameworkType>FMX</FrameworkType>
         <MainSource>HODLER_Wallet_Desktop.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1247</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -424,9 +424,9 @@
         <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
         <DCC_DebugInfoInTds>true</DCC_DebugInfoInTds>
         <VerInfo_MajorVer>0</VerInfo_MajorVer>
-        <VerInfo_MinorVer>2</VerInfo_MinorVer>
-        <VerInfo_Release>9</VerInfo_Release>
-        <VerInfo_Keys>CompanyName=HODLER.TECH;FileVersion=0.2.9.0;InternalName=;LegalCopyright=;LegalTrademarks=hodler.tech;OriginalFilename=;ProductVersion=0.2.9.0;Comments=;ProgramID=HODLER Wallet;FileDescription=HODLER Wallet;ProductName=HODLER Wallet</VerInfo_Keys>
+        <VerInfo_MinorVer>3</VerInfo_MinorVer>
+        <VerInfo_Release>1</VerInfo_Release>
+        <VerInfo_Keys>CompanyName=HODLER.TECH;FileVersion=0.3.1.0;InternalName=HODLER Multi-Asset Wallet;LegalCopyright=;LegalTrademarks=hodler.tech;OriginalFilename=;ProductVersion=0.3.1.0;Comments=;ProgramID=HODLER Multi-Asset Wallet;FileDescription=HODLER Multi-Asset Wallet;ProductName=HODLER Multi-Asset Wallet</VerInfo_Keys>
         <DCC_XmlOutput>C:\Users\PC\Desktop\HODLER Core Alpha\029rc\doc\</DCC_XmlOutput>
         <DCC_OutputDependencies>true</DCC_OutputDependencies>
         <DCC_UnitSearchPath>CryptoLib_output\Win32\Release;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
@@ -684,6 +684,11 @@
                     <Source Name="MainSource">HODLER_Wallet_Desktop.dpr</Source>
                 </Source>
                 <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclBindCompFireDAC250.bpl">LiveBinding Expression Components FireDac</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclbindcomp250.bpl">Embarcadero LiveBindings Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclbindcompvcl250.bpl">Embarcadero LiveBindings Components VCL</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclbindcompdbx250.bpl">LiveBindings Expression Components DbExpress</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclbindcompfmx250.bpl">Embarcadero LiveBindings Components FireMonkey</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k250.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp250.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>

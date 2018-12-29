@@ -2080,7 +2080,9 @@ end;
 
 procedure TfrmHome.TransactionWaitForSendBackButtonClick(Sender: TObject);
 begin
-  switchTab(PageControl, walletView);
+if CurrentCoin.description<>'__dashbrd__' then
+  switchTab(PageControl, walletView) else
+switchTab(PageControl, HOME_TABITEM);
   TThread.CreateAnonymousThread(
     procedure()
     begin
@@ -2232,7 +2234,7 @@ procedure TfrmHome.ConfirmSendClaimCoinButtonClick(Sender: TObject);
 var
   temp: twalletinfo;
 begin
-currentcoin:=ToClaimWD;
+currentcoin:=FromClaimWD;
   WalletViewRelated.PrepareSendTabAndSend(FromClaimWD, ToClaimWD.addr,
     FromClaimWD.confirmed - BigInteger(1700), BigInteger(1700), '',
     AvailableCoin[FromClaimWD.coin].name);
