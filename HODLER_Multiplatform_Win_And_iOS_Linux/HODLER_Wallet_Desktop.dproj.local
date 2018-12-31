@@ -75,6 +75,7 @@
     <Transaction>1899-12-30 00:00:00.000.803,C:\Users\PC\Desktop\HODLER_APP_ALPHA\VM_Snapshots\HodlerVM_160518\Hodler\coinCode\Ethereum.pas=C:\Users\PC\Desktop\HODLER_APP_ALPHA\VM_Snapshots\HodlerVM_160518\Hodler\Unit1.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.864,C:\Users\HODL\Desktop\Hodler_git\new\Languages\SPA.lang=</Transaction>
     <Transaction>1899-12-30 00:00:00.000.424,=C:\Users\HODL\Desktop\Hodler_git\new\Languages\SPA.lang</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.366,C:\Users\HODL\Desktop\Hodler\JavaInterfaces.pas=</Transaction>
     <Transaction>1899-12-30 00:00:00.000.834,C:\Users\HODL\Desktop\Hodler_git\new\Unit1.pas=C:\Users\HODL\Desktop\Hodler_git\new\additionalUnits\WIF.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.766,C:\Users\HODL\Desktop\Hodler_git\new\Unit1.pas=C:\Users\HODL\Desktop\Hodler_git\new\additionalUnits\Account.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.090,=C:\Users\HODL\Desktop\Hodler_git\new\Unit1.pas</Transaction>
@@ -109,6 +110,7 @@
     <Transaction>1899-12-30 00:00:00.000.780,=C:\Users\HODL\Desktop\Hodler_git\AW_04_12\HODLER_Multiplatform_Win_And_iOS_Linux\additionalUnits\bi\Velthuis.BigDecimals.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.336,=C:\Users\HODL\Desktop\Hodler\Languages\ENG.lang</Transaction>
     <Transaction>1899-12-30 00:00:00.000.256,C:\Users\HODL\Desktop\Hodler\additionalUnits\NativeActivity.jar=</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.806,C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas=C:\Users\hodlerapp\Desktop\Hodler\coinCode\cryptoCurrencyData.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.685,=C:\Users\PC\Desktop\HODLER Core Alpha\029rc\token_icons\copy-content_white.png</Transaction>
     <Transaction>1899-12-30 00:00:00.000.838,C:\Users\HODL\Desktop\Hodler_git\AW_04_12\HODLER_Multiplatform_Win_And_iOS_Linux\components\TRotateImage.pas=C:\Users\HODL\Desktop\Hodler_git\AW_04_12\HODLER_Multiplatform_Win_And_iOS_Linux\components\Image1.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.234,=C:\Users\HODL\Desktop\Hodler_git\AW_04_12\HODLER_Multiplatform_Win_And_iOS_Linux\additionalUnits\bi\Velthuis.BigRationals.pas</Transaction>
@@ -117,32 +119,32 @@
     <Transaction>1899-12-30 00:00:00.000.821,=C:\Users\PC\Desktop\HODLER_APP_ALPHA\VM_Snapshots\HodlerVM_160518\Hodler\Unit1.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.613,C:\Users\hodlerapp\Desktop\Hodler\coinCode\tokenData.pas=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.805,=C:\Users\HODL\Desktop\Hodler_git\AW_04_12\HODLER_Multiplatform_Win_And_iOS_Linux\additionalUnits\bi\Velthuis.BigIntegers.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.293,=C:\Users\PC\Desktop\HODLER Core Alpha\029rc\gfx\eqr.png</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.691,=C:\Users\hodlerapp\Desktop\Hodler\DW.ThreadedTimer.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.524,=C:\Users\HODL\Desktop\Hodler_git\AW_04_12\HODLER_Multiplatform_Win_And_iOS_Linux\additionalUnits\bi\Velthuis.Sizes.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.366,C:\Users\HODL\Desktop\Hodler\JavaInterfaces.pas=</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.864,=C:\Users\HODL\Desktop\Hodler\JavaInterfaces.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.775,=C:\Users\HODL\Desktop\Hodler\Androidapi.JNI.Interfaces.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.641,C:\Users\HODL\Desktop\Hodler\Androidapi.JNI.Interfaces.pas=</Transaction>
     <Transaction>1899-12-30 00:00:00.000.301,=C:\Users\HODL\Desktop\Hodler_git\new\Languages\POL.lang</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.864,=C:\Users\HODL\Desktop\Hodler\JavaInterfaces.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.691,=C:\Users\hodlerapp\Desktop\Hodler\DW.ThreadedTimer.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.641,C:\Users\HODL\Desktop\Hodler\Androidapi.JNI.Interfaces.pas=</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.293,=C:\Users\PC\Desktop\HODLER Core Alpha\029rc\gfx\eqr.png</Transaction>
     <Transaction>1899-12-30 00:00:00.000.868,=C:\Users\HODL\Desktop\Hodler_git\new\Languages\DE.lang</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.693,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.357,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.336,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.775,=C:\Users\HODL\Desktop\Hodler\Androidapi.JNI.Interfaces.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.897,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.107,C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas=C:\Users\hodlerapp\Desktop\Hodler\coinCode\CryptoCurrency.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.806,C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas=C:\Users\hodlerapp\Desktop\Hodler\coinCode\cryptoCurrencyData.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.829,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.429,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.693,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.932,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.336,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.429,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.107,C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas=C:\Users\hodlerapp\Desktop\Hodler\coinCode\CryptoCurrency.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.357,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.829,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.603,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.729,C:\Users\PC\Desktop\HODLER Core Alpha\029rc\HODLER_Core_Desktop.dproj=C:\Users\PC\Desktop\HODLER Core Alpha\029rc\HODLER_Wallet_Desktop.dproj</Transaction>
     <Transaction>1899-12-30 00:00:00.000.114,=C:\Users\HODL\Desktop\Hodler_git\AW_04_12\HODLER_Multiplatform_Win_And_iOS_Linux\components\Image1.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.068,C:\Users\hodlerapp\Desktop\Hodler\coinCode\CryptoCurrency.pas=</Transaction>
     <Transaction>1899-12-30 00:00:00.000.095,=C:\Users\HODL\Desktop\Hodler_git\AW_04_12\HODLER_Multiplatform_Win_And_iOS_Linux\components\TImageTextButton.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.557,C:\Users\hodlerapp\Desktop\Hodler\additionalUnits\SynchronizeThread.pas=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
-    <Transaction>1899-12-30 00:00:00.000.603,=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.597,C:\Users\HODL\Desktop\Hodler_git\WinUpload\Languages\ENG.lang=</Transaction>
+    <Transaction>1899-12-30 00:00:00.000.557,C:\Users\hodlerapp\Desktop\Hodler\additionalUnits\SynchronizeThread.pas=C:\Users\hodlerapp\Desktop\Hodler\Unit1.pas</Transaction>
     <Transaction>1899-12-30 00:00:00.000.921,C:\Users\HODL\Desktop\Hodler_git\WinUpload\QRRelated.pas=C:\Users\HODL\Desktop\Hodler_git\WinUpload\Unit1.pas</Transaction>
+    <Transaction>2018-12-31 13:33:26.842,=C:\Users\HODL\Desktop\Hodler_git\AW27_12\HODLER_Multiplatform_Win_And_iOS_Linux\Unit1.pas</Transaction>
+    <Transaction>2018-12-31 13:46:27.483,C:\Users\HODL\Desktop\Hodler_git\AW27_12\HODLER_Multiplatform_Win_And_iOS_Linux\additionalUnits\debugAnalysis.pas=C:\Users\HODL\Desktop\Hodler_git\AW27_12\HODLER_Multiplatform_Win_And_iOS_Linux\Unit1.pas</Transaction>
   </Transactions>
 	<BT_BuildType>Debug</BT_BuildType>
 	<ProjectSortOrder AutoSort="0" SortType="0">
@@ -271,6 +273,7 @@
     <File Path="additionalUnits\SyncThr.pas"/>
     <File Path="additionalUnits\WalletViewRelated.pas"/>
     <File Path="additionalUnits\WIF.pas"/>
+    <File Path="additionalUnits\debugAnalysis.pas"/>
     <File Path="coinCode"/>
     <File Path="coinCode\Bitcoin.pas"/>
     <File Path="coinCode\coinData.pas"/>

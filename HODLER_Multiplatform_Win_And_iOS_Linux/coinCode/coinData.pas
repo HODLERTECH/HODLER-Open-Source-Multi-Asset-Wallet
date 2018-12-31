@@ -164,11 +164,17 @@ begin
 
     if (id in [3, 7]) then
     begin
+      if Pos(':' , address) <> 0 then
+      begin
+        str := rightStr( address , length(address) -  Pos(':' , address) );
+      end
+      else
+        str := address;
+      str := StringReplace(str, ' ', '', [rfReplaceAll]);
+      //showmessage(Str);
+      //str := StringReplace(str, 'bitcoincash:', '', [rfReplaceAll]);
 
-      str := StringReplace(address, ' ', '', [rfReplaceAll]);
-      str := StringReplace(str, 'bitcoincash:', '', [rfReplaceAll]);
-
-      if (str[low(str)] = 'q') or (str[low(str)] = 'p') then
+      if (lowercase(str[low(str)]) = 'q') or (lowercase(str[low(str)]) = 'p') then
       begin
         // isValidBCHCashAddress(Address)
         result := true;

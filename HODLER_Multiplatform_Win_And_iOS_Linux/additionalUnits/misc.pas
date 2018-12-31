@@ -419,6 +419,9 @@ var
   createPasswordBackTabItem : TTabItem;
   RestoreFromFileBackTabItem : TTabItem;
 
+  newcoinID: nativeint;
+  ImportCoinID: Integer;
+
 implementation
 
 uses Bitcoin, uHome, base58, Ethereum, coinData, strutils, secp256k1 ,AccountRelated , TImageTextButtonData
@@ -1649,7 +1652,7 @@ var
   tempInt: integer;
 begin
 
-  if LeftStr(address, 12) <> 'bitcoincash:' then
+  if lowercase(LeftStr(address, 12)) <> 'bitcoincash:' then
   begin
     address := 'bitcoincash:' + address;
   end;

@@ -290,7 +290,7 @@ begin
   frmhome.NewCoinDescriptionEdit.Text := AvailableCoin[ImportCoinID].displayName
     + ' (' + AvailableCoin[ImportCoinID].shortcut + ')';
 
-  if backTabItem = frmhome.PrivOptionsTabItem then
+  if newCoinListNextTabItem = frmhome.ClaimWalletListTabItem then
   begin
     createClaimCoinList(newcoinID);
   end;
@@ -369,6 +369,7 @@ begin
             TransactionWaitForSendDetailsLabel.Text :=
               'Sending... It may take a few seconds';
             TransactionWaitForSendLinkLabel.Visible := false;
+            TransactionWaitForSendBackButton.Visible := false;
 
             switchTab(pageControl, TransactionWaitForSend);
           end);
@@ -390,6 +391,9 @@ begin
               TransactionWaitForSendAniIndicator.Enabled := false;
               TransactionWaitForSendDetailsLabel.Visible := false;
               TransactionWaitForSendLinkLabel.Visible := True;
+              TransactionWaitForSendBackButton.Visible := true;
+
+
               if LeftStr(ans, length('Transaction sent')) = 'Transaction sent'
               then
               begin
@@ -1778,7 +1782,11 @@ end;
           TThread.CreateAnonymousThread(
             procedure
             begin
-              switchTab(pageControl, walletView);
+
+              tthread.Synchronize(nil,
+              procedure begin
+                switchTab(pageControl, walletView);
+              end);
             end).Start;
 
         end, dictionary('InvalidValues'));

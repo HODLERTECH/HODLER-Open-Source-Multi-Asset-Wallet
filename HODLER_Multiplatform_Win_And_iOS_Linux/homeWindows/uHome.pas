@@ -988,6 +988,7 @@ type
     procedure SYWLBackButtonClick(Sender: TObject);
     procedure coinbaseImageClick(Sender: TObject);
     procedure exportemptyaddressesSwitchSwitch(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -1044,6 +1045,7 @@ type
     procedure CopyParentTextToClipboard(Sender: TObject);
     procedure ExportPrivKeyListButtonClick(Sender : TObject);
     procedure RefreshCurrentWallet(Sender : TObject);
+    procedure onExecuteTest(Sender : TObject);
     //procedure PrivateKeyPasswordCheck
   var
     refreshLocalImage : TRotateImage;
@@ -1081,7 +1083,10 @@ var
   trngBufferCounter: Integer;
   stylo: TStyleManager;
   QRCodeBitmap: TBitmap;
-  newcoinID: nativeint;
+
+  //newcoinID: nativeint;
+  //ImportCoinID: Integer;
+
   walletAddressForNewToken: AnsiString;
   tempMasterSeed: AnsiString;
   decryptSeedBackTabItem: TTabItem;
@@ -1105,7 +1110,7 @@ var
   CurrentAccount: Account;
   CurrentStyle: AnsiString;
   BigQRCodeBackTab: TTabItem;
-  ImportCoinID: Integer;
+
   ToClaimWD, FromClaimWD: TwalletInfo;
 
 resourcestring
@@ -2591,7 +2596,7 @@ end;
 
 procedure TfrmHome.btnANWBackClick(Sender: TObject);
 begin
-  switchTab(PageControl, walletView);
+  switchTab(PageControl,  AddCoinBackTabItem {walletView});
 end;
 
 // checking rewriting seed
@@ -2770,6 +2775,14 @@ begin
   createExportPrivateKeyList();
 end;
 
+
+procedure TfrmHome.onExecuteTest(Sender : TObject);
+begin
+
+  showmessage( tfmxObject(Sender).Name );
+
+end;
+
 procedure TfrmHome.Button2Click(Sender: TObject);
 var
   List: TStringList;
@@ -2787,11 +2800,21 @@ var
   bigInt: BigInteger;
 begin
 
-  intArr := getCoinsIDFromAddress(Edit1.Text);
-  createTransactionWalletList(intArr);
-  // switchTab(pageControl , WalletTransactionListTabItem);
-  addressfromQR := 'DUPA';
+  //frmhome.ActionList. := onExecuteTest;
+ { begin
+    showmessage('here');
+  end
+  else
+  begin
 
+    showmessage('overload');
+  end;                      }
+  //fmx.ActnList.TAction
+end;
+
+procedure TfrmHome.Button5Click(Sender: TObject);
+begin
+  switchTab(PageControl, AddnewCoin );
 end;
 
 procedure TfrmHome.ImportPrivateKey(Sender: TObject);

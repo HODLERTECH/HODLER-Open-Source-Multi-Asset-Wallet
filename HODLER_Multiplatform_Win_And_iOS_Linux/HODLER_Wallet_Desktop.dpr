@@ -130,9 +130,8 @@ uses
   Velthuis.RandomNumbers in 'additionalUnits\bi\Velthuis.RandomNumbers.pas',
   Velthuis.Sizes in 'additionalUnits\bi\Velthuis.Sizes.pas',
   Velthuis.StrConsts in 'additionalUnits\bi\Velthuis.StrConsts.pas',
-  Velthuis.XorShifts in 'additionalUnits\bi\Velthuis.XorShifts.pas';
-
-
+  Velthuis.XorShifts in 'additionalUnits\bi\Velthuis.XorShifts.pas',
+  debugAnalysis in 'additionalUnits\debugAnalysis.pas';
 
 {$R *.res}
 

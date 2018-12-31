@@ -1075,7 +1075,7 @@ var
   trngBufferCounter: Integer;
   stylo: TStyleManager;
   QRCodeBitmap: TBitmap;
-  newcoinID: nativeint;
+  //newcoinID: nativeint;   // in misc
   walletAddressForNewToken: AnsiString;
   tempMasterSeed: AnsiString;
   decryptSeedBackTabItem: TTabItem;
@@ -1099,7 +1099,7 @@ var
   CurrentAccount: Account;
   CurrentStyle: AnsiString;
   BigQRCodeBackTab: TTabItem;
-  ImportCoinID: Integer;
+  // ImportCoinID: Integer;    // in misc
 
   ToClaimWD, FromClaimWD: TwalletInfo;
 
@@ -1678,6 +1678,9 @@ end;
 
 procedure switchTab(TabControl: TTabControl; TabItem: TTabItem);
 begin
+
+  // if currentthread <> mainThread then Error
+
   backTabItem := frmHome.PageControl.ActiveTab;
   if not frmHome.shown then
   begin

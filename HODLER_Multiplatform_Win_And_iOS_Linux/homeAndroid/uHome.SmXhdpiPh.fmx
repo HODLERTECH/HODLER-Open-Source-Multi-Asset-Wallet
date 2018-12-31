@@ -143,10 +143,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             Size.Width = 245.000000000000000000
             inherited globalBalance: TLabel
               Size.Width = 245.000000000000000000
-              Size.Height = 58.000000000000000000
             end
             inherited globalCurrency: TLabel
-              Position.Y = 58.000000000000000000
               Size.Width = 245.000000000000000000
             end
             inherited SearchLayout: TLayout
@@ -781,7 +779,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             inherited SendVertScrollBox: TVertScrollBox
               Size.Width = 245.000000000000000000
               Size.Height = 197.000000000000000000
-              Viewport.Width = 245.000000000000000000
+              Viewport.Width = 240.000000000000000000
               Viewport.Height = 197.000000000000000000
               inherited btnSend: TButton
                 Position.Y = 144.000000000000000000

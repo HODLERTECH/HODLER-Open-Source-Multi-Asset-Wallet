@@ -345,6 +345,9 @@ begin
   frmhome.SendValueLabel.Text := BigIntegerToFloatStr(fromClaimWD.confirmed -
     BigInteger(1700), AvailableCoin[CoinID].decimals);
 
+  frmhome.BCHSVBCHABCReplayProtectionLabel.Visible :=
+      (( toClaimWD.coin = 3) or ( toClaimWD.coin = 7));
+
   { try
 
     ans := SweepCoinsRoutine(frmhome.PrivateKeyEditSV.text ,frmhome.CompressedPrivKeySVCheckBox.ischecked,7,frmhome.AddressSVEdit.text);

@@ -33,7 +33,7 @@ object frmHome: TfrmHome
     Size.Height = 687.000000000000000000
     Size.PlatformDefault = False
     TabHeight = 49.000000000000000000
-    TabIndex = 43
+    TabIndex = 18
     TabOrder = 8
     TabPosition = None
     OnChange = closeVirtualKeyBoard
@@ -3183,7 +3183,7 @@ object frmHome: TfrmHome
               Size.Height = 562.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
-              Viewport.Width = 450.000000000000000000
+              Viewport.Width = 434.000000000000000000
               Viewport.Height = 562.000000000000000000
               object ReceiveAmountLayout: TLayout
                 Align = Top
@@ -3465,7 +3465,7 @@ object frmHome: TfrmHome
               Size.Height = 562.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
-              Viewport.Width = 450.000000000000000000
+              Viewport.Width = 434.000000000000000000
               Viewport.Height = 562.000000000000000000
               object btnSend: TButton
                 Align = Top
@@ -12185,7 +12185,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -15476,7 +15476,7 @@ object frmHome: TfrmHome
           StyleLookup = 'buttonstyle'
           TabOrder = 1
           Text = 'Back'
-          OnClick = btnSBackClick
+          OnClick = Button5Click
         end
       end
     end
@@ -15823,7 +15823,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
