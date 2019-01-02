@@ -96,6 +96,8 @@ inherited frmHome_Surface: TfrmHome_Surface
       759s
       1920s
       759s
+      1920s
+      759s
       1920s)
     inherited dashbrd: TTabItem
       ExplicitSize.cx = 8.000000000000000000
@@ -2967,6 +2969,10 @@ inherited frmHome_Surface: TfrmHome_Surface
           TextSettings.Font.StyleExt = {00070000000000000004000000}
         end
       end
+    end
+    inherited PrivacyAndSecuritySettings: TTabItem
+      ExplicitSize.cx = 8.000000000000000000
+      ExplicitSize.cy = 8.000000000000000000
     end
   end
   inherited Panel8: TPanel

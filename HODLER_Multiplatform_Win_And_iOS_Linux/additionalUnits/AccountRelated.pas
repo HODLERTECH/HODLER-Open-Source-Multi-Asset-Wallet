@@ -56,7 +56,7 @@ implementation
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, WalletStructureData, TcopyableEditData, TCopyableLabelData,
-  walletViewRelated, TImageTextButtonData;
+  walletViewRelated, TImageTextButtonData , debugAnalysis;
 
 procedure afterInitialize;
 var
@@ -423,6 +423,8 @@ var
   btn: TImageTextButton;
 begin
 
+  Application.OnException := frmhome.ExceptionHandler;
+
   // %appdata% to %appdata%/hodlertech
   appdataPath := System.SysUtils.GetEnvironmentVariable('APPDATA');
   newDataPath := System.IOUtils.TPath.combine
@@ -483,12 +485,14 @@ begin
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
       HOME_PATH := System.IOUtils.TPath.GetDocumentsPath;
       HOME_TABITEM := TTabItem(frmHome.FindComponent('dashbrd'));
+      debugAnalysis.LOG_FILE_PATH := HOME_PATH;
 {$ELSE}
       HOME_PATH := IncludeTrailingPathDelimiter
         ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetDocumentsPath{$ELSE}System.
         IOUtils.TPath.combine(System.SysUtils.GetEnvironmentVariable('APPDATA'),
         'hodlertech'){$ENDIF});
       HOME_TABITEM := walletView;
+      debugAnalysis.LOG_FILE_PATH := HOME_PATH;
 {$ENDIF}
 {$IF DEFINED(ANDROID)}
       SYSTEM_NAME := 'android';

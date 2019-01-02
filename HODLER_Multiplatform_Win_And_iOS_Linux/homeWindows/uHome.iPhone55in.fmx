@@ -96,6 +96,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
       93s
       716s
       93s
+      716s
+      93s
       716s)
     inherited dashbrd: TTabItem
       Size.Width = 11.000000000000000000
@@ -3531,6 +3533,10 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           TextSettings.Font.StyleExt = {00070000000000000004000000}
         end
       end
+    end
+    inherited PrivacyAndSecuritySettings: TTabItem
+      ExplicitSize.cx = 8.000000000000000000
+      ExplicitSize.cy = 8.000000000000000000
     end
   end
   inherited Panel8: TPanel

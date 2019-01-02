@@ -1044,6 +1044,7 @@ type
     procedure CopyParentTextToClipboard(Sender: TObject);
 
     procedure RefreshCurrentWallet(Sender : TObject);
+    procedure ExceptionHandler( Sender : TObject ; E : Exception );
   var
     refreshLocalImage : TRotateImage;
     refreshGlobalImage : TRotateImage;
@@ -1117,13 +1118,17 @@ implementation
 
 uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
   AccountRelated,
-  TokenData, QRRelated, FileManagerRelated, WalletViewRelated, BackupRelated;
+  TokenData, QRRelated, FileManagerRelated, WalletViewRelated, BackupRelated ,debugAnalysis ;
 {$R *.fmx}
 {$R *.SmXhdpiPh.fmx ANDROID}
 {$R *.iPhone55in.fmx IOS}
 {$R *.Windows.fmx MSWINDOWS}
 {$R *.Surface.fmx MSWINDOWS}
 
+procedure tfrmhome.ExceptionHandler( Sender : TObject ; E : Exception );
+begin
+  debugAnalysis.ExceptionHandler( Sender , E );
+end;
 
 procedure TFrmHome.RefreshCurrentWallet(Sender : TObject);
 begin

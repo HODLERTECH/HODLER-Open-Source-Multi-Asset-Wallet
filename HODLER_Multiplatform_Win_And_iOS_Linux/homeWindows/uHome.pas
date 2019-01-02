@@ -768,6 +768,7 @@ type
     exportemptyaddressesSwitch: TSwitch;
     exportemptyAddressesLabel: TLabel;
     LoadAddressesToImortAniIndicator: TAniIndicator;
+    PrivacyAndSecuritySettings: TTabItem;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -996,6 +997,8 @@ type
     procedure GetImage();
   public
     { Public declarations }
+
+
 {$IF NOT DEFINED(LINUX)}
     MotionSensor: TMotionSensor;
     OrientationSensor: TOrientationSensor;
@@ -1046,6 +1049,8 @@ type
     procedure ExportPrivKeyListButtonClick(Sender : TObject);
     procedure RefreshCurrentWallet(Sender : TObject);
     procedure onExecuteTest(Sender : TObject);
+
+    procedure ExceptionHandler( Sender : TObject ; E : Exception );
     //procedure PrivateKeyPasswordCheck
   var
     refreshLocalImage : TRotateImage;
@@ -1126,7 +1131,7 @@ implementation
 
 uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
   TokenData, AccountRelated, QRRelated, FileManagerRelated, WalletViewRelated,
-  BackupRelated
+  BackupRelated, debugAnalysis
 {$IFDEF ANDRIOD}
 {$ENDIF}
 {$IFDEF MSWINDOWS}
@@ -1147,6 +1152,11 @@ begin
 end;
 
 {$ENDIF}
+
+procedure tfrmhome.ExceptionHandler( Sender : TObject ; E : Exception );
+begin
+  debugAnalysis.ExceptionHandler( Sender , E );
+end;
 
 procedure TFrmHome.RefreshCurrentWallet(Sender : TObject);
 begin
@@ -2798,7 +2808,13 @@ var
   hex: AnsiString;
   ans: AnsiString;
   bigInt: BigInteger;
+
+  actionListener : TActionList;
 begin
+  {actionListener := TActionList.Create(nil);
+  actionListener.Ac
+  frmhome.ActionList := actionListener;}
+
 
   //frmhome.ActionList. := onExecuteTest;
  { begin
