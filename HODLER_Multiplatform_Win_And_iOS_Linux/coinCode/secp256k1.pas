@@ -16,7 +16,7 @@ uses
   ClpECKeyPairGenerator, ClpIECKeyGenerationParameters,
   ClpIAsymmetricCipherKeyPair, ClpIECPrivateKeyParameters,
   ClpIECPublicKeyParameters, ClpECPrivateKeyParameters, ClpIECInterface, ClpHex,
-  ClpCustomNamedCurves;
+  ClpCustomNamedCurves, ClpHMacDsaKCalculator, ClpDigestUtilities;
 
 type
   TBIPoint = record
@@ -195,11 +195,24 @@ begin
   wipeAnsiString(privkey);
 end;
 
-function GetDetermisticRandomForSign(d: AnsiString): BigInteger;
+function GetDetermisticRandomForSign(e, d: AnsiString): BigInteger;
+var
+  hmac: THMacDsaKCalculator;
+var
+  xn, xd: TBigInteger;
+  xe: TBytes;
 begin
-
-  result := BigInteger.Parse('+0x00' + BigInteger(BigInteger.Parse('+0x00' + GetSHA256FromHex(inttohex(random($FFFFFFFF), 8) + d + randomHexStream(64) + inttohex(random($FFFFFF), 32))) mod (getN div 4)).ToHexString);
-
+   /// RFC 6979 - "Deterministic Usage of the Digital
+  /// Signature Algorithm (DSA) and Elliptic Curve Digital Signature
+  /// Algorithm (ECDSA)".
+  hmac := THMacDsaKCalculator.Create(TDigestUtilities.GetDigest('SHA-256'));
+  xn := TBigInteger.Create('FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141', 16);
+  xd := TBigInteger.Create(d, 16);
+  xe := THex.Decode(e);
+  hmac.Init(xn, xd, xe);
+  result := BigInteger.Parse('+0x00' + THex.Encode(hmac.NextK.ToByteArray));
+  hmac.Free;
+  wipeAnsiString(d);
 end;
 
 function secp256k1_signDER(e, d: AnsiString; forEth: boolean = false): AnsiString;
@@ -214,7 +227,7 @@ begin
   overflow := 0;
   BigInteger.Decimal;
   BigInteger.AvoidPartialFlagsStall(True);
-  k := GetDetermisticRandomForSign(uHome.trngBuffer); // mod getN;
+  k := GetDetermisticRandomForSign(e, d); // mod getN;
   C := point_mul(getG, k);
 
   if C.YCoordinate.IsNegative then
@@ -264,4 +277,3 @@ begin
 end;
 
 end.
-
