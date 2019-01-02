@@ -7,7 +7,16 @@ interface
 uses
   System.SysUtils, System.Classes, System.IOUtils, FMX.Types, System.DateUtils ,FMX.Controls, FMX.Layouts,
   FMX.Edit, FMX.StdCtrls, FMX.Clipboard, FMX.Platform, FMX.Objects,
-  System.Types, StrUtils , FMX.Dialogs;
+  System.Types, StrUtils , FMX.Dialogs
+
+{$IF DEFINED(MSWINDOWS)}
+  ,  System.Win.Registry
+  , Windows
+{$ENDIF}
+
+
+
+  ;
 
 {$IF DEFINED(ANDROID) OR DEFINED(IOS) OR DEFINED(LINUX)}
 
@@ -38,10 +47,91 @@ var
   procedure ExceptionHandler( Sender : TObject ; E : Exception );
   procedure saveLogFile();
   procedure addLog( msg : AnsiString );
+  procedure SendReport( url : AnsiString ;msg : AnsiString );
+  procedure SendUserReport( msg : AnsiString );
+  procedure SendAutoReport( msg : AnsiString );
+  function getdeviceInfo(): AnsiString;
+  function getDetailedData(): AnsiString;
 
 
 
 implementation
+uses misc;
+
+
+function getDetailedData(): AnsiString;
+{$IF DEFINED(MSWINDOWS)}
+var
+  Reg: TRegistry;
+begin
+  REsult := '';
+  Reg := TRegistry.Create(KEY_READ);
+  if reg.Access = KEY_READ  then
+  begin
+
+  end;
+  try
+    Reg.RootKey := HKEY_LOCAL_MACHINE;
+    if Reg.OpenKey('\HARDWARE\DESCRIPTION\System\CentralProcessor\0', False) then
+      Result := Reg.ReadString('ProcessorNameString');
+  finally
+    Reg.Free;
+  end;
+end;
+{$ENDIF}
+{$IF DEFINED(ANDROID)}
+begin
+  result := '';
+
+end;
+{$ENDIF}
+{$IF DEFINED(LINUX)}
+begin
+  result := '';
+
+end;
+{$ENDIF}
+{$IF DEFINED(IOS)}
+begin
+  result := '';
+
+end;
+{$ENDIF}
+
+//function CPUType: string;
+
+  ///////////////////////////////////////////////////////
+
+
+function getdeviceInfo(): AnsiString;
+begin
+  result :=
+    'os=' + misc.SYSTEM_NAME +
+    '&more=' + getDetailedData;
+end;
+
+procedure SendAutoReport( msg : AnsiString );
+var
+  temp : AnsiString;
+begin
+  temp := 'msg=' + msg + '&' + getdeviceInfo();
+  sendReport( '' ,  temp);
+
+end;
+
+procedure SendReport( url : AnsiString ; msg : AnsiString );
+begin
+
+  //postDataOverHTTP( url , msg , false , true );
+
+end;
+
+procedure SendUserReport( msg : AnsiString );
+begin
+
+  sendReport( '' , msg );
+
+end;
 
 procedure addLog( msg : AnsiString );
 var

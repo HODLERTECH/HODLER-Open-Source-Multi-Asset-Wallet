@@ -769,6 +769,20 @@ type
     exportemptyAddressesLabel: TLabel;
     LoadAddressesToImortAniIndicator: TAniIndicator;
     PrivacyAndSecuritySettings: TTabItem;
+    ToolBar18: TToolBar;
+    SaPHeaderLabel: TLabel;
+    SaPBackButton: TButton;
+    Panel24: TPanel;
+    SendErrorMsgLabel: TLabel;
+    SendErrorMsgSwitch: TSwitch;
+    ReportIssues: TTabItem;
+    ToolBar19: TToolBar;
+    ReportIssueHeaderLabel: TLabel;
+    Button11: TButton;
+    Memo2: TMemo;
+    SendReportIssuesButton: TButton;
+    Label22: TLabel;
+    Label24: TLabel;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -2811,6 +2825,8 @@ var
 
   actionListener : TActionList;
 begin
+
+  showmessage( getDetailedData() );
   {actionListener := TActionList.Create(nil);
   actionListener.Ac
   frmhome.ActionList := actionListener;}
