@@ -3,6 +3,7 @@ program HODLER_Wallet_Desktop;
 {$R *.dres}
 
 uses
+
   SafeDLLPath in 'SafeDLLPath.pas',
   System.StartUpCopy,
   FMX.Forms,

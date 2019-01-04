@@ -5,7 +5,7 @@
         <FrameworkType>FMX</FrameworkType>
         <MainSource>HODLER_Wallet_Mobile.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Android</Platform>
         <TargetedPlatforms>1247</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -657,6 +657,7 @@
         <DCCReference Include="additionalUnits\bi\Velthuis.XorShifts.pas"/>
         <DCCReference Include="components\TImageTextButtonData.pas"/>
         <DCCReference Include="components\TRotateImageData.pas"/>
+        <DCCReference Include="additionalUnits\debugAnalysis.pas"/>
         <RcItem Include="Languages\PT.lang">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>

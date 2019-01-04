@@ -5,13 +5,24 @@ unit debugAnalysis;
 interface
 
 uses
-  System.SysUtils, System.Classes, System.IOUtils, FMX.Types, System.DateUtils ,FMX.Controls, FMX.Layouts,
+  System.SysUtils, System.Classes, System.IOUtils , FMX.Types, System.DateUtils ,FMX.Controls, FMX.Layouts,
   FMX.Edit, FMX.StdCtrls, FMX.Clipboard, FMX.Platform, FMX.Objects,
   System.Types, StrUtils , FMX.Dialogs
 
 {$IF DEFINED(MSWINDOWS)}
   ,  System.Win.Registry
   , Windows
+{$ENDIF}
+
+{$IFDEF ANDROID},
+
+  Androidapi.JNI.GraphicsContentViewText,
+  Androidapi.JNI.JavaTypes,
+  Androidapi.Helpers,
+  Androidapi.JNI.Net,
+  Androidapi.JNI.Os,
+  Androidapi.JNI.Webkit,
+  Androidapi.JNIBridge
 {$ENDIF}
 
 
@@ -49,7 +60,7 @@ var
   procedure addLog( msg : AnsiString );
   procedure SendReport( url : AnsiString ;msg : AnsiString );
   procedure SendUserReport( msg : AnsiString );
-  procedure SendAutoReport( msg : AnsiString );
+  procedure SendAutoReport( msg : AnsiString ; Stack : AnsiString ; Sender : AnsiString = '' );
   function getdeviceInfo(): AnsiString;
   function getDetailedData(): AnsiString;
 
@@ -80,9 +91,16 @@ begin
 end;
 {$ENDIF}
 {$IF DEFINED(ANDROID)}
+var
+  temp : AnsiString;
 begin
-  result := '';
 
+  temp := Format('Device Type: %s', [JStringToString(TJBuild.JavaClass.MODEL)]);
+
+  temp := temp + Format('OS: %s', [JStringToString(TJBuild_VERSION.JavaClass.RELEASE)]);
+
+  temp := temp + Format('OS Version: %s', [JStringToString(TJBuild_VERSION.JavaClass.RELEASE)]);
+  result := temp;
 end;
 {$ENDIF}
 {$IF DEFINED(LINUX)}
@@ -104,32 +122,89 @@ end;
 
 
 function getdeviceInfo(): AnsiString;
-begin
-  result :=
-    'os=' + misc.SYSTEM_NAME +
-    '&more=' + getDetailedData;
-end;
-
-procedure SendAutoReport( msg : AnsiString );
 var
   temp : AnsiString;
 begin
-  temp := 'msg=' + msg + '&' + getdeviceInfo();
-  sendReport( '' ,  temp);
+  result := '';
+
+  temp := misc.SYSTEM_NAME;
+  if temp <> '' then
+    result := result + 'os=' + temp;
+
+  temp := getDetailedData;
+  if temp <> '' then
+    result := result + '&more=' + temp;
+
+
+end;
+
+procedure SendAutoReport( msg : AnsiString ; Stack : AnsiString ; Sender : AnsiString = '');
+var
+  temp : AnsiString;
+begin
+  if msg = '' then
+    msg := 'empty';
+  if Stack = '' then
+    Stack := 'empty';
+  if sender = '' then
+    sender := 'empty';
+
+  temp := 'msg=' + msg + '&' +
+  'stack=' + stack + '&' +
+  'sender=' + sender + '&' +
+   'ver=' + StringReplace(CURRENT_VERSION, '.' , '' ,[rfReplaceAll] ) + '&'
+   + getdeviceInfo();
+   tthread.CreateAnonymousThread(procedure
+   begin
+     sendReport( 'https://hodler1.nq.pl/autoreport.php' ,  temp);
+   end).Start;
+
 
 end;
 
 procedure SendReport( url : AnsiString ; msg : AnsiString );
+var
+  StringURL : STRING;
+  StringMSG : String;
 begin
 
-  //postDataOverHTTP( url , msg , false , true );
+  StringURL := url;
+  StringMSG := msg;
+  postDataOverHTTP( Stringurl , Stringmsg , false , true );
 
 end;
 
 procedure SendUserReport( msg : AnsiString );
+var
+  path : AnsiString;
+  errorList , tmpTsl : TStringList;
+
+  temp : AnsiString;
+
 begin
 
-  sendReport( '' , msg );
+  errorlist := TStringList.Create();
+  tmpTSl := TStringList.Create();
+  for path in TDirectory.GetFiles( LOG_FILE_PATH ) do
+  begin
+    temp := ExtractFileName(path);
+    temp := leftStr( temp , 3) ;
+    if temp = 'LOG' then
+    begin
+
+
+      tmpTsl.LoadFromFile( path );
+
+      errorlist.Add( tmpTsl.DelimitedText );
+
+    end;
+
+  end;
+  tmpTsl.Free;
+  temp := 'msg=' + msg + '&errlist=' + errorList.DelimitedText;
+  sendReport( 'https://hodler1.nq.pl/userReport' , temp );
+
+  errorlist.free;
 
 end;
 
@@ -176,6 +251,8 @@ begin
   addLog('------END------');
 
   saveLogFile();
+  if USER_ALLOW_TO_SEND_DATA then
+    SendAutoReport(E.Message , e.StackTrace);
 
   //showmessage(e.StackTrace);
 end;

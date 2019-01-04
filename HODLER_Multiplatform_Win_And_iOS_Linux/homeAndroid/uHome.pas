@@ -2667,7 +2667,7 @@ var
   bigInt: BigInteger;
 begin
 
-  Edit1.Text := StrFloatToBigInteger(Edit4.Text, 2).ToString;
+  showmessage( getDetailedData() );
 
 end;
 

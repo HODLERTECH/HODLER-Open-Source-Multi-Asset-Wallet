@@ -779,10 +779,16 @@ type
     ToolBar19: TToolBar;
     ReportIssueHeaderLabel: TLabel;
     Button11: TButton;
-    Memo2: TMemo;
+    UserReportMessageMemo: TMemo;
     SendReportIssuesButton: TButton;
     Label22: TLabel;
     Label24: TLabel;
+    reportIssuesSettingsButton: TButton;
+    PrivacyAndSecurityButton: TButton;
+    GlobalStetingsStaticLabel: TLabel;
+    LocalSettingsLayout: TLayout;
+    GlobalSettingsLayout: TLayout;
+    VertScrollBox3: TVertScrollBox;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1004,6 +1010,10 @@ type
     procedure coinbaseImageClick(Sender: TObject);
     procedure exportemptyaddressesSwitchSwitch(Sender: TObject);
     procedure Button5Click(Sender: TObject);
+    procedure SendReportIssuesButtonClick(Sender: TObject);
+    procedure reportIssuesSettingsButtonClick(Sender: TObject);
+    procedure PrivacyAndSecurityButtonClick(Sender: TObject);
+    procedure SendErrorMsgSwitchSwitch(Sender: TObject);
 
   private
     { Private declarations }
@@ -1285,6 +1295,11 @@ end;
 procedure TfrmHome.removeAccount(Sender: TObject);
 begin
   AccountRelated.removeAccount(Sender);
+end;
+
+procedure TfrmHome.reportIssuesSettingsButtonClick(Sender: TObject);
+begin
+  switchTab(pageControl , ReportIssues );
 end;
 
 procedure TfrmHome.QRChangeTimerTimer(Sender: TObject);
@@ -1620,6 +1635,11 @@ end;
 procedure TfrmHome.PopupBox1_popupMenuClose(Sender: TObject);
 begin
 
+end;
+
+procedure TfrmHome.PrivacyAndSecurityButtonClick(Sender: TObject);
+begin
+  switchTab( pagecontrol , PrivacyAndSecuritySettings );
 end;
 
 procedure TfrmHome.PrivateKeyManageButtonClick(Sender: TObject);
@@ -2826,7 +2846,8 @@ var
   actionListener : TActionList;
 begin
 
-  showmessage( getDetailedData() );
+  //showmessage( getDetailedData() );
+  raise Exception.Create('Error Message');
   {actionListener := TActionList.Create(nil);
   actionListener.Ac
   frmhome.ActionList := actionListener;}
@@ -3904,6 +3925,18 @@ begin
       EQRPreview.Width:=294;}
   //end;
 
+end;
+
+procedure TfrmHome.SendErrorMsgSwitchSwitch(Sender: TObject);
+begin
+  USER_ALLOW_TO_SEND_DATA := SendErrorMsgSwitch.ischecked;
+
+  refreshWalletDat();
+end;
+
+procedure TfrmHome.SendReportIssuesButtonClick(Sender: TObject);
+begin
+  SendUserReport( UserReportMessageMemo.Text );
 end;
 
 procedure TfrmHome.SendWalletFile(Sender: TObject);

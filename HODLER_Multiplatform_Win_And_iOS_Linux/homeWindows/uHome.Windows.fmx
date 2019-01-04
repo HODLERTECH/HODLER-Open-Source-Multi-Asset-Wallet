@@ -1441,69 +1441,91 @@ inherited frmHome_Windows: TfrmHome_Windows
           Size.Width = 500.000000000000000000
         end
       end
-      inherited btnSWipe: TButton
-        Size.Width = 500.000000000000000000
-      end
-      inherited DebugBtn: TButton
-        Size.Width = 500.000000000000000000
-      end
-      inherited OrganizeButton: TButton
-        Size.Width = 500.000000000000000000
-      end
-      inherited Panel2: TPanel
-        Size.Width = 500.000000000000000000
-        inherited LanguageBox: TPopupBox
-          Position.X = 388.000000000000000000
-        end
-        inherited SettingsLanguageLabel: TLabel
-          Size.Width = 358.000000000000000000
-        end
-      end
-      inherited Panel3: TPanel
-        Size.Width = 500.000000000000000000
-        inherited CurrencyBox: TPopupBox
-          Position.X = 388.000000000000000000
-        end
-        inherited SettingsCurrencyLabel: TLabel
-          Size.Width = 358.000000000000000000
-        end
-      end
       inherited DebugSaveSeedButton: TButton
         Size.Width = 640.000000000000000000
-      end
-      inherited CreateBackupButton: TButton
-        Size.Width = 500.000000000000000000
       end
       inherited ImportPrivateKeyButton: TButton
         Size.Width = 500.000000000000000000
       end
-      inherited CheckUpdateButton: TButton
+      inherited VertScrollBox3: TVertScrollBox
         Size.Width = 500.000000000000000000
-      end
-      inherited WipeWalletDataInfoLabel: TLabel
-        Size.Width = 470.000000000000000000
-      end
-      inherited OrganizeInfoLabel: TLabel
-        Size.Width = 470.000000000000000000
-      end
-      inherited CreateBackupInfoLabel: TLabel
-        Size.Width = 470.000000000000000000
-      end
-      inherited CheckUpdateInfoLabel: TLabel
-        Size.Width = 470.000000000000000000
-      end
-      inherited Panel16: TPanel
-        Size.Width = 500.000000000000000000
-        inherited DayNightModeStaticLabel: TLabel
-          Size.Width = 366.000000000000000000
+        Size.Height = 623.000000000000000000
+        Viewport.Width = 484.000000000000000000
+        Viewport.Height = 623.000000000000000000
+        inherited GlobalSettingsLayout: TLayout
+          Size.Width = 484.000000000000000000
+          inherited GlobalStetingsStaticLabel: TLabel
+            Size.Width = 484.000000000000000000
+          end
+          inherited DebugBtn: TButton
+            Size.Width = 484.000000000000000000
+          end
+          inherited Panel16: TPanel
+            Size.Width = 484.000000000000000000
+            inherited DayNightModeStaticLabel: TLabel
+              Size.Width = 350.000000000000000000
+            end
+            inherited DayNightModeSwitch: TSwitch
+              Position.X = 396.000000000000000000
+            end
+          end
+          inherited Panel2: TPanel
+            Size.Width = 484.000000000000000000
+            inherited LanguageBox: TPopupBox
+              Position.X = 372.000000000000000000
+            end
+            inherited SettingsLanguageLabel: TLabel
+              Size.Width = 342.000000000000000000
+            end
+          end
+          inherited Panel3: TPanel
+            Size.Width = 484.000000000000000000
+            inherited CurrencyBox: TPopupBox
+              Position.X = 372.000000000000000000
+            end
+            inherited SettingsCurrencyLabel: TLabel
+              Size.Width = 342.000000000000000000
+            end
+          end
+          inherited btnSWipe: TButton
+            Size.Width = 484.000000000000000000
+          end
+          inherited CheckUpdateButton: TButton
+            Size.Width = 484.000000000000000000
+          end
+          inherited reportIssuesSettingsButton: TButton
+            Size.Width = 484.000000000000000000
+          end
+          inherited PrivacyAndSecurityButton: TButton
+            Size.Width = 484.000000000000000000
+          end
         end
-        inherited DayNightModeSwitch: TSwitch
-          Position.X = 412.000000000000000000
-          OnSwitch = nil
+        inherited LocalSettingsLayout: TLayout
+          Size.Width = 484.000000000000000000
+          inherited CreateBackupButton: TButton
+            Size.Width = 484.000000000000000000
+          end
+          inherited OrganizeButton: TButton
+            Size.Width = 484.000000000000000000
+          end
+          inherited PrivateKeyManageButton: TButton
+            Size.Width = 484.000000000000000000
+          end
         end
-      end
-      inherited PrivateKeyManageButton: TButton
-        Size.Width = 500.000000000000000000
+        inherited CheckUpdateInfoLabel: TLabel
+          Size.Width = 454.000000000000000000
+        end
+        inherited CreateBackupInfoLabel: TLabel
+          Size.Width = 454.000000000000000000
+        end
+        inherited OrganizeInfoLabel: TLabel
+          Position.Y = 576.000000000000000000
+          Size.Width = 454.000000000000000000
+        end
+        inherited WipeWalletDataInfoLabel: TLabel
+          Position.Y = 641.000000000000000000
+          Size.Width = 454.000000000000000000
+        end
       end
     end
     inherited descryptSeed: TTabItem
@@ -3014,7 +3036,7 @@ inherited frmHome_Windows: TfrmHome_Windows
           Size.Width = 500.000000000000000000
         end
       end
-      inherited Memo2: TMemo
+      inherited UserReportMessageMemo: TMemo
         Size.Width = 500.000000000000000000
         Viewport.Width = 500.000000000000000000
         Viewport.Height = 105.000000000000000000

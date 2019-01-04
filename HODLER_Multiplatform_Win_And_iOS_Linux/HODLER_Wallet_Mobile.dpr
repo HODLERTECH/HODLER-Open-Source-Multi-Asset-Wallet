@@ -129,7 +129,8 @@ uses
   Velthuis.StrConsts in 'additionalUnits\bi\Velthuis.StrConsts.pas',
   Velthuis.XorShifts in 'additionalUnits\bi\Velthuis.XorShifts.pas',
   TImageTextButtonData in 'components\TImageTextButtonData.pas',
-  TRotateImageData in 'components\TRotateImageData.pas';
+  TRotateImageData in 'components\TRotateImageData.pas',
+  debugAnalysis in 'additionalUnits\debugAnalysis.pas';
 
 {$R *.res}
 

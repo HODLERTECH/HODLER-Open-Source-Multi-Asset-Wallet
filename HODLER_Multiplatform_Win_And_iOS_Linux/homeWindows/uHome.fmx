@@ -33,7 +33,7 @@ object frmHome: TfrmHome
     Size.Height = 687.000000000000000000
     Size.PlatformDefault = False
     TabHeight = 49.000000000000000000
-    TabIndex = 18
+    TabIndex = 7
     TabOrder = 8
     TabPosition = None
     OnChange = closeVirtualKeyBoard
@@ -10863,7 +10863,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -10873,6 +10873,7 @@ object frmHome: TfrmHome
       ExplicitSize.cx = 8.000000000000000000
       ExplicitSize.cy = 8.000000000000000000
       object SHeader: TToolBar
+        Align = MostTop
         Size.Width = 450.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
@@ -10897,23 +10898,13 @@ object frmHome: TfrmHome
           OnClick = btnSBackClick
         end
       end
-      object btnSWipe: TButton
-        Align = Top
-        Position.Y = 48.000000000000000000
-        Size.Width = 450.000000000000000000
-        Size.Height = 48.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 1
-        Text = 'Wipe Wallet Data'
-        OnClick = btnSWipeClick
-      end
       object btnSSys: TButton
         Align = Top
         Position.Y = 96.000000000000000000
         Size.Width = 384.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 2
+        TabOrder = 1
         Text = 'Open System Settings (HODLER OS)'
         Visible = False
         OnClick = btnSSysClick
@@ -10924,7 +10915,7 @@ object frmHome: TfrmHome
         Size.Width = 384.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 3
+        TabOrder = 2
         Text = 'Add new wallet'
         Visible = False
         OnClick = btnAddNewCoinClick
@@ -10935,96 +10926,10 @@ object frmHome: TfrmHome
         Size.Width = 384.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 4
+        TabOrder = 3
         Text = 'Add new token'
         Visible = False
         OnClick = btnAddNewTokenClick
-      end
-      object DebugBtn: TButton
-        Align = Top
-        Position.Y = 96.000000000000000000
-        Size.Width = 450.000000000000000000
-        Size.Height = 48.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 5
-        Text = 'DebugBtn'
-        OnClick = DebugBtnClick
-      end
-      object OrganizeButton: TButton
-        Align = Top
-        Position.Y = 144.000000000000000000
-        Size.Width = 450.000000000000000000
-        Size.Height = 48.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 6
-        Text = 'Organize'
-        OnClick = OrganizeButtonClick
-      end
-      object Panel2: TPanel
-        Align = Top
-        Position.Y = 192.000000000000000000
-        Size.Width = 450.000000000000000000
-        Size.Height = 48.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 8
-        object LanguageBox: TPopupBox
-          Align = Right
-          Items.Strings = (
-            'ENG'
-            'POL'
-            'DEU'
-            'DUT'
-            'PT'
-            'FRA'
-            'JPN'
-            'SPA'
-            'ZHX')
-          Position.X = 338.000000000000000000
-          Size.Width = 112.000000000000000000
-          Size.Height = 48.000000000000000000
-          Size.PlatformDefault = False
-          StyleLookup = 'popupboxstyle'
-          TabOrder = 0
-          OnChange = LanguageBoxChange
-        end
-        object SettingsLanguageLabel: TLabel
-          Align = Client
-          Margins.Left = 15.000000000000000000
-          Margins.Right = 15.000000000000000000
-          Size.Width = 308.000000000000000000
-          Size.Height = 48.000000000000000000
-          Size.PlatformDefault = False
-          Text = 'Language'
-          TabOrder = 1
-        end
-      end
-      object Panel3: TPanel
-        Align = Top
-        Position.Y = 240.000000000000000000
-        Size.Width = 450.000000000000000000
-        Size.Height = 48.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 7
-        object CurrencyBox: TPopupBox
-          Align = Right
-          Position.X = 338.000000000000000000
-          Size.Width = 112.000000000000000000
-          Size.Height = 48.000000000000000000
-          Size.PlatformDefault = False
-          StyleLookup = 'popupboxstyle'
-          TabOrder = 0
-          OnChange = CurrencyBoxChange
-        end
-        object SettingsCurrencyLabel: TLabel
-          Align = Client
-          Margins.Left = 15.000000000000000000
-          Margins.Right = 15.000000000000000000
-          Size.Width = 308.000000000000000000
-          Size.Height = 48.000000000000000000
-          Size.PlatformDefault = False
-          Text = 'Currency'
-          TabOrder = 1
-        end
       end
       object DebugSaveSeedButton: TButton
         Align = Top
@@ -11032,20 +10937,10 @@ object frmHome: TfrmHome
         Size.Width = 384.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 9
+        TabOrder = 4
         Text = 'DebugSaveSeedButton'
         Visible = False
         OnClick = DebugSaveSeedButtonClick
-      end
-      object CreateBackupButton: TButton
-        Align = Top
-        Position.Y = 288.000000000000000000
-        Size.Width = 450.000000000000000000
-        Size.Height = 49.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 10
-        Text = 'Create Backup'
-        OnClick = CreateBackupButtonClick
       end
       object ImportPrivateKeyButton: TButton
         Align = Top
@@ -11053,7 +10948,7 @@ object frmHome: TfrmHome
         Size.Width = 450.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 12
+        TabOrder = 6
         Text = 'Import Private Key'
         Visible = False
         OnClick = ImportPrivateKeyButtonClick
@@ -11064,122 +10959,280 @@ object frmHome: TfrmHome
         Size.Width = 384.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 11
+        TabOrder = 5
         Text = 'Check for updates'
         Visible = False
         OnClick = updateBtnClick
       end
-      object CheckUpdateButton: TButton
-        Align = Top
-        Position.Y = 337.000000000000000000
+      object VertScrollBox3: TVertScrollBox
+        Align = Client
         Size.Width = 450.000000000000000000
-        Size.Height = 48.000000000000000000
+        Size.Height = 639.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 14
-        Text = 'Check Update'
-        OnClick = CheckUpdateButtonClick
-      end
-      object WipeWalletDataInfoLabel: TLabel
-        Align = Top
-        Margins.Left = 15.000000000000000000
-        Margins.Right = 15.000000000000000000
-        Position.X = 15.000000000000000000
-        Position.Y = 490.000000000000000000
-        Size.Width = 420.000000000000000000
-        Size.Height = 56.000000000000000000
-        Size.PlatformDefault = False
-        Text = 
-          'Wipe Wallet Data - cleans all your HODLER data. Do not select th' +
-          'is option if you have not created a backup, or you will lose you' +
-          'r funds!'
-        TabOrder = 15
-      end
-      object OrganizeInfoLabel: TLabel
-        Align = Top
-        Margins.Left = 15.000000000000000000
-        Margins.Right = 15.000000000000000000
-        Position.X = 15.000000000000000000
-        Position.Y = 546.000000000000000000
-        Size.Width = 420.000000000000000000
-        Size.Height = 65.000000000000000000
-        Size.PlatformDefault = False
-        Text = 
-          'Organize - change the order of cryptocurrencies in your wallet o' +
-          'r remove the once you do not use.'
-        TabOrder = 16
-      end
-      object CreateBackupInfoLabel: TLabel
-        Align = Top
-        Margins.Left = 15.000000000000000000
-        Margins.Right = 15.000000000000000000
-        Position.X = 15.000000000000000000
-        Position.Y = 611.000000000000000000
-        Size.Width = 420.000000000000000000
-        Size.Height = 65.000000000000000000
-        Size.PlatformDefault = False
-        Text = 
-          'Create Backup - select from many backup options to secure your f' +
-          'unds. Remember to always have a secure backup to your wallet, or' +
-          ' you can lose your funds!'
-        TabOrder = 17
-      end
-      object CheckUpdateInfoLabel: TLabel
-        Align = Top
-        Margins.Left = 15.000000000000000000
-        Margins.Right = 15.000000000000000000
-        Position.X = 15.000000000000000000
-        Position.Y = 676.000000000000000000
-        Size.Width = 420.000000000000000000
-        Size.Height = 46.000000000000000000
-        Size.PlatformDefault = False
-        Text = 
-          'Check Update - make sure if you are using the latest version of ' +
-          'HODLER.'
-        TabOrder = 18
-      end
-      object Panel16: TPanel
-        Align = Top
-        Position.Y = 433.000000000000000000
-        Size.Width = 450.000000000000000000
-        Size.Height = 57.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 13
-        object DayNightModeStaticLabel: TLabel
-          Align = Client
-          Margins.Left = 15.000000000000000000
-          Margins.Right = 15.000000000000000000
-          Size.Width = 316.000000000000000000
-          Size.Height = 57.000000000000000000
+        TabOrder = 7
+        Viewport.Width = 434.000000000000000000
+        Viewport.Height = 639.000000000000000000
+        object GlobalSettingsLayout: TLayout
+          Align = Top
+          Position.Y = 144.000000000000000000
+          Size.Width = 434.000000000000000000
+          Size.Height = 432.000000000000000000
           Size.PlatformDefault = False
-          Text = 'Night mode'
           TabOrder = 0
+          object GlobalStetingsStaticLabel: TLabel
+            Align = MostTop
+            Size.Width = 434.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.HorzAlign = Center
+            Text = '----GLOBAL SETTINGS----'
+            TabOrder = 0
+          end
+          object DebugBtn: TButton
+            Align = Top
+            Position.Y = 240.000000000000000000
+            Size.Width = 434.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            Text = 'DebugBtn'
+            OnClick = DebugBtnClick
+          end
+          object Panel16: TPanel
+            Align = Top
+            Position.Y = 48.000000000000000000
+            Size.Width = 434.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 2
+            object DayNightModeStaticLabel: TLabel
+              Align = Client
+              Margins.Left = 15.000000000000000000
+              Margins.Right = 15.000000000000000000
+              Size.Width = 300.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              Text = 'Night mode'
+              TabOrder = 0
+            end
+            object DayNightModeSwitch: TSwitch
+              Align = Right
+              IsChecked = True
+              Margins.Left = 16.000000000000000000
+              Margins.Top = 12.000000000000000000
+              Margins.Right = 16.000000000000000000
+              Margins.Bottom = 12.000000000000000000
+              Position.X = 346.000000000000000000
+              Position.Y = 12.000000000000000000
+              Size.Width = 72.000000000000000000
+              Size.Height = 24.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 1
+              OnClick = DayNightModeSwitchSwitch
+              OnSwitch = DayNightModeSwitchSwitch
+            end
+          end
+          object Panel2: TPanel
+            Align = Top
+            Position.Y = 144.000000000000000000
+            Size.Width = 434.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 3
+            object LanguageBox: TPopupBox
+              Align = Right
+              Items.Strings = (
+                'ENG'
+                'POL'
+                'DEU'
+                'DUT'
+                'PT'
+                'FRA'
+                'JPN'
+                'SPA'
+                'ZHX')
+              Position.X = 322.000000000000000000
+              Size.Width = 112.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'popupboxstyle'
+              TabOrder = 0
+              OnChange = LanguageBoxChange
+            end
+            object SettingsLanguageLabel: TLabel
+              Align = Client
+              Margins.Left = 15.000000000000000000
+              Margins.Right = 15.000000000000000000
+              Size.Width = 292.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              Text = 'Language'
+              TabOrder = 1
+            end
+          end
+          object Panel3: TPanel
+            Align = Top
+            Position.Y = 96.000000000000000000
+            Size.Width = 434.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 4
+            object CurrencyBox: TPopupBox
+              Align = Right
+              Position.X = 322.000000000000000000
+              Size.Width = 112.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              StyleLookup = 'popupboxstyle'
+              TabOrder = 0
+              OnChange = CurrencyBoxChange
+            end
+            object SettingsCurrencyLabel: TLabel
+              Align = Client
+              Margins.Left = 15.000000000000000000
+              Margins.Right = 15.000000000000000000
+              Size.Width = 292.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              Text = 'Currency'
+              TabOrder = 1
+            end
+          end
+          object btnSWipe: TButton
+            Align = Top
+            Position.Y = 288.000000000000000000
+            Size.Width = 434.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 5
+            Text = 'Wipe Wallet Data'
+            OnClick = btnSWipeClick
+          end
+          object CheckUpdateButton: TButton
+            Align = Top
+            Position.Y = 336.000000000000000000
+            Size.Width = 434.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 6
+            Text = 'Check Update'
+            OnClick = CheckUpdateButtonClick
+          end
+          object reportIssuesSettingsButton: TButton
+            Align = Top
+            Position.Y = 384.000000000000000000
+            Size.Width = 434.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 7
+            Text = 'Report Issues'
+            OnClick = reportIssuesSettingsButtonClick
+          end
+          object PrivacyAndSecurityButton: TButton
+            Align = Top
+            Position.Y = 192.000000000000000000
+            Size.Width = 434.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 8
+            Text = 'Privacy and Security'
+            OnClick = PrivacyAndSecurityButtonClick
+          end
         end
-        object DayNightModeSwitch: TSwitch
-          Align = Right
-          IsChecked = True
-          Margins.Left = 16.000000000000000000
-          Margins.Top = 16.000000000000000000
-          Margins.Right = 16.000000000000000000
-          Margins.Bottom = 16.000000000000000000
-          Position.X = 362.000000000000000000
-          Position.Y = 16.000000000000000000
-          Size.Width = 72.000000000000000000
-          Size.Height = 25.000000000000000000
+        object LocalSettingsLayout: TLayout
+          Align = MostTop
+          Size.Width = 434.000000000000000000
+          Size.Height = 144.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
-          OnClick = DayNightModeSwitchSwitch
-          OnSwitch = DayNightModeSwitchSwitch
+          object CreateBackupButton: TButton
+            Align = Top
+            Size.Width = 434.000000000000000000
+            Size.Height = 49.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            Text = 'Create Backup'
+            OnClick = CreateBackupButtonClick
+          end
+          object OrganizeButton: TButton
+            Align = Top
+            Position.Y = 49.000000000000000000
+            Size.Width = 434.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            Text = 'Organize'
+            OnClick = OrganizeButtonClick
+          end
+          object PrivateKeyManageButton: TButton
+            Align = Top
+            Position.Y = 97.000000000000000000
+            Size.Width = 434.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 2
+            Text = 'Private Key'
+            OnClick = PrivateKeyManageButtonClick
+          end
         end
-      end
-      object PrivateKeyManageButton: TButton
-        Align = Top
-        Position.Y = 385.000000000000000000
-        Size.Width = 450.000000000000000000
-        Size.Height = 48.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 19
-        Text = 'Private Key'
-        OnClick = PrivateKeyManageButtonClick
+        object CheckUpdateInfoLabel: TLabel
+          Align = Top
+          Margins.Left = 15.000000000000000000
+          Margins.Right = 15.000000000000000000
+          Position.X = 15.000000000000000000
+          Position.Y = 762.000000000000000000
+          Size.Width = 404.000000000000000000
+          Size.Height = 46.000000000000000000
+          Size.PlatformDefault = False
+          Text = 
+            'Check Update - make sure if you are using the latest version of ' +
+            'HODLER.'
+          TabOrder = 2
+        end
+        object CreateBackupInfoLabel: TLabel
+          Align = Top
+          Margins.Left = 15.000000000000000000
+          Margins.Right = 15.000000000000000000
+          Position.X = 15.000000000000000000
+          Position.Y = 697.000000000000000000
+          Size.Width = 404.000000000000000000
+          Size.Height = 65.000000000000000000
+          Size.PlatformDefault = False
+          Text = 
+            'Create Backup - select from many backup options to secure your f' +
+            'unds. Remember to always have a secure backup to your wallet, or' +
+            ' you can lose your funds!'
+          TabOrder = 3
+        end
+        object OrganizeInfoLabel: TLabel
+          Align = Top
+          Margins.Left = 15.000000000000000000
+          Margins.Right = 15.000000000000000000
+          Position.X = 15.000000000000000000
+          Position.Y = 632.000000000000000000
+          Size.Width = 404.000000000000000000
+          Size.Height = 65.000000000000000000
+          Size.PlatformDefault = False
+          Text = 
+            'Organize - change the order of cryptocurrencies in your wallet o' +
+            'r remove the once you do not use.'
+          TabOrder = 4
+        end
+        object WipeWalletDataInfoLabel: TLabel
+          Align = Top
+          Margins.Left = 15.000000000000000000
+          Margins.Right = 15.000000000000000000
+          Position.X = 15.000000000000000000
+          Position.Y = 576.000000000000000000
+          Size.Width = 404.000000000000000000
+          Size.Height = 56.000000000000000000
+          Size.PlatformDefault = False
+          Text = 
+            'Wipe Wallet Data - cleans all your HODLER data. Do not select th' +
+            'is option if you have not created a backup, or you will lose you' +
+            'r funds!'
+          TabOrder = 5
+        end
       end
     end
     object descryptSeed: TTabItem
@@ -12189,7 +12242,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -16125,7 +16178,7 @@ object frmHome: TfrmHome
           Size.Height = 25.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
-          OnSwitch = DayNightModeSwitchSwitch
+          OnSwitch = SendErrorMsgSwitchSwitch
         end
       end
     end
@@ -16165,7 +16218,7 @@ object frmHome: TfrmHome
           OnClick = btnSBackClick
         end
       end
-      object Memo2: TMemo
+      object UserReportMessageMemo: TMemo
         Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
         DataDetectorTypes = []
         Align = Top
@@ -16185,6 +16238,7 @@ object frmHome: TfrmHome
         Size.PlatformDefault = False
         TabOrder = 2
         Text = 'Send'
+        OnClick = SendReportIssuesButtonClick
       end
       object Label22: TLabel
         Align = Top
