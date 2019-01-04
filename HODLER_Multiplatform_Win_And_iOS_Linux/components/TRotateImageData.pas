@@ -78,7 +78,6 @@ var
 begin
 
   inherited Create(AOwner);
-
   //Bitmap.LoadFromStream();
   Stream := TResourceStream.Create(HInstance,
     'RELOAD_IMAGE', RT_RCDATA);

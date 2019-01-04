@@ -108,6 +108,10 @@ inherited frmHome_Surface: TfrmHome_Surface
         1064s
         1904s
         1064s
+        1904s
+        1064s
+        1904s
+        1064s
         1904s)
       inherited dashbrd: TTabItem
         ExplicitSize.cx = 8.000000000000000000
@@ -1048,6 +1052,12 @@ inherited frmHome_Surface: TfrmHome_Surface
               Size.Width = 1064.000000000000000000
             end
             inherited GlobalStetingsStaticLabel: TLabel
+              Size.Width = 1064.000000000000000000
+            end
+            inherited PrivacyAndSecurityButton: TButton
+              Size.Width = 1064.000000000000000000
+            end
+            inherited reportIssuesSettingsButton: TButton
               Size.Width = 1064.000000000000000000
             end
           end
@@ -2194,6 +2204,73 @@ inherited frmHome_Surface: TfrmHome_Surface
         end
         inherited AboutHodlerLogo: TImage
           Size.Width = 1064.000000000000000000
+        end
+      end
+      inherited PrivacyAndSecuritySettings: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited ToolBar19: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited SaPHeaderLabel: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited Panel24: TPanel
+          Size.Width = 1064.000000000000000000
+          inherited SendErrorMsgLabel: TLabel
+            Size.Width = 930.000000000000000000
+          end
+        end
+        inherited Label25: TLabel
+          Size.Width = 1034.000000000000000000
+        end
+      end
+      inherited ReportIssues: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited ToolBar20: TToolBar
+          Size.Width = 1064.000000000000000000
+          inherited ReportIssueHeaderLabel: TLabel
+            Size.Width = 1064.000000000000000000
+          end
+        end
+        inherited UserReportMessageMemo: TMemo
+          Size.Width = 1064.000000000000000000
+          Size.Height = 1583.000000000000000000
+          Viewport.Width = 1064.000000000000000000
+          Viewport.Height = 1583.000000000000000000
+        end
+        inherited SendReportIssuesButton: TButton
+          Position.Y = 1856.000000000000000000
+          Size.Width = 1064.000000000000000000
+          OnClick = nil
+        end
+        inherited Label22: TLabel
+          Size.Width = 1064.000000000000000000
+        end
+        inherited Label24: TLabel
+          Position.Y = 1793.000000000000000000
+          Size.Width = 1064.000000000000000000
+        end
+        inherited Panel25: TPanel
+          Position.Y = 1679.000000000000000000
+          Size.Width = 1064.000000000000000000
+          inherited UserReportSendLogsLabel: TLabel
+            Size.Width = 930.000000000000000000
+          end
+          inherited UserReportSendLogsSwitch: TSwitch
+            Position.X = 976.000000000000000000
+          end
+        end
+        inherited Panel26: TPanel
+          Position.Y = 1736.000000000000000000
+          Size.Width = 1064.000000000000000000
+          inherited UserReportDeviceInfoLabel: TLabel
+            Size.Width = 930.000000000000000000
+          end
+          inherited UserReportDeviceInfoSwitch: TSwitch
+            Position.X = 976.000000000000000000
+          end
         end
       end
     end

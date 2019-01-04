@@ -1514,7 +1514,6 @@ inherited frmHome_Surface: TfrmHome_Surface
           Size.Width = 729.000000000000000000
         end
         inherited WipeWalletDataInfoLabel: TLabel
-          Position.Y = 641.000000000000000000
           Size.Width = 729.000000000000000000
         end
       end
@@ -3011,6 +3010,9 @@ inherited frmHome_Surface: TfrmHome_Surface
           Position.X = 671.000000000000000000
         end
       end
+      inherited Label25: TLabel
+        Size.Width = 729.000000000000000000
+      end
     end
     inherited ReportIssues: TTabItem
       ExplicitSize.cx = 8.000000000000000000
@@ -3024,18 +3026,36 @@ inherited frmHome_Surface: TfrmHome_Surface
       inherited UserReportMessageMemo: TMemo
         Size.Width = 759.000000000000000000
         Viewport.Width = 759.000000000000000000
-        Viewport.Height = 105.000000000000000000
+        Viewport.Height = 224.000000000000000000
       end
       inherited SendReportIssuesButton: TButton
-        Position.Y = 1777.000000000000000000
+        Position.Y = 1793.000000000000000000
         Size.Width = 759.000000000000000000
       end
       inherited Label22: TLabel
         Size.Width = 759.000000000000000000
       end
       inherited Label24: TLabel
-        Position.Y = 1825.000000000000000000
+        Position.Y = 1841.000000000000000000
         Size.Width = 759.000000000000000000
+      end
+      inherited Panel25: TPanel
+        Size.Width = 759.000000000000000000
+        inherited UserReportSendLogsLabel: TLabel
+          Size.Width = 625.000000000000000000
+        end
+        inherited UserReportSendLogsSwitch: TSwitch
+          Position.X = 671.000000000000000000
+        end
+      end
+      inherited Panel26: TPanel
+        Size.Width = 759.000000000000000000
+        inherited UserReportDeviceInfoLabel: TLabel
+          Size.Width = 625.000000000000000000
+        end
+        inherited UserReportDeviceInfoSwitch: TSwitch
+          Position.X = 671.000000000000000000
+        end
       end
     end
   end

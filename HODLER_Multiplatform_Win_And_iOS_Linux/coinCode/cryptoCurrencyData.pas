@@ -73,6 +73,7 @@ end;
 
 constructor cryptoCurrency.Create();
 begin
+  rate := -1;
   deleted := false;
   orderInWallet := maxint;
 end;

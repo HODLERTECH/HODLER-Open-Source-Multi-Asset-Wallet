@@ -108,6 +108,10 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         245s
         370s
         245s
+        370s
+        245s
+        370s
+        245s
         370s)
       inherited dashbrd: TTabItem
         ExplicitSize.cx = 8.000000000000000000
@@ -775,10 +779,10 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             inherited SendVertScrollBox: TVertScrollBox
               Size.Width = 245.000000000000000000
               Size.Height = 197.000000000000000000
-              Viewport.Width = 245.000000000000000000
+              Viewport.Width = 240.000000000000000000
               Viewport.Height = 197.000000000000000000
               inherited btnSend: TButton
-                Position.Y = 144.000000000000000000
+                Position.Y = 152.000000000000000000
                 Size.Width = 240.000000000000000000
               end
               inherited SendAmountLayout: TLayout
@@ -801,7 +805,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
                 end
               end
               inherited Layout3: TLayout
-                Position.Y = 192.000000000000000000
+                Position.Y = 200.000000000000000000
                 Size.Width = 240.000000000000000000
                 inherited ShowHideAdvancedButton: TButton
                   Size.Width = 240.000000000000000000
@@ -1063,49 +1067,56 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Viewport.Width = 245.000000000000000000
           Viewport.Height = 322.000000000000000000
           inherited GlobalSettingsLayout: TLayout
-            Size.Width = 245.000000000000000000
+            Size.Width = 240.000000000000000000
             inherited btnSWipe: TButton
-              Size.Width = 245.000000000000000000
+              Size.Width = 240.000000000000000000
             end
             inherited DebugBtn: TButton
-              Size.Width = 245.000000000000000000
+              Size.Width = 240.000000000000000000
             end
             inherited Panel2: TPanel
-              Size.Width = 245.000000000000000000
+              Size.Width = 240.000000000000000000
               inherited LanguageBox: TPopupBox
-                Position.X = 133.000000000000000000
+                Position.X = 128.000000000000000000
               end
               inherited SettingsLanguageLabel: TLabel
-                Size.Width = 103.000000000000000000
+                Size.Width = 98.000000000000000000
               end
             end
             inherited Panel3: TPanel
-              Size.Width = 245.000000000000000000
+              Size.Width = 240.000000000000000000
               inherited CurrencyBox: TPopupBox
-                Position.X = 133.000000000000000000
+                Position.X = 128.000000000000000000
                 Position.Y = 8.000000000000000000
                 Size.Height = 32.000000000000000000
               end
               inherited SettingsCurrencyLabel: TLabel
-                Size.Width = 103.000000000000000000
+                Size.Width = 98.000000000000000000
               end
             end
             inherited StyloSwitch: TPanel
-              Size.Width = 245.000000000000000000
+              Size.Width = 240.000000000000000000
               inherited DayNightModeStaticLabel: TLabel
-                Size.Width = 139.000000000000000000
+                Size.Width = 134.000000000000000000
               end
               inherited DayNightModeSwitch: TSwitch
-                Position.X = 185.000000000000000000
+                Position.X = 180.000000000000000000
                 Size.Width = 44.000000000000000000
                 Size.Height = 26.000000000000000000
               end
             end
             inherited AboutHodlerButton: TButton
-              Size.Width = 245.000000000000000000
+              Size.Width = 240.000000000000000000
             end
             inherited GlobalStetingsStaticLabel: TLabel
-              Size.Width = 245.000000000000000000
+              Size.Width = 240.000000000000000000
+            end
+            inherited PrivacyAndSecurityButton: TButton
+              Position.Y = 336.000000000000000000
+              Size.Width = 240.000000000000000000
+            end
+            inherited reportIssuesSettingsButton: TButton
+              Size.Width = 240.000000000000000000
             end
           end
         end
@@ -2197,12 +2208,16 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited CoinPrivKeyDescriptionEdit: TEdit
             Position.X = 45.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited Panel22: TPanel
           Size.Width = 245.000000000000000000
           inherited CoinPrivKeyPassEdit: TEdit
             Position.X = 45.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited NewCoinPrivKeyOKButton: TButton
@@ -2314,6 +2329,82 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         end
         inherited AboutHodlerLogo: TImage
           Size.Width = 245.000000000000000000
+        end
+      end
+      inherited PrivacyAndSecuritySettings: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited ToolBar19: TToolBar
+          Size.Width = 245.000000000000000000
+          inherited SaPHeaderLabel: TLabel
+            Size.Width = 245.000000000000000000
+          end
+        end
+        inherited Panel24: TPanel
+          Size.Width = 245.000000000000000000
+          inherited SendErrorMsgLabel: TLabel
+            Size.Width = 139.000000000000000000
+          end
+          inherited SendErrorMsgSwitch: TSwitch
+            Position.X = 185.000000000000000000
+            Size.Width = 44.000000000000000000
+            Size.Height = 26.000000000000000000
+          end
+        end
+        inherited Label25: TLabel
+          Size.Width = 215.000000000000000000
+        end
+      end
+      inherited ReportIssues: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited ToolBar20: TToolBar
+          Size.Width = 245.000000000000000000
+          inherited ReportIssueHeaderLabel: TLabel
+            Size.Width = 245.000000000000000000
+          end
+        end
+        inherited UserReportMessageMemo: TMemo
+          Size.Width = 245.000000000000000000
+          Size.Height = 49.000000000000000000
+          Viewport.Width = 245.000000000000000000
+          Viewport.Height = 49.000000000000000000
+        end
+        inherited SendReportIssuesButton: TButton
+          Position.Y = 208.000000000000000000
+          Size.Width = 245.000000000000000000
+          OnClick = nil
+        end
+        inherited Label22: TLabel
+          Size.Width = 245.000000000000000000
+        end
+        inherited Label24: TLabel
+          Position.Y = 145.000000000000000000
+          Size.Width = 245.000000000000000000
+        end
+        inherited Panel25: TPanel
+          Position.Y = 256.000000000000000000
+          Size.Width = 245.000000000000000000
+          inherited UserReportSendLogsLabel: TLabel
+            Size.Width = 139.000000000000000000
+          end
+          inherited UserReportSendLogsSwitch: TSwitch
+            Position.X = 185.000000000000000000
+            Size.Width = 44.000000000000000000
+            Size.Height = 26.000000000000000000
+          end
+        end
+        inherited Panel26: TPanel
+          Position.Y = 313.000000000000000000
+          Size.Width = 245.000000000000000000
+          inherited UserReportDeviceInfoLabel: TLabel
+            Size.Width = 139.000000000000000000
+          end
+          inherited UserReportDeviceInfoSwitch: TSwitch
+            Position.X = 185.000000000000000000
+            Size.Width = 44.000000000000000000
+            Size.Height = 26.000000000000000000
+          end
         end
       end
     end

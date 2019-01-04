@@ -1582,19 +1582,27 @@ begin
     balLabel.StyledSettings := balLabel.StyledSettings - [TStyledSetting.size];
 
     balLabel.parent := panel;
-    if crypto is TWalletInfo then
+    if crypto.rate >= 0 then   // rate >= 0 after first sync
     begin
-      balLabel.Text := BigIntegerBeautifulStr
-        (CurrentAccount.aggregateBalances(TWalletInfo(crypto)).confirmed,
-        crypto.decimals) + '    ' + floatToStrF(crypto.getFiat, ffFixed, 15, 2)
-        + ' ' + frmhome.CurrencyConverter.symbol;
+      if crypto is TWalletInfo then
+      begin
+        balLabel.Text := BigIntegerBeautifulStr
+          (CurrentAccount.aggregateBalances(TWalletInfo(crypto)).confirmed,
+          crypto.decimals) + '    ' + floatToStrF(crypto.getFiat, ffFixed, 15, 2)
+          + ' ' + frmhome.CurrencyConverter.symbol;
+      end
+      else
+      begin
+        balLabel.Text := BigIntegerBeautifulStr(crypto.confirmed, crypto.decimals)
+          + '    ' + floatToStrF(crypto.getFiat, ffFixed, 15, 2) + ' ' +
+          frmhome.CurrencyConverter.symbol;
+      end;
     end
     else
     begin
-      balLabel.Text := BigIntegerBeautifulStr(crypto.confirmed, crypto.decimals)
-        + '    ' + floatToStrF(crypto.getFiat, ffFixed, 15, 2) + ' ' +
-        frmhome.CurrencyConverter.symbol;
+      balLabel.Text := 'Syncing with network...';
     end;
+    
 
     balLabel.TextSettings.HorzAlign := TTextAlign.Trailing;
     balLabel.Visible := true;
@@ -1620,8 +1628,11 @@ begin
     price := TLabel.Create(panel);
     price.parent := panel;
     price.Visible := true;
-    price.Text := floatToStrF(frmhome.CurrencyConverter.calculate(crypto.rate),
-      ffFixed, 18, 2);
+    if crypto.rate >= 0 then
+      price.Text := floatToStrF(frmhome.CurrencyConverter.calculate(crypto.rate),
+        ffFixed, 18, 2)
+    else
+      price.Text := 'Syncing with network...';
     price.Align := TAlignLayout.Bottom;
     price.Height := 16;
     price.TextSettings.HorzAlign := TTextAlign.Leading;
@@ -2323,6 +2334,7 @@ begin
     image.Position.Y := 9;
     image.Visible := true;
     image.parent := panel;
+
     if hist[i].typ = 'OUT' then
       image.Bitmap := frmhome.sendImage.Bitmap;
     if hist[i].typ = 'IN' then
@@ -2334,7 +2346,12 @@ begin
     lbl.TextSettings.HorzAlign := TTextAlign.taTrailing;
     lbl.Visible := true;
     lbl.parent := panel;
-    lbl.Text := BigIntegerBeautifulStr(hist[i].CountValues, wallet.decimals);
+    if (wallet is tWalletInfo) and (TwalletInfo(wallet).coin = 4) and (hist[i].CountValues = 0) then
+    begin
+      lbl.Text := 'Token transfer';
+    end
+    else
+      lbl.Text := BigIntegerBeautifulStr(hist[i].CountValues, wallet.decimals);
     lbl.Margins.Right := 5;
 
     if hist[i].confirmation = 0 then
@@ -4537,38 +4554,50 @@ begin
       if fmxObj.TagString = 'balance' then
       begin
         try
-          if cc is TWalletInfo then
-          begin
 
-            if TWalletInfo(cc).coin = 4 then
+
+          if cc.rate >= 0 then
+          begin
+            if cc is TWalletInfo then
+            begin
+
+              if TWalletInfo(cc).coin = 4 then
+              begin
+
+                TLabel(fmxObj).Text := BigIntegerBeautifulStr
+                  (cc.confirmed + Max(bal.unconfirmed.AsInt64, 0), cc.decimals) +
+                  '    ' + floatToStrF(cc.getFiat(), ffFixed, 15, 2) + ' ' +
+                  frmhome.CurrencyConverter.symbol;
+              end
+              else
+              begin
+                bal := CurrentAccount.aggregateBalances(TWalletInfo(cc));
+
+                TLabel(fmxObj).Text := BigIntegerBeautifulStr
+                  (bal.confirmed + Max(bal.unconfirmed.AsInt64, 0), cc.decimals) +
+                  '    ' + floatToStrF
+                  (CurrentAccount.aggregateFiats(TWalletInfo(cc)), ffFixed, 15, 2)
+                  + ' ' + frmhome.CurrencyConverter.symbol;
+              end;
+
+            end
+            else
             begin
 
               TLabel(fmxObj).Text := BigIntegerBeautifulStr
                 (cc.confirmed + Max(bal.unconfirmed.AsInt64, 0), cc.decimals) +
                 '    ' + floatToStrF(cc.getFiat(), ffFixed, 15, 2) + ' ' +
                 frmhome.CurrencyConverter.symbol;
-            end
-            else
-            begin
-              bal := CurrentAccount.aggregateBalances(TWalletInfo(cc));
 
-              TLabel(fmxObj).Text := BigIntegerBeautifulStr
-                (bal.confirmed + Max(bal.unconfirmed.AsInt64, 0), cc.decimals) +
-                '    ' + floatToStrF
-                (CurrentAccount.aggregateFiats(TWalletInfo(cc)), ffFixed, 15, 2)
-                + ' ' + frmhome.CurrencyConverter.symbol;
             end;
-
           end
           else
           begin
-
-            TLabel(fmxObj).Text := BigIntegerBeautifulStr
-              (cc.confirmed + Max(bal.unconfirmed.AsInt64, 0), cc.decimals) +
-              '    ' + floatToStrF(cc.getFiat(), ffFixed, 15, 2) + ' ' +
-              frmhome.CurrencyConverter.symbol;
-
+            TLabel(fmxObj).Text := 'Syncing with network...';
           end;
+
+
+
 
         finally
 
@@ -4579,9 +4608,12 @@ begin
       if fmxObj.TagString = 'price' then
       begin
         try
-          TLabel(fmxObj).Text :=
-            floatToStrF(frmhome.CurrencyConverter.calculate(cc.rate), ffFixed,
-            15, 2) + ' ' + frmhome.CurrencyConverter.symbol + '/' + cc.shortcut;
+          if cc.rate >= 0 then
+            TLabel(fmxObj).Text :=
+              floatToStrF(frmhome.CurrencyConverter.calculate(cc.rate), ffFixed,
+              15, 2) + ' ' + frmhome.CurrencyConverter.symbol + '/' + cc.shortcut
+          else
+            TLabel(fmxObj).Text :='Syncing with network...';
         finally
 
         end;

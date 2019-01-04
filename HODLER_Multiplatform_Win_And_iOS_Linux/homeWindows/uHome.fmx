@@ -33,7 +33,7 @@ object frmHome: TfrmHome
     Size.Height = 687.000000000000000000
     Size.PlatformDefault = False
     TabHeight = 49.000000000000000000
-    TabIndex = 7
+    TabIndex = 41
     TabOrder = 8
     TabPosition = None
     OnChange = closeVirtualKeyBoard
@@ -319,6 +319,7 @@ object frmHome: TfrmHome
           Size.Width = 258.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
+          OnKeyUp = passKeyUp
         end
         object lblEnterPass: TLabel
           Align = Left
@@ -346,6 +347,7 @@ object frmHome: TfrmHome
           Size.Width = 258.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
+          OnKeyUp = retypePassKeyUp
         end
         object lblRetypePass: TLabel
           Align = Left
@@ -745,6 +747,7 @@ object frmHome: TfrmHome
           Size.Width = 258.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
+          OnKeyUp = AccountNameEditKeyUp
         end
         object AccountNameLabel: TLabel
           Align = Left
@@ -842,8 +845,8 @@ object frmHome: TfrmHome
         Size.Height = 544.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 2
-        Viewport.Width = 446.000000000000000000
-        Viewport.Height = 540.000000000000000000
+        Viewport.Width = 450.000000000000000000
+        Viewport.Height = 544.000000000000000000
       end
       object btnSeedGeneratedProceed: TButton
         Align = Bottom
@@ -3187,7 +3190,7 @@ object frmHome: TfrmHome
               Size.Height = 562.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
-              Viewport.Width = 434.000000000000000000
+              Viewport.Width = 450.000000000000000000
               Viewport.Height = 562.000000000000000000
               object ReceiveAmountLayout: TLayout
                 Align = Top
@@ -3216,7 +3219,8 @@ object frmHome: TfrmHome
                   object lblReceiveCoinShort: TLabel
                     Align = MostRight
                     StyledSettings = [Family, Style, FontColor]
-                    Position.X = 282.000000000000000000
+                    Margins.Right = 10.000000000000000000
+                    Position.X = 272.000000000000000000
                     Size.Width = 152.000000000000000000
                     Size.Height = 32.000000000000000000
                     Size.PlatformDefault = False
@@ -3247,7 +3251,8 @@ object frmHome: TfrmHome
                   object lblReceiveRealCurrency: TLabel
                     Align = MostRight
                     StyledSettings = [Family, Style, FontColor]
-                    Position.X = 258.000000000000000000
+                    Margins.Right = 10.000000000000000000
+                    Position.X = 248.000000000000000000
                     Size.Width = 176.000000000000000000
                     Size.Height = 32.000000000000000000
                     Size.PlatformDefault = False
@@ -3469,7 +3474,7 @@ object frmHome: TfrmHome
               Size.Height = 562.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
-              Viewport.Width = 434.000000000000000000
+              Viewport.Width = 450.000000000000000000
               Viewport.Height = 562.000000000000000000
               object btnSend: TButton
                 Align = Top
@@ -3520,7 +3525,6 @@ object frmHome: TfrmHome
                   StyledSettings = [Family, FontColor]
                   KillFocusByReturn = True
                   OnChangeTracking = CoinToUSD
-                  OnTyping = wvAmountTyping
                   OnClick = wvAmountClick
                   OnExit = wvAmountExit
                   object lblCoinShort: TLabel
@@ -7258,8 +7262,8 @@ object frmHome: TfrmHome
           Size.Height = 145.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 5
-          Viewport.Width = 77.000000000000000000
-          Viewport.Height = 141.000000000000000000
+          Viewport.Width = 97.000000000000000000
+          Viewport.Height = 145.000000000000000000
         end
         object WarningImage: TImage
           MultiResBitmap = <
@@ -10863,7 +10867,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -10970,7 +10974,7 @@ object frmHome: TfrmHome
         Size.Height = 639.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 7
-        Viewport.Width = 434.000000000000000000
+        Viewport.Width = 450.000000000000000000
         Viewport.Height = 639.000000000000000000
         object GlobalSettingsLayout: TLayout
           Align = Top
@@ -11291,6 +11295,7 @@ object frmHome: TfrmHome
           Size.Width = 200.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
+          OnKeyUp = passwordForDecryptKeyUp
         end
         object lbldecryptSeedPass: TLabel
           Align = Left
@@ -11477,8 +11482,8 @@ object frmHome: TfrmHome
         Size.Height = 543.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 5
-        Viewport.Width = 446.000000000000000000
-        Viewport.Height = 539.000000000000000000
+        Viewport.Width = 450.000000000000000000
+        Viewport.Height = 543.000000000000000000
       end
     end
     object AddNewCoin: TTabItem
@@ -11675,8 +11680,8 @@ object frmHome: TfrmHome
         StyleLookup = 'memostyle'
         TabOrder = 6
         Visible = False
-        Viewport.Width = 380.000000000000000000
-        Viewport.Height = 84.000000000000000000
+        Viewport.Width = 384.000000000000000000
+        Viewport.Height = 88.000000000000000000
       end
       object lblRetypeSeed: TLabel
         Align = Top
@@ -12010,6 +12015,7 @@ object frmHome: TfrmHome
           Size.Width = 450.000000000000000000
           Size.Height = 32.000000000000000000
           Size.PlatformDefault = False
+          OnKeyUp = ContractAddressKeyUp
         end
         object lblContractAddress: TLabel
           Align = Client
@@ -12036,6 +12042,7 @@ object frmHome: TfrmHome
           Size.Width = 450.000000000000000000
           Size.Height = 32.000000000000000000
           Size.PlatformDefault = False
+          OnKeyUp = DecimalsFieldKeyUp
         end
         object lblDecimals: TLabel
           Align = Client
@@ -12062,6 +12069,7 @@ object frmHome: TfrmHome
           Size.Width = 450.000000000000000000
           Size.Height = 32.000000000000000000
           Size.PlatformDefault = False
+          OnKeyUp = SymbolFieldKeyUp
         end
         object lblSymbol: TLabel
           Align = Client
@@ -12088,6 +12096,7 @@ object frmHome: TfrmHome
           Size.Width = 450.000000000000000000
           Size.Height = 32.000000000000000000
           Size.PlatformDefault = False
+          OnKeyUp = TokenNameFieldKeyUp
         end
         object lblTokenName: TLabel
           Align = Client
@@ -12249,7 +12258,6 @@ object frmHome: TfrmHome
       StyleLookup = ''
       TabOrder = 0
       Text = 'DebugScreen'
-      OnClick = DebugScreenClick
       ExplicitSize.cx = 8.000000000000000000
       ExplicitSize.cy = 8.000000000000000000
       object Edit1: TEdit
@@ -12597,6 +12605,7 @@ object frmHome: TfrmHome
           Size.Width = 450.000000000000000000
           Size.Height = 32.000000000000000000
           Size.PlatformDefault = False
+          OnKeyUp = ChangeDescryptionEditKeyUp
         end
         object lblChangeDescryption: TLabel
           Align = Client
@@ -14455,6 +14464,7 @@ object frmHome: TfrmHome
           Size.Width = 200.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
+          OnKeyUp = RestoreNameEditKeyUp
         end
         object RestoreWalletNameLabel: TLabel
           Align = Left
@@ -14480,6 +14490,7 @@ object frmHome: TfrmHome
           Size.Width = 200.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
+          OnKeyUp = RestorePasswordEditKeyUp
         end
         object RWPPasswordLabel: TLabel
           Align = Left
@@ -14673,6 +14684,7 @@ object frmHome: TfrmHome
           Size.Width = 420.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
+          OnKeyUp = RestoreFromFileAccountNameEditKeyUp
         end
         object RestoreFromFileAccountNameLabel: TLabel
           Align = Top
@@ -14705,6 +14717,7 @@ object frmHome: TfrmHome
           Size.Width = 420.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
+          OnKeyUp = RFFPasswordKeyUp
         end
         object RFFPasswordInfo: TLabel
           Align = Top
@@ -15128,6 +15141,7 @@ object frmHome: TfrmHome
           Size.Width = 200.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
+          OnKeyUp = GenerateYAddressPasswordEditKeyUp
         end
         object YaddressesPasswordLabel: TLabel
           Align = Left
@@ -15615,7 +15629,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -15805,6 +15819,7 @@ object frmHome: TfrmHome
         Size.Width = 450.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
+        OnKeyUp = WIFEditKeyUp
       end
     end
     object PrivOptionsTabItem: TTabItem
@@ -16088,8 +16103,8 @@ object frmHome: TfrmHome
           Size.PlatformDefault = False
           StyleLookup = 'EQRInstrctionStyle1'
           TabOrder = 1
-          Viewport.Width = 446.000000000000000000
-          Viewport.Height = 69.000000000000000000
+          Viewport.Width = 450.000000000000000000
+          Viewport.Height = 73.000000000000000000
         end
         object lblEQRDescription: TLabel
           Align = Bottom
@@ -16146,6 +16161,7 @@ object frmHome: TfrmHome
           StyleLookup = 'buttonstyle'
           TabOrder = 1
           Text = 'Back'
+          OnClick = SaPBackButtonClick
         end
       end
       object Panel24: TPanel
@@ -16181,6 +16197,21 @@ object frmHome: TfrmHome
           OnSwitch = SendErrorMsgSwitchSwitch
         end
       end
+      object Label25: TLabel
+        Align = Top
+        Margins.Left = 15.000000000000000000
+        Margins.Right = 15.000000000000000000
+        Position.X = 15.000000000000000000
+        Position.Y = 105.000000000000000000
+        Size.Width = 420.000000000000000000
+        Size.Height = 105.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.HorzAlign = Center
+        Text = 
+          'Sent informations do not contain data that may in any way affect' +
+          ' the security of the funds stored.'
+        TabOrder = 14
+      end
     end
     object ReportIssues: TTabItem
       CustomIcon = <
@@ -16207,7 +16238,7 @@ object frmHome: TfrmHome
           TextSettings.HorzAlign = Center
           Text = 'Report Issues'
         end
-        object Button11: TButton
+        object ReportIssuesBackButton: TButton
           Align = Left
           Size.Width = 64.000000000000000000
           Size.Height = 48.000000000000000000
@@ -16215,20 +16246,20 @@ object frmHome: TfrmHome
           StyleLookup = 'buttonstyle'
           TabOrder = 1
           Text = 'Back'
-          OnClick = btnSBackClick
+          OnClick = ReportIssuesBackButtonClick
         end
       end
       object UserReportMessageMemo: TMemo
         Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
         DataDetectorTypes = []
         Align = Top
-        Position.Y = 121.000000000000000000
+        Position.Y = 96.000000000000000000
         Size.Width = 450.000000000000000000
-        Size.Height = 105.000000000000000000
+        Size.Height = 224.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 1
-        Viewport.Width = 446.000000000000000000
-        Viewport.Height = 101.000000000000000000
+        Viewport.Width = 450.000000000000000000
+        Viewport.Height = 224.000000000000000000
       end
       object SendReportIssuesButton: TButton
         Align = Bottom
@@ -16244,21 +16275,87 @@ object frmHome: TfrmHome
         Align = Top
         Position.Y = 48.000000000000000000
         Size.Width = 450.000000000000000000
-        Size.Height = 73.000000000000000000
+        Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
         TextSettings.HorzAlign = Center
-        Text = 'Describe your problem below'
+        Text = 'Describe your problem below:'
         TabOrder = 3
       end
       object Label24: TLabel
         Align = Bottom
-        Position.Y = 544.000000000000000000
+        Position.Y = 560.000000000000000000
         Size.Width = 450.000000000000000000
-        Size.Height = 95.000000000000000000
+        Size.Height = 79.000000000000000000
         Size.PlatformDefault = False
         TextSettings.HorzAlign = Center
         Text = 'You can also send message to support@hodler.tech'
         TabOrder = 4
+      end
+      object Panel25: TPanel
+        Align = Top
+        Position.Y = 320.000000000000000000
+        Size.Width = 450.000000000000000000
+        Size.Height = 57.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 14
+        object UserReportSendLogsLabel: TLabel
+          Align = Client
+          Margins.Left = 15.000000000000000000
+          Margins.Right = 15.000000000000000000
+          Size.Width = 316.000000000000000000
+          Size.Height = 57.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Send anonymous program logs'
+          TabOrder = 0
+        end
+        object UserReportSendLogsSwitch: TSwitch
+          Align = Right
+          IsChecked = True
+          Margins.Left = 16.000000000000000000
+          Margins.Top = 16.000000000000000000
+          Margins.Right = 16.000000000000000000
+          Margins.Bottom = 16.000000000000000000
+          Position.X = 362.000000000000000000
+          Position.Y = 16.000000000000000000
+          Size.Width = 72.000000000000000000
+          Size.Height = 25.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          OnSwitch = SendErrorMsgSwitchSwitch
+        end
+      end
+      object Panel26: TPanel
+        Align = Top
+        Position.Y = 377.000000000000000000
+        Size.Width = 450.000000000000000000
+        Size.Height = 57.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 13
+        object UserReportDeviceInfoLabel: TLabel
+          Align = Client
+          Margins.Left = 15.000000000000000000
+          Margins.Right = 15.000000000000000000
+          Size.Width = 316.000000000000000000
+          Size.Height = 57.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Send informations about your device'
+          TabOrder = 0
+        end
+        object UserReportDeviceInfoSwitch: TSwitch
+          Align = Right
+          IsChecked = True
+          Margins.Left = 16.000000000000000000
+          Margins.Top = 16.000000000000000000
+          Margins.Right = 16.000000000000000000
+          Margins.Bottom = 16.000000000000000000
+          Position.X = 362.000000000000000000
+          Position.Y = 16.000000000000000000
+          Size.Width = 72.000000000000000000
+          Size.Height = 25.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          OnSwitch = SendErrorMsgSwitchSwitch
+        end
       end
     end
   end

@@ -1630,7 +1630,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
       inherited VertScrollBox3: TVertScrollBox
         Size.Width = 93.000000000000000000
         Size.Height = 672.000000000000000000
-        Viewport.Width = 88.000000000000000000
+        Viewport.Width = 93.000000000000000000
         Viewport.Height = 672.000000000000000000
         inherited GlobalSettingsLayout: TLayout
           Size.Width = 88.000000000000000000
@@ -1709,7 +1709,6 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Size.Width = 58.000000000000000000
         end
         inherited WipeWalletDataInfoLabel: TLabel
-          Position.Y = 641.000000000000000000
           Size.Width = 58.000000000000000000
         end
       end
@@ -1735,6 +1734,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited passwordForDecrypt: TEdit
           Position.X = -107.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
         end
       end
       inherited btnDecryptSeed: TButton
@@ -2614,6 +2615,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited RestoreNameEdit: TEdit
           Position.X = -107.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
         end
       end
       inherited Panel7: TPanel
@@ -2621,6 +2624,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited RestorePasswordEdit: TEdit
           Position.X = -107.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
         end
       end
       inherited ToolBar6: TToolBar
@@ -2850,6 +2855,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited GenerateYAddressPasswordEdit: TEdit
           Position.X = -107.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
         end
       end
       inherited Panel14: TPanel
@@ -2860,6 +2867,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         end
         inherited SpinBox1: TSpinBox
           Position.X = -27.000000000000000000
+          Position.Y = 57.000000000000000000
+          Size.Height = 30.000000000000000000
           OnChange = nil
         end
         inherited Layout57: TLayout
@@ -3066,6 +3075,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited CoinPrivKeyDescriptionEdit: TEdit
           Position.X = -107.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
         end
       end
       inherited Panel22: TPanel
@@ -3073,6 +3084,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited CoinPrivKeyPassEdit: TEdit
           Position.X = -107.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
         end
       end
       inherited NewCoinPrivKeyOKButton: TButton
@@ -3578,6 +3591,10 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Size.Height = 35.000000000000000000
         end
       end
+      inherited Label25: TLabel
+        Position.Y = 101.000000000000000000
+        Size.Width = 63.000000000000000000
+      end
     end
     inherited ReportIssues: TTabItem
       ExplicitSize.cx = 8.000000000000000000
@@ -3589,15 +3606,15 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Size.Width = 93.000000000000000000
           Size.Height = 44.000000000000000000
         end
-        inherited Button11: TButton
+        inherited ReportIssuesBackButton: TButton
           Size.Height = 44.000000000000000000
         end
       end
       inherited UserReportMessageMemo: TMemo
-        Position.Y = 117.000000000000000000
+        Position.Y = 92.000000000000000000
         Size.Width = 93.000000000000000000
         Viewport.Width = 93.000000000000000000
-        Viewport.Height = 105.000000000000000000
+        Viewport.Height = 224.000000000000000000
       end
       inherited SendReportIssuesButton: TButton
         Position.Y = 668.000000000000000000
@@ -3608,8 +3625,32 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
       end
       inherited Label24: TLabel
-        Position.Y = 573.000000000000000000
+        Position.Y = 589.000000000000000000
         Size.Width = 93.000000000000000000
+      end
+      inherited Panel25: TPanel
+        Position.Y = 316.000000000000000000
+        Size.Width = 93.000000000000000000
+        inherited UserReportSendLogsLabel: TLabel
+          Size.Width = 0.000000000000000000
+        end
+        inherited UserReportSendLogsSwitch: TSwitch
+          Position.X = 22.000000000000000000
+          Size.Width = 55.000000000000000000
+          Size.Height = 35.000000000000000000
+        end
+      end
+      inherited Panel26: TPanel
+        Position.Y = 373.000000000000000000
+        Size.Width = 93.000000000000000000
+        inherited UserReportDeviceInfoLabel: TLabel
+          Size.Width = 0.000000000000000000
+        end
+        inherited UserReportDeviceInfoSwitch: TSwitch
+          Position.X = 22.000000000000000000
+          Size.Width = 55.000000000000000000
+          Size.Height = 35.000000000000000000
+        end
       end
     end
   end

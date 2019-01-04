@@ -778,7 +778,7 @@ type
     ReportIssues: TTabItem;
     ToolBar19: TToolBar;
     ReportIssueHeaderLabel: TLabel;
-    Button11: TButton;
+    ReportIssuesBackButton: TButton;
     UserReportMessageMemo: TMemo;
     SendReportIssuesButton: TButton;
     Label22: TLabel;
@@ -789,6 +789,13 @@ type
     LocalSettingsLayout: TLayout;
     GlobalSettingsLayout: TLayout;
     VertScrollBox3: TVertScrollBox;
+    Panel25: TPanel;
+    UserReportSendLogsLabel: TLabel;
+    UserReportSendLogsSwitch: TSwitch;
+    Panel26: TPanel;
+    UserReportDeviceInfoLabel: TLabel;
+    UserReportDeviceInfoSwitch: TSwitch;
+    Label25: TLabel;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -858,7 +865,6 @@ type
     procedure changeAddressBech32(Sender: TObject);
     procedure Button8Click(Sender: TObject);
     procedure btnRestoreWalletClick(Sender: TObject);
-    procedure DebugScreenClick(Sender: TObject);
     procedure Image1Click(Sender: TObject);
     procedure WVRealCurrencyClick(Sender: TObject);
     procedure WVRealCurrencyExit(Sender: TObject);
@@ -1014,6 +1020,38 @@ type
     procedure reportIssuesSettingsButtonClick(Sender: TObject);
     procedure PrivacyAndSecurityButtonClick(Sender: TObject);
     procedure SendErrorMsgSwitchSwitch(Sender: TObject);
+    procedure ReportIssuesBackButtonClick(Sender: TObject);
+    procedure SaPBackButtonClick(Sender: TObject);
+    procedure passwordForDecryptKeyUp(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
+    procedure GenerateYAddressPasswordEditKeyUp(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
+    procedure RFFPasswordKeyUp(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
+    procedure AccountNameEditKeyUp(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
+    procedure passKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure retypePassKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure RestoreFromFileAccountNameEditKeyUp(Sender: TObject;
+      var Key: Word; var KeyChar: Char; Shift: TShiftState);
+    procedure ContractAddressKeyUp(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
+    procedure TokenNameFieldKeyUp(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
+    procedure SymbolFieldKeyUp(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
+    procedure DecimalsFieldKeyUp(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
+    procedure ChangeDescryptionEditKeyUp(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
+    procedure RestoreNameEditKeyUp(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
+    procedure RestorePasswordEditKeyUp(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
+    procedure WIFEditKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
 
   private
     { Private declarations }
@@ -1259,6 +1297,26 @@ begin
     exit();
   TCheckBox(TfmxObject(Sender).tagObject).IsChecked :=
     (not TCheckBox(TfmxObject(Sender).tagObject).IsChecked);
+
+end;
+
+procedure TfrmHome.passKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
+  Shift: TShiftState);
+begin
+  if Key = vkReturn then
+  begin
+    retypePass.SetFocus;
+  end;
+end;
+
+procedure TfrmHome.passwordForDecryptKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+
+  if Key = vkReturn then
+  begin
+    btnDecryptSeed.onclick(nil);
+  end;
 
 end;
 
@@ -1674,6 +1732,15 @@ begin
 
 end;
 
+procedure TfrmHome.WIFEditKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin  // NewCoinPrivKeyOKButtonClick
+  if Key = vkReturn then
+  begin
+    NewCoinPrivKeyOKButtonClick(nil);
+  end;
+end;
+
 procedure TfrmHome.WordSeedClick(Sender: TObject);
 var
   i, maks: Integer;
@@ -1817,6 +1884,15 @@ begin
   switchTab(PageControl, HSBPassword);
 end;
 
+procedure TfrmHome.RestoreFromFileAccountNameEditKeyUp(Sender: TObject;
+  var Key: Word; var KeyChar: Char; Shift: TShiftState);
+begin
+  if Key = vkReturn then
+  begin
+    RFFPassword.SetFocus;
+  end;
+end;
+
 procedure TfrmHome.RestoreFromFileButtonClick(Sender: TObject);
 begin
 
@@ -1876,10 +1952,39 @@ begin
 
 end;
 
+procedure TfrmHome.RestoreNameEditKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  if Key = vkReturn then
+  begin
+    RestorePasswordEdit.SetFocus;
+  end;
+end;
+
 procedure TfrmHome.RestoreSeedEncryptedQRButtonClick(Sender: TObject);
 begin
   QRFind := QRSearchEncryted;
   btnQRClick(nil);
+end;
+
+procedure TfrmHome.retypePassKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  if Key = vkReturn then
+  begin
+    btnCreateWalletClick(nil);
+  end;
+end;
+
+procedure TfrmHome.RFFPasswordKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  if Key = vkReturn then
+  begin
+    btnDecryptSeed.onclick(nil);
+  end;
+
+
 end;
 
 procedure TfrmHome.WVsendTOExit(Sender: TObject);
@@ -1971,6 +2076,17 @@ end;
 procedure TfrmHome.changeAddressUniversal(Sender: TObject);
 begin
   receiveAddress.Text := CurrentCryptoCurrency.addr;
+end;
+
+procedure TfrmHome.ChangeDescryptionEditKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+
+  if Key = vkReturn then
+  begin
+     btnChangeDescryptionOKClick(nil);
+  end;
+
 end;
 
 procedure TfrmHome.changeFeeWay(Sender: TObject);
@@ -2191,9 +2307,13 @@ begin
 
 end;
 
-procedure TfrmHome.DebugScreenClick(Sender: TObject);
+procedure TfrmHome.DecimalsFieldKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
 begin
-
+  if Key = vkReturn then
+  begin
+    btnAddContractClick(nil);
+  end;
 end;
 
 // invoked when selecting wallet
@@ -2222,6 +2342,16 @@ begin
   switchTab(PageControl, HOME_TABITEM);
 end;
 
+procedure TfrmHome.AccountNameEditKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  if Key = vkReturn then
+  begin
+    pass.SetFocus;
+  end;
+
+end;
+
 procedure TfrmHome.AccountsListPanelExit(Sender: TObject);
 begin
   AccountsListPanel.Visible := false;
@@ -2241,6 +2371,15 @@ end;
 procedure TfrmHome.addNewWalletPanelClick(Sender: TObject);
 begin
   WalletViewRelated.addNewWalletPanelClick(Sender);
+end;
+
+procedure TfrmHome.TokenNameFieldKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin // SymbolField
+  if Key = vkReturn then
+  begin
+    SymbolField.SetFocus;
+  end;
 end;
 
 procedure TfrmHome.TrackBar1Change(Sender: TObject);
@@ -2414,6 +2553,15 @@ begin
     FromClaimWD.confirmed - BigInteger(1700), BigInteger(1700), '',
     AvailableCoin[FromClaimWD.coin].name);
   CurrentCoin := temp;
+end;
+
+procedure TfrmHome.ContractAddressKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  if Key = vkReturn then
+  begin
+    TokenNameField.SetFocus;
+  end;
 end;
 
 procedure TfrmHome.CopyPrivateKeyButtonClick(Sender: TObject);
@@ -2692,6 +2840,15 @@ begin
 
 end;
 
+procedure TfrmHome.RestorePasswordEditKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin //RestoreWalletOKButton
+  if Key = vkReturn then
+  begin
+    RestoreWalletOKButton.onclick(nil);
+  end;
+end;
+
 procedure TfrmHome.switchLegacyp2pkhButtonClick(Sender: TObject);
 begin
   receiveAddress.Text := Bitcoin.generatep2pkh
@@ -2791,6 +2948,11 @@ end;
 procedure TfrmHome.Button10Click(Sender: TObject);
 begin
   switchTab(PageControl, Settings);
+end;
+
+procedure TfrmHome.ReportIssuesBackButtonClick(Sender: TObject);
+begin
+  switchTab(pageControl , Settings);
 end;
 
 procedure TfrmHome.EPCLTIBackButtonClick(Sender: TObject);
@@ -2894,6 +3056,8 @@ end;
 procedure TfrmHome.btnACBackClick(Sender: TObject);
 begin
   switchTab(PageControl, AddNewCoin);
+  CoinPrivKeyPassEdit.Text := '';
+  WIFEdit.Text := '';
 end;
 
 procedure TfrmHome.OrganizeButtonClick(Sender: TObject);
@@ -3180,6 +3344,17 @@ begin
 
   end;
 
+end;
+
+procedure TfrmHome.GenerateYAddressPasswordEditKeyUp(Sender: TObject;
+  var Key: Word; var KeyChar: Char; Shift: TShiftState);
+begin
+  if key = vkReturn then
+  begin
+
+    generateNewAddressesClick(nil);
+
+  end;
 end;
 
 procedure TfrmHome.GetImage;
@@ -3669,6 +3844,15 @@ begin
   flagWVPrecision := not flagWVPrecision;
 end;
 
+procedure TfrmHome.SymbolFieldKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin // DecimalsField
+  if Key = vkReturn then
+  begin
+    DecimalsField.SetFocus;
+  end;
+end;
+
 procedure TfrmHome.syncTimerTimer(Sender: TObject);
 begin
   try
@@ -3759,6 +3943,11 @@ procedure TfrmHome.ReceiveValueClick(Sender: TObject);
 begin
   if strToFloatDef(ReceiveValue.Text, 0) = 0 then
     ReceiveValue.Text := '';
+end;
+
+procedure TfrmHome.SaPBackButtonClick(Sender: TObject);
+begin
+  switchTab(pageControl , Settings);
 end;
 
 procedure TfrmHome.SearchEditChange(Sender: TObject);
@@ -3929,14 +4118,12 @@ end;
 
 procedure TfrmHome.SendErrorMsgSwitchSwitch(Sender: TObject);
 begin
-  USER_ALLOW_TO_SEND_DATA := SendErrorMsgSwitch.ischecked;
-
-  refreshWalletDat();
+  walletViewRelated.SendErrorMsgSwitchSwitch(sender);
 end;
 
 procedure TfrmHome.SendReportIssuesButtonClick(Sender: TObject);
 begin
-  SendUserReport( UserReportMessageMemo.Text );
+  WalletViewRelated.SendReportIssuesButtonClick(sender);
 end;
 
 procedure TfrmHome.SendWalletFile(Sender: TObject);

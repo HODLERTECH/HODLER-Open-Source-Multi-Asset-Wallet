@@ -256,11 +256,15 @@ object frmHome: TfrmHome
       Size.Height = 551.000000000000000000
       Size.PlatformDefault = False
       TabHeight = 49.000000000000000000
-      TabIndex = 7
+      TabIndex = 14
       TabOrder = 0
       TabPosition = None
       OnChange = closeVirtualKeyBoard
       Sizes = (
+        368s
+        551s
+        368s
+        551s
         368s
         551s
         368s
@@ -1326,8 +1330,8 @@ object frmHome: TfrmHome
           Size.Height = 408.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 2
-          Viewport.Width = 368.000000000000000000
-          Viewport.Height = 408.000000000000000000
+          Viewport.Width = 364.000000000000000000
+          Viewport.Height = 404.000000000000000000
         end
         object btnSeedGeneratedProceed: TButton
           Align = Bottom
@@ -3659,7 +3663,7 @@ object frmHome: TfrmHome
               Viewport.Height = 378.000000000000000000
               object btnSend: TButton
                 Align = Top
-                Position.Y = 198.000000000000000000
+                Position.Y = 206.000000000000000000
                 Size.Width = 352.000000000000000000
                 Size.Height = 48.000000000000000000
                 Size.PlatformDefault = False
@@ -3669,9 +3673,9 @@ object frmHome: TfrmHome
               end
               object SendAmountLayout: TLayout
                 Align = Top
-                Position.Y = 56.000000000000000000
+                Position.Y = 60.000000000000000000
                 Size.Width = 352.000000000000000000
-                Size.Height = 88.000000000000000000
+                Size.Height = 92.000000000000000000
                 Size.PlatformDefault = False
                 TabOrder = 1
                 object lblAmount: TLabel
@@ -3681,7 +3685,7 @@ object frmHome: TfrmHome
                   Margins.Top = 5.000000000000000000
                   Margins.Bottom = 5.000000000000000000
                   Size.Width = 352.000000000000000000
-                  Size.Height = 14.000000000000000000
+                  Size.Height = 18.000000000000000000
                   Size.PlatformDefault = False
                   TextSettings.Font.Size = 14.000000000000000000
                   TextSettings.HorzAlign = Center
@@ -3699,7 +3703,7 @@ object frmHome: TfrmHome
                   Text = '0.00'
                   TextSettings.Font.Size = 14.000000000000000000
                   TextSettings.HorzAlign = Center
-                  Position.Y = 56.000000000000000000
+                  Position.Y = 60.000000000000000000
                   Size.Width = 352.000000000000000000
                   Size.Height = 32.000000000000000000
                   Size.PlatformDefault = False
@@ -3732,7 +3736,7 @@ object frmHome: TfrmHome
                   Text = '0.00'
                   TextSettings.Font.Size = 14.000000000000000000
                   TextSettings.HorzAlign = Center
-                  Position.Y = 24.000000000000000000
+                  Position.Y = 28.000000000000000000
                   Size.Width = 352.000000000000000000
                   Size.Height = 32.000000000000000000
                   Size.PlatformDefault = False
@@ -3759,7 +3763,7 @@ object frmHome: TfrmHome
               end
               object Layout3: TLayout
                 Align = Top
-                Position.Y = 144.000000000000000000
+                Position.Y = 152.000000000000000000
                 Size.Width = 352.000000000000000000
                 Size.Height = 54.000000000000000000
                 Size.PlatformDefault = False
@@ -3842,7 +3846,7 @@ object frmHome: TfrmHome
               end
               object TransactionFeeLayout: TLayout
                 Align = Top
-                Position.Y = 246.000000000000000000
+                Position.Y = 254.000000000000000000
                 Size.Width = 352.000000000000000000
                 Size.Height = 228.000000000000000000
                 Size.PlatformDefault = False
@@ -4127,7 +4131,7 @@ object frmHome: TfrmHome
               object SendToLayout: TLayout
                 Align = MostTop
                 Size.Width = 352.000000000000000000
-                Size.Height = 56.000000000000000000
+                Size.Height = 60.000000000000000000
                 Size.PlatformDefault = False
                 TabOrder = 4
                 object lblSendTo: TLabel
@@ -4137,7 +4141,7 @@ object frmHome: TfrmHome
                   Margins.Top = 5.000000000000000000
                   Margins.Bottom = 5.000000000000000000
                   Size.Width = 352.000000000000000000
-                  Size.Height = 14.000000000000000000
+                  Size.Height = 18.000000000000000000
                   Size.PlatformDefault = False
                   TextSettings.Font.Size = 14.000000000000000000
                   TextSettings.HorzAlign = Center
@@ -4147,7 +4151,7 @@ object frmHome: TfrmHome
                 end
                 object AddressQRLayout: TLayout
                   Align = Bottom
-                  Position.Y = 24.000000000000000000
+                  Position.Y = 28.000000000000000000
                   Size.Width = 352.000000000000000000
                   Size.Height = 32.000000000000000000
                   Size.PlatformDefault = False
@@ -6978,8 +6982,8 @@ object frmHome: TfrmHome
             Size.Height = 145.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 5
-            Viewport.Width = 97.000000000000000000
-            Viewport.Height = 145.000000000000000000
+            Viewport.Width = 77.000000000000000000
+            Viewport.Height = 141.000000000000000000
           end
           object WarningImage: TImage
             MultiResBitmap = <
@@ -10583,7 +10587,7 @@ object frmHome: TfrmHome
         CustomIcon = <
           item
           end>
-        IsSelected = True
+        IsSelected = False
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -10678,18 +10682,18 @@ object frmHome: TfrmHome
           Size.Height = 503.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 6
-          Viewport.Width = 368.000000000000000000
+          Viewport.Width = 352.000000000000000000
           Viewport.Height = 503.000000000000000000
           object LocalSettingsLayout: TLayout
             Align = MostTop
-            Size.Width = 368.000000000000000000
+            Size.Width = 352.000000000000000000
             Size.Height = 192.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
             object CreateBackupButton: TButton
               Align = Top
               Position.Y = 48.000000000000000000
-              Size.Width = 368.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 49.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
@@ -10699,7 +10703,7 @@ object frmHome: TfrmHome
             object DeleteAccountButton: TButton
               Align = MostBottom
               Position.Y = 144.000000000000000000
-              Size.Width = 368.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 1
@@ -10708,7 +10712,7 @@ object frmHome: TfrmHome
             end
             object OrganizeButton: TButton
               Align = MostTop
-              Size.Width = 368.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 2
@@ -10718,7 +10722,7 @@ object frmHome: TfrmHome
             object PrivateKeyManageButton: TButton
               Align = Bottom
               Position.Y = 96.000000000000000000
-              Size.Width = 368.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 3
@@ -10729,14 +10733,14 @@ object frmHome: TfrmHome
           object GlobalSettingsLayout: TLayout
             Align = Top
             Position.Y = 192.000000000000000000
-            Size.Width = 368.000000000000000000
-            Size.Height = 49.000000000000000000
+            Size.Width = 352.000000000000000000
+            Size.Height = 432.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
             object btnSWipe: TButton
               Align = Top
               Position.Y = 192.000000000000000000
-              Size.Width = 368.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
@@ -10746,7 +10750,7 @@ object frmHome: TfrmHome
             object DebugBtn: TButton
               Align = Top
               Position.Y = 240.000000000000000000
-              Size.Width = 368.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 1
@@ -10756,7 +10760,7 @@ object frmHome: TfrmHome
             object Panel2: TPanel
               Align = MostTop
               Position.Y = 144.000000000000000000
-              Size.Width = 368.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 2
@@ -10772,7 +10776,7 @@ object frmHome: TfrmHome
                   'JPN'
                   'SPA'
                   'ZHX')
-                Position.X = 256.000000000000000000
+                Position.X = 240.000000000000000000
                 Size.Width = 112.000000000000000000
                 Size.Height = 48.000000000000000000
                 Size.PlatformDefault = False
@@ -10784,7 +10788,7 @@ object frmHome: TfrmHome
                 Align = Client
                 Margins.Left = 15.000000000000000000
                 Margins.Right = 15.000000000000000000
-                Size.Width = 226.000000000000000000
+                Size.Width = 210.000000000000000000
                 Size.Height = 48.000000000000000000
                 Size.PlatformDefault = False
                 Text = 'Language'
@@ -10794,13 +10798,13 @@ object frmHome: TfrmHome
             object Panel3: TPanel
               Align = MostTop
               Position.Y = 96.000000000000000000
-              Size.Width = 368.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 3
               object CurrencyBox: TPopupBox
                 Align = Right
-                Position.X = 256.000000000000000000
+                Position.X = 240.000000000000000000
                 Size.Width = 112.000000000000000000
                 Size.Height = 48.000000000000000000
                 Size.PlatformDefault = False
@@ -10812,7 +10816,7 @@ object frmHome: TfrmHome
                 Align = Client
                 Margins.Left = 15.000000000000000000
                 Margins.Right = 15.000000000000000000
-                Size.Width = 226.000000000000000000
+                Size.Width = 210.000000000000000000
                 Size.Height = 48.000000000000000000
                 Size.PlatformDefault = False
                 Text = 'Currency'
@@ -10822,7 +10826,7 @@ object frmHome: TfrmHome
             object StyloSwitch: TPanel
               Align = MostTop
               Position.Y = 48.000000000000000000
-              Size.Width = 368.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 4
@@ -10830,7 +10834,7 @@ object frmHome: TfrmHome
                 Align = Client
                 Margins.Left = 15.000000000000000000
                 Margins.Right = 15.000000000000000000
-                Size.Width = 234.000000000000000000
+                Size.Width = 218.000000000000000000
                 Size.Height = 48.000000000000000000
                 Size.PlatformDefault = False
                 Text = 'Night mode'
@@ -10843,7 +10847,7 @@ object frmHome: TfrmHome
                 Margins.Top = 12.000000000000000000
                 Margins.Right = 16.000000000000000000
                 Margins.Bottom = 12.000000000000000000
-                Position.X = 280.000000000000000000
+                Position.X = 264.000000000000000000
                 Position.Y = 12.000000000000000000
                 Size.Width = 72.000000000000000000
                 Size.Height = 24.000000000000000000
@@ -10854,8 +10858,8 @@ object frmHome: TfrmHome
             end
             object AboutHodlerButton: TButton
               Align = Top
-              Position.Y = 288.000000000000000000
-              Size.Width = 368.000000000000000000
+              Position.Y = 336.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 5
@@ -10864,12 +10868,32 @@ object frmHome: TfrmHome
             end
             object GlobalStetingsStaticLabel: TLabel
               Align = MostTop
-              Size.Width = 368.000000000000000000
+              Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               TextSettings.HorzAlign = Center
               Text = '----GLOBAL SETTINGS----'
               TabOrder = 6
+            end
+            object PrivacyAndSecurityButton: TButton
+              Align = Top
+              Position.Y = 288.000000000000000000
+              Size.Width = 352.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 8
+              Text = 'Privacy and Security'
+              OnClick = PrivacyAndSecurityButtonClick
+            end
+            object reportIssuesSettingsButton: TButton
+              Align = Top
+              Position.Y = 384.000000000000000000
+              Size.Width = 352.000000000000000000
+              Size.Height = 48.000000000000000000
+              Size.PlatformDefault = False
+              TabOrder = 7
+              Text = 'Report Issues'
+              OnClick = reportIssuesSettingsButtonClick
             end
           end
         end
@@ -11114,8 +11138,8 @@ object frmHome: TfrmHome
           Size.Height = 407.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 5
-          Viewport.Width = 368.000000000000000000
-          Viewport.Height = 407.000000000000000000
+          Viewport.Width = 364.000000000000000000
+          Viewport.Height = 403.000000000000000000
         end
       end
       object AddNewCoin: TTabItem
@@ -11312,8 +11336,8 @@ object frmHome: TfrmHome
           StyleLookup = 'memostyle'
           TabOrder = 6
           Visible = False
-          Viewport.Width = 384.000000000000000000
-          Viewport.Height = 88.000000000000000000
+          Viewport.Width = 380.000000000000000000
+          Viewport.Height = 84.000000000000000000
         end
         object lblRetypeSeed: TLabel
           Align = Top
@@ -11400,7 +11424,7 @@ object frmHome: TfrmHome
         CustomIcon = <
           item
           end>
-        IsSelected = False
+        IsSelected = True
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -15733,8 +15757,8 @@ object frmHome: TfrmHome
             Size.Height = 83.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
-            Viewport.Width = 368.000000000000000000
-            Viewport.Height = 83.000000000000000000
+            Viewport.Width = 364.000000000000000000
+            Viewport.Height = 79.000000000000000000
           end
           object lblEQRDescription: TLabel
             Align = Bottom
@@ -15930,6 +15954,240 @@ object frmHome: TfrmHome
           Size.Width = 368.000000000000000000
           Size.Height = 145.000000000000000000
           Size.PlatformDefault = False
+        end
+      end
+      object PrivacyAndSecuritySettings: TTabItem
+        CustomIcon = <
+          item
+          end>
+        IsSelected = False
+        Size.Width = 8.000000000000000000
+        Size.Height = 8.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = ''
+        TabOrder = 0
+        Text = 'PrivacyAndSecuritySettings'
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        object ToolBar19: TToolBar
+          Size.Width = 368.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object SaPHeaderLabel: TLabel
+            Align = Contents
+            Size.Width = 368.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'calendarlabelstyle'
+            TextSettings.HorzAlign = Center
+            Text = 'Security and Privacy'
+            ParentShowHint = False
+            ShowHint = False
+          end
+          object SaPBackButton: TButton
+            Align = Left
+            Size.Width = 64.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'buttonstyle'
+            TabOrder = 1
+            Text = 'Back'
+          end
+        end
+        object Panel24: TPanel
+          Align = Top
+          Position.Y = 48.000000000000000000
+          Size.Width = 368.000000000000000000
+          Size.Height = 57.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 13
+          object SendErrorMsgLabel: TLabel
+            Align = Client
+            Margins.Left = 15.000000000000000000
+            Margins.Right = 15.000000000000000000
+            Size.Width = 234.000000000000000000
+            Size.Height = 57.000000000000000000
+            Size.PlatformDefault = False
+            Text = 'Allow application to send anonymous error data'
+            TabOrder = 0
+          end
+          object SendErrorMsgSwitch: TSwitch
+            Align = Right
+            IsChecked = True
+            Margins.Left = 16.000000000000000000
+            Margins.Top = 16.000000000000000000
+            Margins.Right = 16.000000000000000000
+            Margins.Bottom = 16.000000000000000000
+            Position.X = 280.000000000000000000
+            Position.Y = 16.000000000000000000
+            Size.Width = 72.000000000000000000
+            Size.Height = 25.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            OnSwitch = SendErrorMsgSwitchSwitch
+          end
+        end
+        object Label25: TLabel
+          Align = Top
+          Margins.Left = 15.000000000000000000
+          Margins.Right = 15.000000000000000000
+          Position.X = 15.000000000000000000
+          Position.Y = 105.000000000000000000
+          Size.Width = 338.000000000000000000
+          Size.Height = 105.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.HorzAlign = Center
+          Text = 
+            'Sent informations do not contain data that may in any way affect' +
+            ' the security of the funds stored.'
+          TabOrder = 14
+        end
+      end
+      object ReportIssues: TTabItem
+        CustomIcon = <
+          item
+          end>
+        IsSelected = False
+        Size.Width = 8.000000000000000000
+        Size.Height = 8.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = ''
+        TabOrder = 0
+        Text = 'ReportIssues'
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        object ToolBar20: TToolBar
+          Size.Width = 368.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object ReportIssueHeaderLabel: TLabel
+            Align = Contents
+            Size.Width = 368.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'calendarlabelstyle'
+            TextSettings.HorzAlign = Center
+            Text = 'Report Issues'
+          end
+          object Button5: TButton
+            Align = Left
+            Size.Width = 64.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            StyleLookup = 'buttonstyle'
+            TabOrder = 1
+            Text = 'Back'
+            OnClick = btnSBackClick
+          end
+        end
+        object UserReportMessageMemo: TMemo
+          Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+          DataDetectorTypes = []
+          Align = Client
+          Size.Width = 368.000000000000000000
+          Size.Height = 230.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Viewport.Width = 364.000000000000000000
+          Viewport.Height = 226.000000000000000000
+        end
+        object SendReportIssuesButton: TButton
+          Align = Bottom
+          Position.Y = 503.000000000000000000
+          Size.Width = 368.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          Text = 'Send'
+          OnClick = SendReportIssuesButtonClick
+        end
+        object Label22: TLabel
+          Align = Top
+          Position.Y = 48.000000000000000000
+          Size.Width = 368.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.HorzAlign = Center
+          Text = 'Describe your problem below:'
+          TabOrder = 3
+        end
+        object Label24: TLabel
+          Align = Bottom
+          Position.Y = 440.000000000000000000
+          Size.Width = 368.000000000000000000
+          Size.Height = 63.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.HorzAlign = Center
+          Text = 'You can also send message to support@hodler.tech'
+          TabOrder = 4
+        end
+        object Panel25: TPanel
+          Align = Bottom
+          Position.Y = 326.000000000000000000
+          Size.Width = 368.000000000000000000
+          Size.Height = 57.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 14
+          object UserReportSendLogsLabel: TLabel
+            Align = Client
+            Margins.Left = 15.000000000000000000
+            Margins.Right = 15.000000000000000000
+            Size.Width = 234.000000000000000000
+            Size.Height = 57.000000000000000000
+            Size.PlatformDefault = False
+            Text = 'Send anonymous program logs'
+            TabOrder = 0
+          end
+          object UserReportSendLogsSwitch: TSwitch
+            Align = Right
+            IsChecked = True
+            Margins.Left = 16.000000000000000000
+            Margins.Top = 16.000000000000000000
+            Margins.Right = 16.000000000000000000
+            Margins.Bottom = 16.000000000000000000
+            Position.X = 280.000000000000000000
+            Position.Y = 16.000000000000000000
+            Size.Width = 72.000000000000000000
+            Size.Height = 25.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            OnSwitch = SendErrorMsgSwitchSwitch
+          end
+        end
+        object Panel26: TPanel
+          Align = Bottom
+          Position.Y = 383.000000000000000000
+          Size.Width = 368.000000000000000000
+          Size.Height = 57.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 13
+          object UserReportDeviceInfoLabel: TLabel
+            Align = Client
+            Margins.Left = 15.000000000000000000
+            Margins.Right = 15.000000000000000000
+            Size.Width = 234.000000000000000000
+            Size.Height = 57.000000000000000000
+            Size.PlatformDefault = False
+            Text = 'Send informations about your device'
+            TabOrder = 0
+          end
+          object UserReportDeviceInfoSwitch: TSwitch
+            Align = Right
+            IsChecked = True
+            Margins.Left = 16.000000000000000000
+            Margins.Top = 16.000000000000000000
+            Margins.Right = 16.000000000000000000
+            Margins.Bottom = 16.000000000000000000
+            Position.X = 280.000000000000000000
+            Position.Y = 16.000000000000000000
+            Size.Width = 72.000000000000000000
+            Size.Height = 25.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            OnSwitch = SendErrorMsgSwitchSwitch
+          end
         end
       end
     end

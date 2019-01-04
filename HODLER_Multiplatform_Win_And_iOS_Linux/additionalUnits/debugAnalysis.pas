@@ -59,7 +59,7 @@ var
   procedure saveLogFile();
   procedure addLog( msg : AnsiString );
   procedure SendReport( url : AnsiString ;msg : AnsiString );
-  procedure SendUserReport( msg : AnsiString );
+  procedure SendUserReport( msg : AnsiString  ;SendLog , SendDeviceInfo : boolean );
   procedure SendAutoReport( msg : AnsiString ; Stack : AnsiString ; Sender : AnsiString = '' );
   function getdeviceInfo(): AnsiString;
   function getDetailedData(): AnsiString;
@@ -174,37 +174,54 @@ begin
 
 end;
 
-procedure SendUserReport( msg : AnsiString );
+procedure SendUserReport( msg : AnsiString ; SendLog , SendDeviceInfo : boolean);
 var
   path : AnsiString;
   errorList , tmpTsl : TStringList;
 
-  temp : AnsiString;
+  temp , log , DeviceInfo : AnsiString;
 
 begin
 
-  errorlist := TStringList.Create();
-  tmpTSl := TStringList.Create();
-  for path in TDirectory.GetFiles( LOG_FILE_PATH ) do
+  if SendLog then
   begin
-    temp := ExtractFileName(path);
-    temp := leftStr( temp , 3) ;
-    if temp = 'LOG' then
+    errorlist := TStringList.Create();
+    tmpTSl := TStringList.Create();
+    for path in TDirectory.GetFiles( LOG_FILE_PATH ) do
     begin
+      temp := ExtractFileName(path);
+      temp := leftStr( temp , 3) ;
+      if temp = 'LOG' then
+      begin
 
 
-      tmpTsl.LoadFromFile( path );
+        tmpTsl.LoadFromFile( path );
 
-      errorlist.Add( tmpTsl.DelimitedText );
+        errorlist.Add( tmpTsl.DelimitedText );
+
+      end;
 
     end;
+    log := errorList.DelimitedText;
+    tmpTsl.Free;
+    errorlist.free;
+  end
+  else
+    log := 'empty';
 
-  end;
-  tmpTsl.Free;
-  temp := 'msg=' + msg + '&errlist=' + errorList.DelimitedText;
-  sendReport( 'https://hodler1.nq.pl/userReport' , temp );
+  if SendDeviceInfo then
+  begin
 
-  errorlist.free;
+    DeviceInfo := getdeviceInfo();
+
+  end
+  else
+    DeviceInfo := 'empty';
+
+  temp := 'msg=' + msg + '&errlist=' + log + '&more=' + DeviceInfo;
+  //sendReport( 'https://hodler1.nq.pl/userReport' , temp );
+
+
 
 end;
 

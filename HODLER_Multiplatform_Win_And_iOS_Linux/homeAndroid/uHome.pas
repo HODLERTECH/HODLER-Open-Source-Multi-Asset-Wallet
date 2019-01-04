@@ -765,6 +765,30 @@ type
     AHWBackButton: TButton;
     AboutHodlerStaticLabel: TLabel;
     AboutHodlerLogo: TImage;
+    PrivacyAndSecuritySettings: TTabItem;
+    ToolBar19: TToolBar;
+    SaPHeaderLabel: TLabel;
+    SaPBackButton: TButton;
+    Panel24: TPanel;
+    SendErrorMsgLabel: TLabel;
+    PrivacyAndSecurityButton: TButton;
+    reportIssuesSettingsButton: TButton;
+    SendErrorMsgSwitch: TSwitch;
+    Label25: TLabel;
+    ReportIssues: TTabItem;
+    ToolBar20: TToolBar;
+    ReportIssueHeaderLabel: TLabel;
+    Button5: TButton;
+    UserReportMessageMemo: TMemo;
+    SendReportIssuesButton: TButton;
+    Label22: TLabel;
+    Label24: TLabel;
+    Panel25: TPanel;
+    UserReportSendLogsLabel: TLabel;
+    UserReportSendLogsSwitch: TSwitch;
+    Panel26: TPanel;
+    UserReportDeviceInfoLabel: TLabel;
+    UserReportDeviceInfoSwitch: TSwitch;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -988,6 +1012,10 @@ type
     procedure SYWLBackButtonTap(Sender: TObject; const Point: TPointF);
     procedure ConfirmSendClaimCoinButtonClick(Sender: TObject);
     procedure AboutHodlerButtonClick(Sender: TObject);
+    procedure PrivacyAndSecurityButtonClick(Sender: TObject);
+    procedure reportIssuesSettingsButtonClick(Sender: TObject);
+    procedure SendErrorMsgSwitchSwitch(Sender: TObject);
+    procedure SendReportIssuesButtonClick(Sender: TObject);
 
 
   private
@@ -1273,6 +1301,11 @@ end;
 procedure TfrmHome.removeAccount(Sender: TObject);
 begin
   AccountRelated.removeAccount(Sender);
+end;
+
+procedure TfrmHome.reportIssuesSettingsButtonClick(Sender: TObject);
+begin
+  SwitchTab(pageControl , reportIssues);
 end;
 
 procedure TfrmHome.QRChangeTimerTimer(Sender: TObject);
@@ -1595,6 +1628,11 @@ end;
 procedure TfrmHome.PopupBox1Change(Sender: TObject);
 begin
   WalletViewRelated.changeViewOrder(Sender);
+end;
+
+procedure TfrmHome.PrivacyAndSecurityButtonClick(Sender: TObject);
+begin
+  switchTab( pagecontrol , PrivacyAndSecuritySettings );
 end;
 
 procedure TfrmHome.PrivateKeyManageButtonClick(Sender: TObject);
@@ -2700,6 +2738,8 @@ end;
 procedure TfrmHome.btnACBackClick(Sender: TObject);
 begin
   switchTab(PageControl, AddNewCoin);
+  CoinPrivKeyPassEdit.Text := '';
+  WIFEdit.Text := '';
 end;
 
 procedure TfrmHome.OrganizeButtonClick(Sender: TObject);
@@ -3739,6 +3779,16 @@ begin
     EQRPreview.Width := 294;
   end;   }
 
+end;
+
+procedure TfrmHome.SendErrorMsgSwitchSwitch(Sender: TObject);
+begin
+  walletViewRelated.SendErrorMsgSwitchSwitch(sender);
+end;
+
+procedure TfrmHome.SendReportIssuesButtonClick(Sender: TObject);
+begin
+  WalletViewRelated.SendReportIssuesButtonClick(sender);
 end;
 
 procedure TfrmHome.SendWalletFile(Sender: TObject);

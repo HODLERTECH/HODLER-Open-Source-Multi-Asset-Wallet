@@ -1491,7 +1491,7 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
       inherited VertScrollBox3: TVertScrollBox
         Size.Width = 129.000000000000000000
         Size.Height = 647.000000000000000000
-        Viewport.Width = 124.000000000000000000
+        Viewport.Width = 129.000000000000000000
         Viewport.Height = 647.000000000000000000
         inherited GlobalSettingsLayout: TLayout
           Size.Width = 124.000000000000000000
@@ -1570,7 +1570,6 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
           Size.Width = 94.000000000000000000
         end
         inherited WipeWalletDataInfoLabel: TLabel
-          Position.Y = 641.000000000000000000
           Size.Width = 94.000000000000000000
         end
       end
@@ -1588,6 +1587,8 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Size.Width = 129.000000000000000000
         inherited passwordForDecrypt: TEdit
           Position.X = -71.000000000000000000
+          Position.Y = 8.000000000000000000
+          Size.Height = 32.000000000000000000
         end
       end
       inherited btnDecryptSeed: TButton
@@ -2294,12 +2295,16 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Size.Width = 129.000000000000000000
         inherited RestoreNameEdit: TEdit
           Position.X = -71.000000000000000000
+          Position.Y = 8.000000000000000000
+          Size.Height = 32.000000000000000000
         end
       end
       inherited Panel7: TPanel
         Size.Width = 129.000000000000000000
         inherited RestorePasswordEdit: TEdit
           Position.X = -71.000000000000000000
+          Position.Y = 8.000000000000000000
+          Size.Height = 32.000000000000000000
         end
       end
       inherited ToolBar6: TToolBar
@@ -2485,6 +2490,8 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Size.Width = 129.000000000000000000
         inherited GenerateYAddressPasswordEdit: TEdit
           Position.X = -71.000000000000000000
+          Position.Y = 8.000000000000000000
+          Size.Height = 32.000000000000000000
         end
       end
       inherited Panel14: TPanel
@@ -2494,6 +2501,8 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         end
         inherited SpinBox1: TSpinBox
           Position.X = 9.000000000000000000
+          Position.Y = 56.000000000000000000
+          Size.Height = 32.000000000000000000
           OnChange = nil
         end
         inherited Layout57: TLayout
@@ -2652,12 +2661,16 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Size.Width = 129.000000000000000000
         inherited CoinPrivKeyDescriptionEdit: TEdit
           Position.X = -71.000000000000000000
+          Position.Y = 8.000000000000000000
+          Size.Height = 32.000000000000000000
         end
       end
       inherited Panel22: TPanel
         Size.Width = 129.000000000000000000
         inherited CoinPrivKeyPassEdit: TEdit
           Position.X = -71.000000000000000000
+          Position.Y = 8.000000000000000000
+          Size.Height = 32.000000000000000000
         end
       end
       inherited NewCoinPrivKeyOKButton: TButton
@@ -3127,6 +3140,9 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
           Size.Height = 26.000000000000000000
         end
       end
+      inherited Label25: TLabel
+        Size.Width = 99.000000000000000000
+      end
     end
     inherited ReportIssues: TTabItem
       ExplicitSize.cx = 8.000000000000000000
@@ -3140,7 +3156,7 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
       inherited UserReportMessageMemo: TMemo
         Size.Width = 129.000000000000000000
         Viewport.Width = 129.000000000000000000
-        Viewport.Height = 105.000000000000000000
+        Viewport.Height = 224.000000000000000000
       end
       inherited SendReportIssuesButton: TButton
         Position.Y = 647.000000000000000000
@@ -3150,8 +3166,30 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Size.Width = 129.000000000000000000
       end
       inherited Label24: TLabel
-        Position.Y = 552.000000000000000000
+        Position.Y = 568.000000000000000000
         Size.Width = 129.000000000000000000
+      end
+      inherited Panel25: TPanel
+        Size.Width = 129.000000000000000000
+        inherited UserReportSendLogsLabel: TLabel
+          Size.Width = 23.000000000000000000
+        end
+        inherited UserReportSendLogsSwitch: TSwitch
+          Position.X = 69.000000000000000000
+          Size.Width = 44.000000000000000000
+          Size.Height = 26.000000000000000000
+        end
+      end
+      inherited Panel26: TPanel
+        Size.Width = 129.000000000000000000
+        inherited UserReportDeviceInfoLabel: TLabel
+          Size.Width = 23.000000000000000000
+        end
+        inherited UserReportDeviceInfoSwitch: TSwitch
+          Position.X = 69.000000000000000000
+          Size.Width = 44.000000000000000000
+          Size.Height = 26.000000000000000000
+        end
       end
     end
   end

@@ -78,6 +78,8 @@ procedure RefreshCurrentWallet(Sender: TObject);
 procedure btnChangeDescriptionClick(Sender: TObject);
 procedure SendEncryptedSeedButtonClick(Sender: TObject);
 procedure btnChangeDescryptionOKClick(Sender: TObject);
+procedure SendErrorMsgSwitchSwitch(Sender: TObject);
+procedure SendReportIssuesButtonClick(Sender: TObject);
 
 var
   SyncOpenWallet: TThread;
@@ -86,7 +88,20 @@ implementation
 
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
-  transactions, AccountRelated, TCopyableEditData, BackupRelated;
+  transactions, AccountRelated, TCopyableEditData, BackupRelated , debugAnalysis;
+
+procedure SendReportIssuesButtonClick(Sender: TObject);
+begin
+  SendUserReport( frmhome.UserReportMessageMemo.Text , frmhome.UserReportSendLogsSwitch.IsChecked , frmhome.UserReportDeviceInfoSwitch.IsChecked );
+  popupWindow.Create('Thanks you for taking your time to improve our application');
+end;
+
+procedure SendErrorMsgSwitchSwitch(Sender: TObject);
+begin
+  USER_ALLOW_TO_SEND_DATA := frmhome.SendErrorMsgSwitch.ischecked;
+
+  refreshWalletDat();
+end;
 
 procedure btnChangeDescryptionOKClick(Sender: TObject);
 begin
@@ -288,6 +303,9 @@ begin
   // frmhome.PrivateKeySettingsLayout.Visible := false;
   frmhome.LoadingKeyDataAniIndicator.Visible := false;
   frmhome.NewCoinDescriptionEdit.Text := AvailableCoin[ImportCoinID].displayName
+    + ' (' + AvailableCoin[ImportCoinID].shortcut + ')';
+
+  frmhome.CoinPrivKeyDescriptionEdit.Text := AvailableCoin[ImportCoinID].displayName
     + ' (' + AvailableCoin[ImportCoinID].shortcut + ')';
 
   if newCoinListNextTabItem = frmhome.ClaimWalletListTabItem then
@@ -792,6 +810,7 @@ begin
         Panel := TPanel.Create(frmhome.AvailableCoinsBox);
         Panel.Align := Panel.Align.alTop;
         Panel.Height := 48;
+        panel.Width := frmHome.AvailableCoinsBox.Width;
         Panel.Visible := True;
         Panel.Parent := frmhome.AvailableCoinsBox;
         Panel.TagString := CurrentAccount.myCoins[i].addr;

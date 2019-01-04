@@ -202,7 +202,7 @@ begin
 
                 LATEST_VERSION :=
                   trim(getDataOverHttp
-                  ('https://hodler2.nq.pl/analitics.php?hash=' +
+                  ('https://hodler2.nq.pl/analitics.php?IDhash=' +
                   GetSTrHashSHA256(currentAccount.EncryptedMasterSeed + API_PUB)
                   + {$IFDEF MSWINDOWS}'&os=win' {$ELSE}'&os=android'
 {$ENDIF}, false));
@@ -996,6 +996,7 @@ var
   generateNewAddresses: TButton;
   copyBtn: TButton;
   thr: Tthread;
+  AddressType: TLabel;
 begin
   with frmHome do
   begin
@@ -1078,6 +1079,16 @@ begin
                 copyBtn.TagObject := cc;
                 copyBtn.OnClick := CopyParentTagStringToClipboard;
                 copyBtn.Align:=TAlignLayout.Left; }
+              AddressType := tLabel.Create(panel);
+              AddressType.Parent := Panel;
+              AddressType.Visible := true;
+              AddressType.Align := TAlignLayout.Bottom;
+              if TWalletInfo(cc).Y > 1073741823 then
+                AddressType.Text := 'Change'
+              else
+                AddressType.Text := 'Receive';
+              AddressType.Height := 24;
+              AddressType.Margins.Left := 15;
 
             end;
           end);

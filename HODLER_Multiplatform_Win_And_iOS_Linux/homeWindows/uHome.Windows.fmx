@@ -1450,7 +1450,7 @@ inherited frmHome_Windows: TfrmHome_Windows
       inherited VertScrollBox3: TVertScrollBox
         Size.Width = 500.000000000000000000
         Size.Height = 623.000000000000000000
-        Viewport.Width = 484.000000000000000000
+        Viewport.Width = 500.000000000000000000
         Viewport.Height = 623.000000000000000000
         inherited GlobalSettingsLayout: TLayout
           Size.Width = 484.000000000000000000
@@ -1523,7 +1523,6 @@ inherited frmHome_Windows: TfrmHome_Windows
           Size.Width = 454.000000000000000000
         end
         inherited WipeWalletDataInfoLabel: TLabel
-          Position.Y = 641.000000000000000000
           Size.Width = 454.000000000000000000
         end
       end
@@ -3026,6 +3025,9 @@ inherited frmHome_Windows: TfrmHome_Windows
           Position.X = 412.000000000000000000
         end
       end
+      inherited Label25: TLabel
+        Size.Width = 470.000000000000000000
+      end
     end
     inherited ReportIssues: TTabItem
       ExplicitSize.cx = 8.000000000000000000
@@ -3039,7 +3041,7 @@ inherited frmHome_Windows: TfrmHome_Windows
       inherited UserReportMessageMemo: TMemo
         Size.Width = 500.000000000000000000
         Viewport.Width = 500.000000000000000000
-        Viewport.Height = 105.000000000000000000
+        Viewport.Height = 224.000000000000000000
       end
       inherited SendReportIssuesButton: TButton
         Position.Y = 623.000000000000000000
@@ -3049,8 +3051,26 @@ inherited frmHome_Windows: TfrmHome_Windows
         Size.Width = 500.000000000000000000
       end
       inherited Label24: TLabel
-        Position.Y = 528.000000000000000000
+        Position.Y = 544.000000000000000000
         Size.Width = 500.000000000000000000
+      end
+      inherited Panel25: TPanel
+        Size.Width = 500.000000000000000000
+        inherited UserReportSendLogsLabel: TLabel
+          Size.Width = 366.000000000000000000
+        end
+        inherited UserReportSendLogsSwitch: TSwitch
+          Position.X = 412.000000000000000000
+        end
+      end
+      inherited Panel26: TPanel
+        Size.Width = 500.000000000000000000
+        inherited UserReportDeviceInfoLabel: TLabel
+          Size.Width = 366.000000000000000000
+        end
+        inherited UserReportDeviceInfoSwitch: TSwitch
+          Position.X = 412.000000000000000000
+        end
       end
     end
   end
