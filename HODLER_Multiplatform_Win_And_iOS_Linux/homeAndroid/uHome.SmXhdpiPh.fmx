@@ -367,7 +367,6 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             245s
             197s)
           inherited WVBalance: TTabItem
-            Size.Width = 61.000000000000000000
             ExplicitSize.cx = 250.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited BalancePanel: TPanel
@@ -697,6 +696,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             end
           end
           inherited WVReceive: TTabItem
+            Size.Width = 55.000000000000000000
             ExplicitSize.cx = 125.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited ReceiveVertScrollBox: TVertScrollBox
@@ -773,7 +773,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             end
           end
           inherited WVSend: TTabItem
-            Size.Width = 61.000000000000000000
+            Size.Width = 39.000000000000000000
             ExplicitSize.cx = 62.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited SendVertScrollBox: TVertScrollBox
@@ -866,7 +866,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             end
           end
           inherited WVSettings: TTabItem
-            Size.Width = 62.000000000000000000
+            Size.Width = 64.000000000000000000
             ExplicitSize.cx = 64.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited btnExportPrivKey: TButton
@@ -2219,16 +2219,12 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited CoinPrivKeyDescriptionEdit: TEdit
             Position.X = 45.000000000000000000
-            Position.Y = 8.000000000000000000
-            Size.Height = 32.000000000000000000
           end
         end
         inherited Panel22: TPanel
           Size.Width = 245.000000000000000000
           inherited CoinPrivKeyPassEdit: TEdit
             Position.X = 45.000000000000000000
-            Position.Y = 8.000000000000000000
-            Size.Height = 32.000000000000000000
           end
         end
         inherited NewCoinPrivKeyOKButton: TButton

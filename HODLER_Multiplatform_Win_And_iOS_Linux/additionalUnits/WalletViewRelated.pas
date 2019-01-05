@@ -305,6 +305,7 @@ begin
   frmhome.NewCoinDescriptionEdit.Text := AvailableCoin[ImportCoinID].displayName
     + ' (' + AvailableCoin[ImportCoinID].shortcut + ')';
 
+
   frmhome.CoinPrivKeyDescriptionEdit.Text := AvailableCoin[ImportCoinID].displayName
     + ' (' + AvailableCoin[ImportCoinID].shortcut + ')';
 

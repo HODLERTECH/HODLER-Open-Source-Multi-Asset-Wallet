@@ -3716,6 +3716,7 @@ begin
       LResponse := req.EndAsyncHTTP(ares);
       asyncResponse := LResponse.ContentAsString();
       // asyncResponse:=req.EndAsyncHTTP(ares).ContentAsString();
+
       result := apiStatus(aURL, asyncResponse);
       ts.Text := asyncResponse;
 {$IFDEF  DEBUG} ts.SaveToFile(urlHash + '.json'); {$ENDIF}

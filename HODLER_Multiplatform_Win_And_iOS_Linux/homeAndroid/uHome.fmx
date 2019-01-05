@@ -1,6 +1,6 @@
 object frmHome: TfrmHome
-  Left = 315
-  Top = 52
+  Left = 426
+  Top = 149
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = Single
   Caption = 'HODLER Open Source Multi-Asset Wallet'
@@ -27,8 +27,8 @@ object frmHome: TfrmHome
   OnVirtualKeyboardHidden = FormVirtualKeyboardHidden
   Touch.GestureManager = GestureManager1
   OnGesture = FormGesture
-  Left = 315
-  Top = 52
+  Left = 426
+  Top = 149
   DesignerMasterStyle = 0
   object StatusBarFixer: TRectangle
     Align = Contents
@@ -3366,7 +3366,7 @@ object frmHome: TfrmHome
               item
               end>
             IsSelected = False
-            Size.Width = 61.000000000000000000
+            Size.Width = 60.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = ''
@@ -14335,7 +14335,7 @@ object frmHome: TfrmHome
         CustomIcon = <
           item
           end>
-        IsSelected = False
+        IsSelected = True
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -14929,7 +14929,7 @@ object frmHome: TfrmHome
               Position.X = 15.000000000000000000
               Position.Y = 14.000000000000000000
               Size.Width = 218.000000000000000000
-              Size.Height = 20.000000000000000000
+              Size.Height = 19.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
               Value = 10.000000000000000000

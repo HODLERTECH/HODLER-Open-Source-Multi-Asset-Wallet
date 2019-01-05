@@ -427,7 +427,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             409s
             542s)
           inherited WVBalance: TTabItem
-            Size.Width = 102.000000000000000000
+            Size.Width = 39.000000000000000000
             ExplicitSize.cx = 414.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited BalancePanel: TPanel
@@ -754,7 +754,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             end
           end
           inherited WVReceive: TTabItem
-            Size.Width = 102.000000000000000000
+            Size.Width = 41.000000000000000000
             ExplicitSize.cx = 207.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited ReceiveVertScrollBox: TVertScrollBox
@@ -839,7 +839,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             end
           end
           inherited WVSend: TTabItem
-            Size.Width = 102.000000000000000000
+            Size.Width = 30.000000000000000000
             ExplicitSize.cx = 103.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited SendVertScrollBox: TVertScrollBox
@@ -893,16 +893,13 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
                   Size.Width = 409.000000000000000000
                   inherited FeeSpin: TSpinBox
                     Position.X = 115.000000000000000000
-                    Position.Y = 1.000000000000000000
                     Size.Width = 294.000000000000000000
-                    Size.Height = 30.000000000000000000
                   end
                 end
                 inherited FixedFeeLayout: TLayout
                   Size.Width = 409.000000000000000000
                   inherited wvFee: TEdit
                     Size.Width = 289.000000000000000000
-                    Size.Height = 30.000000000000000000
                   end
                 end
                 inherited LayoutPresentationFee: TLayout
@@ -945,7 +942,6 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
                   Size.Width = 409.000000000000000000
                   inherited PerByteFeeEdit: TEdit
                     Size.Width = 289.000000000000000000
-                    Size.Height = 30.000000000000000000
                   end
                 end
               end
@@ -961,14 +957,13 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
                   end
                   inherited WVsendTO: TEdit
                     Size.Width = 361.000000000000000000
-                    Size.Height = 30.000000000000000000
                   end
                 end
               end
             end
           end
           inherited WVSettings: TTabItem
-            Size.Width = 103.000000000000000000
+            Size.Width = 43.000000000000000000
             ExplicitSize.cx = 105.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited btnExportPrivKey: TButton
@@ -2615,8 +2610,6 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Size.Width = 409.000000000000000000
           inherited CoinPrivKeyDescriptionEdit: TEdit
             Position.X = 209.000000000000000000
-            Position.Y = 9.000000000000000000
-            Size.Height = 30.000000000000000000
           end
         end
         inherited Panel22: TPanel
@@ -2624,8 +2617,6 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Size.Width = 409.000000000000000000
           inherited CoinPrivKeyPassEdit: TEdit
             Position.X = 209.000000000000000000
-            Position.Y = 9.000000000000000000
-            Size.Height = 30.000000000000000000
           end
         end
         inherited NewCoinPrivKeyOKButton: TButton

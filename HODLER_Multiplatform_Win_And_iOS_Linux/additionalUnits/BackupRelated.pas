@@ -293,7 +293,7 @@ begin
     fromClaimWD.Free;
 
   fromClaimWD := TWalletInfo.create(CoinID, -1, -1,
-    Bitcoin_PublicAddrToWallet(pub, AvailableCoin[CoinID].p2pk), 'Imported');
+    Bitcoin_PublicAddrToWallet(pub, AvailableCoin[CoinID].p2pk), '__dashbrd__');
   fromClaimWD.pub := pub;
   fromClaimWD.EncryptedPrivKey := out;
   fromClaimWD.isCompressed := isCompressed;
