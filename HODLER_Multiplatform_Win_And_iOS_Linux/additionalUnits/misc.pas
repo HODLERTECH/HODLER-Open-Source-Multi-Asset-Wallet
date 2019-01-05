@@ -1290,12 +1290,16 @@ var
   JsonTokens: TJsonArray;
   JsonIt: TJsonvalue;
   T: Token;
-  address, name, decimals, symbol: AnsiString;
+  address, name, decimals, symbol , balance: AnsiString;
   i: integer;
   createToken: boolean;
   createFromList: boolean;
   CreateFromListIndex: integer;
   added: integer;
+
+  panel : TPanel;
+  img : TImage;
+  NameLbl , valuelbl : TLabel;
 begin
   added := 0;
   if ac = nil then
@@ -1342,6 +1346,16 @@ begin
             showmessage('Load Token Symbol Error ' + E.message);
           end;
         end;
+        // balance
+        try
+          balance := JsonIt.GetValue<string>('balance');
+        except
+          on E: Exception do
+          begin
+            balance := '0';
+            showmessage('Load Token Balance Error ' + E.message);
+          end;
+        end;
 
         createToken := true;
         for i := 0 to Length(ac.myTokens) - 1 do
@@ -1381,6 +1395,39 @@ begin
             T := Token.CreateCustom(address, name, symbol, StrToInt(decimals),
               InAddress);
           end;
+
+          panel := Tpanel.Create(frmhome.FoundTokenVertScrollBox);
+          panel.Parent := frmhome.FoundTokenVertScrollBox;
+          panel.Visible := true;
+          panel.Height := 48;
+          panel.align := TAlignLayout.Top;
+
+          img := Timage.Create(panel);
+          img.Parent := panel;
+          img.visible := true;
+          img.Align := TAlignLayout.left;
+          img.Width := 64;
+          img.Bitmap := T.getIcon;
+          img.Margins.Top := 8;
+          img.Margins.Bottom := 8;
+
+          NameLbl := TLabel.create(panel);
+          nameLbl.Align := TAlignLayout.Client;
+          namelbl.visible := true;
+          namelbl.Parent := panel;
+          namelbl.Text := name;
+
+          valueLbl := Tlabel.create(panel);
+          valueLbl.Parent := panel;
+          valueLbl.Align := TAlignLayout.client;
+          valueLbl.Visible := true;// floatToStrF(crypto.getFiat, ffFixed, 15, 2)
+          valueLbl.Text := balance;
+          valueLbl.TextSettings.HorzAlign := TTextAlign.Trailing;
+          valuelbl.Margins.Right := 15;
+
+
+
+
 
           T.idInWallet := Length(ac.myTokens) + 10000;
 

@@ -343,19 +343,20 @@ begin
   if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, svc)
   then
   begin
-    if TfmxObject(Sender).Parent is Tmemo then
+
+    if TfmxObject(Sender).Parent.Parent is Tmemo then
     begin
-      svc.setClipboard(removeSpace(Tmemo(TfmxObject(Sender).Parent).Text));
-      popupWindow.Create(removeSpace(Tmemo(TfmxObject(Sender).Parent).Text) +
+      svc.setClipboard(removeSpace(Tmemo(TfmxObject(Sender).Parent.Parent).Text));
+      popupWindow.Create(removeSpace(Tmemo(TfmxObject(Sender).Parent.Parent).Text) +
         ' ' + dictionary('CopiedToClipboard'));
-      exit;
+      //exit;
     end;
     if TfmxObject(Sender).Parent is Tedit then
     begin
       svc.setClipboard(removeSpace(Tedit(TfmxObject(Sender).Parent).Text));
       popupWindow.Create(removeSpace(Tedit(TfmxObject(Sender).Parent).Text) +
         ' ' + dictionary('CopiedToClipboard'));
-      exit;
+      //exit;
     end;
     if TfmxObject(Sender).Parent is TButton then
     begin

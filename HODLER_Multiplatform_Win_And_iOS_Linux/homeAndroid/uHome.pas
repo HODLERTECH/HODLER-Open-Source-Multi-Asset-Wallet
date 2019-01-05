@@ -793,6 +793,11 @@ type
     lblPrivateKey: TMemo;
     lblWIFKey: TMemo;
     Layout33: TLayout;
+    FoundTokenTabItem: TTabItem;
+    ToolBar21: TToolBar;
+    FoundTokenHeaderLabel: TLabel;
+    FoundTokenOKButton: TButton;
+    FoundTokenVertScrollBox: TVertScrollBox;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1812,7 +1817,15 @@ begin
   end;
 
   found := SearchTokens(CurrentCoin.addr, nil);
-  popupWindow.Create('New tokens found: ' + inttostr(found));
+  if found = 0 then
+  begin
+    popupWindow.Create('New tokens found: ' + inttostr(found));
+  end
+  else
+  begin
+    switchTab(pageControl , foundTokenTabItem);
+  end;
+
 end;
 
 procedure TfrmHome.SelectFileInBackupFileList(Sender: TObject);
