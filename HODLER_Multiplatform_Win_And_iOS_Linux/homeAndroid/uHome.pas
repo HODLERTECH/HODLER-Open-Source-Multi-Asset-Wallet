@@ -606,8 +606,6 @@ type
     Panel15: TPanel;
     OwnXCheckBox: TCheckBox;
     OwnXEdit: TEdit;
-    lblPrivateKey: TEdit;
-    lblWIFKey: TEdit;
     HexFormatLabel: TLabel;
     WIFFormatLabel: TLabel;
     layoutForPrivQR: TLayout;
@@ -789,6 +787,12 @@ type
     Panel26: TPanel;
     UserReportDeviceInfoLabel: TLabel;
     UserReportDeviceInfoSwitch: TSwitch;
+    PrivateKeyInfoPanel: TPanel;
+    PrivateKeyAddressInfoLabel: TLabel;
+    PrivateKeyBalanceInfoLabel: TLabel;
+    lblPrivateKey: TMemo;
+    lblWIFKey: TMemo;
+    Layout33: TLayout;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);

@@ -1467,27 +1467,37 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         inherited Layout56: TLayout
           Size.Width = 409.000000000000000000
           Size.Height = 667.000000000000000000
-          inherited lblPrivateKey: TEdit
-            Position.Y = 34.000000000000000000
-            Size.Width = 409.000000000000000000
-            Size.Height = 30.000000000000000000
-          end
-          inherited lblWIFKey: TEdit
-            Position.Y = 64.000000000000000000
-            Size.Width = 409.000000000000000000
-            Size.Height = 30.000000000000000000
-          end
-          inherited HexFormatLabel: TLabel
-            Size.Width = 409.000000000000000000
-          end
-          inherited WIFFormatLabel: TLabel
-            Position.Y = 17.000000000000000000
-            Size.Width = 409.000000000000000000
-          end
           inherited layoutForPrivQR: TLayout
-            Position.Y = 94.000000000000000000
             Size.Width = 409.000000000000000000
             inherited CopyPrivateKeyButton: TButton
+              Size.Width = 409.000000000000000000
+            end
+          end
+          inherited PrivateKeyInfoPanel: TPanel
+            Size.Width = 409.000000000000000000
+            inherited PrivateKeyAddressInfoLabel: TLabel
+              Size.Width = 394.000000000000000000
+            end
+            inherited PrivateKeyBalanceInfoLabel: TLabel
+              Size.Width = 394.000000000000000000
+            end
+          end
+          inherited Layout33: TLayout
+            Size.Width = 409.000000000000000000
+            inherited HexFormatLabel: TLabel
+              Size.Width = 409.000000000000000000
+            end
+            inherited lblPrivateKey: TMemo
+              Size.Width = 409.000000000000000000
+              Viewport.Width = 409.000000000000000000
+              Viewport.Height = 48.000000000000000000
+            end
+            inherited lblWIFKey: TMemo
+              Size.Width = 409.000000000000000000
+              Viewport.Width = 409.000000000000000000
+              Viewport.Height = 48.000000000000000000
+            end
+            inherited WIFFormatLabel: TLabel
               Size.Width = 409.000000000000000000
             end
           end

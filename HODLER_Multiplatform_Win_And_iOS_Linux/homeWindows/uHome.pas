@@ -796,6 +796,9 @@ type
     UserReportDeviceInfoLabel: TLabel;
     UserReportDeviceInfoSwitch: TSwitch;
     Label25: TLabel;
+    PrivateKeyInfoPanel: TPanel;
+    PrivateKeyAddressInfoLabel: TLabel;
+    PrivateKeyBalanceInfoLabel: TLabel;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);

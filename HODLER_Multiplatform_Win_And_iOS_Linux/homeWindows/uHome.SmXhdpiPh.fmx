@@ -1641,6 +1641,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
       ExplicitSize.cx = 8.000000000000000000
       ExplicitSize.cy = 8.000000000000000000
       inherited EKSHeader: TToolBar
+        Position.Y = 48.000000000000000000
         Size.Width = 200.000000000000000000
         inherited lblEKSHeader: TLabel
           Size.Width = 200.000000000000000000
@@ -2948,7 +2949,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
       inherited UserReportMessageMemo: TMemo
         Position.X = 16.000000000000000000
         Viewport.Width = 450.000000000000000000
-        Viewport.Height = 105.000000000000000000
+        Viewport.Height = 224.000000000000000000
       end
       inherited SendReportIssuesButton: TButton
         Position.X = 24.000000000000000000

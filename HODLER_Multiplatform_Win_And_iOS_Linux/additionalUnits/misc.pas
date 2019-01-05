@@ -3133,7 +3133,7 @@ var
   i, j: integer;
 begin
   result := Str;
-  exit;
+  //exit;
   if n < 0 then
     exit(Str);
   Inc(n);

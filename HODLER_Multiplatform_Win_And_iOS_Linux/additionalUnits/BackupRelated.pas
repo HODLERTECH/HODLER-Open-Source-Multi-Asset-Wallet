@@ -983,11 +983,11 @@ begin
         exit(false);
       end;
       // {$IFDEF MSWINDOWS}lblPrivateKey:=PrivateKeyMemo;{$ENDIF}
-      lblPrivateKey.Text := cutEveryNChar(4, tempStr);
+      lblPrivateKey.Text := tempStr;
       lblWIFKey.Text := PrivKeyToWIF(tempStr, wd.isCompressed,
         AvailableCoin[TWalletInfo(wd).coin].wifByte);
       tempStr := '';
-      MasterSeed := '';
+      wipeAnsiString(MasterSeed);
 
     end
     else
@@ -1007,7 +1007,12 @@ begin
       wipeAnsiString(MasterSeed);
 
     end;
-
+    PrivateKeyBalanceInfoLabel.Text := BigIntegerToFloatStr( wd.confirmed , wd.decimals );
+    PrivateKeyAddressInfoLabel.Text := wd.addr;
+    {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
+    lblPrivateKey.Text := cutEveryNChar( length(lblPrivateKey.Text) div 2 ,lblPrivateKey.Text );
+    lblWIFKey.Text :=  cutEveryNChar( length(lblWIFKey.Text) div 2 ,lblWIFKey.Text );
+    {$ENDIF}
     bitmap := StrToQRBitmap(removeSpace(lblPrivateKey.Text));
     PrivKeyQRImage.bitmap.Assign(bitmap);
     bitmap.Free;

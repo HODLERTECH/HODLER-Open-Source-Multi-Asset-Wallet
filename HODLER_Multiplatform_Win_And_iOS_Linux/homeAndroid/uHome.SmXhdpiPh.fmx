@@ -779,7 +779,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             inherited SendVertScrollBox: TVertScrollBox
               Size.Width = 245.000000000000000000
               Size.Height = 197.000000000000000000
-              Viewport.Width = 240.000000000000000000
+              Viewport.Width = 245.000000000000000000
               Viewport.Height = 197.000000000000000000
               inherited btnSend: TButton
                 Position.Y = 152.000000000000000000
@@ -1291,26 +1291,37 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         inherited Layout56: TLayout
           Size.Width = 245.000000000000000000
           Size.Height = 322.000000000000000000
-          inherited lblPrivateKey: TEdit
-            Size.Width = 245.000000000000000000
-            Size.Height = 32.000000000000000000
-          end
-          inherited lblWIFKey: TEdit
-            Position.Y = 66.000000000000000000
-            Size.Width = 245.000000000000000000
-            Size.Height = 32.000000000000000000
-          end
-          inherited HexFormatLabel: TLabel
-            Size.Width = 245.000000000000000000
-          end
-          inherited WIFFormatLabel: TLabel
-            Position.Y = 49.000000000000000000
-            Size.Width = 245.000000000000000000
-          end
           inherited layoutForPrivQR: TLayout
-            Position.Y = 98.000000000000000000
             Size.Width = 245.000000000000000000
             inherited CopyPrivateKeyButton: TButton
+              Size.Width = 245.000000000000000000
+            end
+          end
+          inherited PrivateKeyInfoPanel: TPanel
+            Size.Width = 245.000000000000000000
+            inherited PrivateKeyAddressInfoLabel: TLabel
+              Size.Width = 230.000000000000000000
+            end
+            inherited PrivateKeyBalanceInfoLabel: TLabel
+              Size.Width = 230.000000000000000000
+            end
+          end
+          inherited Layout33: TLayout
+            Size.Width = 245.000000000000000000
+            inherited HexFormatLabel: TLabel
+              Size.Width = 245.000000000000000000
+            end
+            inherited lblPrivateKey: TMemo
+              Size.Width = 245.000000000000000000
+              Viewport.Width = 245.000000000000000000
+              Viewport.Height = 48.000000000000000000
+            end
+            inherited lblWIFKey: TMemo
+              Size.Width = 245.000000000000000000
+              Viewport.Width = 245.000000000000000000
+              Viewport.Height = 48.000000000000000000
+            end
+            inherited WIFFormatLabel: TLabel
               Size.Width = 245.000000000000000000
             end
           end

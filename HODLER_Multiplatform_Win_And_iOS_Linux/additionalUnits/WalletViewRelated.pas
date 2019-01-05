@@ -258,7 +258,7 @@ begin
   for i := 0 to frmhome.ComponentCount - 1 do
   begin
     fmxObj := frmhome.Components[i];
-    if (fmxObj is Tedit) and (TfmxObject(fmxObj).TagString = 'copyable') then
+    if ((fmxObj is Tedit) or (fmxObj is Tmemo)) and (TfmxObject(fmxObj).TagString = 'copyable') then
     begin
 
       CreateButtonWithCopyImg(fmxObj);
@@ -342,7 +342,13 @@ begin
   if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, svc)
   then
   begin
-
+    if TfmxObject(Sender).Parent is Tmemo then
+    begin
+      svc.setClipboard(removeSpace(Tmemo(TfmxObject(Sender).Parent).Text));
+      popupWindow.Create(removeSpace(Tmemo(TfmxObject(Sender).Parent).Text) +
+        ' ' + dictionary('CopiedToClipboard'));
+      exit;
+    end;
     if TfmxObject(Sender).Parent is Tedit then
     begin
       svc.setClipboard(removeSpace(Tedit(TfmxObject(Sender).Parent).Text));

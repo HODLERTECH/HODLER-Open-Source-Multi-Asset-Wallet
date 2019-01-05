@@ -666,8 +666,66 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
             inherited ReceiveVertScrollBox: TVertScrollBox
               Size.Width = 129.000000000000000000
               Size.Height = 570.000000000000000000
-              Viewport.Width = 129.000000000000000000
+              Viewport.Width = 124.000000000000000000
               Viewport.Height = 570.000000000000000000
+              inherited ReceiveAmountLayout: TLayout
+                Size.Width = 124.000000000000000000
+                inherited ReceiveValue: TEdit
+                  Size.Width = 124.000000000000000000
+                end
+                inherited ReceiveAmountRealCurrency: TEdit
+                  Size.Width = 124.000000000000000000
+                end
+                inherited lblReceiveAmount: TLabel
+                  Size.Width = 124.000000000000000000
+                end
+              end
+              inherited receiveAddress: TEdit
+                Size.Width = 124.000000000000000000
+              end
+              inherited AddressTypelayout: TLayout
+                Size.Width = 124.000000000000000000
+                inherited switchCompatiblep2shButton: TButton
+                  Size.Width = 0.000000000000000000
+                end
+                inherited SwitchSegwitp2wpkhButton: TButton
+                  Position.X = -4.000000000000000000
+                end
+              end
+              inherited Layout33: TLayout
+                Size.Width = 124.000000000000000000
+                inherited Layout32: TLayout
+                  Size.Width = 124.000000000000000000
+                end
+                inherited ArtificialSpace: TLayout
+                  Size.Width = 124.000000000000000000
+                end
+                inherited QRCodeImage: TImage
+                  Size.Width = 124.000000000000000000
+                end
+              end
+              inherited BCHAddressesLayout: TLayout
+                Size.Width = 124.000000000000000000
+                inherited BCHLegacyButton: TButton
+                  Position.X = -68.000000000000000000
+                end
+                inherited BCHCashAddrButton: TButton
+                  Size.Width = 0.000000000000000000
+                end
+              end
+              inherited Yaddresses: TLayout
+                Position.Y = 522.000000000000000000
+                Size.Width = 124.000000000000000000
+                inherited changeYbutton: TButton
+                  Position.X = -44.000000000000000000
+                end
+              end
+              inherited RavencoinAddrTypeLayout: TLayout
+                Size.Width = 124.000000000000000000
+                inherited SegwitRavenAddrButton: TButton
+                  Size.Width = 0.000000000000000000
+                end
+              end
             end
           end
           inherited WVSend: TTabItem
@@ -1739,7 +1797,7 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
       end
       inherited Layout56: TLayout
         Size.Width = 129.000000000000000000
-        Size.Height = 525.000000000000000000
+        Size.Height = 477.000000000000000000
         inherited lblWIFKey: TEdit
           Size.Width = 99.000000000000000000
           Size.Height = 32.000000000000000000
@@ -1750,7 +1808,7 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Size.Width = 129.000000000000000000
       end
       inherited WIFFormatLabel: TLabel
-        Position.Y = 97.000000000000000000
+        Position.Y = 113.000000000000000000
         Size.Width = 99.000000000000000000
       end
       inherited HexFormatLabel: TLabel
@@ -1759,6 +1817,15 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
       inherited lblPrivateKey: TEdit
         Size.Width = 99.000000000000000000
         Size.Height = 32.000000000000000000
+      end
+      inherited PrivateKeyInfoPanel: TPanel
+        Size.Width = 129.000000000000000000
+        inherited PrivateKeyAddressInfoLabel: TLabel
+          Size.Width = 114.000000000000000000
+        end
+        inherited PrivateKeyBalanceInfoLabel: TLabel
+          Size.Width = 114.000000000000000000
+        end
       end
     end
     inherited ChoseToken: TTabItem

@@ -640,8 +640,66 @@ inherited frmHome_Windows: TfrmHome_Windows
             inherited ReceiveVertScrollBox: TVertScrollBox
               Size.Width = 500.000000000000000000
               Size.Height = 546.000000000000000000
-              Viewport.Width = 500.000000000000000000
+              Viewport.Width = 484.000000000000000000
               Viewport.Height = 546.000000000000000000
+              inherited ReceiveAmountLayout: TLayout
+                Size.Width = 484.000000000000000000
+                inherited ReceiveValue: TEdit
+                  Size.Width = 484.000000000000000000
+                end
+                inherited ReceiveAmountRealCurrency: TEdit
+                  Size.Width = 484.000000000000000000
+                end
+                inherited lblReceiveAmount: TLabel
+                  Size.Width = 484.000000000000000000
+                end
+              end
+              inherited receiveAddress: TEdit
+                Size.Width = 484.000000000000000000
+              end
+              inherited AddressTypelayout: TLayout
+                Size.Width = 484.000000000000000000
+                inherited switchCompatiblep2shButton: TButton
+                  Size.Width = 228.000000000000000000
+                end
+                inherited SwitchSegwitp2wpkhButton: TButton
+                  Position.X = 356.000000000000000000
+                end
+              end
+              inherited Layout33: TLayout
+                Size.Width = 484.000000000000000000
+                inherited Layout32: TLayout
+                  Size.Width = 484.000000000000000000
+                end
+                inherited ArtificialSpace: TLayout
+                  Size.Width = 484.000000000000000000
+                end
+                inherited QRCodeImage: TImage
+                  Size.Width = 484.000000000000000000
+                end
+              end
+              inherited BCHAddressesLayout: TLayout
+                Size.Width = 484.000000000000000000
+                inherited BCHLegacyButton: TButton
+                  Position.X = 292.000000000000000000
+                end
+                inherited BCHCashAddrButton: TButton
+                  Size.Width = 292.000000000000000000
+                end
+              end
+              inherited Yaddresses: TLayout
+                Position.Y = 498.000000000000000000
+                Size.Width = 484.000000000000000000
+                inherited changeYbutton: TButton
+                  Position.X = 316.000000000000000000
+                end
+              end
+              inherited RavencoinAddrTypeLayout: TLayout
+                Size.Width = 484.000000000000000000
+                inherited SegwitRavenAddrButton: TButton
+                  Size.Width = 275.000000000000000000
+                end
+              end
             end
           end
           inherited WVSend: TTabItem
@@ -1674,7 +1732,7 @@ inherited frmHome_Windows: TfrmHome_Windows
       end
       inherited Layout56: TLayout
         Size.Width = 500.000000000000000000
-        Size.Height = 484.000000000000000000
+        Size.Height = 436.000000000000000000
         inherited lblWIFKey: TEdit
           Size.Width = 470.000000000000000000
         end
@@ -1691,6 +1749,15 @@ inherited frmHome_Windows: TfrmHome_Windows
       end
       inherited lblPrivateKey: TEdit
         Size.Width = 470.000000000000000000
+      end
+      inherited PrivateKeyInfoPanel: TPanel
+        Size.Width = 500.000000000000000000
+        inherited PrivateKeyAddressInfoLabel: TLabel
+          Size.Width = 485.000000000000000000
+        end
+        inherited PrivateKeyBalanceInfoLabel: TLabel
+          Size.Width = 485.000000000000000000
+        end
       end
     end
     inherited ChoseToken: TTabItem
