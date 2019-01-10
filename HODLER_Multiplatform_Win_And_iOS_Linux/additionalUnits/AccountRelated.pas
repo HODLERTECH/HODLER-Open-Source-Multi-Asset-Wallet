@@ -56,7 +56,7 @@ implementation
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, WalletStructureData, TcopyableEditData, TCopyableLabelData,
-  walletViewRelated, TImageTextButtonData , debugAnalysis;
+  walletViewRelated, TImageTextButtonData , debugAnalysis,keyPoolRelated;
 
 procedure afterInitialize;
 var
@@ -343,6 +343,7 @@ begin
 
     SyncBalanceThr := SynchronizeBalanceThread.Create();
     SyncHistoryThr := SynchronizeHistoryThread.Create();
+    TThread.CreateAnonymousThread(procedure begin verifyKeypool(); end).Start();
   except
     on E: Exception do
     begin
@@ -888,6 +889,7 @@ begin
       popupWindow.Create(dictionary('FailedToDecrypt'));
       exit;
     end;
+    startFullfillingKeypool(MasterSeed);
     Tthread.CreateAnonymousThread(
       procedure
       var
@@ -1018,6 +1020,7 @@ begin
             begin
               if cc.deleted = true then
                 continue;
+             if TWalletInfo(cc).inPool then Continue;
               i := i + 1;
               Application.ProcessMessages;
               Panel := TPanel.Create(YaddressesVertScrollBox);
@@ -1088,6 +1091,9 @@ begin
                 AddressType.Text := 'Change'
               else
                 AddressType.Text := 'Receive';
+                AddressType.Text:=AddressType.Text+' '+ BigIntegertoFloatStr
+        (cc.confirmed,
+        cc.decimals) + ' ' + cc.shortcut;
               AddressType.Height := 24;
               AddressType.Margins.Left := 15;
 

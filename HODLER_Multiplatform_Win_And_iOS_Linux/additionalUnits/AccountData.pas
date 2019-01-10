@@ -77,6 +77,7 @@ begin
 
   result := 0.0;
   for twi in getWalletWithX(wi.X, TWalletInfo(wi).coin) do
+  if not TWalletInfo(twi).inPool then
     result := result + TWalletInfo(twi).getConfirmedFiat;
 
 end;
@@ -92,7 +93,7 @@ begin
   result := 0.0;
   for twi in getWalletWithX(wi.X, TWalletInfo(wi).coin) do
   begin
-          result := result + TWalletInfo(twi).getUnconfirmedFiat;
+           if not TWalletInfo(twi).inPool then result := result + TWalletInfo(twi).getUnconfirmedFiat;
   end;
 
 end;
@@ -107,7 +108,7 @@ begin
 
   result := 0.0;
   for twi in getWalletWithX(wi.X, TWalletInfo(wi).coin) do
-    result := result + max( 0 , TWalletInfo(twi).getfiat);
+     if not TWalletInfo(twi).inPool then result := result + max( 0 , TWalletInfo(twi).getfiat);
 
 end;
 
@@ -135,8 +136,9 @@ begin
   begin
     for i := 0 to Length(TWalletInfo(twi).utxo) - 1 do
     begin
+      if not TWalletInfo(twi).inPool then begin
       SetLength(result, Length(result) + 1);
-      result[high(result)] := TWalletInfo(twi).utxo[i];
+      result[high(result)] := TWalletInfo(twi).utxo[i]; end;
     end;
   end;
 
@@ -166,7 +168,7 @@ begin
     twi := twis[i];
     if not assigned(twi) then
       continue;
-
+       if not TWalletInfo(twi).inPool then Continue;
     try
 
       result.confirmed := result.confirmed + twi.confirmed;
@@ -378,15 +380,51 @@ procedure Account.LoadCoinFile();
 var
   ts: TStringLIst;
   i: Integer;
-  wd: TWalletInfo;
   JsonArray: TJsonArray;
   coinJson: TJSONValue;
   dataJson: TJSONObject;
   ccData: TJSONObject;
-
-  innerID, X, Y, address, description, creationTime, panelYPosition, publicKey,
-    EncryptedPrivateKey, isCompressed: AnsiString;
+  inPool: AnsiString;
   s: string;
+ wd: TWalletInfo;
+  procedure setupCoin(dataJson: TJSONObject);
+  var
+    wd: TWalletInfo;
+  innerID, X, Y, address, description, creationTime, panelYPosition, publicKey, EncryptedPrivateKey, isCompressed: AnsiString;
+  begin
+    innerID := dataJson.GetValue<string>('innerID');
+    X := dataJson.GetValue<string>('X');
+    Y := dataJson.GetValue<string>('Y');
+    address := dataJson.GetValue<string>('address');
+    description := dataJson.GetValue<string>('description');
+    creationTime := dataJson.GetValue<string>('creationTime');
+    panelYPosition := dataJson.GetValue<string>('panelYPosition');
+
+    publicKey := dataJson.GetValue<string>('publicKey');
+    EncryptedPrivateKey := dataJson.GetValue<string>('EncryptedPrivateKey');
+
+    isCompressed := dataJson.GetValue<string>('isCompressed');
+      // confirmed := dataJson.GetValue<string>('confirmed');
+
+    wd := TWalletInfo.Create(strtoInt(innerID), strtoInt(X), strtoInt(Y), address, description, strtoInt(creationTime));
+    wd.inPool := StrToBoolDef(inPool, False);
+    wd.pub := publicKey;
+    wd.orderInWallet := strtoInt(panelYPosition);
+    wd.EncryptedPrivKey := EncryptedPrivateKey;
+    wd.isCompressed := strToBool(isCompressed);
+
+    wd.wid := Length(myCoins);
+
+      // coinJson.TryGetValue<TJsonObject>('CryptoCurrencyData', ccData);
+
+    if coinJson.TryGetValue<TJSONObject>('CryptoCurrencyData', ccData) then
+      loadCryptoCurrencyJSONData(ccData, wd);
+
+    AddCoinWithoutSave(wd);
+
+  end;
+
+
 begin
 
   if not fileExists(CoinFilePath) then
@@ -405,38 +443,16 @@ begin
     begin
 
       dataJson := coinJson.GetValue<TJSONObject>('data');
-      // showmessage(dataJson.ToString);
-
-      innerID := dataJson.GetValue<string>('innerID');
-      X := dataJson.GetValue<string>('X');
-      Y := dataJson.GetValue<string>('Y');
-      address := dataJson.GetValue<string>('address');
-      description := dataJson.GetValue<string>('description');
-      creationTime := dataJson.GetValue<string>('creationTime');
-      panelYPosition := dataJson.GetValue<string>('panelYPosition');
-
-      publicKey := dataJson.GetValue<string>('publicKey');
-      EncryptedPrivateKey := dataJson.GetValue<string>('EncryptedPrivateKey');
-
-      isCompressed := dataJson.GetValue<string>('isCompressed');
-      // confirmed := dataJson.GetValue<string>('confirmed');
-
-      wd := TWalletInfo.Create(strtoInt(innerID), strtoInt(X), strtoInt(Y),
-        address, description, strtoInt(creationTime));
-
-      wd.pub := publicKey;
-      wd.orderInWallet := strtoInt(panelYPosition);
-      wd.EncryptedPrivKey := EncryptedPrivateKey;
-      wd.isCompressed := strToBool(isCompressed);
-      wd.uniq:=Random($4ffffff);
-      wd.wid := Length(myCoins);
-
-      // coinJson.TryGetValue<TJsonObject>('CryptoCurrencyData', ccData);
-
-      if coinJson.TryGetValue<TJSONObject>('CryptoCurrencyData', ccData) then
-        loadCryptoCurrencyJSONData(ccData, wd);
-
-      AddCoinWithoutSave(wd);
+      inPool := '0';
+      try
+        inPool := dataJson.GetValue<string>('inPool')
+      except
+        on E: Exception do
+        begin
+        end;
+        //Do nothing - preKeypool .dat
+      end;
+      setupCoin(dataJson);
 
     end;
 
@@ -446,9 +462,7 @@ begin
     i := 0;
     while i < ts.Count - 1 do
     begin
-      wd := TWalletInfo.Create(strtoInt(ts.Strings[i]),
-        strtoInt(ts.Strings[i + 1]), strtoInt(ts.Strings[i + 2]),
-        ts.Strings[i + 3], ts.Strings[i + 4], strtoInt(ts[i + 5]));
+      wd := TWalletInfo.Create(strtoInt(ts.Strings[i]), strtoInt(ts.Strings[i + 1]), strtoInt(ts.Strings[i + 2]), ts.Strings[i + 3], ts.Strings[i + 4], strtoInt(ts[i + 5]));
 
       wd.orderInWallet := strtoInt(ts[i + 6]);
       wd.pub := ts[i + 7];
@@ -647,7 +661,7 @@ begin
     dataJson.AddPair('publicKey', data.pub);
     dataJson.AddPair('EncryptedPrivateKey', data.EncryptedPrivKey);
     dataJson.AddPair('isCompressed', booltoStr(data.isCompressed));
-
+    dataJson.AddPair('inPool', booltoStr(data.inPool));
     coinJson := TJSONObject.Create();
     coinJson.AddPair('name', data.name);
     coinJson.AddPair('data', dataJson);

@@ -566,6 +566,7 @@
         <DCCReference Include="additionalUnits\bi\Velthuis.StrConsts.pas"/>
         <DCCReference Include="additionalUnits\bi\Velthuis.XorShifts.pas"/>
         <DCCReference Include="additionalUnits\debugAnalysis.pas"/>
+        <DCCReference Include="additionalUnits\KeypoolRelated.pas"/>
         <RcItem Include="Jet.style">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>

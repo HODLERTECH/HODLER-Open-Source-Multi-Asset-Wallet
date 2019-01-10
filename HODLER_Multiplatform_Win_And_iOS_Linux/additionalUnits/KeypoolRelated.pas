@@ -142,7 +142,7 @@ if Self=nil then Exit;
     CurrentAccount.SaveFiles;
   end;
   cleanupRoutine;
-  except on E:Exception do begin Exception.RaiseOuterException(E) end;  end;
+  except on E:Exception do begin SHowMessage(E.Message) end;  end;
 end;
 
 procedure TFillKeypoolThread.cleanupRoutine;

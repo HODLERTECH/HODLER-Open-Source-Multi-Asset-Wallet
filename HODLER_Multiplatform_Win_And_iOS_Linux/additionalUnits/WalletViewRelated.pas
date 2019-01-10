@@ -90,7 +90,7 @@ implementation
 
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
-  transactions, AccountRelated, TCopyableEditData, BackupRelated , debugAnalysis;
+  transactions, AccountRelated, TCopyableEditData, BackupRelated , debugAnalysis,KeypoolRelated;
 
 procedure SearchTokenButtonClick(Sender: TObject);
 var
@@ -1143,7 +1143,7 @@ begin
 
         exit;
       end;
-
+      startFullfillingKeypool(MasterSeed);
       if isHex(frmhome.WIFEdit.Text) then
       begin
 
@@ -1321,6 +1321,7 @@ begin
   // Issue 112 CurrentAccount.userSaveSeed := false;
   CurrentAccount.SaveFiles();
   // askforBackup(1000);
+  startFullfillingKeyPool(masterseed);
   MasterSeed := '';
   TThread.Synchronize(nil,
     procedure
@@ -1415,7 +1416,7 @@ begin
   frmhome.TopInfoConfirmedValue.Text := ' Calculating...';
   frmhome.TopInfoUnconfirmedValue.Text := ' Calculating...';
   lastHistCC := 10;
-  CurrentCryptoCurrency := cryptoCurrency(TfmxObject(Sender).TagObject);
+CurrentCryptoCurrency := findUnusedReceiving(TWalletInfo(TfmxObject(Sender).TagObject));
   // ShowMessage(postDataOverHTTP(HODLER_URL+'/batchSync.php?coin='+availableCoin[0].shortcut, batchSync(0),false,True));
   frmhome.InstantSendLayout.Visible :=
     TWalletInfo(CurrentCryptoCurrency).coin = 2;

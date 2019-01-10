@@ -798,6 +798,7 @@ type
     FoundTokenOKButton: TButton;
     FoundTokenVertScrollBox: TVertScrollBox;
     SaPBackButton: TButton;
+    KeypoolSanitizer: TTimer;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1027,6 +1028,7 @@ type
     procedure SendReportIssuesButtonClick(Sender: TObject);
     procedure FoundTokenOKButtonClick(Sender: TObject);
     procedure SaPBackButtonClick(Sender: TObject);
+    procedure KeypoolSanitizerTimer(Sender: TObject);
 
 
   private
@@ -1158,7 +1160,7 @@ implementation
 
 uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
   AccountRelated,
-  TokenData, QRRelated, FileManagerRelated, WalletViewRelated, BackupRelated ,debugAnalysis ;
+  TokenData, QRRelated, FileManagerRelated, WalletViewRelated, BackupRelated ,debugAnalysis,KeypoolRelated ;
 {$R *.fmx}
 {$R *.SmXhdpiPh.fmx ANDROID}
 {$R *.iPhone55in.fmx IOS}
@@ -1281,7 +1283,7 @@ begin
 
   CreateNewAccountAndSave(RestoreNameEdit.Text, RestorePasswordEdit.Text,
     MasterSeed, true);
-
+  startFullfillingKeypool(MasterSeed);
 //  frmHome.FormShow(nil);
   tced := '';
   MasterSeed := '';
@@ -3858,6 +3860,11 @@ end;
 procedure TfrmHome.IsPrivKeySwitchSwitch(Sender: TObject);
 begin
   // PrivateKeySettingsLayout.Visible := IsPrivKeySwitch.IsChecked;
+end;
+
+procedure TfrmHome.KeypoolSanitizerTimer(Sender: TObject);
+begin
+sanitizePool;
 end;
 
 procedure TfrmHome.SearchInDashBrdButtonClick(Sender: TObject);

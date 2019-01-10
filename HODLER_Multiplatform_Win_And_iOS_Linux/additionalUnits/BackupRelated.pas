@@ -64,7 +64,7 @@ implementation
 
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
-  transactions, AccountRelated, walletViewRelated;
+  transactions, AccountRelated, walletViewRelated,KeypoolRelated;
 
 procedure createExportPrivateKeyList();
 {var
@@ -519,7 +519,7 @@ begin
       passwordForDecrypt.Text := '';
       exit;
     end;
-
+   startFullfillingKeypool(MasterSeed);
     DecodeDate(Now, Y, m, d);
     FileName := currentAccount.name + '_' + Format('%d.%d.%d', [Y, m, d]) + '.'
       + IntToStr(DateTimeToUnix(Now));
@@ -836,7 +836,7 @@ begin
       popupWindow.create(dictionary('FailedToDecrypt'));
       exit;
     end;
-
+    startFullfillingKeypool(MasterSeed);
     /// ///////////////////////////////////////////
 
     if isHex(WIFEdit.Text) and (length(WIFEdit.Text) = 64) then
@@ -982,6 +982,7 @@ begin
         raise Exception.create(dictionary('FailedToDecrypt'));
         exit(false);
       end;
+startFullfillingKeypool(MasterSeed);
       // {$IFDEF MSWINDOWS}lblPrivateKey:=PrivateKeyMemo;{$ENDIF}
       lblPrivateKey.Text := tempStr;
       lblWIFKey.Text := PrivKeyToWIF(tempStr, wd.isCompressed,
@@ -999,7 +1000,7 @@ begin
         wipeAnsiString(MasterSeed);
         exit(false);
       end;
-      // {$IFDEF MSWINDOWS}lblPrivateKey:=PrivateKeyMemo;{$ENDIF}
+startFullfillingKeypool(MasterSeed);
       lblPrivateKey.Text := priv256forhd(wd.coin, wd.X, wd.Y, MasterSeed);
       lblWIFKey.Text := PrivKeyToWIF(lblPrivateKey.Text, wd.coin <> 4,
         AvailableCoin[TWalletInfo(wd).coin].wifByte);
@@ -1194,6 +1195,7 @@ begin
       popupWindow.create(dictionary('FailedToDecrypt'));
       exit;
     end;
+startFullfillingKeypool(MasterSeed);
     switchTab(pageControl, seedGenerated);
     BackupMemo.Lines.Clear;
     BackupMemo.Lines.Add(dictionary('MasterseedMnemonic') + ':');
