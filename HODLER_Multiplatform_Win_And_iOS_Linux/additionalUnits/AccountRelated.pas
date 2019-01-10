@@ -424,6 +424,7 @@ var
 begin
 
   Application.OnException := frmhome.ExceptionHandler;
+  //frmHome.Quality := TCanvasQuality.HighPerformance;
 
   // %appdata% to %appdata%/hodlertech
   appdataPath := System.SysUtils.GetEnvironmentVariable('APPDATA');

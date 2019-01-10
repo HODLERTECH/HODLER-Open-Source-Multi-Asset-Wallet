@@ -80,6 +80,8 @@ procedure SendEncryptedSeedButtonClick(Sender: TObject);
 procedure btnChangeDescryptionOKClick(Sender: TObject);
 procedure SendErrorMsgSwitchSwitch(Sender: TObject);
 procedure SendReportIssuesButtonClick(Sender: TObject);
+procedure FoundTokenOKButtonClick(Sender: TObject);
+procedure SearchTokenButtonClick(Sender: TObject);
 
 var
   SyncOpenWallet: TThread;
@@ -89,6 +91,58 @@ implementation
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, AccountRelated, TCopyableEditData, BackupRelated , debugAnalysis;
+
+procedure SearchTokenButtonClick(Sender: TObject);
+var
+  found: Integer;
+begin
+
+  if ((CurrentCoin.coin <> 4) or (CurrentCryptoCurrency is Token)) then
+  begin
+
+    showmessage('SearchTokenButton shouldnt be visible here');
+    exit;
+
+  end;
+
+  found := SearchTokens(CurrentCoin.addr, nil);
+  if found = 0 then
+  begin
+    popupWindow.Create('New tokens found: ' + inttostr(found));
+  end
+  else
+  begin
+
+    switchTab(frmhome.pageControl , frmhome.foundTokenTabItem);
+  end;
+
+end;
+
+procedure FoundTokenOKButtonClick(Sender: TObject);
+var
+  fmx : TfmxObject;
+  T : Token;
+begin
+
+
+  for fmx in frmhome.FoundTokenVertScrollBox.Content.Children do
+  begin
+    if (fmx is TPanel) and (fmx.TagObject is TCheckBox) and (TCheckBox(fmx.TagObject).IsChecked ) then
+    begin
+      T := Token(TFmxObject(fmx.TagObject).TagObject);
+      T.idInWallet := Length(AccountForSearchToken.myTokens) + 10000;
+
+          AccountForSearchToken.addToken(T);
+          AccountForSearchToken.SaveFiles();
+          if AccountForSearchToken = CurrentAccount then
+            CreatePanel(T);
+
+    end;
+
+  end;
+
+  switchTab(frmhome.pageControl , frmhome.walletView);
+end;
 
 procedure SendReportIssuesButtonClick(Sender: TObject);
 begin
@@ -447,15 +501,25 @@ begin
                 TransactionWaitForSendDetailsLabel.Visible := True;
                 TransactionWaitForSendLinkLabel.Visible := false;
                 ts := SplitString(ans, #$A);
-                TransactionWaitForSendDetailsLabel.Text := ts[0];
-                for i := 1 to ts.Count - 1 do
-                  if ts[i] <> '' then
-                  begin
-                    TransactionWaitForSendDetailsLabel.Text :=
-                      TransactionWaitForSendDetailsLabel.Text + #13#10 +
-                      'Error: ' + ts[i];
-                    break;
-                  end;
+                if ts.Count = 0 then
+                begin
+
+                  TransactionWaitForSendDetailsLabel.Text := 'Unknown Error';
+
+                end
+                else
+                begin
+                  TransactionWaitForSendDetailsLabel.Text := ts[0];
+                  for i := 1 to ts.Count - 1 do
+                    if ts[i] <> '' then
+                    begin
+                      TransactionWaitForSendDetailsLabel.Text :=
+                        TransactionWaitForSendDetailsLabel.Text + #13#10 +
+                        'Error: ' + ts[i];
+                      break;
+                    end;
+                end;
+                
 
                 ts.free;
               end;

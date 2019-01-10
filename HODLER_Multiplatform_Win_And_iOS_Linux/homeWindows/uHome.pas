@@ -1060,6 +1060,7 @@ type
       var KeyChar: Char; Shift: TShiftState);
     procedure WIFEditKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
+    procedure FoundTokenOKButtonClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -1121,6 +1122,7 @@ type
     procedure onExecuteTest(Sender : TObject);
 
     procedure ExceptionHandler( Sender : TObject ; E : Exception );
+    procedure FoundTokenPanelOnClick(Sender : TObject);
     //procedure PrivateKeyPasswordCheck
   var
     refreshLocalImage : TRotateImage;
@@ -1222,6 +1224,13 @@ begin
 end;
 
 {$ENDIF}
+
+
+
+procedure tfrmhome.FoundTokenPanelOnClick(Sender : TObject);
+begin
+  TCheckBox(TfmxObject(Sender).TagObject).IsChecked := not TCheckBox(TfmxObject(Sender).TagObject).IsChecked ;
+end;
 
 procedure tfrmhome.ExceptionHandler( Sender : TObject ; E : Exception );
 begin
@@ -3670,6 +3679,11 @@ if PageControl.ActiveTab=eqrview then exit;
     until abs(Y - round(ScrollBox.ViewportPosition.Y)) < 15;
   end;
 {$ENDIF}
+end;
+
+procedure TfrmHome.FoundTokenOKButtonClick(Sender: TObject);
+begin
+   walletViewRelated.FoundTokenOKButtonClick(Sender);
 end;
 
 procedure TfrmHome.gathenerTimer(Sender: TObject);

@@ -379,6 +379,7 @@ function getComponentsWithTagString(tag: AnsiString; From: TfmxObject)
 function compareVersion(a, b: AnsiString): integer;
 function postDataOverHTTP(var aURL: String; postdata: string;
   useCache: boolean = true; noTimeout: boolean = false): AnsiString;
+  //function floatToBigInteger(f : Single) : BigInteger;
 
 
 
@@ -427,6 +428,7 @@ var
 
   newcoinID: nativeint;
   ImportCoinID: integer;
+  AccountForSearchToken : Account;
 
 implementation
 
@@ -438,6 +440,18 @@ uses Bitcoin, uHome, base58, Ethereum, coinData, strutils, secp256k1,
 
 var
   bitmapData: TBitmapData;
+
+
+{function floatToBigInteger(f : Single) : BigInteger;
+begin
+  result := bigInteger.Zero;
+
+  while( f > 0 ) do
+  begin
+    result :=
+  end;
+
+end;}
 
 function TSecureRandoms.CheckSecureRandom(const random: ISecureRandom): boolean;
 begin
@@ -1300,6 +1314,7 @@ var
   panel : TPanel;
   img : TImage;
   NameLbl , valuelbl : TLabel;
+  checkBox : TCheckBox;
 begin
   added := 0;
   if ac = nil then
@@ -1313,6 +1328,8 @@ begin
       ac := CurrentAccount;
     end;
   end;
+  clearVertScrollBox( frmhome.FoundTokenVertScrollBox );
+  AccountForSearchToken := ac;
 
   data := getDataOverHTTP('https://api.ethplorer.io/getAddressInfo/' + InAddress
     + '?apiKey=freekey');
@@ -1401,6 +1418,8 @@ begin
           panel.Visible := true;
           panel.Height := 48;
           panel.align := TAlignLayout.Top;
+          panel.OnClick := frmhome.FoundTokenPanelOnClick;
+
 
           img := Timage.Create(panel);
           img.Parent := panel;
@@ -1410,6 +1429,7 @@ begin
           img.Bitmap := T.getIcon;
           img.Margins.Top := 8;
           img.Margins.Bottom := 8;
+          img.HitTest := false;
 
           NameLbl := TLabel.create(panel);
           nameLbl.Align := TAlignLayout.Client;
@@ -1421,20 +1441,30 @@ begin
           valueLbl.Parent := panel;
           valueLbl.Align := TAlignLayout.client;
           valueLbl.Visible := true;// floatToStrF(crypto.getFiat, ffFixed, 15, 2)
-          valueLbl.Text := balance;
+          valueLbl.Text := BigIntegerBeautifulStr(BigInteger.Create( StrtoFloat( balance ) ) , T.decimals);
           valueLbl.TextSettings.HorzAlign := TTextAlign.Trailing;
           valuelbl.Margins.Right := 15;
 
+          checkBox := TCheckBox.Create(panel);
+          checkBox.Parent := panel;
+          checkBox.Align := TAlignLayout.MostLeft;
+          //checkBox.Margins.Right := 10;
+          checkBox.Margins.Left := 15;
+          checkBox.Visible := true;
+          checkBox.IsChecked := true;
+          checkBox.Width := 15;
+
+          panel.TagObject := checkBox;
+          checkBox.TagObject := T;
 
 
-
-
+          {
           T.idInWallet := Length(ac.myTokens) + 10000;
 
           ac.addToken(T);
           ac.SaveFiles();
           if ac = CurrentAccount then
-            CreatePanel(T);
+            CreatePanel(T); }
 
         end;
 
@@ -2236,7 +2266,14 @@ function aggregateAndSortTX(CCArray: TCryptoCurrencyArray): TxHistory;
     begin
       for j := Low(Tab) + 1 to High(Tab) do
       begin
-        if strToFloatDef(Tab[j].data, 0) >= strToFloatDef(Tab[j - 1].data, 0)
+        {if compareHistory( tab[j] , tab[i]) < 0 then
+        begin
+          temp := Tab[j];
+          Tab[j] := Tab[j - 1];
+          Tab[j - 1] := temp;
+        end; }
+
+        if strToFloatDef(Tab[j].data, 0) > strToFloatDef(Tab[j - 1].data, 0)
         then
         begin
           temp := Tab[j];
@@ -2315,7 +2352,7 @@ begin
   if start >= Length(hist) then
     exit;
   // {$IFDEF ANDROID}
-  if Length(hist) > 10 then
+  if Length(hist) > stop then
     frmhome.LoadMore.Visible := true;
   // {$ENDIF}
   if start > stop then
@@ -2333,7 +2370,7 @@ begin
     panel.tag := i;
     panel.TagFloat := strToFloatDef(hist[i].data, 0);
     panel.parent := frmhome.TxHistory;
-    panel.Position.Y := (i * 40) + 0.1;
+    panel.Position.Y := (i * 44) -1;   // 40 (panel.height) + 2 ( panel.margin.bottom ) + 2 ( panel.margin.top );
     panel.Align := TAlignLayout.top;
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     panel.OnTap := frmhome.ShowHistoryDetails;
@@ -2412,15 +2449,17 @@ begin
 
   end;
 
-  { frmhome.TxHistory.Sort( function (a , b : TfmxObject) : integer
+  {frmhome.TxHistory.Sort( function (a , b : TfmxObject) : integer
     begin
-    if a.TagFloat > b.TagFloat then
-    exit(1);
-    if a.TagFloat < b.TagFloat then
-    exit(-1);
-    if a.TagFloat = b.TagFloat then
-    exit(0);
-    end); }
+      if not ((a is Tpanel) and (b is TPanel)) then
+        if a is Tpanel then
+          exit(1)
+        else
+          exit(0);
+
+
+      result := compareHistory( THistoryHolder(a.TagObject).history , THistoryHolder(b.TagObject).history  )
+    end);     }
 
   // frmHome.txHistory.RecalcAbsolute;
   // frmHome.txHistory.RealignContent;

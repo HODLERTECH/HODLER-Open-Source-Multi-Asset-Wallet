@@ -766,7 +766,6 @@ type
     PrivacyAndSecuritySettings: TTabItem;
     ToolBar19: TToolBar;
     SaPHeaderLabel: TLabel;
-    SaPBackButton: TButton;
     Panel24: TPanel;
     SendErrorMsgLabel: TLabel;
     PrivacyAndSecurityButton: TButton;
@@ -798,6 +797,7 @@ type
     FoundTokenHeaderLabel: TLabel;
     FoundTokenOKButton: TButton;
     FoundTokenVertScrollBox: TVertScrollBox;
+    SaPBackButton: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1025,6 +1025,8 @@ type
     procedure reportIssuesSettingsButtonClick(Sender: TObject);
     procedure SendErrorMsgSwitchSwitch(Sender: TObject);
     procedure SendReportIssuesButtonClick(Sender: TObject);
+    procedure FoundTokenOKButtonClick(Sender: TObject);
+    procedure SaPBackButtonClick(Sender: TObject);
 
 
   private
@@ -1082,6 +1084,7 @@ type
 
     procedure RefreshCurrentWallet(Sender : TObject);
     procedure ExceptionHandler( Sender : TObject ; E : Exception );
+    procedure FoundTokenPanelOnClick(Sender : TObject);
   var
     refreshLocalImage : TRotateImage;
     refreshGlobalImage : TRotateImage;
@@ -1161,6 +1164,11 @@ uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
 {$R *.iPhone55in.fmx IOS}
 {$R *.Windows.fmx MSWINDOWS}
 {$R *.Surface.fmx MSWINDOWS}
+
+procedure tfrmhome.FoundTokenPanelOnClick(Sender : TObject);
+begin
+  TCheckBox(TfmxObject(Sender).TagObject).IsChecked := not TCheckBox(TfmxObject(Sender).TagObject).IsChecked ;
+end;
 
 procedure tfrmhome.ExceptionHandler( Sender : TObject ; E : Exception );
 begin
@@ -1808,23 +1816,7 @@ var
   found: Integer;
 begin
 
-  if ((CurrentCoin.coin <> 4) or (CurrentCryptoCurrency is Token)) then
-  begin
-
-    showmessage('SearchTokenButton shouldnt be visible here');
-    exit;
-
-  end;
-
-  found := SearchTokens(CurrentCoin.addr, nil);
-  if found = 0 then
-  begin
-    popupWindow.Create('New tokens found: ' + inttostr(found));
-  end
-  else
-  begin
-    switchTab(pageControl , foundTokenTabItem);
-  end;
+  WalletViewRelated.SearchTokenButtonClick(Sender);
 
 end;
 
@@ -3403,6 +3395,16 @@ if PageControl.ActiveTab=eqrview then exit;
 
 end;
 
+procedure TfrmHome.FoundTokenOKButtonClick(Sender: TObject);
+var
+  fmx : TfmxObject;
+  T : Token;
+begin
+
+  walletViewRelated.FoundTokenOKButtonClick(Sender);
+
+end;
+
 procedure TfrmHome.gathenerTimer(Sender: TObject);
 var
   i: Integer;
@@ -3882,6 +3884,11 @@ end;
 procedure TfrmHome.APICheckCompressed(Sender: TObject);
 begin
   WalletViewRelated.importCheck;
+end;
+
+procedure TfrmHome.SaPBackButtonClick(Sender: TObject);
+begin
+  SwitchTab(pageControl , Settings);
 end;
 
 procedure TfrmHome.ScrollKeeperTimer(Sender: TObject);
