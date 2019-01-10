@@ -5,7 +5,7 @@
         <FrameworkType>FMX</FrameworkType>
         <MainSource>HODLER_Wallet_Desktop.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1247</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -566,6 +566,7 @@
         <DCCReference Include="additionalUnits\bi\Velthuis.StrConsts.pas"/>
         <DCCReference Include="additionalUnits\bi\Velthuis.XorShifts.pas"/>
         <DCCReference Include="additionalUnits\debugAnalysis.pas"/>
+        <DCCReference Include="additionalUnits\KeypoolRelated.pas"/>
         <RcItem Include="Jet.style">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>

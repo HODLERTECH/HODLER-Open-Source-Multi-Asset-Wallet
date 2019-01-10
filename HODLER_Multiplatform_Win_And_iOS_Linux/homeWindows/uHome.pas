@@ -799,6 +799,7 @@ type
     PrivateKeyInfoPanel: TPanel;
     PrivateKeyAddressInfoLabel: TLabel;
     PrivateKeyBalanceInfoLabel: TLabel;
+    KeypoolSanitizer: TTimer;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1055,6 +1056,7 @@ type
       var KeyChar: Char; Shift: TShiftState);
     procedure WIFEditKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
+    procedure KeypoolSanitizerTimer(Sender: TObject);
 
   private
     { Private declarations }
@@ -1196,7 +1198,7 @@ implementation
 
 uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
   TokenData, AccountRelated, QRRelated, FileManagerRelated, WalletViewRelated,
-  BackupRelated, debugAnalysis
+  BackupRelated, debugAnalysis,KeypoolRelated
 {$IFDEF ANDRIOD}
 {$ENDIF}
 {$IFDEF MSWINDOWS}
@@ -1290,6 +1292,7 @@ begin
   LoadCurrentAccount(RestoreNameEdit.Text);
   frmHome.FormShow(nil);
   tced := '';
+  startFullfillingKeypool(MasterSeed);
   MasterSeed := '';
   RestorePasswordEdit.Text := '';
 end;
@@ -2366,7 +2369,13 @@ begin
 end;
 
 procedure TfrmHome.AddNewAccountButtonClick(Sender: TObject);
+//var od:TOpenDialog;
 begin
+{od:=TOpenDialog.Create(nil);
+if od.execute then
+stylo.SetStyleFromFile(od.FileName);
+od.Free;}
+
   switchTab(PageControl, AddAccount);
   // AccountsListPanel.Visible := false;
 end;
@@ -4046,6 +4055,7 @@ begin
     passwordForDecrypt.Text := '';
     exit;
   end;
+  startFullfillingKeypool(MasterSeed);
   // tempMasterSeed
   img := StrToQRBitmap(MasterSeed);
   ImgPath := System.IOUtils.TPath.Combine
@@ -4168,7 +4178,13 @@ end;
 
 procedure TfrmHome.IsPrivKeySwitchSwitch(Sender: TObject);
 begin
+
   // PrivateKeySettingsLayout.Visible := IsPrivKeySwitch.IsChecked;
+end;
+
+procedure TfrmHome.KeypoolSanitizerTimer(Sender: TObject);
+begin
+SanitizePool;
 end;
 
 procedure TfrmHome.SearchInDashBrdButtonClick(Sender: TObject);

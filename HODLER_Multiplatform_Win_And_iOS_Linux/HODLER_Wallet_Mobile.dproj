@@ -658,6 +658,7 @@
         <DCCReference Include="components\TImageTextButtonData.pas"/>
         <DCCReference Include="components\TRotateImageData.pas"/>
         <DCCReference Include="additionalUnits\debugAnalysis.pas"/>
+        <DCCReference Include="additionalUnits\KeypoolRelated.pas"/>
         <RcItem Include="Languages\PT.lang">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>

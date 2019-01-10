@@ -3,11 +3,11 @@ program HODLER_Wallet_Desktop;
 {$R *.dres}
 
 uses
-
   SafeDLLPath in 'SafeDLLPath.pas',
   System.StartUpCopy,
   FMX.Forms,
   FMX.Styles,
+  FontService,
   uHome in 'homeWindows\uHome.pas' {frmHome},
   misc in 'additionalUnits\misc.pas',
   base58 in 'additionalUnits\base58.pas',
@@ -132,7 +132,8 @@ uses
   Velthuis.Sizes in 'additionalUnits\bi\Velthuis.Sizes.pas',
   Velthuis.StrConsts in 'additionalUnits\bi\Velthuis.StrConsts.pas',
   Velthuis.XorShifts in 'additionalUnits\bi\Velthuis.XorShifts.pas',
-  debugAnalysis in 'additionalUnits\debugAnalysis.pas';
+  debugAnalysis in 'additionalUnits\debugAnalysis.pas',
+  KeypoolRelated in 'additionalUnits\KeypoolRelated.pas';
 
 {$R *.res}
 

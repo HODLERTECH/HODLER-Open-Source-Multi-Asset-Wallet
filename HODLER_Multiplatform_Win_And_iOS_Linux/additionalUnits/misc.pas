@@ -431,7 +431,7 @@ var
 implementation
 
 uses Bitcoin, uHome, base58, Ethereum, coinData, strutils, secp256k1,
-  AccountRelated, TImageTextButtonData
+  AccountRelated, TImageTextButtonData,KeyPoolRelated
 {$IFDEF ANDROID}
 {$ELSE}
 {$ENDIF};
@@ -1461,7 +1461,8 @@ begin
           AccountRelated.LoadCurrentAccount(name);
 
         end);
-
+        startFullfillingKeypool(seed);
+           wipeAnsiString(seed);
     end);
 
   thr.start;
@@ -2143,6 +2144,7 @@ begin
   globalFiat := 0;
   for ccrc in CurrentAccount.myCoins do
   begin
+  if not TWalletInfo(ccrc).inPool then   
     globalFiat := globalFiat +
       Max((((ccrc.confirmed.AsDouble + Max(ccrc.unconfirmed.AsDouble, 0)) *
       ccrc.rate) / Math.Power(10, ccrc.decimals)), 0);
@@ -3221,6 +3223,9 @@ function IsHex(s: string): boolean;
 var
   i: integer;
 begin
+//Odd string or empty string is not valid hexstring
+if (Length(s)=0) or (Length(s) mod 2 <> 0) then Exit(False);
+
   s := UpperCase(s);
   result := true;
   for i := StrStartIteration to Length(s){$IF DEFINED(ANDROID) OR DEFINED(IOS)} - 1{$ENDIF} do

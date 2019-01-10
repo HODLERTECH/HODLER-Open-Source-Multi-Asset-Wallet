@@ -26,7 +26,7 @@ function generatep2wpkh(pub: AnsiString; hrp: AnsiString = 'bc'): AnsiString;
 implementation
 
 uses
-  uHome, transactions, tokenData, bech32, misc, SyncThr, WalletViewRelated;
+  uHome, transactions, tokenData, bech32, misc, SyncThr, WalletViewRelated,KeypoolRelated;
 
 function Bitcoin_createHD(coinid, x, y: integer; MasterSeed: AnsiString): TWalletInfo;
 var
@@ -128,7 +128,7 @@ begin
   TXBIP143.addOutput(sendto, Amount);
   diff := TXBIP143.getAllToSPent - (Amount.AsInt64 + Fee.AsInt64);
   if diff > 0 then
-    TXBIP143.addOutput(TXBIP143.sender.addr, diff);
+    TXBIP143.addOutput(KeypoolRelated.findUnusedChange(TXBIP143.sender,masterseed).addr, diff);
   if Length(TXBIP143.getAsHex(true)) mod 2 <> 0 then
   begin
     result := createSegwitTransaction(from, sendto, Amount, Fee, inputs, MasterSeed);
@@ -156,7 +156,7 @@ begin
     TX.addOutput(sendto, Amount);
     diff := TX.getAllToSPent - (Amount.AsInt64 + Fee.AsInt64);
     if diff > 0 then
-      TX.addOutput(TX.sender.addr, diff);
+      TX.addOutput(KeypoolRelated.findUnusedChange(TX.sender,masterseed).addr, diff);
     if Length(TX.getAsHex) mod 2 <> 0 then
     begin
       result := createTransaction(from, sendto, Amount, Fee, inputs, MasterSeed);
@@ -176,7 +176,7 @@ begin
     TXCash.addOutput(sendto, Amount);
     diff := TXCash.getAllToSPent - (Amount.AsInt64 + Fee.AsInt64);
     if diff > 0 then
-      TXCash.addOutput(TXCash.sender.addr, diff);
+           TXCash.addOutput(KeypoolRelated.findUnusedChange(TXCash.sender,masterseed).addr, diff);
     if Length(TXCash.getAsHex) mod 2 <> 0 then
     begin
       result := createTransaction(from, sendto, Amount, Fee, inputs, MasterSeed);
@@ -210,6 +210,7 @@ var
   TX: AnsiString;
   TXBuilder: TXBuilder_ETH;
 begin
+startFullfillingKeypool(MasterSeed);
   if CurrentCoin.coin <> 4 then
   begin
     if ((CurrentCoin.coin in [0, 1, 5, 6])) and canSegwit(currentaccount.aggregateUTXO(from)) then

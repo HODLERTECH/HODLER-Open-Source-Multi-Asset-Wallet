@@ -49,6 +49,8 @@ procedure parseDataForERC20(s: string; var wd: Token);
 
 function batchSync(var coinid: Integer; X: Integer = -1): string;
 
+procedure verifyKeypool();
+
 var
   semaphore: TLightweightSemaphore;
   mutex: TSemaphore;
@@ -67,19 +69,13 @@ begin
   legacy := generatep2pkh(wi.pub, availablecoin[wi.coin].p2pk);
   if wi.coin in [0, 1] then
   begin
-    result := '&wallet[][compatible]=' + compatible +
-      '&wallet[][compatiblehash]=' + decodeAddressInfo(compatible, wi.coin)
-      .scriptHash + '&wallet[][segwit]=' + segwit + '&wallet[][segwithash]=' +
-      decodeAddressInfo(segwit, wi.coin).scriptHash;
+    result := '&wallet[][compatible]=' + compatible + '&wallet[][compatiblehash]=' + decodeAddressInfo(compatible, wi.coin).scriptHash + '&wallet[][segwit]=' + segwit + '&wallet[][segwithash]=' + decodeAddressInfo(segwit, wi.coin).scriptHash;
   end
   else
-    result := '&wallet[][compatible]=' + compatible +
-      '&wallet[][compatiblehash]=' + decodeAddressInfo(compatible, wi.coin)
-      .scriptHash + '&wallet[][segwit]=0&wallet[][segwithash]=0';
+    result := '&wallet[][compatible]=' + compatible + '&wallet[][compatiblehash]=' + decodeAddressInfo(compatible, wi.coin).scriptHash + '&wallet[][segwit]=0&wallet[][segwithash]=0';
   result := result + '&wallet[][legacy]=' + legacy;
 
-  result := StringReplace(result, '[]', '[' + IntToStr(abs(wi.uniq)) + ']',
-    [rfReplaceAll]);
+  result := StringReplace(result, '[]', '[' + IntToStr(abs(wi.uniq)) + ']', [rfReplaceAll]);
 end;
 
 function batchSync(var coinid: Integer; X: Integer = -1): string;
@@ -92,11 +88,40 @@ begin
   result := 'coin=' + availablecoin[coinid].name;
   for wi in CurrentAccount.myCoins do
   begin
-    if wi.coin = coinid then
+    if (wi.coin = coinid) then
+    begin
+      wi.uniq := i;
+      if wi.inPool = false then
+      begin
+
+        if (X <> -1) then
+        begin
+          if wi.X = X then
+            result := result + prepareBatch(wi, wi.addr)
+        end
+        else
+          result := result + prepareBatch(wi, wi.addr);
+      end;
+    end;
+    Inc(i);
+  end;
+end;
+
+function keypoolIsUsed(var coinid: Integer; X: Integer = -1): string;
+var
+  wi: TWalletInfo;
+  i: Integer;
+begin
+  i := 0;
+
+  result := 'coin=' + availablecoin[coinid].name;
+  for wi in CurrentAccount.myCoins do
+  begin
+    if (wi.coin = coinid) and ((wi.inPool = True)) then
     begin
       wi.uniq := i;
 
-      if (X <> -1) then
+      if (X <> -1)  then
       begin
         if wi.X = X then
           result := result + prepareBatch(wi, wi.addr)
@@ -108,7 +133,7 @@ begin
   end;
 end;
 
-procedure parseSync(s: string);
+procedure parseSync(s: string; verifyKeypool: boolean = false);
 
   function findWDByAddr(addr: Integer): TWalletInfo;
   var
@@ -137,7 +162,7 @@ begin
     Delete(s, Low(s), 1);
     Delete(s, High(s), 1);
   end;
-{$IFDEF  ANDROID} s := StringReplace(s, '\\', '\', [rfReplaceAll]); {$ENDIF}
+{$IFDEF  ANDROID}     s := StringReplace(s, '\\', '\', [rfReplaceAll]); {$ENDIF}
   try
     coinJson := TJSONObject.ParseJSONValue(s) as TJSONObject;
 
@@ -145,19 +170,26 @@ begin
       Exit;
     for i := 0 to coinJson.Count - 1 do
     begin
-    if SyncBalanceThr<>nil then
-    if SyncBalanceThr.Terminated then
-      Exit();
+      if SyncBalanceThr <> nil then
+        if SyncBalanceThr.Terminated then
+          Exit();
 
       wd := nil;
       JsonPair := coinJson.Pairs[i];
       wd := findWDByAddr(JsonPair.JsonValue.GetValue<Integer>('wid'));
       if wd = nil then
         continue;
+      if not verifyKeypool then
+      begin
 
-      parseBalances(JsonPair.JsonValue.GetValue<string>('balance'), wd);
-      parseCoinHistory(JsonPair.JsonValue.GetValue<string>('history'), wd);
-      wd.UTXO := parseUTXO(JsonPair.JsonValue.GetValue<string>('utxo'), wd.Y);
+        parseBalances(JsonPair.JsonValue.GetValue<string>('balance'), wd);
+        parseCoinHistory(JsonPair.JsonValue.GetValue<string>('history'), wd);
+        wd.UTXO := parseUTXO(JsonPair.JsonValue.GetValue<string>('utxo'), wd.Y);
+      end
+      else
+      begin
+      if wd.inPool=true then  wd.InPool := trim(JsonPair.JsonValue.GetValue<string>('history')) = '';
+      end;
     end;
 
   except
@@ -185,14 +217,13 @@ begin
   TThread.Synchronize(TThread.CurrentThread,
     procedure
     begin
-      frmHome.DashBrdProgressBar.Max := length(CurrentAccount.myCoins) +
-        length(CurrentAccount.myTokens);
+      frmHome.DashBrdProgressBar.Max := length(CurrentAccount.myCoins) + length(CurrentAccount.myTokens);
       frmHome.DashBrdProgressBar.Value := 0;
     end);
 
   for i in [0, 1, 2, 3, 4, 5, 6, 7] do
   begin
-      if TThread.CurrentThread.CheckTerminated then
+    if TThread.CurrentThread.CheckTerminated then
       Exit();
     mutex.Acquire();
 
@@ -243,8 +274,7 @@ begin
         TThread.CurrentThread.Synchronize(nil,
           procedure
           begin
-            frmHome.DashBrdProgressBar.Value :=
-              frmHome.RefreshProgressBar.Value + 1;
+            frmHome.DashBrdProgressBar.Value := frmHome.RefreshProgressBar.Value + 1;
           end);
 
       end).Start();
@@ -269,8 +299,8 @@ begin
 
         semaphore.WaitFor();
         try
-            if TThread.CurrentThread.CheckTerminated then
-              Exit();
+          if TThread.CurrentThread.CheckTerminated then
+            Exit();
           SynchronizeCryptoCurrency(CurrentAccount.myTokens[id]);
         except
           on e: Exception do
@@ -282,8 +312,7 @@ begin
         TThread.CurrentThread.Synchronize(nil,
           procedure
           begin
-            frmHome.DashBrdProgressBar.Value :=
-              frmHome.RefreshProgressBar.Value + 1;
+            frmHome.DashBrdProgressBar.Value := frmHome.RefreshProgressBar.Value + 1;
           end);
 
       end).Start();
@@ -295,13 +324,79 @@ begin
 
   while semaphore.CurrentCount <> 8 do
   begin
-      if TThread.CurrentThread.CheckTerminated then
+    if TThread.CurrentThread.CheckTerminated then
       Exit();
     sleep(50);
   end;
 
   CurrentAccount.SaveFiles();
   firstSync := false;
+
+end;
+
+procedure verifyKeypool();
+var
+  i: Integer;
+  licz: Integer;
+  batched: string;
+begin
+  if semaphore = nil then
+  begin
+    semaphore := TLightweightSemaphore.Create(8);
+  end;
+  if mutex = nil then
+  begin
+    mutex := TSemaphore.Create();
+  end;
+
+  for i in [0, 1, 2, 3, 4, 5, 6, 7] do
+  begin
+    if TThread.CurrentThread.CheckTerminated then
+      Exit();
+    mutex.Acquire();
+
+    TThread.CurrentThread.CreateAnonymousThread(
+      procedure
+      var
+        id: Integer;
+        wi: TWalletInfo;
+        wd: TObject;
+        url, s: string;
+
+      begin
+
+        id := i;
+        mutex.Release();
+
+        semaphore.WaitFor();
+        try
+          s := keypoolIsUsed(id);
+          url := HODLER_URL + '/batchSync.php?keypool=true&coin=' + availablecoin[id].name;
+          if TThread.CurrentThread.CheckTerminated then
+            Exit();
+          parseSync(postDataOverHTTP(url, s, false, True), true);
+
+        except
+          on e: Exception do
+          begin
+
+          end;
+        end;
+        semaphore.Release();
+      end).Start();
+    mutex.Acquire();
+    mutex.Release();
+
+  end;
+
+  while semaphore.CurrentCount <> 8 do
+  begin
+    if TThread.CurrentThread.CheckTerminated then
+      Exit();
+    sleep(50);
+  end;
+
+  CurrentAccount.SaveFiles();
 
 end;
 
@@ -317,16 +412,12 @@ begin
     case TWalletInfo(cc).coin of
       0, 1, 2, 3, 5, 6, 7:
         begin
-          url := HODLER_URL + '/batchSync.php?coin=' + availablecoin
-            [TWalletInfo(cc).coin].name;
-          parseSync(postDataOverHTTP(url, batchSync(TWalletInfo(cc).coin,
-            TWalletInfo(cc).X), false, True));
+          url := HODLER_URL + '/batchSync.php?coin=' + availablecoin[TWalletInfo(cc).coin].name;
+          parseSync(postDataOverHTTP(url, batchSync(TWalletInfo(cc).coin, TWalletInfo(cc).X), false, True));
         end;
       4:
         begin
-          data := getDataOverHTTP(HODLER_URL + 'getHistory.php?coin=' +
-            availablecoin[TWalletInfo(cc).coin].name + '&address=' +
-            TWalletInfo(cc).addr);
+          data := getDataOverHTTP(HODLER_URL + 'getHistory.php?coin=' + availablecoin[TWalletInfo(cc).coin].name + '&address=' + TWalletInfo(cc).addr);
 
           if TThread.CurrentThread.CheckTerminated then
             Exit();
@@ -342,9 +433,7 @@ begin
     if Token(cc).lastBlock = 0 then
       Token(cc).lastBlock := getHighestBlockNumber(Token(cc));
 
-    data := getDataOverHTTP(HODLER_ETH + '/?cmd=tokenHistory&addr=' + Token(cc)
-      .addr + '&contract=' + Token(cc).ContractAddress + '&bno=' +
-      IntToStr(Token(cc).lastBlock));
+    data := getDataOverHTTP(HODLER_ETH + '/?cmd=tokenHistory&addr=' + Token(cc).addr + '&contract=' + Token(cc).ContractAddress + '&bno=' + IntToStr(Token(cc).lastBlock));
 
     if TThread.CurrentThread.CheckTerminated then
       Exit();
@@ -363,8 +452,7 @@ begin
 
         4:
           begin
-            data := getDataOverHTTP(HODLER_ETH + '/?cmd=accInfo&addr=' +
-              TWalletInfo(cc).addr);
+            data := getDataOverHTTP(HODLER_ETH + '/?cmd=accInfo&addr=' + TWalletInfo(cc).addr);
 
             if TThread.CurrentThread.CheckTerminated then
               Exit();
@@ -376,8 +464,7 @@ begin
     end
     else if cc is Token then
     begin
-      data := getDataOverHTTP(HODLER_ETH + '/?cmd=tokenInfo&addr=' + cc.addr +
-        '&contract=' + Token(cc).ContractAddress);
+      data := getDataOverHTTP(HODLER_ETH + '/?cmd=tokenInfo&addr=' + cc.addr + '&contract=' + Token(cc).ContractAddress);
 
       if TThread.CurrentThread.CheckTerminated then
         Exit();
@@ -409,8 +496,7 @@ begin
 
       4:
         begin
-          data := getDataOverHTTP(HODLER_ETH + '/?cmd=accInfo&addr=' +
-            TWalletInfo(cc).addr);
+          data := getDataOverHTTP(HODLER_ETH + '/?cmd=accInfo&addr=' + TWalletInfo(cc).addr);
 
           if TThread.CurrentThread.CheckTerminated then
             Exit();
@@ -422,8 +508,7 @@ begin
   end
   else if cc is Token then
   begin
-    data := getDataOverHTTP(HODLER_ETH + '/?cmd=tokenInfo&addr=' + cc.addr +
-      '&contract=' + Token(cc).ContractAddress);
+    data := getDataOverHTTP(HODLER_ETH + '/?cmd=tokenInfo&addr=' + cc.addr + '&contract=' + Token(cc).ContractAddress);
 
     if TThread.CurrentThread.CheckTerminated then
       Exit();
@@ -577,10 +662,8 @@ begin
 
         end;
 
-        TLabel(frmHome.FindComponent('globalBalance')).text :=
-          floatToStrF(currencyConverter.calculate(globalFiat), ffFixed, 9, 2);
-        TLabel(frmHome.FindComponent('globalCurrency')).text := '         ' +
-          currencyConverter.symbol;
+        TLabel(frmHome.FindComponent('globalBalance')).text := floatToStrF(currencyConverter.calculate(globalFiat), ffFixed, 9, 2);
+        TLabel(frmHome.FindComponent('globalCurrency')).text := '         ' + currencyConverter.symbol;
 
         RefreshWalletView.Enabled := True;
         RefreshProgressBar.Visible := false;
@@ -589,8 +672,7 @@ begin
 
         btnSync.Repaint();
 
-        DebugRefreshTime.text := 'last refresh: ' +
-          Formatdatetime('dd mmm yyyy hh:mm:ss', now);
+        DebugRefreshTime.text := 'last refresh: ' + Formatdatetime('dd mmm yyyy hh:mm:ss', now);
 
         duringSync := false;
         // txHistory.Enabled := true;
@@ -775,13 +857,11 @@ begin
   legacy := generatep2pkh(wi.pub, availablecoin[wi.coin].p2pk);
   if wi.coin in [0, 1] then
   begin
-    result := '&segwit=' + segwit + '&segwithash=' + decodeAddressInfo(segwit,
-      wi.coin).scriptHash;
+    result := '&segwit=' + segwit + '&segwithash=' + decodeAddressInfo(segwit, wi.coin).scriptHash;
   end
   else
     result := '&segwit=' + '0' + '&segwithash=' + '0';
-  result := result + '&compatible=' + compatible + '&compatiblehash=' +
-    decodeAddressInfo(compatible, wi.coin).scriptHash + '&legacy=' + legacy;
+  result := result + '&compatible=' + compatible + '&compatiblehash=' + decodeAddressInfo(compatible, wi.coin).scriptHash + '&legacy=' + legacy;
 
 end;
 
@@ -842,6 +922,7 @@ begin
   except
     on e: Exception do
 
+
   end;
 
   ts.Free;
@@ -860,8 +941,7 @@ begin
 
     // wd.efee[0]:=ts.Strings[0];//floattostrF(strtointdef(ts.Strings[0],11000000000) /1000000000000000000,ffFixed,18,18);
     wd.confirmed := BigInteger.Parse(ts.Strings[1]);
-    if (wd.id < 10000) or (not Token.AvailableToken[wd.id - 10000].stableCoin)
-    then
+    if (wd.id < 10000) or (not Token.AvailableToken[wd.id - 10000].stableCoin) then
       wd.rate := strToFloat(ts[2])
     else
       wd.rate := Token.AvailableToken[wd.id - 10000].stableValue;
@@ -873,6 +953,7 @@ begin
 
   except
     on e: Exception do
+
 
   end;
 
@@ -937,8 +1018,7 @@ begin
     begin
       transHist.addresses[j] := ts.Strings[i];
       Inc(i);
-      transHist.values[j] := StrFloatToBigInteger(ts.Strings[i],
-        availablecoin[wallet.coin].decimals);
+      transHist.values[j] := StrFloatToBigInteger(ts.Strings[i], availablecoin[wallet.coin].decimals);
       Inc(i);
 
       sum := sum + transHist.values[j];
@@ -955,3 +1035,4 @@ begin
 end;
 
 end.
+
