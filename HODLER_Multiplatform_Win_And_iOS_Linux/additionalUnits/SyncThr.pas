@@ -91,7 +91,7 @@ begin
     if (wi.coin = coinid) then
     begin
       wi.uniq := i;
-      if wi.inPool = false then
+     // if wi.inPool = false then
       begin
 
         if (X <> -1) then

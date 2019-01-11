@@ -77,7 +77,6 @@ begin
 
   result := 0.0;
   for twi in getWalletWithX(wi.X, TWalletInfo(wi).coin) do
-  if not TWalletInfo(twi).inPool then
     result := result + TWalletInfo(twi).getConfirmedFiat;
 
 end;
@@ -93,7 +92,7 @@ begin
   result := 0.0;
   for twi in getWalletWithX(wi.X, TWalletInfo(wi).coin) do
   begin
-           if not TWalletInfo(twi).inPool then result := result + TWalletInfo(twi).getUnconfirmedFiat;
+    result := result + TWalletInfo(twi).getUnconfirmedFiat;
   end;
 
 end;
@@ -108,7 +107,7 @@ begin
 
   result := 0.0;
   for twi in getWalletWithX(wi.X, TWalletInfo(wi).coin) do
-     if not TWalletInfo(twi).inPool then result := result + max( 0 , TWalletInfo(twi).getfiat);
+     result := result + max( 0 , TWalletInfo(twi).getfiat);
 
 end;
 
@@ -136,7 +135,7 @@ begin
   begin
     for i := 0 to Length(TWalletInfo(twi).utxo) - 1 do
     begin
-      if not TWalletInfo(twi).inPool then begin
+      begin
       SetLength(result, Length(result) + 1);
       result[high(result)] := TWalletInfo(twi).utxo[i]; end;
     end;
@@ -168,7 +167,7 @@ begin
     twi := twis[i];
     if not assigned(twi) then
       continue;
-       if not TWalletInfo(twi).inPool then Continue;
+     //  if not TWalletInfo(twi).inPool then Continue;
     try
 
       result.confirmed := result.confirmed + twi.confirmed;
