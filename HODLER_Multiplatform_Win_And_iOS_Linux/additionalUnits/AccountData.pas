@@ -168,7 +168,9 @@ begin
     twi := twis[i];
     if not assigned(twi) then
       continue;
-       if not TWalletInfo(twi).inPool then Continue;
+
+    if  TWalletInfo(twi).inPool then Continue;
+
     try
 
       result.confirmed := result.confirmed + twi.confirmed;
