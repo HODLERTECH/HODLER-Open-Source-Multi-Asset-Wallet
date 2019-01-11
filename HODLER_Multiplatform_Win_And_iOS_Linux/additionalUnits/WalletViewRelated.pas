@@ -124,24 +124,31 @@ var
   T : Token;
 begin
 
-
-  for fmx in frmhome.FoundTokenVertScrollBox.Content.Children do
-  begin
-    if (fmx is TPanel) and (fmx.TagObject is TCheckBox) and (TCheckBox(fmx.TagObject).IsChecked ) then
+    for fmx in frmhome.FoundTokenVertScrollBox.Content.Children do
     begin
-      T := Token(TFmxObject(fmx.TagObject).TagObject);
-      T.idInWallet := Length(AccountForSearchToken.myTokens) + 10000;
+      if (fmx is TPanel) and (fmx.TagObject is TCheckBox) then
+      begin
+        if TCheckBox(fmx.TagObject).IsChecked then
+        begin
+          T := Token(TFmxObject(fmx.TagObject).TagObject);
+          T.idInWallet := Length(AccountForSearchToken.myTokens) + 10000;
+
 
           AccountForSearchToken.addToken(T);
           AccountForSearchToken.SaveFiles();
           if AccountForSearchToken = CurrentAccount then
             CreatePanel(T);
+        end
+        else
+        begin
+          Token(TFmxObject(fmx.TagObject).TagObject).Free;
+        end;
+
+      end;
 
     end;
 
-  end;
-
-  switchTab(frmhome.pageControl , frmhome.walletView);
+    switchTab(frmhome.pageControl , frmhome.walletView);
 end;
 
 procedure SendReportIssuesButtonClick(Sender: TObject);

@@ -4218,23 +4218,7 @@ var
   found: Integer;
 begin
 
-  if ((CurrentCoin.coin <> 4) or (CurrentCryptoCurrency is Token)) then
-  begin
-
-    Showmessage('SearchTokenButton shouldnt be visible here');
-    exit;
-
-  end;
-
-  found := SearchTokens(CurrentCoin.addr, nil);
-  if found = 0 then
-  begin
-    popupWindow.Create('New tokens found: ' + inttostr(found));
-  end
-  else
-  begin
-    switchTab(pageControl , foundTokenTabItem);
-  end;
+  WalletViewRelated.SearchTokenButtonClick(Sender);
 end;
 
 procedure TfrmHome.SeedMnemonicBackupButtonClick(Sender: TObject);

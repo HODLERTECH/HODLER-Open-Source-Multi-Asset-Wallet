@@ -795,10 +795,10 @@ type
     FoundTokenTabItem: TTabItem;
     ToolBar21: TToolBar;
     FoundTokenHeaderLabel: TLabel;
-    FoundTokenOKButton: TButton;
     FoundTokenVertScrollBox: TVertScrollBox;
     SaPBackButton: TButton;
     KeypoolSanitizer: TTimer;
+    FoundTokenOKButton: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);

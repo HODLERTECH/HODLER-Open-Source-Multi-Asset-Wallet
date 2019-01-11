@@ -1456,6 +1456,9 @@ begin
 
           panel.TagObject := checkBox;
           checkBox.TagObject := T;
+{$IFDEF ANDROID}
+          checkBox.TagObject.__ObjAddRef();
+{$ENDIF}
 
 
           {
