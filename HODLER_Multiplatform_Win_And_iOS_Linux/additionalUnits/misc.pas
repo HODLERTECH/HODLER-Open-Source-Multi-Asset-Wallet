@@ -389,7 +389,7 @@ const
   API_PUB = {$I 'public_key.key' };
   API_PRIV = {$I 'private_key.key' };
 resourcestring
-  CURRENT_VERSION = '0.3.1';
+  CURRENT_VERSION = '0.3.2';
 
 var
   AccountsNames: array of AccountItem;

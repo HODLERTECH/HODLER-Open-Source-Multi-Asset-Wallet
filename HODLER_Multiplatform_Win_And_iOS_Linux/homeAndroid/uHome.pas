@@ -152,7 +152,6 @@ type
     ANWHeader: TToolBar;
     lblANWHeader: TLabel;
     btnANWBack: TButton;
-    coinIconsList: TImageList;
     TokenIcons3: TImageList;
     checkSeed: TTabItem;
     btnConfirm: TButton;
@@ -671,7 +670,6 @@ type
     ToolBar13: TToolBar;
     Label13: TLabel;
     Button7: TButton;
-    TokenIcons: TImageList;
     AddCoinFromPrivKeyTabItem: TTabItem;
     ToolBar14: TToolBar;
     Label14: TLabel;
@@ -754,6 +752,8 @@ type
     exportemptyaddressesSwitch: TSwitch;
     exportemptyAddressesLabel: TLabel;
     LoadAddressesToImortAniIndicator: TAniIndicator;
+    TokenIcons: TImageList;
+    coinIconsList: TImageList;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);

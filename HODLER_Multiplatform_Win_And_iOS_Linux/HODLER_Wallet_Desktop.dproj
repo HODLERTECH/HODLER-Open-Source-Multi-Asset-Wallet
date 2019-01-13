@@ -425,8 +425,8 @@
         <DCC_DebugInfoInTds>true</DCC_DebugInfoInTds>
         <VerInfo_MajorVer>0</VerInfo_MajorVer>
         <VerInfo_MinorVer>3</VerInfo_MinorVer>
-        <VerInfo_Release>1</VerInfo_Release>
-        <VerInfo_Keys>CompanyName=HODLER.TECH;FileVersion=0.3.1.0;InternalName=HODLER Multi-Asset Wallet;LegalCopyright=;LegalTrademarks=hodler.tech;OriginalFilename=;ProductVersion=0.3.1.0;Comments=;ProgramID=HODLER Multi-Asset Wallet;FileDescription=HODLER Multi-Asset Wallet;ProductName=HODLER Multi-Asset Wallet</VerInfo_Keys>
+        <VerInfo_Release>2</VerInfo_Release>
+        <VerInfo_Keys>CompanyName=HODLER.TECH;FileVersion=0.3.2.0;InternalName=HODLER Multi-Asset Wallet;LegalCopyright=;LegalTrademarks=hodler.tech;OriginalFilename=;ProductVersion=0.3.2.0;Comments=;ProgramID=HODLER Multi-Asset Wallet;FileDescription=HODLER Multi-Asset Wallet;ProductName=HODLER Multi-Asset Wallet</VerInfo_Keys>
         <DCC_XmlOutput>C:\Users\PC\Desktop\HODLER Core Alpha\029rc\doc\</DCC_XmlOutput>
         <DCC_OutputDependencies>true</DCC_OutputDependencies>
         <DCC_UnitSearchPath>CryptoLib_output\Win32\Release;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
