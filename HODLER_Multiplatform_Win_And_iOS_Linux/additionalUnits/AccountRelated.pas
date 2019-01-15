@@ -343,7 +343,6 @@ begin
     refreshCurrencyValue;
 
     SyncBalanceThr := SynchronizeBalanceThread.Create();
-    SyncHistoryThr := SynchronizeHistoryThread.Create();
     TThread.CreateAnonymousThread(procedure begin verifyKeypool(); end).Start();
   except
     on E: Exception do

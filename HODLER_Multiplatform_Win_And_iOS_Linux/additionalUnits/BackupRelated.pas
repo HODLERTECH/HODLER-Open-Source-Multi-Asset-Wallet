@@ -407,6 +407,8 @@ begin
                       Button.parent := BackupFileListVertScrollBox;
                       Button.onclick := SelectFileInBackupFileList;
                     end;
+                    BackupFileListVertScrollBox.height := min( frmhome.height - ( OpenFileMenagerLayout.height +
+                     ChooseHSBStaticLabel.height + RFFHeader.height ) , length(strArr) * button.height );
 
                     LoadBackupFileAniIndicator.visible := false;
                     LoadBackupFileAniIndicator.Enabled := false;

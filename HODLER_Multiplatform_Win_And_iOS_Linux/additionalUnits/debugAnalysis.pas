@@ -278,9 +278,9 @@ begin
   if USER_ALLOW_TO_SEND_DATA then
     SendAutoReport(E.Message , e.StackTrace , Sender.ClassName + ' ' + Sender.UnitName);
 
-    {$IFDEF DEBUG}
+    //{$IFDEF DEBUG}
  showmessage( E.Message );
-{$ENDIF}
+//{$ENDIF}
 
   //showmessage(e.StackTrace);
 end;

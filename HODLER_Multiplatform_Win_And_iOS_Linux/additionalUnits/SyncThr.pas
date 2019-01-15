@@ -34,7 +34,7 @@ type
     outputs: array of ttxoutput;
   end;
 
-type
+{type
   SynchronizeHistoryThread = class(TThread)
   private
     startTime: Double;
@@ -43,7 +43,7 @@ type
     constructor Create();
     procedure Execute(); override;
     function TimeFromStart(): Double;
-  end;
+  end;   }
 
 procedure parseDataForETH(s: AnsiString; { var } wd: TWalletInfo);
 
@@ -548,16 +548,9 @@ begin
     raise Exception.Create('CryptoCurrency Type Error');
   end;
 
-  { TThread.Synchronize(nil,
-    procedure
-    begin
-    frmHome.RefreshProgressBar.Value := 0;
-    frmHome.RefreshProgressBar.Visible := false;
-    end); }
-
 end;
 
-function SynchronizeHistoryThread.TimeFromStart;
+{function SynchronizeHistoryThread.TimeFromStart;
 begin
   result := 0;
   if startTime > endTime then
@@ -583,26 +576,12 @@ begin
   with frmHome do
   begin
 
-    { if synchronizeHistory() then
-      begin
 
-
-      if assigned(Self) and (not Terminated) then
-      TThread.Synchronize(nil,
-      procedure
-      begin
-
-      if PageControl.ActiveTab = walletView then
-      createHistoryList(CurrentCryptoCurrency, 0, lastHistCC);
-
-      end);
-
-      end; }
 
   end;
 
   endTime := now;
-end;
+end;    }
 
 function SynchronizeBalanceThread.TimeFromStart;
 begin
@@ -985,32 +964,41 @@ var
   segwit,cash, compatible, legacy: AnsiString;
 begin
 
-result:=false;
+  result:=false;
 
-for twi in CurrentAccount.myCoins do
-begin
-  segwit := generatep2wpkh(twi.pub, availablecoin[twi.coin].hrp);
-  compatible := generatep2sh(twi.pub, availablecoin[twi.coin].p2sh);
-  legacy := generatep2pkh(twi.pub, availablecoin[twi.coin].p2pk);
-  cash := bitcoinCashAddressToCashAddress(legacy, false);
-  if (adr=segwit) or (adr=compatible) or (adr=legacy) or (adr=cash) then Exit(True);
+  if ContainsStr( adr , ':') then
+    adr := rightStr(adr , length(adr) - pos(':' , adr) );
 
-end;
+
+  for twi in CurrentAccount.myCoins do
+  begin
+    segwit := generatep2wpkh(twi.pub, availablecoin[twi.coin].hrp);
+    compatible := generatep2sh(twi.pub, availablecoin[twi.coin].p2sh);
+    legacy := generatep2pkh(twi.pub, availablecoin[twi.coin].p2pk);
+    cash := bitcoinCashAddressToCashAddress(legacy, false);
+    if (adr=segwit) or (adr=compatible) or (adr=legacy) or (adr=cash) then Exit(True);
+
+  end;
 end;
 function checkTxType(tx:TxHistoryResult):integer;
 var ourInputs,ourOutputs:integer;
 i:Integer;
 begin
-ourInputs:=0;
-ourOutputs:=0;
-for i := 0 to StrToIntDef(tx.inputsCount,0)-1 do
-  if isOurAddress(tx.inputAddresses[i]) then Inc(ourInputs);
-for i := 0 to StrToIntDef(tx.outputsCount,0)-1 do
-  if isOurAddress(tx.outputs[i].address) then Inc(ourOutputs);
-if (ourInputs>=1) and (ourOutputs=0)  then Exit(0); //outgoing
-if (ourInputs>=1) and (ourOutputs=1) and (StrToIntDef(tx.outputsCount,0)>1)  then Exit(0); //outgoing
-if (ourInputs>=1) and (StrToIntDef(tx.outputsCount,0)=ourOutputs)  then Exit(2); //internal\
-if (ourInputs=0) and (ourOutputs>=1) then Exit(1); //incoming
+
+  result := 0;
+  ourInputs:=0;
+  ourOutputs:=0;
+
+  for i := 0 to StrToIntDef(tx.inputsCount,0)-1 do
+    if isOurAddress(tx.inputAddresses[i]) then Inc(ourInputs);
+
+  for i := 0 to StrToIntDef(tx.outputsCount,0)-1 do
+    if isOurAddress(tx.outputs[i].address) then Inc(ourOutputs);
+
+  if (ourInputs>=1) and (ourOutputs=0)  then Exit(0); //outgoing
+  if (ourInputs>=1) and (ourOutputs=1) and (StrToIntDef(tx.outputsCount,0)>1)  then Exit(0); //outgoing
+  if (ourInputs>=1) and (StrToIntDef(tx.outputsCount,0)=ourOutputs)  then Exit(2); //internal\
+  if (ourInputs=0) and (ourOutputs>=1) then Exit(1); //incoming
 
 
 end;

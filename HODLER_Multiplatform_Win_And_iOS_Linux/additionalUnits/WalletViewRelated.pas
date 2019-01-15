@@ -1043,27 +1043,6 @@ begin
     end;
   end;
 
-  if SyncHistoryThr <> nil then
-  begin
-
-    if SyncHistoryThr.Finished then
-    begin
-      SyncHistoryThr.DisposeOf;
-      SyncHistoryThr := nil;
-      SyncHistoryThr := SynchronizeHistoryThread.Create();
-    end
-    else if SyncHistoryThr.TimeFromStart() > 1.0 / 1040.0 then
-    begin
-
-      SyncHistoryThr.Terminate;
-      SyncHistoryThr.WaitFor;
-      SyncHistoryThr.DisposeOf;
-      SyncHistoryThr := nil;
-      SyncHistoryThr := SynchronizeHistoryThread.Create();
-
-    end;
-
-  end;
 
 end;
 
@@ -2115,20 +2094,6 @@ begin
       end;
     end;
 
-    if (SyncHistoryThr <> nil) and (SyncHistoryThr.Finished = false) then
-    begin
-
-      try
-        SyncHistoryThr.Terminate();
-      except
-        on E: Exception do
-        begin
-
-        end;
-      end;
-
-    end;
-    SyncHistoryThr.WaitFor;
     SyncBalanceThr.WaitFor;
 
     CurrentAccount.SaveFiles();
@@ -2143,7 +2108,6 @@ begin
 
     syncTimer.Enabled := True;
     SyncBalanceThr.Terminate();
-    SyncHistoryThr.Terminate();
 
     if SyncBalanceThr.Finished then
     begin
@@ -2152,12 +2116,6 @@ begin
       SyncBalanceThr := nil;
       SyncBalanceThr := SynchronizeBalanceThread.Create();
 
-    end;
-    if SyncHistoryThr.Finished then
-    begin
-      SyncHistoryThr.DisposeOf;
-      SyncHistoryThr := nil;
-      SyncHistoryThr := SynchronizeHistoryThread.Create();
     end;
 
     closeOrganizeView(nil);

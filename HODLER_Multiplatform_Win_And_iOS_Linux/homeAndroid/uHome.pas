@@ -802,6 +802,7 @@ type
     FileManagerPathLabel: TEdit;
     FileMenagerCancelButton: TButton;
     internalImage: TImage;
+    OpenFMParentLayout: TLayout;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1138,7 +1139,6 @@ var
   QRWidth: Integer = -1;
   QRHeight: Integer = -1;
   SyncBalanceThr: SynchronizeBalanceThread;
-  SyncHistoryThr: SynchronizeHistoryThread;
 
   QRFind: AnsiString;
   tempQRFindEncryptedSeed: AnsiString;

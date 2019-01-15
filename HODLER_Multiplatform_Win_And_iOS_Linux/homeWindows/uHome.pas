@@ -1183,7 +1183,7 @@ var
   QRWidth: Integer = -1;
   QRHeight: Integer = -1;
   SyncBalanceThr: SynchronizeBalanceThread;
-  SyncHistoryThr: SynchronizeHistoryThread;
+  //SyncHistoryThr: SynchronizeHistoryThread;
 
   QRFind: AnsiString;
   tempQRFindEncryptedSeed: AnsiString;

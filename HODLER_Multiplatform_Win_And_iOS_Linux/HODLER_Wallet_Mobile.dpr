@@ -132,7 +132,8 @@ uses
   TImageTextButtonData in 'components\TImageTextButtonData.pas',
   TRotateImageData in 'components\TRotateImageData.pas',
   debugAnalysis in 'additionalUnits\debugAnalysis.pas',
-  KeypoolRelated in 'additionalUnits\KeypoolRelated.pas';
+  KeypoolRelated in 'additionalUnits\KeypoolRelated.pas',
+  AssetsMenagerData in 'additionalUnits\AssetsMenagerData.pas';
 
 {$R *.res}
 
