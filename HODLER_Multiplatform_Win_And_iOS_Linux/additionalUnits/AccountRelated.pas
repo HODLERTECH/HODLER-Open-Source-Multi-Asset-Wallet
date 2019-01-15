@@ -50,13 +50,14 @@ procedure InitializeHodler;
 procedure afterInitialize;
 procedure LoadCurrentAccount(name: AnsiString);
 procedure syncFont;
+procedure CloseHodler();
 
 implementation
 
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, WalletStructureData, TcopyableEditData, TCopyableLabelData,
-  walletViewRelated, TImageTextButtonData , debugAnalysis,keyPoolRelated;
+  walletViewRelated, TImageTextButtonData , debugAnalysis,keyPoolRelated , AssetsMenagerData;
 
 procedure afterInitialize;
 var
@@ -348,8 +349,9 @@ begin
     on E: Exception do
     begin
 
-      showmessage(E.Message);
+      //showmessage(E.Message);
       frmHome.AccountsListPanel.Enabled := true;
+      raise E;
     end;
   end;
   if (currentAccount.userSaveSeed = false) then
@@ -363,14 +365,22 @@ begin
   try
     refreshWalletDat;
 {$IF DEFINED(MSWINDOWS) or DEFINED(LINUX)}
-    if frmHome.WalletList.Content.ChildrenCount > 0 then
-      frmHome.OpenWalletView(frmHome.WalletList.Content.Children[0]);
+    if (frmHome.WalletList.Content.ChildrenCount > 0) then
+    begin
+      WalletViewRelated.OpenWallet(frmHome.WalletList.Content.Children[0]);
+      if frmhome.PageControl.ActiveTab <> frmhome.Settings then
+      begin
+        switchTab( frmhome.pageControl , frmhome.walletView );
+      end;
+
+    end;
 {$ENDIF}
   except
     on E: Exception do
     begin
-      showmessage('XX' + E.Message);
+      ///showmessage('XX' + E.Message);
       frmHome.AccountsListPanel.Enabled := true;
+      raise E;
     end;
   end;
   frmHome.AccountsListPanel.Enabled := true;
@@ -407,7 +417,10 @@ begin
   end;
 
 end;
-
+procedure CloseHodler();
+begin
+  ResourceMenager.free;
+end;
 procedure InitializeHodler;
 var
   i: integer;
@@ -425,6 +438,8 @@ var
 begin
 
   Application.OnException := frmhome.ExceptionHandler;
+  ResourceMenager := AssetsMenager.Create();
+
   //frmHome.Quality := TCanvasQuality.HighPerformance;
 
   // %appdata% to %appdata%/hodlertech
@@ -617,7 +632,7 @@ begin
       // HistoryTransactionValue.TagString := 'copyable';
       // historyTransactionConfirmation.TagString := 'copyable';
       CreateCopyImageButtonOnTEdits();
-
+      //////// Restore form HSB
       btn := TImageTextButton.Create(HSBbackupLayout);
       btn.Parent := HSBbackupLayout;
       btn.Visible := true;
@@ -628,7 +643,7 @@ begin
       btn.TagString := 'hodler_secure_backup_image';
 
       btn.OnClick := SendWalletFileButtonClick;
-
+      //////  Restore from Seed
       btn := TImageTextButton.Create(EncrypredQRBackupLayout);
       btn.Parent := EncrypredQRBackupLayout;
       btn.Visible := true;
@@ -641,7 +656,21 @@ begin
       btn.img.Margins.Top := 20;
       btn.img.Margins.Bottom := 20;
       btn.OnClick := SendEncryptedSeedButtonClick;
-
+{$IFDEF ANDROID}
+      //////// Search Device
+      btn := TImageTextButton.Create(OpenFileMenagerLayout);
+      btn.Parent := OpenFileMenagerLayout;
+      btn.Visible := true;
+      btn.Align := TAlignLayout.Bottom;
+      btn.Height := 48;
+      btn.LoadImage('BROWSE_DEVICE');
+      btn.lbl.Text := 'Browse Device';
+      btn.lbl.TextSettings.HorzAlign := TTextAlign.Center;
+      //btn.TagString := 'encrypted_qr_image';
+      //btn.img.Margins.Top := 20;
+      //btn.img.Margins.Bottom := 20;
+      btn.OnClick := Showfilemanager;
+{$ENDIF}
       refreshLocalImage := TRotateImage.Create(RefreshLayout);
       refreshLocalImage.Parent := RefreshLayout;
       refreshLocalImage.Visible := true;

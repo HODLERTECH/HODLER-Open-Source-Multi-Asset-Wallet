@@ -3,7 +3,7 @@ program HODLER_Wallet_Mobile;
 {$R *.dres}
 
 uses
-FontService,
+  FontService,
   System.StartUpCopy,
   FMX.Forms,
   FMX.Styles,

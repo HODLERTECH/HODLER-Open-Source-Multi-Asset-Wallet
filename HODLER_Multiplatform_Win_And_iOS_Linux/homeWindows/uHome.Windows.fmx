@@ -1518,7 +1518,7 @@ inherited frmHome_Windows: TfrmHome_Windows
       inherited VertScrollBox3: TVertScrollBox
         Size.Width = 500.000000000000000000
         Size.Height = 623.000000000000000000
-        Viewport.Width = 500.000000000000000000
+        Viewport.Width = 484.000000000000000000
         Viewport.Height = 623.000000000000000000
         inherited GlobalSettingsLayout: TLayout
           Size.Width = 484.000000000000000000
@@ -1591,6 +1591,7 @@ inherited frmHome_Windows: TfrmHome_Windows
           Size.Width = 454.000000000000000000
         end
         inherited WipeWalletDataInfoLabel: TLabel
+          Position.Y = 641.000000000000000000
           Size.Width = 454.000000000000000000
         end
       end

@@ -395,17 +395,12 @@ type
     CreateBackupButton: TButton;
     RestoreFromFileButton: TButton;
     fileManager: TTabItem;
-    SelectFilePath: TButton;
     FilesManagerScrollBox: TVertScrollBox;
-    FileManagerPathLabel: TLabel;
-    Layout22: TLayout;
-    FileManagerPathUpButton: TButton;
     RestoreFromFileTabitem: TTabItem;
     RestoreFromFileConfirmButton: TButton;
     RFFHeader: TToolBar;
     RFFHeaderLabel: TLabel;
     btnRFFBack: TButton;
-    RFFSelectFileButton: TButton;
     RFFPassword: TEdit;
     RFFPasswordInfo: TLabel;
     Layout24: TLayout;
@@ -799,6 +794,13 @@ type
     SaPBackButton: TButton;
     KeypoolSanitizer: TTimer;
     FoundTokenOKButton: TButton;
+    ChooseHSBStaticLabel: TLabel;
+    OpenFileMenagerLayout: TLayout;
+    OpenFileMenagerLabel: TLabel;
+    OpenFileStaticLabel: TLabel;
+    FileMenagerUpImageButton: TImage;
+    FileManagerPathLabel: TEdit;
+    FileMenagerCancelButton: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1029,6 +1031,8 @@ type
     procedure FoundTokenOKButtonClick(Sender: TObject);
     procedure SaPBackButtonClick(Sender: TObject);
     procedure KeypoolSanitizerTimer(Sender: TObject);
+    procedure FileMenagerCancelButtonClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
 
 
   private
@@ -1203,14 +1207,12 @@ end;
 
 procedure TfrmHome.exportemptyaddressesSwitchClick(Sender: TObject);
 begin
-  createExportPrivateKeyList
+  createExportPrivateKeyList(newCoinID);
 end;
 
 procedure TfrmHome.ExportPrivateKeyButtonClick(Sender: TObject);
 begin
-  createExportPrivateKeyList();
-  exportemptyaddressesSwitch.IsChecked := false;
-  switchTab(PageControl, ExportPrivCoinListTabItem);
+  WalletViewRelated.ExportPrivateKeyButtonClick(Sender);
 end;
 
 procedure TfrmHome.ExportPrivKeyListButtonClick(Sender: TObject; const Point: TPointF);
@@ -1368,6 +1370,7 @@ end;
 procedure TfrmHome.FilePanelClick(Sender: TObject);
 begin
   frmHome.FileManagerPathLabel.Text := TfmxObject(Sender).TagString;
+  onFileManagerSelectClick();
 end;
 
 procedure TfrmHome.FilePanelClick(Sender: TObject; const Point: TPointF);
@@ -1430,6 +1433,11 @@ end;
 procedure TfrmHome.FileManagerSelectClick(Sender: TObject);
 begin
   onFileManagerSelectClick();
+end;
+
+procedure TfrmHome.FileMenagerCancelButtonClick(Sender: TObject);
+begin
+  switchTab(pageControl , RestoreFromFileTabitem );
 end;
 
 procedure TfrmHome.ShowFileManager(Sender: TObject);
@@ -2693,7 +2701,7 @@ end;
 
 procedure TfrmHome.Button11Click(Sender: TObject);
 begin
-  switchTab(PageControl, PrivOptionsTabItem);
+  switchTab(PageControl, AddNewCoin);
 end;
 
 procedure TfrmHome.Button1Click(Sender: TObject);
@@ -3058,6 +3066,11 @@ end;
 procedure TfrmHome.FeeToUSDUpdate(Sender: TObject);
 begin
   WalletViewRelated.calcUSDFee;
+end;
+
+procedure TfrmHome.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  AccountRelated.CloseHodler();
 end;
 
 procedure TfrmHome.FormCloseQuery(Sender: TObject; var CanClose: Boolean);

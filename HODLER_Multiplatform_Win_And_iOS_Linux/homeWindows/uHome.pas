@@ -1063,6 +1063,7 @@ type
       Shift: TShiftState);
     procedure FoundTokenOKButtonClick(Sender: TObject);
     procedure KeypoolSanitizerTimer(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
 
   private
     { Private declarations }
@@ -1421,6 +1422,7 @@ end;
 procedure TfrmHome.FilePanelClick(Sender: TObject);
 begin
   frmHome.FileManagerPathLabel.Text := TfmxObject(Sender).TagString;
+  onFileManagerSelectClick();
 end;
 
 procedure TfrmHome.FilePanelClick(Sender: TObject; const Point: TPointF);
@@ -1478,9 +1480,7 @@ end;
 
 procedure TfrmHome.ExportPrivateKeyButtonClick(Sender: TObject);
 begin
-  createExportPrivateKeyList();
-  exportemptyaddressesSwitch.IsChecked := false;
-  switchTab(PageControl, ExportPrivCoinListTabItem);
+  WalletViewRelated.ExportPrivateKeyButtonClick(Sender);
 end;
 
 procedure TfrmHome.FileManagerPathUpButtonClick(Sender: TObject);
@@ -2985,7 +2985,7 @@ end;
 
 procedure TfrmHome.EPCLTIBackButtonClick(Sender: TObject);
 begin
-  switchTab(PageControl, PrivOptionsTabItem );
+  switchTab(PageControl, AddNewCoin );
 end;
 
 procedure TfrmHome.EQRBackBtnClick(Sender: TObject);
@@ -3006,7 +3006,7 @@ end;
 
 procedure TfrmHome.exportemptyaddressesSwitchSwitch(Sender: TObject);
 begin
-  createExportPrivateKeyList();
+  createExportPrivateKeyList(newcoinID);
 end;
 
 
@@ -3036,6 +3036,8 @@ var
   actionListener : TActionList;
 begin
 
+
+  image7.Bitmap.LoadFromStream( ResourceMenager.getAssets( 'HSB_WHITE' ) );
   //showmessage( getDetailedData() );
   raise Exception.Create('Error Message');
   {actionListener := TActionList.Create(nil);
@@ -3408,6 +3410,11 @@ end;
 procedure TfrmHome.FormActivate(Sender: TObject);
 begin
   NoPrintScreenImage.Visible := false;
+end;
+
+procedure TfrmHome.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  AccountRelated.CloseHodler();
 end;
 
 procedure TfrmHome.FormCloseQuery(Sender: TObject; var CanClose: Boolean);

@@ -82,6 +82,7 @@ procedure SendErrorMsgSwitchSwitch(Sender: TObject);
 procedure SendReportIssuesButtonClick(Sender: TObject);
 procedure FoundTokenOKButtonClick(Sender: TObject);
 procedure SearchTokenButtonClick(Sender: TObject);
+procedure ExportPrivateKeyButtonClick(Sender: TObject);
 
 var
   SyncOpenWallet: TThread;
@@ -91,6 +92,43 @@ implementation
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, AccountRelated, TCopyableEditData, BackupRelated , debugAnalysis,KeypoolRelated;
+
+procedure ExportPrivateKeyButtonClick(Sender: TObject);
+begin
+  //createExportPrivateKeyList();
+  createAddWalletView();
+  frmhome.exportemptyaddressesSwitch.IsChecked := false;
+
+  newCoinListNextTabItem := frmhome.ExportPrivCoinListTabItem;
+  AddCoinBackTabItem := frmhome.pageControl.ActiveTab;
+
+
+  switchTab(frmhome.PageControl, frmhome.AddNewcoin);
+
+  {
+    createAddWalletView();
+  with frmhome do
+  begin
+    HexPrivKeyDefaultRadioButton.IsChecked := True;
+    Layout31.Visible := false;
+    WIFEdit.Text := '';
+    // PrivateKeySettingsLayout.Visible := false;
+    NewCoinDescriptionEdit.Text := '';
+    OwnXEdit.Text := '';
+    OwnXCheckBox.IsChecked := false;
+    IsPrivKeySwitch.IsChecked := false;
+    IsPrivKeySwitch.Enabled := false;
+    NewCoinDescriptionPassEdit.Text := '';
+    NewCoinDescriptionEdit.Text := '';
+    CoinPrivKeyPassEdit.Text := '';
+    CoinPrivKeyDescriptionEdit.Text := '';
+    newCoinListNextTabItem := AddCoinFromPrivKeyTabItem;
+    AddCoinBackTabItem := pageControl.ActiveTab;
+    switchTab(pageControl, AddNewCoin);
+
+  end;
+  }
+end;
 
 procedure SearchTokenButtonClick(Sender: TObject);
 var
@@ -372,8 +410,30 @@ begin
 
   if newCoinListNextTabItem = frmhome.ClaimWalletListTabItem then
   begin
+    if newCoinID = 4 then
+    begin
+
+      popupWindow.Create('Better solution is to import the ETH key to transfer ETH and tokens to the wallet.');
+
+      exit();
+    end;
+
     createClaimCoinList(newcoinID);
   end;
+
+  if newCoinListNextTabItem = frmhome.ExportPrivCoinListTabItem then
+  begin
+
+    if createExportPrivateKeyList(newCoinID) = 0  then
+    begin
+
+      popupWindow.Create('No addresses have been created for this coin');
+      exit();
+
+    end;
+
+  end;
+
 
   switchTab(frmhome.pageControl,
     newCoinListNextTabItem { frmhome.AddNewCoinSettings } );
@@ -508,10 +568,11 @@ begin
                 TransactionWaitForSendDetailsLabel.Visible := True;
                 TransactionWaitForSendLinkLabel.Visible := false;
                 ts := SplitString(ans, #$A);
+                //showmessage('_' + ans + '_');
                 if ts.Count = 0 then
                 begin
 
-                  TransactionWaitForSendDetailsLabel.Text := 'Unknown Error';
+                  TransactionWaitForSendDetailsLabel.Text := 'Unknown Error' + ans;
 
                 end
                 else

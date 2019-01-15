@@ -302,7 +302,7 @@ begin
   end;
   if Length(Ys) = 0 then
     Exit(changeDelimiter + 1);
-  for i := 1 to Length(Ys) - 2 do
+  for i := 1 to Length(Ys) - 1 do
   begin
     j := Ys[i - 1];
     if Abs(j - Ys[i]) > 1 then

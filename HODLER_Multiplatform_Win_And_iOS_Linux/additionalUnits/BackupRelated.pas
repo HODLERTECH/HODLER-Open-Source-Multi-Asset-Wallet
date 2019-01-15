@@ -57,158 +57,122 @@ function SweepCoinsRoutine(priv: AnsiString; isCompressed: Boolean;
   coin: Integer; targetAddr: AnsiString): AnsiString;
 procedure Claim(CoinID: Integer);
 procedure createClaimCoinList(id: Integer);
-procedure createExportPrivateKeyList();
+function createExportPrivateKeyList( ExportCoinID : Integer ):Integer;
 function isEQRGenerated: Boolean;
 
 implementation
 
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
-  transactions, AccountRelated, walletViewRelated,KeypoolRelated;
+  transactions, AccountRelated, walletViewRelated,KeypoolRelated , TImageTextButtonData;
 
-procedure createExportPrivateKeyList();
+function createExportPrivateKeyList( ExportCoinID : Integer ):Integer;
 {var
   i: Integer;
   panel: TPanel;
   lbl: TLabel;
   image: TImage;
   bilancelbl: TLabel;  }
-begin
-
-  clearVertScrollBox(frmhome.ExportPrivKeyListVertScrollBox);
-  //LoadAddressesToImortAniIndicator
-  tthread.CreateAnonymousThread(procedure
   var
-    i: Integer;
-    panel: TPanel;
-    lbl: TLabel;
-    image: TImage;
-    bilancelbl: TLabel;
+  i : Integer;
+begin
+  result := 0;
+  clearVertScrollBox(frmhome.ExportPrivKeyListVertScrollBox);
+
+  for i := 0 to length(CurrentAccount.myCoins) - 1 do
   begin
 
-     tthread.Synchronize(nil , procedure
-      begin
+    if CurrentAccount.myCoins[i].coin = ExportCoinID then
+      result := result + 1;
 
-        frmhome.LoadAddressesToImortAniIndicator.visible := true;
-        frmhome.LoadAddressesToImortAniIndicator.enabled := true;
-        //frmhome.LoadAddressesToImortAniIndicator.
+  end;
 
-      end);
+  if result > 0 then
 
-    for i := 0 to (length(currentAccount.myCoins) - 1) do
+    tthread.CreateAnonymousThread(procedure
+    var
+      i: Integer;
+      panel: TPanel;
+      lbl: TLabel;
+      image: TImage;
+      bilancelbl: TLabel;
     begin
 
-      if ((currentAccount.myCoins[i].confirmed) <> 0) or frmhome.exportemptyaddressesSwitch.ischecked then
-      begin
-        tthread.Synchronize(nil , procedure
+       tthread.Synchronize(nil , procedure
         begin
 
-          panel := TPanel.create(frmhome.ExportPrivKeyListVertScrollBox);
-          panel.parent := frmhome.ExportPrivKeyListVertScrollBox;
-          panel.visible := true;
-          panel.align := TAlignLayout.MostTop;
-          panel.height := 48;
-          panel.tagObject := currentAccount.myCoins[i];
-          {$IF defined(ANDROID) or defined(IOS)}
-          panel.OnTap := frmhome.ExportPrivKeyListButtonClick;
-          {$ELSE}
-          panel.onclick := frmhome.ExportPrivKeyListButtonClick;
-          {$ENDIF}
-          panel.Position.Y := -1;
-
-          lbl := TLabel.create(panel);
-          lbl.parent := panel;
-          lbl.align := TAlignLayout.client;
-          lbl.margins.left := 15;
-          lbl.margins.right := 15;
-          lbl.visible := true;
-          lbl.Text := currentAccount.myCoins[i].addr;
-
-          image := TImage.create(panel);
-          image.parent := panel;
-          image.bitmap := currentAccount.myCoins[i].getIcon();
-          image.align := TAlignLayout.left;
-          image.width := 32 + 2 * 15;
-          image.visible := true;
-          image.margins.Top := 8;
-          image.margins.Bottom := 8;
-
-          bilancelbl := TLabel.create(panel);
-          bilancelbl.parent := panel;
-          bilancelbl.align := TAlignLayout.right;
-          bilancelbl.width := 96;
-          bilancelbl.visible := true;
-          bilancelbl.margins.right := 15;
-          bilancelbl.Text := BigIntegerBeautifulStr
-            ((currentAccount.myCoins[i].confirmed), currentAccount.myCoins[i].decimals);
-          bilancelbl.TextSettings.HorzAlign := TTextAlign.Trailing;
+          frmhome.LoadAddressesToImortAniIndicator.visible := true;
+          frmhome.LoadAddressesToImortAniIndicator.enabled := true;
+          //frmhome.LoadAddressesToImortAniIndicator.
 
         end);
 
+      for i := 0 to (length(currentAccount.myCoins) - 1) do
+      begin
+        if CurrentAccount.myCoins[i].coin <> ExportCoinID then
+          continue;
 
+        if ((currentAccount.myCoins[i].confirmed) <> 0) or frmhome.exportemptyaddressesSwitch.ischecked then
+        begin
+          tthread.Synchronize(nil , procedure
+          begin
+
+            panel := TPanel.create(frmhome.ExportPrivKeyListVertScrollBox);
+            panel.parent := frmhome.ExportPrivKeyListVertScrollBox;
+            panel.visible := true;
+            panel.align := TAlignLayout.MostTop;
+            panel.height := 48;
+            panel.tagObject := currentAccount.myCoins[i];
+            {$IF defined(ANDROID) or defined(IOS)}
+            panel.OnTap := frmhome.ExportPrivKeyListButtonClick;
+            {$ELSE}
+            panel.onclick := frmhome.ExportPrivKeyListButtonClick;
+            {$ENDIF}
+            panel.Position.Y := -1;
+
+            lbl := TLabel.create(panel);
+            lbl.parent := panel;
+            lbl.align := TAlignLayout.client;
+            lbl.margins.left := 15;
+            lbl.margins.right := 15;
+            lbl.visible := true;
+            lbl.Text := currentAccount.myCoins[i].addr;
+
+            image := TImage.create(panel);
+            image.parent := panel;
+            image.bitmap := currentAccount.myCoins[i].getIcon();
+            image.align := TAlignLayout.left;
+            image.width := 32 + 2 * 15;
+            image.visible := true;
+            image.margins.Top := 8;
+            image.margins.Bottom := 8;
+
+            bilancelbl := TLabel.create(panel);
+            bilancelbl.parent := panel;
+            bilancelbl.align := TAlignLayout.right;
+            bilancelbl.width := 96;
+            bilancelbl.visible := true;
+            bilancelbl.margins.right := 15;
+            bilancelbl.Text := BigIntegerBeautifulStr
+              ((currentAccount.myCoins[i].confirmed), currentAccount.myCoins[i].decimals);
+            bilancelbl.TextSettings.HorzAlign := TTextAlign.Trailing;
+
+          end);
+
+
+        end;
       end;
-    end;
 
-    //showmessage( inttoStr(frmhome.ExportPrivKeyListVertScrollBox.Content.ChildrenCount) ) ;
-    tthread.Synchronize(nil , procedure
-    begin
-      frmhome.emptyAddressesLayout.visible := ( frmhome.ExportPrivKeyListVertScrollBox.Content.ChildrenCount <= 1 );
-      frmhome.LoadAddressesToImortAniIndicator.visible := false;
-      frmhome.LoadAddressesToImortAniIndicator.enabled := false;
-    end);
+      //showmessage( inttoStr(frmhome.ExportPrivKeyListVertScrollBox.Content.ChildrenCount) ) ;
+      tthread.Synchronize(nil , procedure
+      begin
+        frmhome.emptyAddressesLayout.visible := ( frmhome.ExportPrivKeyListVertScrollBox.Content.ChildrenCount <= 1 );
+        frmhome.LoadAddressesToImortAniIndicator.visible := false;
+        frmhome.LoadAddressesToImortAniIndicator.enabled := false;
+      end);
 
-  end).Start();
+    end).Start();
 
-  (*for i := 0 to (length(currentAccount.myCoins) - 1) do
-  begin
-
-    if ((currentAccount.myCoins[i].confirmed) <> 0) or frmhome.exportemptyaddressesSwitch.ischecked then
-    begin
-
-      panel := TPanel.create(frmhome.ExportPrivKeyListVertScrollBox);
-      panel.parent := frmhome.ExportPrivKeyListVertScrollBox;
-      panel.visible := true;
-      panel.align := TAlignLayout.Top;
-      panel.height := 48;
-      panel.tagObject := currentAccount.myCoins[i];
-      {$IF defined(ANDROID) or defined(IOS)}
-      panel.OnTap := frmhome.ExportPrivKeyListButtonClick;
-      {$ELSE}
-      panel.onclick := frmhome.ExportPrivKeyListButtonClick;
-      {$ENDIF}
-      panel.Position.Y := -1;
-
-      lbl := TLabel.create(panel);
-      lbl.parent := panel;
-      lbl.align := TAlignLayout.client;
-      lbl.margins.left := 15;
-      lbl.margins.right := 15;
-      lbl.visible := true;
-      lbl.Text := currentAccount.myCoins[i].addr;
-
-      image := TImage.create(panel);
-      image.parent := panel;
-      image.bitmap := currentAccount.myCoins[i].getIcon();
-      image.align := TAlignLayout.left;
-      image.width := 32 + 2 * 15;
-      image.visible := true;
-      image.margins.Top := 8;
-      image.margins.Bottom := 8;
-
-      bilancelbl := TLabel.create(panel);
-      bilancelbl.parent := panel;
-      bilancelbl.align := TAlignLayout.right;
-      bilancelbl.width := 96;
-      bilancelbl.visible := true;
-      bilancelbl.margins.right := 15;
-      bilancelbl.Text := BigIntegerBeautifulStr
-        ((currentAccount.myCoins[i].confirmed), currentAccount.myCoins[i].decimals);
-      bilancelbl.TextSettings.HorzAlign := TTextAlign.Trailing;
-
-    end;
-  end;
-  //showmessage( inttoStr(frmhome.ExportPrivKeyListVertScrollBox.Content.ChildrenCount) ) ;
-  frmhome.emptyAddressesLayout.visible := ( frmhome.ExportPrivKeyListVertScrollBox.Content.ChildrenCount <= 1 ); *)
 
 end;
 
@@ -399,7 +363,7 @@ begin
               procedure
               var
                 strArr: TStringDynArray;
-                Button: TButton;
+                Button: TImageTextButton;
 
               begin
 
@@ -422,20 +386,23 @@ begin
 
                     for i := 0 to length(strArr) - 1 do
                     begin
-                      Button := TButton.create(BackupFileListVertScrollBox);
+                      Button := TImageTextButton.create(BackupFileListVertScrollBox);
+                      Button.LoadImage('HSB_' + RightStr(currentStyle, length(currentStyle) - 3));
+                      Button.TagString := 'hodler_secure_backup_image';
                       Button.visible := true;
                       Button.align := TAlignLayout.Top;
                       Button.height := 48;
-                      if LeftStr(strArr[i],
+                      Button.lbl.Text := extractfilename(strArr[i]);
+                      {if LeftStr(strArr[i],
                         length(TDirectory.GetParent(System.IOUtils.TPath.
                         GetSharedDownloadsPath()))) = TDirectory.GetParent
                         (System.IOUtils.TPath.GetSharedDownloadsPath()) then
-                        Button.Text := rightStr(strArr[i],
+                        Button.lbl.Text := rightStr(strArr[i],
                           length(strArr[i]) -
                           length(TDirectory.GetParent
                           (System.IOUtils.TPath.GetSharedDownloadsPath())))
                       else
-                        Button.Text := strArr[i];
+                        Button.lbl.Text := strArr[i];}
                       Button.TagString := strArr[i];
                       Button.parent := BackupFileListVertScrollBox;
                       Button.onclick := SelectFileInBackupFileList;

@@ -1582,6 +1582,7 @@ inherited frmHome_Surface: TfrmHome_Surface
           Size.Width = 729.000000000000000000
         end
         inherited WipeWalletDataInfoLabel: TLabel
+          Position.Y = 641.000000000000000000
           Size.Width = 729.000000000000000000
         end
       end

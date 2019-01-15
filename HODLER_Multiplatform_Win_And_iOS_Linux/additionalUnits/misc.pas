@@ -103,7 +103,8 @@ uses AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA, IdSSLOpenSSL, languages,
   ClpSecureRandom,
   ClpISecureRandom,
   ClpCryptoApiRandomGenerator,
-  ClpICryptoApiRandomGenerator
+  ClpICryptoApiRandomGenerator,
+  AssetsMenagerData
 
 {$IFDEF ANDROID},
 
@@ -395,7 +396,7 @@ const
   API_PRIV = {$I 'private_key.key' };
 
 resourcestring
-  CURRENT_VERSION = '0.3.1';
+  CURRENT_VERSION = '0.3.2';
 
 var
   AccountsNames: array of AccountItem;
@@ -429,6 +430,7 @@ var
   newcoinID: nativeint;
   ImportCoinID: integer;
   AccountForSearchToken : Account;
+  ResourceMenager : AssetsMenager;
 
 implementation
 
@@ -1697,9 +1699,10 @@ begin
     coinIMG := TImage.Create(frmhome.walletList);
     coinIMG.parent := panel;
     if crypto is TWalletInfo then
-      coinIMG.Bitmap := getCoinIcon(TWalletInfo(crypto).coin)
+      coinIMG.Bitmap.LoadFromStream( ResourceMenager.getAssets( Availablecoin[TWalletInfo(crypto).coin].ResourceName ) )// getCoinIcon(TWalletInfo(crypto).coin)
     else
-      coinIMG.Bitmap := Token(crypto).image;
+      coinIMG.Bitmap.LoadFromStream( Token(crypto).getIconResource );// getCoinIcon(TWalletInfo(crypto).coin)
+
 
     coinIMG.Height := 32.0;
     coinIMG.Width := 50;

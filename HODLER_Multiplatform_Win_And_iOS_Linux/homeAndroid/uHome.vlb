@@ -1,5 +1,5 @@
 ﻿[]
-Coordinates=1725,1002,79,51
+Coordinates=1725,463,123,51
 
 [WVReceive]
 Coordinates=404,270,69,33
@@ -953,9 +953,6 @@ Coordinates=412,942,53,51
 [SendEncryptedSeedButton]
 Coordinates=2465,155,147,51
 
-[RFFSelectFileButton]
-Coordinates=272,78,115,51
-
 [BackupHeaderLabel]
 Coordinates=989,375,113,51
 
@@ -1006,9 +1003,6 @@ Coordinates=0,0,69,51
 
 [receiveImage]
 Coordinates=700,732,79,51
-
-[FileManagerPathLabel]
-Coordinates=1725,463,123,51
 
 [HistoryTransactionID]
 Coordinates=2177,386,118,51
@@ -1061,9 +1055,6 @@ Coordinates=597,1,131,51
 [Layout7]
 Coordinates=2350,1018,53,33
 
-[SelectFilePath]
-Coordinates=1195,750,84,51
-
 [receiveAddress]
 Coordinates=1391,867,91,51
 
@@ -1106,9 +1097,6 @@ Coordinates=265,732,79,51
 [EncryptedQRDescriptionLabel]
 Coordinates=1500,617,163,51
 
-[FileManagerPathUpButton]
-Coordinates=785,1,143,51
-
 [ExportKeyScreen]
 Coordinates=2911,111,100,33
 
@@ -1138,9 +1126,6 @@ Coordinates=2673,617,136,33
 
 [topInfoUnconfirmed]
 Coordinates=1857,848,112,51
-
-[Layout22]
-Coordinates=2113,1210,59,33
 
 [Layout29]
 Coordinates=1915,1210,59,33
