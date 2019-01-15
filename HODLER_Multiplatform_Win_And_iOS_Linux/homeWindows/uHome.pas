@@ -805,6 +805,7 @@ type
     FoundTokenOKButton: TButton;
     FoundTokenVertScrollBox: TVertScrollBox;
     KeypoolSanitizer: TTimer;
+    internalImage: TImage;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);

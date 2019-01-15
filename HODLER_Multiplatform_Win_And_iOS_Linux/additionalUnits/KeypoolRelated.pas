@@ -34,7 +34,7 @@ procedure sanitizePool;
 
 function findUnusedReceiving(wi: TWalletInfo): twalletinfo;
 
-function findUnusedChange(wi: TWalletInfo; ms: AnsiString): TWalletInfo;
+function findUnusedChange(wi: TWalletInfo; ms: AnsiString;forceCreate:boolean=false): TWalletInfo;
 
 procedure startFullfillingKeypool(ms: ansistring);
 
@@ -68,7 +68,9 @@ var
     Ys: tArray<Integer>;
     i, j: Integer;
   begin
+  result:=-1;
     i := 0;
+    SetLength(Ys,0);
     for wd in CurrentAccount.myCoins do
       if (wd.x = wi.x) and (wd.coin = wi.coin) then
       begin
@@ -81,11 +83,12 @@ var
     begin
       Exit(Ys[0] + 1);
     end;
-    for i := 1 to Length(Ys) - 2 do
+    for i := 1 to Length(Ys) - 1 do
     begin
       j := Ys[i - 1];
       if Abs(j - Ys[i]) > 1 then
         Exit(j + 1);
+        result:=Ys[i]+1;
     end;
   end;
 
@@ -116,7 +119,33 @@ var
 
     end;
   end;
+  function missingChangeAmount: Integer;
+  var
+    arr: array of Integer;
+    wd: TWalletInfo;
+    flagElse, sorted: Boolean;
+    i, j: Integer;
+    debugString: ansistring;
+  begin
+    i := 0;
+    result := 5;
+    SetLength(arr, CurrentAccount.countWalletBy(TWalletInfo(self.crypto).coin));
+    for wd in CurrentAccount.myCoins do
+    begin
+      if result = 0 then
+        Break;
 
+      if wd.x = -1 then
+        continue;
+      if (wd.coin = TWalletInfo(self.crypto).coin) and (wd.X = TWalletInfo(self.crypto).X) and (wd.Y>=changeDelimiter) then
+      begin
+        if Length(wd.History) = 0 then
+          Dec(result);
+
+      end;
+
+    end;
+  end;
 begin
 try
 if Self=nil then Exit;
@@ -134,13 +163,21 @@ if Self=nil then Exit;
     if Self.Terminated then
       Exit();
     newY := findUnusedReceiveY(TWalletInfo(self.crypto));
+    if newY=-1 then Continue;
+
     newOne := coinData.createCoin(TWalletInfo(Self.crypto).coin, TWalletInfo(self.crypto).X, newY, GhostMasterSeed, self.crypto.description);
     newOne.inPool := True; // Pooled
     if Self.Terminated then
       Exit();
     CurrentAccount.AddCoin(newOne);
     CurrentAccount.SaveFiles;
-  end;
+
+
+  end;   repeat
+ findUnusedChange(TWalletInfo(Self.crypto),GhostMasterSeed,True);
+    if missingChangeAmount()=0 then break;
+
+    until missingChangeAmount=0;
   cleanupRoutine;
   except on E:Exception do begin SHowMessage(E.Message) end;  end;
 end;
@@ -287,6 +324,7 @@ var
   Ys: tArray<Integer>;
   i, j: Integer;
 begin
+result:=-1;
   i := 0;
   for wd in CurrentAccount.myCoins do
     if (wd.x = wi.x) and (wd.coin = wi.coin) and (wd.Y > changeDelimiter) then
@@ -307,10 +345,11 @@ begin
     j := Ys[i - 1];
     if Abs(j - Ys[i]) > 1 then
       Exit(j + 1);
+      result:=Ys[i]+1;
   end;
 end;
 
-function findUnusedChange(wi: TWalletInfo; ms: AnsiString): TWalletInfo;
+function findUnusedChange(wi: TWalletInfo; ms: AnsiString;forceCreate:boolean=false): TWalletInfo;
 var
   arr: array of Integer;
   wd: TWalletInfo;
@@ -339,12 +378,14 @@ begin
         if Length(wd.History) <> 0 then
           Inc(used)
         else
-          Exit(wd);
+       if not forceCreate then Exit(wd);
 
       end;
 
     end;
     newY := findUnusedChangeY(wi);
+    if newY = -1 then exit;
+    
     newOne := coinData.createCoin(wi.coin, wi.X, newY, ms, wi.description);
     CurrentAccount.AddCoin(newOne);
     CurrentAccount.SaveFiles;

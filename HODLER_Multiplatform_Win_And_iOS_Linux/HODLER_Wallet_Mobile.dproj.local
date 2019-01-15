@@ -154,13 +154,6 @@
   </Transactions>
 	<BT_BuildType>AppStore</BT_BuildType>
 	<ProjectSortOrder AutoSort="0" SortType="0">
-    <File Path="android-support-v4.dex.jar"/>
-    <File Path="cloud-messaging.dex.jar"/>
-    <File Path="fmx.dex.jar"/>
-    <File Path="google-analytics-v2.dex.jar"/>
-    <File Path="google-play-billing.dex.jar"/>
-    <File Path="google-play-licensing.dex.jar"/>
-    <File Path="google-play-services.dex.jar"/>
     <File Path="additionalUnits"/>
     <File Path="additionalUnits\bi"/>
     <File Path="additionalUnits\bi\Velthuis.BigDecimals.pas"/>
@@ -294,9 +287,6 @@
     <File Path="components\TCopyableLabelData.pas"/>
     <File Path="components\TImageTextButtonData.pas"/>
     <File Path="components\TRotateImageData.pas"/>
-    <File Path="gfx"/>
-    <File Path="gfx\paperwallet"/>
-    <File Path="gfx\paperwallet\eqrbig.png"/>
     <File Path="homeAndroid"/>
     <File Path="homeAndroid\uHome.pas"/>
     <File Path="homeAndroid\uHome.fmx"/>

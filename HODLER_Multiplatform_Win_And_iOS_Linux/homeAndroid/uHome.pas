@@ -801,6 +801,7 @@ type
     FileMenagerUpImageButton: TImage;
     FileManagerPathLabel: TEdit;
     FileMenagerCancelButton: TButton;
+    internalImage: TImage;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);

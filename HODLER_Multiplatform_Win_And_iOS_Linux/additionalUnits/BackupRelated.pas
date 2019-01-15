@@ -887,17 +887,16 @@ begin
     end
     else
     begin
+
+if trim(frmhome.SeedField.Text)='' then exit;
+
       inputWordsList := SplitString(frmhome.SeedField.Text);
-
       seedFromWords := fromMnemonic(inputWordsList);
-
-      if seedFromWords = '' then
+      if (seedFromWords = '0000000000000000000000000000000000000000000000000000000000000000') or (seedFromWords='') then
       begin
         exit;
       end;
-
       userSavedSeed := true;
-
       CreateNewAccountAndSave(AccountNameEdit.Text, pass.Text,
         seedFromWords, true);
 

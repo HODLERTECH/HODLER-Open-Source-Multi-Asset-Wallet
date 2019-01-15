@@ -1484,6 +1484,8 @@ begin
   frmhome.TopInfoConfirmedValue.Text := ' Calculating...';
   frmhome.TopInfoUnconfirmedValue.Text := ' Calculating...';
   lastHistCC := 10;
+  if TFmxObject(Sender).Tag=-2 then
+  CurrentCryptoCurrency :=                   TWalletInfo(  TfmxObject(Sender).TagObject)  else
 CurrentCryptoCurrency := findUnusedReceiving(TWalletInfo(TfmxObject(Sender).TagObject));
   // ShowMessage(postDataOverHTTP(HODLER_URL+'/batchSync.php?coin='+availableCoin[0].shortcut, batchSync(0),false,True));
   frmhome.InstantSendLayout.Visible :=
@@ -2386,8 +2388,10 @@ begin
     HistoryTransactionID.Text := th.TransactionID;
     if th.typ = 'IN' then
       HistoryTransactionSendReceive.Text := dictionary('Receive')
-    else if th.typ = 'OUT' then
+    else if (th.typ = 'OUT') then
       HistoryTransactionSendReceive.Text := dictionary('Sent')
+    else if (th.typ = 'INTERNAL')  then
+      HistoryTransactionSendReceive.Text := dictionary('Internal')
     else
     begin
       ShowMessage('History Transaction type error');
