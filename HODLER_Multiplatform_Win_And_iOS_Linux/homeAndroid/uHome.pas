@@ -794,6 +794,7 @@ type
     lblWIFKey: TMemo;
     Layout33: TLayout;
     KeypoolSanitizer: TTimer;
+    internalImage: TImage;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);

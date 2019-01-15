@@ -1029,6 +1029,7 @@ begin
               Panel.height := 48;
               Panel.TagObject := cc;
               Panel.TagString := cc.addr;
+              Panel.Tag:=-2;
               Panel.OnClick := OpenWalletViewFromYWalletList;
               Panel.Position.y := i * Panel.height;
               Panel.Margins.Bottom := 1;

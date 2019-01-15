@@ -2179,6 +2179,38 @@ begin;
 end;
 
 function aggregateAndSortTX(CCArray: TCryptoCurrencyArray): TxHistory;
+  function alreadyOnList(txid:AnsiString;var Tab: TxHistory):Boolean;
+  var tx:transactionHistory;
+  ref:integer;
+  begin
+     result:=False;
+    ref:=0;
+    if Length(Tab)<=1 then Exit(False);
+
+     for tx in Tab do  begin
+     if tx.TransactionID=txid then Inc(ref);
+
+     if ref > 1 then Exit(True);
+
+    end;
+  end;
+  procedure removeDuplicatedTX(var Tab: TxHistory);
+  var i:integer;
+  begin
+  i:=0;
+  if Length(Tab)<=1 then Exit;
+    repeat
+    if  alreadyOnList(Tab[i].TransactionID,Tab) then
+    begin
+     Tab[i]:=Tab[High(Tab)];
+     SetLength(Tab,Length(Tab)-1);
+
+    end;
+    Inc(i);
+   until i>=Length(Tab);
+
+
+  end;
   procedure Sort(var Tab: TxHistory);
   var
     i, j: integer;
@@ -2223,6 +2255,7 @@ begin
     SetLength(result, Length(tmp) + Length(cc.history));
     insert(cc.history, tmp, Length(tmp) - Length(cc.history));
   end;
+  RemoveDuplicatedTX(tmp);
   Sort(tmp);
   result := tmp;
   SetLength(tmp, 0);
@@ -2341,7 +2374,8 @@ begin
       image.Bitmap := frmhome.sendImage.Bitmap;
     if hist[i].typ = 'IN' then
       image.Bitmap := frmhome.receiveImage.Bitmap;
-
+    if hist[i].typ = 'INTERNAL' then
+      image.Bitmap := frmhome.internalImage.Bitmap;
     lbl := TLabel.Create(panel);
     lbl.Align := TAlignLayout.Bottom;
     lbl.Height := 18;
