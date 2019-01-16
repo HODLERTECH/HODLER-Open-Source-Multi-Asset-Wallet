@@ -1702,6 +1702,7 @@ CurrentCryptoCurrency := findUnusedReceiving(TWalletInfo(TfmxObject(Sender).TagO
     // changeYbutton.Text := 'Change address (' + intToStr(CurrentCoin.x) +','+inttoStr(CurrentCoin.y) + ')';
     if pageControl.ActiveTab = HOME_TABITEM then
       WVTabControl.ActiveTab := WVBalance;
+    loadSendCacheFromFile( );
   end;
 end;
 
@@ -1958,6 +1959,8 @@ end;
 
     PrepareSendTabAndSend(CurrentCoin, Address, Amount, Fee, MasterSeed,
       AvailableCoin[CurrentCoin.coin].name);
+
+    clearSendCache();
 
   end;
 

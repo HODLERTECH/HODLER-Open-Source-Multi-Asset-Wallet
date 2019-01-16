@@ -381,6 +381,9 @@ function compareVersion(a, b: AnsiString): integer;
 function postDataOverHTTP(var aURL: String; postdata: string;
   useCache: boolean = true; noTimeout: boolean = false): AnsiString;
   //function floatToBigInteger(f : Single) : BigInteger;
+procedure saveSendCacheToFile();
+procedure loadSendCacheFromFile( );
+procedure clearSendCache();
 
 
 
@@ -444,16 +447,162 @@ var
   bitmapData: TBitmapData;
 
 
-{function floatToBigInteger(f : Single) : BigInteger;
-begin
-  result := bigInteger.Zero;
 
-  while( f > 0 ) do
+
+procedure clearSendCache();
+var
+ FilePath : AnSiString;
+ ts : TStringList;
+ arr : TJsonArray;
+ obj : TJsonObject;
+ val : TJsonValue;
+ exist : boolean;
+ coinID , X : Integer;
+ i : integer;
+begin
+{$IFDEF ANDROID}
+  filepath := tpath.Combine( CurrentAccount.DirPath , 'SendCache.dat');
+
+  ts := TStringList.Create();
+
+  ts.LoadFromFile( filePath );
+
+  arr := TJsonArray(TJSONObject.ParseJSONValue(ts.Text));
+
+  exist := false;
+  i := 0;
+  for val in arr do
   begin
-    result :=
+
+    val.TryGetValue<Integer>('coinID', coinID);
+
+    val.TryGetValue<integer>('X' , x);
+
+    if (coinID = CurrentCoin.coin) and (X = currentCoin.X) then
+    begin
+      arr.Remove(i);
+      break;
+    end;
+
+
+    i := i + 1;
   end;
 
-end;}
+  ts.Text := arr.ToString;
+
+  ts.SaveToFile( FilePath );
+
+  ts.Free;
+  arr.Free();
+{$ENDIF}
+end;
+procedure saveSendCacheToFile();
+var
+ FilePath : AnSiString;
+ ts : TStringList;
+ arr : TJsonArray;
+ obj : TJsonObject;
+ val : TJsonValue;
+ exist : boolean;
+ coinID , X : Integer;
+ i : integer;
+begin
+{$IFDEF ANDROID}
+  filepath := tpath.Combine( CurrentAccount.DirPath , 'SendCache.dat');
+
+  ts := TStringList.Create();
+
+  ts.LoadFromFile( filePath );
+
+  arr := TJsonArray(TJSONObject.ParseJSONValue(ts.Text));
+
+  exist := false;
+  i := 0;
+  for val in arr do
+  begin
+
+    val.TryGetValue<Integer>('coinID', coinID);
+
+    val.TryGetValue<integer>('X' , x);
+
+    if (coinID = CurrentCoin.coin) and (X = currentCoin.X) then
+    begin
+      arr.Remove(i);
+      break;
+    end;
+
+
+    i := i + 1;
+  end;
+
+  obj := TJSONObject.Create();
+
+  obj.AddPair( 'coinID' , intToStr(CurrentCoin.coin) );
+  obj.AddPair( 'X' , intToStr(CurrentCoin.x) );
+  obj.AddPair( 'WVsendTO' ,frmhome.WVsendTO.Text );
+  obj.AddPair( 'wvAmount' ,frmhome.wvAmount.Text );
+  obj.AddPair( 'wvFee' ,frmhome.wvFee.Text );
+
+  arr.AddElement( obj );
+
+  ts.Text := arr.ToString;
+
+  ts.SaveToFile( FilePath );
+
+  ts.Free;
+  arr.Free();
+{$ENDIF}
+end;
+
+procedure loadSendCacheFromFile();
+var
+ FilePath : AnSiString;
+ ts : TStringList;
+ arr : TJsonArray;
+ obj : TJsonObject;
+ val : TJsonValue;
+ exist : boolean;
+ coinID , X : Integer;
+ i : integer;
+ temp : AnsiString;
+begin
+{$IFDEF ANDROID}
+  filepath := tpath.Combine( CurrentAccount.DirPath , 'SendCache.dat');
+
+  ts := TStringList.Create();
+  ts.LoadFromFile( filePath );
+
+  arr := TJsonArray(TJSONObject.ParseJSONValue(ts.Text));
+
+  for val in arr do
+  begin
+
+    val.TryGetValue<Integer>('coinID', coinID);
+
+    val.TryGetValue<integer>('X' , x);
+
+    if (coinID = CurrentCoin.coin) and (X = currentCoin.X) then
+    begin
+
+      val.TryGetValue<AnsiString>('WVsendTO' , temp );
+      frmhome.WVsendTO.Text := temp;
+      val.TryGetValue<AnsiString>('wvAmount' , temp );
+      frmhome.wvAmount.Text := temp;
+      val.TryGetValue<AnsiString>('wvFee' , temp );
+      frmhome.wvFee.Text := temp;
+
+
+      break;
+    end;
+
+  end;
+
+  ts.Free;
+  arr.Free();
+{$ENDIF}
+
+end;
+
 
 function TSecureRandoms.CheckSecureRandom(const random: ISecureRandom): boolean;
 begin

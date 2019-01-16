@@ -571,7 +571,7 @@
         <RcItem Include="Jet.style">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
-            <ResourceId>RT_DARKold</ResourceId>
+            <ResourceId>RT_DARK</ResourceId>
         </RcItem>
         <RcItem Include="Languages\PT.lang">
             <ContainerId>ResourceItem</ContainerId>
@@ -669,7 +669,7 @@
         <RcItem Include="token_icons\CharocalExpressive.style">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
-            <ResourceId>RT_DARK</ResourceId>
+            <ResourceId>RT_DARKnew</ResourceId>
         </RcItem>
         <RcItem Include="coin_icons\1.png">
             <ResourceType>RCDATA</ResourceType>
