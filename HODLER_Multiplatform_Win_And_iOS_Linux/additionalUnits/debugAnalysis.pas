@@ -5,7 +5,7 @@ unit debugAnalysis;
 interface
 
 uses
-  System.SysUtils, System.Classes, System.IOUtils , FMX.Types, System.DateUtils ,FMX.Controls, FMX.Layouts,
+  SysUtils, System.Classes, System.IOUtils , FMX.Types, System.DateUtils ,FMX.Controls, FMX.Layouts,
   FMX.Edit, FMX.StdCtrls, FMX.Clipboard, FMX.Platform, FMX.Objects,
   System.Types, StrUtils , FMX.Dialogs
 
@@ -152,7 +152,7 @@ begin
   temp := 'msg=' + msg + '&' +
   'stack=' + stack + '&' +
   'sender=' + sender + '&' +
-   'ver=' + StringReplace(CURRENT_VERSION, '.' , '' ,[rfReplaceAll] ) + '&'
+   'ver=' + StringReplace(CURRENT_VERSION, '.' , 'x' ,[rfReplaceAll] ) + '&'
    + getdeviceInfo();
    tthread.CreateAnonymousThread(procedure
    begin
@@ -219,7 +219,12 @@ begin
     DeviceInfo := 'empty';
 
   temp := 'msg=' + msg + '&errlist=' + log + '&more=' + DeviceInfo;
-  //sendReport( 'https://hodler1.nq.pl/userReport' , temp );
+
+  tthread.CreateAnonymousThread(procedure
+  begin
+    sendReport( 'https://hodler1.nq.pl/userreport.php' , temp );
+  end).Start;
+
 
 
 
@@ -268,8 +273,14 @@ begin
   addLog('------END------');
 
   saveLogFile();
+
+  //showmessage( Exception.GetStackInfoStringProc( ExceptAddr ) );
   if USER_ALLOW_TO_SEND_DATA then
-    SendAutoReport(E.Message , e.StackTrace);
+    SendAutoReport(E.Message , e.StackTrace , Sender.ClassName + ' ' + Sender.UnitName);
+
+    //{$IFDEF DEBUG}
+ showmessage( E.Message );
+//{$ENDIF}
 
   //showmessage(e.StackTrace);
 end;

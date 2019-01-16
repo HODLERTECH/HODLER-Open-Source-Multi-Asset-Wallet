@@ -34,7 +34,7 @@ type
     outputs: array of ttxoutput;
   end;
 
-type
+{type
   SynchronizeHistoryThread = class(TThread)
   private
     startTime: Double;
@@ -43,7 +43,7 @@ type
     constructor Create();
     procedure Execute(); override;
     function TimeFromStart(): Double;
-  end;
+  end;   }
 
 procedure parseDataForETH(s: AnsiString; { var } wd: TWalletInfo);
 
@@ -199,7 +199,11 @@ begin
       begin
 
         parseBalances(JsonPair.JsonValue.GetValue<string>('balance'), wd);
+        try
         parseCoinHistory(JsonPair.JsonValue.GetValue<string>('history'), wd);
+        except on e:Exception do begin end;
+
+        end;
         wd.UTXO := parseUTXO(JsonPair.JsonValue.GetValue<string>('utxo'), wd.Y);
                 if wd.inPool = true then
           wd.InPool := trim(JsonPair.JsonValue.GetValue<string>('history')) = '';
@@ -548,16 +552,9 @@ begin
     raise Exception.Create('CryptoCurrency Type Error');
   end;
 
-  { TThread.Synchronize(nil,
-    procedure
-    begin
-    frmHome.RefreshProgressBar.Value := 0;
-    frmHome.RefreshProgressBar.Visible := false;
-    end); }
-
 end;
 
-function SynchronizeHistoryThread.TimeFromStart;
+{function SynchronizeHistoryThread.TimeFromStart;
 begin
   result := 0;
   if startTime > endTime then
@@ -583,26 +580,12 @@ begin
   with frmHome do
   begin
 
-    { if synchronizeHistory() then
-      begin
 
-
-      if assigned(Self) and (not Terminated) then
-      TThread.Synchronize(nil,
-      procedure
-      begin
-
-      if PageControl.ActiveTab = walletView then
-      createHistoryList(CurrentCryptoCurrency, 0, lastHistCC);
-
-      end);
-
-      end; }
 
   end;
 
   endTime := now;
-end;
+end;    }
 
 function SynchronizeBalanceThread.TimeFromStart;
 begin
@@ -979,38 +962,49 @@ begin
   ts.Free;
 end;
 
-function isOurAddress(adr:string):Boolean;
+function isOurAddress(adr:string;coinid:integer):Boolean;
 var twi:TWalletInfo;
 var
   segwit,cash, compatible, legacy: AnsiString;
 begin
 
-result:=false;
+  result:=false;
 
-for twi in CurrentAccount.myCoins do
-begin
-  segwit := generatep2wpkh(twi.pub, availablecoin[twi.coin].hrp);
-  compatible := generatep2sh(twi.pub, availablecoin[twi.coin].p2sh);
-  legacy := generatep2pkh(twi.pub, availablecoin[twi.coin].p2pk);
-  cash := bitcoinCashAddressToCashAddress(legacy, false);
-  if (adr=segwit) or (adr=compatible) or (adr=legacy) or (adr=cash) then Exit(True);
+  if ContainsStr( adr , ':') then
+    adr := rightStr(adr , length(adr) - pos(':' , adr) );
 
+
+  for twi in CurrentAccount.myCoins do
+  begin
+  if twi.coin<>coinid then Continue;
+
+    segwit := generatep2wpkh(twi.pub, availablecoin[twi.coin].hrp);
+    compatible := generatep2sh(twi.pub, availablecoin[twi.coin].p2sh);
+    legacy := generatep2pkh(twi.pub, availablecoin[twi.coin].p2pk);
+    cash := bitcoinCashAddressToCashAddress(legacy, false);
+    if (adr=segwit) or (adr=compatible) or (adr=legacy) or (adr=cash) then Exit(True);
+
+  end;
 end;
-end;
-function checkTxType(tx:TxHistoryResult):integer;
+function checkTxType(tx:TxHistoryResult;coinid:integer):integer;
 var ourInputs,ourOutputs:integer;
 i:Integer;
 begin
-ourInputs:=0;
-ourOutputs:=0;
-for i := 0 to StrToIntDef(tx.inputsCount,0)-1 do
-  if isOurAddress(tx.inputAddresses[i]) then Inc(ourInputs);
-for i := 0 to StrToIntDef(tx.outputsCount,0)-1 do
-  if isOurAddress(tx.outputs[i].address) then Inc(ourOutputs);
-if (ourInputs>=1) and (ourOutputs=0)  then Exit(0); //outgoing
-if (ourInputs>=1) and (ourOutputs=1) and (StrToIntDef(tx.outputsCount,0)>1)  then Exit(0); //outgoing
-if (ourInputs>=1) and (StrToIntDef(tx.outputsCount,0)=ourOutputs)  then Exit(2); //internal\
-if (ourInputs=0) and (ourOutputs>=1) then Exit(1); //incoming
+
+  result := 0;
+  ourInputs:=0;
+  ourOutputs:=0;
+
+  for i := 0 to StrToIntDef(tx.inputsCount,0)-1 do
+    if isOurAddress(tx.inputAddresses[i],coinid) then Inc(ourInputs);
+
+  for i := 0 to StrToIntDef(tx.outputsCount,0)-1 do
+    if isOurAddress(tx.outputs[i].address,coinid) then Inc(ourOutputs);
+
+  if (ourInputs>=1) and (ourOutputs=0)  then Exit(0); //outgoing
+  if (ourInputs>=1) and (ourOutputs=1) and (StrToIntDef(tx.outputsCount,0)>1)  then Exit(0); //outgoing
+  if (ourInputs>=1) and (StrToIntDef(tx.outputsCount,0)=ourOutputs)  then Exit(2); //internal\
+  if (ourInputs=0) and (ourOutputs>=1) then Exit(1); //incoming
 
 
 end;
@@ -1066,13 +1060,13 @@ begin
     inc(txIndex);
     SetLength(parsedTx,txIndex+1);
   until (entry>=(ts.Count-1));
-
+  SetLength(parsedTx,txIndex);
   i := 0;
   setLength(wallet.history, 0);
 
   for i := 0 to txIndex-1 do
     begin
-      case checkTxType(parsedTx[i]) of
+      case checkTxType(parsedTx[i],wallet.coin) of
           0: transHist.typ:='OUT';
           1: transHist.typ:='IN';
           2: transHist.typ:='INTERNAL';
@@ -1088,7 +1082,7 @@ begin
     for j := 0 to strToIntdef(parsedTx[i].outputsCount,0)-1 do
     begin
      transHist.addresses[j] := parsedTx[i].outputs[j].address;
-     if (isOurAddress(parsedTx[i].outputs[j].address)=True) and (transHist.typ='OUT') then
+     if (isOurAddress(parsedTx[i].outputs[j].address,wallet.coin)=True) and (transHist.typ='OUT') then
        transHist.values[j] := StrFloatToBigInteger('0.000000', availablecoin[wallet.coin].decimals) else
        transHist.values[j] := StrFloatToBigInteger(parsedTx[i].outputs[j].value, availablecoin[wallet.coin].decimals);
       sum := sum + transHist.values[j];

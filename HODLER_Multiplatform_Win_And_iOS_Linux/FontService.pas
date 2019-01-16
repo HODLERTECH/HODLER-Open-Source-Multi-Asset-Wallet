@@ -21,7 +21,7 @@ end;
 
 function TmyFMXSystemFontService.GetDefaultFontSize: Single;
 begin
-  Result := 9.999;
+  Result := 12;
 end;
 
 procedure InitFont;

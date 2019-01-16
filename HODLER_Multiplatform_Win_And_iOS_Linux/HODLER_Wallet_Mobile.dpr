@@ -3,7 +3,7 @@ program HODLER_Wallet_Mobile;
 {$R *.dres}
 
 uses
-FontService,
+  FontService,
   System.StartUpCopy,
   FMX.Forms,
   FMX.Styles,
@@ -132,7 +132,8 @@ FontService,
   TImageTextButtonData in 'components\TImageTextButtonData.pas',
   TRotateImageData in 'components\TRotateImageData.pas',
   debugAnalysis in 'additionalUnits\debugAnalysis.pas',
-  KeypoolRelated in 'additionalUnits\KeypoolRelated.pas';
+  KeypoolRelated in 'additionalUnits\KeypoolRelated.pas',
+  AssetsMenagerData in 'additionalUnits\AssetsMenagerData.pas';
 
 {$R *.res}
 

@@ -25,47 +25,48 @@ type
     availableFirstLetter: AnsiString;
     hrp: AnsiString;
     qrname: AnsiString;
+    ResourceName : AnsiString;
   end;
 
 const
-  // all supported coin
+  // all supported coin   ResourceName : '_IMG';
   availableCoin: array [0 .. 7] of coinInfo = ((id: 0; displayName: 'Bitcoin';
     name: 'bitcoin'; shortcut: 'BTC'; WifByte: '80'; p2sh: '05'; p2pk: '00';
 
     flag: 0; decimals: 8; availableFirstLetter: '13b'; hrp: 'bc';
-    qrname: 'bitcoin';
+    qrname: 'bitcoin'; ResourceName : 'BITCOIN_IMG';
 
     ), (id: 1; displayName: 'Litecoin'; name: 'litecoin'; shortcut: 'LTC';
     WifByte: 'B0'; p2sh: '32' { '05' }; p2pk: '30';
 
     flag: 0; decimals: 8; availableFirstLetter: 'lm'; hrp: 'ltc';
-    qrname: 'litecoin';
+    qrname: 'litecoin'; ResourceName : 'LITECOIN_IMG';
 
     ), (id: 2; displayName: 'DASH'; name: 'dash'; shortcut: 'DASH';
     WifByte: 'CC'; p2sh: '10'; p2pk: '4c'; flag: 0; decimals: 8;
-    availableFirstLetter: 'X'; qrname: 'dash';
+    availableFirstLetter: 'X'; qrname: 'dash'; ResourceName : 'DASH_IMG';
 
     ), (id: 3; displayName: 'Bitcoin Cash'; name: 'bitcoinabc'; shortcut: 'BCH';
     WifByte: '80'; p2sh: '05'; p2pk: '00';
 
-    flag: 0; decimals: 8; availableFirstLetter: '13pq'; qrname: 'bitcoincash';
+    flag: 0; decimals: 8; availableFirstLetter: '13pq'; qrname: 'bitcoincash'; ResourceName : 'BITCOINCASH_IMG';
 
     ), (id: 4; displayName: 'Ethereum'; name: 'ethereum'; shortcut: 'ETH';
     WifByte: ''; p2pk: '00'; flag: 1; decimals: 18; availableFirstLetter: '0';
-    qrname: 'ethereum';
+    qrname: 'ethereum'; ResourceName : 'ETHEREUM_IMG';
 
     ), (id: 5; displayName: 'Ravencoin'; name: 'ravencoin'; shortcut: 'RVN';
     WifByte: '80'; p2sh: '7a'; p2pk: '3c'; flag: 0; decimals: 8;
-    availableFirstLetter: 'Rr'; qrname: 'ravencoin';
+    availableFirstLetter: 'Rr'; qrname: 'ravencoin'; ResourceName : 'RAVENCOIN_IMG';
 
     ), (id: 6; displayName: 'Digibyte'; name: 'digibyte'; shortcut: 'DGB';
     WifByte: '80'; p2sh: '3f'; p2pk: '1e'; flag: 0; decimals: 8;
-    availableFirstLetter: 'SD'; qrname: 'digibyte';
+    availableFirstLetter: 'SD'; qrname: 'digibyte'; ResourceName : 'DIGIBYTE_IMG';
 
     ), (id: 7; displayName: 'Bitcoin SV'; name: 'bitcoinsv'; shortcut: 'BSV';
     WifByte: '80'; p2sh: '05'; p2pk: '00';
 
-    flag: 0; decimals: 8; availableFirstLetter: '13pq'; qrname: 'bitcoincash';
+    flag: 0; decimals: 8; availableFirstLetter: '13pq'; qrname: 'bitcoincash'; ResourceName : 'BITCOINSV_IMG';
 
     )
 

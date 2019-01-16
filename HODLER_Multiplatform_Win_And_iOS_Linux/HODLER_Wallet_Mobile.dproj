@@ -659,6 +659,7 @@
         <DCCReference Include="components\TRotateImageData.pas"/>
         <DCCReference Include="additionalUnits\debugAnalysis.pas"/>
         <DCCReference Include="additionalUnits\KeypoolRelated.pas"/>
+        <DCCReference Include="additionalUnits\AssetsMenagerData.pas"/>
         <RcItem Include="Languages\PT.lang">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
@@ -745,6 +746,134 @@
         <RcItem Include="token_icons\Refresh-PNG-Transparent-Image.png">
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>RELOAD_IMAGE</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\698831-icon-105-folder-add-512.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>BROWSE_DEVICE</ResourceId>
+        </RcItem>
+        <RcItem Include="coin_icons\1.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>BITCOIN_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="coin_icons\131.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>DASH_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\1715.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>MOBILEGO_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\1776.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>CRYPTOCOM_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="coin_icons\1831.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>BITCOINCASH_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\1908.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>NEBULAS_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\1954.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>MDA_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\1982.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>KYBERNETWORK_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="coin_icons\2.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>LITECOIN_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\2071.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>REQUESTNETWORK_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\2308.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>DAI_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\2457.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>TRUECHAIN_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\2502.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>HUOBITOKEN_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\2918.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>BITZTOKEN_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="coin_icons\7.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>BITCOINSV_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\AE.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>AETERNITY_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\ALG.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>ALGORY_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\BNB.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>BINANCECOIN_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\BTM.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>BYTOM_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\centre-usdc_28.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>USDCOIN_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="coin_icons\DGB.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>DIGIBYTE_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="coin_icons\ETH.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>ETHEREUM_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\HDL.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>HDL_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\imgNotFound.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>IMG_EQR_SMALL</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\latoken.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>LATOKEN_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\MKR.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>MAKER_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\OMG.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>OMNISEGO_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\paxos_28_2.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>PAXOSSTANDARD_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="coin_icons\RVN.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>RAVENCOIN_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\trueusd_28.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>TRUEUSD_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\ZRX.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>ZRX_IMG</ResourceId>
         </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
@@ -917,6 +1046,18 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="coin_icons\131.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\1776.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="OKSterling.style" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSDevice64">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -976,6 +1117,12 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_180x180.png" Configuration="Debug" Class="iPhone_AppIcon180">
                     <Platform Name="iOSSimulator">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\BTM.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1078,6 +1225,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\centre-usdc_28.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\SPA.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="All Platforms">
                         <RemoteDir>.\</RemoteDir>
@@ -1136,6 +1289,12 @@
                 <DeployFile LocalName="Languages\PT.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSDevice64">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\1715.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1252,6 +1411,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\paxos_28_2.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Android\Release\classes.dex" Configuration="Release" Class="AndroidClassesDexFile">
                     <Platform Name="All Platforms">
                         <Overwrite>true</Overwrite>
@@ -1354,6 +1519,12 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_29x29.png" Configuration="Debug" Class="iPhone_Spotlight29">
                     <Platform Name="iOSSimulator">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\ALG.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1558,6 +1729,12 @@
                 <DeployFile LocalName="Languages\ZHX.lang" Configuration="Release" Class="ProjectFile">
                     <Platform Name="iOSDevice32">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\2918.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1813,6 +1990,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\HDL.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Android\Release\splash_image_def.xml" Configuration="Release" Class="AndroidSplashImageDef">
                     <Platform Name="All Platforms">
                         <Overwrite>true</Overwrite>
@@ -1842,11 +2025,23 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\latoken.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="gfx\Icon96x96.png" Configuration="Debug" Class="Android_LauncherIcon96"/>
                 <DeployFile LocalName="$(BDS)\lib\android\debug\x86\libnative-activity.so" Configuration="Release" Class="AndroidLibnativeX86File"/>
                 <DeployFile LocalName="Languages\SPA.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSSimulator">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\698831-icon-105-folder-add-512.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1935,6 +2130,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\1908.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\lib\android\debug\mips\libnative-activity.so" Configuration="Release" Class="AndroidLibnativeMipsFile">
                     <Platform Name="All Platforms">
                         <Overwrite>true</Overwrite>
@@ -1985,6 +2186,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="Android\Release\classes.dex" Configuration="Release" Class="AndroidClassesDexFile"/>
+                <DeployFile LocalName="token_icons\1954.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageLandscape_1024x768.png" Configuration="Debug" Class="iPad_Launch1024x768">
                     <Platform Name="iOSSimulator">
                         <RemoteName>Default-Landscape~ipad.png</RemoteName>
@@ -2142,6 +2349,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="gfx\splash470x320.png" Configuration="Debug" Class="Android_SplashImage470"/>
+                <DeployFile LocalName="token_icons\1982.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_ApplicationIcon_144x144.png" Configuration="Debug" Class="iPad_AppIcon144">
                     <Platform Name="iOSSimulator">
                         <Overwrite>true</Overwrite>
@@ -2267,6 +2480,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\2071.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\lib\android\debug\mips\libnative-activity.so" Configuration="Debug" Class="AndroidLibnativeMipsFile"/>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImagePortrait_768x1024.png" Configuration="Debug" Class="iPad_Launch768x1024">
                     <Platform Name="iOSSimulator">
@@ -2322,6 +2541,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\AE.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\POLlang.json" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
@@ -2358,6 +2583,18 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="Languages\DUT.lang" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="coin_icons\7.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\imgNotFound.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -2400,6 +2637,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\2308.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_ApplicationIcon_76x76.png" Configuration="Debug" Class="iPad_AppIcon76">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
@@ -2413,6 +2656,12 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_SpotlightSearchIcon_80x80.png" Configuration="Debug" Class="iPad_SpotLight80">
                     <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="coin_icons\RVN.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -2566,6 +2815,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="coin_icons\ETH.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="iOSDevice64\Debug\HODLER_Wallet_Mobile" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="iOSDevice64">
                         <RemoteName>HODLER_Wallet_Mobile</RemoteName>
@@ -2618,6 +2873,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="Languages\FRA.lang" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\BNB.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -2687,6 +2948,12 @@
                 <DeployFile LocalName="Languages\FRA.lang" Configuration="Release" Class="ProjectFile">
                     <Platform Name="iOSSimulator">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\MKR.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -2815,6 +3082,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\OMG.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_SpotlightSearchIcon_100x100.png" Configuration="Debug" Class="iPad_SpotLight100">
                     <Platform Name="iOSSimulator">
                         <Overwrite>true</Overwrite>
@@ -2859,6 +3132,12 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_114x114.png" Configuration="Debug" Class="iPhone_AppIcon114">
                     <Platform Name="iOSSimulator">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\2502.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -2938,6 +3217,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="OKSterling.style" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\2457.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -3023,6 +3308,18 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="coin_icons\DGB.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\ZRX.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\PT.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSDevice32">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -3038,6 +3335,12 @@
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_640x960.png" Configuration="Release" Class="iPhone_Launch640">
                     <Platform Name="iOSDevice32">
                         <RemoteName>Default@2x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="coin_icons\1831.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -3099,6 +3402,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="coin_icons\2.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Jet.style" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSSimulator">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -3118,6 +3427,12 @@
                 </DeployFile>
                 <DeployFile LocalName="..\..\Downloads\FireMonkey_Premium_Style_Pack_XE6\FireMonkey Premium Style Pack XE6\FireMonkey Premium Style Pack XE6\Win\Jet.style" Configuration="Release" Class="ProjectFile"/>
                 <DeployFile LocalName="Android\Release\libHODLER_Core.so" Configuration="Release" Class="ProjectOutput"/>
+                <DeployFile LocalName="token_icons\trueusd_28.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_SpotlightSearchIcon_80x80.png" Configuration="Release" Class="iPad_SpotLight80">
                     <Platform Name="iOSDevice32">
                         <Overwrite>true</Overwrite>
@@ -3302,6 +3617,12 @@
                 <DeployFile LocalName="iOSSterling.style" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSDevice64">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="coin_icons\1.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

@@ -80,6 +80,9 @@ procedure SendEncryptedSeedButtonClick(Sender: TObject);
 procedure btnChangeDescryptionOKClick(Sender: TObject);
 procedure SendErrorMsgSwitchSwitch(Sender: TObject);
 procedure SendReportIssuesButtonClick(Sender: TObject);
+procedure FoundTokenOKButtonClick(Sender: TObject);
+procedure SearchTokenButtonClick(Sender: TObject);
+procedure ExportPrivateKeyButtonClick(Sender: TObject);
 
 var
   SyncOpenWallet: TThread;
@@ -89,6 +92,102 @@ implementation
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, AccountRelated, TCopyableEditData, BackupRelated , debugAnalysis,KeypoolRelated;
+
+procedure ExportPrivateKeyButtonClick(Sender: TObject);
+begin
+  //createExportPrivateKeyList();
+  createAddWalletView();
+  frmhome.exportemptyaddressesSwitch.IsChecked := false;
+
+  newCoinListNextTabItem := frmhome.ExportPrivCoinListTabItem;
+  AddCoinBackTabItem := frmhome.pageControl.ActiveTab;
+
+
+  switchTab(frmhome.PageControl, frmhome.AddNewcoin);
+
+  {
+    createAddWalletView();
+  with frmhome do
+  begin
+    HexPrivKeyDefaultRadioButton.IsChecked := True;
+    Layout31.Visible := false;
+    WIFEdit.Text := '';
+    // PrivateKeySettingsLayout.Visible := false;
+    NewCoinDescriptionEdit.Text := '';
+    OwnXEdit.Text := '';
+    OwnXCheckBox.IsChecked := false;
+    IsPrivKeySwitch.IsChecked := false;
+    IsPrivKeySwitch.Enabled := false;
+    NewCoinDescriptionPassEdit.Text := '';
+    NewCoinDescriptionEdit.Text := '';
+    CoinPrivKeyPassEdit.Text := '';
+    CoinPrivKeyDescriptionEdit.Text := '';
+    newCoinListNextTabItem := AddCoinFromPrivKeyTabItem;
+    AddCoinBackTabItem := pageControl.ActiveTab;
+    switchTab(pageControl, AddNewCoin);
+
+  end;
+  }
+end;
+
+procedure SearchTokenButtonClick(Sender: TObject);
+var
+  found: Integer;
+begin
+
+  if ((CurrentCoin.coin <> 4) or (CurrentCryptoCurrency is Token)) then
+  begin
+
+    showmessage('SearchTokenButton shouldnt be visible here');
+    exit;
+
+  end;
+
+  found := SearchTokens(CurrentCoin.addr, nil);
+  if found = 0 then
+  begin
+    popupWindow.Create('New tokens found: ' + inttostr(found));
+  end
+  else
+  begin
+
+    switchTab(frmhome.pageControl , frmhome.foundTokenTabItem);
+  end;
+
+end;
+
+procedure FoundTokenOKButtonClick(Sender: TObject);
+var
+  fmx : TfmxObject;
+  T : Token;
+begin
+
+    for fmx in frmhome.FoundTokenVertScrollBox.Content.Children do
+    begin
+      if (fmx is TPanel) and (fmx.TagObject is TCheckBox) then
+      begin
+        if TCheckBox(fmx.TagObject).IsChecked then
+        begin
+          T := Token(TFmxObject(fmx.TagObject).TagObject);
+          T.idInWallet := Length(AccountForSearchToken.myTokens) + 10000;
+
+
+          AccountForSearchToken.addToken(T);
+          AccountForSearchToken.SaveFiles();
+          if AccountForSearchToken = CurrentAccount then
+            CreatePanel(T);
+        end
+        else
+        begin
+          Token(TFmxObject(fmx.TagObject).TagObject).Free;
+        end;
+
+      end;
+
+    end;
+
+    switchTab(frmhome.pageControl , frmhome.walletView);
+end;
 
 procedure SendReportIssuesButtonClick(Sender: TObject);
 begin
@@ -311,8 +410,30 @@ begin
 
   if newCoinListNextTabItem = frmhome.ClaimWalletListTabItem then
   begin
+    if newCoinID = 4 then
+    begin
+
+      popupWindow.Create('Better solution is to import the ETH key to transfer ETH and tokens to the wallet.');
+
+      exit();
+    end;
+
     createClaimCoinList(newcoinID);
   end;
+
+  if newCoinListNextTabItem = frmhome.ExportPrivCoinListTabItem then
+  begin
+
+    if createExportPrivateKeyList(newCoinID) = 0  then
+    begin
+
+      popupWindow.Create('No addresses have been created for this coin');
+      exit();
+
+    end;
+
+  end;
+
 
   switchTab(frmhome.pageControl,
     newCoinListNextTabItem { frmhome.AddNewCoinSettings } );
@@ -343,19 +464,20 @@ begin
   if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, svc)
   then
   begin
-    if TfmxObject(Sender).Parent is Tmemo then
+
+    if TfmxObject(Sender).Parent.Parent is Tmemo then
     begin
-      svc.setClipboard(removeSpace(Tmemo(TfmxObject(Sender).Parent).Text));
-      popupWindow.Create(removeSpace(Tmemo(TfmxObject(Sender).Parent).Text) +
+      svc.setClipboard(removeSpace(Tmemo(TfmxObject(Sender).Parent.Parent).Text));
+      popupWindow.Create(removeSpace(Tmemo(TfmxObject(Sender).Parent.Parent).Text) +
         ' ' + dictionary('CopiedToClipboard'));
-      exit;
+      //exit;
     end;
     if TfmxObject(Sender).Parent is Tedit then
     begin
       svc.setClipboard(removeSpace(Tedit(TfmxObject(Sender).Parent).Text));
       popupWindow.Create(removeSpace(Tedit(TfmxObject(Sender).Parent).Text) +
         ' ' + dictionary('CopiedToClipboard'));
-      exit;
+      //exit;
     end;
     if TfmxObject(Sender).Parent is TButton then
     begin
@@ -446,15 +568,26 @@ begin
                 TransactionWaitForSendDetailsLabel.Visible := True;
                 TransactionWaitForSendLinkLabel.Visible := false;
                 ts := SplitString(ans, #$A);
-                TransactionWaitForSendDetailsLabel.Text := ts[0];
-                for i := 1 to ts.Count - 1 do
-                  if ts[i] <> '' then
-                  begin
-                    TransactionWaitForSendDetailsLabel.Text :=
-                      TransactionWaitForSendDetailsLabel.Text + #13#10 +
-                      'Error: ' + ts[i];
-                    break;
-                  end;
+                //showmessage('_' + ans + '_');
+                if ts.Count = 0 then
+                begin
+
+                  TransactionWaitForSendDetailsLabel.Text := 'Unknown Error' + ans;
+
+                end
+                else
+                begin
+                  TransactionWaitForSendDetailsLabel.Text := ts[0];
+                  for i := 1 to ts.Count - 1 do
+                    if ts[i] <> '' then
+                    begin
+                      TransactionWaitForSendDetailsLabel.Text :=
+                        TransactionWaitForSendDetailsLabel.Text + #13#10 +
+                        'Error: ' + ts[i];
+                     // break;
+                    end;
+                end;
+                
 
                 ts.free;
               end;
@@ -556,10 +689,11 @@ begin
     begin
       if SendAllFundsSwitch.IsChecked then
       begin
-        wvAmount.Text := lbBalanceLong.Text;
+        wvAmount.Text :=  BigIntegertoFloatStr
+        (( BigInteger.Min(CurrentAccount.getSpendable(TWalletInfo(CurrentCryptoCurrency)),CurrentAccount.aggregateBalances(TWalletInfo(CurrentCryptoCurrency)).confirmed)), CurrentCryptoCurrency.decimals);;
         WVRealCurrency.Text :=
           floatToStrF(CurrencyConverter.calculate
-          (strToFloatDef(lbBalanceLong.Text, 0) * CurrentCryptoCurrency.rate),
+          (strToFloatDef(wvAmount.Text, 0) * CurrentCryptoCurrency.rate),
           ffFixed, 18, 2);
         FeeFromAmountSwitch.IsChecked := True;
         FeeFromAmountSwitch.Enabled := false;
@@ -910,27 +1044,6 @@ begin
     end;
   end;
 
-  if SyncHistoryThr <> nil then
-  begin
-
-    if SyncHistoryThr.Finished then
-    begin
-      SyncHistoryThr.DisposeOf;
-      SyncHistoryThr := nil;
-      SyncHistoryThr := SynchronizeHistoryThread.Create();
-    end
-    else if SyncHistoryThr.TimeFromStart() > 1.0 / 1040.0 then
-    begin
-
-      SyncHistoryThr.Terminate;
-      SyncHistoryThr.WaitFor;
-      SyncHistoryThr.DisposeOf;
-      SyncHistoryThr := nil;
-      SyncHistoryThr := SynchronizeHistoryThread.Create();
-
-    end;
-
-  end;
 
 end;
 
@@ -1982,20 +2095,6 @@ begin
       end;
     end;
 
-    if (SyncHistoryThr <> nil) and (SyncHistoryThr.Finished = false) then
-    begin
-
-      try
-        SyncHistoryThr.Terminate();
-      except
-        on E: Exception do
-        begin
-
-        end;
-      end;
-
-    end;
-    SyncHistoryThr.WaitFor;
     SyncBalanceThr.WaitFor;
 
     CurrentAccount.SaveFiles();
@@ -2010,7 +2109,6 @@ begin
 
     syncTimer.Enabled := True;
     SyncBalanceThr.Terminate();
-    SyncHistoryThr.Terminate();
 
     if SyncBalanceThr.Finished then
     begin
@@ -2019,12 +2117,6 @@ begin
       SyncBalanceThr := nil;
       SyncBalanceThr := SynchronizeBalanceThread.Create();
 
-    end;
-    if SyncHistoryThr.Finished then
-    begin
-      SyncHistoryThr.DisposeOf;
-      SyncHistoryThr := nil;
-      SyncHistoryThr := SynchronizeHistoryThread.Create();
     end;
 
     closeOrganizeView(nil);

@@ -23,7 +23,10 @@ type
     function toJsonValue(): TJsonValue;
     procedure fromJsonValue(JsonValue: TJsonValue);
 
+
+
   end;
+function compareHistory( a , b : transactionHistory ):integer;
 
 type
   TxHistory = array of transactionHistory;
@@ -60,6 +63,17 @@ type
 implementation
 
 uses misc, uHome;
+
+function compareHistory( a , b : transactionHistory ):integer;
+begin
+
+  if strToFloatDef(a.data , 0) > strToFloatDef( b.data , 0 ) then
+    exit(1);
+  if strToFloatDef( a.data , 0 ) < strToFloatDef( b.data , 0 ) then
+    exit(-1);
+
+  result := CompareStr( a.TransactionID , b.TransactionID);
+end;
 
 function cryptoCurrency.getIcon(): TBitmap;
 begin
@@ -103,7 +117,7 @@ function cryptoCurrency.getFiat: Double;
 var
   d: Double;
 begin
-  d := confirmed.asDouble + Max(unconfirmed.asDouble,0);
+  d := confirmed.asDouble + unconfirmed.asDouble;
   if d < 0 then
     d := 0.0;
   result := frmHome.currencyConverter.calculate(d) * rate /

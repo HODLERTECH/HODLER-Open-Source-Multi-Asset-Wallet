@@ -133,7 +133,8 @@ uses
   Velthuis.StrConsts in 'additionalUnits\bi\Velthuis.StrConsts.pas',
   Velthuis.XorShifts in 'additionalUnits\bi\Velthuis.XorShifts.pas',
   debugAnalysis in 'additionalUnits\debugAnalysis.pas',
-  KeypoolRelated in 'additionalUnits\KeypoolRelated.pas';
+  KeypoolRelated in 'additionalUnits\KeypoolRelated.pas',
+  AssetsMenagerData in 'additionalUnits\AssetsMenagerData.pas';
 
 {$R *.res}
 
@@ -141,7 +142,7 @@ var
   H: THandle;
 
 begin
-
+   Application.OnException := frmhome.ExceptionHandler;
   VKAutoShowMode := TVKAutoShowMode.Never;
 
   FMX.Types.GlobalUseDX := true;
@@ -155,7 +156,6 @@ begin
   begin
     try
       Application.Initialize;
-
       Application.FormFactor.Orientations := [TFormOrientation.Portrait];
       Application.CreateForm(TfrmHome, frmHome);
       Application.Run;

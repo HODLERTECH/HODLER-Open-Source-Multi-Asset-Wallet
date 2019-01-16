@@ -799,6 +799,11 @@ type
     PrivateKeyInfoPanel: TPanel;
     PrivateKeyAddressInfoLabel: TLabel;
     PrivateKeyBalanceInfoLabel: TLabel;
+    FoundTokenTabItem: TTabItem;
+    ToolBar21: TToolBar;
+    FoundTokenHeaderLabel: TLabel;
+    FoundTokenOKButton: TButton;
+    FoundTokenVertScrollBox: TVertScrollBox;
     KeypoolSanitizer: TTimer;
     internalImage: TImage;
 
@@ -1057,7 +1062,9 @@ type
       var KeyChar: Char; Shift: TShiftState);
     procedure WIFEditKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
+    procedure FoundTokenOKButtonClick(Sender: TObject);
     procedure KeypoolSanitizerTimer(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
 
   private
     { Private declarations }
@@ -1119,6 +1126,7 @@ type
     procedure onExecuteTest(Sender : TObject);
 
     procedure ExceptionHandler( Sender : TObject ; E : Exception );
+    procedure FoundTokenPanelOnClick(Sender : TObject);
     //procedure PrivateKeyPasswordCheck
   var
     refreshLocalImage : TRotateImage;
@@ -1175,7 +1183,7 @@ var
   QRWidth: Integer = -1;
   QRHeight: Integer = -1;
   SyncBalanceThr: SynchronizeBalanceThread;
-  SyncHistoryThr: SynchronizeHistoryThread;
+  //SyncHistoryThr: SynchronizeHistoryThread;
 
   QRFind: AnsiString;
   tempQRFindEncryptedSeed: AnsiString;
@@ -1220,6 +1228,13 @@ begin
 end;
 
 {$ENDIF}
+
+
+
+procedure tfrmhome.FoundTokenPanelOnClick(Sender : TObject);
+begin
+  TCheckBox(TfmxObject(Sender).TagObject).IsChecked := not TCheckBox(TfmxObject(Sender).TagObject).IsChecked ;
+end;
 
 procedure tfrmhome.ExceptionHandler( Sender : TObject ; E : Exception );
 begin
@@ -1408,6 +1423,7 @@ end;
 procedure TfrmHome.FilePanelClick(Sender: TObject);
 begin
   frmHome.FileManagerPathLabel.Text := TfmxObject(Sender).TagString;
+  onFileManagerSelectClick();
 end;
 
 procedure TfrmHome.FilePanelClick(Sender: TObject; const Point: TPointF);
@@ -1465,9 +1481,7 @@ end;
 
 procedure TfrmHome.ExportPrivateKeyButtonClick(Sender: TObject);
 begin
-  createExportPrivateKeyList();
-  exportemptyaddressesSwitch.IsChecked := false;
-  switchTab(PageControl, ExportPrivCoinListTabItem);
+  WalletViewRelated.ExportPrivateKeyButtonClick(Sender);
 end;
 
 procedure TfrmHome.FileManagerPathUpButtonClick(Sender: TObject);
@@ -2972,7 +2986,7 @@ end;
 
 procedure TfrmHome.EPCLTIBackButtonClick(Sender: TObject);
 begin
-  switchTab(PageControl, PrivOptionsTabItem );
+  switchTab(PageControl, AddNewCoin );
 end;
 
 procedure TfrmHome.EQRBackBtnClick(Sender: TObject);
@@ -2993,7 +3007,7 @@ end;
 
 procedure TfrmHome.exportemptyaddressesSwitchSwitch(Sender: TObject);
 begin
-  createExportPrivateKeyList();
+  createExportPrivateKeyList(newcoinID);
 end;
 
 
@@ -3023,6 +3037,8 @@ var
   actionListener : TActionList;
 begin
 
+
+  image7.Bitmap.LoadFromStream( ResourceMenager.getAssets( 'HSB_WHITE' ) );
   //showmessage( getDetailedData() );
   raise Exception.Create('Error Message');
   {actionListener := TActionList.Create(nil);
@@ -3397,6 +3413,11 @@ begin
   NoPrintScreenImage.Visible := false;
 end;
 
+procedure TfrmHome.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  AccountRelated.CloseHodler();
+end;
+
 procedure TfrmHome.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
 {$IFDEF WIN32 or WIN64}
@@ -3675,6 +3696,11 @@ if PageControl.ActiveTab=eqrview then exit;
     until abs(Y - round(ScrollBox.ViewportPosition.Y)) < 15;
   end;
 {$ENDIF}
+end;
+
+procedure TfrmHome.FoundTokenOKButtonClick(Sender: TObject);
+begin
+   walletViewRelated.FoundTokenOKButtonClick(Sender);
 end;
 
 procedure TfrmHome.gathenerTimer(Sender: TObject);
@@ -4200,16 +4226,7 @@ var
   found: Integer;
 begin
 
-  if ((CurrentCoin.coin <> 4) or (CurrentCryptoCurrency is Token)) then
-  begin
-
-    Showmessage('SearchTokenButton shouldnt be visible here');
-    exit;
-
-  end;
-
-  found := SearchTokens(CurrentCoin.addr, nil);
-  popupWindow.Create('New tokens found: ' + IntToStr(found));
+  WalletViewRelated.SearchTokenButtonClick(Sender);
 end;
 
 procedure TfrmHome.SeedMnemonicBackupButtonClick(Sender: TObject);

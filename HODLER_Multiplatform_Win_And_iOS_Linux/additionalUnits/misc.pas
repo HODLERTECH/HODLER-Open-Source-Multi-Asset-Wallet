@@ -103,7 +103,8 @@ uses AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA, IdSSLOpenSSL, languages,
   ClpSecureRandom,
   ClpISecureRandom,
   ClpCryptoApiRandomGenerator,
-  ClpICryptoApiRandomGenerator
+  ClpICryptoApiRandomGenerator,
+  AssetsMenagerData
 
 {$IFDEF ANDROID},
 
@@ -379,6 +380,7 @@ function getComponentsWithTagString(tag: AnsiString; From: TfmxObject)
 function compareVersion(a, b: AnsiString): integer;
 function postDataOverHTTP(var aURL: String; postdata: string;
   useCache: boolean = true; noTimeout: boolean = false): AnsiString;
+  //function floatToBigInteger(f : Single) : BigInteger;
 
 
 
@@ -394,7 +396,7 @@ const
   API_PRIV = {$I 'private_key.key' };
 
 resourcestring
-  CURRENT_VERSION = '0.3.1';
+  CURRENT_VERSION = '0.4.0';
 
 var
   AccountsNames: array of AccountItem;
@@ -427,6 +429,8 @@ var
 
   newcoinID: nativeint;
   ImportCoinID: integer;
+  AccountForSearchToken : Account;
+  ResourceMenager : AssetsMenager;
 
 implementation
 
@@ -438,6 +442,18 @@ uses Bitcoin, uHome, base58, Ethereum, coinData, strutils, secp256k1,
 
 var
   bitmapData: TBitmapData;
+
+
+{function floatToBigInteger(f : Single) : BigInteger;
+begin
+  result := bigInteger.Zero;
+
+  while( f > 0 ) do
+  begin
+    result :=
+  end;
+
+end;}
 
 function TSecureRandoms.CheckSecureRandom(const random: ISecureRandom): boolean;
 begin
@@ -1290,12 +1306,17 @@ var
   JsonTokens: TJsonArray;
   JsonIt: TJsonvalue;
   T: Token;
-  address, name, decimals, symbol: AnsiString;
+  address, name, decimals, symbol , balance: AnsiString;
   i: integer;
   createToken: boolean;
   createFromList: boolean;
   CreateFromListIndex: integer;
   added: integer;
+
+  panel : TPanel;
+  img : TImage;
+  NameLbl , valuelbl : TLabel;
+  checkBox : TCheckBox;
 begin
   added := 0;
   if ac = nil then
@@ -1309,6 +1330,8 @@ begin
       ac := CurrentAccount;
     end;
   end;
+  clearVertScrollBox( frmhome.FoundTokenVertScrollBox );
+  AccountForSearchToken := ac;
 
   data := getDataOverHTTP('https://api.ethplorer.io/getAddressInfo/' + InAddress
     + '?apiKey=freekey');
@@ -1340,6 +1363,16 @@ begin
           begin
             symbol := '';
             showmessage('Load Token Symbol Error ' + E.message);
+          end;
+        end;
+        // balance
+        try
+          balance := JsonIt.GetValue<string>('balance');
+        except
+          on E: Exception do
+          begin
+            balance := '0';
+            showmessage('Load Token Balance Error ' + E.message);
           end;
         end;
 
@@ -1382,12 +1415,61 @@ begin
               InAddress);
           end;
 
+          panel := Tpanel.Create(frmhome.FoundTokenVertScrollBox);
+          panel.Parent := frmhome.FoundTokenVertScrollBox;
+          panel.Visible := true;
+          panel.Height := 48;
+          panel.align := TAlignLayout.Top;
+          panel.OnClick := frmhome.FoundTokenPanelOnClick;
+
+
+          img := Timage.Create(panel);
+          img.Parent := panel;
+          img.visible := true;
+          img.Align := TAlignLayout.left;
+          img.Width := 64;
+          img.Bitmap := T.getIcon;
+          img.Margins.Top := 8;
+          img.Margins.Bottom := 8;
+          img.HitTest := false;
+
+          NameLbl := TLabel.create(panel);
+          nameLbl.Align := TAlignLayout.Client;
+          namelbl.visible := true;
+          namelbl.Parent := panel;
+          namelbl.Text := name;
+
+          valueLbl := Tlabel.create(panel);
+          valueLbl.Parent := panel;
+          valueLbl.Align := TAlignLayout.client;
+          valueLbl.Visible := true;// floatToStrF(crypto.getFiat, ffFixed, 15, 2)
+          valueLbl.Text := BigIntegerBeautifulStr(BigInteger.Create( StrtoFloat( balance ) ) , T.decimals);
+          valueLbl.TextSettings.HorzAlign := TTextAlign.Trailing;
+          valuelbl.Margins.Right := 15;
+
+          checkBox := TCheckBox.Create(panel);
+          checkBox.Parent := panel;
+          checkBox.Align := TAlignLayout.MostLeft;
+          //checkBox.Margins.Right := 10;
+          checkBox.Margins.Left := 15;
+          checkBox.Visible := true;
+          checkBox.IsChecked := true;
+          checkBox.Width := 15;
+
+          panel.TagObject := checkBox;
+          checkBox.TagObject := T;
+{$IFDEF ANDROID}
+          checkBox.TagObject.__ObjAddRef();
+{$ENDIF}
+
+
+          {
           T.idInWallet := Length(ac.myTokens) + 10000;
 
           ac.addToken(T);
           ac.SaveFiles();
           if ac = CurrentAccount then
-            CreatePanel(T);
+            CreatePanel(T); }
 
         end;
 
@@ -1589,7 +1671,7 @@ begin
       begin
         balLabel.Text := BigIntegerBeautifulStr
           (CurrentAccount.aggregateBalances(TWalletInfo(crypto)).confirmed,
-          crypto.decimals) + '    ' + floatToStrF(crypto.getFiat, ffFixed, 15, 2)
+          crypto.decimals) + '    ' + floatToStrF(CurrentAccount.aggregateConfirmedFiats(TWalletInfo(crypto)), ffFixed, 15, 2)
           + ' ' + frmhome.CurrencyConverter.symbol;
       end
       else
@@ -1617,9 +1699,10 @@ begin
     coinIMG := TImage.Create(frmhome.walletList);
     coinIMG.parent := panel;
     if crypto is TWalletInfo then
-      coinIMG.Bitmap := getCoinIcon(TWalletInfo(crypto).coin)
+      coinIMG.Bitmap.LoadFromStream( ResourceMenager.getAssets( Availablecoin[TWalletInfo(crypto).coin].ResourceName ) )// getCoinIcon(TWalletInfo(crypto).coin)
     else
-      coinIMG.Bitmap := Token(crypto).image;
+      coinIMG.Bitmap.LoadFromStream( Token(crypto).getIconResource );// getCoinIcon(TWalletInfo(crypto).coin)
+
 
     coinIMG.Height := 32.0;
     coinIMG.Width := 50;
@@ -2146,7 +2229,7 @@ begin
   begin
   if not TWalletInfo(ccrc).inPool then   
     globalFiat := globalFiat +
-      Max((((ccrc.confirmed.AsDouble + Max(ccrc.unconfirmed.AsDouble, 0)) *
+      Max((((ccrc.confirmed.AsDouble + ccrc.unconfirmed.AsDouble) *
       ccrc.rate) / Math.Power(10, ccrc.decimals)), 0);
   end;
 
@@ -2194,22 +2277,22 @@ function aggregateAndSortTX(CCArray: TCryptoCurrencyArray): TxHistory;
 
     end;
   end;
-  procedure removeDuplicatedTX(var Tab: TxHistory);
+  function removeDuplicatedTX(var Tab: TxHistory):TxHistory;
   var i:integer;
   begin
   i:=0;
-  if Length(Tab)<=1 then Exit;
+  if Length(Tab)<=1 then Exit(tab);
     repeat
     if  alreadyOnList(Tab[i].TransactionID,Tab) then
     begin
      Tab[i]:=Tab[High(Tab)];
      SetLength(Tab,Length(Tab)-1);
-
+     continue;
     end;
     Inc(i);
    until i>=Length(Tab);
 
-
+   result:=Tab;
   end;
   procedure Sort(var Tab: TxHistory);
   var
@@ -2223,7 +2306,14 @@ function aggregateAndSortTX(CCArray: TCryptoCurrencyArray): TxHistory;
     begin
       for j := Low(Tab) + 1 to High(Tab) do
       begin
-        if strToFloatDef(Tab[j].data, 0) >= strToFloatDef(Tab[j - 1].data, 0)
+        {if compareHistory( tab[j] , tab[i]) < 0 then
+        begin
+          temp := Tab[j];
+          Tab[j] := Tab[j - 1];
+          Tab[j - 1] := temp;
+        end; }
+
+        if strToFloatDef(Tab[j].data, 0) > strToFloatDef(Tab[j - 1].data, 0)
         then
         begin
           temp := Tab[j];
@@ -2255,7 +2345,7 @@ begin
     SetLength(result, Length(tmp) + Length(cc.history));
     insert(cc.history, tmp, Length(tmp) - Length(cc.history));
   end;
-  RemoveDuplicatedTX(tmp);
+  tmp:=RemoveDuplicatedTX(tmp);
   Sort(tmp);
   result := tmp;
   SetLength(tmp, 0);
@@ -2303,7 +2393,7 @@ begin
   if start >= Length(hist) then
     exit;
   // {$IFDEF ANDROID}
-  if Length(hist) > 10 then
+  if Length(hist) > stop then
     frmhome.LoadMore.Visible := true;
   // {$ENDIF}
   if start > stop then
@@ -2313,7 +2403,7 @@ begin
   begin
     if i >= Length(hist) then
       exit;
-
+    if Length(hist[i].addresses) = 0 then Continue;
     panel := TPanel.Create(frmhome.TxHistory);
 
     panel.Height := 40;
@@ -2321,7 +2411,7 @@ begin
     panel.tag := i;
     panel.TagFloat := strToFloatDef(hist[i].data, 0);
     panel.parent := frmhome.TxHistory;
-    panel.Position.Y := (i * 40) + 0.1;
+    panel.Position.Y := (i * 44) -1;   // 40 (panel.height) + 2 ( panel.margin.bottom ) + 2 ( panel.margin.top );
     panel.Align := TAlignLayout.top;
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     panel.OnTap := frmhome.ShowHistoryDetails;
@@ -2401,15 +2491,17 @@ begin
 
   end;
 
-  { frmhome.TxHistory.Sort( function (a , b : TfmxObject) : integer
+  {frmhome.TxHistory.Sort( function (a , b : TfmxObject) : integer
     begin
-    if a.TagFloat > b.TagFloat then
-    exit(1);
-    if a.TagFloat < b.TagFloat then
-    exit(-1);
-    if a.TagFloat = b.TagFloat then
-    exit(0);
-    end); }
+      if not ((a is Tpanel) and (b is TPanel)) then
+        if a is Tpanel then
+          exit(1)
+        else
+          exit(0);
+
+
+      result := compareHistory( THistoryHolder(a.TagObject).history , THistoryHolder(b.TagObject).history  )
+    end);     }
 
   // frmHome.txHistory.RecalcAbsolute;
   // frmHome.txHistory.RealignContent;
@@ -4605,7 +4697,7 @@ begin
               begin
 
                 TLabel(fmxObj).Text := BigIntegerBeautifulStr
-                  (cc.confirmed + Max(bal.unconfirmed.AsInt64, 0), cc.decimals) +
+                  (cc.confirmed + bal.unconfirmed.AsInt64, cc.decimals) +
                   '    ' + floatToStrF(cc.getFiat(), ffFixed, 15, 2) + ' ' +
                   frmhome.CurrencyConverter.symbol;
               end
@@ -4614,7 +4706,7 @@ begin
                 bal := CurrentAccount.aggregateBalances(TWalletInfo(cc));
 
                 TLabel(fmxObj).Text := BigIntegerBeautifulStr
-                  (bal.confirmed + Max(bal.unconfirmed.AsInt64, 0), cc.decimals) +
+                  (bal.confirmed + bal.unconfirmed.AsInt64, cc.decimals) +
                   '    ' + floatToStrF
                   (CurrentAccount.aggregateFiats(TWalletInfo(cc)), ffFixed, 15, 2)
                   + ' ' + frmhome.CurrencyConverter.symbol;
@@ -4625,7 +4717,7 @@ begin
             begin
 
               TLabel(fmxObj).Text := BigIntegerBeautifulStr
-                (cc.confirmed + Max(bal.unconfirmed.AsInt64, 0), cc.decimals) +
+                (cc.confirmed + bal.unconfirmed.AsInt64, cc.decimals) +
                 '    ' + floatToStrF(cc.getFiat(), ffFixed, 15, 2) + ' ' +
                 frmhome.CurrencyConverter.symbol;
 
