@@ -46,6 +46,7 @@ type
     function aggregateFiats(wi: TWalletInfo): double;
     function aggregateConfirmedFiats(wi: TWalletInfo): double;
     function aggregateUnconfirmedFiats(wi: TWalletInfo): double;
+    function getSpendable(wi:TWalletInfo):BigInteger;
   private
     procedure SaveTokenFile();
     procedure SaveCoinFile();
@@ -142,7 +143,35 @@ begin
   end;
 
 end;
+function Account.getSpendable(wi:TWalletInfo):BigInteger;
+var
+  twi: cryptoCurrency;
+  twis: TCryptoCurrencyArray;
+  i: Integer;
+begin
+result:=BigInteger.Zero;
+ if wi.X = -1 then
+  begin
+  result:=wi.confirmed;
+  Result:=Result+wi.unconfirmed;
 
+  end;
+  twis := getWalletWithX(wi.X, TWalletInfo(wi).coin);
+  for i := 0 to Length(twis) - 1 do
+  begin
+    twi := twis[i];
+    if not assigned(twi) then
+      continue;
+     //  if not TWalletInfo(twi).inPool then Continue;
+    try
+
+      result := result + twi.confirmed;
+      result := result + twi.unconfirmed;
+    except
+
+    end;
+  end
+end;
 function Account.aggregateBalances(wi: TWalletInfo): TBalances;
 var
   twi: cryptoCurrency;

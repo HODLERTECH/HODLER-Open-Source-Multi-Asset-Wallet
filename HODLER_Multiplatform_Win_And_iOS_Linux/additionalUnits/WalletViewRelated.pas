@@ -584,7 +584,7 @@ begin
                       TransactionWaitForSendDetailsLabel.Text :=
                         TransactionWaitForSendDetailsLabel.Text + #13#10 +
                         'Error: ' + ts[i];
-                      break;
+                     // break;
                     end;
                 end;
                 
@@ -689,10 +689,11 @@ begin
     begin
       if SendAllFundsSwitch.IsChecked then
       begin
-        wvAmount.Text := lbBalanceLong.Text;
+        wvAmount.Text :=  BigIntegertoFloatStr
+        (( BigInteger.Min(CurrentAccount.getSpendable(TWalletInfo(CurrentCryptoCurrency)),CurrentAccount.aggregateBalances(TWalletInfo(CurrentCryptoCurrency)).confirmed)), CurrentCryptoCurrency.decimals);;
         WVRealCurrency.Text :=
           floatToStrF(CurrencyConverter.calculate
-          (strToFloatDef(lbBalanceLong.Text, 0) * CurrentCryptoCurrency.rate),
+          (strToFloatDef(wvAmount.Text, 0) * CurrentCryptoCurrency.rate),
           ffFixed, 18, 2);
         FeeFromAmountSwitch.IsChecked := True;
         FeeFromAmountSwitch.Enabled := false;

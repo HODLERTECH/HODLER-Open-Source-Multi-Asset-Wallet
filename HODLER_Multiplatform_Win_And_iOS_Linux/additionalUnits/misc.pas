@@ -399,7 +399,7 @@ const
   API_PRIV = {$I 'private_key.key' };
 
 resourcestring
-  CURRENT_VERSION = '0.3.2';
+  CURRENT_VERSION = '0.4.0';
 
 var
   AccountsNames: array of AccountItem;
@@ -445,8 +445,6 @@ uses Bitcoin, uHome, base58, Ethereum, coinData, strutils, secp256k1,
 
 var
   bitmapData: TBitmapData;
-
-
 
 
 procedure clearSendCache();
@@ -602,6 +600,7 @@ begin
 {$ENDIF}
 
 end;
+
 
 
 function TSecureRandoms.CheckSecureRandom(const random: ISecureRandom): boolean;
@@ -1820,7 +1819,7 @@ begin
       begin
         balLabel.Text := BigIntegerBeautifulStr
           (CurrentAccount.aggregateBalances(TWalletInfo(crypto)).confirmed,
-          crypto.decimals) + '    ' + floatToStrF(crypto.getFiat, ffFixed, 15, 2)
+          crypto.decimals) + '    ' + floatToStrF(CurrentAccount.aggregateConfirmedFiats(TWalletInfo(crypto)), ffFixed, 15, 2)
           + ' ' + frmhome.CurrencyConverter.symbol;
       end
       else
@@ -2378,7 +2377,7 @@ begin
   begin
   if not TWalletInfo(ccrc).inPool then   
     globalFiat := globalFiat +
-      Max((((ccrc.confirmed.AsDouble + Max(ccrc.unconfirmed.AsDouble, 0)) *
+      Max((((ccrc.confirmed.AsDouble + ccrc.unconfirmed.AsDouble) *
       ccrc.rate) / Math.Power(10, ccrc.decimals)), 0);
   end;
 
@@ -2426,22 +2425,22 @@ function aggregateAndSortTX(CCArray: TCryptoCurrencyArray): TxHistory;
 
     end;
   end;
-  procedure removeDuplicatedTX(var Tab: TxHistory);
+  function removeDuplicatedTX(var Tab: TxHistory):TxHistory;
   var i:integer;
   begin
   i:=0;
-  if Length(Tab)<=1 then Exit;
+  if Length(Tab)<=1 then Exit(tab);
     repeat
     if  alreadyOnList(Tab[i].TransactionID,Tab) then
     begin
      Tab[i]:=Tab[High(Tab)];
      SetLength(Tab,Length(Tab)-1);
-
+     continue;
     end;
     Inc(i);
    until i>=Length(Tab);
 
-
+   result:=Tab;
   end;
   procedure Sort(var Tab: TxHistory);
   var
@@ -2494,7 +2493,7 @@ begin
     SetLength(result, Length(tmp) + Length(cc.history));
     insert(cc.history, tmp, Length(tmp) - Length(cc.history));
   end;
-  RemoveDuplicatedTX(tmp);
+  tmp:=RemoveDuplicatedTX(tmp);
   Sort(tmp);
   result := tmp;
   SetLength(tmp, 0);
@@ -2552,7 +2551,7 @@ begin
   begin
     if i >= Length(hist) then
       exit;
-
+    if Length(hist[i].addresses) = 0 then Continue;
     panel := TPanel.Create(frmhome.TxHistory);
 
     panel.Height := 40;
@@ -4846,7 +4845,7 @@ begin
               begin
 
                 TLabel(fmxObj).Text := BigIntegerBeautifulStr
-                  (cc.confirmed + Max(bal.unconfirmed.AsInt64, 0), cc.decimals) +
+                  (cc.confirmed + bal.unconfirmed.AsInt64, cc.decimals) +
                   '    ' + floatToStrF(cc.getFiat(), ffFixed, 15, 2) + ' ' +
                   frmhome.CurrencyConverter.symbol;
               end
@@ -4855,7 +4854,7 @@ begin
                 bal := CurrentAccount.aggregateBalances(TWalletInfo(cc));
 
                 TLabel(fmxObj).Text := BigIntegerBeautifulStr
-                  (bal.confirmed + Max(bal.unconfirmed.AsInt64, 0), cc.decimals) +
+                  (bal.confirmed + bal.unconfirmed.AsInt64, cc.decimals) +
                   '    ' + floatToStrF
                   (CurrentAccount.aggregateFiats(TWalletInfo(cc)), ffFixed, 15, 2)
                   + ' ' + frmhome.CurrencyConverter.symbol;
@@ -4866,7 +4865,7 @@ begin
             begin
 
               TLabel(fmxObj).Text := BigIntegerBeautifulStr
-                (cc.confirmed + Max(bal.unconfirmed.AsInt64, 0), cc.decimals) +
+                (cc.confirmed + bal.unconfirmed.AsInt64, cc.decimals) +
                 '    ' + floatToStrF(cc.getFiat(), ffFixed, 15, 2) + ' ' +
                 frmhome.CurrencyConverter.symbol;
 

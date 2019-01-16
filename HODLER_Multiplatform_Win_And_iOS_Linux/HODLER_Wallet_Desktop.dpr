@@ -142,7 +142,7 @@ var
   H: THandle;
 
 begin
-
+   Application.OnException := frmhome.ExceptionHandler;
   VKAutoShowMode := TVKAutoShowMode.Never;
 
   FMX.Types.GlobalUseDX := true;

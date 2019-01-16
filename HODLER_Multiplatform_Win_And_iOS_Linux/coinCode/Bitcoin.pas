@@ -4,7 +4,7 @@ interface
 
 uses
   SysUtils, secp256k1, HashObj, base58, coinData, Velthuis.BigIntegers,
-  WalletStructureData;
+  WalletStructureData,System.classes;
 
 function reedemFromPub(pub: AnsiString): AnsiString;
 
@@ -171,7 +171,7 @@ begin
     result := '';
     TXCash := TXBuilderBIP_143.Create;
     TXCash.sender := from;
-    TXCash.inputs := from.UTXO;
+    TXCash.inputs := inputs;
     TXCash.MasterSeed := MasterSeed;
     TXCash.addOutput(sendto, Amount);
     diff := TXCash.getAllToSPent - (Amount.AsInt64 + Fee.AsInt64);
@@ -253,12 +253,14 @@ begin
     if frmHome.InstantSendSwitch.isChecked then
       coin := coin + '&mode=instant';
 
-    result := getDataOverHTTP(HODLER_URL + 'sendTX.php?coin=' + coin + '&tx=' + TX + '&os=' + SYSTEM_NAME + '&appver=' + StringReplace(CURRENT_VERSION,'.','x',[rfReplaceAll]), false);
+
+    result := getDataOverHTTP(HODLER_URL + 'sendTX.php?coin=' + coin + '&tx=' + TX + '&os=' + SYSTEM_NAME + '&appver=' + StringReplace(CURRENT_VERSION,'.','x',[rfReplaceAll]), false,true);
+TThread.CreateAnonymousThread(procedure begin
     if CurrentCoin.description <> '__dashbrd__' then
     begin
       SyncThr.SynchronizeCryptoCurrency(CurrentCoin);
       reloadWalletView;
-    end;
+    end; end).Start();
   end;
 end;
 

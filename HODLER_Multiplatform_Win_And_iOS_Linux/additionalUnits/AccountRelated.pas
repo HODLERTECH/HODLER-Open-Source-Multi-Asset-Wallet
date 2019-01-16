@@ -856,7 +856,7 @@ begin
       exit;
 
     end;
-
+    TFmxObject(Sender).Tag:=-2;
     OpenWalletView(Sender);
 
     WVTabControl.ActiveTab := WVReceive;
