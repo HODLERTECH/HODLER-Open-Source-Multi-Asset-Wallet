@@ -105,7 +105,7 @@ end;
 
 function getCoinIcon(id: Integer): TBitmap;
 begin
-  result := frmhome.coinIconsList.Source[id].MultiResBitmap[0].Bitmap;
+  result := frmhome.coinIconsList.Source[id].MultiResBitmap[0].Bitmap
 end;
 
 function CreateCoin(id, x, y: Integer; MasterSeed: AnsiString;

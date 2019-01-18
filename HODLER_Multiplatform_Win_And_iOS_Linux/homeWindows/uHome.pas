@@ -252,8 +252,6 @@ type
     WVRealCurrency: TEdit;
     AutomaticFeeRadio: TRadioButton;
     FixedFeeRadio: TRadioButton;
-    SendAllFundsSwitch: TSwitch;
-    FeeFromAmountSwitch: TSwitch;
     lblSendAllFunds: TLabel;
     lblFromFee: TLabel;
     SendVertScrollBox: TVertScrollBox;
@@ -598,7 +596,6 @@ type
     OwnXEdit: TEdit;
     Panel16: TPanel;
     DayNightModeStaticLabel: TLabel;
-    DayNightModeSwitch: TSwitch;
     privTCAPanel2: TPanel;
     PreAlphaImportLabel: TLabel;
     notPrivTCA2: TCheckBox;
@@ -628,7 +625,6 @@ type
     Switch1: TSwitch;
     InstantSendLayout: TLayout;
     Layout42: TLayout;
-    InstantSendSwitch: TSwitch;
     Label5: TLabel;
     CopyTextButton: TButton;
     lblPrivateKey: TEdit;
@@ -806,6 +802,10 @@ type
     FoundTokenVertScrollBox: TVertScrollBox;
     KeypoolSanitizer: TTimer;
     internalImage: TImage;
+    SendAllFundsSwitch: TCheckBox;
+    FeeFromAmountSwitch: TCheckBox;
+    InstantSendSwitch: TCheckBox;
+    DayNightModeSwitch: TCheckBox;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);

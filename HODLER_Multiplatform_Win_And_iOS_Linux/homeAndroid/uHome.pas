@@ -252,8 +252,6 @@ type
     WVRealCurrency: TEdit;
     AutomaticFeeRadio: TRadioButton;
     FixedFeeRadio: TRadioButton;
-    SendAllFundsSwitch: TSwitch;
-    FeeFromAmountSwitch: TSwitch;
     lblSendAllFunds: TLabel;
     lblFromFee: TLabel;
     SendVertScrollBox: TVertScrollBox;
@@ -572,7 +570,6 @@ type
     SameYWalletList: TTabItem;
     YaddressesVertScrollBox: TVertScrollBox;
     changeYbutton: TButton;
-    DayNightModeSwitch: TSwitch;
     StyloSwitch: TPanel;
     DayNightModeStaticLabel: TLabel;
     YAddresses: TLayout;
@@ -621,7 +618,6 @@ type
     Label3: TLabel;
     Layout12: TLayout;
     Switch1: TSwitch;
-    InstantSendSwitch: TSwitch;
     CopyButtonPitStopEdit: TEdit;
     CopyTextButton: TButton;
     SelectGenetareCoin: TTabItem;
@@ -803,6 +799,10 @@ type
     FileMenagerCancelButton: TButton;
     internalImage: TImage;
     OpenFMParentLayout: TLayout;
+    SendAllFundsSwitch: TCheckBox;
+    FeeFromAmountSwitch: TCheckBox;
+    InstantSendSwitch: TCheckBox;
+    DayNightModeSwitch: TCheckBox;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1035,6 +1035,7 @@ type
     procedure KeypoolSanitizerTimer(Sender: TObject);
     procedure FileMenagerCancelButtonClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure DayNightModeSwitchClick(Sender: TObject);
 
 
   private
@@ -2053,6 +2054,8 @@ begin
   // switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
   btnSyncClick(nil);
 end;
+
+
 
 procedure TfrmHome.DayNightModeSwitchSwitch(Sender: TObject);
 begin

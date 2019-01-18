@@ -1121,8 +1121,13 @@ begin
               else
                 AddressType.Text := 'Receive';
                 AddressType.Text:=AddressType.Text+' '+ BigIntegertoFloatStr
-        (cc.confirmed,
+        (cc.confirmed+cc.unconfirmed,
         cc.decimals) + ' ' + cc.shortcut;
+        if cc.confirmed+cc.unconfirmed>0 then begin AddressType.TextSettings.Font.Style:=AddressType.TextSettings.Font.Style+[TFontStyle.fsBold];
+        AddressType.StyledSettings := AddressType.StyledSettings - [TStyledSetting.Style] - [TStyledSetting.FontColor];
+                     AddressType.FontColor:= TAlphaColorRec.Limegreen;
+                     end;
+              {$IFDEF  DEBUG} AddressType.Text:=AddressType.Text+' X: '+IntToStr(TWalletInfo(cc).X)+' Y: '+IntToStr(TWalletInfo(cc).Y);{$ENDIF}
               AddressType.Height := 24;
               AddressType.Margins.Left := 15;
 

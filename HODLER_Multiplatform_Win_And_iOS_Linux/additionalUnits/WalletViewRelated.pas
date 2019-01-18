@@ -279,6 +279,7 @@ begin
         procedure
         begin
           reloadWalletView;
+          updateBalanceLabels;
         end);
 
       frmhome.refreshLocalImage.Stop();
@@ -1459,6 +1460,7 @@ var
   wd: TWalletInfo;
   a: BigInteger;
   Control: Tcomponent;
+ts:TMemoryStream;
 begin
   frmhome.AutomaticFeeRadio.IsChecked := True;
   frmhome.TopInfoConfirmedValue.Text := ' Calculating...';
@@ -1600,8 +1602,16 @@ CurrentCryptoCurrency := findUnusedReceiving(TWalletInfo(TfmxObject(Sender).TagO
     ReceiveAmountRealCurrency.Text := '0.00';
     WVRealCurrency.Text := floatToStrF(strToFloatDef(wvAmount.Text, 0) *
       CurrentCryptoCurrency.rate, ffFixed, 15, 2);
-
-    ShortcutValetInfoImage.Bitmap := CurrentCryptoCurrency.getIcon();
+//ShortcutValetInfoImage.DisableInterpolation:=True;
+      if CurrentCryptoCurrency is TWalletInfo then
+     ShortcutValetInfoImage.MultiResBitmap[0].Bitmap.LoadFromStream( ResourceMenager.getAssets( Availablecoin[TWalletInfo(CurrentCryptoCurrency).coin].ResourceName ) );
+if CurrentCryptoCurrency is Token then
+          ShortcutValetInfoImage.MultiResBitmap[0].Bitmap.LoadFromStream(Token(CurrentCryptoCurrency).getIconResource);
+      ShortcutValetInfoImage.WrapMode:=TImageWrapMode.Original;
+      ShortcutValetInfoImage.Align:=TAlignLayout.Center;
+//ShortcutValetInfoImage.Height:= ShortcutValetInfoImage.MultiResBitmap[0].Bitmap.Height;
+           // ;
+    //ShortcutValetInfoImage.Bitmap :=
     wvGFX.Bitmap := CurrentCryptoCurrency.getIcon();
 
     lblCoinShort.Text := CurrentCryptoCurrency.shortcut + '';

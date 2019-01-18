@@ -279,7 +279,7 @@ begin
     SendAutoReport(E.Message , e.StackTrace , Sender.ClassName + ' ' + Sender.UnitName);
 
     //{$IFDEF DEBUG}
- showmessage( E.Message );
+// showmessage( E.Message );
 //{$ENDIF}
 
   //showmessage(e.StackTrace);
