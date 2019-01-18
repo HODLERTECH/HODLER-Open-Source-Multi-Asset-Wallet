@@ -13,7 +13,7 @@ uses
 
 const
   maxKeypoolFillThreads = 19;
-  requiredKeyPool: Integer = 100;
+  requiredKeyPool: Integer = 10;
   changeDelimiter = 1073741823;
 
 type
@@ -237,7 +237,7 @@ begin
 
 end;
 
-function pickFromPool(wi: TWalletInfo): TWalletInfo;
+function pickFromPool(wi: TWalletInfo;receiving:Boolean=true): TWalletInfo;
 var
   arr: array of Integer;
   wd: TWalletInfo;
@@ -255,7 +255,9 @@ begin
         continue;
       if (wd.coin = wi.coin) and (wd.X = wi.X) and (wd.inPool) then
       begin
-
+         if receiving then
+         if wd.Y>changeDelimiter then Continue;
+                                                                  
         if Length(wd.History) = 0 then
         begin
           wd.inPool := false;
@@ -299,7 +301,7 @@ begin
       if (wd.coin = wi.coin) and (wd.X = wi.X) and (not wd.inPool) then
       begin
         Inc(all);
-        if Length(wd.History) <> 0 then
+        if (Length(wd.History) <> 0) and (wd.Y < changeDelimiter) then
           Inc(used)
         else
           Exit(wd);

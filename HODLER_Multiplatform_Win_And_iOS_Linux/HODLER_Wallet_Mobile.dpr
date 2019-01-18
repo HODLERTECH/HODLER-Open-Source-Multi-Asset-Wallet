@@ -164,8 +164,8 @@ begin
       Application.Initialize;
 
       Application.FormFactor.Orientations := [TFormOrientation.Portrait];
-      Application.CreateForm(TfrmHome, frmHome);
-  Application.Run;
+      AApplication.CreateForm(TfrmHome, frmHome);
+  pplication.Run;
     finally
       ReleaseMutex(H);
     end;

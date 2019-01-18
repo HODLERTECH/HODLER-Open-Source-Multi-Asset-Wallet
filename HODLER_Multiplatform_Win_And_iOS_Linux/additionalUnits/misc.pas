@@ -1248,6 +1248,32 @@ begin
 
   end;
 
+  if RightStr(currentStyle, Length(currentStyle) - 3) = 'DARK' then
+  begin
+
+    frmhome.SearchInDashBrdImage.Visible := true;
+    {$IF DEFINED(ANDROID) OR DEFINED(OIS)}
+    frmhome.MoreImage.Visible := TRUE;
+    {$ENDIF}
+
+    frmhome.SearchInDashBrdImage.bitmap.loadFromStream( ResourceMenager.getAssets( 'SEARCH_' + RightStr(currentStyle, Length(currentStyle) - 3) ) );
+    {$IF DEFINED(ANDROID) OR DEFINED(OIS)}
+    frmhome.MoreImage.bitmap.loadFromStream( ResourceMenager.getAssets( 'MORE_' + RightStr(currentStyle, Length(currentStyle) - 3) ) );
+    {$ENDIF}
+
+  end
+  else
+  begin
+    frmhome.SearchInDashBrdImage.Visible := false;
+    {$IF DEFINED(ANDROID) OR DEFINED(OIS)}
+    frmhome.MoreImage.Visible := false;
+    {$ENDIF}
+
+  end;
+
+
+
+
 end;
 
 procedure DeleteAccount(name: AnsiString);

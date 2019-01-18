@@ -285,7 +285,13 @@ end;
 
 destructor Account.Destroy();
 begin
+//SyncBalanceThr: SynchronizeBalanceThread;
   clearArrays();
+  if SyncBalanceThr <> nil then
+
+  SyncBalanceThr.Terminate;
+
+  //SyncBalanceThr.Free;
 end;
 
 procedure Account.SaveSeedFile();

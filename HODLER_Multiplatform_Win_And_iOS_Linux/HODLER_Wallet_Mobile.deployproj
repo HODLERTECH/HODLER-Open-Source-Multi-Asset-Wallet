@@ -2431,6 +2431,15 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="token_icons\more_white.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
+            <RemoteName>more_white.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="$(BDS)\lib\android\release\armeabi\libnative-activity.so" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile\library\lib\armeabi\</RemoteDir>
             <RemoteName>libHODLER_Core.so</RemoteName>
@@ -2755,6 +2764,15 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="token_icons\more_black.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
+            <RemoteName>more_black.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="Android\Release\libHODLER_Wallet_Mobile.so" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile\library\lib\armeabi-v7a\</RemoteDir>
             <RemoteName>libHODLER_Wallet_Mobile.so</RemoteName>
@@ -2811,9 +2829,9 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="Jet.style" Condition="'$(Config)'=='Release'">
+        <DeployFile Include="token_icons\imgNotFound.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
-            <RemoteName>Jet.style</RemoteName>
+            <RemoteName>imgNotFound.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -2832,15 +2850,6 @@
         <DeployFile Include="coin_icons\7.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
             <RemoteName>7.png</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="token_icons\imgNotFound.png" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
-            <RemoteName>imgNotFound.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -2868,6 +2877,15 @@
         <DeployFile Include="token_icons\copy-content.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
             <RemoteName>copy-content.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Dark.style" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
+            <RemoteName>Dark.style</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -2958,6 +2976,15 @@
         <DeployFile Include="token_icons\MKR.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
             <RemoteName>MKR.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="token_icons\search_white.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
+            <RemoteName>search_white.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -3131,6 +3158,15 @@
             <RemoteName>libHODLER_Core.so</RemoteName>
             <DeployClass>AndroidLibnativeArmeabiFile</DeployClass>
             <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="token_icons\search_dark.png" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
+            <RemoteName>search_dark.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>

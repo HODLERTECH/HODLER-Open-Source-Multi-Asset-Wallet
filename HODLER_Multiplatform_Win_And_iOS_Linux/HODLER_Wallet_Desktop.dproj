@@ -5,7 +5,7 @@
         <FrameworkType>FMX</FrameworkType>
         <MainSource>HODLER_Wallet_Desktop.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1247</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -571,7 +571,7 @@
         <RcItem Include="Jet.style">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
-            <ResourceId>RT_DARK</ResourceId>
+            <ResourceId>RT_DARK_jet</ResourceId>
         </RcItem>
         <RcItem Include="Languages\PT.lang">
             <ContainerId>ResourceItem</ContainerId>
@@ -669,7 +669,7 @@
         <RcItem Include="token_icons\CharocalExpressive.style">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
-            <ResourceId>RT_DARKnew</ResourceId>
+            <ResourceId>RT_DARK</ResourceId>
         </RcItem>
         <RcItem Include="coin_icons\1.png">
             <ResourceType>RCDATA</ResourceType>
@@ -798,6 +798,22 @@
         <RcItem Include="token_icons\paxos_28_2.png">
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>PAXOSSTANDARD_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\more_black.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>MORE_DARK</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\more_white.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>MORE_WHITE</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\search_dark.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>SEARCH_DARK</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\search_white.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>SEARCH_WHITE</ResourceId>
         </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
@@ -1756,6 +1772,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\more_white.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="token_icons\1776.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
@@ -2041,6 +2063,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\more_black.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(NDKBasePath)\prebuilt\android-arm\gdbserver\gdbserver" Configuration="Release" Class="AndroidGDBServer">
                     <Platform Name="Android">
                         <Overwrite>true</Overwrite>
@@ -2274,6 +2302,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="coin_icons\ETH.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\search_white.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -2585,6 +2619,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="token_icons\2457.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\search_dark.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
