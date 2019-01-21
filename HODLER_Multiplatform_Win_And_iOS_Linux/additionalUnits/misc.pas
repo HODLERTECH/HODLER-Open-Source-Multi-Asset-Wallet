@@ -458,7 +458,7 @@ var
  coinID , X : Integer;
  i : integer;
 begin
-{$IFDEF ANDROID}
+//{$IFDEF ANDROID}
 
 
   filepath := tpath.Combine( CurrentAccount.DirPath , 'SendCache.dat');
@@ -494,7 +494,7 @@ begin
 
   ts.Free;
   arr.Free();
-{$ENDIF}
+//{$ENDIF}
 end;
 
 procedure saveSendCacheToFile();
@@ -508,17 +508,26 @@ var
  coinID , X : Integer;
  i : integer;
 begin
-{$IFDEF ANDROID}
+//{$IFDEF ANDROID}
   filepath := tpath.Combine( CurrentAccount.DirPath , 'SendCache.dat');
 
   ts := TStringList.Create();
   if FileExists( filepath )  then
+  begin
     ts.LoadFromFile( filePath );
+    arr := TJsonArray(TJSONObject.ParseJSONValue(ts.Text));
+  end
+  else
+  begin
+    arr := TJSONArray.Create();
+  end;
 
-  arr := TJsonArray(TJSONObject.ParseJSONValue(ts.Text));
+
 
   exist := false;
   i := 0;
+
+  if arr.Count > 0 then
   for val in arr do
   begin
 
@@ -552,7 +561,7 @@ begin
 
   ts.Free;
   arr.Free();
-{$ENDIF}
+//{$ENDIF}
 end;
 
 procedure loadSendCacheFromFile();
@@ -567,10 +576,10 @@ var
  i : integer;
  temp : AnsiString;
 begin
-{$IFDEF ANDROID}
+//{$IFDEF ANDROID}
 try
   filepath := tpath.Combine( CurrentAccount.DirPath , 'SendCache.dat');
-  if FileExists( filepath )  then
+  if not FileExists( filepath )  then
     exit();
   ts := TStringList.Create();
 
@@ -617,7 +626,7 @@ begin
 end;
 end;
   
-{$ENDIF}
+//{$ENDIF}
 
 end;
 

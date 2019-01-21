@@ -1775,7 +1775,7 @@ procedure TfrmHome.WVRealCurrencyChange(Sender: TObject);
 begin
   WVRealCurrency.Text := StringReplace(WVRealCurrency.Text, ',', '.',
     [rfReplaceAll]);
-  if WVRealCurrency.IsFocused then
+  if  frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
   saveSendCacheToFile();
 end;
 
@@ -1905,7 +1905,7 @@ end;
 procedure TfrmHome.WVsendTOChange(Sender: TObject);
 begin
   WVsendTOExit(self);
-  if wvSendTo.IsFocused then
+  if frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
   saveSendCacheToFile();
 end;
 
@@ -2245,7 +2245,7 @@ procedure TfrmHome.wvAmountChange(Sender: TObject);
 var
   i: Single;
 begin
-  if wvAmount.IsFocused then
+  if frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
   saveSendCacheToFile();
 end;
 
@@ -2268,7 +2268,7 @@ end;
 
 procedure TfrmHome.wvFeeChange(Sender: TObject);
 begin
-  if wvFee.IsFocused then
+  if  frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
 
   saveSendCacheToFile();
 end;

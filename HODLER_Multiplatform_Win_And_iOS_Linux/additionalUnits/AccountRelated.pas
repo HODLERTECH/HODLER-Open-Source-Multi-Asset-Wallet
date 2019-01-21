@@ -574,7 +574,8 @@ begin
 
       FFrameTake := 0;
       stylo := TStyleManager.Create;
-      LoadStyle(style);
+      //LoadStyle(style);
+      LoadStyle('RT_DARK');
       if style = 'RT_DARK' then
         DayNightModeSwitch.IsChecked := true
       else

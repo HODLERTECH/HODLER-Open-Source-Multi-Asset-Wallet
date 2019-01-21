@@ -1464,6 +1464,10 @@ var
   Control: Tcomponent;
   ts: TMemoryStream;
 begin
+
+  if frmhome.pageControl.ActiveTab = HOME_TABITEM then
+      frmhome.WVTabControl.ActiveTab := frmhome.WVBalance;
+
   frmhome.AutomaticFeeRadio.IsChecked := True;
   frmhome.TopInfoConfirmedValue.Text := ' Calculating...';
   frmhome.TopInfoUnconfirmedValue.Text := ' Calculating...';

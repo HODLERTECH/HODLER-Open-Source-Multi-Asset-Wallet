@@ -9,8 +9,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
   inherited ScrollBox: TVertScrollBox
     Size.Width = 250.000000000000000000
     Size.Height = 375.000000000000000000
-    Viewport.Width = 245.000000000000000000
-    Viewport.Height = 370.000000000000000000
+    Viewport.Width = 250.000000000000000000
+    Viewport.Height = 375.000000000000000000
     inherited PageControl: TTabControl
       Size.Width = 245.000000000000000000
       Size.Height = 370.000000000000000000
@@ -1211,6 +1211,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
               Size.Width = 240.000000000000000000
               inherited LanguageBox: TPopupBox
                 Position.X = 128.000000000000000000
+                Position.Y = 8.000000000000000000
+                Size.Height = 32.000000000000000000
               end
               inherited SettingsLanguageLabel: TLabel
                 Size.Width = 98.000000000000000000

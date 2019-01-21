@@ -1066,6 +1066,8 @@ type
     procedure FoundTokenOKButtonClick(Sender: TObject);
     procedure KeypoolSanitizerTimer(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure WVsendTOChange(Sender: TObject);
+    procedure wvFeeChange(Sender: TObject);
 
   private
     { Private declarations }
@@ -1844,6 +1846,9 @@ procedure TfrmHome.WVRealCurrencyChange(Sender: TObject);
 begin
   WVRealCurrency.Text := StringReplace(WVRealCurrency.Text, ',', '.',
     [rfReplaceAll]);
+
+    if frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
+  saveSendCacheToFile();
 end;
 
 procedure TfrmHome.WVRealCurrencyClick(Sender: TObject);
@@ -2003,6 +2008,12 @@ begin
     btnDecryptSeed.onclick(nil);
   end;
 
+end;
+
+procedure TfrmHome.WVsendTOChange(Sender: TObject);
+begin
+  if frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
+  saveSendCacheToFile();
 end;
 
 procedure TfrmHome.WVsendTOExit(Sender: TObject);
@@ -2504,22 +2515,11 @@ procedure TfrmHome.wvAmountChange(Sender: TObject);
 var
   i: Single;
 begin
-  case length(wvAmount.Text) of
-    0 .. 8:
-      i := 24;
-    9 .. 14:
-      i := 20;
-    15 .. 20:
-      i := 16;
-    21 .. 25:
-      i := 10;
-  else
-    i := 0;
+   if frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
+  saveSendCacheToFile();
 
-  end;
-
-  wvAmount.TextSettings.Font.Size := i;
-  wvAmount.Text := StringReplace(wvAmount.Text, ',', '.', [rfReplaceAll]);
+  //wvAmount.TextSettings.Font.Size := i;
+  //wvAmount.Text := StringReplace(wvAmount.Text, ',', '.', [rfReplaceAll]);
 end;
 
 procedure TfrmHome.wvAmountClick(Sender: TObject);
@@ -2537,6 +2537,12 @@ end;
 procedure TfrmHome.wvAmountTyping(Sender: TObject);
 begin
   wvAmountChange(Sender);
+end;
+
+procedure TfrmHome.wvFeeChange(Sender: TObject);
+begin
+  if frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
+  saveSendCacheToFile();
 end;
 
 procedure TfrmHome.CoinToUSD(Sender: TObject);
