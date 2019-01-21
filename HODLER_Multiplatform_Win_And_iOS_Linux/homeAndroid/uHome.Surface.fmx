@@ -3077,6 +3077,18 @@ inherited frmHome_Surface: TfrmHome_Surface
           Size.Height = 1791.000000000000000000
           Viewport.Width = 1064.000000000000000000
           Viewport.Height = 1791.000000000000000000
+          inherited emptyAddressesLayout: TLayout
+            Size.Width = 1034.000000000000000000
+            inherited NoPrivateKeyToExportLabel: TLabel
+              Size.Width = 1034.000000000000000000
+            end
+            inherited Layout58: TLayout
+              Size.Width = 1034.000000000000000000
+              inherited exportemptyaddressesSwitch: TCheckBox
+                Size.Width = 954.000000000000000000
+              end
+            end
+          end
         end
       end
       inherited PrivOptionsTabItem: TTabItem

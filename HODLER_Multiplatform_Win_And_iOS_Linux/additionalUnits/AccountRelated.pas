@@ -1059,7 +1059,7 @@ begin
               addrLbl.Height := 24;
               addrLbl.Margins.Left := 15;
               if TwalletInfo(cc).coin in [3, 7] then
-                addrLbl.Text := bitcoinCashAddressToCashAddress(cc.addr)
+                addrLbl.Text := bitcoinCashAddressToCashAddress(cc.addr , TwalletInfo(cc).coin = 3 )
               else
                 addrLbl.Text := cc.addr;
               addrLbl.TagString := 'copyable';

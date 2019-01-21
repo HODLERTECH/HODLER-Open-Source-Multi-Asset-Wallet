@@ -1616,12 +1616,12 @@ begin
     if CurrentCryptoCurrency is Token then
       ShortcutValetInfoImage.MultiResBitmap[0].Bitmap.LoadFromStream
         (Token(CurrentCryptoCurrency).getIconResource);
-    ShortcutValetInfoImage.WrapMode := TImageWrapMode.Original;
+    ShortcutValetInfoImage.WrapMode := TImageWrapMode.Place;
     ShortcutValetInfoImage.Align := TAlignLayout.Center;
     // ShortcutValetInfoImage.Height:= ShortcutValetInfoImage.MultiResBitmap[0].Bitmap.Height;
     // ;
     // ShortcutValetInfoImage.Bitmap :=
-    wvGFX.Bitmap := CurrentCryptoCurrency.getIcon();
+    //wvGFX.Bitmap := CurrentCryptoCurrency.getIcon();
 
     lblCoinShort.Text := CurrentCryptoCurrency.shortcut + '';
     lblReceiveCoinShort.Text := CurrentCryptoCurrency.shortcut + '';

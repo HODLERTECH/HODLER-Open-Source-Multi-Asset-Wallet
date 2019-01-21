@@ -3528,6 +3528,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Size.Width = 409.000000000000000000
           inherited CoinPrivKeyDescriptionEdit: TEdit
             Position.X = 209.000000000000000000
+            Position.Y = 9.000000000000000000
+            Size.Height = 30.000000000000000000
           end
         end
         inherited Panel22: TPanel
@@ -3535,6 +3537,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Size.Width = 409.000000000000000000
           inherited CoinPrivKeyPassEdit: TEdit
             Position.X = 209.000000000000000000
+            Position.Y = 9.000000000000000000
+            Size.Height = 30.000000000000000000
           end
         end
         inherited NewCoinPrivKeyOKButton: TButton
@@ -3580,12 +3584,17 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Viewport.Width = 409.000000000000000000
           Viewport.Height = 602.000000000000000000
           inherited emptyAddressesLayout: TLayout
+            Size.Width = 379.000000000000000000
+            inherited NoPrivateKeyToExportLabel: TLabel
+              Size.Width = 379.000000000000000000
+            end
             inherited Layout58: TLayout
-              inherited exportemptyaddressesSwitch: TSwitch
-                Size.Width = 55.000000000000000000
-              end
+              Size.Width = 379.000000000000000000
               inherited exportemptyAddressesLabel: TLabel
-                Size.Width = 253.000000000000000000
+                Size.Width = 364.000000000000000000
+              end
+              inherited exportemptyaddressesSwitch: TCheckBox
+                Size.Width = 299.000000000000000000
               end
             end
           end

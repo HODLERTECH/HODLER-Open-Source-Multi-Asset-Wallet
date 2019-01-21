@@ -761,7 +761,6 @@ type
     emptyAddressesLayout: TLayout;
     NoPrivateKeyToExportLabel: TLabel;
     Layout58: TLayout;
-    exportemptyaddressesSwitch: TSwitch;
     exportemptyAddressesLabel: TLabel;
     LoadAddressesToImortAniIndicator: TAniIndicator;
     PrivacyAndSecuritySettings: TTabItem;
@@ -807,6 +806,9 @@ type
     InstantSendSwitch: TCheckBox;
     DayNightModeSwitch: TCheckBox;
     SearchInDashBrdImage: TImage;
+    SweepQRButton: TButton;
+    Button11: TButton;
+    exportemptyaddressesSwitch: TCheckBox;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1068,6 +1070,9 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure WVsendTOChange(Sender: TObject);
     procedure wvFeeChange(Sender: TObject);
+    procedure exportemptyaddressesSwitchClick(Sender: TObject);
+    procedure Button11Click(Sender: TObject);
+    procedure SweepQRButtonClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -2063,7 +2068,7 @@ end;
 procedure TfrmHome.BCHCashAddrButtonClick(Sender: TObject);
 begin
   receiveAddress.Text := bitcoinCashAddressToCashAddress
-    (TwalletInfo(CurrentCryptoCurrency).addr);
+    (TwalletInfo(CurrentCryptoCurrency).addr , false);
   receiveAddress.Text := receiveAddress.Text;
 end;
 
@@ -2988,6 +2993,11 @@ begin
   switchTab(PageControl, Settings);
 end;
 
+procedure TfrmHome.Button11Click(Sender: TObject);
+begin
+  QRRelated.scanQR(Sender);
+end;
+
 procedure TfrmHome.ReportIssuesBackButtonClick(Sender: TObject);
 begin
   switchTab(PageControl, Settings);
@@ -3012,6 +3022,11 @@ procedure TfrmHome.EQRShareBtnClick(Sender: TObject);
 begin
   shareFile(System.IOUtils.TPath.Combine(HOME_PATH, CurrentAccount.name +
     '_EQR_BIG' + '.png'), false);
+end;
+
+procedure TfrmHome.exportemptyaddressesSwitchClick(Sender: TObject);
+begin
+  exportemptyaddressesSwitchSwitch(Sender);
 end;
 
 procedure TfrmHome.exportemptyaddressesSwitchSwitch(Sender: TObject);
@@ -3047,21 +3062,10 @@ begin
 
   Image7.Bitmap.LoadFromStream(ResourceMenager.getAssets('HSB_WHITE'));
   // showmessage( getDetailedData() );
-  raise Exception.Create('Error Message');
-  { actionListener := TActionList.Create(nil);
-    actionListener.Ac
-    frmhome.ActionList := actionListener; }
+  //raise Exception.Create('Error Message');
 
-  // frmhome.ActionList. := onExecuteTest;
-  { begin
-    showmessage('here');
-    end
-    else
-    begin
+  showmessage( floatToStr( globalLoadCacheTime ) + ' s' );
 
-    showmessage('overload');
-    end; }
-  // fmx.ActnList.TAction
 end;
 
 procedure TfrmHome.Button5Click(Sender: TObject);
@@ -4213,6 +4217,11 @@ end;
 procedure TfrmHome.SweepButtonClick(Sender: TObject);
 begin
   WalletViewRelated.SweepButtonClick(Sender);
+end;
+
+procedure TfrmHome.SweepQRButtonClick(Sender: TObject);
+begin
+  QRRelated.scanQR(Sender);
 end;
 
 procedure TfrmHome.IsPrivKeySwitchSwitch(Sender: TObject);

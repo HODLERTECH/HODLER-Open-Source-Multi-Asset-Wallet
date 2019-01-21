@@ -85,7 +85,7 @@ interface
 uses AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA, IdSSLOpenSSL, languages,
   System.Hash, MiscOBJ,
   SysUtils, System.IOUtils, HashObj, System.Types, System.UITypes,
-  System.DateUtils, System.Generics.Collections,
+  System.DateUtils, System.Generics.Collections,  System.Diagnostics ,System.TimeSpan ,
   System.Classes,
   System.Variants, Math,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
@@ -435,6 +435,8 @@ var
   ImportCoinID: integer;
   AccountForSearchToken: Account;
   ResourceMenager: AssetsMenager;
+
+  globalLoadCacheTime : double = 0;
 
 implementation
 
@@ -3845,12 +3847,22 @@ var
   list: TStringList;
   i: integer;
   conv: TConvert;
+
+//var
+  //Stopwatch: TStopwatch;
+  //Elapsed: TTimeSpan;
+
 begin
+
+
+
   result := 'NOCACHE';
 
   if (CurrentAccount = nil) or
     (fileExists(CurrentAccount.DirPath + '/cache.dat') = false) then
     exit;
+
+  //Stopwatch := TStopwatch.StartNew;
 
   list := TStringList.Create();
   try
@@ -3872,6 +3884,10 @@ begin
   finally
     list.Free;
   end;
+
+  //Elapsed := Stopwatch.Elapsed;
+  //globalLoadCacheTime := globalLoadCacheTime + Elapsed.TotalSeconds;
+
 end;
 
 procedure saveCache(Hash, data: AnsiString);

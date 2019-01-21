@@ -740,7 +740,6 @@ type
     emptyAddressesLayout: TLayout;
     NoPrivateKeyToExportLabel: TLabel;
     Layout58: TLayout;
-    exportemptyaddressesSwitch: TSwitch;
     exportemptyAddressesLabel: TLabel;
     LoadAddressesToImortAniIndicator: TAniIndicator;
     GlobalSettingsLayout: TLayout;
@@ -805,6 +804,7 @@ type
     DayNightModeSwitch: TCheckBox;
     MoreImage: TImage;
     SearchInDashBrdImage: TImage;
+    exportemptyaddressesSwitch: TCheckBox;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);

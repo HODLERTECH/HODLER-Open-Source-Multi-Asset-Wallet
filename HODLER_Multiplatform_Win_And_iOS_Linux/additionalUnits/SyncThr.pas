@@ -1134,7 +1134,11 @@ begin
       strToIntdef(parsedTx[txIndex].inputsCount, 0));
 
     for i := 0 to strToIntdef(parsedTx[txIndex].inputsCount, 0) - 1 do
+    begin
+
       parsedTx[txIndex].inputAddresses[i] := ts.Strings[entry + 3 + i];
+
+    end;
 
     for i := 0 to strToIntdef(parsedTx[txIndex].outputsCount, 0) - 1 do
     begin
@@ -1174,29 +1178,43 @@ begin
     for j := 0 to strToIntdef(parsedTx[i].outputsCount, 0) - 1 do
     begin
       transHist.addresses[j] := parsedTx[i].outputs[j].address;
+      if wallet.coin = 7 then
+      begin
 
-      if (transHist.typ = 'OUT') then begin
+        if ContainsStr( transHist.addresses[j] , ':' ) then
+        begin
+          transHist.addresses[j] := rightstr( transHist.addresses[j] , length(transHist.addresses[j]) - pos( ':' , transHist.addresses[j] ) );
+        end;
 
-      if (isOurAddress(parsedTx[i].outputs[j].address, wallet.coin) = True) then
-        transHist.values[j] := StrFloatToBigInteger('0.000000',
-          availablecoin[wallet.coin].decimals)
-      else
-        transHist.values[j] := StrFloatToBigInteger
-          (parsedTx[i].outputs[j].value, availablecoin[wallet.coin].decimals);
-      sum := sum + transHist.values[j];
+      end;
 
-    end;
-      if (transHist.typ = 'IN') or (transHist.typ = 'INTERNAL')   then begin
+      if (transHist.typ = 'OUT') then
+      begin
 
-      if not (isOurAddress(parsedTx[i].outputs[j].address, wallet.coin) = True) then
-        transHist.values[j] := StrFloatToBigInteger('0.000000',
-          availablecoin[wallet.coin].decimals)
-      else
-        transHist.values[j] := StrFloatToBigInteger
-          (parsedTx[i].outputs[j].value, availablecoin[wallet.coin].decimals);
-      sum := sum + transHist.values[j];
+        if (isOurAddress(parsedTx[i].outputs[j].address, wallet.coin) = True) then
+          transHist.values[j] := StrFloatToBigInteger('0.000000',
+            availablecoin[wallet.coin].decimals)
+        else
+          transHist.values[j] := StrFloatToBigInteger
+            (parsedTx[i].outputs[j].value, availablecoin[wallet.coin].decimals);
 
-    end;
+        sum := sum + transHist.values[j];
+
+      end;
+
+      if (transHist.typ = 'IN') or (transHist.typ = 'INTERNAL') then
+      begin
+
+        if not (isOurAddress(parsedTx[i].outputs[j].address, wallet.coin) = True) then
+          transHist.values[j] := StrFloatToBigInteger('0.000000',
+            availablecoin[wallet.coin].decimals)
+        else
+          transHist.values[j] := StrFloatToBigInteger
+            (parsedTx[i].outputs[j].value, availablecoin[wallet.coin].decimals);
+
+        sum := sum + transHist.values[j];
+
+      end;
     end;
     transHist.CountValues := sum;
     setLength(wallet.history, length(wallet.history) + 1);
