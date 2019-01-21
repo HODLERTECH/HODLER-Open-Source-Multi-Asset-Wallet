@@ -459,11 +459,13 @@ var
  i : integer;
 begin
 {$IFDEF ANDROID}
+
+
   filepath := tpath.Combine( CurrentAccount.DirPath , 'SendCache.dat');
 
   ts := TStringList.Create();
-
-  ts.LoadFromFile( filePath );
+  if FileExists( filepath )  then
+    ts.LoadFromFile( filePath );
 
   arr := TJsonArray(TJSONObject.ParseJSONValue(ts.Text));
 
@@ -509,8 +511,8 @@ begin
   filepath := tpath.Combine( CurrentAccount.DirPath , 'SendCache.dat');
 
   ts := TStringList.Create();
-
-  ts.LoadFromFile( filePath );
+  if FileExists( filepath )  then
+    ts.LoadFromFile( filePath );
 
   arr := TJsonArray(TJSONObject.ParseJSONValue(ts.Text));
 
@@ -565,9 +567,14 @@ var
  temp : AnsiString;
 begin
 {$IFDEF ANDROID}
+try
   filepath := tpath.Combine( CurrentAccount.DirPath , 'SendCache.dat');
-
+  if FileExists( filepath )  then
+    exit();
   ts := TStringList.Create();
+
+
+
   ts.LoadFromFile( filePath );
 
   arr := TJsonArray(TJSONObject.ParseJSONValue(ts.Text));
@@ -596,7 +603,18 @@ begin
   end;
 
   ts.Free;
+  ts := nil;
   arr.Free();
+  arr := nil;
+except on E: Exception do
+begin
+  if ts <> nil then
+    ts.Free;
+  if arr <> nil then
+    arr.Free();
+end;
+end;
+  
 {$ENDIF}
 
 end;
@@ -1706,6 +1724,11 @@ begin
     begin
       ac := CreateNewAccount(name, pass, seed);
       ac.userSaveSeed := userSaveSeed;
+      Tthread.Synchronize(nil , procedure
+      begin
+        frmhome.HideZeroWalletsCheckBox.ischecked := false;
+      end);
+
       AddAccountToFile(ac);
 
       ac.Free;

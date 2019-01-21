@@ -290,6 +290,10 @@ begin
   if SyncBalanceThr <> nil then
 
   SyncBalanceThr.Terminate;
+  TThread.CreateAnonymousThread(procedure begin
+      SyncBalanceThr.DisposeOf;
+      end).Start();
+      SyncBalanceThr := nil;
 
   //SyncBalanceThr.Free;
 end;

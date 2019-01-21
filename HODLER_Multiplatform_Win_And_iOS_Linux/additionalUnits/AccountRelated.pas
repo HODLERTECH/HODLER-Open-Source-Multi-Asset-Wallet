@@ -348,7 +348,7 @@ begin
     on E: Exception do
     begin
 
-      //showmessage(E.Message);
+      showmessage(E.Message);
       frmHome.AccountsListPanel.Enabled := true;
       raise E;
     end;
