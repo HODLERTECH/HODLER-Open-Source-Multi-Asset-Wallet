@@ -56,7 +56,7 @@ var
   IconIMG: TImage;
   ImgLayout: TLayout;
   Dir, Files: TStringDynArray;
-  stream : TResourceStream;
+  stream: TResourceStream;
 begin
   clearVertScrollBox(frmHome.FilesManagerScrollBox);
 
@@ -140,25 +140,21 @@ begin
 
       IconIMG := TImage.Create(Panel);
       IconIMG.Parent := Panel;
-      Stream := TResourceStream.Create(HInstance,
-          'HSB_' + RightStr(currentStyle,
-        length(currentStyle) - 3), RT_RCDATA);
+      stream := TResourceStream.Create(HInstance,
+        'HSB_' + RightStr(currentStyle, length(currentStyle) - 3), RT_RCDATA);
       try
-        IconIMG.Bitmap.LoadFromStream(Stream);
+        IconIMG.Bitmap.LoadFromStream(stream);
       finally
-        Stream.Free;
+        stream.Free;
       end;
       IconIMG.TagString := 'encrypted_qr_image';
       IconIMG.Align := TAlignLayout.Left;
       IconIMG.Width := 66;
 
       IconIMG.Height := 32.0;
-     //IconIMG.Width := 50;
+      // IconIMG.Width := 50;
       IconIMG.Position.X := 4;
       IconIMG.Position.Y := 8;
-
-
-
 
     end;
 

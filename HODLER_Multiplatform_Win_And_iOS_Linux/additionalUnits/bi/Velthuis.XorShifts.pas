@@ -1,47 +1,47 @@
-{---------------------------------------------------------------------------}
-{                                                                           }
-{ File:       Velthuis.XorShifts.pas                                        }
-{ Function:   Simple xorshift random number generators, implementing        }
-{             IRandom interface from Velthuis.RandomNumbers.                }
-{ Language:   Delphi version XE3 or later                                   }
-{ Author:     Rudy Velthuis                                                 }
-{ Copyright:  (c) 2018 Rudy Velthuis                                        }
-{                                                                           }
-{ Literature: https://de.wikipedia.org/wiki/Xorshift                        }
-{             https://en.wikipedia.org/wiki/Xorshift                        }
-{                                                                           }
-{ Acknowledgement:                                                          }
-{             Several of the algorithms below were developed by             }
-{             Sebastiano Vigna and released to the public domain,           }
-{             see http://vigna.di.unimi.it/                                 }
-{                                                                           }
-{ License:    Redistribution and use in source and binary forms, with or    }
-{             without modification, are permitted provided that the         }
-{             following conditions are met:                                 }
-{                                                                           }
-{             * Redistributions of source code must retain the above        }
-{               copyright notice, this list of conditions and the following }
-{               disclaimer.                                                 }
-{             * Redistributions in binary form must reproduce the above     }
-{               copyright notice, this list of conditions and the following }
-{               disclaimer in the documentation and/or other materials      }
-{               provided with the distribution.                             }
-{                                                                           }
-{ Disclaimer: THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS"     }
-{             AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT     }
-{             LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND     }
-{             FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO        }
-{             EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE     }
-{             FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,     }
-{             OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,      }
-{             PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,     }
-{             DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED    }
-{             AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   }
-{             LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)        }
-{             ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF   }
-{             ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                    }
-{                                                                           }
-{---------------------------------------------------------------------------}
+{ --------------------------------------------------------------------------- }
+{ }
+{ File:       Velthuis.XorShifts.pas }
+{ Function:   Simple xorshift random number generators, implementing }
+{ IRandom interface from Velthuis.RandomNumbers. }
+{ Language:   Delphi version XE3 or later }
+{ Author:     Rudy Velthuis }
+{ Copyright:  (c) 2018 Rudy Velthuis }
+{ }
+{ Literature: https://de.wikipedia.org/wiki/Xorshift }
+{ https://en.wikipedia.org/wiki/Xorshift }
+{ }
+{ Acknowledgement: }
+{ Several of the algorithms below were developed by }
+{ Sebastiano Vigna and released to the public domain, }
+{ see http://vigna.di.unimi.it/ }
+{ }
+{ License:    Redistribution and use in source and binary forms, with or }
+{ without modification, are permitted provided that the }
+{ following conditions are met: }
+{ }
+{ * Redistributions of source code must retain the above }
+{ copyright notice, this list of conditions and the following }
+{ disclaimer. }
+{ * Redistributions in binary form must reproduce the above }
+{ copyright notice, this list of conditions and the following }
+{ disclaimer in the documentation and/or other materials }
+{ provided with the distribution. }
+{ }
+{ Disclaimer: THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER "AS IS" }
+{ AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT }
+{ LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND }
+{ FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO }
+{ EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE }
+{ FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, }
+{ OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, }
+{ PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, }
+{ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED }
+{ AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT }
+{ LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) }
+{ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF }
+{ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. }
+{ }
+{ --------------------------------------------------------------------------- }
 
 unit Velthuis.XorShifts;
 
@@ -75,7 +75,7 @@ type
 
   TXorShift128 = class(TRandomBase)
   private
-    FSeed: array[0..3] of UInt32;
+    FSeed: array [0 .. 3] of UInt32;
     FSeedIndex: Integer;
   protected
     function GetSeed: Int64; override;
@@ -85,7 +85,7 @@ type
     constructor Create;
   end;
 
-  TXorWowState = array[0..4] of UInt32;
+  TXorWowState = array [0 .. 4] of UInt32;
 
   TXorWow = class(TRandomBase)
   private
@@ -111,7 +111,7 @@ type
 
   TXorShift1024Star = class(TRandomBase64)
   private
-    FSeed: array[0..15] of UInt64;
+    FSeed: array [0 .. 15] of UInt64;
     FSeedIndex: Integer;
     FNextIndex: Integer;
   protected
@@ -124,7 +124,7 @@ type
 
   TXorShift128Plus = class(TRandomBase64)
   private
-    FSeed: array[0..1] of UInt64;
+    FSeed: array [0 .. 1] of UInt64;
     FSeedIndex: Integer;
   protected
     function GetSeed: Int64; override;
@@ -142,7 +142,7 @@ uses
 {$RANGECHECKS OFF}
 {$OVERFLOWCHECKS OFF}
 
-function SplitMix64(var X: UInt64) : UInt64;
+function SplitMix64(var X: UInt64): UInt64;
 var
   Z: UInt64;
 begin
@@ -159,8 +159,8 @@ var
   C: Int64;
 begin
 
-    FSeed := UInt32(C)
-  
+  FSeed := UInt32(C)
+
 end;
 
 function TXorShift32.GetSeed: Int64;
@@ -188,7 +188,7 @@ var
   C: Int64;
 begin
 
-    FSeed := C
+  FSeed := C
 
 end;
 
@@ -230,15 +230,15 @@ function TXorShift128.Next(Bits: Integer): UInt32;
 const
   X = 0;
   y = 1;
-  z = 2;
+  Z = 2;
   w = 3;
 var
   T: UInt32;
 begin
-  T := FSeed[x] xor (FSeed[x] shl 11);
-  FSeed[x] := FSeed[y];
-  FSeed[y] := FSeed[z];
-  FSeed[z] := FSeed[w];
+  T := FSeed[X] xor (FSeed[X] shl 11);
+  FSeed[X] := FSeed[y];
+  FSeed[y] := FSeed[Z];
+  FSeed[Z] := FSeed[w];
   FSeed[w] := FSeed[w] xor ((FSeed[w] shr 19) xor T xor (T shr 8));
 
   Result := FSeed[w] shr (32 - Bits);
@@ -382,15 +382,15 @@ end;
 
 function TXorShift128Plus.Next64(Bits: Integer): UInt64;
 var
-  X, Y: UInt64;
+  X, y: UInt64;
 begin
   X := FSeed[0];
-  Y := FSeed[1];
-  FSeed[0] := Y;
+  y := FSeed[1];
+  FSeed[0] := y;
   X := X xor (X shl 23);
-  FSeed[1] := X xor Y xor (X shr 17) xor (Y shr 26);
+  FSeed[1] := X xor y xor (X shr 17) xor (y shr 26);
 
-  Result := (FSeed[1] + Y) shr (64 - Bits);
+  Result := (FSeed[1] + y) shr (64 - Bits);
 end;
 
 procedure TXorShift128Plus.SetSeed(Seed: Int64);

@@ -37,7 +37,7 @@ begin
   RegisterComponents('Samples', [TCopyableLabel]);
 end;
 
-procedure TCopyAbleLabel.copy_Text(Sender : TObject);
+procedure TCopyableLabel.copy_Text(Sender: TObject);
 var
   svc: IFMXExtendedClipboardService;
 begin
@@ -53,7 +53,7 @@ begin
   end;
 end;
 
-constructor TcopyableLabel.Create(AOwner: TComponent);
+constructor TCopyableLabel.Create(AOwner: TComponent);
 var
   Stream: TResourceStream;
 begin
@@ -75,13 +75,11 @@ begin
   image.Margins.Top := 5;
   image.Margins.Bottom := 5;
   image.Margins.Left := 5;
-  image.Margins.Right := 5;
+  image.Margins.right := 5;
   image.Visible := true;
   image.TagString := 'copy_image';
   image.OnClick := copy_Text;
 
 end;
-
-
 
 end.

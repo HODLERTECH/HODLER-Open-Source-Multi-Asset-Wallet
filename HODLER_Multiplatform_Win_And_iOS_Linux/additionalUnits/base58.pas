@@ -4,7 +4,7 @@ unit base58;
 
 interface
 
-uses System.SysUtils, FMX.Dialogs , system.strUtils;
+uses System.SysUtils, FMX.Dialogs, System.strUtils;
 {$IF DEFINED(ANDROID) OR DEFINED(IOS) OR DEFINED(LINUX)}
 
 type
@@ -184,13 +184,13 @@ var
 begin
 
   Address := StringReplace(Address, '0x', '', [rfReplaceAll]);
-  if Pos(':' , address) <> 0 then
-      begin
-        address := rightStr( address , length(address) -  Pos(':' , address) );
-      end
-      else
-        address := address;
-  //Address := StringReplace(Address, 'bitcoincash:', '', [rfReplaceAll]);
+  if Pos(':', Address) <> 0 then
+  begin
+    Address := rightStr(Address, Length(Address) - Pos(':', Address));
+  end
+  else
+    Address := Address;
+  // Address := StringReplace(Address, 'bitcoincash:', '', [rfReplaceAll]);
   // ETH Adr
   if isHex(Address) and (Length(Address) = 40) then
   begin

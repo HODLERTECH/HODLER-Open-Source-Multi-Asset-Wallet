@@ -5,7 +5,7 @@
         <FrameworkType>FMX</FrameworkType>
         <MainSource>HODLER_Wallet_Desktop.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1247</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -130,7 +130,6 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <OrientationPortrait>true</OrientationPortrait>
         <SanitizedProjectName>HODLER_Wallet_Desktop</SanitizedProjectName>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
@@ -424,9 +423,8 @@
         <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
         <DCC_DebugInfoInTds>true</DCC_DebugInfoInTds>
         <VerInfo_MajorVer>0</VerInfo_MajorVer>
-        <VerInfo_MinorVer>3</VerInfo_MinorVer>
-        <VerInfo_Release>1</VerInfo_Release>
-        <VerInfo_Keys>CompanyName=HODLER.TECH;FileVersion=0.3.1.0;InternalName=HODLER Multi-Asset Wallet;LegalCopyright=;LegalTrademarks=hodler.tech;OriginalFilename=;ProductVersion=0.3.1.0;Comments=;ProgramID=HODLER Multi-Asset Wallet;FileDescription=HODLER Multi-Asset Wallet;ProductName=HODLER Multi-Asset Wallet</VerInfo_Keys>
+        <VerInfo_MinorVer>4</VerInfo_MinorVer>
+        <VerInfo_Keys>CompanyName=HODLER.TECH;FileVersion=0.4.0.0;InternalName=HODLER Multi-Asset Wallet;LegalCopyright=;LegalTrademarks=hodler.tech;OriginalFilename=;ProductVersion=0.4.0.0;Comments=;ProgramID=HODLER Multi-Asset Wallet;FileDescription=HODLER Multi-Asset Wallet;ProductName=HODLER Multi-Asset Wallet</VerInfo_Keys>
         <DCC_XmlOutput>C:\Users\PC\Desktop\HODLER Core Alpha\029rc\doc\</DCC_XmlOutput>
         <DCC_OutputDependencies>true</DCC_OutputDependencies>
         <DCC_UnitSearchPath>CryptoLib_output\Win32\Release;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
@@ -1756,6 +1754,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\more_white.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="token_icons\1776.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
@@ -2041,6 +2045,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\more_black.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(NDKBasePath)\prebuilt\android-arm\gdbserver\gdbserver" Configuration="Release" Class="AndroidGDBServer">
                     <Platform Name="Android">
                         <Overwrite>true</Overwrite>
@@ -2274,6 +2284,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="coin_icons\ETH.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\search_white.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -2585,6 +2601,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="token_icons\2457.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\search_dark.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>

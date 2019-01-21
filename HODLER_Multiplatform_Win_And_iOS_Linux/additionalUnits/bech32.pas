@@ -655,7 +655,7 @@ var
   // debugStr : String;
 begin
 
-  if lowercase(leftstr(address, 12)) = 'bitcoincash:' then
+  if LowerCase(leftstr(address, 12)) = 'bitcoincash:' then
   begin
     values := rightstr(address, Length(address) - 12);
   end
@@ -696,7 +696,7 @@ var
   values: String;
 begin
 
-  if lowercase(leftstr(address, 12)) = 'bitcoincash:' then
+  if LowerCase(leftstr(address, 12)) = 'bitcoincash:' then
   begin
     values := rightstr(address, Length(address) - 12);
   end
@@ -704,7 +704,8 @@ begin
   begin
     values := address;
   end;
-  if (  lowercase(values[low(values)]) = 'p') or (  lowercase(values[low(values)]) = 'q') then
+  if (LowerCase(values[low(values)]) = 'p') or
+    (LowerCase(values[low(values)]) = 'q') then
     Result := true
   else
     Result := False;
