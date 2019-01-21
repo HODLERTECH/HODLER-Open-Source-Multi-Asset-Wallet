@@ -57,7 +57,8 @@ implementation
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, WalletStructureData, TcopyableEditData, TCopyableLabelData,
-  walletViewRelated, TImageTextButtonData , debugAnalysis,keyPoolRelated , AssetsMenagerData;
+  walletViewRelated, TImageTextButtonData, debugAnalysis, keyPoolRelated,
+  AssetsMenagerData;
 
 procedure afterInitialize;
 var
@@ -110,6 +111,7 @@ var
 begin
   with frmHome do
   begin
+    KeypoolSanitizer.Interval := 30000;
     gathener.Enabled := true;
 
     if not isWalletDatExists then
@@ -272,20 +274,21 @@ begin
     begin
       SyncBalanceThr.Suspend;
       SyncBalanceThr.Terminate;
-  //    SyncBalanceThr.Destroy;
-    {  while not(SyncBalanceThr.Finished) do
-      begin
+      // SyncBalanceThr.Destroy;
+      { while not(SyncBalanceThr.Finished) do
+        begin
         Application.ProcessMessages();
         sleep(50);
-      end;}
-   //   SyncBalanceThr.WaitFor;
-   TThread.CreateAnonymousThread(procedure begin
-      SyncBalanceThr.DisposeOf;
-      end).Start();
+        end; }
+      // SyncBalanceThr.WaitFor;
+      Tthread.CreateAnonymousThread(
+        procedure
+        begin
+          SyncBalanceThr.DisposeOf;
+        end).Start();
       SyncBalanceThr := nil;
 
     end;
-
 
     frmHome.ChangeAccountButton.Text := name;
 
@@ -343,12 +346,17 @@ begin
     refreshCurrencyValue;
 
     SyncBalanceThr := SynchronizeBalanceThread.Create();
-    TThread.CreateAnonymousThread(procedure begin verifyKeypool(); end).Start();
+    Tthread.CreateAnonymousThread(
+      procedure
+      begin
+        verifyKeypool();
+      end).Start();
   except
     on E: Exception do
     begin
 
-      showmessage(E.Message);
+
+      // showmessage(E.Message);
       frmHome.AccountsListPanel.Enabled := true;
       raise E;
     end;
@@ -366,10 +374,10 @@ begin
 {$IF DEFINED(MSWINDOWS) or DEFINED(LINUX)}
     if (frmHome.WalletList.Content.ChildrenCount > 0) then
     begin
-      WalletViewRelated.OpenWallet(frmHome.WalletList.Content.Children[0]);
-      if frmhome.PageControl.ActiveTab <> frmhome.Settings then
+      walletViewRelated.OpenWallet(frmHome.WalletList.Content.Children[0]);
+      if frmHome.PageControl.ActiveTab <> frmHome.Settings then
       begin
-        switchTab( frmhome.pageControl , frmhome.walletView );
+        switchTab(frmHome.PageControl, frmHome.walletView);
       end;
 
     end;
@@ -377,7 +385,7 @@ begin
   except
     on E: Exception do
     begin
-      ///showmessage('XX' + E.Message);
+      /// showmessage('XX' + E.Message);
       frmHome.AccountsListPanel.Enabled := true;
       raise E;
     end;
@@ -416,10 +424,12 @@ begin
   end;
 
 end;
+
 procedure CloseHodler();
 begin
   ResourceMenager.free;
 end;
+
 procedure InitializeHodler;
 var
   i: integer;
@@ -436,10 +446,11 @@ var
   btn: TImageTextButton;
 begin
 
+
   Application.OnException := frmhome.ExceptionHandler;
   ResourceMenager := AssetsMenager.Create();
 
-  //frmHome.Quality := TCanvasQuality.HighPerformance;
+  // frmHome.Quality := TCanvasQuality.HighPerformance;
 
   // %appdata% to %appdata%/hodlertech
   appdataPath := System.SysUtils.GetEnvironmentVariable('APPDATA');
@@ -631,7 +642,7 @@ begin
       // HistoryTransactionValue.TagString := 'copyable';
       // historyTransactionConfirmation.TagString := 'copyable';
       CreateCopyImageButtonOnTEdits();
-      //////// Restore form HSB
+      /// ///// Restore form HSB
       btn := TImageTextButton.Create(HSBbackupLayout);
       btn.Parent := HSBbackupLayout;
       btn.Visible := true;
@@ -642,7 +653,7 @@ begin
       btn.TagString := 'hodler_secure_backup_image';
 
       btn.OnClick := SendWalletFileButtonClick;
-      //////  Restore from Seed
+      /// ///  Restore from Seed
       btn := TImageTextButton.Create(EncrypredQRBackupLayout);
       btn.Parent := EncrypredQRBackupLayout;
       btn.Visible := true;
@@ -656,7 +667,7 @@ begin
       btn.img.Margins.Bottom := 20;
       btn.OnClick := SendEncryptedSeedButtonClick;
 {$IFDEF ANDROID}
-      //////// Search Device
+      /// ///// Search Device
       btn := TImageTextButton.Create(OpenFileMenagerLayout);
       btn.Parent := OpenFileMenagerLayout;
       btn.Visible := true;
@@ -665,9 +676,9 @@ begin
       btn.LoadImage('BROWSE_DEVICE');
       btn.lbl.Text := 'Browse Device';
       btn.lbl.TextSettings.HorzAlign := TTextAlign.Center;
-      //btn.TagString := 'encrypted_qr_image';
-      //btn.img.Margins.Top := 20;
-      //btn.img.Margins.Bottom := 20;
+      // btn.TagString := 'encrypted_qr_image';
+      // btn.img.Margins.Top := 20;
+      // btn.img.Margins.Bottom := 20;
       btn.OnClick := Showfilemanager;
 {$ENDIF}
       refreshLocalImage := TRotateImage.Create(RefreshLayout);
@@ -684,7 +695,7 @@ begin
       refreshGlobalImage.Parent := GlobalRefreshLayout;
       refreshGlobalImage.Visible := true;
       refreshGlobalImage.Align := TAlignLayout.Top;
-      refreshGlobalImage.height := 32;
+      refreshGlobalImage.Height := 32;
       refreshGlobalImage.OnClick := btnSyncClick;
       // refreshGlobalImage.Margins.Right := 15;
       refreshGlobalImage.Margins.Top := 8;
@@ -760,20 +771,20 @@ begin
 
         Button := TButton.Create(frmHome.AccountsListVertScrollBox);
         Button.Align := TAlignLayout.Top;
-        Button.height := 36;
+        Button.Height := 36;
         Button.Visible := true;
         Button.Parent := frmHome.AccountsListVertScrollBox;
         Button.TagString := accname.name;
         Button.OnClick := LoadAccountPanelClick;
         Button.Text := accname.name;
-        button.Position.y := 36* accname.order;
+        Button.Position.y := 36 * accname.order;
 
       end;
 
     end;
 
-    AccountsListPanel.height :=
-      min(PageControl.height - ChangeAccountButton.height,
+    AccountsListPanel.Height :=
+      min(PageControl.Height - ChangeAccountButton.Height,
       length(AccountsNames) * 36 + 48);
   end;
 end;
@@ -808,7 +819,7 @@ begin
                 AccountsListPanel.Visible := false;
 {$ENDIF}
                 closeOrganizeView(nil);
-                FormShow(nil);
+                AccountRelated.afterInitialize;
 
               end);
 
@@ -856,7 +867,7 @@ begin
       exit;
 
     end;
-    TFmxObject(Sender).Tag:=-2;
+    TfmxObject(Sender).Tag := -2;
     OpenWalletView(Sender);
 
     WVTabControl.ActiveTab := WVReceive;
@@ -926,23 +937,6 @@ begin
         it: integer;
       begin
 
-        Tthread.Synchronize(nil,
-          procedure
-          begin
-            switchTab(PageControl, walletDatCreation);
-            labelForGenerating.Text := 'Generating new addresses...';
-            GenerateSeedProgressBar.Value := 2;
-
-          end);
-
-        Tthread.Synchronize(nil,
-          procedure
-          begin
-            switchTab(PageControl, walletDatCreation);
-            GenerateSeedProgressBar.Value := 10;
-
-          end);
-
         wd := TwalletInfo(CurrentCoin);
 
         SetLength(indexArray, 0);
@@ -989,17 +983,8 @@ begin
 
           currentAccount.AddCoin(newWD);
 
-          Tthread.Synchronize(nil,
-            procedure
-            begin
-
-              GenerateSeedProgressBar.Value := 10 + (i + 1) * 90 /
-                length(indexArray);
-
-            end);
-
         end;
-
+        currentAccount.SaveFiles;
         Tthread.Synchronize(nil,
           procedure
           begin
@@ -1048,19 +1033,20 @@ begin
             begin
               if cc.deleted = true then
                 continue;
-             if TWalletInfo(cc).inPool then Continue;
+              if TwalletInfo(cc).inPool then
+                continue;
               i := i + 1;
               Application.ProcessMessages;
               Panel := TPanel.Create(YaddressesVertScrollBox);
               Panel.Parent := YaddressesVertScrollBox;
               Panel.Visible := true;
               Panel.Align := TAlignLayout.Top;
-              Panel.height := 48;
+              Panel.Height := 48;
               Panel.TagObject := cc;
               Panel.TagString := cc.addr;
-              Panel.Tag:=-2;
+              Panel.Tag := -2;
               Panel.OnClick := OpenWalletViewFromYWalletList;
-              Panel.Position.y := i * Panel.height;
+              Panel.Position.y := i * Panel.Height;
               Panel.Margins.Bottom := 1;
               addrLbl := TCopyableLabel.Create(Panel);
               addrLbl.image.Align := TAlignLayout.Right;
@@ -1069,7 +1055,7 @@ begin
               addrLbl.Visible := true;
               // addrLbl.Margins.Left := 15;
               // addrLbl.Margins.Right := 15;
-              addrLbl.height := 24;
+              addrLbl.Height := 24;
               addrLbl.Margins.Left := 15;
               if TwalletInfo(cc).coin in [3, 7] then
                 addrLbl.Text := bitcoinCashAddressToCashAddress(cc.addr)
@@ -1112,36 +1098,40 @@ begin
                 copyBtn.TagObject := cc;
                 copyBtn.OnClick := CopyParentTagStringToClipboard;
                 copyBtn.Align:=TAlignLayout.Left; }
-              AddressType := tLabel.Create(panel);
+              AddressType := TLabel.Create(Panel);
               AddressType.Parent := Panel;
               AddressType.Visible := true;
               AddressType.Align := TAlignLayout.Bottom;
-              if TWalletInfo(cc).Y > 1073741823 then
+              if TwalletInfo(cc).y > 1073741823 then
                 AddressType.Text := 'Change'
               else
                 AddressType.Text := 'Receive';
-                AddressType.Text:=AddressType.Text+' '+ BigIntegertoFloatStr
-        (cc.confirmed+cc.unconfirmed,
-        cc.decimals) + ' ' + cc.shortcut;
-        if cc.confirmed+cc.unconfirmed>0 then begin AddressType.TextSettings.Font.Style:=AddressType.TextSettings.Font.Style+[TFontStyle.fsBold];
-        AddressType.StyledSettings := AddressType.StyledSettings - [TStyledSetting.Style] - [TStyledSetting.FontColor];
-                     AddressType.FontColor:= TAlphaColorRec.Limegreen;
-                     end;
-              {$IFDEF  DEBUG} AddressType.Text:=AddressType.Text+' X: '+IntToStr(TWalletInfo(cc).X)+' Y: '+IntToStr(TWalletInfo(cc).Y);{$ENDIF}
+              AddressType.Text := AddressType.Text + ' ' +
+                BigIntegertoFloatStr(cc.confirmed + cc.unconfirmed, cc.decimals)
+                + ' ' + cc.ShortCut;
+              if cc.confirmed + cc.unconfirmed > 0 then
+              begin
+                AddressType.TextSettings.Font.style :=
+                  AddressType.TextSettings.Font.style + [TFontStyle.fsBold];
+                AddressType.StyledSettings := AddressType.StyledSettings -
+                  [TStyledSetting.style] - [TStyledSetting.FontColor];
+                AddressType.FontColor := TAlphaColorRec.Limegreen;
+              end;
+{$IFDEF  DEBUG} AddressType.Text := AddressType.Text + ' X: ' + IntToStr(TwalletInfo(cc).x) + ' Y: ' + IntToStr(TwalletInfo(cc).y); {$ENDIF}
               AddressType.Height := 24;
               AddressType.Margins.Left := 15;
 
             end;
           end);
       end);
-      thr.Start;
+    thr.Start;
     generateNewAddresses := TButton.Create(YaddressesVertScrollBox);
     generateNewAddresses.Parent := YaddressesVertScrollBox;
     generateNewAddresses.Visible := true;
     generateNewAddresses.Align := TAlignLayout.Top;
     generateNewAddresses.Text := 'Add new addresses';
     generateNewAddresses.OnClick := generateNewAddressesClick;
-    generateNewAddresses.height := 48;
+    generateNewAddresses.Height := 48;
     generateNewAddresses.TagObject := CurrentCoin;
     generateNewAddresses.Position.y := 1000000000;
   end

@@ -380,9 +380,10 @@ function getComponentsWithTagString(tag: AnsiString; From: TfmxObject)
 function compareVersion(a, b: AnsiString): integer;
 function postDataOverHTTP(var aURL: String; postdata: string;
   useCache: boolean = true; noTimeout: boolean = false): AnsiString;
-  //function floatToBigInteger(f : Single) : BigInteger;
+
+// function floatToBigInteger(f : Single) : BigInteger;
 procedure saveSendCacheToFile();
-procedure loadSendCacheFromFile( );
+procedure loadSendCacheFromFile();
 procedure clearSendCache();
 
 
@@ -432,20 +433,19 @@ var
 
   newcoinID: nativeint;
   ImportCoinID: integer;
-  AccountForSearchToken : Account;
-  ResourceMenager : AssetsMenager;
+  AccountForSearchToken: Account;
+  ResourceMenager: AssetsMenager;
 
 implementation
 
 uses Bitcoin, uHome, base58, Ethereum, coinData, strutils, secp256k1,
-  AccountRelated, TImageTextButtonData,KeyPoolRelated
+  AccountRelated, TImageTextButtonData, KeyPoolRelated
 {$IFDEF ANDROID}
 {$ELSE}
 {$ENDIF};
 
 var
   bitmapData: TBitmapData;
-
 
 procedure clearSendCache();
 var
@@ -496,6 +496,7 @@ begin
   arr.Free();
 {$ENDIF}
 end;
+
 procedure saveSendCacheToFile();
 var
  FilePath : AnSiString;
@@ -579,6 +580,7 @@ try
 
   arr := TJsonArray(TJSONObject.ParseJSONValue(ts.Text));
 
+
   for val in arr do
   begin
 
@@ -618,8 +620,6 @@ end;
 {$ENDIF}
 
 end;
-
-
 
 function TSecureRandoms.CheckSecureRandom(const random: ISecureRandom): boolean;
 begin
@@ -1270,6 +1270,7 @@ begin
   begin
 
     frmhome.SearchInDashBrdImage.Visible := true;
+
     {$IF DEFINED(ANDROID) OR DEFINED(OIS)}
     frmhome.MoreImage.Visible := TRUE;
     {$ENDIF}
@@ -1278,6 +1279,7 @@ begin
     {$IF DEFINED(ANDROID) OR DEFINED(OIS)}
     frmhome.MoreImage.bitmap.loadFromStream( ResourceMenager.getAssets( 'MORE_' + RightStr(currentStyle, Length(currentStyle) - 3) ) );
     {$ENDIF}
+
 
   end
   else
@@ -1288,9 +1290,6 @@ begin
     {$ENDIF}
 
   end;
-
-
-
 
 end;
 
@@ -1348,11 +1347,11 @@ begin
     ConfirmSendClaimCoinButton.Visible := false;
 
     BCHSVBCHABCReplayProtectionLabel.Visible :=
-      ((currentcoin.coin = 3) or (currentcoin.coin = 7));
+      ((CurrentCoin.coin = 3) or (CurrentCoin.coin = 7));
 
     if not isEthereum then
     begin
-      fee := StrFloatToBigInteger(wvFee.Text, availableCoin[currentcoin.coin]
+      fee := StrFloatToBigInteger(wvFee.Text, availableCoin[CurrentCoin.coin]
         .decimals);
       tempFee := fee;
     end
@@ -1369,7 +1368,7 @@ begin
     if (not isTokenTransfer) then
     begin
       amount := StrFloatToBigInteger(wvAmount.Text,
-        availableCoin[currentcoin.coin].decimals);
+        availableCoin[CurrentCoin.coin].decimals);
       if FeeFromAmountSwitch.IsChecked then
       begin
         amount := amount - tempFee;
@@ -1381,7 +1380,7 @@ begin
       amount := StrFloatToBigInteger(wvAmount.Text,
         CurrentCryptoCurrency.decimals);
     if (not isTokenTransfer) then
-      if amount + tempFee > (CurrentAccount.aggregateBalances(currentcoin)
+      if amount + tempFee > (CurrentAccount.aggregateBalances(CurrentCoin)
         .confirmed) then
       begin
         raise Exception.Create(dictionary('AmountExceed'));
@@ -1416,7 +1415,7 @@ begin
     end;
     // sendCoinsTO(CurrentCoin, Address, amount, fee, MasterSeed,
     // AvailableCoin[CurrentCoin.coin].name)
-    SendFromLabel.Text := currentcoin.addr;
+    SendFromLabel.Text := CurrentCoin.addr;
     SendToLabel.Text := address;
     if ((CurrentCryptoCurrency is TWalletInfo) and
       (TWalletInfo(CurrentCryptoCurrency).coin in [3, 7])) then
@@ -1436,7 +1435,7 @@ begin
       frmhome.CurrencyConverter.symbol + ' ' + '(' + BigIntegerToFloatStr
       (amount, CurrentCryptoCurrency.decimals) + ')';
 
-    if (currentcoin.coin = 4) and (CurrentCryptoCurrency is Token) then
+    if (CurrentCoin.coin = 4) and (CurrentCryptoCurrency is Token) then
     begin
       WaitTimeLabel.Text :=
         'The transaction may get stuck because of the low bandwidth of the ethereum network';
@@ -1444,7 +1443,7 @@ begin
       sendFeeLabel.Text := AnsiReverseString
         (cutEveryNChar(3, AnsiReverseString(fee.ToString))) + ' WEI';
     end
-    else if (currentcoin.coin = 4) then
+    else if (CurrentCoin.coin = 4) then
     begin
       WaitTimeLabel.Text :=
         'The transaction may get stuck because of the low bandwidth of the ethereum network';
@@ -1494,21 +1493,21 @@ end;
 function searchTokens(InAddress: AnsiString; ac: Account = nil): integer;
 var
   data: AnsiString;
-  JsonValue: TJsonvalue;
+  JsonValue: TJsonValue;
   JsonTokens: TJsonArray;
-  JsonIt: TJsonvalue;
+  JsonIt: TJsonValue;
   T: Token;
-  address, name, decimals, symbol , balance: AnsiString;
+  address, name, decimals, symbol, balance: AnsiString;
   i: integer;
   createToken: boolean;
   createFromList: boolean;
   CreateFromListIndex: integer;
   added: integer;
 
-  panel : TPanel;
-  img : TImage;
-  NameLbl , valuelbl : TLabel;
-  checkBox : TCheckBox;
+  panel: TPanel;
+  img: TImage;
+  NameLbl, valuelbl: TLabel;
+  checkBox: TCheckBox;
 begin
   added := 0;
   if ac = nil then
@@ -1522,16 +1521,16 @@ begin
       ac := CurrentAccount;
     end;
   end;
-  clearVertScrollBox( frmhome.FoundTokenVertScrollBox );
+  clearVertScrollBox(frmhome.FoundTokenVertScrollBox);
   AccountForSearchToken := ac;
 
   data := getDataOverHTTP('https://api.ethplorer.io/getAddressInfo/' + InAddress
     + '?apiKey=freekey');
-  JsonValue := TJSONObject.ParseJSONValue(data);
+  JsonValue := TJsonObject.ParseJSONValue(data);
 
-  if JsonValue is TJSONObject then
+  if JsonValue is TJsonObject then
   begin
-    if JsonValue.tryGetValue<TJsonArray>('tokens', JsonTokens) then
+    if JsonValue.TryGetValue<TJsonArray>('tokens', JsonTokens) then
       for JsonIt in JsonTokens do
       begin
 
@@ -1607,42 +1606,43 @@ begin
               InAddress);
           end;
 
-          panel := Tpanel.Create(frmhome.FoundTokenVertScrollBox);
-          panel.Parent := frmhome.FoundTokenVertScrollBox;
+          panel := TPanel.Create(frmhome.FoundTokenVertScrollBox);
+          panel.parent := frmhome.FoundTokenVertScrollBox;
           panel.Visible := true;
           panel.Height := 48;
-          panel.align := TAlignLayout.Top;
+          panel.Align := TAlignLayout.top;
           panel.OnClick := frmhome.FoundTokenPanelOnClick;
 
-
-          img := Timage.Create(panel);
-          img.Parent := panel;
-          img.visible := true;
-          img.Align := TAlignLayout.left;
+          img := TImage.Create(panel);
+          img.parent := panel;
+          img.Visible := true;
+          img.Align := TAlignLayout.Left;
           img.Width := 64;
           img.Bitmap := T.getIcon;
-          img.Margins.Top := 8;
+          img.Margins.top := 8;
           img.Margins.Bottom := 8;
           img.HitTest := false;
 
-          NameLbl := TLabel.create(panel);
-          nameLbl.Align := TAlignLayout.Client;
-          namelbl.visible := true;
-          namelbl.Parent := panel;
-          namelbl.Text := name;
+          NameLbl := TLabel.Create(panel);
+          NameLbl.Align := TAlignLayout.Client;
+          NameLbl.Visible := true;
+          NameLbl.parent := panel;
+          NameLbl.Text := name;
 
-          valueLbl := Tlabel.create(panel);
-          valueLbl.Parent := panel;
-          valueLbl.Align := TAlignLayout.client;
-          valueLbl.Visible := true;// floatToStrF(crypto.getFiat, ffFixed, 15, 2)
-          valueLbl.Text := BigIntegerBeautifulStr(BigInteger.Create( StrtoFloat( balance ) ) , T.decimals);
-          valueLbl.TextSettings.HorzAlign := TTextAlign.Trailing;
+          valuelbl := TLabel.Create(panel);
+          valuelbl.parent := panel;
+          valuelbl.Align := TAlignLayout.Client;
+          valuelbl.Visible := true;
+          // floatToStrF(crypto.getFiat, ffFixed, 15, 2)
+          valuelbl.Text := BigIntegerBeautifulStr
+            (BigInteger.Create(strToFloat(balance)), T.decimals);
+          valuelbl.TextSettings.HorzAlign := TTextAlign.Trailing;
           valuelbl.Margins.Right := 15;
 
           checkBox := TCheckBox.Create(panel);
-          checkBox.Parent := panel;
+          checkBox.parent := panel;
           checkBox.Align := TAlignLayout.MostLeft;
-          //checkBox.Margins.Right := 10;
+          // checkBox.Margins.Right := 10;
           checkBox.Margins.Left := 15;
           checkBox.Visible := true;
           checkBox.IsChecked := true;
@@ -1653,14 +1653,12 @@ begin
 {$IFDEF ANDROID}
           checkBox.TagObject.__ObjAddRef();
 {$ENDIF}
-
-
           {
-          T.idInWallet := Length(ac.myTokens) + 10000;
+            T.idInWallet := Length(ac.myTokens) + 10000;
 
-          ac.addToken(T);
-          ac.SaveFiles();
-          if ac = CurrentAccount then
+            ac.addToken(T);
+            ac.SaveFiles();
+            if ac = CurrentAccount then
             CreatePanel(T); }
 
         end;
@@ -1724,11 +1722,12 @@ begin
     begin
       ac := CreateNewAccount(name, pass, seed);
       ac.userSaveSeed := userSaveSeed;
-      Tthread.Synchronize(nil , procedure
-      begin
-        frmhome.HideZeroWalletsCheckBox.ischecked := false;
-      end);
 
+      Tthread.Synchronize(nil,
+        procedure
+        begin
+          frmhome.HideZeroWalletsCheckBox.IsChecked := false;
+        end);
       AddAccountToFile(ac);
 
       ac.Free;
@@ -1736,12 +1735,12 @@ begin
       Tthread.Synchronize(nil,
         procedure
         begin
-          frmhome.FormShow(nil);
-          AccountRelated.LoadCurrentAccount(name);
 
+          AccountRelated.LoadCurrentAccount(name);
+          AccountRelated.afterInitialize;
         end);
-        startFullfillingKeypool(seed);
-           wipeAnsiString(seed);
+      startFullfillingKeypool(seed);
+      wipeAnsiString(seed);
     end);
 
   thr.start;
@@ -1862,27 +1861,27 @@ begin
     balLabel.StyledSettings := balLabel.StyledSettings - [TStyledSetting.size];
 
     balLabel.parent := panel;
-    if crypto.rate >= 0 then   // rate >= 0 after first sync
+    if crypto.rate >= 0 then // rate >= 0 after first sync
     begin
       if crypto is TWalletInfo then
       begin
         balLabel.Text := BigIntegerBeautifulStr
           (CurrentAccount.aggregateBalances(TWalletInfo(crypto)).confirmed,
-          crypto.decimals) + '    ' + floatToStrF(CurrentAccount.aggregateConfirmedFiats(TWalletInfo(crypto)), ffFixed, 15, 2)
-          + ' ' + frmhome.CurrencyConverter.symbol;
+          crypto.decimals) + '    ' +
+          floatToStrF(CurrentAccount.aggregateConfirmedFiats(TWalletInfo(crypto)
+          ), ffFixed, 15, 2) + ' ' + frmhome.CurrencyConverter.symbol;
       end
       else
       begin
-        balLabel.Text := BigIntegerBeautifulStr(crypto.confirmed, crypto.decimals)
-          + '    ' + floatToStrF(crypto.getFiat, ffFixed, 15, 2) + ' ' +
-          frmhome.CurrencyConverter.symbol;
+        balLabel.Text := BigIntegerBeautifulStr(crypto.confirmed,
+          crypto.decimals) + '    ' + floatToStrF(crypto.getFiat, ffFixed, 15,
+          2) + ' ' + frmhome.CurrencyConverter.symbol;
       end;
     end
     else
     begin
       balLabel.Text := 'Syncing with network...';
     end;
-    
 
     balLabel.TextSettings.HorzAlign := TTextAlign.Trailing;
     balLabel.Visible := true;
@@ -1896,10 +1895,12 @@ begin
     coinIMG := TImage.Create(frmhome.walletList);
     coinIMG.parent := panel;
     if crypto is TWalletInfo then
-      coinIMG.Bitmap.LoadFromStream( ResourceMenager.getAssets( Availablecoin[TWalletInfo(crypto).coin].ResourceName ) )// getCoinIcon(TWalletInfo(crypto).coin)
+      coinIMG.Bitmap.LoadFromStream
+        (ResourceMenager.getAssets(availableCoin[TWalletInfo(crypto).coin]
+        .ResourceName)) // getCoinIcon(TWalletInfo(crypto).coin)
     else
-      coinIMG.Bitmap.LoadFromStream( Token(crypto).getIconResource );// getCoinIcon(TWalletInfo(crypto).coin)
-
+      coinIMG.Bitmap.LoadFromStream(Token(crypto).getIconResource);
+    // getCoinIcon(TWalletInfo(crypto).coin)
 
     coinIMG.Height := 32.0;
     coinIMG.Width := 50;
@@ -1910,8 +1911,8 @@ begin
     price.parent := panel;
     price.Visible := true;
     if crypto.rate >= 0 then
-      price.Text := floatToStrF(frmhome.CurrencyConverter.calculate(crypto.rate),
-        ffFixed, 18, 2)
+      price.Text := floatToStrF(frmhome.CurrencyConverter.calculate
+        (crypto.rate), ffFixed, 18, 2)
     else
       price.Text := 'Syncing with network...';
     price.Align := TAlignLayout.Bottom;
@@ -2081,7 +2082,7 @@ begin
     ts.Add(data);
   end;
 
-  ts.SaveToFile(TPath.Combine(HOME_PATH, 'hodler.fiat.dat'));
+  ts.SaveToFile(tpath.Combine(HOME_PATH, 'hodler.fiat.dat'));
 
   ts.Free;
 
@@ -2095,7 +2096,7 @@ begin
   ts := TStringList.Create();
   try
 
-    ts.LoadFromFile(TPath.Combine(HOME_PATH, 'hodler.fiat.dat'));
+    ts.LoadFromFile(tpath.Combine(HOME_PATH, 'hodler.fiat.dat'));
 
     for line in ts do
     begin
@@ -2185,7 +2186,7 @@ var
 begin
 {$IFDEF ANDROID}
   mimetypeStr := TJMimeTypeMap.JavaClass.getSingleton.getMimeTypeFromExtension
-    (StringToJString(StringReplace(TPath.GetExtension(path), '.', '', [])));
+    (StringToJString(StringReplace(tpath.GetExtension(path), '.', '', [])));
   intent := TJIntent.Create();
   intent.setFlags(TJIntent.JavaClass.FLAG_GRANT_READ_URI_PERMISSION);
   intent.SetAction(TJIntent.JavaClass.ACTION_SEND);
@@ -2215,7 +2216,7 @@ begin
   saveDialog.FileName := ExtractFileName(path);
 
   saveDialog.InitialDir :=
-{$IFDEF IOS}TPath.GetSharedDocumentsPath{$ELSE}GetCurrentDir{$ENDIF};
+{$IFDEF IOS}tpath.GetSharedDocumentsPath{$ELSE}GetCurrentDir{$ENDIF};
 
   saveDialog.Filter := 'Zip File|*.zip';
 
@@ -2378,7 +2379,7 @@ var
   data: AnsiString;
   StringReader: TStringReader;
   JSONTextReader: TJSONTextReader;
-  JsonValue: TJsonvalue;
+  JsonValue: TJsonValue;
   JSONArray: TJsonArray;
   it: TJSONIterator;
   ts: TStringList;
@@ -2424,10 +2425,10 @@ begin
   globalFiat := 0;
   for ccrc in CurrentAccount.myCoins do
   begin
-  if not TWalletInfo(ccrc).inPool then   
-    globalFiat := globalFiat +
-      Max((((ccrc.confirmed.AsDouble + ccrc.unconfirmed.AsDouble) *
-      ccrc.rate) / Math.Power(10, ccrc.decimals)), 0);
+    if not TWalletInfo(ccrc).inPool then
+      globalFiat := globalFiat +
+        Max((((ccrc.confirmed.AsDouble + ccrc.unconfirmed.AsDouble) * ccrc.rate)
+        / Math.Power(10, ccrc.decimals)), 0);
   end;
 
   for ccrc in CurrentAccount.myTokens do
@@ -2459,37 +2460,44 @@ begin;
 end;
 
 function aggregateAndSortTX(CCArray: TCryptoCurrencyArray): TxHistory;
-  function alreadyOnList(txid:AnsiString;var Tab: TxHistory):Boolean;
-  var tx:transactionHistory;
-  ref:integer;
+  function alreadyOnList(txid: AnsiString; var Tab: TxHistory): boolean;
+  var
+    tx: transactionHistory;
+    ref: integer;
   begin
-     result:=False;
-    ref:=0;
-    if Length(Tab)<=1 then Exit(False);
+    result := false;
+    ref := 0;
+    if Length(Tab) <= 1 then
+      exit(false);
 
-     for tx in Tab do  begin
-     if tx.TransactionID=txid then Inc(ref);
+    for tx in Tab do
+    begin
+      if tx.TransactionID = txid then
+        Inc(ref);
 
-     if ref > 1 then Exit(True);
+      if ref > 1 then
+        exit(true);
 
     end;
   end;
-  function removeDuplicatedTX(var Tab: TxHistory):TxHistory;
-  var i:integer;
+  function removeDuplicatedTX(var Tab: TxHistory): TxHistory;
+  var
+    i: integer;
   begin
-  i:=0;
-  if Length(Tab)<=1 then Exit(tab);
+    i := 0;
+    if Length(Tab) <= 1 then
+      exit(Tab);
     repeat
-    if  alreadyOnList(Tab[i].TransactionID,Tab) then
-    begin
-     Tab[i]:=Tab[High(Tab)];
-     SetLength(Tab,Length(Tab)-1);
-     continue;
-    end;
-    Inc(i);
-   until i>=Length(Tab);
+      if alreadyOnList(Tab[i].TransactionID, Tab) then
+      begin
+        Tab[i] := Tab[High(Tab)];
+        SetLength(Tab, Length(Tab) - 1);
+        continue;
+      end;
+      Inc(i);
+    until i >= Length(Tab);
 
-   result:=Tab;
+    result := Tab;
   end;
   procedure Sort(var Tab: TxHistory);
   var
@@ -2503,12 +2511,12 @@ function aggregateAndSortTX(CCArray: TCryptoCurrencyArray): TxHistory;
     begin
       for j := Low(Tab) + 1 to High(Tab) do
       begin
-        {if compareHistory( tab[j] , tab[i]) < 0 then
-        begin
+        { if compareHistory( tab[j] , tab[i]) < 0 then
+          begin
           temp := Tab[j];
           Tab[j] := Tab[j - 1];
           Tab[j - 1] := temp;
-        end; }
+          end; }
 
         if strToFloatDef(Tab[j].data, 0) > strToFloatDef(Tab[j - 1].data, 0)
         then
@@ -2542,7 +2550,7 @@ begin
     SetLength(result, Length(tmp) + Length(cc.history));
     insert(cc.history, tmp, Length(tmp) - Length(cc.history));
   end;
-  tmp:=RemoveDuplicatedTX(tmp);
+  tmp := removeDuplicatedTX(tmp);
   Sort(tmp);
   result := tmp;
   SetLength(tmp, 0);
@@ -2600,7 +2608,8 @@ begin
   begin
     if i >= Length(hist) then
       exit;
-    if Length(hist[i].addresses) = 0 then Continue;
+    if Length(hist[i].addresses) = 0 then
+      continue;
     panel := TPanel.Create(frmhome.TxHistory);
 
     panel.Height := 40;
@@ -2608,7 +2617,8 @@ begin
     panel.tag := i;
     panel.TagFloat := strToFloatDef(hist[i].data, 0);
     panel.parent := frmhome.TxHistory;
-    panel.Position.Y := (i * 44) -1;   // 40 (panel.height) + 2 ( panel.margin.bottom ) + 2 ( panel.margin.top );
+    panel.Position.Y := (i * 44) - 1;
+    // 40 (panel.height) + 2 ( panel.margin.bottom ) + 2 ( panel.margin.top );
     panel.Align := TAlignLayout.top;
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     panel.OnTap := frmhome.ShowHistoryDetails;
@@ -2669,7 +2679,8 @@ begin
     lbl.TextSettings.HorzAlign := TTextAlign.taTrailing;
     lbl.Visible := true;
     lbl.parent := panel;
-    if (wallet is tWalletInfo) and (TwalletInfo(wallet).coin = 4) and (hist[i].CountValues = 0) then
+    if (wallet is TWalletInfo) and (TWalletInfo(wallet).coin = 4) and
+      (hist[i].CountValues = 0) then
     begin
       lbl.Text := 'Token transfer';
     end
@@ -2688,17 +2699,17 @@ begin
 
   end;
 
-  {frmhome.TxHistory.Sort( function (a , b : TfmxObject) : integer
+  { frmhome.TxHistory.Sort( function (a , b : TfmxObject) : integer
     begin
-      if not ((a is Tpanel) and (b is TPanel)) then
-        if a is Tpanel then
-          exit(1)
-        else
-          exit(0);
+    if not ((a is Tpanel) and (b is TPanel)) then
+    if a is Tpanel then
+    exit(1)
+    else
+    exit(0);
 
 
-      result := compareHistory( THistoryHolder(a.TagObject).history , THistoryHolder(b.TagObject).history  )
-    end);     }
+    result := compareHistory( THistoryHolder(a.TagObject).history , THistoryHolder(b.TagObject).history  )
+    end); }
 
   // frmHome.txHistory.RecalcAbsolute;
   // frmHome.txHistory.RealignContent;
@@ -3127,7 +3138,7 @@ end;
 function isEthereum: boolean;
 begin
 
-  result := currentcoin.coin = 4;
+  result := CurrentCoin.coin = 4;
 
 end;
 
@@ -3349,7 +3360,7 @@ end;
 
 procedure wipeTokenDat();
 begin
-  DeleteFile(TPath.Combine(HOME_PATH, 'hodler.erc20.dat'));
+  DeleteFile(tpath.Combine(HOME_PATH, 'hodler.erc20.dat'));
 end;
 
 // generate icon based on hex
@@ -3458,7 +3469,7 @@ var
   i, j: integer;
 begin
   result := Str;
-  //exit;
+  // exit;
   if n < 0 then
     exit(Str);
   Inc(n);
@@ -3546,8 +3557,9 @@ function IsHex(s: string): boolean;
 var
   i: integer;
 begin
-//Odd string or empty string is not valid hexstring
-if (Length(s)=0) or (Length(s) mod 2 <> 0) then Exit(False);
+  // Odd string or empty string is not valid hexstring
+  if (Length(s) = 0) or (Length(s) mod 2 <> 0) then
+    exit(false);
 
   s := UpperCase(s);
   result := true;
@@ -4109,7 +4121,7 @@ function isWalletDatExists: boolean;
 var
   WDPath: AnsiString;
 begin
-  WDPath := TPath.Combine(HOME_PATH, 'hodler.wallet.dat');
+  WDPath := tpath.Combine(HOME_PATH, 'hodler.wallet.dat');
   result := fileExists(WDPath);
 end;
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
@@ -4482,13 +4494,13 @@ var
   ts { , oldFile } : TStringList;
   i: integer;
   Flock: TObject;
-  accObject, JsonObject: TJSONObject;
+  accObject, JsonObject: TJsonObject;
   JSONArray: TJsonArray;
 begin
   Flock := TObject.Create;
   TMonitor.Enter(Flock);
   try
-    if not fileExists(TPath.Combine(HOME_PATH, 'hodler.wallet.dat')) then
+    if not fileExists(tpath.Combine(HOME_PATH, 'hodler.wallet.dat')) then
     begin
       exit;
     end;
@@ -4504,14 +4516,14 @@ begin
       if AccountsNames[i].name = '' then
         continue;
 
-      accObject := TJSONObject.Create();
+      accObject := TJsonObject.Create();
       accObject.AddPair('name', AccountsNames[i].name);
       accObject.AddPair('order', intToStr(i));
 
       JSONArray.AddElement(accObject);
     end;
 
-    JsonObject := TJSONObject.Create();
+    JsonObject := TJsonObject.Create();
 
     JsonObject.AddPair('languageIndex',
       intToStr(frmhome.LanguageBox.ItemIndex));
@@ -4526,7 +4538,7 @@ begin
     JsonObject.AddPair('AllowToSendData', boolToStr(USER_ALLOW_TO_SEND_DATA));
 
     ts.Text := JsonObject.ToString;
-    ts.SaveToFile(TPath.Combine(HOME_PATH, 'hodler.wallet.dat'));
+    ts.SaveToFile(tpath.Combine(HOME_PATH, 'hodler.wallet.dat'));
     ts.Free;
 
   finally
@@ -4539,7 +4551,7 @@ procedure createWalletDat();
 var
   ts: TStringList;
   genThr: Tthread;
-  accObject, JsonObject: TJSONObject;
+  accObject, JsonObject: TJsonObject;
   JSONArray: TJsonArray;
 begin
 
@@ -4550,14 +4562,14 @@ begin
     if AccountsNames[i].name = '' then
       continue;
 
-    accObject := TJSONObject.Create();
+    accObject := TJsonObject.Create();
     accObject.AddPair('name', AccountsNames[i].name);
     accObject.AddPair('order', intToStr(i));
 
     JSONArray.AddElement(accObject);
   end;
 
-  JsonObject := TJSONObject.Create();
+  JsonObject := TJsonObject.Create();
 
   JsonObject.AddPair('languageIndex', intToStr(frmhome.LanguageBox.ItemIndex));
   JsonObject.AddPair('currency', frmhome.CurrencyConverter.symbol);
@@ -4569,7 +4581,7 @@ begin
   ts := TStringList.Create;
   ts.Text := JsonObject.ToString;
 
-  ts.SaveToFile(TPath.Combine(HOME_PATH, 'hodler.wallet.dat'));
+  ts.SaveToFile(tpath.Combine(HOME_PATH, 'hodler.wallet.dat'));
 
   ts.Free;
 
@@ -4749,21 +4761,21 @@ var
   ts: TStringList;
   acname: AccountItem;
   tempAccount: Account;
-  filePath: AnsiString;
+  FilePath: AnsiString;
 begin
   try
     for acname in AccountsNames do
     begin
       tempAccount := Account.Create(acname.name);
       try
-        for filePath in tempAccount.Paths do
+        for FilePath in tempAccount.Paths do
         begin
           ts := TStringList.Create;
-          ts.LoadFromFile(filePath);
+          ts.LoadFromFile(FilePath);
           ts.Text := StringofChar('@', Length(ts.Text));
-          ts.SaveToFile(filePath);
+          ts.SaveToFile(FilePath);
           ts.Free;
-          DeleteFile(filePath);
+          DeleteFile(FilePath);
         end;
 
         RemoveDir(tempAccount.DirPath);
@@ -4776,8 +4788,8 @@ begin
       tempAccount.Free;
     end;
   finally
-    DeleteFile(TPath.Combine(HOME_PATH, 'hodler.wallet.dat'));
-    DeleteFile(TPath.Combine(HOME_PATH, 'hodler.fiat.dat'));
+    DeleteFile(tpath.Combine(HOME_PATH, 'hodler.wallet.dat'));
+    DeleteFile(tpath.Combine(HOME_PATH, 'hodler.fiat.dat'));
   end;
 end;
 
@@ -4786,17 +4798,17 @@ var
   ts: TStringList;
   i, j: integer;
   wd: TWalletInfo;
-  JsonObject: TJSONObject;
+  JsonObject: TJsonObject;
   JSONArray: TJsonArray;
-  JsonValue: TJsonvalue;
+  JsonValue: TJsonValue;
   temp, name, order: AnsiString;
 begin
   ts := TStringList.Create;
-  ts.LoadFromFile(TPath.Combine(HOME_PATH, 'hodler.wallet.dat'));
+  ts.LoadFromFile(tpath.Combine(HOME_PATH, 'hodler.wallet.dat'));
 
   if ts.Text[low(ts.Text)] = '{' then
   begin
-    JsonObject := TJSONObject(TJSONObject.ParseJSONValue(ts.Text));
+    JsonObject := TJsonObject(TJsonObject.ParseJSONValue(ts.Text));
 
     JSONArray := TJsonArray(JsonObject.GetValue('accounts'));
 
@@ -4809,7 +4821,7 @@ begin
 
     currentStyle := JsonObject.GetValue<string>('styleName');
 
-    if JsonObject.tryGetValue<AnsiString>('AllowToSendData', temp) then
+    if JsonObject.TryGetValue<AnsiString>('AllowToSendData', temp) then
       USER_ALLOW_TO_SEND_DATA := strToBool(temp)
     else
       USER_ALLOW_TO_SEND_DATA := true;
@@ -4820,7 +4832,7 @@ begin
     i := 0;
     for JsonValue in JSONArray do
     begin
-      if JsonValue.tryGetValue<AnsiString>('name', name) then
+      if JsonValue.TryGetValue<AnsiString>('name', name) then
       begin
         AccountsNames[i].name := name;
         try
@@ -4884,7 +4896,6 @@ begin
       begin
         try
 
-
           if cc.rate >= 0 then
           begin
             if cc is TWalletInfo then
@@ -4894,8 +4905,8 @@ begin
               begin
 
                 TLabel(fmxObj).Text := BigIntegerBeautifulStr
-                  (cc.confirmed + bal.unconfirmed.AsInt64, cc.decimals) +
-                  '    ' + floatToStrF(cc.getFiat(), ffFixed, 15, 2) + ' ' +
+                  (cc.confirmed + bal.unconfirmed.AsInt64, cc.decimals) + '    '
+                  + floatToStrF(cc.getFiat(), ffFixed, 15, 2) + ' ' +
                   frmhome.CurrencyConverter.symbol;
               end
               else
@@ -4905,8 +4916,8 @@ begin
                 TLabel(fmxObj).Text := BigIntegerBeautifulStr
                   (bal.confirmed + bal.unconfirmed.AsInt64, cc.decimals) +
                   '    ' + floatToStrF
-                  (CurrentAccount.aggregateFiats(TWalletInfo(cc)), ffFixed, 15, 2)
-                  + ' ' + frmhome.CurrencyConverter.symbol;
+                  (CurrentAccount.aggregateFiats(TWalletInfo(cc)), ffFixed, 15,
+                  2) + ' ' + frmhome.CurrencyConverter.symbol;
               end;
 
             end
@@ -4914,8 +4925,8 @@ begin
             begin
 
               TLabel(fmxObj).Text := BigIntegerBeautifulStr
-                (cc.confirmed + bal.unconfirmed.AsInt64, cc.decimals) +
-                '    ' + floatToStrF(cc.getFiat(), ffFixed, 15, 2) + ' ' +
+                (cc.confirmed + bal.unconfirmed.AsInt64, cc.decimals) + '    ' +
+                floatToStrF(cc.getFiat(), ffFixed, 15, 2) + ' ' +
                 frmhome.CurrencyConverter.symbol;
 
             end;
@@ -4924,9 +4935,6 @@ begin
           begin
             TLabel(fmxObj).Text := 'Syncing with network...';
           end;
-
-
-
 
         finally
 
@@ -4940,9 +4948,10 @@ begin
           if cc.rate >= 0 then
             TLabel(fmxObj).Text :=
               floatToStrF(frmhome.CurrencyConverter.calculate(cc.rate), ffFixed,
-              15, 2) + ' ' + frmhome.CurrencyConverter.symbol + '/' + cc.shortcut
+              15, 2) + ' ' + frmhome.CurrencyConverter.symbol + '/' +
+              cc.shortcut
           else
-            TLabel(fmxObj).Text :='Syncing with network...';
+            TLabel(fmxObj).Text := 'Syncing with network...';
         finally
 
         end;

@@ -11,7 +11,8 @@ unit secp256k1;
 interface
 
 uses
-  Velthuis.BigIntegers, misc, System.SysUtils, ClpBigInteger, ClpIX9ECParameters,
+  Velthuis.BigIntegers, misc, System.SysUtils, ClpBigInteger,
+  ClpIX9ECParameters,
   ClpIECDomainParameters, ClpECDomainParameters, ClpIECKeyPairGenerator,
   ClpECKeyPairGenerator, ClpIECKeyGenerationParameters,
   ClpIAsymmetricCipherKeyPair, ClpIECPrivateKeyParameters,
@@ -26,9 +27,11 @@ type
 
 function make256bit(var bi: BigInteger): BigInteger;
 
-function secp256k1_get_public(privkey: AnsiString; forEth: boolean = false): AnsiString;
+function secp256k1_get_public(privkey: AnsiString; forEth: boolean = false)
+  : AnsiString;
 
-function secp256k1_signDER(e, d: AnsiString; forEth: boolean = false): AnsiString;
+function secp256k1_signDER(e, d: AnsiString; forEth: boolean = false)
+  : AnsiString;
 
 function getG: TBIPoint;
 
@@ -45,27 +48,33 @@ function getG: TBIPoint;
 var
   tmp: BigInteger;
 begin
-  result.XCoordinate := BigInteger.Parse('0x079BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798');
-  result.YCoordinate := BigInteger.Parse('0x0483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8');
+  result.XCoordinate := BigInteger.Parse
+    ('0x079BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798');
+  result.YCoordinate := BigInteger.Parse
+    ('0x0483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8');
 end;
 
 function make256bit(var bi: BigInteger): BigInteger;
 begin
   if bi.IsNegative then
-    bi := bi + BigInteger.Parse('+0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F')
+    bi := bi + BigInteger.Parse
+      ('+0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F')
   else
-    bi := bi mod BigInteger.Parse('+0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF');
+    bi := bi mod BigInteger.Parse
+      ('+0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF');
   result := bi;
 end;
 
 function getP: BigInteger;
 begin
-  result := BigInteger.Parse('+0x0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F');
+  result := BigInteger.Parse
+    ('+0x0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F');
 end;
 
 function getN: BigInteger;
 begin
-  result := BigInteger.Parse('+0x00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141');
+  result := BigInteger.Parse
+    ('+0x00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141');
 end;
 
 function cmpecp(p, q: TBIPoint): boolean;
@@ -80,7 +89,8 @@ var
   i: integer;
   b: TArray<Byte>;
 begin
-  bi := bi mod BigInteger.Parse('0x10000000000000000000000000000000000000000000000000000000000000000');
+  bi := bi mod BigInteger.Parse
+    ('0x10000000000000000000000000000000000000000000000000000000000000000');
   b := bi.ToByteArray;
   result := '';
 
@@ -105,7 +115,8 @@ begin
   xq := q.XCoordinate;
   yq := q.YCoordinate;
   if cmpecp(p, q) then
-    L := (BigInteger.ModPow((yp * bitwo) mod biP, biP - bitwo, biP) * (3 * xp * xp)) mod biP
+    L := (BigInteger.ModPow((yp * bitwo) mod biP, biP - bitwo, biP) *
+      (3 * xp * xp)) mod biP
   else
     L := (BigInteger.ModPow(xq - xp, biP - bitwo, biP) * (yq - yp)) mod biP;
 
@@ -146,7 +157,8 @@ begin
   result := q;
 end;
 
-function secp256k1_get_public(privkey: AnsiString; forEth: boolean = false): AnsiString;
+function secp256k1_get_public(privkey: AnsiString; forEth: boolean = false)
+  : AnsiString;
 var
   q: TBIPoint;
   ss: AnsiString;
@@ -169,17 +181,22 @@ begin
   BigInteger.AvoidPartialFlagsStall(True);
 
   ss := '$' + (privkey);
-  //// Hyperspeed
+  /// / Hyperspeed
   FCurve := TCustomNamedCurves.GetByName('secp256k1');
-  domain := TECDomainParameters.Create(FCurve.Curve, FCurve.G, FCurve.n, FCurve.H, FCurve.GetSeed);
+  domain := TECDomainParameters.Create(FCurve.Curve, FCurve.G, FCurve.n,
+    FCurve.H, FCurve.GetSeed);
   PrivateKeyBytes := THex.Decode(privkey);
   PrivD := TBigInteger.Create(1, PrivateKeyBytes);
-  RegeneratedPrivateKey := TECPrivateKeyParameters.Create('ECDSA', PrivD, domain);
+  RegeneratedPrivateKey := TECPrivateKeyParameters.Create('ECDSA',
+    PrivD, domain);
 
-  RegeneratedPublicKey := TECKeyPairGenerator.GetCorrespondingPublicKey(RegeneratedPrivateKey);
-  ax := BigInteger.Parse('+0x00' + RegeneratedPublicKey.q.Normalize.AffineXCoord.ToBigInteger.ToString(16));
-  ay := BigInteger.Parse('+0x00' + RegeneratedPublicKey.q.Normalize.AffineYCoord.ToBigInteger.ToString(16));
-  //// Hyperspeed
+  RegeneratedPublicKey := TECKeyPairGenerator.GetCorrespondingPublicKey
+    (RegeneratedPrivateKey);
+  ax := BigInteger.Parse('+0x00' + RegeneratedPublicKey.q.Normalize.
+    AffineXCoord.ToBigInteger.ToString(16));
+  ay := BigInteger.Parse('+0x00' + RegeneratedPublicKey.q.Normalize.
+    AffineYCoord.ToBigInteger.ToString(16));
+  /// / Hyperspeed
   // q := point_mul(getG, ss);
   q.YCoordinate := make256bit(ay);
   q.XCoordinate := make256bit(ax);
@@ -202,11 +219,12 @@ var
   xn, xd: TBigInteger;
   xe: TBytes;
 begin
-   /// RFC 6979 - "Deterministic Usage of the Digital
+  /// RFC 6979 - "Deterministic Usage of the Digital
   /// Signature Algorithm (DSA) and Elliptic Curve Digital Signature
   /// Algorithm (ECDSA)".
   hmac := THMacDsaKCalculator.Create(TDigestUtilities.GetDigest('SHA-256'));
-  xn := TBigInteger.Create('FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141', 16);
+  xn := TBigInteger.Create
+    ('FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141', 16);
   xd := TBigInteger.Create(d, 16);
   xe := THex.Decode(e);
   hmac.Init(xn, xd, xe);
@@ -215,7 +233,8 @@ begin
   wipeAnsiString(d);
 end;
 
-function secp256k1_signDER(e, d: AnsiString; forEth: boolean = false): AnsiString;
+function secp256k1_signDER(e, d: AnsiString; forEth: boolean = false)
+  : AnsiString;
 var
   C: TBIPoint;
   r, s: BigInteger;
@@ -231,14 +250,17 @@ begin
   C := point_mul(getG, k);
 
   if C.YCoordinate.IsNegative then
-    C.YCoordinate := C.YCoordinate + BigInteger.Parse('+0x0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F');
-  ;
+    C.YCoordinate := C.YCoordinate + BigInteger.Parse
+      ('+0x0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F');;
   if C.XCoordinate.IsNegative then
-    C.XCoordinate := C.XCoordinate + BigInteger.Parse('+0x0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F');
+    C.XCoordinate := C.XCoordinate + BigInteger.Parse
+      ('+0x0FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F');
 
   r := C.XCoordinate mod getN;
   // s=(e+rd)/k
-  s := BigInteger.ModInverse(k, getN) * (BigInteger.Parse('+0x0' + (e)) + (BigInteger(r * BigInteger.Parse('+0x0' + d)) mod getN)) mod getN;
+  s := BigInteger.ModInverse(k, getN) *
+    (BigInteger.Parse('+0x0' + (e)) +
+    (BigInteger(r * BigInteger.Parse('+0x0' + d)) mod getN)) mod getN;
   if C.YCoordinate.isEven then
     recid := 0
   else

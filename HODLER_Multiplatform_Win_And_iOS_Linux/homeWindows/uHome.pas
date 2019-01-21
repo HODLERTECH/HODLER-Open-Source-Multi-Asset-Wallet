@@ -30,7 +30,7 @@ uses
   FMX.Clipboard, bech32, cryptoCurrencyData, FMX.VirtualKeyBoard, JSON,
   languages, WIF, AccountData, WalletStructureData,
   System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
-  CurrencyConverter, uEncryptedZipFile, System.Zip , TRotateImageData
+  CurrencyConverter, uEncryptedZipFile, System.Zip, TRotateImageData
 {$IFDEF ANDROID},
   FMX.VirtualKeyBoard.Android,
   Androidapi.JNI,
@@ -1074,7 +1074,6 @@ type
   public
     { Public declarations }
 
-
 {$IF NOT DEFINED(LINUX)}
     MotionSensor: TMotionSensor;
     OrientationSensor: TOrientationSensor;
@@ -1122,16 +1121,17 @@ type
     procedure TransactionWalletListClick(Sender: TObject);
     procedure CopyParentTagStringToClipboard(Sender: TObject);
     procedure CopyParentTextToClipboard(Sender: TObject);
-    procedure ExportPrivKeyListButtonClick(Sender : TObject);
-    procedure RefreshCurrentWallet(Sender : TObject);
-    procedure onExecuteTest(Sender : TObject);
+    procedure ExportPrivKeyListButtonClick(Sender: TObject);
+    procedure RefreshCurrentWallet(Sender: TObject);
+    procedure onExecuteTest(Sender: TObject);
 
-    procedure ExceptionHandler( Sender : TObject ; E : Exception );
-    procedure FoundTokenPanelOnClick(Sender : TObject);
-    //procedure PrivateKeyPasswordCheck
+    procedure ExceptionHandler(Sender: TObject; E: Exception);
+    procedure FoundTokenPanelOnClick(Sender: TObject);
+
+    // procedure PrivateKeyPasswordCheck
   var
-    refreshLocalImage : TRotateImage;
-    refreshGlobalImage : TRotateImage;
+    refreshLocalImage: TRotateImage;
+    refreshGlobalImage: TRotateImage;
 
   var
     HistoryMaxLength: Integer;
@@ -1155,7 +1155,7 @@ procedure switchTab(TabControl: TTabControl; TabItem: TTabItem);
 // procedure reloadWalletView;
 
 const
-  SYSTEM_APP: Boolean = {$IFDEF ANDROID}true{$ELSE}false{$ENDIF};
+  SYSTEM_APP: Boolean = {$IFDEF ANDROID}false{$ELSE}false{$ENDIF};
   // Load OS.xml as manifest and place app in /system/priv-app
 
 var
@@ -1166,16 +1166,16 @@ var
   stylo: TStyleManager;
   QRCodeBitmap: TBitmap;
 
-  //newcoinID: nativeint;
-  //ImportCoinID: Integer;
+  // newcoinID: nativeint;
+  // ImportCoinID: Integer;
 
   walletAddressForNewToken: AnsiString;
   tempMasterSeed: AnsiString;
   decryptSeedBackTabItem: TTabItem;
   cameraBackTabItem: TTabItem;
   dashboardDecimalsPrecision: Integer = 6;
-  //dashBoardFontSize: Integer =
-  //{$IF (DEFINED(MSWINDOWS) OR DEFINED(LINUX))}14{$ELSE}8{$ENDIF};
+  // dashBoardFontSize: Integer =
+  // {$IF (DEFINED(MSWINDOWS) OR DEFINED(LINUX))}14{$ELSE}8{$ENDIF};
   flagWVPrecision: Boolean = true;
   CurrentCryptoCurrency: CryptoCurrency;
   CurrentCoin: TwalletInfo;
@@ -1184,7 +1184,7 @@ var
   QRWidth: Integer = -1;
   QRHeight: Integer = -1;
   SyncBalanceThr: SynchronizeBalanceThread;
-  //SyncHistoryThr: SynchronizeHistoryThread;
+  // SyncHistoryThr: SynchronizeHistoryThread;
 
   QRFind: AnsiString;
   tempQRFindEncryptedSeed: AnsiString;
@@ -1199,8 +1199,6 @@ resourcestring
   QRSearchEncryted = 'QRSearchEncryted';
   QRSearchDecryted = 'QRSearchDecryted';
 
-
-
 var
   LATEST_VERSION: AnsiString;
 
@@ -1208,7 +1206,7 @@ implementation
 
 uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
   TokenData, AccountRelated, QRRelated, FileManagerRelated, WalletViewRelated,
-  BackupRelated, debugAnalysis,KeypoolRelated
+  BackupRelated, debugAnalysis, KeypoolRelated
 {$IFDEF ANDRIOD}
 {$ENDIF}
 {$IFDEF MSWINDOWS}
@@ -1222,7 +1220,7 @@ uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
 {$R *.Surface.fmx MSWINDOWS}
 {$IFNDEF MSWINDOWS}
 
-function ShellExecute(a: Integer; b, c: String; d, e: PWideChar;
+function ShellExecute(a: Integer; b, c: String; d, E: PWideChar;
   f: Integer): Integer;
 begin
 
@@ -1230,24 +1228,23 @@ end;
 
 {$ENDIF}
 
-
-
-procedure tfrmhome.FoundTokenPanelOnClick(Sender : TObject);
+procedure TfrmHome.FoundTokenPanelOnClick(Sender: TObject);
 begin
-  TCheckBox(TfmxObject(Sender).TagObject).IsChecked := not TCheckBox(TfmxObject(Sender).TagObject).IsChecked ;
+  TCheckBox(TfmxObject(Sender).TagObject).IsChecked :=
+    not TCheckBox(TfmxObject(Sender).TagObject).IsChecked;
 end;
 
-procedure tfrmhome.ExceptionHandler( Sender : TObject ; E : Exception );
+procedure TfrmHome.ExceptionHandler(Sender: TObject; E: Exception);
 begin
-  debugAnalysis.ExceptionHandler( Sender , E );
+  debugAnalysis.ExceptionHandler(Sender, E);
 end;
 
-procedure TFrmHome.RefreshCurrentWallet(Sender : TObject);
+procedure TfrmHome.RefreshCurrentWallet(Sender: TObject);
 begin
   WalletViewRelated.RefreshCurrentWallet(Sender);
 end;
 
-procedure Tfrmhome.ExportPrivKeyListButtonClick(Sender : TObject);
+procedure TfrmHome.ExportPrivKeyListButtonClick(Sender: TObject);
 begin
   WalletViewRelated.ExportPrivKeyListButtonClick(Sender);
 end;
@@ -1276,7 +1273,7 @@ end;
 procedure TfrmHome.ClaimCoinSelectInListClick(Sender: TObject);
 begin
 
-  ToClaimWD := TwalletInfo(TfmxObject(Sender).tagObject);
+  ToClaimWD := TwalletInfo(TfmxObject(Sender).TagObject);
   switchTab(PageControl, ClaimTabItem);
 
 end;
@@ -1316,15 +1313,15 @@ end;
 
 procedure TfrmHome.PanelSelectGenerateCoinOnClick(Sender: TObject);
 begin
-  if (not TCheckBox(TfmxObject(Sender).tagObject).Enabled) then
+  if (not TCheckBox(TfmxObject(Sender).TagObject).Enabled) then
     exit();
-  TCheckBox(TfmxObject(Sender).tagObject).IsChecked :=
-    (not TCheckBox(TfmxObject(Sender).tagObject).IsChecked);
+  TCheckBox(TfmxObject(Sender).TagObject).IsChecked :=
+    (not TCheckBox(TfmxObject(Sender).TagObject).IsChecked);
 
 end;
 
 procedure TfrmHome.passKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
-  Shift: TShiftState);
+Shift: TShiftState);
 begin
   if Key = vkReturn then
   begin
@@ -1333,7 +1330,7 @@ begin
 end;
 
 procedure TfrmHome.passwordForDecryptKeyUp(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
+var KeyChar: Char; Shift: TShiftState);
 begin
 
   if Key = vkReturn then
@@ -1380,7 +1377,7 @@ end;
 
 procedure TfrmHome.reportIssuesSettingsButtonClick(Sender: TObject);
 begin
-  switchTab(pageControl , ReportIssues );
+  switchTab(PageControl, ReportIssues);
 end;
 
 procedure TfrmHome.QRChangeTimerTimer(Sender: TObject);
@@ -1719,7 +1716,7 @@ end;
 
 procedure TfrmHome.PrivacyAndSecurityButtonClick(Sender: TObject);
 begin
-  switchTab( pagecontrol , PrivacyAndSecuritySettings );
+  switchTab(PageControl, PrivacyAndSecuritySettings);
 end;
 
 procedure TfrmHome.PrivateKeyManageButtonClick(Sender: TObject);
@@ -1755,8 +1752,8 @@ begin
 end;
 
 procedure TfrmHome.WIFEditKeyUp(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
-begin  // NewCoinPrivKeyOKButtonClick
+var KeyChar: Char; Shift: TShiftState);
+begin // NewCoinPrivKeyOKButtonClick
   if Key = vkReturn then
   begin
     NewCoinPrivKeyOKButtonClick(nil);
@@ -1907,7 +1904,7 @@ begin
 end;
 
 procedure TfrmHome.RestoreFromFileAccountNameEditKeyUp(Sender: TObject;
-  var Key: Word; var KeyChar: Char; Shift: TShiftState);
+var Key: Word; var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = vkReturn then
   begin
@@ -1975,7 +1972,7 @@ begin
 end;
 
 procedure TfrmHome.RestoreNameEditKeyUp(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
+var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = vkReturn then
   begin
@@ -1990,7 +1987,7 @@ begin
 end;
 
 procedure TfrmHome.retypePassKeyUp(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
+var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = vkReturn then
   begin
@@ -1999,13 +1996,12 @@ begin
 end;
 
 procedure TfrmHome.RFFPasswordKeyUp(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
+var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = vkReturn then
   begin
     btnDecryptSeed.onclick(nil);
   end;
-
 
 end;
 
@@ -2101,12 +2097,12 @@ begin
 end;
 
 procedure TfrmHome.ChangeDescryptionEditKeyUp(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
+var KeyChar: Char; Shift: TShiftState);
 begin
 
   if Key = vkReturn then
   begin
-     btnChangeDescryptionOKClick(nil);
+    btnChangeDescryptionOKClick(nil);
   end;
 
 end;
@@ -2196,8 +2192,10 @@ var
 var
   X: Integer;
 begin
+  frmHome.BeginUpdate;
 
-  if (LATEST_VERSION <> '') and (compareVersion(LATEST_VERSION , CURRENT_VERSION) > 0 ) then
+  if (LATEST_VERSION <> '') and
+    (compareVersion(LATEST_VERSION, CURRENT_VERSION) > 0) then
   begin
     frmHome.Caption := 'HODLER Open Source Multi-Asset Wallet v' +
       CURRENT_VERSION + ' (New version is available)';
@@ -2225,7 +2223,8 @@ begin
         end);
 
   end
-  else if (LATEST_VERSION <> '') and (compareVersion(LATEST_VERSION , CURRENT_VERSION) < 0 ) then
+  else if (LATEST_VERSION <> '') and
+    (compareVersion(LATEST_VERSION, CURRENT_VERSION) < 0) then
   begin
     frmHome.Caption := 'HODLER Open Source Multi-Asset Wallet v' +
       CURRENT_VERSION + ' ( Unofficial Version )';
@@ -2235,7 +2234,8 @@ begin
   begin
     popupWindow.Create(dictionary('LatestVersion'));
   end;
-
+  Application.ProcessMessages  ;
+  frmHome.EndUpdate;
 end;
 
 procedure TfrmHome.changeYbuttonClick(Sender: TObject);
@@ -2281,9 +2281,9 @@ begin
   try
     claim(newcoinID);
   except
-    on e: Exception do
+    on E: Exception do
     begin
-      popupWindow.Create(e.Message);
+      popupWindow.Create(E.Message);
     end;
   end;
 
@@ -2321,16 +2321,16 @@ end;
 procedure TfrmHome.DebugSaveSeedButtonClick(Sender: TObject);
 begin
 
-  btnDecryptSeed.OnClick := decryptSeedForSeedRestore;
+  btnDecryptSeed.onclick := decryptSeedForSeedRestore;
 
   decryptSeedBackTabItem := PageControl.ActiveTab;
   PageControl.ActiveTab := descryptSeed;
-  btnDSBack.OnClick := backBtnDecryptSeed;
+  btnDSBack.onclick := backBtnDecryptSeed;
 
 end;
 
 procedure TfrmHome.DecimalsFieldKeyUp(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
+var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = vkReturn then
   begin
@@ -2351,9 +2351,9 @@ begin
     if BackupRelated.PKCheckPassword(Sender, WDToExportPrivKey) then
       switchTab(PageControl, ExportKeyScreen);
   except
-    on e: Exception do
+    on E: Exception do
     begin
-      popupWindow.Create(e.Message);
+      popupWindow.Create(E.Message);
     end;
   end;
 
@@ -2365,7 +2365,7 @@ begin
 end;
 
 procedure TfrmHome.AccountNameEditKeyUp(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
+var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = vkReturn then
   begin
@@ -2385,12 +2385,12 @@ begin
 end;
 
 procedure TfrmHome.AddNewAccountButtonClick(Sender: TObject);
-//var od:TOpenDialog;
+// var od:TOpenDialog;
 begin
-{od:=TOpenDialog.Create(nil);
-if od.execute then
-stylo.SetStyleFromFile(od.FileName);
-od.Free;}
+  { od:=TOpenDialog.Create(nil);
+    if od.execute then
+    stylo.SetStyleFromFile(od.FileName);
+    od.Free; }
 
   switchTab(PageControl, AddAccount);
   // AccountsListPanel.Visible := false;
@@ -2402,7 +2402,7 @@ begin
 end;
 
 procedure TfrmHome.TokenNameFieldKeyUp(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
+var KeyChar: Char; Shift: TShiftState);
 begin // SymbolField
   if Key = vkReturn then
   begin
@@ -2427,17 +2427,19 @@ end;
 
 procedure TfrmHome.TransactionWaitForSendBackButtonClick(Sender: TObject);
 begin
-if CurrentCoin.description<>'__dashbrd__' then
-  switchTab(PageControl, walletView) else
-switchTab(PageControl, HOME_TABITEM);
-  
-  TThread.CreateAnonymousThread(procedure   ()
-  begin
-    //SyncThr.SynchronizeCryptoCurrency(CurrentCoin);
-    sleep(2000);
-    RefreshCurrentWallet(Sender);
+  if CurrentCoin.description <> '__dashbrd__' then
+    switchTab(PageControl, walletView)
+  else
+    switchTab(PageControl, HOME_TABITEM);
 
-  end).Start();
+  TThread.CreateAnonymousThread(
+    procedure()
+    begin
+      // SyncThr.SynchronizeCryptoCurrency(CurrentCoin);
+      sleep(2000);
+      RefreshCurrentWallet(Sender);
+
+    end).Start();
 end;
 
 procedure TfrmHome.TransactionWaitForSendLinkLabelClick(Sender: TObject);
@@ -2575,18 +2577,18 @@ end;
 
 procedure TfrmHome.ConfirmSendClaimCoinButtonClick(Sender: TObject);
 var
-  temp: twalletinfo;
+  temp: TwalletInfo;
 begin
   temp := CurrentCoin;
-  CurrentCoin:= FromClaimWD;
+  CurrentCoin := FromClaimWD;
   WalletViewRelated.PrepareSendTabAndSend(FromClaimWD, ToClaimWD.addr,
     FromClaimWD.confirmed - BigInteger(1700), BigInteger(1700), '',
     AvailableCoin[FromClaimWD.coin].name);
-  //CurrentCoin := temp;
+  // CurrentCoin := temp;
 end;
 
 procedure TfrmHome.ContractAddressKeyUp(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
+var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = vkReturn then
   begin
@@ -2818,7 +2820,7 @@ end;
 
 procedure TfrmHome.btnANWBackClick(Sender: TObject);
 begin
-  switchTab(PageControl,  AddCoinBackTabItem {walletView});
+  switchTab(PageControl, AddCoinBackTabItem { walletView } );
 end;
 
 // checking rewriting seed
@@ -2871,8 +2873,8 @@ begin
 end;
 
 procedure TfrmHome.RestorePasswordEditKeyUp(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
-begin //RestoreWalletOKButton
+var KeyChar: Char; Shift: TShiftState);
+begin // RestoreWalletOKButton
   if Key = vkReturn then
   begin
     RestoreWalletOKButton.onclick(nil);
@@ -2982,28 +2984,28 @@ end;
 
 procedure TfrmHome.ReportIssuesBackButtonClick(Sender: TObject);
 begin
-  switchTab(pageControl , Settings);
+  switchTab(PageControl, Settings);
 end;
 
 procedure TfrmHome.EPCLTIBackButtonClick(Sender: TObject);
 begin
-  switchTab(PageControl, AddNewCoin );
+  switchTab(PageControl, AddNewCoin);
 end;
 
 procedure TfrmHome.EQRBackBtnClick(Sender: TObject);
 begin
-  switchTab(PageControl,HOME_TABITEM);
+  switchTab(PageControl, HOME_TABITEM);
 end;
 
 procedure TfrmHome.EQRPreviewClick(Sender: TObject);
 begin
-switchTab(PageControl,HOME_TABITEM);
+  switchTab(PageControl, HOME_TABITEM);
 end;
 
 procedure TfrmHome.EQRShareBtnClick(Sender: TObject);
 begin
-shareFile(System.IOUtils.TPath.Combine(HOME_PATH,
-      currentAccount.name + '_EQR_BIG' + '.png'),false);
+  shareFile(System.IOUtils.TPath.Combine(HOME_PATH, CurrentAccount.name +
+    '_EQR_BIG' + '.png'), false);
 end;
 
 procedure TfrmHome.exportemptyaddressesSwitchSwitch(Sender: TObject);
@@ -3011,11 +3013,10 @@ begin
   createExportPrivateKeyList(newcoinID);
 end;
 
-
-procedure TfrmHome.onExecuteTest(Sender : TObject);
+procedure TfrmHome.onExecuteTest(Sender: TObject);
 begin
 
-  showmessage( tfmxObject(Sender).Name );
+  Showmessage(TfmxObject(Sender).name);
 
 end;
 
@@ -3035,33 +3036,31 @@ var
   ans: AnsiString;
   bigInt: BigInteger;
 
-  actionListener : TActionList;
+  actionListener: TActionList;
 begin
 
-
-  image7.Bitmap.LoadFromStream( ResourceMenager.getAssets( 'HSB_WHITE' ) );
-  //showmessage( getDetailedData() );
+  Image7.Bitmap.LoadFromStream(ResourceMenager.getAssets('HSB_WHITE'));
+  // showmessage( getDetailedData() );
   raise Exception.Create('Error Message');
-  {actionListener := TActionList.Create(nil);
-  actionListener.Ac
-  frmhome.ActionList := actionListener;}
+  { actionListener := TActionList.Create(nil);
+    actionListener.Ac
+    frmhome.ActionList := actionListener; }
 
-
-  //frmhome.ActionList. := onExecuteTest;
- { begin
+  // frmhome.ActionList. := onExecuteTest;
+  { begin
     showmessage('here');
-  end
-  else
-  begin
+    end
+    else
+    begin
 
     showmessage('overload');
-  end;                      }
-  //fmx.ActnList.TAction
+    end; }
+  // fmx.ActnList.TAction
 end;
 
 procedure TfrmHome.Button5Click(Sender: TObject);
 begin
-  switchTab(PageControl, AddnewCoin );
+  switchTab(PageControl, AddNewCoin);
 end;
 
 procedure TfrmHome.ImportPrivateKey(Sender: TObject);
@@ -3177,11 +3176,11 @@ end;
 
 procedure TfrmHome.btnChangeDescryptionOKClick(Sender: TObject);
 begin
-  walletViewRelated.btnChangeDescryptionOKClick(sender);
-  {CurrentCryptoCurrency.description := ChangeDescryptionEdit.Text;
-  CurrentAccount.SaveFiles();
-  misc.updateNameLabels();
-  switchTab(PageControl, walletView);  }
+  WalletViewRelated.btnChangeDescryptionOKClick(Sender);
+  { CurrentCryptoCurrency.description := ChangeDescryptionEdit.Text;
+    CurrentAccount.SaveFiles();
+    misc.updateNameLabels();
+    switchTab(PageControl, walletView); }
 end;
 
 procedure TfrmHome.btnCTBackClick(Sender: TObject);
@@ -3194,8 +3193,8 @@ begin
 
   decryptSeedBackTabItem := PageControl.ActiveTab;
   switchTab(PageControl, descryptSeed);
-  btnDSBack.OnClick := backBtnDecryptSeed;
-  btnDecryptSeed.OnClick := privateKeyPasswordCheck;
+  btnDSBack.onclick := backBtnDecryptSeed;
+  btnDecryptSeed.onclick := privateKeyPasswordCheck;
   WDToExportPrivKey := CurrentCoin;
 
 end;
@@ -3255,7 +3254,7 @@ begin
   NewCoinDescriptionEdit.Text := '';
   newCoinListNextTAbItem := frmHome.AddNewCoinSettings;
   backTabItem := HOME_TABITEM;
-  AddCoinBackTabItem := pageControl.ActiveTab;
+  AddCoinBackTabItem := PageControl.ActiveTab;
   switchTab(PageControl, AddNewCoin);
 end;
 
@@ -3379,9 +3378,9 @@ begin
 end;
 
 procedure TfrmHome.GenerateYAddressPasswordEditKeyUp(Sender: TObject;
-  var Key: Word; var KeyChar: Char; Shift: TShiftState);
+var Key: Word; var KeyChar: Char; Shift: TShiftState);
 begin
-  if key = vkReturn then
+  if Key = vkReturn then
   begin
 
     generateNewAddressesClick(nil);
@@ -3437,8 +3436,6 @@ begin
   MotionSensor := TMotionSensor.Create(frmHome);
   OrientationSensor := TOrientationSensor.Create(frmHome);
 {$ENDIF}
-
-
   AccountRelated.InitializeHodler;
   BackupInfoLabel.Position.Y := 100000;
 end;
@@ -3505,10 +3502,10 @@ begin
     end
     else
     begin
-          //  (PageControl.ActiveTab = createPassword) or
+      // (PageControl.ActiveTab = createPassword) or
       if (PageControl.ActiveTab = createPassword) then
       begin
-        switchTab( PageControl, createPasswordBackTabItem );
+        switchTab(PageControl, createPasswordBackTabItem);
       end
       else if (PageControl.ActiveTab = SeedCreation) then
       begin
@@ -3566,7 +3563,8 @@ begin
   if gathener.Enabled then
 
     trngBuffer := trngBuffer + floattoStr(X * random($FFFF) * trngBufferCounter)
-      + floattoStr(Y * random($FFFF)) + IntToStr(random($FFFFFFFF)) + ISecureRandomBuffer;
+      + floattoStr(Y * random($FFFF)) + IntToStr(random($FFFFFFFF)) +
+      ISecureRandomBuffer;
 end;
 
 procedure TfrmHome.FormResize(Sender: TObject);
@@ -3594,8 +3592,11 @@ begin
   LabelEditApplyStyleLookup(HistoryTransactionValue);
   LabelEditApplyStyleLookup(HistoryTransactionDate);
   LabelEditApplyStyleLookup(historyTransactionConfirmation);
+  NoPrintScreenImage.Visible := true;
+  Application.ProcessMessages;
   AccountRelated.afterInitialize;
-  // SweepCoinsRoutine('priv',true,7,'1Zor3jjgJT15bUED3kcnDJLBZXKnvV3z6');
+  NoPrintScreenImage.Visible := false;
+
 end;
 
 procedure TfrmHome.FormVirtualKeyboardHidden(Sender: TObject;
@@ -3604,7 +3605,8 @@ var
   FService: IFMXVirtualKeyboardService;
   X: Integer;
 begin
-if PageControl.ActiveTab=eqrview then exit;
+  if PageControl.ActiveTab = EQRView then
+    exit;
 {$IFDEF ANDROID}
   X := (round(frmHome.Height * 0.5));
   PageControl.Height := frmHome.Height;
@@ -3630,7 +3632,8 @@ var
   X, Y: Integer;
   sameY: Integer;
 begin
-if PageControl.ActiveTab=eqrview then exit;
+  if PageControl.ActiveTab = EQRView then
+    exit;
 
 {$IFDEF ANDROID}
   Y := 0;
@@ -3690,7 +3693,7 @@ if PageControl.ActiveTab=eqrview then exit;
       if Y < ScrollBox.ViewportPosition.Y then
         ScrollBox.ViewportPosition :=
           PointF(0, ScrollBox.ViewportPosition.Y - 10);
-      application.ProcessMessages;
+      Application.ProcessMessages;
       if sameY = round(ScrollBox.ViewportPosition.Y) then
         break;
 
@@ -3701,7 +3704,7 @@ end;
 
 procedure TfrmHome.FoundTokenOKButtonClick(Sender: TObject);
 begin
-   walletViewRelated.FoundTokenOKButtonClick(Sender);
+  WalletViewRelated.FoundTokenOKButtonClick(Sender);
 end;
 
 procedure TfrmHome.gathenerTimer(Sender: TObject);
@@ -3712,7 +3715,7 @@ begin
   inc(trngBufferCounter);
   // colecting random data for seed generator
   trngBuffer := trngBuffer + GetSTrHashSHA256(inttohex(random($FFFFFFFF), 8) +
-    DateTimeToStr(Now))+ISecureRandomBuffer;
+    DateTimeToStr(Now)) + ISecureRandomBuffer;
 {$IFDEF ANDROID}
   if MotionSensor.Sensor <> nil then
     with MotionSensor.Sensor do
@@ -3745,7 +3748,8 @@ begin
     if trngBufferCounter mod 200 = 0 then
     begin
       // 10sec of gathering random data should be enough to get unique seed
-      trngBuffer := GetSTrHashSHA256(trngBuffer + IntToStr(random($FFFFFFFF))+ISecureRandomBuffer);
+      trngBuffer := GetSTrHashSHA256(trngBuffer + IntToStr(random($FFFFFFFF)) +
+        ISecureRandomBuffer);
       gathener.Enabled := false;
 
       if swForEncryption.IsChecked then
@@ -3887,7 +3891,7 @@ begin
 end;
 
 procedure TfrmHome.SymbolFieldKeyUp(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
+var KeyChar: Char; Shift: TShiftState);
 begin // DecimalsField
   if Key = vkReturn then
   begin
@@ -3898,9 +3902,9 @@ end;
 procedure TfrmHome.syncTimerTimer(Sender: TObject);
 begin
   try
-    btnSync.OnClick(self);
+    btnSync.onclick(self);
   except
-    on e: Exception do
+    on E: Exception do
     begin
 
     end;
@@ -3927,7 +3931,7 @@ end;
 
 procedure TfrmHome.SYWLBackButtonClick(Sender: TObject);
 begin
-  switchTab(PageControl , WalletView );
+  switchTab(PageControl, walletView);
 end;
 
 procedure TfrmHome.receiveAddressChange(Sender: TObject);
@@ -3989,7 +3993,7 @@ end;
 
 procedure TfrmHome.SaPBackButtonClick(Sender: TObject);
 begin
-  switchTab(pageControl , Settings);
+  switchTab(PageControl, Settings);
 end;
 
 procedure TfrmHome.SearchEditChange(Sender: TObject);
@@ -4049,11 +4053,11 @@ end;
 procedure TfrmHome.SendDecryptedSeedButtonClick(Sender: TObject);
 begin
 
-  btnDecryptSeed.OnClick := SendDecryptedSeed;
+  btnDecryptSeed.onclick := SendDecryptedSeed;
 
   decryptSeedBackTabItem := PageControl.ActiveTab;
   PageControl.ActiveTab := descryptSeed;
-  btnDSBack.OnClick := backBtnDecryptSeed;
+  btnDSBack.onclick := backBtnDecryptSeed;
 end;
 
 procedure TfrmHome.SendAllFundsOnSwitch(Sender: TObject);
@@ -4128,45 +4132,46 @@ begin
 end;
 
 procedure TfrmHome.SendEncryptedSeedButtonClick(Sender: TObject);
-var pngName:string;
+var
+  pngName: string;
 begin
 
-  WalletViewRelated.SendEncryptedSeedButtonClick(sender);
-  {if not isEQRGenerated then
-  begin
+  WalletViewRelated.SendEncryptedSeedButtonClick(Sender);
+  { if not isEQRGenerated then
+    begin
 
     btnDecryptSeed.OnClick := SendEncryptedSeed;
     decryptSeedBackTabItem := PageControl.ActiveTab;
     PageControl.ActiveTab := descryptSeed;
     btnDSBack.OnClick := backBtnDecryptSeed;
-  end
-  else
-  begin  }
-  //if EQRPreview.MultiResBitmap[0]=nil then EQRPreview.MultiResBitmap[0].CreateBitmap()
+    end
+    else
+    begin }
+  // if EQRPreview.MultiResBitmap[0]=nil then EQRPreview.MultiResBitmap[0].CreateBitmap()
 
   {
-  BackupRelated.SendEQR;
-  pngname:=System.IOUtils.TPath.Combine(HOME_PATH,
-      currentAccount.name + '_EQR_SMALL' + '.png');
-      EQRPreview.Visible:=True;
+    BackupRelated.SendEQR;
+    pngname:=System.IOUtils.TPath.Combine(HOME_PATH,
+    currentAccount.name + '_EQR_SMALL' + '.png');
+    EQRPreview.Visible:=True;
     PageControl.ActiveTab := EQRView;
-   EQRPreview.Bitmap.LoadFromFile(pngname);
-   EQRPreview.Repaint;
-   EQRPreview.Align:=TAlignLayout.Center;
-   EQRPreview.Height:=294;
-      EQRPreview.Width:=294;}
-  //end;
+    EQRPreview.Bitmap.LoadFromFile(pngname);
+    EQRPreview.Repaint;
+    EQRPreview.Align:=TAlignLayout.Center;
+    EQRPreview.Height:=294;
+    EQRPreview.Width:=294; }
+  // end;
 
 end;
 
 procedure TfrmHome.SendErrorMsgSwitchSwitch(Sender: TObject);
 begin
-  walletViewRelated.SendErrorMsgSwitchSwitch(sender);
+  WalletViewRelated.SendErrorMsgSwitchSwitch(Sender);
 end;
 
 procedure TfrmHome.SendReportIssuesButtonClick(Sender: TObject);
 begin
-  WalletViewRelated.SendReportIssuesButtonClick(sender);
+  WalletViewRelated.SendReportIssuesButtonClick(Sender);
 end;
 
 procedure TfrmHome.SendWalletFile(Sender: TObject);
@@ -4176,10 +4181,10 @@ end;
 
 procedure TfrmHome.SendWalletFileButtonClick(Sender: TObject);
 begin
-  btnDecryptSeed.OnClick := SendWalletFile;
+  btnDecryptSeed.onclick := SendWalletFile;
   decryptSeedBackTabItem := PageControl.ActiveTab;
   PageControl.ActiveTab := descryptSeed;
-  btnDSBack.OnClick := backBtnDecryptSeed;
+  btnDSBack.onclick := backBtnDecryptSeed;
 end;
 
 procedure TfrmHome.ShowShareSheetAction1BeforeExecute(Sender: TObject);
@@ -4212,7 +4217,7 @@ end;
 
 procedure TfrmHome.KeypoolSanitizerTimer(Sender: TObject);
 begin
-SanitizePool;
+  SanitizePool;
 end;
 
 procedure TfrmHome.SearchInDashBrdButtonClick(Sender: TObject);
@@ -4232,10 +4237,10 @@ end;
 
 procedure TfrmHome.SeedMnemonicBackupButtonClick(Sender: TObject);
 begin
-  btnDecryptSeed.OnClick := decryptSeedForSeedRestore;
+  btnDecryptSeed.onclick := decryptSeedForSeedRestore;
   decryptSeedBackTabItem := PageControl.ActiveTab;
   PageControl.ActiveTab := descryptSeed;
-  btnDSBack.OnClick := backBtnDecryptSeed;
+  btnDSBack.onclick := backBtnDecryptSeed;
 end;
 
 procedure TfrmHome.SwitchSavedSeedSwitch(Sender: TObject);

@@ -25,7 +25,7 @@ type
     availableFirstLetter: AnsiString;
     hrp: AnsiString;
     qrname: AnsiString;
-    ResourceName : AnsiString;
+    ResourceName: AnsiString;
   end;
 
 const
@@ -34,39 +34,43 @@ const
     name: 'bitcoin'; shortcut: 'BTC'; WifByte: '80'; p2sh: '05'; p2pk: '00';
 
     flag: 0; decimals: 8; availableFirstLetter: '13b'; hrp: 'bc';
-    qrname: 'bitcoin'; ResourceName : 'BITCOIN_IMG';
+    qrname: 'bitcoin'; ResourceName: 'BITCOIN_IMG';
 
     ), (id: 1; displayName: 'Litecoin'; name: 'litecoin'; shortcut: 'LTC';
     WifByte: 'B0'; p2sh: '32' { '05' }; p2pk: '30';
 
     flag: 0; decimals: 8; availableFirstLetter: 'lm'; hrp: 'ltc';
-    qrname: 'litecoin'; ResourceName : 'LITECOIN_IMG';
+    qrname: 'litecoin'; ResourceName: 'LITECOIN_IMG';
 
     ), (id: 2; displayName: 'DASH'; name: 'dash'; shortcut: 'DASH';
     WifByte: 'CC'; p2sh: '10'; p2pk: '4c'; flag: 0; decimals: 8;
-    availableFirstLetter: 'X'; qrname: 'dash'; ResourceName : 'DASH_IMG';
+    availableFirstLetter: 'X'; qrname: 'dash'; ResourceName: 'DASH_IMG';
 
     ), (id: 3; displayName: 'Bitcoin Cash'; name: 'bitcoinabc'; shortcut: 'BCH';
     WifByte: '80'; p2sh: '05'; p2pk: '00';
 
-    flag: 0; decimals: 8; availableFirstLetter: '13pq'; qrname: 'bitcoincash'; ResourceName : 'BITCOINCASH_IMG';
+    flag: 0; decimals: 8; availableFirstLetter: '13pq'; qrname: 'bitcoincash';
+    ResourceName: 'BITCOINCASH_IMG';
 
     ), (id: 4; displayName: 'Ethereum'; name: 'ethereum'; shortcut: 'ETH';
     WifByte: ''; p2pk: '00'; flag: 1; decimals: 18; availableFirstLetter: '0';
-    qrname: 'ethereum'; ResourceName : 'ETHEREUM_IMG';
+    qrname: 'ethereum'; ResourceName: 'ETHEREUM_IMG';
 
     ), (id: 5; displayName: 'Ravencoin'; name: 'ravencoin'; shortcut: 'RVN';
     WifByte: '80'; p2sh: '7a'; p2pk: '3c'; flag: 0; decimals: 8;
-    availableFirstLetter: 'Rr'; qrname: 'ravencoin'; ResourceName : 'RAVENCOIN_IMG';
+    availableFirstLetter: 'Rr'; qrname: 'ravencoin';
+    ResourceName: 'RAVENCOIN_IMG';
 
     ), (id: 6; displayName: 'Digibyte'; name: 'digibyte'; shortcut: 'DGB';
     WifByte: '80'; p2sh: '3f'; p2pk: '1e'; flag: 0; decimals: 8;
-    availableFirstLetter: 'SD'; qrname: 'digibyte'; ResourceName : 'DIGIBYTE_IMG';
+    availableFirstLetter: 'SD'; qrname: 'digibyte';
+    ResourceName: 'DIGIBYTE_IMG';
 
     ), (id: 7; displayName: 'Bitcoin SV'; name: 'bitcoinsv'; shortcut: 'BSV';
     WifByte: '80'; p2sh: '05'; p2pk: '00';
 
-    flag: 0; decimals: 8; availableFirstLetter: '13pq'; qrname: 'bitcoincash'; ResourceName : 'BITCOINSV_IMG';
+    flag: 0; decimals: 8; availableFirstLetter: '13pq'; qrname: 'bitcoincash';
+    ResourceName: 'BITCOINSV_IMG';
 
     )
 
@@ -165,17 +169,18 @@ begin
 
     if (id in [3, 7]) then
     begin
-      if Pos(':' , address) <> 0 then
+      if pos(':', address) <> 0 then
       begin
-        str := rightStr( address , length(address) -  Pos(':' , address) );
+        str := rightStr(address, length(address) - pos(':', address));
       end
       else
         str := address;
       str := StringReplace(str, ' ', '', [rfReplaceAll]);
-      //showmessage(Str);
-      //str := StringReplace(str, 'bitcoincash:', '', [rfReplaceAll]);
+      // showmessage(Str);
+      // str := StringReplace(str, 'bitcoincash:', '', [rfReplaceAll]);
 
-      if (lowercase(str[low(str)]) = 'q') or (lowercase(str[low(str)]) = 'p') then
+      if (lowercase(str[low(str)]) = 'q') or (lowercase(str[low(str)]) = 'p')
+      then
       begin
         // isValidBCHCashAddress(Address)
         result := true;

@@ -91,24 +91,24 @@ implementation
 
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
-  transactions, AccountRelated, TCopyableEditData, BackupRelated , debugAnalysis,KeypoolRelated;
+  transactions, AccountRelated, TCopyableEditData, BackupRelated, debugAnalysis,
+  KeypoolRelated;
 
 procedure ExportPrivateKeyButtonClick(Sender: TObject);
 begin
-  //createExportPrivateKeyList();
+  // createExportPrivateKeyList();
   createAddWalletView();
   frmhome.exportemptyaddressesSwitch.IsChecked := false;
 
   newCoinListNextTabItem := frmhome.ExportPrivCoinListTabItem;
   AddCoinBackTabItem := frmhome.pageControl.ActiveTab;
 
-
-  switchTab(frmhome.PageControl, frmhome.AddNewcoin);
+  switchTab(frmhome.pageControl, frmhome.AddNewcoin);
 
   {
     createAddWalletView();
-  with frmhome do
-  begin
+    with frmhome do
+    begin
     HexPrivKeyDefaultRadioButton.IsChecked := True;
     Layout31.Visible := false;
     WIFEdit.Text := '';
@@ -126,7 +126,7 @@ begin
     AddCoinBackTabItem := pageControl.ActiveTab;
     switchTab(pageControl, AddNewCoin);
 
-  end;
+    end;
   }
 end;
 
@@ -151,53 +151,55 @@ begin
   else
   begin
 
-    switchTab(frmhome.pageControl , frmhome.foundTokenTabItem);
+    switchTab(frmhome.pageControl, frmhome.foundTokenTabItem);
   end;
 
 end;
 
 procedure FoundTokenOKButtonClick(Sender: TObject);
 var
-  fmx : TfmxObject;
-  T : Token;
+  FMX: TfmxObject;
+  T: Token;
 begin
 
-    for fmx in frmhome.FoundTokenVertScrollBox.Content.Children do
+  for FMX in frmhome.FoundTokenVertScrollBox.Content.Children do
+  begin
+    if (FMX is TPanel) and (FMX.TagObject is TCheckBox) then
     begin
-      if (fmx is TPanel) and (fmx.TagObject is TCheckBox) then
+      if TCheckBox(FMX.TagObject).IsChecked then
       begin
-        if TCheckBox(fmx.TagObject).IsChecked then
-        begin
-          T := Token(TFmxObject(fmx.TagObject).TagObject);
-          T.idInWallet := Length(AccountForSearchToken.myTokens) + 10000;
+        T := Token(TfmxObject(FMX.TagObject).TagObject);
+        T.idInWallet := Length(AccountForSearchToken.myTokens) + 10000;
 
-
-          AccountForSearchToken.addToken(T);
-          AccountForSearchToken.SaveFiles();
-          if AccountForSearchToken = CurrentAccount then
-            CreatePanel(T);
-        end
-        else
-        begin
-          Token(TFmxObject(fmx.TagObject).TagObject).Free;
-        end;
-
+        AccountForSearchToken.addToken(T);
+        AccountForSearchToken.SaveFiles();
+        if AccountForSearchToken = CurrentAccount then
+          CreatePanel(T);
+      end
+      else
+      begin
+        Token(TfmxObject(FMX.TagObject).TagObject).Free;
       end;
 
     end;
 
-    switchTab(frmhome.pageControl , frmhome.walletView);
+  end;
+
+  switchTab(frmhome.pageControl, frmhome.walletView);
 end;
 
 procedure SendReportIssuesButtonClick(Sender: TObject);
 begin
-  SendUserReport( frmhome.UserReportMessageMemo.Text , frmhome.UserReportSendLogsSwitch.IsChecked , frmhome.UserReportDeviceInfoSwitch.IsChecked );
-  popupWindow.Create('Thanks you for taking your time to improve our application');
+  SendUserReport(frmhome.UserReportMessageMemo.Text,
+    frmhome.UserReportSendLogsSwitch.IsChecked,
+    frmhome.UserReportDeviceInfoSwitch.IsChecked);
+  popupWindow.Create
+    ('Thanks you for taking your time to improve our application');
 end;
 
 procedure SendErrorMsgSwitchSwitch(Sender: TObject);
 begin
-  USER_ALLOW_TO_SEND_DATA := frmhome.SendErrorMsgSwitch.ischecked;
+  USER_ALLOW_TO_SEND_DATA := frmhome.SendErrorMsgSwitch.IsChecked;
 
   refreshWalletDat();
 end;
@@ -209,10 +211,9 @@ begin
     CurrentCryptoCurrency.description := ChangeDescryptionEdit.Text;
     CurrentAccount.SaveFiles();
     misc.updateNameLabels();
-    switchTab(PageControl, walletView);
+    switchTab(pageControl, walletView);
   end;
 end;
-
 
 procedure SendEncryptedSeedButtonClick(Sender: TObject);
 var
@@ -299,7 +300,7 @@ begin
     newCoinListNextTabItem := ClaimWalletListTabItem;
 
     AddCoinBackTabItem := pageControl.ActiveTab;
-    switchTab(pageControl, AddNewCoin);
+    switchTab(pageControl, AddNewcoin);
   end;
 
 end;
@@ -324,7 +325,7 @@ begin
     CoinPrivKeyDescriptionEdit.Text := '';
     newCoinListNextTabItem := AddCoinFromPrivKeyTabItem;
     AddCoinBackTabItem := pageControl.ActiveTab;
-    switchTab(pageControl, AddNewCoin);
+    switchTab(pageControl, AddNewcoin);
 
   end;
 end;
@@ -358,7 +359,8 @@ begin
   for i := 0 to frmhome.ComponentCount - 1 do
   begin
     fmxObj := frmhome.Components[i];
-    if ((fmxObj is Tedit) or (fmxObj is Tmemo)) and (TfmxObject(fmxObj).TagString = 'copyable') then
+    if ((fmxObj is Tedit) or (fmxObj is Tmemo)) and
+      (TfmxObject(fmxObj).TagString = 'copyable') then
     begin
 
       CreateButtonWithCopyImg(fmxObj);
@@ -398,23 +400,23 @@ begin
   frmhome.OwnXCheckBox.Enabled := True;
   frmhome.IsPrivKeySwitch.Enabled := True;
 
-  frmhome.OwnXEdit.Text := intToStr(getFirstUnusedXforCoin(newcoinID));
+  frmhome.OwnXEdit.Text := inttostr(getFirstUnusedXforCoin(newcoinID));
 
   // frmhome.PrivateKeySettingsLayout.Visible := false;
   frmhome.LoadingKeyDataAniIndicator.Visible := false;
   frmhome.NewCoinDescriptionEdit.Text := AvailableCoin[ImportCoinID].displayName
     + ' (' + AvailableCoin[ImportCoinID].shortcut + ')';
 
-
-  frmhome.CoinPrivKeyDescriptionEdit.Text := AvailableCoin[ImportCoinID].displayName
-    + ' (' + AvailableCoin[ImportCoinID].shortcut + ')';
+  frmhome.CoinPrivKeyDescriptionEdit.Text := AvailableCoin[ImportCoinID]
+    .displayName + ' (' + AvailableCoin[ImportCoinID].shortcut + ')';
 
   if newCoinListNextTabItem = frmhome.ClaimWalletListTabItem then
   begin
-    if newCoinID = 4 then
+    if newcoinID = 4 then
     begin
 
-      popupWindow.Create('Better solution is to import the ETH key to transfer ETH and tokens to the wallet.');
+      popupWindow.Create
+        ('Better solution is to import the ETH key to transfer ETH and tokens to the wallet.');
 
       exit();
     end;
@@ -425,7 +427,7 @@ begin
   if newCoinListNextTabItem = frmhome.ExportPrivCoinListTabItem then
   begin
 
-    if createExportPrivateKeyList(newCoinID) = 0  then
+    if createExportPrivateKeyList(newcoinID) = 0 then
     begin
 
       popupWindow.Create('No addresses have been created for this coin');
@@ -434,7 +436,6 @@ begin
     end;
 
   end;
-
 
   switchTab(frmhome.pageControl,
     newCoinListNextTabItem { frmhome.AddNewCoinSettings } );
@@ -468,17 +469,18 @@ begin
 
     if TfmxObject(Sender).Parent.Parent is Tmemo then
     begin
-      svc.setClipboard(removeSpace(Tmemo(TfmxObject(Sender).Parent.Parent).Text));
-      popupWindow.Create(removeSpace(Tmemo(TfmxObject(Sender).Parent.Parent).Text) +
-        ' ' + dictionary('CopiedToClipboard'));
-      //exit;
+      svc.setClipboard
+        (removeSpace(Tmemo(TfmxObject(Sender).Parent.Parent).Text));
+      popupWindow.Create(removeSpace(Tmemo(TfmxObject(Sender).Parent.Parent)
+        .Text) + ' ' + dictionary('CopiedToClipboard'));
+      // exit;
     end;
     if TfmxObject(Sender).Parent is Tedit then
     begin
       svc.setClipboard(removeSpace(Tedit(TfmxObject(Sender).Parent).Text));
       popupWindow.Create(removeSpace(Tedit(TfmxObject(Sender).Parent).Text) +
         ' ' + dictionary('CopiedToClipboard'));
-      //exit;
+      // exit;
     end;
     if TfmxObject(Sender).Parent is TButton then
     begin
@@ -523,11 +525,11 @@ begin
           end);
         ans := '';
         tries := 0;
-     //   while (ans = '') and (tries < 5) do
-      //  begin
-          ans := sendCoinsTO(from, sendto, Amount, Fee, MasterSeed, coin);
-      //    inc(tries);
-      //  end;
+        // while (ans = '') and (tries < 5) do
+        // begin
+        ans := sendCoinsTO(from, sendto, Amount, Fee, MasterSeed, coin);
+        // inc(tries);
+        // end;
         TThread.Synchronize(nil,
           procedure
           var
@@ -539,10 +541,9 @@ begin
               TransactionWaitForSendAniIndicator.Enabled := false;
               TransactionWaitForSendDetailsLabel.Visible := false;
               TransactionWaitForSendLinkLabel.Visible := True;
-              TransactionWaitForSendBackButton.Visible := true;
+              TransactionWaitForSendBackButton.Visible := True;
 
-
-              if LeftStr(ans, length('Transaction sent')) = 'Transaction sent'
+              if LeftStr(ans, Length('Transaction sent')) = 'Transaction sent'
               then
               begin
                 { TThread.CreateAnonymousThread(
@@ -560,7 +561,7 @@ begin
                   getURLToExplorer(CurrentCoin.coin, ts[ts.Count - 1]);
                 TransactionWaitForSendLinkLabel.Text :=
                   TransactionWaitForSendLinkLabel.TagString;
-                ts.free;
+                ts.Free;
                 TransactionWaitForSendDetailsLabel.Visible := True;
                 TransactionWaitForSendLinkLabel.Visible := True;
               end
@@ -569,11 +570,12 @@ begin
                 TransactionWaitForSendDetailsLabel.Visible := True;
                 TransactionWaitForSendLinkLabel.Visible := false;
                 ts := SplitString(ans, #$A);
-                //showmessage('_' + ans + '_');
+                // showmessage('_' + ans + '_');
                 if ts.Count = 0 then
                 begin
 
-                  TransactionWaitForSendDetailsLabel.Text := 'Unknown Error' + ans;
+                  TransactionWaitForSendDetailsLabel.Text :=
+                    'Unknown Error' + ans;
 
                 end
                 else
@@ -585,16 +587,15 @@ begin
                       TransactionWaitForSendDetailsLabel.Text :=
                         TransactionWaitForSendDetailsLabel.Text + #13#10 +
                         'Error: ' + ts[i];
-                     // break;
+                      // break;
                     end;
                 end;
-                
 
-                ts.free;
+                ts.Free;
               end;
             except
               on E: Exception do
-                ShowMessage(E.Message);
+                showmessage(E.Message);
             end;
           end);
 
@@ -653,7 +654,7 @@ begin
     if InstantSendSwitch.IsChecked = True then
     begin
       wvFee.Text := BigIntegertoFloatStr
-        (100000 * length(CurrentAccount.aggregateUTXO(CurrentCoin)),
+        (100000 * Length(CurrentAccount.aggregateUTXO(CurrentCoin)),
         CurrentCoin.decimals);
       PerByteFeeEdit.Enabled := false;
       FeeSpin.Enabled := false;
@@ -690,12 +691,14 @@ begin
     begin
       if SendAllFundsSwitch.IsChecked then
       begin
-        wvAmount.Text :=  BigIntegertoFloatStr
-        (( BigInteger.Min(CurrentAccount.getSpendable(TWalletInfo(CurrentCryptoCurrency)),CurrentAccount.aggregateBalances(TWalletInfo(CurrentCryptoCurrency)).confirmed)), CurrentCryptoCurrency.decimals);;
+        wvAmount.Text := BigIntegertoFloatStr
+          ((BigInteger.Min(CurrentAccount.getSpendable
+          (TWalletInfo(CurrentCryptoCurrency)),
+          CurrentAccount.aggregateBalances(TWalletInfo(CurrentCryptoCurrency))
+          .confirmed)), CurrentCryptoCurrency.decimals);;
         WVRealCurrency.Text :=
-          floatToStrF(CurrencyConverter.calculate
-          (strToFloatDef(wvAmount.Text, 0) * CurrentCryptoCurrency.rate),
-          ffFixed, 18, 2);
+          floatToStrF(CurrencyConverter.calculate(strToFloatDef(wvAmount.Text,
+          0) * CurrentCryptoCurrency.rate), ffFixed, 18, 2);
         FeeFromAmountSwitch.IsChecked := True;
         FeeFromAmountSwitch.Enabled := false;
       end
@@ -751,7 +754,7 @@ begin
       else
         curWUstr := ' sat/b) ';
 
-      lblFee.Text := wvFee.Text + ' (' + intToStr(satb) + curWUstr +
+      lblFee.Text := wvFee.Text + ' (' + inttostr(satb) + curWUstr +
         AvailableCoin[CurrentCoin.coin].shortcut + ' = ' +
         floatToStrF(CurrencyConverter.calculate(strToFloatDef(wvFee.Text,
         0) * CurrentCoin.rate), ffFixed, 18, 6) + ' ' +
@@ -769,7 +772,7 @@ begin
   begin
     if not isEthereum then
     begin
-      a := ((180 * length(CurrentAccount.aggregateUTXO(CurrentCoin)) +
+      a := ((180 * Length(CurrentAccount.aggregateUTXO(CurrentCoin)) +
         (34 * 2) + 12));
       curWU := a.asInteger;
       a := (a * StrFloatToBigInteger(CurrentCoin.efee[round(FeeSpin.Value) - 1],
@@ -780,7 +783,7 @@ begin
       wvFee.Text := BigIntegertoFloatStr(a, CurrentCoin.decimals);
       // CurrentCoin.efee[round(FeeSpin.Value) - 1] ;
       lblBlockInfo.Text := dictionary('ConfirmInNext') + ' ' +
-        intToStr(round(FeeSpin.Value)) + ' ' + dictionary('Blocks');
+        inttostr(round(FeeSpin.Value)) + ' ' + dictionary('Blocks');
     end
     else
       FeeSpin.Value := 1.0;
@@ -941,7 +944,7 @@ begin
 
   clearVertScrollBox(frmhome.AvailableCoinsBox);
 
-  for i := 0 to length(CurrentAccount.myCoins) - 1 do
+  for i := 0 to Length(CurrentAccount.myCoins) - 1 do
   begin
     if CurrentAccount.myCoins[i].coin = 4 then // if ETH
     begin
@@ -952,7 +955,7 @@ begin
         Panel := TPanel.Create(frmhome.AvailableCoinsBox);
         Panel.Align := Panel.Align.alTop;
         Panel.Height := 48;
-        panel.Width := frmHome.AvailableCoinsBox.Width;
+        Panel.Width := frmhome.AvailableCoinsBox.Width;
         Panel.Visible := True;
         Panel.Parent := frmhome.AvailableCoinsBox;
         Panel.TagString := CurrentAccount.myCoins[i].addr;
@@ -1045,7 +1048,6 @@ begin
     end;
   end;
 
-
 end;
 
 procedure CreateWallet(Sender: TObject; Option: AnsiString = '');
@@ -1069,7 +1071,7 @@ begin
       passwordMessage.Text := dictionary('PasswordNotMatch');
       exit;
     end;
-    if pass.Text.length < 8 then
+    if pass.Text.Length < 8 then
     begin
 
       popupWindow.Create(dictionary('PasswordShort'));
@@ -1097,13 +1099,13 @@ begin
 
     end;
 
-    if (AccountNameEdit.Text = '') or (length(AccountNameEdit.Text) < 3) then
+    if (AccountNameEdit.Text = '') or (Length(AccountNameEdit.Text) < 3) then
     begin
       popupWindow.Create(dictionary('AccountNameTooShort'));
       exit();
     end;
 
-    for i := 0 to length(AccountsNames) - 1 do
+    for i := 0 to Length(AccountsNames) - 1 do
     begin
 
       if AccountsNames[i].name = AccountNameEdit.Text then
@@ -1130,7 +1132,7 @@ begin
 
         if TPanel(frmhome.GenerateCoinVertScrollBox.Content.Children[i]).Tag = 7
         then
-          TcheckBox(TPanel(frmhome.GenerateCoinVertScrollBox.Content.Children[i]
+          TCheckBox(TPanel(frmhome.GenerateCoinVertScrollBox.Content.Children[i]
             ).TagObject).IsChecked := True;
       end;
       frmhome.NextButtonSGC.OnClick(nil);
@@ -1210,7 +1212,7 @@ begin
             frmhome.NewCoinPrivKeyOKButton.Enabled := True;
           end);
 
-        if (length(frmhome.WIFEdit.Text) = 64) then
+        if (Length(frmhome.WIFEdit.Text) = 64) then
         begin
 
           // Tthread.Synchronize(nil , procedure
@@ -1370,7 +1372,7 @@ begin
   // Issue 112 CurrentAccount.userSaveSeed := false;
   CurrentAccount.SaveFiles();
   // askforBackup(1000);
-  startFullfillingKeyPool(masterseed);
+  startFullfillingKeypool(MasterSeed);
   MasterSeed := '';
   TThread.Synchronize(nil,
     procedure
@@ -1460,20 +1462,22 @@ var
   wd: TWalletInfo;
   a: BigInteger;
   Control: Tcomponent;
-ts:TMemoryStream;
+  ts: TMemoryStream;
 begin
   frmhome.AutomaticFeeRadio.IsChecked := True;
   frmhome.TopInfoConfirmedValue.Text := ' Calculating...';
   frmhome.TopInfoUnconfirmedValue.Text := ' Calculating...';
   lastHistCC := 10;
-  if TFmxObject(Sender).Tag=-2 then
-  CurrentCryptoCurrency :=                   TWalletInfo(  TfmxObject(Sender).TagObject)  else
-CurrentCryptoCurrency := findUnusedReceiving(TWalletInfo(TfmxObject(Sender).TagObject));
+  if TfmxObject(Sender).Tag = -2 then
+    CurrentCryptoCurrency := TWalletInfo(TfmxObject(Sender).TagObject)
+  else
+    CurrentCryptoCurrency := findUnusedReceiving
+      (TWalletInfo(TfmxObject(Sender).TagObject));
   // ShowMessage(postDataOverHTTP(HODLER_URL+'/batchSync.php?coin='+availableCoin[0].shortcut, batchSync(0),false,True));
   frmhome.InstantSendLayout.Visible :=
     TWalletInfo(CurrentCryptoCurrency).coin = 2;
 
-  reloadWalletView;     // po co  jak jest w watku ?
+  reloadWalletView; // po co  jak jest w watku ?
 
   if SyncOpenWallet <> nil then
   begin
@@ -1517,8 +1521,6 @@ CurrentCryptoCurrency := findUnusedReceiving(TWalletInfo(TfmxObject(Sender).TagO
     SyncOpenWallet.Start;
 
   end;
-
-
 
   with frmhome do
   begin
@@ -1602,16 +1604,19 @@ CurrentCryptoCurrency := findUnusedReceiving(TWalletInfo(TfmxObject(Sender).TagO
     ReceiveAmountRealCurrency.Text := '0.00';
     WVRealCurrency.Text := floatToStrF(strToFloatDef(wvAmount.Text, 0) *
       CurrentCryptoCurrency.rate, ffFixed, 15, 2);
-//ShortcutValetInfoImage.DisableInterpolation:=True;
-      if CurrentCryptoCurrency is TWalletInfo then
-     ShortcutValetInfoImage.MultiResBitmap[0].Bitmap.LoadFromStream( ResourceMenager.getAssets( Availablecoin[TWalletInfo(CurrentCryptoCurrency).coin].ResourceName ) );
-if CurrentCryptoCurrency is Token then
-          ShortcutValetInfoImage.MultiResBitmap[0].Bitmap.LoadFromStream(Token(CurrentCryptoCurrency).getIconResource);
-      ShortcutValetInfoImage.WrapMode:=TImageWrapMode.Original;
-      ShortcutValetInfoImage.Align:=TAlignLayout.Center;
-//ShortcutValetInfoImage.Height:= ShortcutValetInfoImage.MultiResBitmap[0].Bitmap.Height;
-           // ;
-    //ShortcutValetInfoImage.Bitmap :=
+    // ShortcutValetInfoImage.DisableInterpolation:=True;
+    if CurrentCryptoCurrency is TWalletInfo then
+      ShortcutValetInfoImage.MultiResBitmap[0].Bitmap.LoadFromStream
+        (ResourceMenager.getAssets(AvailableCoin
+        [TWalletInfo(CurrentCryptoCurrency).coin].ResourceName));
+    if CurrentCryptoCurrency is Token then
+      ShortcutValetInfoImage.MultiResBitmap[0].Bitmap.LoadFromStream
+        (Token(CurrentCryptoCurrency).getIconResource);
+    ShortcutValetInfoImage.WrapMode := TImageWrapMode.Original;
+    ShortcutValetInfoImage.Align := TAlignLayout.Center;
+    // ShortcutValetInfoImage.Height:= ShortcutValetInfoImage.MultiResBitmap[0].Bitmap.Height;
+    // ;
+    // ShortcutValetInfoImage.Bitmap :=
     wvGFX.Bitmap := CurrentCryptoCurrency.getIcon();
 
     lblCoinShort.Text := CurrentCryptoCurrency.shortcut + '';
@@ -1678,10 +1683,10 @@ if CurrentCryptoCurrency is Token then
     else
       SearchTokenButton.Visible := false;
 
-    if (not isEthereum) and ( currentCryptocurrency is TwalletInfo )then
+    if (not isEthereum) and (CurrentCryptoCurrency is TWalletInfo) then
     begin
 
-      a := ((180 * length(TWalletInfo(CurrentCryptoCurrency).UTXO) +
+      a := ((180 * Length(TWalletInfo(CurrentCryptoCurrency).UTXO) +
         (34 * 2) + 12));
       curWU := a.asInteger;
       a := (a * StrFloatToBigInteger(CurrentCoin.efee[round(FeeSpin.Value) - 1],
@@ -1690,10 +1695,11 @@ if CurrentCryptoCurrency is Token then
         a := a * 4;
       try
         a := Max(a.asInteger, 500);
-      except on E: Exception do
+      except
+        on E: Exception do
         begin
-          a := ((180 * length(TWalletInfo(CurrentCryptoCurrency).UTXO) +
-          (34 * 2) + 12)) * 10 ;
+          a := ((180 * Length(TWalletInfo(CurrentCryptoCurrency).UTXO) +
+            (34 * 2) + 12)) * 10;
           a := Max(a.asInteger, 500);
         end;
       end;
@@ -1701,7 +1707,7 @@ if CurrentCryptoCurrency is Token then
       wvFee.Text := BigIntegertoFloatStr(a, CurrentCoin.decimals);
       // CurrentCoin.efee[round(FeeSpin.Value) - 1] ;
       lblBlockInfo.Text := dictionary('ConfirmInNext') + ' ' +
-        intToStr(round(FeeSpin.Value)) + ' ' + dictionary('Blocks');
+        inttostr(round(FeeSpin.Value)) + ' ' + dictionary('Blocks');
     end;
     if (TWalletInfo(CurrentCryptoCurrency).coin = 3) or
       (TWalletInfo(CurrentCryptoCurrency).coin = 7) then
@@ -1709,11 +1715,12 @@ if CurrentCryptoCurrency is Token then
       frmhome.BCHCashAddrButtonClick(Sender);
     end;
 
-
     // changeYbutton.Text := 'Change address (' + intToStr(CurrentCoin.x) +','+inttoStr(CurrentCoin.y) + ')';
     if pageControl.ActiveTab = HOME_TABITEM then
       WVTabControl.ActiveTab := WVBalance;
-    loadSendCacheFromFile( );
+	  
+    loadSendCacheFromFile();
+	
   end;
 end;
 
@@ -1730,25 +1737,23 @@ begin
   begin
 
     isTokenTransfer := CurrentCryptoCurrency is Token;
-    currentCoin := nil;
+    CurrentCoin := nil;
     if isTokenTransfer then
     begin
 
-      if length(CurrentAccount.myCoins) <> 0 then
+      if Length(CurrentAccount.myCoins) <> 0 then
       begin
         for wd in CurrentAccount.myCoins do
-        if lowercase(wd.addr) = lowercase(CurrentCryptoCurrency.addr) then
-        begin
-          CurrentCoin := wd;
-          break;
-        end;
+          if lowercase(wd.addr) = lowercase(CurrentCryptoCurrency.addr) then
+          begin
+            CurrentCoin := wd;
+            break;
+          end;
       end;
 
-      if currentCoin = nil then
+      if CurrentCoin = nil then
         raise Exception.Create('Not found ETH account');
 
-
-     
     end
     else
       CurrentCoin := TWalletInfo(CurrentCryptoCurrency);
@@ -1881,10 +1886,11 @@ begin
       popupWindow.Create(dictionary('FailedToDecrypt'));
       exit;
     end;
-       if not( (isEthereum) or (isTokenTransfer)) then
-  if Length(currentaccount.aggregateUTXO(CurrentCoin))=0 then
-           begin
-        popupWindow.Create('There is no inputs to spend, please wait for transaction confirmation' );
+    if not((isEthereum) or (isTokenTransfer)) then
+      if Length(CurrentAccount.aggregateUTXO(CurrentCoin)) = 0 then
+      begin
+        popupWindow.Create
+          ('There is no inputs to spend, please wait for transaction confirmation');
         exit;
       end;
     if not isEthereum then
@@ -1917,7 +1923,8 @@ begin
       Amount := StrFloatToBigInteger(wvAmount.Text,
         CurrentCryptoCurrency.decimals);
 
-    if { (not isEthereum) and } (not isTokenTransfer) then begin
+    if { (not isEthereum) and } (not isTokenTransfer) then
+    begin
       if Amount + tempFee > (CurrentAccount.aggregateBalances(CurrentCoin)
         .confirmed) then
       begin
@@ -1925,7 +1932,7 @@ begin
         exit;
       end;
 
-end;
+    end;
     if ((Amount) = 0) or ((Fee) = 0) then
     begin
       popupWindowOK.Create(
@@ -1936,10 +1943,11 @@ end;
             procedure
             begin
 
-              tthread.Synchronize(nil,
-              procedure begin
-                switchTab(pageControl, walletView);
-              end);
+              TThread.Synchronize(nil,
+                procedure
+                begin
+                  switchTab(pageControl, walletView);
+                end);
             end).Start;
 
         end, dictionary('InvalidValues'));
@@ -1952,7 +1960,7 @@ end;
     if (CurrentCryptoCurrency is TWalletInfo) and
       (TWalletInfo(CurrentCryptoCurrency).coin in [3, 7]) then
     begin
-      CashAddr := StringReplace(LowerCase(Address), 'bitcoincash:', '',
+      CashAddr := StringReplace(lowercase(Address), 'bitcoincash:', '',
         [rfReplaceAll]);
       if (LeftStr(CashAddr, 1) = 'q') or (LeftStr(CashAddr, 1) = 'p') then
       begin
@@ -1961,7 +1969,7 @@ end;
         except
           on E: Exception do
           begin
-            ShowMessage('Wrong bech32 address');
+            showmessage('Wrong bech32 address');
             exit;
           end;
         end;
@@ -1990,7 +1998,7 @@ begin
 
   clearVertScrollBox(frmhome.AvailableTokensBox);
 
-  for i := 0 to length(Token.availableToken) - 1 do
+  for i := 0 to Length(Token.availableToken) - 1 do
   begin
 
     if Token.availableToken[i].Address = '' then // if token is no longer exist
@@ -2048,17 +2056,17 @@ end;
 
 procedure chooseToken(Sender: TObject);
 var
-  t: Token;
+  T: Token;
   popup: TPopup;
   Panel: TPanel;
   mess: popupWindow;
   holder: TfmxObject;
 begin
-  for t in CurrentAccount.myTokens do
+  for T in CurrentAccount.myTokens do
   begin
 
-    if (t.addr = walletAddressForNewToken) and
-      (t.id = (Tcomponent(Sender).Tag + 10000)) then
+    if (T.addr = walletAddressForNewToken) and
+      (T.id = (Tcomponent(Sender).Tag + 10000)) then
     begin
 
       mess := popupWindow.Create(dictionary('TokenExist'));
@@ -2068,14 +2076,14 @@ begin
 
   end;
 
-  t := Token.Create(Tcomponent(Sender).Tag, walletAddressForNewToken);
+  T := Token.Create(Tcomponent(Sender).Tag, walletAddressForNewToken);
 
-  t.idInWallet := length(CurrentAccount.myTokens) + 10000;
+  T.idInWallet := Length(CurrentAccount.myTokens) + 10000;
 
-  CurrentAccount.addToken(t);
-  CreatePanel(t);
+  CurrentAccount.addToken(T);
+  CreatePanel(T);
   holder := TfmxObject.Create(nil);
-  holder.TagObject := t;
+  holder.TagObject := T;
   frmhome.OpenWalletView(holder, PointF(0, 0));
   holder.DisposeOf;
 end;
@@ -2118,7 +2126,7 @@ begin
     refreshWalletDat();
 
     TLabel(frmhome.FindComponent('globalBalance')).Text := '0.00';
-    FormShow(nil);
+    AccountRelated.afterInitialize;
 
     syncTimer.Enabled := True;
     SyncBalanceThr.Terminate();
@@ -2350,7 +2358,7 @@ begin
     HistoryTransactionValue.Text := BigIntegertoFloatStr(th.CountValues,
       CurrentCryptoCurrency.decimals);
     if th.confirmation > 0 then
-      historyTransactionConfirmation.Text := intToStr(th.confirmation) +
+      historyTransactionConfirmation.Text := inttostr(th.confirmation) +
         ' Confirmation(s)'
     else
       historyTransactionConfirmation.Text := 'Unconfirmed';
@@ -2362,11 +2370,11 @@ begin
       HistoryTransactionSendReceive.Text := dictionary('Receive')
     else if (th.typ = 'OUT') then
       HistoryTransactionSendReceive.Text := dictionary('Sent')
-    else if (th.typ = 'INTERNAL')  then
+    else if (th.typ = 'INTERNAL') then
       HistoryTransactionSendReceive.Text := dictionary('Internal')
     else
     begin
-      ShowMessage('History Transaction type error');
+      showmessage('History Transaction type error');
       exit();
     end;
     i := 0;
@@ -2374,7 +2382,7 @@ begin
     begin
       fmxObject := HistoryTransactionVertScrollBox.Content.Children[i];
 
-      if LeftStr(fmxObject.name, length('HistoryValueAddressPanel_')) = 'HistoryValueAddressPanel_'
+      if LeftStr(fmxObject.name, Length('HistoryValueAddressPanel_')) = 'HistoryValueAddressPanel_'
       then
       begin
         fmxObject.DisposeOf;
@@ -2383,7 +2391,7 @@ begin
       inc(i);
 
     end;
-    for i := 0 to length(th.values) - 1 do
+    for i := 0 to Length(th.values) - 1 do
     begin
       Panel := TPanel.Create(HistoryTransactionVertScrollBox);
       Panel.Align := TAlignLayout.Top;
@@ -2391,7 +2399,7 @@ begin
       Panel.Visible := True;
       Panel.Tag := i;
       Panel.TagString := th.addresses[i];
-      Panel.name := 'HistoryValueAddressPanel_' + intToStr(i);
+      Panel.name := 'HistoryValueAddressPanel_' + inttostr(i);
       Panel.Parent := HistoryTransactionVertScrollBox;
       Panel.Position.Y := 1000 + Panel.Height * i;
       Panel.Margins.Left := 0;
@@ -2428,7 +2436,7 @@ begin
       valuelbl.HitTest := True;
 
       addrlbl := TCopyableEdit.Create(Panel);
-      addrlbl.ReadOnly:=true;
+      addrlbl.ReadOnly := True;
       // addrlbl.StyleLookup := 'transparentedit';
       addrlbl.Height := 21;
       addrlbl.Align := TAlignLayout.Top;
@@ -2476,7 +2484,7 @@ begin
       wdArray := CurrentAccount.getWalletWithX(TWalletInfo(Panel.TagObject).x,
         TWalletInfo(Panel.TagObject).coin);
 
-      for i := 0 to length(wdArray) - 1 do
+      for i := 0 to Length(wdArray) - 1 do
       begin
         wdArray[i].deleted := True;
       end;
@@ -2507,7 +2515,7 @@ begin
     try
       if isHex(WIFEdit.Text) then
       begin
-        if (length(WIFEdit.Text) <> 64) then
+        if (Length(WIFEdit.Text) <> 64) then
 
         begin
           popupWindow.Create('Key too short');
@@ -2567,16 +2575,16 @@ begin
               WData := getDataOverHTTP(HODLER_URL + 'getSegwitHistory.php?coin='
                 + AvailableCoin[wd.coin].name + '&' + segwitParameters(wd));
 
-              if length(WData) > 10 then
+              if Length(WData) > 10 then
               begin
 
                 TThread.Synchronize(nil,
                   procedure
                   begin
                     HexPrivKeyCompressedRadioButton.IsChecked := True;
-                    ts.free;
+                    ts.Free;
                     ts := nil;
-                    wd.free;
+                    wd.Free;
                     wd := nil;
                     exit;
                   end);
@@ -2589,17 +2597,17 @@ begin
                 procedure
                 begin
                   HexPrivKeyCompressedRadioButton.IsChecked := True;
-                  ts.free;
+                  ts.Free;
                   ts := nil;
-                  wd.free;
+                  wd.Free;
                   wd := nil;
                   exit;
                 end);
             end;
             if ts <> nil then
-              ts.free;
+              ts.Free;
             if wd <> nil then
-              wd.free;
+              wd.Free;
 
             wd := TWalletInfo.Create(newcoinID, -1, -1,
               Bitcoin_PublicAddrToWallet(notkey,
@@ -2615,15 +2623,15 @@ begin
             begin
               WData := getDataOverHTTP(HODLER_URL + 'getHistory.php?coin=' +
                 AvailableCoin[wd.coin].name + '&address=' + wd.addr);
-              if length(WData) > 10 then
+              if Length(WData) > 10 then
               begin
                 TThread.Synchronize(nil,
                   procedure
                   begin
                     HexPrivKeyNotCompressedRadioButton.IsChecked := True;
-                    ts.free;
+                    ts.Free;
                     ts := nil;
-                    wd.free;
+                    wd.Free;
                     wd := nil;
                     exit; // +
                   end);
@@ -2635,17 +2643,17 @@ begin
                 procedure
                 begin
                   HexPrivKeyNotCompressedRadioButton.IsChecked := True;
-                  ts.free;
+                  ts.Free;
                   ts := nil;
-                  wd.free;
+                  wd.Free;
                   wd := nil;
                   exit;
                 end);
             end;
             if ts <> nil then
-              ts.free;
+              ts.Free;
             if wd <> nil then
-              wd.free;
+              wd.Free;
 
             TThread.Synchronize(nil,
               procedure
@@ -2687,7 +2695,7 @@ begin
                 HexPrivKeyNotCompressedRadioButton.IsChecked := True;
               end);
 
-            wd.free;
+            wd.Free;
 
             // end).Start();
             exit;
@@ -2709,16 +2717,15 @@ begin
         exit;
       end;
     end;
-    tthread.Synchronize(nil , procedure
-    begin
-      btnDecryptSeed.OnClick := ImportPrivateKey;
-      decryptSeedBackTabItem := pageControl.ActiveTab;
-      // PageControl.ActiveTab := descryptSeed;
-      btnDSBack.OnClick := backBtnDecryptSeed;
-    end);
+    TThread.Synchronize(nil,
+      procedure
+      begin
+        btnDecryptSeed.OnClick := ImportPrivateKey;
+        decryptSeedBackTabItem := pageControl.ActiveTab;
+        // PageControl.ActiveTab := descryptSeed;
+        btnDSBack.OnClick := backBtnDecryptSeed;
+      end);
 
-
-    
   end;
 end;
 
