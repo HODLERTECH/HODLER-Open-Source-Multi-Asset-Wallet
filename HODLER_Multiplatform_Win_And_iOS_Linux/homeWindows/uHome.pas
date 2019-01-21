@@ -3060,11 +3060,21 @@ var
   actionListener: TActionList;
 begin
 
-  Image7.Bitmap.LoadFromStream(ResourceMenager.getAssets('HSB_WHITE'));
-  // showmessage( getDetailedData() );
-  //raise Exception.Create('Error Message');
+  {CurrentAccount.changeDescription( 0 , 0 , 'dupa');
+  CurrentAccount.changeDescription( 1 , 0 , 'dupa2');
+  CurrentAccount.changeDescription( 0 , 2 , 'dupa3');
+  CurrentAccount.changeDescription( 1 , 1 , 'kutas');
+  CurrentAccount.changeDescription( 1 , 1 , 'kutas2');
+  CurrentAccount.SaveDescriptionFile; }
 
-  showmessage( floatToStr( globalLoadCacheTime ) + ' s' );
+  CurrentAccount.LoadDescriptionFile();
+  showmessage( CurrentAccount.getDescription( 0 , 0) + #13#10 +
+   CurrentAccount.getDescription( 1 , 0) + #13#10 +
+   CurrentAccount.getDescription( 0 , 2) + #13#10 +
+   CurrentAccount.getDescription( 1 , 1) + #13#10 +
+   CurrentAccount.getDescription( 3 , 0) + #13#10 +
+   CurrentAccount.getDescription( 2 , 2)
+  );
 
 end;
 

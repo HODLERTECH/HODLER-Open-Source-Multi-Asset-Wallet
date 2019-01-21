@@ -31,6 +31,7 @@ type
     // decimals : Integer;
     _WalletID: integer;
     // addr : AnsiString;
+    //description : AnsiString;
 
   public
     idInWallet: integer;
