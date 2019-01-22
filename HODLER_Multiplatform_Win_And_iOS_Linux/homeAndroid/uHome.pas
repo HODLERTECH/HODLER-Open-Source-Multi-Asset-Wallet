@@ -760,7 +760,6 @@ type
     SendErrorMsgLabel: TLabel;
     PrivacyAndSecurityButton: TButton;
     reportIssuesSettingsButton: TButton;
-    SendErrorMsgSwitch: TSwitch;
     Label25: TLabel;
     ReportIssues: TTabItem;
     ToolBar20: TToolBar;
@@ -805,6 +804,7 @@ type
     MoreImage: TImage;
     SearchInDashBrdImage: TImage;
     exportemptyaddressesSwitch: TCheckBox;
+    SendErrorMsgSwitch: TCheckBox;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -2509,6 +2509,7 @@ begin
   t.idInWallet := length(CurrentAccount.myTokens) + 10000;
   CurrentAccount.addToken(t);
   CurrentAccount.SaveFiles();
+  CreatePanel(T);
   btnSyncClick(nil);
   switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
 

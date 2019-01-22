@@ -208,8 +208,17 @@ procedure btnChangeDescryptionOKClick(Sender: TObject);
 begin
   with frmhome do
   begin
-    CurrentCryptoCurrency.description := ChangeDescryptionEdit.Text;
-    CurrentAccount.SaveFiles();
+    if currentCryptoCurrency is TwalletInfo then
+    begin
+      CurrentAccount.changeDescription( TwalletInfo(CurrentCryptoCurrency).coin , TwalletInfo(CurrentCryptoCurrency).x , ChangeDescryptionEdit.Text  );
+      // .changeDescription save description in file
+    end
+    else
+    begin
+      CurrentCryptoCurrency.description := ChangeDescryptionEdit.Text;
+      CurrentAccount.SaveFiles();
+    end;
+
     misc.updateNameLabels();
     switchTab(pageControl, walletView);
   end;
@@ -243,15 +252,25 @@ procedure btnChangeDescriptionClick(Sender: TObject);
 begin
   with frmhome do
   begin
-    if CurrentCryptoCurrency.description = '' then
+
+    if CurrentCryptoCurrency is Twalletinfo then
     begin
-      ChangeDescryptionEdit.Text := AvailableCoin[CurrentCoin.coin].displayName
-        + ' (' + AvailableCoin[CurrentCoin.coin].shortcut + ')';
+      ChangeDescryptionEdit.Text := currentAccount.getDescription( TwalletInfo(CurrentCryptoCurrency).coin , TwalletInfo(CurrentCryptoCurrency).x );
     end
-    else
+    else if CurrentCryptoCurrency is Token then
     begin
-      ChangeDescryptionEdit.Text := CurrentCryptoCurrency.description;
+      if CurrentCryptoCurrency.description = '' then
+      begin
+        ChangeDescryptionEdit.Text := Token.availableToken[Token(CurrentCryptoCurrency).id - 10000].Name
+          + ' (' + Token.availableToken[Token(CurrentCryptoCurrency).id - 10000].shortcut + ')';
+      end
+      else
+      begin
+        ChangeDescryptionEdit.Text := CurrentCryptoCurrency.description;
+      end;
     end;
+
+    
 
     switchTab(pageControl, ChangeDescryptionScreen);
   end;
@@ -1852,15 +1871,25 @@ begin
       / 12) + 6;
     TopInfoConfirmedFiatLabel.Width := TopInfoUnconfirmedFiatLabel.Width;
 
-    if CurrentCryptoCurrency.description = '' then
+    if currentCryptoCurrency is TwalletInfo then
     begin
-      NameShortcutLabel.Text := CurrentCryptoCurrency.name + ' (' +
-        CurrentCryptoCurrency.shortcut + ')';
+      NameShortcutLabel.Text := CurrentAccount.getDescription( TwalletInfo(CurrentCryptoCurrency).coin , TwalletInfo(CurrentCryptoCurrency).X);
     end
     else
     begin
-      NameShortcutLabel.Text := CurrentCryptoCurrency.description;
+      if CurrentCryptoCurrency.description = '' then
+      begin
+        NameShortcutLabel.Text := CurrentCryptoCurrency.name + ' (' +
+          CurrentCryptoCurrency.shortcut + ')';
+      end
+      else
+      begin
+        NameShortcutLabel.Text := CurrentCryptoCurrency.description;
+      end;
     end;
+
+
+    
 
     if (CurrentCoin.coin = 0) and ((frmhome.TxHistory.ChildrenCount) = 0) then
     begin

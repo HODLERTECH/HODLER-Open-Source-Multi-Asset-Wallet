@@ -1848,13 +1848,20 @@ begin
     adrLabel.StyledSettings := adrLabel.StyledSettings - [TStyledSetting.size];
     adrLabel.TextSettings.Font.size := dashBoardFontSize;
     adrLabel.parent := panel;
-
-    if crypto.description = '' then
+    if crypto is TwalletInfo then
     begin
-      adrLabel.Text := crypto.name + ' (' + crypto.shortcut + ')';
+      adrLabel.Text := currentAccount.getDescription( TWalletInfo(crypto).coin , TwalletInfo(crypto).x );
     end
     else
-      adrLabel.Text := crypto.description;
+    begin
+      if crypto.description = '' then
+      begin
+        adrLabel.Text := crypto.name + ' (' + crypto.shortcut + ')';
+      end
+      else
+        adrLabel.Text := crypto.description;
+    end;
+    
     adrLabel.AutoSize := false;
     adrLabel.Visible := true;
     adrLabel.TextSettings.WordWrap := false;
@@ -5006,12 +5013,26 @@ begin
       try
         if fmxObj.TagString = 'name' then
         begin
-          if cc.description = '' then
+
+          if cc is TwalletInfo then
           begin
-            TLabel(fmxObj).Text := cc.name + ' (' + cc.shortcut + ')';
+
+            TLabel(fmxObj).Text := CurrentAccount.getDescription( TwalletInfo(cc).coin, TwalletInfo(cc).x );
+
           end
           else
-            TLabel(fmxObj).Text := cc.description;
+          begin
+
+            if cc.description = '' then
+            begin
+              TLabel(fmxObj).Text := cc.name + ' (' + cc.shortcut + ')';
+            end
+            else
+              TLabel(fmxObj).Text := cc.description;
+
+          end;
+
+          
         end;
 
       finally

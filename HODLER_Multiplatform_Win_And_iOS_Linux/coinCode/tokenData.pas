@@ -49,7 +49,7 @@ type
     function send(address: AnsiString): boolean; virtual;
     function toString(): AnsiString; virtual;
     function getIcon(): TBitmap; override;
-    function getIconResource(): TResourceStream;
+    function getIconResource(): TStream;
 
     // property name: AnsiString read _name;
     // property id : Integer read _id;
@@ -182,10 +182,25 @@ implementation
 
 uses misc, uHome;
 
-function Token.getIconResource(): TResourceStream;
+function Token.getIconResource(): TStream;
+var
+  temp : TBitmap;
+  tempStr : TMemoryStream;
 begin
 
-  result := ResourceMenager.getAssets(availableToken[id - 10000].ResourceName);
+  if (id >= 10000) and ( id-10000 <= length(availableToken) ) then
+    result := ResourceMenager.getAssets(availableToken[id - 10000].ResourceName)
+  else
+  begin
+    tempStr := TMemoryStream.Create();
+    temp := generateIcon( ContractAddress );
+    temp.SaveToStream( tempStr );
+    ResourceMenager.addOrSetResource( ContractAddress , tempStr );
+    temp.Free();
+
+    result := ResourceMenager.getAssets( ContractAddress );
+
+  end;
 
 end;
 

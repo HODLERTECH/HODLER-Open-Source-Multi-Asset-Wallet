@@ -3584,17 +3584,9 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Viewport.Width = 409.000000000000000000
           Viewport.Height = 602.000000000000000000
           inherited emptyAddressesLayout: TLayout
-            Size.Width = 379.000000000000000000
-            inherited NoPrivateKeyToExportLabel: TLabel
-              Size.Width = 379.000000000000000000
-            end
             inherited Layout58: TLayout
-              Size.Width = 379.000000000000000000
               inherited exportemptyAddressesLabel: TLabel
                 Size.Width = 364.000000000000000000
-              end
-              inherited exportemptyaddressesSwitch: TCheckBox
-                Size.Width = 299.000000000000000000
               end
             end
           end
@@ -3713,11 +3705,10 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Position.Y = 44.000000000000000000
           Size.Width = 409.000000000000000000
           inherited SendErrorMsgLabel: TLabel
-            Size.Width = 292.000000000000000000
+            Size.Width = 379.000000000000000000
           end
-          inherited SendErrorMsgSwitch: TSwitch
-            Position.X = 338.000000000000000000
-            Size.Width = 55.000000000000000000
+          inherited SendErrorMsgSwitch: TCheckBox
+            Size.Width = 379.000000000000000000
           end
         end
         inherited Label25: TLabel

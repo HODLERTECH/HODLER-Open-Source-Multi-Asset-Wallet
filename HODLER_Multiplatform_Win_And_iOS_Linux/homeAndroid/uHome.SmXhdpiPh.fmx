@@ -3197,17 +3197,9 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Viewport.Width = 245.000000000000000000
           Viewport.Height = 257.000000000000000000
           inherited emptyAddressesLayout: TLayout
-            Size.Width = 215.000000000000000000
-            inherited NoPrivateKeyToExportLabel: TLabel
-              Size.Width = 215.000000000000000000
-            end
             inherited Layout58: TLayout
-              Size.Width = 215.000000000000000000
               inherited exportemptyAddressesLabel: TLabel
                 Size.Width = 200.000000000000000000
-              end
-              inherited exportemptyaddressesSwitch: TCheckBox
-                Size.Width = 135.000000000000000000
               end
             end
           end
@@ -3292,11 +3284,10 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         inherited Panel24: TPanel
           Size.Width = 245.000000000000000000
           inherited SendErrorMsgLabel: TLabel
-            Size.Width = 139.000000000000000000
+            Size.Width = 215.000000000000000000
           end
-          inherited SendErrorMsgSwitch: TSwitch
-            Position.X = 185.000000000000000000
-            Size.Width = 44.000000000000000000
+          inherited SendErrorMsgSwitch: TCheckBox
+            Size.Width = 215.000000000000000000
           end
         end
         inherited Label25: TLabel

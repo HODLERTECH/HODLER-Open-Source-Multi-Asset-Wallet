@@ -769,7 +769,6 @@ type
     SaPBackButton: TButton;
     Panel24: TPanel;
     SendErrorMsgLabel: TLabel;
-    SendErrorMsgSwitch: TSwitch;
     ReportIssues: TTabItem;
     ToolBar19: TToolBar;
     ReportIssueHeaderLabel: TLabel;
@@ -809,6 +808,7 @@ type
     SweepQRButton: TButton;
     Button11: TButton;
     exportemptyaddressesSwitch: TCheckBox;
+    SendErrorMsgSwitch: TCheckBox;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1073,6 +1073,8 @@ type
     procedure exportemptyaddressesSwitchClick(Sender: TObject);
     procedure Button11Click(Sender: TObject);
     procedure SweepQRButtonClick(Sender: TObject);
+    procedure btnChangeDescryptionBackClick(Sender: TObject);
+    procedure SendErrorMsgSwitchClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -2814,6 +2816,7 @@ begin
   t.idInWallet := length(CurrentAccount.myTokens) + 10000;
   CurrentAccount.addToken(t);
   CurrentAccount.SaveFiles();
+  CreatePanel(T);
   btnSyncClick(nil);
   switchTab(PageControl, walletView);
 
@@ -3192,6 +3195,11 @@ procedure TfrmHome.btnCreateWalletClick(Sender: TObject);
 begin
   WalletViewRelated.CreateWallet(Sender, TfmxObject(Sender).TagString);
   // tagString - generate list oprions | '' - user choose coins | 'claim' - only BSV
+end;
+
+procedure TfrmHome.btnChangeDescryptionBackClick(Sender: TObject);
+begin
+  switchTab(PageControl , walletView );
 end;
 
 procedure TfrmHome.btnChangeDescryptionOKClick(Sender: TObject);
@@ -4182,6 +4190,11 @@ begin
     EQRPreview.Width:=294; }
   // end;
 
+end;
+
+procedure TfrmHome.SendErrorMsgSwitchClick(Sender: TObject);
+begin
+  SendErrorMsgSwitchSwitch(Sender);
 end;
 
 procedure TfrmHome.SendErrorMsgSwitchSwitch(Sender: TObject);

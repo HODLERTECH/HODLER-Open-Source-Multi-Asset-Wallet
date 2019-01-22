@@ -82,12 +82,12 @@ var
   middleNum : AnsiString;
 
 begin
-  if not DescriptionDict.tryGetValue( TPair<Integer , Integer>.Create(id , X) , result) then
+  if (not DescriptionDict.tryGetValue( TPair<Integer , Integer>.Create(id , X) , result)) or (result = '') then
   begin
-    if X = 0 then
+    if (X = 0) or (X = -1) then
       middleNum := ''
     else
-      middleNum := ' ' + intToStr(x);
+      middleNum := '';//' ' + intToStr(x+1);
     result := availableCoin[id].displayname + middleNum  + ' (' + availableCoin[id].shortcut + ')' ;
   end;
 end;
@@ -95,6 +95,7 @@ end;
 procedure Account.changeDescription( id , X : Integer ; newDesc : AnsiString );
 begin
   DescriptionDict.AddOrSetValue( Tpair<Integer , Integer >.create( id , X) , newDesc );
+  SaveDescriptionFile();
 end;
 
 procedure Account.SaveDescriptionFile();
@@ -502,6 +503,7 @@ procedure Account.AddCoin(wd: TWalletInfo);
 begin
   SetLength(myCoins, Length(myCoins) + 1);
   myCoins[Length(myCoins) - 1] := wd;
+  changeDescription( wd.coin , wd.x , wd.description);
   SaveCoinFile();
 end;
 
@@ -540,6 +542,8 @@ begin
 
   LoadCoinFile();
   LoadTokenFile();
+  LoadDescriptionFile();
+
   TMonitor.exit(flock);
   flock.Free;
 end;
@@ -762,6 +766,8 @@ begin
 
   SaveCoinFile();
   SaveTokenFile();
+  SaveDescriptionFile();
+
   TMonitor.exit(flock);
   flock.Free;
 end;

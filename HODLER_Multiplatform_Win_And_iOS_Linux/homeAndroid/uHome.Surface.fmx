@@ -3077,18 +3077,6 @@ inherited frmHome_Surface: TfrmHome_Surface
           Size.Height = 1791.000000000000000000
           Viewport.Width = 1064.000000000000000000
           Viewport.Height = 1791.000000000000000000
-          inherited emptyAddressesLayout: TLayout
-            Size.Width = 1034.000000000000000000
-            inherited NoPrivateKeyToExportLabel: TLabel
-              Size.Width = 1034.000000000000000000
-            end
-            inherited Layout58: TLayout
-              Size.Width = 1034.000000000000000000
-              inherited exportemptyaddressesSwitch: TCheckBox
-                Size.Width = 954.000000000000000000
-              end
-            end
-          end
         end
       end
       inherited PrivOptionsTabItem: TTabItem
@@ -3170,10 +3158,10 @@ inherited frmHome_Surface: TfrmHome_Surface
         inherited Panel24: TPanel
           Size.Width = 1064.000000000000000000
           inherited SendErrorMsgLabel: TLabel
-            Size.Width = 930.000000000000000000
+            Size.Width = 1034.000000000000000000
           end
-          inherited SendErrorMsgSwitch: TSwitch
-            Position.X = 976.000000000000000000
+          inherited SendErrorMsgSwitch: TCheckBox
+            Size.Width = 1034.000000000000000000
           end
         end
         inherited Label25: TLabel

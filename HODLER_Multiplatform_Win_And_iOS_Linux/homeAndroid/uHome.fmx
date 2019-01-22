@@ -257,7 +257,7 @@ object frmHome: TfrmHome
       Size.Height = 551.000000000000000000
       Size.PlatformDefault = False
       TabHeight = 49.000000000000000000
-      TabIndex = 43
+      TabIndex = 16
       TabOrder = 0
       TabPosition = None
       OnChange = closeVirtualKeyBoard
@@ -11789,7 +11789,7 @@ object frmHome: TfrmHome
         CustomIcon = <
           item
           end>
-        IsSelected = False
+        IsSelected = True
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -16488,7 +16488,7 @@ object frmHome: TfrmHome
         CustomIcon = <
           item
           end>
-        IsSelected = True
+        IsSelected = False
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -17017,26 +17017,22 @@ object frmHome: TfrmHome
             Align = Client
             Margins.Left = 15.000000000000000000
             Margins.Right = 15.000000000000000000
-            Size.Width = 234.000000000000000000
+            Size.Width = 338.000000000000000000
             Size.Height = 57.000000000000000000
             Size.PlatformDefault = False
             Text = 'Allow application to send anonymous error data'
+            Visible = False
             TabOrder = 0
           end
-          object SendErrorMsgSwitch: TSwitch
-            Align = Right
-            IsChecked = True
-            Margins.Left = 16.000000000000000000
-            Margins.Top = 16.000000000000000000
-            Margins.Right = 16.000000000000000000
-            Margins.Bottom = 16.000000000000000000
-            Position.X = 280.000000000000000000
-            Position.Y = 16.000000000000000000
-            Size.Width = 72.000000000000000000
-            Size.Height = 25.000000000000000000
+          object SendErrorMsgSwitch: TCheckBox
+            Align = Client
+            Margins.Left = 15.000000000000000000
+            Margins.Right = 15.000000000000000000
+            Size.Width = 338.000000000000000000
+            Size.Height = 57.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
-            OnSwitch = SendErrorMsgSwitchSwitch
+            Text = 'Allow application to send anonymous error data'
           end
         end
         object Label25: TLabel
