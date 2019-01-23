@@ -34,7 +34,7 @@ object frmHome: TfrmHome
     Size.Height = 687.000000000000000000
     Size.PlatformDefault = False
     TabHeight = 49.000000000000000000
-    TabIndex = 16
+    TabIndex = 46
     TabOrder = 8
     TabPosition = None
     OnChange = closeVirtualKeyBoard
@@ -12080,7 +12080,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -16363,7 +16363,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -16450,26 +16450,22 @@ object frmHome: TfrmHome
           Align = Client
           Margins.Left = 15.000000000000000000
           Margins.Right = 15.000000000000000000
-          Size.Width = 316.000000000000000000
+          Size.Width = 420.000000000000000000
           Size.Height = 57.000000000000000000
           Size.PlatformDefault = False
           Text = 'Send anonymous program logs'
+          Visible = False
           TabOrder = 0
         end
-        object UserReportSendLogsSwitch: TSwitch
-          Align = Right
-          IsChecked = True
-          Margins.Left = 16.000000000000000000
-          Margins.Top = 16.000000000000000000
-          Margins.Right = 16.000000000000000000
-          Margins.Bottom = 16.000000000000000000
-          Position.X = 362.000000000000000000
-          Position.Y = 16.000000000000000000
-          Size.Width = 72.000000000000000000
-          Size.Height = 25.000000000000000000
+        object UserReportSendLogsSwitch: TCheckBox
+          Align = Client
+          Margins.Left = 15.000000000000000000
+          Margins.Right = 15.000000000000000000
+          Size.Width = 420.000000000000000000
+          Size.Height = 57.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
-          OnSwitch = SendErrorMsgSwitchSwitch
+          Text = 'Send anonymous program logs'
         end
       end
       object Panel26: TPanel
@@ -16483,26 +16479,22 @@ object frmHome: TfrmHome
           Align = Client
           Margins.Left = 15.000000000000000000
           Margins.Right = 15.000000000000000000
-          Size.Width = 316.000000000000000000
+          Size.Width = 420.000000000000000000
           Size.Height = 57.000000000000000000
           Size.PlatformDefault = False
           Text = 'Send informations about your device'
+          Visible = False
           TabOrder = 0
         end
-        object UserReportDeviceInfoSwitch: TSwitch
-          Align = Right
-          IsChecked = True
-          Margins.Left = 16.000000000000000000
-          Margins.Top = 16.000000000000000000
-          Margins.Right = 16.000000000000000000
-          Margins.Bottom = 16.000000000000000000
-          Position.X = 362.000000000000000000
-          Position.Y = 16.000000000000000000
-          Size.Width = 72.000000000000000000
-          Size.Height = 25.000000000000000000
+        object UserReportDeviceInfoSwitch: TCheckBox
+          Align = Client
+          Margins.Left = 15.000000000000000000
+          Margins.Right = 15.000000000000000000
+          Size.Width = 420.000000000000000000
+          Size.Height = 57.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
-          OnSwitch = SendErrorMsgSwitchSwitch
+          Text = 'Send informations about your device'
         end
       end
     end

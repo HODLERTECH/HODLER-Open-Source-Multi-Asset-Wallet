@@ -257,7 +257,7 @@ object frmHome: TfrmHome
       Size.Height = 551.000000000000000000
       Size.PlatformDefault = False
       TabHeight = 49.000000000000000000
-      TabIndex = 16
+      TabIndex = 0
       TabOrder = 0
       TabPosition = None
       OnChange = closeVirtualKeyBoard
@@ -366,7 +366,7 @@ object frmHome: TfrmHome
         CustomIcon = <
           item
           end>
-        IsSelected = False
+        IsSelected = True
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -11789,7 +11789,7 @@ object frmHome: TfrmHome
         CustomIcon = <
           item
           end>
-        IsSelected = True
+        IsSelected = False
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -17065,6 +17065,7 @@ object frmHome: TfrmHome
         ExplicitSize.cx = 8.000000000000000000
         ExplicitSize.cy = 8.000000000000000000
         object ToolBar20: TToolBar
+          Align = MostTop
           Size.Width = 368.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
@@ -17101,7 +17102,7 @@ object frmHome: TfrmHome
           Viewport.Height = 226.000000000000000000
         end
         object SendReportIssuesButton: TButton
-          Align = Bottom
+          Align = MostBottom
           Position.Y = 503.000000000000000000
           Size.Width = 368.000000000000000000
           Size.Height = 48.000000000000000000
@@ -17121,7 +17122,7 @@ object frmHome: TfrmHome
           TabOrder = 3
         end
         object Label24: TLabel
-          Align = Bottom
+          Align = MostBottom
           Position.Y = 440.000000000000000000
           Size.Width = 368.000000000000000000
           Size.Height = 63.000000000000000000
@@ -17141,26 +17142,22 @@ object frmHome: TfrmHome
             Align = Client
             Margins.Left = 15.000000000000000000
             Margins.Right = 15.000000000000000000
-            Size.Width = 234.000000000000000000
+            Size.Width = 338.000000000000000000
             Size.Height = 57.000000000000000000
             Size.PlatformDefault = False
             Text = 'Send anonymous program logs'
+            Visible = False
             TabOrder = 0
           end
-          object UserReportSendLogsSwitch: TSwitch
-            Align = Right
-            IsChecked = True
-            Margins.Left = 16.000000000000000000
-            Margins.Top = 16.000000000000000000
-            Margins.Right = 16.000000000000000000
-            Margins.Bottom = 16.000000000000000000
-            Position.X = 280.000000000000000000
-            Position.Y = 16.000000000000000000
-            Size.Width = 72.000000000000000000
-            Size.Height = 25.000000000000000000
+          object UserReportSendLogsSwitch: TCheckBox
+            Align = Client
+            Margins.Left = 15.000000000000000000
+            Margins.Right = 15.000000000000000000
+            Size.Width = 338.000000000000000000
+            Size.Height = 57.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
-            OnSwitch = SendErrorMsgSwitchSwitch
+            Text = 'Send anonymous program logs'
           end
         end
         object Panel26: TPanel
@@ -17174,26 +17171,22 @@ object frmHome: TfrmHome
             Align = Client
             Margins.Left = 15.000000000000000000
             Margins.Right = 15.000000000000000000
-            Size.Width = 234.000000000000000000
+            Size.Width = 338.000000000000000000
             Size.Height = 57.000000000000000000
             Size.PlatformDefault = False
             Text = 'Send informations about your device'
+            Visible = False
             TabOrder = 0
           end
-          object UserReportDeviceInfoSwitch: TSwitch
-            Align = Right
-            IsChecked = True
-            Margins.Left = 16.000000000000000000
-            Margins.Top = 16.000000000000000000
-            Margins.Right = 16.000000000000000000
-            Margins.Bottom = 16.000000000000000000
-            Position.X = 280.000000000000000000
-            Position.Y = 16.000000000000000000
-            Size.Width = 72.000000000000000000
-            Size.Height = 25.000000000000000000
+          object UserReportDeviceInfoSwitch: TCheckBox
+            Align = Client
+            Margins.Left = 15.000000000000000000
+            Margins.Right = 15.000000000000000000
+            Size.Width = 338.000000000000000000
+            Size.Height = 57.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
-            OnSwitch = SendErrorMsgSwitchSwitch
+            Text = 'Send informations about your device'
           end
         end
       end

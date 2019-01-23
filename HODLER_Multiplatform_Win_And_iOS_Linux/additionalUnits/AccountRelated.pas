@@ -726,6 +726,7 @@ begin
   begin
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     AccountsListPanel.Visible := not AccountsListPanel.Visible;
+    AccountsListPanel.BringToFront;
 {$ENDIF}
     for i := AccountsListVertScrollBox.Content.ChildrenCount - 1 downto 0 do
     begin

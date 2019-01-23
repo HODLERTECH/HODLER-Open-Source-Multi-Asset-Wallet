@@ -3755,22 +3755,21 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Position.Y = 486.000000000000000000
           Size.Width = 409.000000000000000000
           inherited UserReportSendLogsLabel: TLabel
-            Size.Width = 292.000000000000000000
+            Size.Width = 379.000000000000000000
           end
-          inherited UserReportSendLogsSwitch: TSwitch
-            Position.X = 338.000000000000000000
-            Size.Width = 55.000000000000000000
+          inherited UserReportSendLogsSwitch: TCheckBox
+            Size.Width = 379.000000000000000000
+            OnClick = nil
           end
         end
         inherited Panel26: TPanel
           Position.Y = 543.000000000000000000
           Size.Width = 409.000000000000000000
           inherited UserReportDeviceInfoLabel: TLabel
-            Size.Width = 292.000000000000000000
+            Size.Width = 379.000000000000000000
           end
-          inherited UserReportDeviceInfoSwitch: TSwitch
-            Position.X = 338.000000000000000000
-            Size.Width = 55.000000000000000000
+          inherited UserReportDeviceInfoSwitch: TCheckBox
+            Size.Width = 379.000000000000000000
           end
         end
       end

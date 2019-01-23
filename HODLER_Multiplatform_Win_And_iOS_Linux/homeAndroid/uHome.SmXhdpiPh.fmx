@@ -3310,7 +3310,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Viewport.Height = 49.000000000000000000
         end
         inherited SendReportIssuesButton: TButton
-          Position.Y = 208.000000000000000000
+          Position.Y = 322.000000000000000000
           Size.Width = 245.000000000000000000
           OnClick = nil
         end
@@ -3318,29 +3318,28 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
         end
         inherited Label24: TLabel
-          Position.Y = 145.000000000000000000
+          Position.Y = 259.000000000000000000
           Size.Width = 245.000000000000000000
         end
         inherited Panel25: TPanel
-          Position.Y = 256.000000000000000000
+          Position.Y = 145.000000000000000000
           Size.Width = 245.000000000000000000
           inherited UserReportSendLogsLabel: TLabel
-            Size.Width = 139.000000000000000000
+            Size.Width = 215.000000000000000000
           end
-          inherited UserReportSendLogsSwitch: TSwitch
-            Position.X = 185.000000000000000000
-            Size.Width = 44.000000000000000000
+          inherited UserReportSendLogsSwitch: TCheckBox
+            Size.Width = 215.000000000000000000
+            OnClick = nil
           end
         end
         inherited Panel26: TPanel
-          Position.Y = 313.000000000000000000
+          Position.Y = 202.000000000000000000
           Size.Width = 245.000000000000000000
           inherited UserReportDeviceInfoLabel: TLabel
-            Size.Width = 139.000000000000000000
+            Size.Width = 215.000000000000000000
           end
-          inherited UserReportDeviceInfoSwitch: TSwitch
-            Position.X = 185.000000000000000000
-            Size.Width = 44.000000000000000000
+          inherited UserReportDeviceInfoSwitch: TCheckBox
+            Size.Width = 215.000000000000000000
           end
         end
       end

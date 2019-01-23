@@ -785,10 +785,8 @@ type
     VertScrollBox3: TVertScrollBox;
     Panel25: TPanel;
     UserReportSendLogsLabel: TLabel;
-    UserReportSendLogsSwitch: TSwitch;
     Panel26: TPanel;
     UserReportDeviceInfoLabel: TLabel;
-    UserReportDeviceInfoSwitch: TSwitch;
     Label25: TLabel;
     PrivateKeyInfoPanel: TPanel;
     PrivateKeyAddressInfoLabel: TLabel;
@@ -809,6 +807,8 @@ type
     Button11: TButton;
     exportemptyaddressesSwitch: TCheckBox;
     SendErrorMsgSwitch: TCheckBox;
+    UserReportSendLogsSwitch: TCheckBox;
+    UserReportDeviceInfoSwitch: TCheckBox;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1075,6 +1075,7 @@ type
     procedure SweepQRButtonClick(Sender: TObject);
     procedure btnChangeDescryptionBackClick(Sender: TObject);
     procedure SendErrorMsgSwitchClick(Sender: TObject);
+    //procedure UserReportSendLogsSwitchClick(Sender: TObject);
 
   private
     { Private declarations }

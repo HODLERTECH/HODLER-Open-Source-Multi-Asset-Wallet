@@ -771,10 +771,8 @@ type
     Label24: TLabel;
     Panel25: TPanel;
     UserReportSendLogsLabel: TLabel;
-    UserReportSendLogsSwitch: TSwitch;
     Panel26: TPanel;
     UserReportDeviceInfoLabel: TLabel;
-    UserReportDeviceInfoSwitch: TSwitch;
     PrivateKeyInfoPanel: TPanel;
     PrivateKeyAddressInfoLabel: TLabel;
     PrivateKeyBalanceInfoLabel: TLabel;
@@ -805,6 +803,8 @@ type
     SearchInDashBrdImage: TImage;
     exportemptyaddressesSwitch: TCheckBox;
     SendErrorMsgSwitch: TCheckBox;
+    UserReportSendLogsSwitch: TCheckBox;
+    UserReportDeviceInfoSwitch: TCheckBox;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);

@@ -3199,20 +3199,21 @@ inherited frmHome_Surface: TfrmHome_Surface
           Position.Y = 1679.000000000000000000
           Size.Width = 1064.000000000000000000
           inherited UserReportSendLogsLabel: TLabel
-            Size.Width = 930.000000000000000000
+            Size.Width = 1034.000000000000000000
           end
-          inherited UserReportSendLogsSwitch: TSwitch
-            Position.X = 976.000000000000000000
+          inherited UserReportSendLogsSwitch: TCheckBox
+            Size.Width = 1034.000000000000000000
+            OnClick = nil
           end
         end
         inherited Panel26: TPanel
           Position.Y = 1736.000000000000000000
           Size.Width = 1064.000000000000000000
           inherited UserReportDeviceInfoLabel: TLabel
-            Size.Width = 930.000000000000000000
+            Size.Width = 1034.000000000000000000
           end
-          inherited UserReportDeviceInfoSwitch: TSwitch
-            Position.X = 976.000000000000000000
+          inherited UserReportDeviceInfoSwitch: TCheckBox
+            Size.Width = 1034.000000000000000000
           end
         end
       end
