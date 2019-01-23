@@ -3,7 +3,7 @@ unit AccountData;
 interface
 
 uses tokenData, WalletStructureData, cryptoCurrencyData, System.IOUtils,
-  Sysutils, Classes, FMX.Dialogs, Json, Velthuis.BigIntegers, math;
+  Sysutils, Classes, FMX.Dialogs, Json, Velthuis.BigIntegers, math ,System.Generics.Collections;
 
 procedure loadCryptoCurrencyJSONData(data: TJSONValue; cc: cryptoCurrency);
 function getCryptoCurrencyJsonData(cc: cryptoCurrency): TJSONObject;
@@ -24,11 +24,15 @@ type
     userSaveSeed: boolean;
     hideEmpties: boolean;
     privTCA: boolean;
+
     DirPath: AnsiString;
     CoinFilePath: AnsiString;
     TokenFilePath: AnsiString;
     SeedFilePath: AnsiString;
+    DescriptionFilePath : AnsiString;
     Paths: Array of AnsiString;
+
+    DescriptionDict: TObjectDictionary< TPair<Integer , Integer> , AnsiString >;
 
     constructor Create(_name: AnsiString);
     destructor Destroy(); override;
@@ -47,10 +51,16 @@ type
     function aggregateConfirmedFiats(wi: TWalletInfo): double;
     function aggregateUnconfirmedFiats(wi: TWalletInfo): double;
     function getSpendable(wi: TWalletInfo): BigInteger;
+
+    function getDescription( id , X : Integer ): AnsiString;
+    procedure changeDescription( id , X : Integer ; newDesc : AnsiString ); procedure SaveDescriptionFile();
+    procedure LoadDescriptionFile();
   private
     procedure SaveTokenFile();
     procedure SaveCoinFile();
     procedure SaveSeedFile();
+
+
 
     procedure LoadCoinFile();
     procedure LoadTokenFile();
@@ -65,7 +75,99 @@ type
 implementation
 
 uses
-  misc, uHome;
+  misc, uHome , coinData;
+
+function Account.getDescription( id , X : Integer ): AnsiString;
+var
+  middleNum : AnsiString;
+
+begin
+  if (not DescriptionDict.tryGetValue( TPair<Integer , Integer>.Create(id , X) , result)) or (result = '') then
+  begin
+    if (X = 0) or (X = -1) then
+      middleNum := ''
+    else
+      middleNum := '';//' ' + intToStr(x+1);
+    result := availableCoin[id].displayname + middleNum  + ' (' + availableCoin[id].shortcut + ')' ;
+  end;
+end;
+
+procedure Account.changeDescription( id , X : Integer ; newDesc : AnsiString );
+begin
+  DescriptionDict.AddOrSetValue( Tpair<Integer , Integer >.create( id , X) , newDesc );
+  SaveDescriptionFile();
+end;
+
+procedure Account.SaveDescriptionFile();
+var
+  obj : TJsonObject;
+  it : TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
+  pair : TJSONString;
+  str : TJSONString;
+  ts : TstringList;
+begin
+  obj := TJsonObject.Create();
+
+  it := DescriptionDict.GetEnumerator;
+
+  while( it.MoveNext ) do
+  begin
+    //it.Current.Key ;
+    pair := TJSONString.Create( intToStr(it.Current.Key.Key)+ '_' + intToStr(it.Current.Key.Value) );
+    str := TJsonString.Create( it.Current.Value );
+
+    obj.AddPair( TJsonPair.Create( pair , str ) );
+  end;
+
+  ts := TStringList.Create();
+
+  ts.Text := obj.ToString;
+  ts.SaveToFile( DescriptionFilePath );
+
+  ts.Free();
+  obj.Free;
+end;
+
+
+procedure Account.LoadDescriptionFile();
+var
+  obj : TJsonObject;
+  it : TJSONPairEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
+  pair : TJSONString;
+  str : TJSONString;
+  ts , temp : TstringList;
+begin
+
+  if not FileExists( DescriptionFilePath ) then
+    exit();
+
+  ts := TStringList.Create();
+  ts.loadFromFile( DescriptionFilePath );
+  if ts.Text = '' then
+  begin
+    ts.free();
+    exit();
+  end;
+
+  obj := TJsonObject(TJSONObject.ParseJSONValue( ts.Text ));
+
+  it := obj.GetEnumerator;
+
+  while( it.MoveNext ) do
+  begin
+
+    temp := SplitString(it.Current.JsonString.Value , '_' );
+
+    changeDescription( strToInt(temp[0]) , strToInt(temp[1]) ,  it.Current.JsonValue.Value );
+
+    temp.Free();
+  end;
+
+  ts.Free();
+
+  obj.Free();
+end;
+
 
 function Account.aggregateConfirmedFiats(wi: TWalletInfo): double;
 var
@@ -263,6 +365,8 @@ begin
 
   DirPath := TPath.Combine(HOME_PATH, name);
 
+  DescriptionDict := TObjectDictionary<TPair<Integer , Integer> , AnsiString>.create();
+
   if not DirectoryExists(DirPath) then
     CreateDir(DirPath);
 
@@ -275,10 +379,13 @@ begin
   // SeedFilePath := TPath.Combine(HOME_PATH, name);
   SeedFilePath := TPath.Combine(DirPath, 'hodler.masterseed.dat');
 
-  SetLength(Paths, 3);
+  DescriptionFilePath := Tpath.Combine(DirPath, 'hodler.description.dat');
+
+  SetLength(Paths, 4);
   Paths[0] := CoinFilePath;
   Paths[1] := TokenFilePath;
   Paths[2] := SeedFilePath;
+  Paths[3] := DescriptionFilePath;
 
   SetLength(myCoins, 0);
   SetLength(myTokens, 0);
@@ -287,13 +394,19 @@ end;
 
 destructor Account.Destroy();
 begin
-  // SyncBalanceThr: SynchronizeBalanceThread;
+
   clearArrays();
+  DescriptionDict.Free();
+
   if SyncBalanceThr <> nil then
 
-    SyncBalanceThr.Terminate;
+  SyncBalanceThr.Terminate;
+  TThread.CreateAnonymousThread(procedure begin
+      SyncBalanceThr.DisposeOf;
+      end).Start();
+      SyncBalanceThr := nil;
 
-  // SyncBalanceThr.Free;
+
 end;
 
 procedure Account.SaveSeedFile();
@@ -390,6 +503,7 @@ procedure Account.AddCoin(wd: TWalletInfo);
 begin
   SetLength(myCoins, Length(myCoins) + 1);
   myCoins[Length(myCoins) - 1] := wd;
+  changeDescription( wd.coin , wd.x , wd.description);
   SaveCoinFile();
 end;
 
@@ -428,6 +542,8 @@ begin
 
   LoadCoinFile();
   LoadTokenFile();
+  LoadDescriptionFile();
+
   TMonitor.exit(flock);
   flock.Free;
 end;
@@ -650,6 +766,8 @@ begin
 
   SaveCoinFile();
   SaveTokenFile();
+  SaveDescriptionFile();
+
   TMonitor.exit(flock);
   flock.Free;
 end;

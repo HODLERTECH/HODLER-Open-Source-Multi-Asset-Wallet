@@ -85,7 +85,7 @@ interface
 uses AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA, IdSSLOpenSSL, languages,
   System.Hash, MiscOBJ,
   SysUtils, System.IOUtils, HashObj, System.Types, System.UITypes,
-  System.DateUtils, System.Generics.Collections,
+  System.DateUtils, System.Generics.Collections,  System.Diagnostics ,System.TimeSpan ,
   System.Classes,
   System.Variants, Math,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
@@ -380,6 +380,7 @@ function getComponentsWithTagString(tag: AnsiString; From: TfmxObject)
 function compareVersion(a, b: AnsiString): integer;
 function postDataOverHTTP(var aURL: String; postdata: string;
   useCache: boolean = true; noTimeout: boolean = false): AnsiString;
+
 // function floatToBigInteger(f : Single) : BigInteger;
 procedure saveSendCacheToFile();
 procedure loadSendCacheFromFile();
@@ -435,6 +436,8 @@ var
   AccountForSearchToken: Account;
   ResourceMenager: AssetsMenager;
 
+  globalLoadCacheTime : double = 0;
+
 implementation
 
 uses Bitcoin, uHome, base58, Ethereum, coinData, strutils, secp256k1,
@@ -448,144 +451,164 @@ var
 
 procedure clearSendCache();
 var
-  FilePath: AnsiString;
-  ts: TStringList;
-  arr: TJsonArray;
-  obj: TJsonObject;
-  val: TJsonValue;
-  exist: boolean;
-  coinid, x: integer;
-  i: integer;
+ FilePath : AnSiString;
+ ts : TStringList;
+ arr : TJsonArray;
+ obj : TJsonObject;
+ val : TJsonValue;
+ exist : boolean;
+ coinID , X : Integer;
+ i : integer;
 begin
-{$IFDEF ANDROID}
-  FilePath := tpath.Combine(CurrentAccount.DirPath, 'SendCache.dat');
+//{$IFDEF ANDROID}
+
+
+  filepath := tpath.Combine( CurrentAccount.DirPath , 'SendCache.dat');
 
   ts := TStringList.Create();
+  if FileExists( filepath )  then
+    ts.LoadFromFile( filePath );
 
-  ts.LoadFromFile(FilePath);
-
-  arr := TJsonArray(TJsonObject.ParseJSONValue(ts.Text));
+  arr := TJsonArray(TJSONObject.ParseJSONValue(ts.Text));
 
   exist := false;
   i := 0;
   for val in arr do
   begin
 
-    val.TryGetValue<integer>('coinID', coinid);
+    val.TryGetValue<Integer>('coinID', coinID);
 
-    val.TryGetValue<integer>('X', x);
+    val.TryGetValue<integer>('X' , x);
 
-    if (coinid = CurrentCoin.coin) and (x = CurrentCoin.x) then
+    if (coinID = CurrentCoin.coin) and (X = currentCoin.X) then
     begin
       arr.Remove(i);
       break;
     end;
+
 
     i := i + 1;
   end;
 
   ts.Text := arr.ToString;
 
-  ts.SaveToFile(FilePath);
+  ts.SaveToFile( FilePath );
 
   ts.Free;
   arr.Free();
-{$ENDIF}
+//{$ENDIF}
 end;
 
 procedure saveSendCacheToFile();
 var
-  FilePath: AnsiString;
-  ts: TStringList;
-  arr: TJsonArray;
-  obj: TJsonObject;
-  val: TJsonValue;
-  exist: boolean;
-  coinid, x: integer;
-  i: integer;
+ FilePath : AnSiString;
+ ts : TStringList;
+ arr : TJsonArray;
+ obj : TJsonObject;
+ val : TJsonValue;
+ exist : boolean;
+ coinID , X : Integer;
+ i : integer;
 begin
-{$IFDEF ANDROID}
-  FilePath := tpath.Combine(CurrentAccount.DirPath, 'SendCache.dat');
+//{$IFDEF ANDROID}
+  filepath := tpath.Combine( CurrentAccount.DirPath , 'SendCache.dat');
 
   ts := TStringList.Create();
+  if FileExists( filepath )  then
+  begin
+    ts.LoadFromFile( filePath );
+    arr := TJsonArray(TJSONObject.ParseJSONValue(ts.Text));
+  end
+  else
+  begin
+    arr := TJSONArray.Create();
+  end;
 
-  ts.LoadFromFile(FilePath);
 
-  arr := TJsonArray(TJsonObject.ParseJSONValue(ts.Text));
 
   exist := false;
   i := 0;
+
+  if arr.Count > 0 then
   for val in arr do
   begin
 
-    val.TryGetValue<integer>('coinID', coinid);
+    val.TryGetValue<Integer>('coinID', coinID);
 
-    val.TryGetValue<integer>('X', x);
+    val.TryGetValue<integer>('X' , x);
 
-    if (coinid = CurrentCoin.coin) and (x = CurrentCoin.x) then
+    if (coinID = CurrentCoin.coin) and (X = currentCoin.X) then
     begin
       arr.Remove(i);
       break;
     end;
 
+
     i := i + 1;
   end;
 
-  obj := TJsonObject.Create();
+  obj := TJSONObject.Create();
 
-  obj.AddPair('coinID', intToStr(CurrentCoin.coin));
-  obj.AddPair('X', intToStr(CurrentCoin.x));
-  obj.AddPair('WVsendTO', frmhome.WVsendTO.Text);
-  obj.AddPair('wvAmount', frmhome.wvAmount.Text);
-  obj.AddPair('wvFee', frmhome.wvFee.Text);
+  obj.AddPair( 'coinID' , intToStr(CurrentCoin.coin) );
+  obj.AddPair( 'X' , intToStr(CurrentCoin.x) );
+  obj.AddPair( 'WVsendTO' ,frmhome.WVsendTO.Text );
+  obj.AddPair( 'wvAmount' ,frmhome.wvAmount.Text );
+  obj.AddPair( 'wvFee' ,frmhome.wvFee.Text );
 
-  arr.AddElement(obj);
+  arr.AddElement( obj );
 
   ts.Text := arr.ToString;
 
-  ts.SaveToFile(FilePath);
+  ts.SaveToFile( FilePath );
 
   ts.Free;
   arr.Free();
-{$ENDIF}
+//{$ENDIF}
 end;
 
 procedure loadSendCacheFromFile();
 var
-  FilePath: AnsiString;
-  ts: TStringList;
-  arr: TJsonArray;
-  obj: TJsonObject;
-  val: TJsonValue;
-  exist: boolean;
-  coinid, x: integer;
-  i: integer;
-  temp: AnsiString;
+ FilePath : AnSiString;
+ ts : TStringList;
+ arr : TJsonArray;
+ obj : TJsonObject;
+ val : TJsonValue;
+ exist : boolean;
+ coinID , X : Integer;
+ i : integer;
+ temp : AnsiString;
 begin
-{$IFDEF ANDROID}
-  FilePath := tpath.Combine(CurrentAccount.DirPath, 'SendCache.dat');
-
+//{$IFDEF ANDROID}
+try
+  filepath := tpath.Combine( CurrentAccount.DirPath , 'SendCache.dat');
+  if not FileExists( filepath )  then
+    exit();
   ts := TStringList.Create();
-  571 ts.LoadFromFile(FilePath);
 
-  arr := TJsonArray(TJsonObject.ParseJSONValue(ts.Text));
+
+
+  ts.LoadFromFile( filePath );
+
+  arr := TJsonArray(TJSONObject.ParseJSONValue(ts.Text));
+
 
   for val in arr do
   begin
 
-    val.TryGetValue<integer>('coinID', coinid);
+    val.TryGetValue<Integer>('coinID', coinID);
 
-    val.TryGetValue<integer>('X', x);
+    val.TryGetValue<integer>('X' , x);
 
-    if (coinid = CurrentCoin.coin) and (x = CurrentCoin.x) then
+    if (coinID = CurrentCoin.coin) and (X = currentCoin.X) then
     begin
 
-      val.TryGetValue<AnsiString>('WVsendTO', temp);
+      val.TryGetValue<AnsiString>('WVsendTO' , temp );
       frmhome.WVsendTO.Text := temp;
-      val.TryGetValue<AnsiString>('wvAmount', temp);
+      val.TryGetValue<AnsiString>('wvAmount' , temp );
       frmhome.wvAmount.Text := temp;
-      val.TryGetValue<AnsiString>('wvFee', temp);
+      val.TryGetValue<AnsiString>('wvFee' , temp );
       frmhome.wvFee.Text := temp;
+
 
       break;
     end;
@@ -593,8 +616,20 @@ begin
   end;
 
   ts.Free;
+  ts := nil;
   arr.Free();
-{$ENDIF}
+  arr := nil;
+except on E: Exception do
+begin
+  if ts <> nil then
+    ts.Free;
+  if arr <> nil then
+    arr.Free();
+end;
+end;
+  
+//{$ENDIF}
+
 end;
 
 function TSecureRandoms.CheckSecureRandom(const random: ISecureRandom): boolean;
@@ -1246,24 +1281,25 @@ begin
   begin
 
     frmhome.SearchInDashBrdImage.Visible := true;
-{$IF DEFINED(ANDROID) OR DEFINED(OIS)}
-    frmhome.MoreImage.Visible := true;
-{$ENDIF}
-    frmhome.SearchInDashBrdImage.Bitmap.LoadFromStream
-      (ResourceMenager.getAssets('SEARCH_' + RightStr(currentStyle,
-      Length(currentStyle) - 3)));
-{$IF DEFINED(ANDROID) OR DEFINED(OIS)}
-    frmhome.MoreImage.Bitmap.LoadFromStream
-      (ResourceMenager.getAssets('MORE_' + RightStr(currentStyle,
-      Length(currentStyle) - 3)));
-{$ENDIF}
+
+    {$IF DEFINED(ANDROID) OR DEFINED(OIS)}
+    frmhome.MoreImage.Visible := TRUE;
+    {$ENDIF}
+
+    frmhome.SearchInDashBrdImage.bitmap.loadFromStream( ResourceMenager.getAssets( 'SEARCH_' + RightStr(currentStyle, Length(currentStyle) - 3) ) );
+    {$IF DEFINED(ANDROID) OR DEFINED(OIS)}
+    frmhome.MoreImage.bitmap.loadFromStream( ResourceMenager.getAssets( 'MORE_' + RightStr(currentStyle, Length(currentStyle) - 3) ) );
+    {$ENDIF}
+
+
   end
   else
   begin
     frmhome.SearchInDashBrdImage.Visible := false;
-{$IF DEFINED(ANDROID) OR DEFINED(OIS)}
+    {$IF DEFINED(ANDROID) OR DEFINED(OIS)}
     frmhome.MoreImage.Visible := false;
-{$ENDIF}
+    {$ENDIF}
+
   end;
 
 end;
@@ -1697,6 +1733,7 @@ begin
     begin
       ac := CreateNewAccount(name, pass, seed);
       ac.userSaveSeed := userSaveSeed;
+
       Tthread.Synchronize(nil,
         procedure
         begin
@@ -1811,13 +1848,20 @@ begin
     adrLabel.StyledSettings := adrLabel.StyledSettings - [TStyledSetting.size];
     adrLabel.TextSettings.Font.size := dashBoardFontSize;
     adrLabel.parent := panel;
-
-    if crypto.description = '' then
+    if crypto is TwalletInfo then
     begin
-      adrLabel.Text := crypto.name + ' (' + crypto.shortcut + ')';
+      adrLabel.Text := currentAccount.getDescription( TWalletInfo(crypto).coin , TwalletInfo(crypto).x );
     end
     else
-      adrLabel.Text := crypto.description;
+    begin
+      if crypto.description = '' then
+      begin
+        adrLabel.Text := crypto.name + ' (' + crypto.shortcut + ')';
+      end
+      else
+        adrLabel.Text := crypto.description;
+    end;
+    
     adrLabel.AutoSize := false;
     adrLabel.Visible := true;
     adrLabel.TextSettings.WordWrap := false;
@@ -3810,12 +3854,22 @@ var
   list: TStringList;
   i: integer;
   conv: TConvert;
+
+//var
+  //Stopwatch: TStopwatch;
+  //Elapsed: TTimeSpan;
+
 begin
+
+
+
   result := 'NOCACHE';
 
   if (CurrentAccount = nil) or
     (fileExists(CurrentAccount.DirPath + '/cache.dat') = false) then
     exit;
+
+  //Stopwatch := TStopwatch.StartNew;
 
   list := TStringList.Create();
   try
@@ -3837,6 +3891,10 @@ begin
   finally
     list.Free;
   end;
+
+  //Elapsed := Stopwatch.Elapsed;
+  //globalLoadCacheTime := globalLoadCacheTime + Elapsed.TotalSeconds;
+
 end;
 
 procedure saveCache(Hash, data: AnsiString);
@@ -4955,12 +5013,26 @@ begin
       try
         if fmxObj.TagString = 'name' then
         begin
-          if cc.description = '' then
+
+          if cc is TwalletInfo then
           begin
-            TLabel(fmxObj).Text := cc.name + ' (' + cc.shortcut + ')';
+
+            TLabel(fmxObj).Text := CurrentAccount.getDescription( TwalletInfo(cc).coin, TwalletInfo(cc).x );
+
           end
           else
-            TLabel(fmxObj).Text := cc.description;
+          begin
+
+            if cc.description = '' then
+            begin
+              TLabel(fmxObj).Text := cc.name + ' (' + cc.shortcut + ')';
+            end
+            else
+              TLabel(fmxObj).Text := cc.description;
+
+          end;
+
+          
         end;
 
       finally

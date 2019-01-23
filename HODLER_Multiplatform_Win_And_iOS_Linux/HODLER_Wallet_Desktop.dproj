@@ -566,6 +566,7 @@
         <DCCReference Include="additionalUnits\debugAnalysis.pas"/>
         <DCCReference Include="additionalUnits\KeypoolRelated.pas"/>
         <DCCReference Include="additionalUnits\AssetsMenagerData.pas"/>
+        <DCCReference Include="coinCode\Nano.pas"/>
         <RcItem Include="Jet.style">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
@@ -796,6 +797,10 @@
         <RcItem Include="token_icons\paxos_28_2.png">
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>PAXOSSTANDARD_IMG</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\search_dark.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>SEARCH_DARK</ResourceId>
         </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
@@ -1666,6 +1671,12 @@
                     </Platform>
                     <Platform Name="Android">
                         <RemoteName>ic_launcher.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\search_dark.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -2812,6 +2823,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\paxos_28_2.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\FRA.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSDevice32">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -3038,6 +3055,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\latoken.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_114x114.png" Configuration="Debug" Class="iPhone_AppIcon114">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
@@ -3119,12 +3142,6 @@
                 <DeployFile LocalName="Languages\DEU.lang" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="Win32\Debug\HODLER_Wallet_Desktop.rsm" Configuration="Debug" Class="DebugSymbols">
-                    <Platform Name="Win32">
-                        <RemoteName>HODLER_Wallet_Desktop.rsm</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

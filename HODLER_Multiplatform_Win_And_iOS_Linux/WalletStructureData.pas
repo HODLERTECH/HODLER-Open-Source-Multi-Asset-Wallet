@@ -44,6 +44,9 @@ type
 
 type
   TWalletInfo = class(cryptoCurrency)
+
+  public
+
     pub: AnsiString;
     coin: integer;
     x: integer;
@@ -60,10 +63,13 @@ type
     isCompressed: Boolean;
     inPool: Boolean;
 
+
     constructor Create(id: integer; _x: integer; _y: integer; _addr: AnsiString;
       _description: AnsiString; crTime: integer = -1);
 
     function getIcon(): TBitmap; override;
+
+
 
   end;
 

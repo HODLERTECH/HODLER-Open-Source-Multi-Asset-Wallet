@@ -208,8 +208,17 @@ procedure btnChangeDescryptionOKClick(Sender: TObject);
 begin
   with frmhome do
   begin
-    CurrentCryptoCurrency.description := ChangeDescryptionEdit.Text;
-    CurrentAccount.SaveFiles();
+    if currentCryptoCurrency is TwalletInfo then
+    begin
+      CurrentAccount.changeDescription( TwalletInfo(CurrentCryptoCurrency).coin , TwalletInfo(CurrentCryptoCurrency).x , ChangeDescryptionEdit.Text  );
+      // .changeDescription save description in file
+    end
+    else
+    begin
+      CurrentCryptoCurrency.description := ChangeDescryptionEdit.Text;
+      CurrentAccount.SaveFiles();
+    end;
+
     misc.updateNameLabels();
     switchTab(pageControl, walletView);
   end;
@@ -243,15 +252,25 @@ procedure btnChangeDescriptionClick(Sender: TObject);
 begin
   with frmhome do
   begin
-    if CurrentCryptoCurrency.description = '' then
+
+    if CurrentCryptoCurrency is Twalletinfo then
     begin
-      ChangeDescryptionEdit.Text := AvailableCoin[CurrentCoin.coin].displayName
-        + ' (' + AvailableCoin[CurrentCoin.coin].shortcut + ')';
+      ChangeDescryptionEdit.Text := currentAccount.getDescription( TwalletInfo(CurrentCryptoCurrency).coin , TwalletInfo(CurrentCryptoCurrency).x );
     end
-    else
+    else if CurrentCryptoCurrency is Token then
     begin
-      ChangeDescryptionEdit.Text := CurrentCryptoCurrency.description;
+      if CurrentCryptoCurrency.description = '' then
+      begin
+        ChangeDescryptionEdit.Text := Token.availableToken[Token(CurrentCryptoCurrency).id - 10000].Name
+          + ' (' + Token.availableToken[Token(CurrentCryptoCurrency).id - 10000].shortcut + ')';
+      end
+      else
+      begin
+        ChangeDescryptionEdit.Text := CurrentCryptoCurrency.description;
+      end;
     end;
+
+    
 
     switchTab(pageControl, ChangeDescryptionScreen);
   end;
@@ -1464,6 +1483,10 @@ var
   Control: Tcomponent;
   ts: TMemoryStream;
 begin
+
+  if frmhome.pageControl.ActiveTab = HOME_TABITEM then
+      frmhome.WVTabControl.ActiveTab := frmhome.WVBalance;
+
   frmhome.AutomaticFeeRadio.IsChecked := True;
   frmhome.TopInfoConfirmedValue.Text := ' Calculating...';
   frmhome.TopInfoUnconfirmedValue.Text := ' Calculating...';
@@ -1612,12 +1635,12 @@ begin
     if CurrentCryptoCurrency is Token then
       ShortcutValetInfoImage.MultiResBitmap[0].Bitmap.LoadFromStream
         (Token(CurrentCryptoCurrency).getIconResource);
-    ShortcutValetInfoImage.WrapMode := TImageWrapMode.Original;
+    ShortcutValetInfoImage.WrapMode := TImageWrapMode.Place;
     ShortcutValetInfoImage.Align := TAlignLayout.Center;
     // ShortcutValetInfoImage.Height:= ShortcutValetInfoImage.MultiResBitmap[0].Bitmap.Height;
     // ;
     // ShortcutValetInfoImage.Bitmap :=
-    wvGFX.Bitmap := CurrentCryptoCurrency.getIcon();
+    //wvGFX.Bitmap := CurrentCryptoCurrency.getIcon();
 
     lblCoinShort.Text := CurrentCryptoCurrency.shortcut + '';
     lblReceiveCoinShort.Text := CurrentCryptoCurrency.shortcut + '';
@@ -1718,7 +1741,9 @@ begin
     // changeYbutton.Text := 'Change address (' + intToStr(CurrentCoin.x) +','+inttoStr(CurrentCoin.y) + ')';
     if pageControl.ActiveTab = HOME_TABITEM then
       WVTabControl.ActiveTab := WVBalance;
+	  
     loadSendCacheFromFile();
+	
   end;
 end;
 
@@ -1846,15 +1871,25 @@ begin
       / 12) + 6;
     TopInfoConfirmedFiatLabel.Width := TopInfoUnconfirmedFiatLabel.Width;
 
-    if CurrentCryptoCurrency.description = '' then
+    if currentCryptoCurrency is TwalletInfo then
     begin
-      NameShortcutLabel.Text := CurrentCryptoCurrency.name + ' (' +
-        CurrentCryptoCurrency.shortcut + ')';
+      NameShortcutLabel.Text := CurrentAccount.getDescription( TwalletInfo(CurrentCryptoCurrency).coin , TwalletInfo(CurrentCryptoCurrency).X);
     end
     else
     begin
-      NameShortcutLabel.Text := CurrentCryptoCurrency.description;
+      if CurrentCryptoCurrency.description = '' then
+      begin
+        NameShortcutLabel.Text := CurrentCryptoCurrency.name + ' (' +
+          CurrentCryptoCurrency.shortcut + ')';
+      end
+      else
+      begin
+        NameShortcutLabel.Text := CurrentCryptoCurrency.description;
+      end;
     end;
+
+
+    
 
     if (CurrentCoin.coin = 0) and ((frmhome.TxHistory.ChildrenCount) = 0) then
     begin
@@ -2091,7 +2126,10 @@ var
   fmxObj: TfmxObject;
   i: Integer;
 begin
-  with frmhome do
+
+
+try
+ with frmhome do
   begin
     for i := 0 to OrganizeList.Content.ChildrenCount - 1 do
     begin
@@ -2139,7 +2177,9 @@ begin
     end;
 
     closeOrganizeView(nil);
-  end;
+  end;  Except on E:Exception do begin
+
+end;  end;
 end;
 
 procedure changeLanguage(Sender: TObject);
@@ -2470,6 +2510,8 @@ var
   wdArray: TCryptoCurrencyArray;
   i: Integer;
 begin
+
+try
   if Sender is TButton then
   begin
 
@@ -2495,7 +2537,7 @@ begin
 
     Panel.DisposeOf;
   end;
-
+except on E:Exception do begin end; end;
 end;
 
 procedure importCheck;

@@ -761,7 +761,6 @@ type
     emptyAddressesLayout: TLayout;
     NoPrivateKeyToExportLabel: TLabel;
     Layout58: TLayout;
-    exportemptyaddressesSwitch: TSwitch;
     exportemptyAddressesLabel: TLabel;
     LoadAddressesToImortAniIndicator: TAniIndicator;
     PrivacyAndSecuritySettings: TTabItem;
@@ -770,7 +769,6 @@ type
     SaPBackButton: TButton;
     Panel24: TPanel;
     SendErrorMsgLabel: TLabel;
-    SendErrorMsgSwitch: TSwitch;
     ReportIssues: TTabItem;
     ToolBar19: TToolBar;
     ReportIssueHeaderLabel: TLabel;
@@ -787,10 +785,8 @@ type
     VertScrollBox3: TVertScrollBox;
     Panel25: TPanel;
     UserReportSendLogsLabel: TLabel;
-    UserReportSendLogsSwitch: TSwitch;
     Panel26: TPanel;
     UserReportDeviceInfoLabel: TLabel;
-    UserReportDeviceInfoSwitch: TSwitch;
     Label25: TLabel;
     PrivateKeyInfoPanel: TPanel;
     PrivateKeyAddressInfoLabel: TLabel;
@@ -807,6 +803,12 @@ type
     InstantSendSwitch: TCheckBox;
     DayNightModeSwitch: TCheckBox;
     SearchInDashBrdImage: TImage;
+    SweepQRButton: TButton;
+    Button11: TButton;
+    exportemptyaddressesSwitch: TCheckBox;
+    SendErrorMsgSwitch: TCheckBox;
+    UserReportSendLogsSwitch: TCheckBox;
+    UserReportDeviceInfoSwitch: TCheckBox;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1066,6 +1068,14 @@ type
     procedure FoundTokenOKButtonClick(Sender: TObject);
     procedure KeypoolSanitizerTimer(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure WVsendTOChange(Sender: TObject);
+    procedure wvFeeChange(Sender: TObject);
+    procedure exportemptyaddressesSwitchClick(Sender: TObject);
+    procedure Button11Click(Sender: TObject);
+    procedure SweepQRButtonClick(Sender: TObject);
+    procedure btnChangeDescryptionBackClick(Sender: TObject);
+    procedure SendErrorMsgSwitchClick(Sender: TObject);
+    //procedure UserReportSendLogsSwitchClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -1844,6 +1854,9 @@ procedure TfrmHome.WVRealCurrencyChange(Sender: TObject);
 begin
   WVRealCurrency.Text := StringReplace(WVRealCurrency.Text, ',', '.',
     [rfReplaceAll]);
+
+    if frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
+  saveSendCacheToFile();
 end;
 
 procedure TfrmHome.WVRealCurrencyClick(Sender: TObject);
@@ -2005,6 +2018,12 @@ begin
 
 end;
 
+procedure TfrmHome.WVsendTOChange(Sender: TObject);
+begin
+  if frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
+  saveSendCacheToFile();
+end;
+
 procedure TfrmHome.WVsendTOExit(Sender: TObject);
 begin
   if Pos(' ', WVsendTO.Text) > 0 then
@@ -2052,7 +2071,7 @@ end;
 procedure TfrmHome.BCHCashAddrButtonClick(Sender: TObject);
 begin
   receiveAddress.Text := bitcoinCashAddressToCashAddress
-    (TwalletInfo(CurrentCryptoCurrency).addr);
+    (TwalletInfo(CurrentCryptoCurrency).addr , false);
   receiveAddress.Text := receiveAddress.Text;
 end;
 
@@ -2504,22 +2523,11 @@ procedure TfrmHome.wvAmountChange(Sender: TObject);
 var
   i: Single;
 begin
-  case length(wvAmount.Text) of
-    0 .. 8:
-      i := 24;
-    9 .. 14:
-      i := 20;
-    15 .. 20:
-      i := 16;
-    21 .. 25:
-      i := 10;
-  else
-    i := 0;
+   if frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
+  saveSendCacheToFile();
 
-  end;
-
-  wvAmount.TextSettings.Font.Size := i;
-  wvAmount.Text := StringReplace(wvAmount.Text, ',', '.', [rfReplaceAll]);
+  //wvAmount.TextSettings.Font.Size := i;
+  //wvAmount.Text := StringReplace(wvAmount.Text, ',', '.', [rfReplaceAll]);
 end;
 
 procedure TfrmHome.wvAmountClick(Sender: TObject);
@@ -2537,6 +2545,12 @@ end;
 procedure TfrmHome.wvAmountTyping(Sender: TObject);
 begin
   wvAmountChange(Sender);
+end;
+
+procedure TfrmHome.wvFeeChange(Sender: TObject);
+begin
+  if frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
+  saveSendCacheToFile();
 end;
 
 procedure TfrmHome.CoinToUSD(Sender: TObject);
@@ -2803,6 +2817,7 @@ begin
   t.idInWallet := length(CurrentAccount.myTokens) + 10000;
   CurrentAccount.addToken(t);
   CurrentAccount.SaveFiles();
+  CreatePanel(T);
   btnSyncClick(nil);
   switchTab(PageControl, walletView);
 
@@ -2982,6 +2997,11 @@ begin
   switchTab(PageControl, Settings);
 end;
 
+procedure TfrmHome.Button11Click(Sender: TObject);
+begin
+  QRRelated.scanQR(Sender);
+end;
+
 procedure TfrmHome.ReportIssuesBackButtonClick(Sender: TObject);
 begin
   switchTab(PageControl, Settings);
@@ -3006,6 +3026,11 @@ procedure TfrmHome.EQRShareBtnClick(Sender: TObject);
 begin
   shareFile(System.IOUtils.TPath.Combine(HOME_PATH, CurrentAccount.name +
     '_EQR_BIG' + '.png'), false);
+end;
+
+procedure TfrmHome.exportemptyaddressesSwitchClick(Sender: TObject);
+begin
+  exportemptyaddressesSwitchSwitch(Sender);
 end;
 
 procedure TfrmHome.exportemptyaddressesSwitchSwitch(Sender: TObject);
@@ -3039,23 +3064,22 @@ var
   actionListener: TActionList;
 begin
 
-  Image7.Bitmap.LoadFromStream(ResourceMenager.getAssets('HSB_WHITE'));
-  // showmessage( getDetailedData() );
-  raise Exception.Create('Error Message');
-  { actionListener := TActionList.Create(nil);
-    actionListener.Ac
-    frmhome.ActionList := actionListener; }
+  {CurrentAccount.changeDescription( 0 , 0 , 'dupa');
+  CurrentAccount.changeDescription( 1 , 0 , 'dupa2');
+  CurrentAccount.changeDescription( 0 , 2 , 'dupa3');
+  CurrentAccount.changeDescription( 1 , 1 , 'kutas');
+  CurrentAccount.changeDescription( 1 , 1 , 'kutas2');
+  CurrentAccount.SaveDescriptionFile; }
 
-  // frmhome.ActionList. := onExecuteTest;
-  { begin
-    showmessage('here');
-    end
-    else
-    begin
+  CurrentAccount.LoadDescriptionFile();
+  showmessage( CurrentAccount.getDescription( 0 , 0) + #13#10 +
+   CurrentAccount.getDescription( 1 , 0) + #13#10 +
+   CurrentAccount.getDescription( 0 , 2) + #13#10 +
+   CurrentAccount.getDescription( 1 , 1) + #13#10 +
+   CurrentAccount.getDescription( 3 , 0) + #13#10 +
+   CurrentAccount.getDescription( 2 , 2)
+  );
 
-    showmessage('overload');
-    end; }
-  // fmx.ActnList.TAction
 end;
 
 procedure TfrmHome.Button5Click(Sender: TObject);
@@ -3172,6 +3196,11 @@ procedure TfrmHome.btnCreateWalletClick(Sender: TObject);
 begin
   WalletViewRelated.CreateWallet(Sender, TfmxObject(Sender).TagString);
   // tagString - generate list oprions | '' - user choose coins | 'claim' - only BSV
+end;
+
+procedure TfrmHome.btnChangeDescryptionBackClick(Sender: TObject);
+begin
+  switchTab(PageControl , walletView );
 end;
 
 procedure TfrmHome.btnChangeDescryptionOKClick(Sender: TObject);
@@ -4164,6 +4193,11 @@ begin
 
 end;
 
+procedure TfrmHome.SendErrorMsgSwitchClick(Sender: TObject);
+begin
+  SendErrorMsgSwitchSwitch(Sender);
+end;
+
 procedure TfrmHome.SendErrorMsgSwitchSwitch(Sender: TObject);
 begin
   WalletViewRelated.SendErrorMsgSwitchSwitch(Sender);
@@ -4207,6 +4241,11 @@ end;
 procedure TfrmHome.SweepButtonClick(Sender: TObject);
 begin
   WalletViewRelated.SweepButtonClick(Sender);
+end;
+
+procedure TfrmHome.SweepQRButtonClick(Sender: TObject);
+begin
+  QRRelated.scanQR(Sender);
 end;
 
 procedure TfrmHome.IsPrivKeySwitchSwitch(Sender: TObject);

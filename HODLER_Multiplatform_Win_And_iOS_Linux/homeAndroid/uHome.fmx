@@ -10880,7 +10880,7 @@ object frmHome: TfrmHome
             TabOrder = 1
             object btnSWipe: TButton
               Align = Top
-              Position.Y = 192.000000000000000000
+              Position.Y = 144.000000000000000000
               Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
@@ -10890,7 +10890,7 @@ object frmHome: TfrmHome
             end
             object DebugBtn: TButton
               Align = Top
-              Position.Y = 240.000000000000000000
+              Position.Y = 192.000000000000000000
               Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
@@ -10900,7 +10900,7 @@ object frmHome: TfrmHome
             end
             object Panel2: TPanel
               Align = MostTop
-              Position.Y = 144.000000000000000000
+              Position.Y = 96.000000000000000000
               Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
@@ -10938,7 +10938,7 @@ object frmHome: TfrmHome
             end
             object Panel3: TPanel
               Align = MostTop
-              Position.Y = 96.000000000000000000
+              Position.Y = 48.000000000000000000
               Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
@@ -10970,6 +10970,7 @@ object frmHome: TfrmHome
               Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
+              Visible = False
               TabOrder = 4
               object DayNightModeStaticLabel: TLabel
                 Align = Client
@@ -11013,7 +11014,7 @@ object frmHome: TfrmHome
             end
             object PrivacyAndSecurityButton: TButton
               Align = Top
-              Position.Y = 288.000000000000000000
+              Position.Y = 240.000000000000000000
               Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
@@ -11023,7 +11024,7 @@ object frmHome: TfrmHome
             end
             object reportIssuesSettingsButton: TButton
               Align = Top
-              Position.Y = 336.000000000000000000
+              Position.Y = 288.000000000000000000
               Size.Width = 352.000000000000000000
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
@@ -16582,25 +16583,26 @@ object frmHome: TfrmHome
               Size.Height = 36.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 1
-              object exportemptyaddressesSwitch: TSwitch
-                Align = Left
-                IsChecked = False
-                Margins.Left = 15.000000000000000000
-                Position.X = 15.000000000000000000
-                Size.Width = 89.000000000000000000
-                Size.Height = 36.000000000000000000
-                Size.PlatformDefault = False
-                TabOrder = 0
-                OnClick = exportemptyaddressesSwitchClick
-              end
               object exportemptyAddressesLabel: TLabel
                 Align = Client
                 Margins.Left = 15.000000000000000000
-                Size.Width = 219.000000000000000000
+                Size.Width = 323.000000000000000000
                 Size.Height = 36.000000000000000000
                 Size.PlatformDefault = False
                 Text = 'Yes, let me export empty addresses'
+                Visible = False
+                TabOrder = 0
+              end
+              object exportemptyaddressesSwitch: TCheckBox
+                Align = Client
+                Margins.Left = 40.000000000000000000
+                Margins.Right = 40.000000000000000000
+                Size.Width = 258.000000000000000000
+                Size.Height = 36.000000000000000000
+                Size.PlatformDefault = False
                 TabOrder = 1
+                Text = 'Yes, let me export empty addresses'
+                OnClick = exportemptyaddressesSwitchClick
               end
             end
           end
@@ -17015,26 +17017,22 @@ object frmHome: TfrmHome
             Align = Client
             Margins.Left = 15.000000000000000000
             Margins.Right = 15.000000000000000000
-            Size.Width = 234.000000000000000000
+            Size.Width = 338.000000000000000000
             Size.Height = 57.000000000000000000
             Size.PlatformDefault = False
             Text = 'Allow application to send anonymous error data'
+            Visible = False
             TabOrder = 0
           end
-          object SendErrorMsgSwitch: TSwitch
-            Align = Right
-            IsChecked = True
-            Margins.Left = 16.000000000000000000
-            Margins.Top = 16.000000000000000000
-            Margins.Right = 16.000000000000000000
-            Margins.Bottom = 16.000000000000000000
-            Position.X = 280.000000000000000000
-            Position.Y = 16.000000000000000000
-            Size.Width = 72.000000000000000000
-            Size.Height = 25.000000000000000000
+          object SendErrorMsgSwitch: TCheckBox
+            Align = Client
+            Margins.Left = 15.000000000000000000
+            Margins.Right = 15.000000000000000000
+            Size.Width = 338.000000000000000000
+            Size.Height = 57.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
-            OnSwitch = SendErrorMsgSwitchSwitch
+            Text = 'Allow application to send anonymous error data'
           end
         end
         object Label25: TLabel
@@ -17067,6 +17065,7 @@ object frmHome: TfrmHome
         ExplicitSize.cx = 8.000000000000000000
         ExplicitSize.cy = 8.000000000000000000
         object ToolBar20: TToolBar
+          Align = MostTop
           Size.Width = 368.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
@@ -17103,7 +17102,7 @@ object frmHome: TfrmHome
           Viewport.Height = 226.000000000000000000
         end
         object SendReportIssuesButton: TButton
-          Align = Bottom
+          Align = MostBottom
           Position.Y = 503.000000000000000000
           Size.Width = 368.000000000000000000
           Size.Height = 48.000000000000000000
@@ -17123,7 +17122,7 @@ object frmHome: TfrmHome
           TabOrder = 3
         end
         object Label24: TLabel
-          Align = Bottom
+          Align = MostBottom
           Position.Y = 440.000000000000000000
           Size.Width = 368.000000000000000000
           Size.Height = 63.000000000000000000
@@ -17143,26 +17142,22 @@ object frmHome: TfrmHome
             Align = Client
             Margins.Left = 15.000000000000000000
             Margins.Right = 15.000000000000000000
-            Size.Width = 234.000000000000000000
+            Size.Width = 338.000000000000000000
             Size.Height = 57.000000000000000000
             Size.PlatformDefault = False
             Text = 'Send anonymous program logs'
+            Visible = False
             TabOrder = 0
           end
-          object UserReportSendLogsSwitch: TSwitch
-            Align = Right
-            IsChecked = True
-            Margins.Left = 16.000000000000000000
-            Margins.Top = 16.000000000000000000
-            Margins.Right = 16.000000000000000000
-            Margins.Bottom = 16.000000000000000000
-            Position.X = 280.000000000000000000
-            Position.Y = 16.000000000000000000
-            Size.Width = 72.000000000000000000
-            Size.Height = 25.000000000000000000
+          object UserReportSendLogsSwitch: TCheckBox
+            Align = Client
+            Margins.Left = 15.000000000000000000
+            Margins.Right = 15.000000000000000000
+            Size.Width = 338.000000000000000000
+            Size.Height = 57.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
-            OnSwitch = SendErrorMsgSwitchSwitch
+            Text = 'Send anonymous program logs'
           end
         end
         object Panel26: TPanel
@@ -17176,26 +17171,22 @@ object frmHome: TfrmHome
             Align = Client
             Margins.Left = 15.000000000000000000
             Margins.Right = 15.000000000000000000
-            Size.Width = 234.000000000000000000
+            Size.Width = 338.000000000000000000
             Size.Height = 57.000000000000000000
             Size.PlatformDefault = False
             Text = 'Send informations about your device'
+            Visible = False
             TabOrder = 0
           end
-          object UserReportDeviceInfoSwitch: TSwitch
-            Align = Right
-            IsChecked = True
-            Margins.Left = 16.000000000000000000
-            Margins.Top = 16.000000000000000000
-            Margins.Right = 16.000000000000000000
-            Margins.Bottom = 16.000000000000000000
-            Position.X = 280.000000000000000000
-            Position.Y = 16.000000000000000000
-            Size.Width = 72.000000000000000000
-            Size.Height = 25.000000000000000000
+          object UserReportDeviceInfoSwitch: TCheckBox
+            Align = Client
+            Margins.Left = 15.000000000000000000
+            Margins.Right = 15.000000000000000000
+            Size.Width = 338.000000000000000000
+            Size.Height = 57.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
-            OnSwitch = SendErrorMsgSwitchSwitch
+            Text = 'Send informations about your device'
           end
         end
       end

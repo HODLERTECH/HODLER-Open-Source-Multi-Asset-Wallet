@@ -875,6 +875,22 @@
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>RT_DARK</ResourceId>
         </RcItem>
+        <RcItem Include="token_icons\more_black.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>MORE_DARK</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\more_white.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>MORE_WHITE</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\search_dark.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>SEARCH_DARK</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\search_white.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>SEARCH_WHITE</ResourceId>
+        </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -1275,7 +1291,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="token_icons\1715.png" Configuration="Release" Class="ProjectFile">
+                <DeployFile LocalName="token_icons\Encrypted_512_White.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -1292,7 +1308,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="token_icons\Encrypted_512_White.png" Configuration="Debug" Class="ProjectFile">
+                <DeployFile LocalName="token_icons\1715.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>

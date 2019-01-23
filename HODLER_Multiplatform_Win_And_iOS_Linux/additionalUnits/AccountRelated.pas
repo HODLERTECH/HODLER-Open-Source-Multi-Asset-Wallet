@@ -355,6 +355,7 @@ begin
     on E: Exception do
     begin
 
+
       // showmessage(E.Message);
       frmHome.AccountsListPanel.Enabled := true;
       raise E;
@@ -445,7 +446,8 @@ var
   btn: TImageTextButton;
 begin
 
-  Application.OnException := frmHome.ExceptionHandler;
+
+  Application.OnException := frmhome.ExceptionHandler;
   ResourceMenager := AssetsMenager.Create();
 
   // frmHome.Quality := TCanvasQuality.HighPerformance;
@@ -538,20 +540,20 @@ begin
         begin
           JSON := TJsonObject(TJsonObject.ParseJSONValue(WData));
           Lang := JSON.GetValue<string>('languageIndex');
-          style := JSON.GetValue<string>('styleName');
+          style :='RT_DARK';// JSON.GetValue<string>('styleName');
           JSON.free;
         end
         else
         begin
           Lang := '0';
-          style := 'RT_WHITE';
+          style := 'RT_DARK';
         end;
 
       end
       else
       begin
         Lang := '0';
-        style := 'RT_WHITE';
+        style := 'RT_DARK';
       end;
 
       cpTimeout := 0;
@@ -572,7 +574,8 @@ begin
 
       FFrameTake := 0;
       stylo := TStyleManager.Create;
-      LoadStyle(style);
+      //LoadStyle(style);
+      LoadStyle('RT_DARK');
       if style = 'RT_DARK' then
         DayNightModeSwitch.IsChecked := true
       else
@@ -723,6 +726,7 @@ begin
   begin
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     AccountsListPanel.Visible := not AccountsListPanel.Visible;
+    AccountsListPanel.BringToFront;
 {$ENDIF}
     for i := AccountsListVertScrollBox.Content.ChildrenCount - 1 downto 0 do
     begin
@@ -1056,7 +1060,7 @@ begin
               addrLbl.Height := 24;
               addrLbl.Margins.Left := 15;
               if TwalletInfo(cc).coin in [3, 7] then
-                addrLbl.Text := bitcoinCashAddressToCashAddress(cc.addr)
+                addrLbl.Text := bitcoinCashAddressToCashAddress(cc.addr , TwalletInfo(cc).coin = 3 )
               else
                 addrLbl.Text := cc.addr;
               addrLbl.TagString := 'copyable';

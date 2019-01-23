@@ -29,11 +29,13 @@ const
 type
   AssetsMenager = class
   private
-    map: TObjectDictionary<AnsiString, TResourceStream>;
+    map: TObjectDictionary<AnsiString, TStream>;
     procedure addToMap(name: AnsiString);
 
   public
-    function getAssets(resourceName: AnsiString): TResourceStream;
+    function getAssets(resourceName: AnsiString): TStream;
+    procedure addOrSetResource( resName : AnsiString ; stream : TStream);
+
 
     constructor create();
     destructor free();
@@ -42,9 +44,36 @@ type
 
 implementation
 
+procedure AssetsMenager.addOrSetResource( resName : AnsiString ; stream : TStream);
+var
+  temp : Tpair<AnsiString , TStream>;
+begin
+
+  if not map.ContainsKey(resName) then
+  begin
+
+    try
+      map.Add(resname, Stream);
+    except on E: Exception do
+    end;
+
+  end
+  else
+  begin
+
+    temp := map.ExtractPair( resname );
+
+    temp.Value.Free();
+
+    map.Add(resname, Stream);
+
+  end;
+
+end;
+
 procedure AssetsMenager.addToMap(name: AnsiString);
 var
-  Stream: TResourceStream;
+  Stream: TStream;
 begin
 
   try
@@ -60,7 +89,7 @@ begin
 
 end;
 
-function AssetsMenager.getAssets(resourceName: AnsiString): TResourceStream;
+function AssetsMenager.getAssets(resourceName: AnsiString): TStream;
 begin
 
   if not map.TryGetValue(resourceName, result) then
@@ -86,7 +115,7 @@ end;
 
 constructor AssetsMenager.create();
 begin
-  map := TObjectDictionary<AnsiString, TResourceStream>.create();
+  map := TObjectDictionary<AnsiString, TStream>.create();
   addToMap('IMG_NOT_FOUND');
 end;
 

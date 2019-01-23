@@ -277,6 +277,7 @@ begin
     if frmHome.InstantSendSwitch.isChecked then
       coin := coin + '&mode=instant';
 
+
     result := getDataOverHTTP(HODLER_URL + 'sendTX.php?coin=' + coin + '&tx=' +
       TX + '&os=' + SYSTEM_NAME + '&appver=' + StringReplace(CURRENT_VERSION,
       '.', 'x', [rfReplaceAll]), false, true);

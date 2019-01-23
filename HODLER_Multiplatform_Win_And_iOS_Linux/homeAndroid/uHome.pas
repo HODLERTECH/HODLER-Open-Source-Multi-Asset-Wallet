@@ -740,7 +740,6 @@ type
     emptyAddressesLayout: TLayout;
     NoPrivateKeyToExportLabel: TLabel;
     Layout58: TLayout;
-    exportemptyaddressesSwitch: TSwitch;
     exportemptyAddressesLabel: TLabel;
     LoadAddressesToImortAniIndicator: TAniIndicator;
     GlobalSettingsLayout: TLayout;
@@ -761,7 +760,6 @@ type
     SendErrorMsgLabel: TLabel;
     PrivacyAndSecurityButton: TButton;
     reportIssuesSettingsButton: TButton;
-    SendErrorMsgSwitch: TSwitch;
     Label25: TLabel;
     ReportIssues: TTabItem;
     ToolBar20: TToolBar;
@@ -773,10 +771,8 @@ type
     Label24: TLabel;
     Panel25: TPanel;
     UserReportSendLogsLabel: TLabel;
-    UserReportSendLogsSwitch: TSwitch;
     Panel26: TPanel;
     UserReportDeviceInfoLabel: TLabel;
-    UserReportDeviceInfoSwitch: TSwitch;
     PrivateKeyInfoPanel: TPanel;
     PrivateKeyAddressInfoLabel: TLabel;
     PrivateKeyBalanceInfoLabel: TLabel;
@@ -805,6 +801,10 @@ type
     DayNightModeSwitch: TCheckBox;
     MoreImage: TImage;
     SearchInDashBrdImage: TImage;
+    exportemptyaddressesSwitch: TCheckBox;
+    SendErrorMsgSwitch: TCheckBox;
+    UserReportSendLogsSwitch: TCheckBox;
+    UserReportDeviceInfoSwitch: TCheckBox;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1775,7 +1775,7 @@ procedure TfrmHome.WVRealCurrencyChange(Sender: TObject);
 begin
   WVRealCurrency.Text := StringReplace(WVRealCurrency.Text, ',', '.',
     [rfReplaceAll]);
-  if WVRealCurrency.IsFocused then
+  if  frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
   saveSendCacheToFile();
 end;
 
@@ -1905,7 +1905,7 @@ end;
 procedure TfrmHome.WVsendTOChange(Sender: TObject);
 begin
   WVsendTOExit(self);
-  if wvSendTo.IsFocused then
+  if frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
   saveSendCacheToFile();
 end;
 
@@ -2245,7 +2245,7 @@ procedure TfrmHome.wvAmountChange(Sender: TObject);
 var
   i: Single;
 begin
-  if wvAmount.IsFocused then
+  if frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
   saveSendCacheToFile();
 end;
 
@@ -2268,7 +2268,7 @@ end;
 
 procedure TfrmHome.wvFeeChange(Sender: TObject);
 begin
-  if wvFee.IsFocused then
+  if  frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
 
   saveSendCacheToFile();
 end;
@@ -2509,6 +2509,7 @@ begin
   t.idInWallet := length(CurrentAccount.myTokens) + 10000;
   CurrentAccount.addToken(t);
   CurrentAccount.SaveFiles();
+  CreatePanel(T);
   btnSyncClick(nil);
   switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
 
