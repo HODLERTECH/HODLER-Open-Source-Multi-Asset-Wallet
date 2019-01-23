@@ -26,7 +26,6 @@ type
 
   end;
 
-
 Function CreateButtonWithCopyImg(AOwner: TComponent): TButton;
 
 procedure Register;
@@ -58,7 +57,7 @@ begin
   button.Width := 32;
   button.OnClick := frmhome.CopyParentTextToClipboard;
 
-  image := Timage.Create(Aowner);
+  image := Timage.Create(AOwner);
   Stream := TResourceStream.Create(HInstance,
     'COPY_IMG_' + RightStr(CurrentStyle, length(CurrentStyle) - 3), RT_RCDATA);
   try
@@ -73,7 +72,7 @@ begin
   image.Margins.Top := 5;
   image.Margins.Bottom := 5;
   image.Margins.Left := 5;
-  image.Margins.Right := 5;
+  image.Margins.right := 5;
   image.Visible := true;
   image.TagString := 'copy_image';
   image.OnClick := frmhome.CopyParentTextToClipboard;
@@ -95,8 +94,8 @@ begin
   then
   begin
 
-    svc.setClipboard(TEdit(TfmxObject(Sender).Parent).Text);
-    popupWindow.Create(TEdit(TfmxObject(Sender).Parent).Text + ' ' +
+    svc.setClipboard(Tedit(TfmxObject(Sender).Parent).Text);
+    popupWindow.Create(Tedit(TfmxObject(Sender).Parent).Text + ' ' +
       dictionary('CopiedToClipboard'));
 
   end;

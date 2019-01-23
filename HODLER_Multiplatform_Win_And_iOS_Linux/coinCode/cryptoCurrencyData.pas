@@ -25,21 +25,23 @@ type
 
   end;
 
+function compareHistory(a, b: transactionHistory): integer;
+
 type
   TxHistory = array of transactionHistory;
 
 type
   cryptoCurrency = class
 
-    creationTime: Integer;
+    creationTime: integer;
     history: TxHistory;
     confirmed: BigInteger;
     unconfirmed: BigInteger;
-    decimals: Integer;
+    decimals: integer;
     addr: AnsiString;
     rate: Double;
     description: AnsiString;
-    orderInWallet: Integer;
+    orderInWallet: integer;
     deleted: boolean;
     EncryptedPrivKey: AnsiString;
     name, ShortCut: AnsiString;
@@ -50,8 +52,8 @@ type
     function getIcon(): TBitmap; virtual;
 
     function getFiat: Double;
-    function getUnconfirmedFiat() : Double;
-    function getConfirmedFiat() : Double;
+    function getUnconfirmedFiat(): Double;
+    function getConfirmedFiat(): Double;
   end;
 
 type
@@ -60,6 +62,17 @@ type
 implementation
 
 uses misc, uHome;
+
+function compareHistory(a, b: transactionHistory): integer;
+begin
+
+  if strToFloatDef(a.data, 0) > strToFloatDef(b.data, 0) then
+    exit(1);
+  if strToFloatDef(a.data, 0) < strToFloatDef(b.data, 0) then
+    exit(-1);
+
+  result := CompareStr(a.TransactionID, b.TransactionID);
+end;
 
 function cryptoCurrency.getIcon(): TBitmap;
 begin
@@ -73,11 +86,12 @@ end;
 
 constructor cryptoCurrency.Create();
 begin
+  rate := -1;
   deleted := false;
   orderInWallet := maxint;
 end;
 
-function cryptoCurrency.getUnconfirmedFiat() : Double;
+function cryptoCurrency.getUnconfirmedFiat(): Double;
 var
   d: Double;
 begin
@@ -87,13 +101,13 @@ begin
     Math.power(10, decimals);
 end;
 
-function cryptoCurrency.getConfirmedFiat() : Double;
+function cryptoCurrency.getConfirmedFiat(): Double;
 var
   d: Double;
 begin
   d := confirmed.asDouble;
-  {if d < 0 then
-    d := 0.0;}
+  { if d < 0 then
+    d := 0.0; }
   result := frmHome.currencyConverter.calculate(d) * rate /
     Math.power(10, decimals);
 end;
@@ -102,7 +116,7 @@ function cryptoCurrency.getFiat: Double;
 var
   d: Double;
 begin
-  d := confirmed.asDouble + Max(unconfirmed.asDouble,0);
+  d := confirmed.asDouble + unconfirmed.asDouble;
   if d < 0 then
     d := 0.0;
   result := frmHome.currencyConverter.calculate(d) * rate /
@@ -115,7 +129,7 @@ var
   HistJson: TJsonObject;
   addrArray: TjsonArray;
   addrValJson: TJsonObject;
-  i: Integer;
+  i: integer;
 begin
   HistJson := TJsonObject.Create();
 
@@ -146,7 +160,7 @@ end;
 
 procedure transactionHistory.fromJsonValue(JsonValue: TJsonValue);
 var
-  i: Integer;
+  i: integer;
   conf, lastB, temp, countVal: AnsiString;
   addrlist: TjsonArray;
   JsonIt: TJsonValue;
@@ -197,7 +211,7 @@ end;
 function transactionHistory.toString(): AnsiString;
 var
   list: TstringList;
-  i: Integer;
+  i: integer;
 begin
   list := TstringList.Create();
 
@@ -222,8 +236,8 @@ end;
 
 procedure transactionHistory.FromString(str: AnsiString);
 var
-  size: Integer;
-  i: Integer;
+  size: integer;
+  i: integer;
   temp: BigInteger;
   list: TstringList;
 begin

@@ -44,11 +44,14 @@ type
 
 type
   TWalletInfo = class(cryptoCurrency)
+
+  public
+
     pub: AnsiString;
     coin: integer;
     x: integer;
     Y: integer;
-    uniq: System.UInt64;
+    uniq: System.uint64;
     // addr: AnsiString;
     wid: integer;
     // confirmed: BigInteger;     //// AnsiString;
@@ -58,13 +61,15 @@ type
     UTXO: TUTXOS;
     nonce: System.UInt32;
     isCompressed: Boolean;
-    // description: AnsiString;
-    // rate : Double;    // coin cost in USD
+    inPool: Boolean;
+
 
     constructor Create(id: integer; _x: integer; _y: integer; _addr: AnsiString;
       _description: AnsiString; crTime: integer = -1);
 
     function getIcon(): TBitmap; override;
+
+
 
   end;
 
@@ -86,7 +91,7 @@ begin
   name := availablecoin[id].displayName;
   isCompressed := true;
   deleted := false;
-
+  inPool := false;
   if crTime = -1 then
     crTime := DateTimeToUnix(now);
 

@@ -3,21 +3,21 @@ unit TRotateImageData;
 interface
 
 uses
-   System.SysUtils, System.Classes, FMX.Types, FMX.Controls, FMX.Layouts,
+  System.SysUtils, System.Classes, FMX.Types, FMX.Controls, FMX.Layouts,
   FMX.Edit, FMX.StdCtrls, FMX.Clipboard, FMX.Platform, FMX.Objects,
-  System.Types, StrUtils , FMX.Dialogs;
+  System.Types, StrUtils, FMX.Dialogs;
 
 type
   TRotateImage = class(TImage)
   private
 
-    timer : TThread;
-    isOn : boolean;
+    timer: TThread;
+    isOn: boolean;
   protected
 
   public
 
-    constructor Create(AOwner : TComponent);Override;
+    constructor Create(AOwner: TComponent); Override;
     procedure Start();
     procedure Stop();
 
@@ -39,32 +39,34 @@ end;
 procedure TRotateImage.Start();
 begin
   if isOn then
-      exit;
+    exit;
   isOn := true;
-  timer := TThread.CreateAnonymousThread(procedure
-  begin
-
-
-    while isOn do
+  timer := TThread.CreateAnonymousThread(
+    procedure
     begin
 
-      tthread.Synchronize(nil , procedure
+      while isOn do
       begin
-        AnimateFloat('RotationAngle', RotationAngle + 180 , 1);
 
-      end);
+        TThread.Synchronize(nil,
+          procedure
+          begin
+            AnimateFloat('RotationAngle', RotationAngle + 180, 1);
 
-      sleep(1000);
+          end);
 
-    end;
+        sleep(1000);
 
-  end);
+      end;
+
+    end);
 
   timer.FreeOnTerminate := true;
 
   timer.Start;
 
 end;
+
 procedure TRotateImage.Stop();
 begin
 
@@ -72,16 +74,14 @@ begin
 
 end;
 
-constructor TRotateImage.Create(AOwner : TComponent);
+constructor TRotateImage.Create(AOwner: TComponent);
 var
   Stream: TResourceStream;
 begin
 
   inherited Create(AOwner);
-
-  //Bitmap.LoadFromStream();
-  Stream := TResourceStream.Create(HInstance,
-    'RELOAD_IMAGE', RT_RCDATA);
+  // Bitmap.LoadFromStream();
+  Stream := TResourceStream.Create(HInstance, 'RELOAD_IMAGE', RT_RCDATA);
   try
     Bitmap.LoadFromStream(Stream);
   finally

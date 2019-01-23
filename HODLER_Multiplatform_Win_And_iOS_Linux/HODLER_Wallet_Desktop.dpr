@@ -7,6 +7,7 @@ uses
   System.StartUpCopy,
   FMX.Forms,
   FMX.Styles,
+  FontService,
   uHome in 'homeWindows\uHome.pas' {frmHome},
   misc in 'additionalUnits\misc.pas',
   base58 in 'additionalUnits\base58.pas',
@@ -130,9 +131,11 @@ uses
   Velthuis.RandomNumbers in 'additionalUnits\bi\Velthuis.RandomNumbers.pas',
   Velthuis.Sizes in 'additionalUnits\bi\Velthuis.Sizes.pas',
   Velthuis.StrConsts in 'additionalUnits\bi\Velthuis.StrConsts.pas',
-  Velthuis.XorShifts in 'additionalUnits\bi\Velthuis.XorShifts.pas';
-
-
+  Velthuis.XorShifts in 'additionalUnits\bi\Velthuis.XorShifts.pas',
+  debugAnalysis in 'additionalUnits\debugAnalysis.pas',
+  KeypoolRelated in 'additionalUnits\KeypoolRelated.pas',
+  AssetsMenagerData in 'additionalUnits\AssetsMenagerData.pas',
+  Nano in 'coinCode\Nano.pas';
 
 {$R *.res}
 
@@ -140,7 +143,7 @@ var
   H: THandle;
 
 begin
-
+  Application.OnException := frmhome.ExceptionHandler;
   VKAutoShowMode := TVKAutoShowMode.Never;
 
   FMX.Types.GlobalUseDX := true;
@@ -154,9 +157,8 @@ begin
   begin
     try
       Application.Initialize;
-
       Application.FormFactor.Orientations := [TFormOrientation.Portrait];
-      Application.CreateForm(TfrmHome, frmHome);
+      Application.CreateForm(TfrmHome, frmhome);
       Application.Run;
     finally
       ReleaseMutex(H);
@@ -168,7 +170,7 @@ begin
   Application.Initialize;
 
   Application.FormFactor.Orientations := [TFormOrientation.Portrait];
-  Application.CreateForm(TfrmHome, frmHome);
+  Application.CreateForm(TfrmHome, frmhome);
   Application.Run;
 {$ENDIF}
 

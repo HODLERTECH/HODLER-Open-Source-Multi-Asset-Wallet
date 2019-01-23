@@ -56,6 +56,7 @@ var
   IconIMG: TImage;
   ImgLayout: TLayout;
   Dir, Files: TStringDynArray;
+  stream: TResourceStream;
 begin
   clearVertScrollBox(frmHome.FilesManagerScrollBox);
 
@@ -132,16 +133,26 @@ begin
 {$ENDIF}
       lbl := TLabel.Create(Panel);
       lbl.Align := TAlignLayout.Client;
-      lbl.TextSettings.HorzAlign := TTextAlign.taTrailing;
+      lbl.TextSettings.HorzAlign := TTextAlign.Leading;
       lbl.Visible := true;
       lbl.Parent := Panel;
       lbl.Text := extractfilename(path);
 
       IconIMG := TImage.Create(Panel);
       IconIMG.Parent := Panel;
-      IconIMG.Bitmap := frmHome.HSBIcon.Bitmap;
+      stream := TResourceStream.Create(HInstance,
+        'HSB_' + RightStr(currentStyle, length(currentStyle) - 3), RT_RCDATA);
+      try
+        IconIMG.Bitmap.LoadFromStream(stream);
+      finally
+        stream.Free;
+      end;
+      IconIMG.TagString := 'encrypted_qr_image';
+      IconIMG.Align := TAlignLayout.Left;
+      IconIMG.Width := 66;
+
       IconIMG.Height := 32.0;
-      IconIMG.Width := 50;
+      // IconIMG.Width := 50;
       IconIMG.Position.X := 4;
       IconIMG.Position.Y := 8;
 

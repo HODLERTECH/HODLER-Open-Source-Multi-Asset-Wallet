@@ -3,6 +3,7 @@ program HODLER_Wallet_Mobile;
 {$R *.dres}
 
 uses
+  FontService,
   System.StartUpCopy,
   FMX.Forms,
   FMX.Styles,
@@ -129,7 +130,10 @@ uses
   Velthuis.StrConsts in 'additionalUnits\bi\Velthuis.StrConsts.pas',
   Velthuis.XorShifts in 'additionalUnits\bi\Velthuis.XorShifts.pas',
   TImageTextButtonData in 'components\TImageTextButtonData.pas',
-  TRotateImageData in 'components\TRotateImageData.pas';
+  TRotateImageData in 'components\TRotateImageData.pas',
+  debugAnalysis in 'additionalUnits\debugAnalysis.pas',
+  KeypoolRelated in 'additionalUnits\KeypoolRelated.pas',
+  AssetsMenagerData in 'additionalUnits\AssetsMenagerData.pas';
 
 {$R *.res}
 
@@ -160,8 +164,8 @@ begin
       Application.Initialize;
 
       Application.FormFactor.Orientations := [TFormOrientation.Portrait];
-      Application.CreateForm(TfrmHome, frmHome);
-  Application.Run;
+      AApplication.CreateForm(TfrmHome, frmHome);
+  pplication.Run;
     finally
       ReleaseMutex(H);
     end;

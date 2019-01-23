@@ -94,16 +94,16 @@ begin
     output[n] := Codes58[c];
 
   end;
-  {for n := 1 to Length(output) - 1 do
-  begin
+  { for n := 1 to Length(output) - 1 do
+    begin
     if output[n] = '1' then
     begin
-      Delete(output, n, 1);
-      continue;
+    Delete(output, n, 1);
+    continue;
     end;
     break;
 
-  end; }
+    end; }
   result := output;
 end;
 {$ELSE}
@@ -121,13 +121,13 @@ var
 
   size: Integer;
 begin
-  size := ceil((Length(V)) * 10000 / 14645) ;
-  //size := ceil((Length(V)) * 138 / 100);
+  size := ceil((Length(V)) * 10000 / 14645);
+  // size := ceil((Length(V)) * 138 / 100);
   SetLength(S, (Length(V) div 2));
   for i := 1 to (Length(V) div 2) do
   begin
-    sb := system.UInt8(StrToInt('$' + Copy(V, ((i -1) * 2) + 1, 2)));
-    S[i-1] := sb;
+    sb := system.UInt8(StrToInt('$' + Copy(V, ((i - 1) * 2) + 1, 2)));
+    S[i - 1] := sb;
   end;
   n := size;
   SetLength(output, size);
@@ -136,23 +136,23 @@ begin
     c := 0;
     for i := 1 to round(Length(V) / 2) do
     begin
-      c := c * 256 + ord(S[i-1]);
-      S[i-1] := system.UInt8(c div 58);
+      c := c * 256 + ord(S[i - 1]);
+      S[i - 1] := system.UInt8(c div 58);
       c := c mod 58;
     end;
     output[n] := Codes58[c + 1];
     dec(n);
   end;
-  {for n := 2 to Length(output) do
-  begin
+  { for n := 2 to Length(output) do
+    begin
     if output[n] = '1' then
     begin
-      Delete(output, n, 1);
-      continue;
+    Delete(output, n, 1);
+    continue;
     end;
     break;
 
-  end;    }
+    end; }
   result := output;
 end;
 {$ENDIF}

@@ -252,8 +252,6 @@ type
     WVRealCurrency: TEdit;
     AutomaticFeeRadio: TRadioButton;
     FixedFeeRadio: TRadioButton;
-    SendAllFundsSwitch: TSwitch;
-    FeeFromAmountSwitch: TSwitch;
     lblSendAllFunds: TLabel;
     lblFromFee: TLabel;
     SendVertScrollBox: TVertScrollBox;
@@ -395,17 +393,12 @@ type
     CreateBackupButton: TButton;
     RestoreFromFileButton: TButton;
     fileManager: TTabItem;
-    SelectFilePath: TButton;
     FilesManagerScrollBox: TVertScrollBox;
-    FileManagerPathLabel: TLabel;
-    Layout22: TLayout;
-    FileManagerPathUpButton: TButton;
     RestoreFromFileTabitem: TTabItem;
     RestoreFromFileConfirmButton: TButton;
     RFFHeader: TToolBar;
     RFFHeaderLabel: TLabel;
     btnRFFBack: TButton;
-    RFFSelectFileButton: TButton;
     RFFPassword: TEdit;
     RFFPasswordInfo: TLabel;
     Layout24: TLayout;
@@ -577,7 +570,6 @@ type
     SameYWalletList: TTabItem;
     YaddressesVertScrollBox: TVertScrollBox;
     changeYbutton: TButton;
-    DayNightModeSwitch: TSwitch;
     StyloSwitch: TPanel;
     DayNightModeStaticLabel: TLabel;
     YAddresses: TLayout;
@@ -606,8 +598,6 @@ type
     Panel15: TPanel;
     OwnXCheckBox: TCheckBox;
     OwnXEdit: TEdit;
-    lblPrivateKey: TEdit;
-    lblWIFKey: TEdit;
     HexFormatLabel: TLabel;
     WIFFormatLabel: TLabel;
     layoutForPrivQR: TLayout;
@@ -628,7 +618,6 @@ type
     Label3: TLabel;
     Layout12: TLayout;
     Switch1: TSwitch;
-    InstantSendSwitch: TSwitch;
     CopyButtonPitStopEdit: TEdit;
     CopyTextButton: TButton;
     SelectGenetareCoin: TTabItem;
@@ -751,9 +740,71 @@ type
     emptyAddressesLayout: TLayout;
     NoPrivateKeyToExportLabel: TLabel;
     Layout58: TLayout;
-    exportemptyaddressesSwitch: TSwitch;
     exportemptyAddressesLabel: TLabel;
     LoadAddressesToImortAniIndicator: TAniIndicator;
+    GlobalSettingsLayout: TLayout;
+    SettingsVertScrollBox: TVertScrollBox;
+    LocalSettingsLayout: TLayout;
+    GlobalStetingsStaticLabel: TLabel;
+    AboutHodlerButton: TButton;
+    AboutHodlerTabItem: TTabItem;
+    ToolBar18: TToolBar;
+    AHWHeaderLabel: TLabel;
+    AHWBackButton: TButton;
+    AboutHodlerStaticLabel: TLabel;
+    AboutHodlerLogo: TImage;
+    PrivacyAndSecuritySettings: TTabItem;
+    ToolBar19: TToolBar;
+    SaPHeaderLabel: TLabel;
+    Panel24: TPanel;
+    SendErrorMsgLabel: TLabel;
+    PrivacyAndSecurityButton: TButton;
+    reportIssuesSettingsButton: TButton;
+    Label25: TLabel;
+    ReportIssues: TTabItem;
+    ToolBar20: TToolBar;
+    ReportIssueHeaderLabel: TLabel;
+    Button5: TButton;
+    UserReportMessageMemo: TMemo;
+    SendReportIssuesButton: TButton;
+    Label22: TLabel;
+    Label24: TLabel;
+    Panel25: TPanel;
+    UserReportSendLogsLabel: TLabel;
+    Panel26: TPanel;
+    UserReportDeviceInfoLabel: TLabel;
+    PrivateKeyInfoPanel: TPanel;
+    PrivateKeyAddressInfoLabel: TLabel;
+    PrivateKeyBalanceInfoLabel: TLabel;
+    lblPrivateKey: TMemo;
+    lblWIFKey: TMemo;
+    Layout33: TLayout;
+    FoundTokenTabItem: TTabItem;
+    ToolBar21: TToolBar;
+    FoundTokenHeaderLabel: TLabel;
+    FoundTokenVertScrollBox: TVertScrollBox;
+    SaPBackButton: TButton;
+    KeypoolSanitizer: TTimer;
+    FoundTokenOKButton: TButton;
+    ChooseHSBStaticLabel: TLabel;
+    OpenFileMenagerLayout: TLayout;
+    OpenFileMenagerLabel: TLabel;
+    OpenFileStaticLabel: TLabel;
+    FileMenagerUpImageButton: TImage;
+    FileManagerPathLabel: TEdit;
+    FileMenagerCancelButton: TButton;
+    internalImage: TImage;
+    OpenFMParentLayout: TLayout;
+    SendAllFundsSwitch: TCheckBox;
+    FeeFromAmountSwitch: TCheckBox;
+    InstantSendSwitch: TCheckBox;
+    DayNightModeSwitch: TCheckBox;
+    MoreImage: TImage;
+    SearchInDashBrdImage: TImage;
+    exportemptyaddressesSwitch: TCheckBox;
+    SendErrorMsgSwitch: TCheckBox;
+    UserReportSendLogsSwitch: TCheckBox;
+    UserReportDeviceInfoSwitch: TCheckBox;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -976,6 +1027,18 @@ type
     procedure exportemptyaddressesSwitchClick(Sender: TObject);
     procedure SYWLBackButtonTap(Sender: TObject; const Point: TPointF);
     procedure ConfirmSendClaimCoinButtonClick(Sender: TObject);
+    procedure AboutHodlerButtonClick(Sender: TObject);
+    procedure PrivacyAndSecurityButtonClick(Sender: TObject);
+    procedure reportIssuesSettingsButtonClick(Sender: TObject);
+    procedure SendErrorMsgSwitchSwitch(Sender: TObject);
+    procedure SendReportIssuesButtonClick(Sender: TObject);
+    procedure FoundTokenOKButtonClick(Sender: TObject);
+    procedure SaPBackButtonClick(Sender: TObject);
+    procedure KeypoolSanitizerTimer(Sender: TObject);
+    procedure FileMenagerCancelButtonClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure wvFeeChange(Sender: TObject);
+    //procedure DayNightModeSwitchClick(Sender: TObject);
 
 
   private
@@ -1032,6 +1095,8 @@ type
     procedure CopyParentTextToClipboard(Sender: TObject);
 
     procedure RefreshCurrentWallet(Sender : TObject);
+    procedure ExceptionHandler( Sender : TObject ; E : Exception );
+    procedure FoundTokenPanelOnClick(Sender : TObject);
   var
     refreshLocalImage : TRotateImage;
     refreshGlobalImage : TRotateImage;
@@ -1063,7 +1128,7 @@ var
   trngBufferCounter: Integer;
   stylo: TStyleManager;
   QRCodeBitmap: TBitmap;
-  newcoinID: nativeint;
+  //newcoinID: nativeint;   // in misc
   walletAddressForNewToken: AnsiString;
   tempMasterSeed: AnsiString;
   decryptSeedBackTabItem: TTabItem;
@@ -1078,7 +1143,6 @@ var
   QRWidth: Integer = -1;
   QRHeight: Integer = -1;
   SyncBalanceThr: SynchronizeBalanceThread;
-  SyncHistoryThr: SynchronizeHistoryThread;
 
   QRFind: AnsiString;
   tempQRFindEncryptedSeed: AnsiString;
@@ -1087,7 +1151,7 @@ var
   CurrentAccount: Account;
   CurrentStyle: AnsiString;
   BigQRCodeBackTab: TTabItem;
-  ImportCoinID: Integer;
+  // ImportCoinID: Integer;    // in misc
 
   ToClaimWD, FromClaimWD: TwalletInfo;
 
@@ -1105,13 +1169,22 @@ implementation
 
 uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
   AccountRelated,
-  TokenData, QRRelated, FileManagerRelated, WalletViewRelated, BackupRelated;
+  TokenData, QRRelated, FileManagerRelated, WalletViewRelated, BackupRelated ,debugAnalysis,KeypoolRelated ;
 {$R *.fmx}
 {$R *.SmXhdpiPh.fmx ANDROID}
 {$R *.iPhone55in.fmx IOS}
 {$R *.Windows.fmx MSWINDOWS}
 {$R *.Surface.fmx MSWINDOWS}
 
+procedure tfrmhome.FoundTokenPanelOnClick(Sender : TObject);
+begin
+  TCheckBox(TfmxObject(Sender).TagObject).IsChecked := not TCheckBox(TfmxObject(Sender).TagObject).IsChecked ;
+end;
+
+procedure tfrmhome.ExceptionHandler( Sender : TObject ; E : Exception );
+begin
+  debugAnalysis.ExceptionHandler( Sender , E );
+end;
 
 procedure TFrmHome.RefreshCurrentWallet(Sender : TObject);
 begin
@@ -1139,14 +1212,12 @@ end;
 
 procedure TfrmHome.exportemptyaddressesSwitchClick(Sender: TObject);
 begin
-  createExportPrivateKeyList
+  createExportPrivateKeyList(newCoinID);
 end;
 
 procedure TfrmHome.ExportPrivateKeyButtonClick(Sender: TObject);
 begin
-  createExportPrivateKeyList();
-  exportemptyaddressesSwitch.IsChecked := false;
-  switchTab(PageControl, ExportPrivCoinListTabItem);
+  WalletViewRelated.ExportPrivateKeyButtonClick(Sender);
 end;
 
 procedure TfrmHome.ExportPrivKeyListButtonClick(Sender: TObject; const Point: TPointF);
@@ -1219,7 +1290,7 @@ begin
 
   CreateNewAccountAndSave(RestoreNameEdit.Text, RestorePasswordEdit.Text,
     MasterSeed, true);
-
+  startFullfillingKeypool(MasterSeed);
 //  frmHome.FormShow(nil);
   tced := '';
   MasterSeed := '';
@@ -1256,6 +1327,11 @@ end;
 procedure TfrmHome.removeAccount(Sender: TObject);
 begin
   AccountRelated.removeAccount(Sender);
+end;
+
+procedure TfrmHome.reportIssuesSettingsButtonClick(Sender: TObject);
+begin
+  SwitchTab(pageControl , reportIssues);
 end;
 
 procedure TfrmHome.QRChangeTimerTimer(Sender: TObject);
@@ -1299,6 +1375,7 @@ end;
 procedure TfrmHome.FilePanelClick(Sender: TObject);
 begin
   frmHome.FileManagerPathLabel.Text := TfmxObject(Sender).TagString;
+  onFileManagerSelectClick();
 end;
 
 procedure TfrmHome.FilePanelClick(Sender: TObject; const Point: TPointF);
@@ -1361,6 +1438,11 @@ end;
 procedure TfrmHome.FileManagerSelectClick(Sender: TObject);
 begin
   onFileManagerSelectClick();
+end;
+
+procedure TfrmHome.FileMenagerCancelButtonClick(Sender: TObject);
+begin
+  switchTab(pageControl , RestoreFromFileTabitem );
 end;
 
 procedure TfrmHome.ShowFileManager(Sender: TObject);
@@ -1580,6 +1662,11 @@ begin
   WalletViewRelated.changeViewOrder(Sender);
 end;
 
+procedure TfrmHome.PrivacyAndSecurityButtonClick(Sender: TObject);
+begin
+  switchTab( pagecontrol , PrivacyAndSecuritySettings );
+end;
+
 procedure TfrmHome.PrivateKeyManageButtonClick(Sender: TObject);
 begin
 
@@ -1666,6 +1753,9 @@ end;
 
 procedure switchTab(TabControl: TTabControl; TabItem: TTabItem);
 begin
+
+  // if currentthread <> mainThread then Error
+
   backTabItem := frmHome.PageControl.ActiveTab;
   if not frmHome.shown then
   begin
@@ -1685,6 +1775,8 @@ procedure TfrmHome.WVRealCurrencyChange(Sender: TObject);
 begin
   WVRealCurrency.Text := StringReplace(WVRealCurrency.Text, ',', '.',
     [rfReplaceAll]);
+  if  frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
+  saveSendCacheToFile();
 end;
 
 procedure TfrmHome.WVRealCurrencyClick(Sender: TObject);
@@ -1741,16 +1833,8 @@ var
   found: Integer;
 begin
 
-  if ((CurrentCoin.coin <> 4) or (CurrentCryptoCurrency is Token)) then
-  begin
+  WalletViewRelated.SearchTokenButtonClick(Sender);
 
-    showmessage('SearchTokenButton shouldnt be visible here');
-    exit;
-
-  end;
-
-  found := SearchTokens(CurrentCoin.addr, nil);
-  popupWindow.Create('New tokens found: ' + inttostr(found));
 end;
 
 procedure TfrmHome.SelectFileInBackupFileList(Sender: TObject);
@@ -1821,6 +1905,8 @@ end;
 procedure TfrmHome.WVsendTOChange(Sender: TObject);
 begin
   WVsendTOExit(self);
+  if frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
+  saveSendCacheToFile();
 end;
 
 procedure TfrmHome.WVsendTOExit(Sender: TObject);
@@ -1976,6 +2062,8 @@ begin
   btnSyncClick(nil);
 end;
 
+
+
 procedure TfrmHome.DayNightModeSwitchSwitch(Sender: TObject);
 begin
 
@@ -2040,6 +2128,11 @@ begin
     end;
   end;
 
+end;
+
+procedure TfrmHome.AboutHodlerButtonClick(Sender: TObject);
+begin
+  switchTab(pageControl , AboutHodlerTabItem);
 end;
 
 procedure TfrmHome.AccountsListPanelExit(Sender: TObject);
@@ -2152,22 +2245,8 @@ procedure TfrmHome.wvAmountChange(Sender: TObject);
 var
   i: Single;
 begin
-  case length(wvAmount.Text) of
-    0 .. 8:
-      i := 24;
-    9 .. 14:
-      i := 20;
-    15 .. 20:
-      i := 16;
-    21 .. 25:
-      i := 10;
-  else
-    i := 0;
-
-  end;
-
-  wvAmount.TextSettings.Font.Size := i;
-  wvAmount.Text := StringReplace(wvAmount.Text, ',', '.', [rfReplaceAll]);
+  if frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
+  saveSendCacheToFile();
 end;
 
 procedure TfrmHome.wvAmountClick(Sender: TObject);
@@ -2185,6 +2264,13 @@ end;
 procedure TfrmHome.wvAmountTyping(Sender: TObject);
 begin
   wvAmountChange(Sender);
+end;
+
+procedure TfrmHome.wvFeeChange(Sender: TObject);
+begin
+  if  frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
+
+  saveSendCacheToFile();
 end;
 
 procedure TfrmHome.CoinToUSD(Sender: TObject);
@@ -2423,6 +2509,7 @@ begin
   t.idInWallet := length(CurrentAccount.myTokens) + 10000;
   CurrentAccount.addToken(t);
   CurrentAccount.SaveFiles();
+  CreatePanel(T);
   btnSyncClick(nil);
   switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
 
@@ -2619,7 +2706,7 @@ end;
 
 procedure TfrmHome.Button11Click(Sender: TObject);
 begin
-  switchTab(PageControl, PrivOptionsTabItem);
+  switchTab(PageControl, AddNewCoin);
 end;
 
 procedure TfrmHome.Button1Click(Sender: TObject);
@@ -2644,7 +2731,7 @@ var
   bigInt: BigInteger;
 begin
 
-  Edit1.Text := StrFloatToBigInteger(Edit4.Text, 2).ToString;
+  showmessage( getDetailedData() );
 
 end;
 
@@ -2677,6 +2764,8 @@ end;
 procedure TfrmHome.btnACBackClick(Sender: TObject);
 begin
   switchTab(PageControl, AddNewCoin);
+  CoinPrivKeyPassEdit.Text := '';
+  WIFEdit.Text := '';
 end;
 
 procedure TfrmHome.OrganizeButtonClick(Sender: TObject);
@@ -2982,6 +3071,11 @@ end;
 procedure TfrmHome.FeeToUSDUpdate(Sender: TObject);
 begin
   WalletViewRelated.calcUSDFee;
+end;
+
+procedure TfrmHome.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  AccountRelated.CloseHodler();
 end;
 
 procedure TfrmHome.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -3318,6 +3412,16 @@ if PageControl.ActiveTab=eqrview then exit;
 
     until abs(Y - round(ScrollBox.ViewportPosition.Y)) < 15;
   end;
+
+end;
+
+procedure TfrmHome.FoundTokenOKButtonClick(Sender: TObject);
+var
+  fmx : TfmxObject;
+  T : Token;
+begin
+
+  walletViewRelated.FoundTokenOKButtonClick(Sender);
 
 end;
 
@@ -3718,6 +3822,16 @@ begin
 
 end;
 
+procedure TfrmHome.SendErrorMsgSwitchSwitch(Sender: TObject);
+begin
+  walletViewRelated.SendErrorMsgSwitchSwitch(sender);
+end;
+
+procedure TfrmHome.SendReportIssuesButtonClick(Sender: TObject);
+begin
+  WalletViewRelated.SendReportIssuesButtonClick(sender);
+end;
+
 procedure TfrmHome.SendWalletFile(Sender: TObject);
 begin
   if SYSTEM_APP then
@@ -3766,6 +3880,11 @@ begin
   // PrivateKeySettingsLayout.Visible := IsPrivKeySwitch.IsChecked;
 end;
 
+procedure TfrmHome.KeypoolSanitizerTimer(Sender: TObject);
+begin
+sanitizePool;
+end;
+
 procedure TfrmHome.SearchInDashBrdButtonClick(Sender: TObject);
 begin
   TLabel(frmHome.FindComponent('HeaderLabel')).Visible := false;
@@ -3790,6 +3909,11 @@ end;
 procedure TfrmHome.APICheckCompressed(Sender: TObject);
 begin
   WalletViewRelated.importCheck;
+end;
+
+procedure TfrmHome.SaPBackButtonClick(Sender: TObject);
+begin
+  SwitchTab(pageControl , Settings);
 end;
 
 procedure TfrmHome.ScrollKeeperTimer(Sender: TObject);
