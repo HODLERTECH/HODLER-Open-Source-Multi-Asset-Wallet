@@ -350,7 +350,6 @@ type
     OrganizeButton: TButton;
     WalletList: TVertScrollBox;
     ShowHideAdvancedButton: TButton;
-    ImageList2: TImageList;
     arrowImg: TImage;
     arrowList: TImageList;
     Layout2: TLayout;
@@ -549,7 +548,6 @@ type
     TransactionWaitForSendLinkLabel: TLabel;
     Layout53: TLayout;
     WaitTimeLabel: TLabel;
-    coinIconsList: TImageList;
     WelcomeTabInfoLabel: TLabel;
     AddAccountInfoLabel: TLabel;
     BackupInfoLabel: TLabel;
@@ -615,7 +613,6 @@ type
     notPrivTCA1: TCheckBox;
     LoadMore: TButton;
     FindUnusedAddressButton: TButton;
-    TokenIcons: TImageList;
     RavencoinAddrTypeLayout: TLayout;
     LegacyRavenAddrButton: TButton;
     SegwitRavenAddrButton: TButton;
@@ -3064,12 +3061,7 @@ var
   actionListener: TActionList;
 begin
 
-  {CurrentAccount.changeDescription( 0 , 0 , 'dupa');
-  CurrentAccount.changeDescription( 1 , 0 , 'dupa2');
-  CurrentAccount.changeDescription( 0 , 2 , 'dupa3');
-  CurrentAccount.changeDescription( 1 , 1 , 'kutas');
-  CurrentAccount.changeDescription( 1 , 1 , 'kutas2');
-  CurrentAccount.SaveDescriptionFile; }
+
 
   CurrentAccount.LoadDescriptionFile();
   showmessage( CurrentAccount.getDescription( 0 , 0) + #13#10 +

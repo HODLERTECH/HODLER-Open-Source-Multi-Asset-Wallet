@@ -145,7 +145,7 @@ begin
 
                 image := TImage.create(panel);
                 image.parent := panel;
-                image.bitmap := CurrentAccount.myCoins[i].getIcon();
+                image.bitmap.LoadFromStream( getcoinIconResource( CurrentAccount.myCoins[i].coin ) );
                 image.align := TAlignLayout.left;
                 image.width := 32 + 2 * 15;
                 image.visible := true;
@@ -218,7 +218,7 @@ begin
 
       image := TImage.create(panel);
       image.parent := panel;
-      image.bitmap := CurrentAccount.myCoins[i].getIcon();
+      image.bitmap.loadFromStream( getcoinIconResource( CurrentAccount.myCoins[i].coin ) );
       image.align := TAlignLayout.left;
       image.width := 32 + 2 * 15;
       image.visible := true;

@@ -152,7 +152,6 @@ type
     ANWHeader: TToolBar;
     lblANWHeader: TLabel;
     btnANWBack: TButton;
-    coinIconsList: TImageList;
     TokenIcons3: TImageList;
     checkSeed: TTabItem;
     btnConfirm: TButton;
@@ -350,7 +349,6 @@ type
     OrganizeButton: TButton;
     WalletList: TVertScrollBox;
     ShowHideAdvancedButton: TButton;
-    ImageList2: TImageList;
     arrowImg: TImage;
     arrowList: TImageList;
     Layout2: TLayout;
@@ -660,7 +658,6 @@ type
     ToolBar13: TToolBar;
     Label13: TLabel;
     Button7: TButton;
-    TokenIcons: TImageList;
     AddCoinFromPrivKeyTabItem: TTabItem;
     ToolBar14: TToolBar;
     Label14: TLabel;

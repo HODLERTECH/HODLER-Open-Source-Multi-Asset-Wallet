@@ -1023,7 +1023,7 @@ begin
         coinIMG := TImage.Create(frmhome.AvailableCoinsBox);
         coinIMG.Parent := Panel;
 
-        coinIMG.Bitmap := getCoinIcon(wd.coin);
+        coinIMG.Bitmap.loadFromStream( getCoinIconResource(wd.coin) );
 
         coinIMG.Height := 32.0;
         coinIMG.Width := 50;
@@ -2063,7 +2063,8 @@ begin
 
       coinIMG := TImage.Create(frmhome.AvailableTokensBox);
       coinIMG.Parent := Panel;
-      coinIMG.Bitmap := frmhome.TokenIcons.Source[i].MultiResBitmap[0].Bitmap;
+      coinIMG.Bitmap.LoadFromStream( resourceMenager.getAssets( Token.AvailableToken[i].ResourceName) ) ;
+      // frmhome.TokenIcons.Source[i].MultiResBitmap[0].Bitmap;
 
       coinIMG.Height := 32.0;
       coinIMG.Width := 50;

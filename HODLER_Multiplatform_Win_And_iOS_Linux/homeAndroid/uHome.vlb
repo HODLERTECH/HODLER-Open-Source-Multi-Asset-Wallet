@@ -1,5 +1,5 @@
 ﻿[]
-Coordinates=1725,463,123,51
+Coordinates=2177,1057,71,33
 
 [WVReceive]
 Coordinates=404,270,69,33
@@ -639,9 +639,6 @@ Coordinates=2177,1002,82,33
 [AutomaticFeeRadio]
 Coordinates=2525,782,111,33
 
-[TokenIcons]
-Coordinates=2177,1057,71,33
-
 [QRChangeTimer]
 Coordinates=2559,837,95,33
 
@@ -923,9 +920,6 @@ Coordinates=2903,1,107,33
 [Image5]
 Coordinates=586,828,49,51
 
-[ImageList2]
-Coordinates=657,1136,68,33
-
 [AddNewCoin]
 Coordinates=558,1136,78,33
 
@@ -1170,9 +1164,6 @@ Coordinates=734,828,46,51
 
 [TransactionDetailsHeaderLabel]
 Coordinates=122,828,46,51
-
-[coinIconsList]
-Coordinates=64,1136,68,33
 
 [HSBbackupLayout]
 Coordinates=1644,1136,59,33

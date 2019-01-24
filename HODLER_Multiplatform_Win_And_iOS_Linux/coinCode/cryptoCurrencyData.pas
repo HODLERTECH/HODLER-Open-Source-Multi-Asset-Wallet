@@ -49,7 +49,7 @@ type
     constructor Create();
     destructor Destroy(); override;
 
-    function getIcon(): TBitmap; virtual;
+    function getIconResource(): TStream; virtual;
 
     function getFiat: Double;
     function getUnconfirmedFiat(): Double;
@@ -74,7 +74,7 @@ begin
   result := CompareStr(a.TransactionID, b.TransactionID);
 end;
 
-function cryptoCurrency.getIcon(): TBitmap;
+function cryptoCurrency.getIconResource(): TStream;
 begin
   raise Exception.Create('getIcon not implemented');
 end;

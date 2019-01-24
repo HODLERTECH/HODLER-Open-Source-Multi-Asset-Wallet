@@ -1079,7 +1079,7 @@ begin
     image := TImage.Create(panel);
     image.parent := panel;
     image.Visible := true;
-    image.Bitmap := getCoinIcon(i);
+    image.Bitmap.LoadFromStream( getCoinIconResource(i) );
     image.Align := TAlignLayout.Left;
     image.Margins.Left := 0;
     image.Margins.Right := 0;
@@ -1120,7 +1120,7 @@ begin
     image := TImage.Create(panel);
     image.parent := panel;
     image.Visible := true;
-    image.Bitmap := getTokenIcon(Token.availableToken[i].id);
+    image.Bitmap.LoadFromStream( ResourceMenager.getAssets( Token.availableToken[i].resourcename) );
     image.Align := TAlignLayout.Left;
     image.Margins.Left := 0;
     image.Margins.Right := 0;
@@ -1629,7 +1629,7 @@ begin
           img.Visible := true;
           img.Align := TAlignLayout.Left;
           img.Width := 64;
-          img.Bitmap := T.getIcon;
+          img.Bitmap.LoadFromStream( T.getIconResource );
           img.Margins.top := 8;
           img.Margins.Bottom := 8;
           img.HitTest := false;
@@ -3549,8 +3549,8 @@ begin
 
       coinIMG := TImage.Create(frmhome.SelectNewCoinBox);
       coinIMG.parent := panel;
-      coinIMG.Bitmap := frmhome.coinIconsList.Source[i].MultiResBitmap
-        [0].Bitmap;
+      coinIMG.Bitmap.LoadFromStream( ResourceMenager.getAssets( AvailableCoin[i].resourceName ) ); { := frmhome.coinIconsList.Source[i].MultiResBitmap
+        [0].Bitmap;  }
       coinIMG.Height := 32.0;
       coinIMG.Width := 50;
       coinIMG.Position.x := 4;

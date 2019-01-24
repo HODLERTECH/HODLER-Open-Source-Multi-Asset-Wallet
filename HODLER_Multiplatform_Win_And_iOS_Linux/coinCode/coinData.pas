@@ -2,12 +2,12 @@ unit coinData;
 
 interface
 
-uses System.IOUtils, sysutils, StrUtils,
+uses System.IOUtils, sysutils, StrUtils, System.classes ,
   FMX.Graphics, base58, FMX.Dialogs, WalletStructureData;
 
 function CreateCoin(id, x, y: Integer; MasterSeed: AnsiString;
   description: AnsiString = ''): TWalletInfo;
-function getCoinIcon(id: Integer): TBitmap;
+function getCoinIconResource(id: Integer): TStream;
 function isValidForCoin(id: Integer; address: AnsiString): Boolean;
 function getURLToExplorer(id: Integer; hash: AnsiString): AnsiString;
 
@@ -107,9 +107,9 @@ begin
   result := URL + hash;
 end;
 
-function getCoinIcon(id: Integer): TBitmap;
+function getCoinIconResource(id: Integer): TStream;
 begin
-  result := frmhome.coinIconsList.Source[id].MultiResBitmap[0].Bitmap
+  result := resourceMenager.getAssets( AvailableCoin[id].Resourcename );
 end;
 
 function CreateCoin(id, x, y: Integer; MasterSeed: AnsiString;
