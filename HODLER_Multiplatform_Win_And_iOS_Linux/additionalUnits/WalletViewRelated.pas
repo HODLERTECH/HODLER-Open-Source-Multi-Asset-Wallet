@@ -2127,7 +2127,10 @@ var
   fmxObj: TfmxObject;
   i: Integer;
 begin
-  with frmhome do
+
+
+try
+ with frmhome do
   begin
     for i := 0 to OrganizeList.Content.ChildrenCount - 1 do
     begin
@@ -2175,7 +2178,9 @@ begin
     end;
 
     closeOrganizeView(nil);
-  end;
+  end;  Except on E:Exception do begin
+
+end;  end;
 end;
 
 procedure changeLanguage(Sender: TObject);
@@ -2506,6 +2511,8 @@ var
   wdArray: TCryptoCurrencyArray;
   i: Integer;
 begin
+
+try
   if Sender is TButton then
   begin
 
@@ -2531,7 +2538,7 @@ begin
 
     Panel.DisposeOf;
   end;
-
+except on E:Exception do begin end; end;
 end;
 
 procedure importCheck;

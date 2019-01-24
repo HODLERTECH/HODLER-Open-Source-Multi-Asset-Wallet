@@ -540,20 +540,20 @@ begin
         begin
           JSON := TJsonObject(TJsonObject.ParseJSONValue(WData));
           Lang := JSON.GetValue<string>('languageIndex');
-          style := JSON.GetValue<string>('styleName');
+          style :='RT_DARK';// JSON.GetValue<string>('styleName');
           JSON.free;
         end
         else
         begin
           Lang := '0';
-          style := 'RT_WHITE';
+          style := 'RT_DARK';
         end;
 
       end
       else
       begin
         Lang := '0';
-        style := 'RT_WHITE';
+        style := 'RT_DARK';
       end;
 
       cpTimeout := 0;

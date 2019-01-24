@@ -51,6 +51,7 @@ type
     function getIconResource(): TStream; override;
     //function getIconResource(): TStream;
 
+
     // property name: AnsiString read _name;
     // property id : Integer read _id;
     //property image: TBitmap read getIcon;

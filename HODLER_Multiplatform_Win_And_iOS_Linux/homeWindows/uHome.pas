@@ -3061,8 +3061,6 @@ var
   actionListener: TActionList;
 begin
 
-
-
   CurrentAccount.LoadDescriptionFile();
   showmessage( CurrentAccount.getDescription( 0 , 0) + #13#10 +
    CurrentAccount.getDescription( 1 , 0) + #13#10 +
