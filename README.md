@@ -5,14 +5,23 @@ Support for a large number of coins and tokens. Our wallet is working of these p
 Windows 7 SP1 & and up, Android 4.4 and up, iOS 9 and up, Linux (64bit only)
 
 ## Resources & community
+
 Binaries and source code: https://github.com/HODLERTECH/HODLER-Open-Source-Multi-Asset-Wallet/releases/
+
 Homesite: https://hodler.tech
+
 Blog: https://steemit.com/@hodler.tech
+
 Bitcointalk: https://bitcointalk.org/index.php?topic=5032817.0
+
 Youtube: https://www.youtube.com/channel/UCjbq9kkoexo07NH3aB-LZ-w
+
 Twitter: https://twitter.com/HODLER_TECH
+
 Telegram: https://telegram.me/HODLER_TECH_IN
+
 Email contact: contact@hodler.tech
+
 Software house: https://fl4re.pl
 
 ## Compilation 
