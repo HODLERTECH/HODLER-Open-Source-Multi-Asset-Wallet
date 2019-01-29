@@ -8,6 +8,8 @@ Windows 7 SP1 & and up, Android 4.4 and up, iOS 9 and up, Linux (64bit only)
 
 Binaries and source code: https://github.com/HODLERTECH/HODLER-Open-Source-Multi-Asset-Wallet/releases/
 
+Report a bug, idea or feature: https://github.com/HODLERTECH/HODLER-Open-Source-Multi-Asset-Wallet/issues
+
 Homepage: https://hodler.tech
 
 Blog: https://steemit.com/@hodler.tech
