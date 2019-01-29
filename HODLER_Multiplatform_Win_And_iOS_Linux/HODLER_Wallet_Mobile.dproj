@@ -660,6 +660,9 @@
         <DCCReference Include="additionalUnits\debugAnalysis.pas"/>
         <DCCReference Include="additionalUnits\KeypoolRelated.pas"/>
         <DCCReference Include="additionalUnits\AssetsMenagerData.pas"/>
+        <DCCReference Include="CrossPlatformHeaders.pas"/>
+        <DCCReference Include="additionalUnits\PopupWindowData.pas"/>
+        <DCCReference Include="components\NotificationLayoutData.pas"/>
         <RcItem Include="Languages\PT.lang">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
@@ -885,6 +888,10 @@
         <RcItem Include="token_icons\search_white.png">
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>SEARCH_WHITE</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\gemini_28.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>GEMINIDOLLAR_IMG</ResourceId>
         </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
@@ -1169,6 +1176,12 @@
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImagePortrait_1536x2048.png" Configuration="Debug" Class="iPad_Launch1536x2048">
                     <Platform Name="iOSSimulator">
                         <RemoteName>Default-Portrait@2x~ipad.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\gemini_28.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

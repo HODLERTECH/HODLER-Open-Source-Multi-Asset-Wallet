@@ -38,7 +38,7 @@ type
 
 
     constructor create();
-    destructor free();
+    destructor Destroy(); override;
 
   end;
 
@@ -119,9 +119,9 @@ begin
   addToMap('IMG_NOT_FOUND');
 end;
 
-destructor AssetsMenager.free();
+destructor AssetsMenager.Destroy();
 begin
-
+  inherited;
   map.Clear;
   map.free;
 end;

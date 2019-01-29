@@ -30,7 +30,7 @@ uses
   FMX.Clipboard, bech32, cryptoCurrencyData, FMX.VirtualKeyBoard, JSON,
   languages, WIF, AccountData, WalletStructureData,
   System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
-  CurrencyConverter, uEncryptedZipFile, System.Zip, TRotateImageData
+  CurrencyConverter, uEncryptedZipFile, System.Zip, TRotateImageData , popupwindowData , notificationLayoutData
 {$IFDEF ANDROID},
   FMX.VirtualKeyBoard.Android,
   Androidapi.JNI,
@@ -1139,6 +1139,7 @@ type
   var
     refreshLocalImage: TRotateImage;
     refreshGlobalImage: TRotateImage;
+    NotificationLayout : TNotificationLayout;
 
   var
     HistoryMaxLength: Integer;
@@ -2732,7 +2733,8 @@ end;
 procedure TfrmHome.btnSWipeClick(Sender: TObject);
 begin
 
-  popupWindowYesNo.Create(
+  //PopupWindowProtectYesNo.Create(
+    NotificationLayout.popupProtectedConfirm(
     procedure()
     begin
       wipeWalletDat;
@@ -3061,14 +3063,14 @@ var
   actionListener: TActionList;
 begin
 
-  CurrentAccount.LoadDescriptionFile();
-  showmessage( CurrentAccount.getDescription( 0 , 0) + #13#10 +
-   CurrentAccount.getDescription( 1 , 0) + #13#10 +
-   CurrentAccount.getDescription( 0 , 2) + #13#10 +
-   CurrentAccount.getDescription( 1 , 1) + #13#10 +
-   CurrentAccount.getDescription( 3 , 0) + #13#10 +
-   CurrentAccount.getDescription( 2 , 2)
-  );
+  NotificationLayout.popupProtectedConfirm(procedure
+  begin
+
+  end , procedure
+  begin
+
+
+  end , 'dupa');
 
 end;
 
@@ -3439,10 +3441,11 @@ end;
 
 procedure TfrmHome.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
+  //AccountRelated.CloseHodler();
 {$IFDEF WIN32 or WIN64}
   stylo.Destroy;
   try
-    halt(0);
+    //halt(0);
   except
 
   end;

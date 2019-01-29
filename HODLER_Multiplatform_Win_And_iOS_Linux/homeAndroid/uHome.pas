@@ -26,7 +26,7 @@ uses
   FMX.TabControl, System.Sensors, System.Sensors.Components, FMX.Edit,
   FMX.Clipboard, bech32, cryptoCurrencyData, FMX.VirtualKeyBoard, JSON,
   languages, WIF, AccountData, WalletStructureData,
-  System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
+  System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient, popupWindowData ,
 
   FMX.Media, FMX.Objects, CurrencyConverter, uEncryptedZipFile, System.Zip ,TRotateImageData
 {$IFDEF ANDROID},
@@ -51,7 +51,7 @@ uses
   ZXing.ScanManager, FMX.EditBox, FMX.SpinBox, FMX.Gestures, FMX.Effects,
   FMX.Filter.Effects, System.Actions, FMX.ActnList, System.Math.Vectors,
   FMX.Controls3D, FMX.Layers3D, FMX.StdActns, FMX.MediaLibrary.Actions,
-  FMX.ComboEdit;
+  FMX.ComboEdit , NotificationLayoutData;
 
 type
 
@@ -1097,6 +1097,7 @@ type
   var
     refreshLocalImage : TRotateImage;
     refreshGlobalImage : TRotateImage;
+    NotificationLayout : TNotificationLayout;
 
   var
     cpTimeout: int64;
@@ -2425,7 +2426,7 @@ end;
 procedure TfrmHome.btnSWipeClick(Sender: TObject);
 begin
 
-  popupWindowYesNo.Create(
+  NotificationLayout.popupProtectedConfirm(
     procedure()
     begin
       wipeWalletDat;

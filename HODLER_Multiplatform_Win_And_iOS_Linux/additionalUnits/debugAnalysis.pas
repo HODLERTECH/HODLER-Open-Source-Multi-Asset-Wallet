@@ -178,20 +178,21 @@ begin
   begin
     errorList := TStringList.Create();
     tmpTsl := TStringList.Create();
-    for path in TDirectory.GetFiles(LOG_FILE_PATH) do
-    begin
-      temp := ExtractFileName(path);
-      temp := leftStr(temp, 3);
-      if temp = 'LOG' then
+    if Tdirectory.Exists( LOG_FILE_PATH ) then
+      for path in TDirectory.GetFiles(LOG_FILE_PATH) do
       begin
+        temp := ExtractFileName(path);
+        temp := leftStr(temp, 3);
+        if temp = 'LOG' then
+        begin
 
-        tmpTsl.LoadFromFile(path);
+          tmpTsl.LoadFromFile(path);
 
-        errorList.Add(tmpTsl.DelimitedText);
+          errorList.Add(tmpTsl.DelimitedText);
+
+        end;
 
       end;
-
-    end;
     log := errorList.DelimitedText;
     tmpTsl.Free;
     errorList.Free;
@@ -244,6 +245,10 @@ begin
       temp.load }
     DecodeDate(Now, Y, m, d);
     // Format('%d.%d.%d', [Y, m, d])
+
+    if not TDirectory.Exists(LOG_FILE_PATH) then
+      TDirectory.CreateDirectory( LOG_file_PATh );
+
     logData.SaveToFile(System.IOUtils.TPath.combine(LOG_FILE_PATH,
       'LOG_' + IntToStr(DateTimeToUnix(Now)) + '.log'));
 
@@ -261,18 +266,15 @@ begin
   addLog(E.StackTrace);
   addLog('------END------');
 
-  saveLogFile();
+
 
   // showmessage( Exception.GetStackInfoStringProc( ExceptAddr ) );
   if USER_ALLOW_TO_SEND_DATA then
     SendAutoReport(E.Message, E.StackTrace, sender.ClassName + ' ' +
       sender.UnitName);
 
-  // {$IFDEF DEBUG}
-  // showmessage( E.Message );
-  // {$ENDIF}
+  saveLogFile();
 
-  // showmessage(e.StackTrace);
 end;
 
 procedure assert(value: boolean; msg: AnsiString; sender: TObject = nil);

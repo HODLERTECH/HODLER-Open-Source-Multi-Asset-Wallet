@@ -12,7 +12,7 @@ uses
   FMX.Layouts, FMX.ExtCtrls, Velthuis.BigIntegers, FMX.ScrollBox, FMX.Memo,
   FMX.Platform, System.Threading, Math, DelphiZXingQRCode,
   FMX.TabControl, FMX.Edit,
-  FMX.Clipboard, FMX.VirtualKeyBoard, JSON,
+  FMX.Clipboard, FMX.VirtualKeyBoard, JSON, popupwindowData,
   languages, WalletStructureData,
 
   FMX.Media, FMX.Objects, uEncryptedZipFile, System.Zip

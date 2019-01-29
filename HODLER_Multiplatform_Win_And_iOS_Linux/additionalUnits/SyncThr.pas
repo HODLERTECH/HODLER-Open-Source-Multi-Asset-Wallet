@@ -5,7 +5,7 @@ interface
 uses
   System.classes, System.sysutils, FMX.Controls, FMX.StdCtrls, FMX.dialogs,
   StrUtils, WalletStructureData, CryptoCurrencyData, tokenData, System.SyncObjs,
-  JSON;
+  JSON ,System.TimeSpan ,  System.Diagnostics;
 
 type
   SynchronizeBalanceThread = class(TThread)
@@ -70,6 +70,7 @@ procedure verifyKeypoolNoThread(wi: TWalletInfo);
 
 var
   semaphore: TLightweightSemaphore;
+  VerifyKeypoolSemaphore : TLightweightSemaphore;
   mutex: TSemaphore;
 
 implementation
@@ -191,6 +192,7 @@ begin
   end;
 {$IFDEF  ANDROID} s := StringReplace(s, '\\', '\', [rfReplaceAll]); {$ENDIF}
   try
+
     coinJson := TJSONObject.ParseJSONValue(s) as TJSONObject;
 
     if coinJson.Count = 0 then
@@ -252,6 +254,8 @@ var
   licz: Integer;
   batched: string;
 begin
+
+  globalLoadCacheTime := 0;
   if semaphore = nil then
   begin
     semaphore := TLightweightSemaphore.Create(8);
@@ -379,6 +383,10 @@ begin
       Exit();
     sleep(50);
   end;
+  {tthread.Synchronize(nil , procedure
+  begin
+    showmessage( floatToStr( globalLoadCacheTime ) );
+  end); }
 
   CurrentAccount.SaveFiles();
   firstSync := false;
@@ -416,10 +424,13 @@ var
   i: Integer;
   licz: Integer;
   batched: string;
+var
+  Stopwatch: TStopwatch;
+  Elapsed: TTimeSpan;
 begin
-  if semaphore = nil then
+  if VerifyKeypoolSemaphore = nil then
   begin
-    semaphore := TLightweightSemaphore.Create(8);
+    VerifyKeypoolSemaphore := TLightweightSemaphore.Create(8);
   end;
   if mutex = nil then
   begin
@@ -441,11 +452,11 @@ begin
         url, s: string;
 
       begin
-
+        Stopwatch := TStopwatch.StartNew;
         id := i;
         mutex.Release();
 
-        semaphore.WaitFor();
+        VerifyKeypoolSemaphore.WaitFor();
         try
           s := keypoolIsUsed(id);
           url := HODLER_URL + '/batchSync0.3.2.php?keypool=true&coin=' +
@@ -460,14 +471,18 @@ begin
 
           end;
         end;
-        semaphore.Release();
+        VerifyKeypoolSemaphore.Release();
+
+        Elapsed := Stopwatch.Elapsed;
+        globalVerifyKeypoolTime := globalLoadCacheTime + Elapsed.TotalSeconds;
+
       end).Start();
     mutex.Acquire();
     mutex.Release();
 
   end;
 
-  while semaphore.CurrentCount <> 8 do
+  while VerifyKeypoolSemaphore.CurrentCount <> 8 do
   begin
     if TThread.CurrentThread.CheckTerminated then
       Exit();
@@ -475,6 +490,11 @@ begin
   end;
 
   CurrentAccount.SaveFiles();
+
+  {tthread.Synchronize(nil , procedure
+  begin
+    showmessage( floatToStr(globalVerifyKeypoolTime ) );
+  end); }
 
 end;
 
