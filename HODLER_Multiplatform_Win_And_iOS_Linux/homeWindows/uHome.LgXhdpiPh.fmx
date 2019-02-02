@@ -422,6 +422,7 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
             129s
             570s)
           inherited WVBalance: TTabItem
+            Size.Width = 32.000000000000000000
             ExplicitSize.cx = 61.000000000000000000
             ExplicitSize.cy = 26.000000000000000000
             inherited BalancePanel: TPanel
@@ -745,7 +746,7 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
             end
           end
           inherited WVReceive: TTabItem
-            Size.Width = 56.000000000000000000
+            Size.Width = 32.000000000000000000
             ExplicitSize.cx = 60.000000000000000000
             ExplicitSize.cy = 26.000000000000000000
             inherited ReceiveVertScrollBox: TVertScrollBox
@@ -820,7 +821,7 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
             end
           end
           inherited WVSend: TTabItem
-            Size.Width = 39.000000000000000000
+            Size.Width = 32.000000000000000000
             ExplicitSize.cx = 95.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited SendVertScrollBox: TVertScrollBox
@@ -831,7 +832,7 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
             end
           end
           inherited WVSettings: TTabItem
-            Size.Width = 65.000000000000000000
+            Size.Width = 33.000000000000000000
             ExplicitSize.cx = 63.000000000000000000
             ExplicitSize.cy = 26.000000000000000000
             inherited btnExportPrivKey: TButton
@@ -1845,6 +1846,8 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Size.Width = 129.000000000000000000
         inherited passwordForDecrypt: TEdit
           Position.X = -71.000000000000000000
+          Position.Y = 8.000000000000000000
+          Size.Height = 32.000000000000000000
         end
       end
       inherited btnDecryptSeed: TButton
@@ -2150,6 +2153,8 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Size.Width = 129.000000000000000000
         inherited NewCoinDescriptionEdit: TEdit
           Position.X = -71.000000000000000000
+          Position.Y = 8.000000000000000000
+          Size.Height = 32.000000000000000000
         end
       end
       inherited btnOKAddNewCoinSettings: TButton
@@ -2164,6 +2169,8 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Size.Width = 129.000000000000000000
         inherited NewCoinDescriptionPassEdit: TEdit
           Position.X = -71.000000000000000000
+          Position.Y = 8.000000000000000000
+          Size.Height = 32.000000000000000000
         end
       end
       inherited Panel11: TPanel
@@ -2186,6 +2193,8 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         end
         inherited OwnXEdit: TEdit
           Position.X = 48.000000000000000000
+          Position.Y = 8.000000000000000000
+          Size.Height = 32.000000000000000000
         end
       end
     end

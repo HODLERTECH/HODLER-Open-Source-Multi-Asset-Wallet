@@ -372,9 +372,11 @@ var
   AddCoinBackTabItem: TTabItem;
   createPasswordBackTabItem: TTabItem;
   RestoreFromFileBackTabItem: TTabItem;
+  QRMask : TBitmap;
 
   newcoinID: nativeint;
   ImportCoinID: integer;
+  newTokenID : Integer;
   AccountForSearchToken: Account;
   ResourceMenager: AssetsMenager;
 

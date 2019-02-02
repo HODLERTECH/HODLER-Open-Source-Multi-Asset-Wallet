@@ -1134,6 +1134,7 @@ type
 
     procedure ExceptionHandler(Sender: TObject; E: Exception);
     procedure FoundTokenPanelOnClick(Sender: TObject);
+    procedure GenerateETHAddressWithToken(Sender : TObject);
 
     // procedure PrivateKeyPasswordCheck
   var
@@ -1235,6 +1236,12 @@ begin
 end;
 
 {$ENDIF}
+
+
+procedure tfrmhome.GenerateETHAddressWithToken(Sender : TObject);
+begin
+  WalletViewRelated.GenerateETHAddressWithToken(Sender);
+end;
 
 procedure TfrmHome.FoundTokenPanelOnClick(Sender: TObject);
 begin
@@ -2809,16 +2816,7 @@ procedure TfrmHome.btnAddContractClick(Sender: TObject);
 var
   t: Token;
 begin
-
-  t := Token.CreateCustom(frmHome.ContractAddress.Text,
-    frmHome.TokenNameField.Text, frmHome.SymbolField.Text,
-    strtoint(frmHome.DecimalsField.Text), walletAddressForNewToken);
-  t.idInWallet := length(CurrentAccount.myTokens) + 10000;
-  CurrentAccount.addToken(t);
-  CurrentAccount.SaveFiles();
-  CreatePanel(T);
-  btnSyncClick(nil);
-  switchTab(PageControl, walletView);
+   WalletViewRelated.btnAddContractClick(Sender);
 
 end;
 
@@ -3255,7 +3253,7 @@ end;
 procedure TfrmHome.btnAddNewTokenClick(Sender: TObject);
 begin
   WalletViewRelated.ShowETHWallets(Sender);
-  switchTab(PageControl, AddNewToken);
+
 end;
 
 procedure TfrmHome.btnAddNewCoinClick(Sender: TObject);

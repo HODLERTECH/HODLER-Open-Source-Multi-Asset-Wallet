@@ -802,6 +802,9 @@ type
     SendErrorMsgSwitch: TCheckBox;
     UserReportSendLogsSwitch: TCheckBox;
     UserReportDeviceInfoSwitch: TCheckBox;
+    Layout22: TLayout;
+    LightButtonQR: TButton;
+    DebugQRImage: TImage;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1035,6 +1038,7 @@ type
     procedure FileMenagerCancelButtonClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure wvFeeChange(Sender: TObject);
+    procedure LightButtonQRClick(Sender: TObject);
     //procedure DayNightModeSwitchClick(Sender: TObject);
 
 
@@ -1094,6 +1098,10 @@ type
     procedure RefreshCurrentWallet(Sender : TObject);
     procedure ExceptionHandler( Sender : TObject ; E : Exception );
     procedure FoundTokenPanelOnClick(Sender : TObject);
+    procedure GenerateETHAddressWithToken(Sender : TObject);
+
+
+
   var
     refreshLocalImage : TRotateImage;
     refreshGlobalImage : TRotateImage;
@@ -1173,6 +1181,11 @@ uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
 {$R *.iPhone55in.fmx IOS}
 {$R *.Windows.fmx MSWINDOWS}
 {$R *.Surface.fmx MSWINDOWS}
+
+procedure tfrmhome.GenerateETHAddressWithToken(Sender : TObject);
+begin
+  WalletViewRelated.GenerateETHAddressWithToken(Sender);
+end;
 
 procedure tfrmhome.FoundTokenPanelOnClick(Sender : TObject);
 begin
@@ -2501,15 +2514,7 @@ var
   t: Token;
 begin
 
-  t := Token.CreateCustom(frmHome.ContractAddress.Text,
-    frmHome.TokenNameField.Text, frmHome.SymbolField.Text,
-    strtoint(frmHome.DecimalsField.Text), walletAddressForNewToken);
-  t.idInWallet := length(CurrentAccount.myTokens) + 10000;
-  CurrentAccount.addToken(t);
-  CurrentAccount.SaveFiles();
-  CreatePanel(T);
-  btnSyncClick(nil);
-  switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
+  WalletViewRelated.btnAddContractClick(Sender);
 
 end;
 
@@ -2909,7 +2914,6 @@ end;
 procedure TfrmHome.btnAddNewTokenClick(Sender: TObject);
 begin
   WalletViewRelated.ShowETHWallets(Sender);
-  switchTab(PageControl, AddNewToken);
 end;
 
 procedure TfrmHome.btnAddNewCoinClick(Sender: TObject);
@@ -3557,6 +3561,14 @@ end;
 procedure TfrmHome.ImportPrivateKeyInPrivButtonClick(Sender: TObject);
 begin
   WalletViewRelated.ImportPrivateKeyInPrivButtonClick(Sender);
+end;
+
+procedure TfrmHome.LightButtonQRClick(Sender: TObject);
+begin
+  if CameraComponent1.TorchMode <> TTorchMode.ModeOn then
+    CameraComponent1.TorchMode := TTorchMode.ModeOn
+  else
+    CameraComponent1.TorchMode := TTorchMode.Modeoff;
 end;
 
 procedure TfrmHome.LinkLayoutClick(Sender: TObject);

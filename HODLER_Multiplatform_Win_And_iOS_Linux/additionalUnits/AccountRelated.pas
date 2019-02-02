@@ -720,6 +720,9 @@ begin
       NotificationLayout.Align := TAlignLayout.Contents;
       NotificationLayout.Visible := true;
 
+     
+
+
     end;
 
   except

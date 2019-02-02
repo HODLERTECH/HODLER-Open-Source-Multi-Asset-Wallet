@@ -383,16 +383,16 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             Size.Width = 409.000000000000000000
             Size.Height = 44.000000000000000000
           end
-          inherited btnQRBack: TButton
-            Size.Height = 44.000000000000000000
-          end
         end
         inherited imgCamera: TImage
           MultiResBitmap.Height = 117
           MultiResBitmap.Width = 117
           MultiResBitmap.LoadSize = 1
           Size.Width = 409.000000000000000000
-          Size.Height = 667.000000000000000000
+          Size.Height = 711.000000000000000000
+        end
+        inherited Layout22: TLayout
+          Size.Width = 409.000000000000000000
         end
       end
       inherited walletView: TTabItem

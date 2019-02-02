@@ -9,8 +9,8 @@ inherited frmHome_Windows: TfrmHome_Windows
   inherited ScrollBox: TVertScrollBox
     Size.Width = 640.000000000000000000
     Size.Height = 480.000000000000000000
-    Viewport.Width = 640.000000000000000000
-    Viewport.Height = 480.000000000000000000
+    Viewport.Width = 624.000000000000000000
+    Viewport.Height = 464.000000000000000000
     inherited PageControl: TTabControl
       Size.Width = 624.000000000000000000
       Size.Height = 464.000000000000000000
@@ -314,7 +314,10 @@ inherited frmHome_Windows: TfrmHome_Windows
           MultiResBitmap.Width = 117
           MultiResBitmap.LoadSize = 1
           Size.Width = 624.000000000000000000
-          Size.Height = 416.000000000000000000
+          Size.Height = 464.000000000000000000
+        end
+        inherited Layout22: TLayout
+          Size.Width = 624.000000000000000000
         end
       end
       inherited walletView: TTabItem

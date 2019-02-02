@@ -339,7 +339,10 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           MultiResBitmap.Width = 117
           MultiResBitmap.LoadSize = 1
           Size.Width = 245.000000000000000000
-          Size.Height = 322.000000000000000000
+          Size.Height = 370.000000000000000000
+        end
+        inherited Layout22: TLayout
+          Size.Width = 245.000000000000000000
         end
       end
       inherited walletView: TTabItem
@@ -1183,7 +1186,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         inherited SettingsVertScrollBox: TVertScrollBox
           Size.Width = 245.000000000000000000
           Size.Height = 322.000000000000000000
-          Viewport.Width = 240.000000000000000000
+          Viewport.Width = 245.000000000000000000
           Viewport.Height = 322.000000000000000000
           inherited LocalSettingsLayout: TLayout
             Size.Width = 240.000000000000000000
