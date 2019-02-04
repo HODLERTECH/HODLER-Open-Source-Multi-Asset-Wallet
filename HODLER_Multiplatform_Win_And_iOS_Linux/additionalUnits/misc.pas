@@ -85,7 +85,8 @@ interface
 uses AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA, IdSSLOpenSSL, languages,
   System.Hash, MiscOBJ,
   SysUtils, System.IOUtils, HashObj, System.Types, System.UITypes,
-  System.DateUtils, System.Generics.Collections,  System.Diagnostics ,System.TimeSpan ,
+  System.DateUtils, System.Generics.Collections, System.Diagnostics,
+  System.TimeSpan,
   System.Classes,
   System.Variants, Math,
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
@@ -103,7 +104,7 @@ uses AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA, IdSSLOpenSSL, languages,
   ClpSecureRandom,
   ClpISecureRandom,
   ClpCryptoApiRandomGenerator,
-  ClpICryptoApiRandomGenerator,
+  ClpICryptoApiRandomGenerator, PopupWindowData,
   AssetsMenagerData
 
 {$IFDEF ANDROID},
@@ -165,64 +166,6 @@ type
   THistoryHolder = class(TObject)
   public
     history: transactionHistory;
-  end;
-
-type
-  popupWindow = class(TPopup)
-  public
-
-    messageLabel: TLabel;
-
-    procedure _onEnd(sender: TObject);
-
-    constructor Create(mess: AnsiString);
-
-  end;
-
-type
-  popupWindowOK = class(TPopup)
-  private
-
-    _ImageLayout: TLayout;
-    _Image: TImage;
-
-    _OKbutton: TButton;
-    _lblMessage: TLabel;
-
-    _onOKButtonPress: TProc;
-
-    procedure _OKButtonpress(sender: TObject);
-    procedure _onEnd(sender: TObject);
-
-  public
-    constructor Create(OK: TProc; mess: AnsiString;
-      ButtonText: AnsiString = 'OK'; icon: integer = 1);
-
-  end;
-
-type
-  popupWindowYesNo = class(TPopup)
-  private
-    _lblMessage: TLabel;
-
-    _ImageLayout: TLayout;
-    _Image: TImage;
-
-    _ButtonLayout: TLayout;
-    _YesButton: TButton;
-    _NoButton: TButton;
-
-    _onYesPress: TProc;
-    _onNoPress: TProc;
-
-    procedure _onYesClick(sender: TObject);
-    procedure _onNoClick(sender: TObject);
-    procedure _OnExit(sender: TObject);
-
-  public
-    constructor Create(Yes, No: TProc; mess: AnsiString;
-      YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
-      icon: integer = 2);
   end;
 
 type
@@ -436,12 +379,13 @@ var
   AccountForSearchToken: Account;
   ResourceMenager: AssetsMenager;
 
-  globalLoadCacheTime : double = 0;
+  globalLoadCacheTime: Double = 0;
+  globalVerifyKeypoolTime: Double = 0;
 
 implementation
 
 uses Bitcoin, uHome, base58, Ethereum, coinData, strutils, secp256k1,
-  AccountRelated, TImageTextButtonData, KeyPoolRelated
+  AccountRelated, TImageTextButtonData, KeyPoolRelated,Nano
 {$IFDEF ANDROID}
 {$ELSE}
 {$ENDIF};
@@ -451,184 +395,176 @@ var
 
 procedure clearSendCache();
 var
- FilePath : AnSiString;
- ts : TStringList;
- arr : TJsonArray;
- obj : TJsonObject;
- val : TJsonValue;
- exist : boolean;
- coinID , X : Integer;
- i : integer;
+  FilePath: AnsiString;
+  ts: TStringList;
+  arr: TJsonArray;
+  obj: TJsonObject;
+  val: TJsonValue;
+  exist: boolean;
+  coinid, x: integer;
+  i: integer;
 begin
-//{$IFDEF ANDROID}
+  // {$IFDEF ANDROID}
 
-
-  filepath := tpath.Combine( CurrentAccount.DirPath , 'SendCache.dat');
+  FilePath := tpath.Combine(CurrentAccount.DirPath, 'SendCache.dat');
 
   ts := TStringList.Create();
-  if FileExists( filepath )  then
-    ts.LoadFromFile( filePath );
+  if FileExists(FilePath) then
+    ts.LoadFromFile(FilePath);
 
-  arr := TJsonArray(TJSONObject.ParseJSONValue(ts.Text));
+  arr := TJsonArray(TJsonObject.ParseJSONValue(ts.Text));
 
   exist := false;
   i := 0;
   for val in arr do
   begin
 
-    val.TryGetValue<Integer>('coinID', coinID);
+    val.TryGetValue<integer>('coinID', coinid);
 
-    val.TryGetValue<integer>('X' , x);
+    val.TryGetValue<integer>('X', x);
 
-    if (coinID = CurrentCoin.coin) and (X = currentCoin.X) then
+    if (coinid = CurrentCoin.coin) and (x = CurrentCoin.x) then
     begin
       arr.Remove(i);
       break;
     end;
-
 
     i := i + 1;
   end;
 
   ts.Text := arr.ToString;
 
-  ts.SaveToFile( FilePath );
+  ts.SaveToFile(FilePath);
 
   ts.Free;
   arr.Free();
-//{$ENDIF}
+  // {$ENDIF}
 end;
 
 procedure saveSendCacheToFile();
 var
- FilePath : AnSiString;
- ts : TStringList;
- arr : TJsonArray;
- obj : TJsonObject;
- val : TJsonValue;
- exist : boolean;
- coinID , X : Integer;
- i : integer;
+  FilePath: AnsiString;
+  ts: TStringList;
+  arr: TJsonArray;
+  obj: TJsonObject;
+  val: TJsonValue;
+  exist: boolean;
+  coinid, x: integer;
+  i: integer;
 begin
-//{$IFDEF ANDROID}
-  filepath := tpath.Combine( CurrentAccount.DirPath , 'SendCache.dat');
+  // {$IFDEF ANDROID}
+  FilePath := tpath.Combine(CurrentAccount.DirPath, 'SendCache.dat');
 
   ts := TStringList.Create();
-  if FileExists( filepath )  then
+  if FileExists(FilePath) then
   begin
-    ts.LoadFromFile( filePath );
-    arr := TJsonArray(TJSONObject.ParseJSONValue(ts.Text));
+    ts.LoadFromFile(FilePath);
+    arr := TJsonArray(TJsonObject.ParseJSONValue(ts.Text));
   end
   else
   begin
-    arr := TJSONArray.Create();
+    arr := TJsonArray.Create();
   end;
-
-
 
   exist := false;
   i := 0;
 
   if arr.Count > 0 then
-  for val in arr do
-  begin
-
-    val.TryGetValue<Integer>('coinID', coinID);
-
-    val.TryGetValue<integer>('X' , x);
-
-    if (coinID = CurrentCoin.coin) and (X = currentCoin.X) then
+    for val in arr do
     begin
-      arr.Remove(i);
-      break;
+
+      val.TryGetValue<integer>('coinID', coinid);
+
+      val.TryGetValue<integer>('X', x);
+
+      if (coinid = CurrentCoin.coin) and (x = CurrentCoin.x) then
+      begin
+        arr.Remove(i);
+        break;
+      end;
+
+      i := i + 1;
     end;
 
+  obj := TJsonObject.Create();
 
-    i := i + 1;
-  end;
+  obj.AddPair('coinID', intToStr(CurrentCoin.coin));
+  obj.AddPair('X', intToStr(CurrentCoin.x));
+  obj.AddPair('WVsendTO', frmhome.WVsendTO.Text);
+  obj.AddPair('wvAmount', frmhome.wvAmount.Text);
+  obj.AddPair('wvFee', frmhome.wvFee.Text);
 
-  obj := TJSONObject.Create();
-
-  obj.AddPair( 'coinID' , intToStr(CurrentCoin.coin) );
-  obj.AddPair( 'X' , intToStr(CurrentCoin.x) );
-  obj.AddPair( 'WVsendTO' ,frmhome.WVsendTO.Text );
-  obj.AddPair( 'wvAmount' ,frmhome.wvAmount.Text );
-  obj.AddPair( 'wvFee' ,frmhome.wvFee.Text );
-
-  arr.AddElement( obj );
+  arr.AddElement(obj);
 
   ts.Text := arr.ToString;
 
-  ts.SaveToFile( FilePath );
+  ts.SaveToFile(FilePath);
 
   ts.Free;
   arr.Free();
-//{$ENDIF}
+  // {$ENDIF}
 end;
 
 procedure loadSendCacheFromFile();
 var
- FilePath : AnSiString;
- ts : TStringList;
- arr : TJsonArray;
- obj : TJsonObject;
- val : TJsonValue;
- exist : boolean;
- coinID , X : Integer;
- i : integer;
- temp : AnsiString;
+  FilePath: AnsiString;
+  ts: TStringList;
+  arr: TJsonArray;
+  obj: TJsonObject;
+  val: TJsonValue;
+  exist: boolean;
+  coinid, x: integer;
+  i: integer;
+  temp: AnsiString;
 begin
-//{$IFDEF ANDROID}
-try
-  filepath := tpath.Combine( CurrentAccount.DirPath , 'SendCache.dat');
-  if not FileExists( filepath )  then
-    exit();
-  ts := TStringList.Create();
+  // {$IFDEF ANDROID}
+  try
+    FilePath := tpath.Combine(CurrentAccount.DirPath, 'SendCache.dat');
+    if not FileExists(FilePath) then
+      exit();
+    ts := TStringList.Create();
 
+    ts.LoadFromFile(FilePath);
 
+    arr := TJsonArray(TJsonObject.ParseJSONValue(ts.Text));
 
-  ts.LoadFromFile( filePath );
-
-  arr := TJsonArray(TJSONObject.ParseJSONValue(ts.Text));
-
-
-  for val in arr do
-  begin
-
-    val.TryGetValue<Integer>('coinID', coinID);
-
-    val.TryGetValue<integer>('X' , x);
-
-    if (coinID = CurrentCoin.coin) and (X = currentCoin.X) then
+    for val in arr do
     begin
 
-      val.TryGetValue<AnsiString>('WVsendTO' , temp );
-      frmhome.WVsendTO.Text := temp;
-      val.TryGetValue<AnsiString>('wvAmount' , temp );
-      frmhome.wvAmount.Text := temp;
-      val.TryGetValue<AnsiString>('wvFee' , temp );
-      frmhome.wvFee.Text := temp;
+      val.TryGetValue<integer>('coinID', coinid);
 
+      val.TryGetValue<integer>('X', x);
 
-      break;
+      if (coinid = CurrentCoin.coin) and (x = CurrentCoin.x) then
+      begin
+
+        val.TryGetValue<AnsiString>('WVsendTO', temp);
+        frmhome.WVsendTO.Text := temp;
+        val.TryGetValue<AnsiString>('wvAmount', temp);
+        frmhome.wvAmount.Text := temp;
+        val.TryGetValue<AnsiString>('wvFee', temp);
+        frmhome.wvFee.Text := temp;
+
+        break;
+      end;
+
     end;
 
+    ts.Free;
+    ts := nil;
+    arr.Free();
+    arr := nil;
+  except
+    on E: Exception do
+    begin
+      if ts <> nil then
+        ts.Free;
+      if arr <> nil then
+        arr.Free();
+    end;
   end;
 
-  ts.Free;
-  ts := nil;
-  arr.Free();
-  arr := nil;
-except on E: Exception do
-begin
-  if ts <> nil then
-    ts.Free;
-  if arr <> nil then
-    arr.Free();
-end;
-end;
-  
-//{$ENDIF}
+  // {$ENDIF}
 
 end;
 
@@ -1079,7 +1015,7 @@ begin
     image := TImage.Create(panel);
     image.parent := panel;
     image.Visible := true;
-    image.Bitmap := getCoinIcon(i);
+    image.Bitmap.LoadFromStream(getCoinIconResource(i));
     image.Align := TAlignLayout.Left;
     image.Margins.Left := 0;
     image.Margins.Right := 0;
@@ -1120,7 +1056,8 @@ begin
     image := TImage.Create(panel);
     image.parent := panel;
     image.Visible := true;
-    image.Bitmap := getTokenIcon(Token.availableToken[i].id);
+    image.Bitmap.LoadFromStream
+      (ResourceMenager.getAssets(Token.availableToken[i].resourcename));
     image.Align := TAlignLayout.Left;
     image.Margins.Left := 0;
     image.Margins.Right := 0;
@@ -1282,24 +1219,24 @@ begin
 
     frmhome.SearchInDashBrdImage.Visible := true;
 
-    {$IF DEFINED(ANDROID) OR DEFINED(OIS)}
-    frmhome.MoreImage.Visible := TRUE;
-    {$ENDIF}
-
-    frmhome.SearchInDashBrdImage.bitmap.loadFromStream( ResourceMenager.getAssets( 'SEARCH_' + RightStr(currentStyle, Length(currentStyle) - 3) ) );
-    {$IF DEFINED(ANDROID) OR DEFINED(OIS)}
-    frmhome.MoreImage.bitmap.loadFromStream( ResourceMenager.getAssets( 'MORE_' + RightStr(currentStyle, Length(currentStyle) - 3) ) );
-    {$ENDIF}
-
-
+{$IF DEFINED(ANDROID) OR DEFINED(OIS)}
+    frmhome.MoreImage.Visible := true;
+{$ENDIF}
+    frmhome.SearchInDashBrdImage.Bitmap.LoadFromStream
+      (ResourceMenager.getAssets('SEARCH_' + RightStr(currentStyle,
+      Length(currentStyle) - 3)));
+{$IF DEFINED(ANDROID) OR DEFINED(OIS)}
+    frmhome.MoreImage.Bitmap.LoadFromStream
+      (ResourceMenager.getAssets('MORE_' + RightStr(currentStyle,
+      Length(currentStyle) - 3)));
+{$ENDIF}
   end
   else
   begin
     frmhome.SearchInDashBrdImage.Visible := false;
-    {$IF DEFINED(ANDROID) OR DEFINED(OIS)}
+{$IF DEFINED(ANDROID) OR DEFINED(OIS)}
     frmhome.MoreImage.Visible := false;
-    {$ENDIF}
-
+{$ENDIF}
   end;
 
 end;
@@ -1364,10 +1301,13 @@ begin
     begin
       fee := StrFloatToBigInteger(wvFee.Text, availableCoin[CurrentCoin.coin]
         .decimals);
+    if CurrentCoin.coin=8 then
+    fee:=0;
       tempFee := fee;
     end
     else
     begin
+
       fee := BigInteger.Parse(wvFee.Text);
 
       if isTokenTransfer then
@@ -1397,8 +1337,9 @@ begin
         raise Exception.Create(dictionary('AmountExceed'));
         exit;
       end;
-    if ((amount) = 0) or ((fee) = 0) then
+    if ((amount) = 0) or (((fee) = 0) and (currentcoin.coin<>8)) then
     begin
+
       raise Exception.Create(dictionary('InvalidValues'));
 
       exit;
@@ -1464,9 +1405,13 @@ begin
     end
     else
     begin
-
+      if currentcoin.coin=8 then begin
+       sendFeeLabel.Visible:=false;
+       WaitTimeLabel.Text := 'This transaction must be mined, please be patient and do not close the application';
+      end else begin
       if AutomaticFeeRadio.IsChecked then
       begin
+      sendFeeLabel.Visible:=true;
         WaitTimeLabel.Text := 'The transaction should be confirmed in the ' +
           intToStr(Round(FeeSpin.Value)) + ' nearest blocks, in about ' +
           intToStr(Round(FeeSpin.Value)) + '0 minutes';
@@ -1475,7 +1420,7 @@ begin
       begin
         WaitTimeLabel.Text := 'Fee set by the user';
       end;
-
+      end;
       sendFeeLabel.Text := BigIntegerToFloatStr(fee,
         CurrentCryptoCurrency.decimals);
 
@@ -1629,7 +1574,7 @@ begin
           img.Visible := true;
           img.Align := TAlignLayout.Left;
           img.Width := 64;
-          img.Bitmap := T.getIcon;
+          img.Bitmap.LoadFromStream(T.getIconResource);
           img.Margins.top := 8;
           img.Margins.Bottom := 8;
           img.HitTest := false;
@@ -1848,9 +1793,10 @@ begin
     adrLabel.StyledSettings := adrLabel.StyledSettings - [TStyledSetting.size];
     adrLabel.TextSettings.Font.size := dashBoardFontSize;
     adrLabel.parent := panel;
-    if crypto is TwalletInfo then
+    if crypto is TWalletInfo then
     begin
-      adrLabel.Text := currentAccount.getDescription( TWalletInfo(crypto).coin , TwalletInfo(crypto).x );
+      adrLabel.Text := CurrentAccount.getDescription(TWalletInfo(crypto).coin,
+        TWalletInfo(crypto).x);
     end
     else
     begin
@@ -1861,7 +1807,7 @@ begin
       else
         adrLabel.Text := crypto.description;
     end;
-    
+
     adrLabel.AutoSize := false;
     adrLabel.Visible := true;
     adrLabel.TextSettings.WordWrap := false;
@@ -1915,7 +1861,7 @@ begin
     if crypto is TWalletInfo then
       coinIMG.Bitmap.LoadFromStream
         (ResourceMenager.getAssets(availableCoin[TWalletInfo(crypto).coin]
-        .ResourceName)) // getCoinIcon(TWalletInfo(crypto).coin)
+        .resourcename)) // getCoinIcon(TWalletInfo(crypto).coin)
     else
       coinIMG.Bitmap.LoadFromStream(Token(crypto).getIconResource);
     // getCoinIcon(TWalletInfo(crypto).coin)
@@ -1977,7 +1923,7 @@ begin
     raise Exception.Create('BECH FAILRE');
   intarr := Copy(bech.values, 1, Length(bech.values) - 1);
 
-  intarr := Change(bech.values, 5, 8);
+  intarr := ChangeBits(bech.values, 5, 8);
 
   hex := '';
   for i := 0 to Length(intarr) - 7 do
@@ -2039,7 +1985,7 @@ begin
 
   end;
 
-  intarr := Change(intarr, 4, 5);
+  intarr := ChangeBits(intarr, 4, 5);
   checksum := CreateChecksum8('bitcoincash', intarr);
 
   temparr := concat(intarr, checksum);
@@ -2676,7 +2622,7 @@ begin
     datalbl.Text := FormatDateTime('dd mmm yyyy hh:mm',
       UnixToDateTime(strToIntdef(hist[i].data, 0)));
     datalbl.TextSettings.HorzAlign := TTextAlign.Leading;
-
+    datalbl.Visible := TWalletInfo(wallet).coin <> 8;
     image := TImage.Create(panel);
     image.Width := 18;
     image.Height := 18;
@@ -2794,287 +2740,6 @@ begin
 
     result.Unmap(temp);
   end;
-
-end;
-
-constructor popupWindowYesNo.Create(Yes: TProc; No: TProc; mess: AnsiString;
-YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No'; icon: integer = 2);
-var
-  panel, Panel2: TPanel;
-  rect: TRectangle;
-  i: integer;
-begin
-  inherited Create(frmhome.pageControl);
-
-  _onYesPress := Yes;
-  _onNoPress := No;
-
-  parent := frmhome.pageControl;
-  Height := 300;
-  Width := 350;
-  Placement := TPlacement.Center;
-
-  Visible := true;
-  PlacementRectangle := TBounds.Create(RectF(0, 0, 0, 0));
-
-  panel := TPanel.Create(self);
-  panel.Align := TAlignLayout.Client;
-  panel.Height := 48;
-  panel.Visible := true;
-  panel.tag := i;
-  panel.parent := self;
-
-  rect := TRectangle.Create(panel);
-  rect.parent := panel;
-  rect.Align := TAlignLayout.Contents;
-  rect.Fill.Color := frmhome.StatusBarFixer.Fill.Color;
-
-  _ImageLayout := TLayout.Create(panel);
-  _ImageLayout.Visible := true;
-  _ImageLayout.Align := TAlignLayout.MostTop;
-  _ImageLayout.parent := panel;
-  _ImageLayout.Height := 96;
-
-  _Image := TImage.Create(_ImageLayout);
-  _Image.Align := TAlignLayout.Center;
-  _Image.Width := 64;
-  _Image.Height := 64;
-  _Image.Visible := true;
-  _Image.parent := _ImageLayout;
-  case icon of
-    0:
-      _Image.Bitmap := frmhome.OKImage.Bitmap;
-    1:
-      _Image.Bitmap := frmhome.InfoImage.Bitmap;
-    2:
-      _Image.Bitmap := frmhome.warningImage.Bitmap;
-    3:
-      _Image.Bitmap := frmhome.ErrorImage.Bitmap;
-  end;
-
-  _lblMessage := TLabel.Create(panel);
-  _lblMessage.Align := TAlignLayout.Client;
-  _lblMessage.Visible := true;
-  _lblMessage.parent := panel;
-  _lblMessage.Text := mess;
-  _lblMessage.TextSettings.HorzAlign := TTextAlign.Center;
-
-  _ButtonLayout := TLayout.Create(panel);
-  _ButtonLayout.Visible := true;
-  _ButtonLayout.Align := TAlignLayout.MostBottom;
-  _ButtonLayout.parent := panel;
-  _ButtonLayout.Height := 48;
-
-  _YesButton := TButton.Create(_ButtonLayout);
-  _YesButton.Align := TAlignLayout.Right;
-  _YesButton.Width := _ButtonLayout.Width / 2;
-  _YesButton.Visible := true;
-  _YesButton.parent := _ButtonLayout;
-  _YesButton.Text := YesText;
-  _YesButton.OnClick := _onYesClick;
-
-  _NoButton := TButton.Create(_ButtonLayout);
-  _NoButton.Align := TAlignLayout.Left;
-  _NoButton.Width := _ButtonLayout.Width / 2;
-  _NoButton.Visible := true;
-  _NoButton.parent := _ButtonLayout;
-  _NoButton.Text := NoText;
-  _NoButton.OnClick := _onNoClick;
-
-  Popup();
-
-  OnClosePopup := _OnExit;
-
-end;
-
-procedure popupWindowYesNo._OnExit(sender: TObject);
-begin
-
-  parent := nil;
-  Tthread.CreateAnonymousThread(
-    procedure
-    begin
-      Tthread.Synchronize(nil,
-        procedure
-        begin
-          DisposeOf();
-        end);
-    end).start;
-
-end;
-
-procedure popupWindowYesNo._onYesClick;
-begin
-  IsOpen := false;
-  _onYesPress();
-
-  ClosePopup();
-  // Release;
-
-end;
-
-procedure popupWindowYesNo._onNoClick;
-begin
-  IsOpen := false;
-
-  _onNoPress();
-
-  ClosePopup();
-  // Release;
-
-end;
-
-constructor popupWindowOK.Create(OK: TProc; mess: AnsiString;
-ButtonText: AnsiString = 'OK'; icon: integer = 1);
-var
-  panel, Panel2: TPanel;
-  i: integer;
-  rect: TRectangle;
-begin
-  inherited Create(frmhome.pageControl);
-  parent := frmhome.pageControl;
-  Height := 200;
-  Width := 300;
-  Placement := TPlacement.Center;
-
-  Visible := true;
-  PlacementRectangle := TBounds.Create(RectF(0, 0, 0, 0));
-
-  panel := TPanel.Create(self);
-  panel.Align := TAlignLayout.Client;
-  panel.Height := 48;
-  panel.Visible := true;
-  panel.tag := i;
-  panel.parent := self;
-
-  rect := TRectangle.Create(panel);
-  rect.parent := panel;
-  rect.Align := TAlignLayout.Contents;
-  rect.Fill.Color := frmhome.StatusBarFixer.Fill.Color;
-
-  _ImageLayout := TLayout.Create(panel);
-  _ImageLayout.Visible := true;
-  _ImageLayout.Align := TAlignLayout.MostTop;
-  _ImageLayout.parent := panel;
-  _ImageLayout.Height := 96;
-
-  _Image := TImage.Create(_ImageLayout);
-  _Image.Align := TAlignLayout.Center;
-  _Image.Width := 64;
-  _Image.Height := 64;
-  _Image.Visible := true;
-  _Image.parent := _ImageLayout;
-  case icon of
-    0:
-      _Image.Bitmap := frmhome.OKImage.Bitmap;
-    1:
-      _Image.Bitmap := frmhome.InfoImage.Bitmap;
-    2:
-      _Image.Bitmap := frmhome.warningImage.Bitmap;
-    3:
-      _Image.Bitmap := frmhome.ErrorImage.Bitmap;
-  end;
-
-  _lblMessage := TLabel.Create(panel);
-  _lblMessage.Align := TAlignLayout.Client;
-  _lblMessage.Visible := true;
-  _lblMessage.parent := panel;
-  _lblMessage.Text := mess;
-  _lblMessage.TextSettings.HorzAlign := TTextAlign.Center;
-
-  _OKbutton := TButton.Create(panel);
-  _OKbutton.Align := TAlignLayout.Bottom;
-  _OKbutton.Height := 48;
-  _OKbutton.Visible := true;
-  _OKbutton.parent := panel;
-  _OKbutton.OnClick := _OKButtonpress;
-  _OKbutton.Text := ButtonText;
-
-  _onOKButtonPress := OK;
-
-  self.OnClosePopup := _onEnd;
-
-  Popup();
-end;
-
-procedure popupWindowOK._OKButtonpress(sender: TObject);
-begin
-  IsOpen := false;
-  _onOKButtonPress();
-
-  ClosePopup();
-
-end;
-
-procedure popupWindowOK._onEnd(sender: TObject);
-begin
-
-  parent := nil;
-  Tthread.CreateAnonymousThread(
-    procedure
-    begin
-      Tthread.Synchronize(nil,
-        procedure
-        begin
-          DisposeOf();
-        end);
-    end).start;
-end;
-
-constructor popupWindow.Create(mess: AnsiString);
-var
-  panel, Panel2: TPanel;
-  i: integer;
-  rect: TRectangle;
-begin
-  inherited Create(frmhome.pageControl);
-
-  parent := frmhome.pageControl;
-  Height := 100;
-  Width := 300;
-  Placement := TPlacement.Center;
-
-  Visible := true;
-  PlacementRectangle := TBounds.Create(RectF(0, 0, 0, 0));
-
-  panel := TPanel.Create(self);
-  panel.Align := TAlignLayout.Client;
-  panel.Visible := true;
-  panel.tag := i;
-  panel.parent := self;
-
-  rect := TRectangle.Create(panel);
-  rect.parent := panel;
-  rect.Align := TAlignLayout.Contents;
-  rect.Fill.Color := frmhome.StatusBarFixer.Fill.Color;
-
-  messageLabel := TLabel.Create(panel);
-  messageLabel.Align := TAlignLayout.Client;
-  messageLabel.Visible := true;
-  messageLabel.parent := panel;
-  messageLabel.Text := mess;
-  messageLabel.TextSettings.HorzAlign := TTextAlign.Center;
-
-  self.OnClosePopup := _onEnd;
-
-  Popup();
-end;
-
-procedure popupWindow._onEnd(sender: TObject);
-begin
-
-  IsOpen := false;
-
-  parent := nil;
-  Tthread.CreateAnonymousThread(
-    procedure
-    begin
-      Tthread.Synchronize(nil,
-        procedure
-        begin
-          DisposeOf();
-        end);
-    end).start;
 
 end;
 
@@ -3549,8 +3214,10 @@ begin
 
       coinIMG := TImage.Create(frmhome.SelectNewCoinBox);
       coinIMG.parent := panel;
-      coinIMG.Bitmap := frmhome.coinIconsList.Source[i].MultiResBitmap
-        [0].Bitmap;
+      coinIMG.Bitmap.LoadFromStream
+        (ResourceMenager.getAssets(availableCoin[i].resourcename));
+      { := frmhome.coinIconsList.Source[i].MultiResBitmap
+        [0].Bitmap; }
       coinIMG.Height := 32.0;
       coinIMG.Width := 50;
       coinIMG.Position.x := 4;
@@ -3855,21 +3522,19 @@ var
   i: integer;
   conv: TConvert;
 
-//var
-  //Stopwatch: TStopwatch;
-  //Elapsed: TTimeSpan;
+var
+  Stopwatch: TStopwatch;
+  Elapsed: TTimeSpan;
 
 begin
-
-
 
   result := 'NOCACHE';
 
   if (CurrentAccount = nil) or
-    (fileExists(CurrentAccount.DirPath + '/cache.dat') = false) then
+    (FileExists(CurrentAccount.DirPath + '/cache.dat') = false) then
     exit;
 
-  //Stopwatch := TStopwatch.StartNew;
+  Stopwatch := TStopwatch.StartNew;
 
   list := TStringList.Create();
   try
@@ -3892,8 +3557,8 @@ begin
     list.Free;
   end;
 
-  //Elapsed := Stopwatch.Elapsed;
-  //globalLoadCacheTime := globalLoadCacheTime + Elapsed.TotalSeconds;
+  Elapsed := Stopwatch.Elapsed;
+  globalLoadCacheTime := globalLoadCacheTime + Elapsed.TotalSeconds;
 
 end;
 
@@ -3915,7 +3580,7 @@ begin
         Tthread.Synchronize(nil,
           procedure
           begin
-            if fileExists(CurrentAccount.DirPath + '/cache.dat') then
+            if FileExists(CurrentAccount.DirPath + '/cache.dat') then
               ts.LoadFromFile(CurrentAccount.DirPath + '/cache.dat');
           end);
 
@@ -4154,7 +3819,7 @@ var
   WDPath: AnsiString;
 begin
   WDPath := tpath.Combine(HOME_PATH, 'hodler.wallet.dat');
-  result := fileExists(WDPath);
+  result := FileExists(WDPath);
 end;
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
 
@@ -4532,7 +4197,7 @@ begin
   Flock := TObject.Create;
   TMonitor.Enter(Flock);
   try
-    if not fileExists(tpath.Combine(HOME_PATH, 'hodler.wallet.dat')) then
+    if not FileExists(tpath.Combine(HOME_PATH, 'hodler.wallet.dat')) then
     begin
       exit;
     end;
@@ -4575,6 +4240,7 @@ begin
 
   finally
     TMonitor.exit(Flock);
+    Flock.Free;
   end;
 
 end;
@@ -4645,7 +4311,11 @@ begin
   if ac = nil then
     raise Exception.Create('GenerateCoinsData() nullptr Exception');
 
-  frmhome.pageControl.ActiveTab := frmhome.WaitWalletGenerate;
+  Tthread.Synchronize(nil,
+    procedure
+    begin
+      frmhome.pageControl.ActiveTab := frmhome.WaitWalletGenerate;
+    end);
 
   try
 
@@ -4714,7 +4384,24 @@ begin
 
           continue;
         end;
+        if panel.tag = 8 then
+        begin
 
+          wd := nano_createHD( 0, 0, seed);
+          wd.orderInWallet := Position;
+          Inc(Position, 48);
+          ac.AddCoin(wd);
+          Tthread.Synchronize(nil,
+            procedure
+            begin
+              frmhome.WaitForGenerationLabel.Text := 'Generating NANO Wallet';
+              frmhome.WaitForGenerationProgressBar.Value :=
+                frmhome.WaitForGenerationProgressBar.Value + 1;
+            end);
+
+
+          continue;
+        end;
         for j := 0 to 4 do
         begin
           wd := Bitcoin_createHD(panel.tag, 0, j, seed);
@@ -4933,13 +4620,26 @@ begin
             if cc is TWalletInfo then
             begin
 
-              if TWalletInfo(cc).coin = 4 then
+              if TWalletInfo(cc).coin in [4, 8] then
               begin
-
-                TLabel(fmxObj).Text := BigIntegerBeautifulStr
-                  (cc.confirmed + bal.unconfirmed.AsInt64, cc.decimals) + '    '
-                  + floatToStrF(cc.getFiat(), ffFixed, 15, 2) + ' ' +
-                  frmhome.CurrencyConverter.symbol;
+                if TWalletInfo(cc).coin = 4 then
+                  TLabel(fmxObj).Text :=
+                    BigIntegerBeautifulStr
+                    (cc.confirmed + bal.unconfirmed.AsInt64, cc.decimals) +
+                    '    ' + floatToStrF(cc.getFiat(), ffFixed, 15, 2) + ' ' +
+                    frmhome.CurrencyConverter.symbol;
+                if TWalletInfo(cc).coin = 8 then
+                begin
+                  TLabel(fmxObj).Text := BigIntegerBeautifulStr(cc.confirmed,
+                    cc.decimals) + '    ' + floatToStrF(cc.getConfirmedFiat(),
+                    ffFixed, 15, 2) + ' ' + frmhome.CurrencyConverter.symbol;
+                  if cc.unconfirmed > 0 then
+                    TLabel(fmxObj).Text := TLabel(fmxObj).Text + #13#10 +
+                      ' Unpocketed ' + BigIntegerBeautifulStr(cc.unconfirmed,
+                      cc.decimals) + '    ' +
+                      floatToStrF(cc.getunConfirmedFiat(), ffFixed, 15, 2) + ' '
+                      + frmhome.CurrencyConverter.symbol
+                end;
               end
               else
               begin
@@ -4977,7 +4677,7 @@ begin
       if fmxObj.TagString = 'price' then
       begin
         try
-          if cc.rate >= 0 then
+          if cc.rate >= 0.0 then
             TLabel(fmxObj).Text :=
               floatToStrF(frmhome.CurrencyConverter.calculate(cc.rate), ffFixed,
               15, 2) + ' ' + frmhome.CurrencyConverter.symbol + '/' +
@@ -5014,10 +4714,11 @@ begin
         if fmxObj.TagString = 'name' then
         begin
 
-          if cc is TwalletInfo then
+          if cc is TWalletInfo then
           begin
 
-            TLabel(fmxObj).Text := CurrentAccount.getDescription( TwalletInfo(cc).coin, TwalletInfo(cc).x );
+            TLabel(fmxObj).Text := CurrentAccount.getDescription
+              (TWalletInfo(cc).coin, TWalletInfo(cc).x);
 
           end
           else
@@ -5032,7 +4733,6 @@ begin
 
           end;
 
-          
         end;
 
       finally

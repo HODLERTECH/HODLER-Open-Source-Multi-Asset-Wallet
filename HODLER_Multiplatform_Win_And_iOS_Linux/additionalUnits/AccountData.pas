@@ -3,7 +3,7 @@ unit AccountData;
 interface
 
 uses tokenData, WalletStructureData, cryptoCurrencyData, System.IOUtils,
-  Sysutils, Classes, FMX.Dialogs, Json, Velthuis.BigIntegers, math ,System.Generics.Collections;
+  Sysutils, Classes, FMX.Dialogs, Json, Velthuis.BigIntegers, math ,System.Generics.Collections , System.SyncObjs;
 
 procedure loadCryptoCurrencyJSONData(data: TJSONValue; cc: cryptoCurrency);
 function getCryptoCurrencyJsonData(cc: cryptoCurrency): TJSONObject;
@@ -53,14 +53,19 @@ type
     function getSpendable(wi: TWalletInfo): BigInteger;
 
     function getDescription( id , X : Integer ): AnsiString;
-    procedure changeDescription( id , X : Integer ; newDesc : AnsiString ); procedure SaveDescriptionFile();
-    procedure LoadDescriptionFile();
+    procedure changeDescription( id , X : Integer ; newDesc : AnsiString );
+    
   private
+
+    var
+      mutexTokenFile , mutexCoinFile , mutexSeedFile , mutexDescriptionFile : TSemaphore;
+
     procedure SaveTokenFile();
     procedure SaveCoinFile();
     procedure SaveSeedFile();
 
-
+    procedure SaveDescriptionFile();
+    procedure LoadDescriptionFile();
 
     procedure LoadCoinFile();
     procedure LoadTokenFile();
@@ -70,6 +75,7 @@ type
     procedure AddCoinWithoutSave(wd: TWalletInfo);
     procedure AddTokenWithoutSave(T: Token);
 
+    procedure changeDescriptionwithoutSave( id , X : Integer ; newDesc : AnsiString );
   end;
 
 implementation
@@ -98,6 +104,12 @@ begin
   SaveDescriptionFile();
 end;
 
+procedure Account.changeDescriptionWithoutSave( id , X : Integer ; newDesc : AnsiString );
+begin
+  DescriptionDict.AddOrSetValue( Tpair<Integer , Integer >.create( id , X) , newDesc );
+
+end;
+
 procedure Account.SaveDescriptionFile();
 var
   obj : TJsonObject;
@@ -106,6 +118,8 @@ var
   str : TJSONString;
   ts : TstringList;
 begin
+
+  mutexDescriptionFile.Acquire;
   obj := TJsonObject.Create();
 
   it := DescriptionDict.GetEnumerator;
@@ -126,6 +140,8 @@ begin
 
   ts.Free();
   obj.Free;
+
+  mutexDescriptionFile.Release;
 end;
 
 
@@ -137,15 +153,20 @@ var
   str : TJSONString;
   ts , temp : TstringList;
 begin
-
+  mutexDescriptionFile.Acquire;
   if not FileExists( DescriptionFilePath ) then
+  begin
+    mutexDescriptionFile.Release;
     exit();
+
+  end;
 
   ts := TStringList.Create();
   ts.loadFromFile( DescriptionFilePath );
   if ts.Text = '' then
   begin
     ts.free();
+    mutexDescriptionFile.Release;
     exit();
   end;
 
@@ -158,7 +179,7 @@ begin
 
     temp := SplitString(it.Current.JsonString.Value , '_' );
 
-    changeDescription( strToInt(temp[0]) , strToInt(temp[1]) ,  it.Current.JsonValue.Value );
+    changeDescriptionwithoutSave( strToInt(temp[0]) , strToInt(temp[1]) ,  it.Current.JsonValue.Value );
 
     temp.Free();
   end;
@@ -166,6 +187,7 @@ begin
   ts.Free();
 
   obj.Free();
+  mutexDescriptionFile.Release;
 end;
 
 
@@ -390,6 +412,11 @@ begin
   SetLength(myCoins, 0);
   SetLength(myTokens, 0);
 
+  mutexTokenFile := TSemaphore.Create();
+  mutexCoinFile := TSemaphore.Create();
+  mutexSeedFile := TSemaphore.Create();
+  mutexDescriptionFile := TSemaphore.Create();
+
 end;
 
 destructor Account.Destroy();
@@ -397,6 +424,11 @@ begin
 
   clearArrays();
   DescriptionDict.Free();
+
+  mutexTokenFile.Free;
+  mutexCoinFile.Free;
+  mutexSeedFile.Free;
+  mutexDescriptionFile.Free;
 
   if SyncBalanceThr <> nil then
 
@@ -414,8 +446,9 @@ var
   ts: TStringLIst;
   flock: TObject;
 begin
-  flock := TObject.Create;
-  TMonitor.Enter(flock);
+  mutexSeedFile.Acquire;
+  {flock := TObject.Create;
+    TMonitor.Enter(flock);}
   ts := TStringLIst.Create();
   try
     ts.Add(inttoStr(TCAIterations));
@@ -431,8 +464,9 @@ begin
 
   end;
   ts.Free;
-  TMonitor.exit(flock);
-  flock.Free;
+  {TMonitor.exit(flock);
+    flock.Free;}
+    mutexSeedFile.Release;
 end;
 
 procedure Account.LoadSeedFile();
@@ -440,10 +474,14 @@ var
   ts: TStringLIst;
   flock:TObject;
 begin
-flock:=TObject.Create;
- TMonitor.Enter(flock);
+{flock:=TObject.Create;
+ TMonitor.Enter(flock);}
+
+ mutexSeedFile.Acquire;
+
   ts := TStringLIst.Create();
  try
+
   ts.LoadFromFile(SeedFilePath);
 
   TCAIterations := strtoInt(ts.Strings[0]);
@@ -460,8 +498,10 @@ flock:=TObject.Create;
     hideEmpties := false;
   end;  except on E:Exception do begin end; end;
   ts.Free;
-  TMonitor.exit(flock);
-  flock.Free;
+
+  mutexSeedFile.Release;
+  {TMonitor.exit(flock);
+    flock.Free;}
 end;
 
 function Account.countWalletBy(id: Integer): Integer;
@@ -533,8 +573,8 @@ var
   T: Token;
   flock: TObject;
 begin
-  flock := TObject.Create;
-  TMonitor.Enter(flock);
+  //flock := TObject.Create;
+  //TMonitor.Enter(flock);
 
   clearArrays();
 
@@ -544,8 +584,8 @@ begin
   LoadTokenFile();
   LoadDescriptionFile();
 
-  TMonitor.exit(flock);
-  flock.Free;
+  //TMonitor.exit(flock);
+  //flock.Free;
 end;
 
 procedure Account.LoadCoinFile();
@@ -601,11 +641,19 @@ var
 var
   flock: TObject;
 begin
-  flock := TObject.Create;
-  TMonitor.Enter(flock);
+
+  mutexCoinFile.Acquire;
+
+  {flock := TObject.Create;
+    TMonitor.Enter(flock);}
 
   if not fileExists(CoinFilePath) then
+  begin
+
+    mutexCoinFile.Release;
     exit;
+
+  end;
 
   ts := TStringLIst.Create();
 
@@ -667,8 +715,11 @@ begin
   // ts.LoadFromFile(CoinFilePath);
 
   ts.Free;
-  TMonitor.exit(flock);
-  flock.Free;
+
+  mutexCoinFile.Release;
+  {
+    TMonitor.exit(flock);
+      flock.Free;}
 end;
 
 procedure Account.LoadTokenFile();
@@ -681,8 +732,9 @@ var
   tempJson: TJSONValue;
   flock: TObject;
 begin
-  flock := TObject.Create;
-  TMonitor.Enter(flock);
+  {flock := TObject.Create;
+    TMonitor.Enter(flock);}
+    mutexTokenFile.Acquire;
   if fileExists(TokenFilePath) then
   begin
 
@@ -712,7 +764,7 @@ begin
 
         if (T.id < 10000) or (Token.availableToken[T.id - 10000].address <> '')
         then // if token.address = ''   token is no longer exist
-          AddToken(T);
+          AddTokenWithoutSave(T);
 
         {
           tokenJson.AddPair('name' , myTokens[i].name );
@@ -738,7 +790,7 @@ begin
         // histSize := strtoInt(ts[i]);
         inc(i);
 
-        AddToken(T);
+        AddTokenWithoutSave(T);
         // add new token to array myTokens
 
       end;
@@ -748,8 +800,10 @@ begin
     ts.Free;
 
   end;
-  TMonitor.exit(flock);
-  flock.Free;
+
+  mutexTokenFile.Release;
+  {TMonitor.exit(flock);
+    flock.Free;}
 end;
 
 procedure Account.SaveFiles();
@@ -759,8 +813,8 @@ var
   fileData: AnsiString;
   flock: TObject;
 begin
-  flock := TObject.Create;
-  TMonitor.Enter(flock);
+  //flock := TObject.Create;
+  //TMonitor.Enter(flock);
 
   SaveSeedFile();
 
@@ -768,8 +822,8 @@ begin
   SaveTokenFile();
   SaveDescriptionFile();
 
-  TMonitor.exit(flock);
-  flock.Free;
+ // TMonitor.exit(flock);
+  //flock.Free;
 end;
 
 procedure Account.SaveTokenFile();
@@ -781,8 +835,11 @@ var
   tokenJson: TJSONObject;
   flock: TObject;
 begin
-  flock := TObject.Create;
-  TMonitor.Enter(flock);
+  {flock := TObject.Create;
+  TMonitor.Enter(flock); }
+
+  mutexTokenFile.Acquire;
+
   ts := TStringLIst.Create();
   try
     TokenArray := TJsonArray.Create();
@@ -812,8 +869,9 @@ begin
     end;
   end;
   ts.Free;
-  TMonitor.exit(flock);
-  flock.Free;
+  mutexTokenFile.Release;
+  {TMonitor.exit(flock);
+  flock.Free; }
 end;
 
 procedure Account.SaveCoinFile();
@@ -826,8 +884,10 @@ var
   dataJson: TJSONObject;
   flock: TObject;
 begin
-  flock := TObject.Create;
-  TMonitor.Enter(flock);
+  {flock := TObject.Create;
+  TMonitor.Enter(flock);   }
+  mutexCoinFile.Acquire();
+
   JsonArray := TJsonArray.Create();
 
   for data in myCoins do
@@ -868,8 +928,11 @@ begin
   end;
   ts.Free;
   JsonArray.Free;
-  TMonitor.exit(flock);
-  flock.Free;
+
+  mutexCoinFile.Release;
+
+  {TMonitor.exit(flock);
+  flock.Free; }
 end;
 
 procedure loadCryptoCurrencyJSONData(data: TJSONValue; cc: cryptoCurrency);

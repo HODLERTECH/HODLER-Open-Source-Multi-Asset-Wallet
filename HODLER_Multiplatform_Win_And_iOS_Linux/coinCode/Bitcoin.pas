@@ -32,7 +32,7 @@ implementation
 
 uses
   uHome, transactions, tokenData, bech32, misc, SyncThr, WalletViewRelated,
-  KeypoolRelated;
+  KeypoolRelated,Nano;
 
 function Bitcoin_createHD(coinid, x, y: integer; MasterSeed: AnsiString)
   : TWalletInfo;
@@ -228,9 +228,32 @@ function sendCoinsTO(from: TWalletInfo; sendto: AnsiString;
 var
   TX: AnsiString;
   TXBuilder: TXBuilder_ETH;
+  procedure cleanupSend;
+  begin
+     TThread.CreateAnonymousThread(
+      procedure
+      begin
+        if CurrentCoin.description <> '__dashbrd__' then
+        begin
+          SyncThr.SynchronizeCryptoCurrency(CurrentCoin);
+          reloadWalletView;
+        end;
+      end).Start();
+  end;
 begin
 
   startFullfillingKeypool(MasterSeed);
+  if CurrentCoin.coin=8 then begin
+    TX:=nano_send(from,sendto,Amount,MasterSeed);
+    wipeAnsiString(masterseed);
+    cleanupSend;
+    Exit(tx);
+
+
+  end else begin
+
+
+
   if CurrentCoin.coin <> 4 then
   begin
     if ((CurrentCoin.coin in [0, 1, 5, 6])) and
@@ -270,7 +293,7 @@ begin
     TXBuilder.createPreImage;
     TXBuilder.sign(MasterSeed);
     TX := TXBuilder.Image;
-  end;
+  end;  end;
   result := TX;
   if TX <> '' then
   begin
@@ -281,15 +304,7 @@ begin
     result := getDataOverHTTP(HODLER_URL + 'sendTX.php?coin=' + coin + '&tx=' +
       TX + '&os=' + SYSTEM_NAME + '&appver=' + StringReplace(CURRENT_VERSION,
       '.', 'x', [rfReplaceAll]), false, true);
-    TThread.CreateAnonymousThread(
-      procedure
-      begin
-        if CurrentCoin.description <> '__dashbrd__' then
-        begin
-          SyncThr.SynchronizeCryptoCurrency(CurrentCoin);
-          reloadWalletView;
-        end;
-      end).Start();
+   cleanupSend;
   end;
 end;
 

@@ -20,6 +20,7 @@ type
     constructor Create(AOwner: TComponent); Override;
     procedure Start();
     procedure Stop();
+    destructor Destroy(); override;
 
   published
 
@@ -34,6 +35,14 @@ uses uhome;
 procedure Register;
 begin
   RegisterComponents('Samples', [TRotateImage]);
+end;
+
+destructor TRotateImage.destroy();
+begin
+
+  inherited;
+  stop();
+
 end;
 
 procedure TRotateImage.Start();

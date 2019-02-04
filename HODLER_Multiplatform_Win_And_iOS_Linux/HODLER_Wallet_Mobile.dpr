@@ -133,7 +133,12 @@ uses
   TRotateImageData in 'components\TRotateImageData.pas',
   debugAnalysis in 'additionalUnits\debugAnalysis.pas',
   KeypoolRelated in 'additionalUnits\KeypoolRelated.pas',
-  AssetsMenagerData in 'additionalUnits\AssetsMenagerData.pas';
+  AssetsMenagerData in 'additionalUnits\AssetsMenagerData.pas',
+  CrossPlatformHeaders in 'CrossPlatformHeaders.pas',
+  PopupWindowData in 'additionalUnits\PopupWindowData.pas',
+  NotificationLayoutData in 'components\NotificationLayoutData.pas',
+  ED25519_Blake2b in 'coinCode\ED25519_Blake2b.pas',
+  Nano in 'coinCode\Nano.pas';
 
 {$R *.res}
 

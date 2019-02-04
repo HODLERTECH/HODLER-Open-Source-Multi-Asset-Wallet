@@ -15,7 +15,9 @@ unit uHome;
 interface
 
 uses
-  SysUtils, System.Types, System.UITypes, System.Classes, strUtils,
+  {$IFDEF MSWINDOWS}
+   Windows,
+{$ENDIF}SysUtils, System.Types, System.UITypes, System.Classes, strUtils,
   SyncThr, System.Generics.Collections, System.character,
   System.DateUtils, System.Messaging,
   System.Variants, System.IOUtils,
@@ -30,7 +32,7 @@ uses
   FMX.Clipboard, bech32, cryptoCurrencyData, FMX.VirtualKeyBoard, JSON,
   languages, WIF, AccountData, WalletStructureData,
   System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
-  CurrencyConverter, uEncryptedZipFile, System.Zip, TRotateImageData
+  CurrencyConverter, uEncryptedZipFile, System.Zip, TRotateImageData , popupwindowData , notificationLayoutData
 {$IFDEF ANDROID},
   FMX.VirtualKeyBoard.Android,
   Androidapi.JNI,
@@ -257,7 +259,7 @@ type
     SendVertScrollBox: TVertScrollBox;
     StyleBook1: TStyleBook;
     SendAmountLayout: TLayout;
-    Layout3: TLayout;
+    ShowAdvancedLayout: TLayout;
     TransactionFeeLayout: TLayout;
     SendToLayout: TLayout;
     AutomaticFeeLayout: TLayout;
@@ -350,7 +352,6 @@ type
     OrganizeButton: TButton;
     WalletList: TVertScrollBox;
     ShowHideAdvancedButton: TButton;
-    ImageList2: TImageList;
     arrowImg: TImage;
     arrowList: TImageList;
     Layout2: TLayout;
@@ -549,7 +550,6 @@ type
     TransactionWaitForSendLinkLabel: TLabel;
     Layout53: TLayout;
     WaitTimeLabel: TLabel;
-    coinIconsList: TImageList;
     WelcomeTabInfoLabel: TLabel;
     AddAccountInfoLabel: TLabel;
     BackupInfoLabel: TLabel;
@@ -615,7 +615,6 @@ type
     notPrivTCA1: TCheckBox;
     LoadMore: TButton;
     FindUnusedAddressButton: TButton;
-    TokenIcons: TImageList;
     RavencoinAddrTypeLayout: TLayout;
     LegacyRavenAddrButton: TButton;
     SegwitRavenAddrButton: TButton;
@@ -809,6 +808,7 @@ type
     SendErrorMsgSwitch: TCheckBox;
     UserReportSendLogsSwitch: TCheckBox;
     UserReportDeviceInfoSwitch: TCheckBox;
+    NanoUnlocker: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1075,12 +1075,14 @@ type
     procedure SweepQRButtonClick(Sender: TObject);
     procedure btnChangeDescryptionBackClick(Sender: TObject);
     procedure SendErrorMsgSwitchClick(Sender: TObject);
+    procedure NanoUnlockerClick(Sender: TObject);
     //procedure UserReportSendLogsSwitchClick(Sender: TObject);
 
   private
     { Private declarations }
 
     procedure GetImage();
+    procedure MineNano(Sender: TObject);
   public
     { Public declarations }
 
@@ -1142,6 +1144,7 @@ type
   var
     refreshLocalImage: TRotateImage;
     refreshGlobalImage: TRotateImage;
+    NotificationLayout : TNotificationLayout;
 
   var
     HistoryMaxLength: Integer;
@@ -1216,7 +1219,7 @@ implementation
 
 uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
   TokenData, AccountRelated, QRRelated, FileManagerRelated, WalletViewRelated,
-  BackupRelated, debugAnalysis, KeypoolRelated
+  BackupRelated, debugAnalysis, KeypoolRelated,Nano
 {$IFDEF ANDRIOD}
 {$ENDIF}
 {$IFDEF MSWINDOWS}
@@ -2735,7 +2738,8 @@ end;
 procedure TfrmHome.btnSWipeClick(Sender: TObject);
 begin
 
-  popupWindowYesNo.Create(
+  //PopupWindowProtectYesNo.Create(
+    NotificationLayout.popupProtectedConfirm(
     procedure()
     begin
       wipeWalletDat;
@@ -2936,6 +2940,19 @@ procedure TfrmHome.notPrivTCA2Change(Sender: TObject);
 begin
   notPrivTCA1.IsChecked := notPrivTCA2.IsChecked;
 end;
+procedure TfrmHome.MineNano(Sender: TObject);
+begin
+  nano_DoMine(cryptoCurrency(NanoUnlocker.TagObject),passwordForDecrypt.Text);
+  passwordForDecrypt.Text:='';
+  PageControl.ActiveTab:=walletView;
+end;
+procedure TfrmHome.NanoUnlockerClick(Sender: TObject);
+begin
+     btnDecryptSeed.onclick := MIneNano;
+  decryptSeedBackTabItem := PageControl.ActiveTab;
+  PageControl.ActiveTab := descryptSeed;
+  btnDSBack.onclick := backBtnDecryptSeed;
+end;
 
 procedure TfrmHome.NewCoinPrivKeyOKButtonClick(Sender: TObject);
 begin
@@ -3064,21 +3081,14 @@ var
   actionListener: TActionList;
 begin
 
-  {CurrentAccount.changeDescription( 0 , 0 , 'dupa');
-  CurrentAccount.changeDescription( 1 , 0 , 'dupa2');
-  CurrentAccount.changeDescription( 0 , 2 , 'dupa3');
-  CurrentAccount.changeDescription( 1 , 1 , 'kutas');
-  CurrentAccount.changeDescription( 1 , 1 , 'kutas2');
-  CurrentAccount.SaveDescriptionFile; }
+  NotificationLayout.popupProtectedConfirm(procedure
+  begin
 
-  CurrentAccount.LoadDescriptionFile();
-  showmessage( CurrentAccount.getDescription( 0 , 0) + #13#10 +
-   CurrentAccount.getDescription( 1 , 0) + #13#10 +
-   CurrentAccount.getDescription( 0 , 2) + #13#10 +
-   CurrentAccount.getDescription( 1 , 1) + #13#10 +
-   CurrentAccount.getDescription( 3 , 0) + #13#10 +
-   CurrentAccount.getDescription( 2 , 2)
-  );
+  end , procedure
+  begin
+
+
+  end , 'dupa');
 
 end;
 
@@ -3124,7 +3134,7 @@ procedure TfrmHome.ShowHideAdvancedButtonClick(Sender: TObject);
 begin
 
   TransactionFeeLayout.Visible := not TransactionFeeLayout.Visible;
-  TransactionFeeLayout.Position.Y := Layout3.Position.Y + 1;
+  TransactionFeeLayout.Position.Y := ShowAdvancedLayout.Position.Y + 1;
 
   if TransactionFeeLayout.Visible then
   begin
@@ -3449,10 +3459,11 @@ end;
 
 procedure TfrmHome.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
+  //AccountRelated.CloseHodler();
 {$IFDEF WIN32 or WIN64}
   stylo.Destroy;
   try
-    halt(0);
+    //halt(0);
   except
 
   end;
@@ -3617,7 +3628,9 @@ procedure TfrmHome.FormShow(Sender: TObject);
       TControl(Obj).Opacity := 0;
   end;
 
+
 begin
+
   LabelEditApplyStyleLookup(HistoryTransactionValue);
   LabelEditApplyStyleLookup(HistoryTransactionDate);
   LabelEditApplyStyleLookup(historyTransactionConfirmation);

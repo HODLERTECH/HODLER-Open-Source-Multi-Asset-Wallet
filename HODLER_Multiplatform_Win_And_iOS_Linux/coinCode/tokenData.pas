@@ -48,12 +48,13 @@ type
     function toJson(): TJSONObject;
     function send(address: AnsiString): boolean; virtual;
     function toString(): AnsiString; virtual;
-    function getIcon(): TBitmap; override;
-    function getIconResource(): TStream;
+    function getIconResource(): TStream; override;
+    //function getIconResource(): TStream;
+
 
     // property name: AnsiString read _name;
     // property id : Integer read _id;
-    property image: TBitmap read getIcon;
+    //property image: TBitmap read getIcon;
     // property shortcut: AnsiString read _shortcut;
     property ContractAddress: AnsiString read _contractAddress;
     // property decimals : Integer read _decimals;
@@ -176,7 +177,6 @@ type
 
   end;
 
-function getTokenIcon(id: integer): TBitmap;
 
 implementation
 
@@ -267,7 +267,7 @@ begin
 end;
 
 // return token icon  or generate syntetic when icon doesn't exist
-function Token.getIcon(): TBitmap;
+{function Token.getIcon(): TBitmap;
 begin
   // sry
   if (id >= 10000) and (id < 10000 + length(availableToken)) then
@@ -277,14 +277,8 @@ begin
   else
     result := generateIcon(ContractAddress);
 
-end;
+end;   }
 
-function getTokenIcon(id: integer): TBitmap;
-begin
-
-  result := frmhome.TokenIcons.Source[id - 10000].MultiResBitmap[0].Bitmap;
-
-end;
 
 // return string      you can build a token from it
 function Token.toString: AnsiString;

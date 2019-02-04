@@ -566,6 +566,10 @@
         <DCCReference Include="additionalUnits\debugAnalysis.pas"/>
         <DCCReference Include="additionalUnits\KeypoolRelated.pas"/>
         <DCCReference Include="additionalUnits\AssetsMenagerData.pas"/>
+        <DCCReference Include="additionalUnits\PopupWindowData.pas"/>
+        <DCCReference Include="CrossPlatformHeaders.pas"/>
+        <DCCReference Include="components\NotificationLayoutData.pas"/>
+        <DCCReference Include="coinCode\ED25519_Blake2b.pas"/>
         <DCCReference Include="coinCode\Nano.pas"/>
         <RcItem Include="Jet.style">
             <ContainerId>ResourceItem</ContainerId>
@@ -801,6 +805,10 @@
         <RcItem Include="token_icons\search_dark.png">
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>SEARCH_DARK</ResourceId>
+        </RcItem>
+        <RcItem Include="coin_icons\Nano-icon.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>NANO_IMG</ResourceId>
         </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
@@ -2130,6 +2138,12 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_80x80.png" Configuration="Debug" Class="iPhone_Spotlight80">
                     <Platform Name="iOSDevice32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="coin_icons\Nano-icon.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

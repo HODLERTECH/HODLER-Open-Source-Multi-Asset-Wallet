@@ -12,7 +12,7 @@ uses
   FMX.Layouts, FMX.ExtCtrls, Velthuis.BigIntegers, FMX.ScrollBox, FMX.Memo,
   FMX.Platform, System.Threading, Math, DelphiZXingQRCode,
   FMX.TabControl, FMX.Edit,
-  FMX.Clipboard, FMX.VirtualKeyBoard, JSON,
+  FMX.Clipboard, FMX.VirtualKeyBoard, JSON , popupwindowData,
   languages,
 
   FMX.Media, FMX.Objects, uEncryptedZipFile, System.Zip, TRotateImageData
@@ -37,7 +37,7 @@ uses
   ZXing.ScanManager, FMX.EditBox, FMX.SpinBox, FMX.Gestures, FMX.Effects,
   FMX.Filter.Effects, System.Actions, FMX.ActnList, System.Math.Vectors,
   FMX.Controls3D, FMX.Layers3D, FMX.StdActns, FMX.MediaLibrary.Actions,
-  FMX.ComboEdit;
+  FMX.ComboEdit, NotificationLayoutData;
 
 procedure deleteYAddress(Sender: Tobject);
 procedure generateNewYAddress(Sender: Tobject);
@@ -94,6 +94,7 @@ var
     rec.Align := TAlignLayout.Contents;
     rec.Opacity := 0.1;
     AEditControl.Repaint;
+
   end;
 
   procedure fixEditBG;
@@ -113,7 +114,8 @@ begin
   begin
     KeypoolSanitizer.Interval := 30000;
     gathener.Enabled := true;
-
+    NanoUnlocker.Visible:=False;
+    NanoUnlocker.TagString:='LOADMORE';
     if not isWalletDatExists then
     begin
       createWalletDat();
@@ -165,7 +167,9 @@ begin
 
         ChangeAccountButton.Text := lastClosedAccount;
 
-        LoadCurrentAccount(lastClosedAccount);
+        if (currentAccount = nil) or (CurrentAccount.name <> lastClosedAccount) then
+          LoadCurrentAccount(lastClosedAccount);
+
       except
         on E: Exception do
         begin
@@ -199,9 +203,9 @@ begin
           var
             i: integer;
           begin
-            Tthread.Synchronize(nil,
-              procedure
-              begin
+            //Tthread.Synchronize(nil,
+            //  procedure
+            //  begin
 
                 LATEST_VERSION :=
                   trim(getDataOverHttp
@@ -210,13 +214,13 @@ begin
                   + {$IFDEF MSWINDOWS}'&os=win' {$ELSE}'&os=android'
 {$ENDIF}, false));
 
-              end);
+            //  end);
 
-            for i := 0 to length(currentAccount.myCoins) - 1 do
+            {for i := 0 to length(currentAccount.myCoins) - 1 do
             begin
               if currentAccount.myCoins[i].coin = 4 then
                 SearchTokens(currentAccount.myCoins[i].addr);
-            end;
+            end; }
 
           end).Start;
 
@@ -428,6 +432,9 @@ end;
 procedure CloseHodler();
 begin
   ResourceMenager.free;
+  currentAccount.Free;
+  frmhome.refreshLocalImage.Stop();
+  frmhome.refreshGlobalImage.Stop();
 end;
 
 procedure InitializeHodler;
@@ -506,21 +513,28 @@ begin
 
     with frmHome do
     begin
+
 {$IFDEF IOS}
       StyloSwitch.Visible := false;
 {$ENDIF}
+
+
+
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
       HOME_PATH := System.IOUtils.TPath.GetDocumentsPath;
       HOME_TABITEM := TTabItem(frmHome.FindComponent('dashbrd'));
-      debugAnalysis.LOG_FILE_PATH := HOME_PATH;
+      debugAnalysis.LOG_FILE_PATH := System.ioutils.Tpath.combine( HOME_PATH , 'logs' );
 {$ELSE}
       HOME_PATH := IncludeTrailingPathDelimiter
         ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetDocumentsPath{$ELSE}System.
         IOUtils.TPath.combine(System.SysUtils.GetEnvironmentVariable('APPDATA'),
         'hodlertech'){$ENDIF});
       HOME_TABITEM := walletView;
-      debugAnalysis.LOG_FILE_PATH := HOME_PATH;
+      debugAnalysis.LOG_FILE_PATH := System.ioutils.Tpath.combine( HOME_PATH , 'logs' );
 {$ENDIF}
+
+
+
 {$IF DEFINED(ANDROID)}
       SYSTEM_NAME := 'android';
 {$ELSE IF DEFINED(MSWINDOWS)}
@@ -701,6 +715,12 @@ begin
       // refreshGlobalImage.Margins.Right := 15;
       refreshGlobalImage.Margins.Top := 8;
       refreshGlobalImage.Margins.Bottom := 8;
+
+
+      NotificationLayout := TnotificationLayout.create( frmhome );
+      NotificationLayout.Parent := frmhome;
+      NotificationLayout.Align := TAlignLayout.Contents;
+      NotificationLayout.Visible := true;
 
     end;
 

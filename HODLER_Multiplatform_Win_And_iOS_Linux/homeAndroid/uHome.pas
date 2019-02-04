@@ -26,7 +26,7 @@ uses
   FMX.TabControl, System.Sensors, System.Sensors.Components, FMX.Edit,
   FMX.Clipboard, bech32, cryptoCurrencyData, FMX.VirtualKeyBoard, JSON,
   languages, WIF, AccountData, WalletStructureData,
-  System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
+  System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient, popupWindowData ,
 
   FMX.Media, FMX.Objects, CurrencyConverter, uEncryptedZipFile, System.Zip ,TRotateImageData
 {$IFDEF ANDROID},
@@ -51,7 +51,7 @@ uses
   ZXing.ScanManager, FMX.EditBox, FMX.SpinBox, FMX.Gestures, FMX.Effects,
   FMX.Filter.Effects, System.Actions, FMX.ActnList, System.Math.Vectors,
   FMX.Controls3D, FMX.Layers3D, FMX.StdActns, FMX.MediaLibrary.Actions,
-  FMX.ComboEdit;
+  FMX.ComboEdit , NotificationLayoutData;
 
 type
 
@@ -152,7 +152,6 @@ type
     ANWHeader: TToolBar;
     lblANWHeader: TLabel;
     btnANWBack: TButton;
-    coinIconsList: TImageList;
     TokenIcons3: TImageList;
     checkSeed: TTabItem;
     btnConfirm: TButton;
@@ -257,7 +256,7 @@ type
     SendVertScrollBox: TVertScrollBox;
     StyleBook1: TStyleBook;
     SendAmountLayout: TLayout;
-    Layout3: TLayout;
+    ShowAdvancedLayout: TLayout;
     TransactionFeeLayout: TLayout;
     SendToLayout: TLayout;
     AutomaticFeeLayout: TLayout;
@@ -350,7 +349,6 @@ type
     OrganizeButton: TButton;
     WalletList: TVertScrollBox;
     ShowHideAdvancedButton: TButton;
-    ImageList2: TImageList;
     arrowImg: TImage;
     arrowList: TImageList;
     Layout2: TLayout;
@@ -660,7 +658,6 @@ type
     ToolBar13: TToolBar;
     Label13: TLabel;
     Button7: TButton;
-    TokenIcons: TImageList;
     AddCoinFromPrivKeyTabItem: TTabItem;
     ToolBar14: TToolBar;
     Label14: TLabel;
@@ -805,6 +802,7 @@ type
     SendErrorMsgSwitch: TCheckBox;
     UserReportSendLogsSwitch: TCheckBox;
     UserReportDeviceInfoSwitch: TCheckBox;
+    NanoUnlocker: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1038,6 +1036,8 @@ type
     procedure FileMenagerCancelButtonClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure wvFeeChange(Sender: TObject);
+    procedure MineNano(Sender:TObject);
+    procedure NanoUnlockerClick(Sender: TObject);
     //procedure DayNightModeSwitchClick(Sender: TObject);
 
 
@@ -1100,6 +1100,7 @@ type
   var
     refreshLocalImage : TRotateImage;
     refreshGlobalImage : TRotateImage;
+    NotificationLayout : TNotificationLayout;
 
   var
     cpTimeout: int64;
@@ -1169,7 +1170,7 @@ implementation
 
 uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
   AccountRelated,
-  TokenData, QRRelated, FileManagerRelated, WalletViewRelated, BackupRelated ,debugAnalysis,KeypoolRelated ;
+  TokenData, QRRelated, FileManagerRelated, WalletViewRelated, BackupRelated ,debugAnalysis,KeypoolRelated,Nano ;
 {$R *.fmx}
 {$R *.SmXhdpiPh.fmx ANDROID}
 {$R *.iPhone55in.fmx IOS}
@@ -2428,7 +2429,7 @@ end;
 procedure TfrmHome.btnSWipeClick(Sender: TObject);
 begin
 
-  popupWindowYesNo.Create(
+  NotificationLayout.popupProtectedConfirm(
     procedure()
     begin
       wipeWalletDat;
@@ -2640,6 +2641,19 @@ begin
   generateNewYAddress(Sender);
 end;
 
+procedure TfrmHome.MineNano(Sender: TObject);
+begin
+  nano_DoMine(cryptoCurrency(NanoUnlocker.TagObject),passwordForDecrypt.Text);
+  passwordForDecrypt.Text:='';
+  PageControl.ActiveTab:=walletView;
+end;
+procedure TfrmHome.NanoUnlockerClick(Sender: TObject);
+begin
+     btnDecryptSeed.onclick := MIneNano;
+  decryptSeedBackTabItem := PageControl.ActiveTab;
+  PageControl.ActiveTab := descryptSeed;
+  btnDSBack.onclick := backBtnDecryptSeed;
+end;
 procedure TfrmHome.NewCoinPrivKeyOKButtonClick(Sender: TObject);
 begin
   WalletViewRelated.newCoinFromPrivateKey(Sender);
@@ -2777,7 +2791,7 @@ procedure TfrmHome.ShowHideAdvancedButtonClick(Sender: TObject);
 begin
 
   TransactionFeeLayout.Visible := not TransactionFeeLayout.Visible;
-  TransactionFeeLayout.Position.Y := Layout3.Position.Y + 1;
+  TransactionFeeLayout.Position.Y := ShowAdvancedLayout.Position.Y + 1;
 
   if TransactionFeeLayout.Visible then
   begin
