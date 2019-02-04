@@ -168,7 +168,7 @@ begin
 
 
   QRMask := TBitmap.Create;
-  QRMask.SetSize( height , width );
+  QRMask.SetSize( width , height );
 
   if QRMask.map(TMapAccess.ReadWrite ,maskBitmapData) then
   begin
@@ -186,6 +186,7 @@ begin
     QRmask.unmap( maskBitmapData );
 
   end;
+  frmHome.DebugQRImage.Bitmap.Assign( QRMask );
 
 end;
 
@@ -201,6 +202,7 @@ var
 
   QRRect: TRectF;
   QRfieldRect : TRect;
+  dist : integer;
 
 begin
   with frmhome do
@@ -229,22 +231,28 @@ begin
       createQRMask( imgCamera.Bitmap.Height , imgCamera.Bitmap.Width );
     end;
 
+    dist := ceil (0.4 * Min( imgCamera.Bitmap.height , imgCamera.Bitmap.width ));
 
-    QRfieldRect := Rect(0 , 100 , imgCamera.Bitmap.Width , 356);
+    QRRect := RectF( (imgCamera.Bitmap.width/2) - dist , (imgCamera.Bitmap.height/2) - dist , (imgCamera.Bitmap.width/2) + dist , (imgCamera.Bitmap.height/2) + dist   );
+
+
+    QRfieldRect := Rect( Round( qrrECT.Left ) ,Round( qrrECT.tOP ) , Round( qrrECT.Right ) ,Round( qrrECT.Bottom ) ) ;
 
     scanBitmap := TBitmap.Create();
     scanBitmap.Height := QRfieldRect.Height;
     scanBitmap.Width :=  QRfieldRect.Width;
-    scanBitmap.CopyFromBitmap(imgCamera.Bitmap , QRfieldRect , 0 , 0 );
+    scanBitmap.CopyFromBitmap(imgCamera.Bitmap , QRFIELDRect , 0 , 0 );
 
-    imgCamera.Bitmap.ApplyMask( QRMask.CreateMask );
+
+
+    //imgCamera.Bitmap.ApplyMask( QRMask.CreateMask );
 
     //imgCamera.Bitmap.Assign( QRMask );
 
     //if frmhome.DebugQRImage.Bitmap = nil then
     //  frmhome.DebugQRImage.Bitmap := TBitmap.Create();
     //frmhome.DebugQRImage.bitmap.assign(scanBitmap);
-    //frmhome.DebugQRImage.BringToFront;
+    frmhome.Layout22.BringToFront;
 
     ReadResult := nil;
 {$IFDEF IOS} if not FScanInProgress then {$ENDIF}
