@@ -52,7 +52,7 @@ procedure OpenWallet(Sender: TObject);
 procedure organizeView(Sender: TObject);
 procedure newCoin(Sender: TObject);
 procedure CreateWallet(Sender: TObject; Option: AnsiString = '');
-procedure ShowETHWallets(Sender: TObject);
+procedure ShowETHWallets();
 procedure synchro;
 procedure SendClick(Sender: TObject);
 procedure calcFeeWithSpin;
@@ -85,6 +85,7 @@ procedure SearchTokenButtonClick(Sender: TObject);
 procedure ExportPrivateKeyButtonClick(Sender: TObject);
 procedure GenerateETHAddressWithToken(Sender : TObject);
 procedure btnAddContractClick(Sender: TObject);
+procedure ShowETHWalletsForNewToken( );
 
 
 
@@ -180,7 +181,7 @@ begin
     MasterSeed := '';
 
 
-    if decryptSeedBackTabItem = ChoseToken then
+    if (decryptSeedBackTabItem = ChoseToken) or (decryptSeedBackTabItem = AddWalletList ) then
     begin
 
       T := Token.Create( newTokenID , wd.addr );
@@ -189,6 +190,7 @@ begin
 
       CurrentAccount.addToken(T);
       CreatePanel(T);
+
 
 
 
@@ -1099,7 +1101,95 @@ begin
   end;
 end;
 
-procedure ShowETHWallets(Sender: TObject);
+procedure ShowETHWalletsForNewToken( );
+var
+  i: Integer;
+  Panel: TPanel;
+  adrLabel: TLabel;
+  balLabel: TLabel;
+  coinIMG: TImage;
+  wd: TWalletInfo;
+  CountETH: Integer;
+begin
+  //CountETH := 0;
+  clearVertScrollBox(frmhome.AvailableCoinsBox);
+
+  for i := 0 to Length(CurrentAccount.myCoins) - 1 do
+  begin
+    if CurrentAccount.myCoins[i].coin = 4 then // if ETH
+    begin
+      //CountETH := CountETH + 1;
+      with frmhome.AvailableCoinsBox do
+      begin
+        wd := CurrentAccount.myCoins[i];
+        Panel := TPanel.Create(frmhome.AvailableCoinsBox);
+        Panel.Align := Panel.Align.alTop;
+        Panel.Height := 48;
+        Panel.Width := frmhome.AvailableCoinsBox.Width;
+        Panel.Visible := True;
+        Panel.Parent := frmhome.AvailableCoinsBox;
+        Panel.TagString := CurrentAccount.myCoins[i].addr;
+        Panel.OnClick := frmhome.AddNewTokenETHPanelClick;
+
+        adrLabel := TLabel.Create(frmhome.AvailableCoinsBox);
+        adrLabel.StyledSettings := adrLabel.StyledSettings -
+          [TStyledSetting.Size];
+        adrLabel.TextSettings.Font.Size := dashBoardFontSize;
+
+        adrLabel.Parent := Panel;
+        adrLabel.TagString := CurrentAccount.myCoins[i].addr;
+
+        if wd.description = '' then
+        begin
+          adrLabel.Text := AvailableCoin[wd.coin].displayName + ' (' +
+            AvailableCoin[wd.coin].shortcut + ')';
+        end
+        else
+        begin
+
+          adrLabel.Text := wd.description;
+        end;
+        adrLabel.Visible := True;
+        adrLabel.Width := 500;
+        adrLabel.Height := 48;
+        adrLabel.Position.x := 52;
+        adrLabel.Position.Y := 0;
+        adrLabel.hittest := False;
+
+        balLabel := TLabel.Create(frmhome.WalletList);
+        balLabel.StyledSettings := balLabel.StyledSettings -
+          [TStyledSetting.Size];
+        balLabel.TextSettings.Font.Size := 12;
+        balLabel.Parent := Panel;
+        balLabel.TagString := CurrentAccount.myCoins[i].addr;
+        balLabel.Text := CurrentAccount.myCoins[i].addr;
+
+        balLabel.TextSettings.HorzAlign := TTextAlign.Center;
+        balLabel.Visible := True;
+        balLabel.Width := 500;
+        balLabel.Height := 14;
+        balLabel.Align := TAlignLayout.Bottom;
+        balLabel.hittest := False;
+
+        coinIMG := TImage.Create(frmhome.AvailableCoinsBox);
+        coinIMG.Parent := Panel;
+
+        coinIMG.Bitmap.loadFromStream(getCoinIconResource(wd.coin));
+
+        coinIMG.Height := 32.0;
+        coinIMG.Width := 50;
+        coinIMG.Position.x := 4;
+        coinIMG.Position.Y := 8;
+        coinIMG.hittest := False;
+        coinIMG.TagString := CurrentAccount.myCoins[i].addr;
+      end;
+
+    end;
+
+  end;
+end;
+
+procedure ShowETHWallets( );
 var
   i: Integer;
   Panel: TPanel;

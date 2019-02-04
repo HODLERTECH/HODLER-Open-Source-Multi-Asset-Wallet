@@ -58,7 +58,7 @@ uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, WalletStructureData, TcopyableEditData, TCopyableLabelData,
   walletViewRelated, TImageTextButtonData, debugAnalysis, keyPoolRelated,
-  AssetsMenagerData;
+  AssetsMenagerData ;
 
 procedure afterInitialize;
 var
@@ -818,7 +818,7 @@ begin
   with frmHome do
   begin
 
-    popupWindowYesNo.Create(
+    NotificationLayout.popupConfirm(
       procedure
       begin
 
@@ -899,7 +899,7 @@ end;
 
 procedure deleteYAddress(Sender: Tobject);
 begin
-  popupWindowYesNo.Create(
+  frmhome.NotificationLayout.popupConfirm(
     procedure
     begin
 
@@ -1167,7 +1167,7 @@ begin
   begin
     if Sender is TButton then
     begin
-      popupWindowYesNo.Create(
+      frmhome.NotificationLayout.popupConfirm(
         procedure
         begin
 

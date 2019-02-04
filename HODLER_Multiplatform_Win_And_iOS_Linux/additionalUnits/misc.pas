@@ -1096,7 +1096,7 @@ begin
         begin
 
           with frmhome do
-            popupWindowYesNo.Create(
+            frmhome.NotificationLayout.popupConfirm(
               procedure()
               begin
 

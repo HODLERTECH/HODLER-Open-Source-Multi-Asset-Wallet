@@ -114,6 +114,8 @@ inherited frmHome_Windows: TfrmHome_Windows
         624s
         464s
         624s
+        464s
+        624s
         464s)
       inherited dashbrd: TTabItem
         ExplicitSize.cx = 8.000000000000000000
@@ -168,7 +170,10 @@ inherited frmHome_Windows: TfrmHome_Windows
           Position.Y = 380.000000000000000000
           Size.Width = 624.000000000000000000
           inherited NewTokenButton: TButton
-            Position.X = 432.000000000000000000
+            Position.X = 560.000000000000000000
+          end
+          inherited AddWalletButton: TButton
+            Size.Width = 495.000000000000000000
           end
         end
         inherited WalletList: TVertScrollBox
@@ -3269,6 +3274,22 @@ inherited frmHome_Windows: TfrmHome_Windows
         inherited FoundTokenOKButton: TButton
           Position.Y = 416.000000000000000000
           Size.Width = 624.000000000000000000
+        end
+      end
+      inherited AddWalletList: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited ToolBar22: TToolBar
+          Size.Width = 624.000000000000000000
+          inherited Label6: TLabel
+            Size.Width = 624.000000000000000000
+          end
+        end
+        inherited VertScrollBox3: TVertScrollBox
+          Size.Width = 624.000000000000000000
+          Size.Height = 416.000000000000000000
+          Viewport.Width = 624.000000000000000000
+          Viewport.Height = 416.000000000000000000
         end
       end
     end

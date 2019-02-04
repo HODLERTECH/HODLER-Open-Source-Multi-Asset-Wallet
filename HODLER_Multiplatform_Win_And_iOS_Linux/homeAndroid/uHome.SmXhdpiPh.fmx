@@ -114,6 +114,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         245s
         370s
         245s
+        370s
+        245s
         370s)
       inherited dashbrd: TTabItem
         ExplicitSize.cx = 8.000000000000000000
@@ -157,6 +159,11 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
               Size.Width = 245.000000000000000000
               inherited SearchInDashBrdButton: TSpeedButton
                 Position.X = 213.000000000000000000
+                Position.Y = 8.000000000000000000
+                Size.Height = 32.000000000000000000
+                inherited SearchInDashBrdImage: TImage
+                  Size.Height = 0.000000000000000000
+                end
               end
               inherited HideZeroWalletsCheckBox: TCheckBox
                 Size.Width = 245.000000000000000000
@@ -168,7 +175,10 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Position.Y = 286.000000000000000000
           Size.Width = 245.000000000000000000
           inherited NewTokenButton: TButton
-            Position.X = 53.000000000000000000
+            Position.X = 181.000000000000000000
+          end
+          inherited AddWalletButton: TButton
+            Size.Width = 116.000000000000000000
           end
         end
         inherited WalletList: TVertScrollBox
@@ -194,6 +204,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           end
           inherited PopupBox1: TPopupBox
             Position.X = 65.000000000000000000
+            Position.Y = 8.000000000000000000
+            Size.Height = 32.000000000000000000
           end
         end
         inherited BackToBalanceViewLayout: TLayout
@@ -379,6 +391,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             245s
             197s)
           inherited WVBalance: TTabItem
+            Size.Width = 61.000000000000000000
             ExplicitSize.cx = 250.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited BalancePanel: TPanel
@@ -710,7 +723,6 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             end
           end
           inherited WVReceive: TTabItem
-            Size.Width = 56.000000000000000000
             ExplicitSize.cx = 125.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited ReceiveVertScrollBox: TVertScrollBox
@@ -787,7 +799,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             end
           end
           inherited WVSend: TTabItem
-            Size.Width = 39.000000000000000000
+            Size.Width = 61.000000000000000000
             ExplicitSize.cx = 62.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited SendVertScrollBox: TVertScrollBox
@@ -880,7 +892,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             end
           end
           inherited WVSettings: TTabItem
-            Size.Width = 65.000000000000000000
+            Size.Width = 62.000000000000000000
             ExplicitSize.cx = 64.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited btnExportPrivKey: TButton
@@ -3361,6 +3373,22 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         inherited FoundTokenOKButton: TButton
           Position.Y = 322.000000000000000000
           Size.Width = 245.000000000000000000
+        end
+      end
+      inherited AddWalletList: TTabItem
+        ExplicitSize.cx = 8.000000000000000000
+        ExplicitSize.cy = 8.000000000000000000
+        inherited ToolBar22: TToolBar
+          Size.Width = 245.000000000000000000
+          inherited Label6: TLabel
+            Size.Width = 245.000000000000000000
+          end
+        end
+        inherited VertScrollBox3: TVertScrollBox
+          Size.Width = 245.000000000000000000
+          Size.Height = 322.000000000000000000
+          Viewport.Width = 245.000000000000000000
+          Viewport.Height = 322.000000000000000000
         end
       end
     end
