@@ -4,13 +4,13 @@ unit Nano;
 interface
 
 uses
-  AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA, IdSSLOpenSSL,
-  languages, System.Hash, MiscOBJ, SysUtils, System.IOUtils, HashObj, System.Types,
-  System.UITypes, System.DateUtils, System.Generics.Collections, System.Classes,
-  System.Variants, Math, FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs,
-  FMX.StdCtrls, FMX.Controls.Presentation, FMX.Styles, System.ImageList, FMX.ImgList,
-  FMX.Ani, FMX.Layouts, FMX.ExtCtrls, Velthuis.BigIntegers, FMX.ScrollBox, FMX.Memo,
-  FMX.platform, FMX.TabControl, {$IF NOT DEFINED(LINUX)}System.Sensors, System.Sensors.Components, {$ENDIF}
+  AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA, IdSSLOpenSSL, languages,
+  System.Hash, MiscOBJ, SysUtils, System.IOUtils, HashObj, System.Types, System.UITypes,
+  System.DateUtils, System.Generics.Collections, System.Classes, System.Variants,
+  Math, FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
+  FMX.Controls.Presentation, FMX.Styles, System.ImageList, FMX.ImgList, FMX.Ani,
+  FMX.Layouts, FMX.ExtCtrls, Velthuis.BigIntegers, FMX.ScrollBox, FMX.Memo, FMX.platform,
+  FMX.TabControl, {$IF NOT DEFINED(LINUX)}System.Sensors, System.Sensors.Components, {$ENDIF}
   FMX.Edit, JSON, JSON.Builders, JSON.Readers, DelphiZXingQRCode, System.Net.HttpClientComponent,
   System.Net.HttpClient, keccak_n, tokenData, bech32, cryptoCurrencyData,
   WalletStructureData, AccountData, ClpCryptoLibTypes, ClpSecureRandom,
@@ -159,6 +159,7 @@ type
   public
     foundWork: AnsiString;
     hash: AnsiString;
+    Blake2b: IHash;
   protected
     procedure execute; override;
   end;
@@ -187,10 +188,10 @@ begin
   SetLength(rAdr, Length(adr));
   SetLength(rChk, Length(chk));
   for i := 0 to Length(adr) - 1 do
-    rAdr[i] := Pos(adr[i{$IFDEF MSWINDOWS}  + 1{$ENDIF}], nano_charset)  - 1;
+    rAdr[i] := Pos(adr[i{$IFDEF MSWINDOWS}     + 1{$ENDIF}], nano_charset) - 1;
 
   for i := 0 to Length(chk) - 1 do
-    rChk[i] := Pos(chk[i{$IFDEF MSWINDOWS}  + 1{$ENDIF}], nano_charset)  - 1;
+    rChk[i] := Pos(chk[i{$IFDEF MSWINDOWS}     + 1{$ENDIF}], nano_charset) - 1;
   result := '';
   rAdr := ChangeBits(rAdr, 5, 8, true);
   for i := 3 to Length(rAdr) - 1 do
@@ -267,7 +268,7 @@ begin
     Blake2b.TransformBytes(hexatotbytes(block.account));
     Blake2b.TransformBytes(hexatotbytes(block.previous));
     Blake2b.TransformBytes(hexatotbytes(block.representative));
-    Blake2b.TransformBytes(hexatotbytes(reversehexorder(inttotx(BigInteger.Parse('0x00' + block.balance), 32))));
+    Blake2b.TransformBytes(hexatotbytes(reversehexorder(inttotx(BigInteger.Parse('+0x00' + block.balance), 32))));
 
     if block.blockType = 'send' then
       Blake2b.TransformBytes(hexatotbytes(block.destination));
@@ -399,70 +400,40 @@ end;
 procedure TPowWorker.execute;
 var
   i, j: System.Uint8;
-  toHash: AnsiString;
-var
-  t, t2: TBytes;
-var
-  Blake2b: IHash;
-  bh: TArray<Byte>;
-  workBytes: TArray<Byte>;
+  workBytes, t: TArray<Byte>;
 var
   work: AnsiString;
   ran, thres: System.UInt64;
-  q1: Integer;
+  counter: Int64;
 var
-  //&random: ISecureRandom;
-  state: _blake2b_state;
-{$IF (defined(MSWINDOWS) or defined(MACOS)) and (not defined(IOS))}
-  BHash: PAnsiChar;
-  mess: array[0..39] of AnsiChar;
-{$ELSE}
-  BHash: PByte;
-  mess: array[0..39] of Byte;
-{$IFEND}
-counter:Int64;
+  &random: ISecureRandom;
 begin
   self.foundWork := '';
-  counter:=0;
- // random := TSecureRandom.GetInstance('SHA256PRNG');
+  counter := 0;
   Blake2b := THashFactory.TCrypto.CreateBlake2B(TBlake2BConfig.Create(8));
   Blake2b.Initialize();
-  thres := $FFFFFFC000000000;
-  init_blake2b(@state, 8);
-  BHash := GetMemory(8);
+  thres := $ffffffc000000000;
   workBytes := hexatotbytes('0000000000000000' + Hash);
+  random := TSecureRandom.GetInstance('SHA256PRNG');
+  ran := random.NextInt64;
+  Move(ran, workBytes[0], 8);
   while True do
   begin
-    if counter mod 1000000 = 0 then Sleep(500); //no luck, let's cool down CPU :)
 
-    workBytes[0] := random(255);
-    workBytes[1] := random(255);
-    workBytes[2] := random(255);
-    workBytes[3] := random(255);
-    workBytes[4] := random(255);
-    workBytes[5] := random(255);
-    workBytes[6] := random(255);
-    // workBytes[7] := ran shr 56;
+    //if counter mod 1000000 = 0 then
+    //  Sleep(50); //no luck, let's cool down CPU :)
+
     for i := 0 to 255 do
     begin
       workBytes[7] := i;
-    counter:=counter+1;
+      //inc(counter);
+
       Blake2b.TransformBytes(workBytes);
-       t2 := Blake2b.TransformFinal.GetBytes;   //Blake2b.ComputeBytes(workBytes).GetBytes; //
-     // hackNANOMiner(workBytes);
-     //  init_blake2b(@state, 8);
-     // init_blake2b(@state, 8);
-    //  update_blake2b(@state, @workBytes[0], 40);
-    //  finalHash_blake2b(@state, BHash, 8);
-    //  if (Ord(BHash[7]) = 255) then
-     //   if (Ord(BHash[6]) = 255) then
-     //     if (Ord(BHash[5]) = 255) then
-     //       if (Ord(BHash[4]) >= 192) then //
-  //   t2:=Blake2b.ComputeBytes(workBytes).GetBytes;
-     if  t2[7]=255 then
-     if t2[6]=255 then
-     if t2[5]=255 then
-     if t2[4]>=128 then  //Blake2b.ComputeBytes(workBytes).GetUInt64 >= thres then
+      t := Blake2b.TransformFinal.GetBytes;
+      if t[7] = 255 then
+        if t[6] = 255 then
+          if t[5] = 255 then
+            if t[4] >= 192 then
             begin
               work := '';
               for j := 7 downto 0 do
@@ -471,15 +442,19 @@ begin
               Exit;
             end;
     end;
-
+//Move(t[0],ran,8);
+    ran := ran * $08088405 + 1;
+    Move(ran, workBytes[0], 7);
   end;
-  FreeMem(BHash);
+
 end;
 
 function nano_pow(Hash: AnsiString): AnsiString;
+const
+  powworkers = 0;
 var
   work: AnsiString;
-  workers: array[0..1] of TPowWorker;
+  workers: array[0..powworkers] of TPowWorker;
   i: Integer;
 begin
   Randomize;
@@ -493,15 +468,15 @@ begin
   end;
   if work = 'MINING' then
   begin // We are mining this one already, so let's wait
-    Sleep(1000);
+    Sleep(100);
     Exit(nano_pow(Hash));
   end;
   setPrecalculated(Hash, 'MINING');
 
-  for i := 0 to 1 do
+  for i := 0 to powworkers do
   begin
     workers[i] := TPowWorker.Create(True);
-    {$IFDEF MSWINDOWS}workers[i].Priority := tpHighest;{$ENDIF}
+    {$IFDEF MSWINDOWS}            workers[i].Priority := tpHighest; {$ENDIF}
     workers[i].Hash := Hash;
     workers[i].Start;
   end;
@@ -509,7 +484,7 @@ begin
   while work = '' do
   begin
     Sleep(100);
-    for i := 0 to 1 do
+    for i := 0 to powworkers do
       if workers[i].foundWork <> '' then
       begin
         work := workers[i].foundWork;
@@ -519,7 +494,7 @@ begin
       end;
 
   end;
-  for i := 0 to 1 do
+  for i := 0 to powworkers do
     workers[i].Terminate;
 end;
 
@@ -667,7 +642,7 @@ begin
 
     obj.AddPair(TJSONPair.Create('account', nano_accountFromHexKey(block.account)));
     obj.AddPair(TJSONPair.Create('representative', nano_accountFromHexKey(block.representative { + block.account } )));
-    obj.AddPair(TJSONPair.Create('balance', BigInteger.Parse('0x0' + block.balance).ToString(10)));
+    obj.AddPair(TJSONPair.Create('balance', BigInteger.Parse('+0x0' + block.balance).ToString(10)));
     if block.blockType = 'send' then
       obj.AddPair(TJSONPair.Create('link', block.destination));
     if block.blockType = 'receive' then
@@ -711,7 +686,7 @@ end;
 
 function nano_obtainBlock(Hash: AnsiString): AnsiString;
 var
-  data: AnsiString;
+  data, err: AnsiString;
 begin
   data := '{}';
   try
@@ -721,6 +696,7 @@ begin
   except
     on E: Exception do
     begin
+      err := E.Message;
     end;
   end;
 end;
@@ -891,7 +867,7 @@ end;
 function nano_addPendingReceiveBlock(sourceBlockHash: AnsiString; cc: cryptoCurrency; from: AnsiString; ms: AnsiString; amount: BigInteger): TNanoBlock;
 begin
   result := nano_newBlock(true);
-  if (Length(cc.lastPendingBlock) = 64) and (Length(cc.History)>0) then
+  if (Length(cc.lastPendingBlock) = 64) and (Length(cc.History) > 0) then
     nano_setReceiveParameters(result, cc.lastPendingBlock, sourceBlockHash)
   else
     nano_setOpenParameters(result, sourceBlockHash, cc.addr, nano_getWalletRepresentative);

@@ -3670,6 +3670,7 @@ var
   LResponse: IHTTPResponse;
   urlHash: AnsiString;
 begin
+     req := THTTPClient.Create();
   aURL := ensureURL(aURL);
   urlHash := GetStrHashSHA256(aURL);
   if (firstSync and useCache) then
@@ -3680,7 +3681,7 @@ begin
     if ((result = 'NOCACHE') or (not firstSync) or (not useCache)) then
     begin
 
-      req := THTTPClient.Create();
+
       if not noTimeout then
       begin
 
@@ -3708,8 +3709,9 @@ begin
       result := apiStatus(aURL, '', true);
 
     end;
+
   end;
-  req.Free;
+   req.Free;
 end;
 
 function postDataOverHTTP(var aURL: String; postdata: string;

@@ -3639,9 +3639,11 @@ procedure TfrmHome.FormShow(Sender: TObject);
       TControl(Obj).Opacity := 0;
   end;
 
-
+  var q1:SYSTEM.uint64;
 begin
-
+{q1:=GetTickCount;
+nano_pow('fdd79b6607f83a44c499ee5c173dd90ba757ae910deb687bf3844e93780ccfa1');
+ShowMessage(IntToStr((GetTickCount-q1) div 1000));   }
   LabelEditApplyStyleLookup(HistoryTransactionValue);
   LabelEditApplyStyleLookup(HistoryTransactionDate);
   LabelEditApplyStyleLookup(historyTransactionConfirmation);
