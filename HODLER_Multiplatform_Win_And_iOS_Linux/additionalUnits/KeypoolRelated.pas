@@ -305,6 +305,8 @@ begin
   GhostMasterSeed := ms;
   for wd in CurrentAccount.myCoins do
   begin
+  if wd.coin in [4,8] then Continue;
+  
     kLog(Format('checking coin %d wd X: %d Y: %d', [wd.coin, wd.x, wd.Y]));
     if (wd.Y = 0) and (wd.deleted = false) and (not wd.inPool) then
       keypoolCoin(wd);

@@ -577,7 +577,14 @@ begin
 
       exit();
     end;
+    if newcoinID = 8 then
+    begin
 
+      popupWindow.Create
+        ('Not supported');
+
+      exit();
+    end;
     createClaimCoinList(newcoinID);
   end;
 
@@ -673,8 +680,9 @@ begin
             TransactionWaitForSendAniIndicator.Visible := True;
             TransactionWaitForSendAniIndicator.Enabled := True;
             TransactionWaitForSendDetailsLabel.Visible := True;
-            TransactionWaitForSendDetailsLabel.Text :=
-              'Sending... It may take a few seconds';
+            if from.coin<>8 then TransactionWaitForSendDetailsLabel.Text :=
+              'Sending... It may take a few seconds' else
+            TransactionWaitForSendDetailsLabel.Text := 'Mining transaction, please be patient';
             TransactionWaitForSendLinkLabel.Visible := false;
             TransactionWaitForSendBackButton.Visible := false;
 
@@ -852,10 +860,10 @@ begin
         if CurrentCryptoCurrency is TWalletInfo then
         begin
 
-          wvAmount.Text := BigIntegertoFloatStr
-            ((BigInteger.Min(CurrentAccount.getSpendable
-            (TWalletInfo(CurrentCryptoCurrency)),
-            CurrentAccount.aggregateBalances(TWalletInfo(CurrentCryptoCurrency))
+        wvAmount.Text := BigIntegertoFloatStr
+          ((BigInteger.Min(CurrentAccount.getSpendable
+          (TWalletInfo(CurrentCryptoCurrency)),
+          CurrentAccount.aggregateBalances(TWalletInfo(CurrentCryptoCurrency))
             .confirmed)), CurrentCryptoCurrency.decimals);
 
         end
@@ -1010,7 +1018,9 @@ begin
       popupWindow.Create(dictionary('WrongAddress'));
       exit;
     end;
-    if { (not isEthereum) and } (not isTokenTransfer) then
+    if CurrentCoin.coin = 8 then
+      Fee := 0;
+    if (not isTokenTransfer) then
       if Amount + Fee > (CurrentAccount.aggregateBalances(CurrentCoin).confirmed)
       then
       begin
@@ -1076,7 +1086,21 @@ begin
         exit;
         end; }
     end;
+    if CurrentCoin.coin = 8 then
+    begin
+      try
+        prepareConfirmSendTabItem();
+      except
+        on E: Exception do
+        begin
+          popupWindow.Create(E.Message);
+          exit();
+        end;
+      end;
 
+      switchTab(pageControl, ConfirmSendTabItem);
+      ConfirmSendPasswordEdit.Text := '';
+    end;
     if ValidateBitcoinAddress(Address) then
     begin
       try
@@ -1817,7 +1841,7 @@ begin
 
       if isTokenTransfer then
       begin
-        lblFee.Text := wvFee.Text + ' = ' +
+        lblFee.Text := wvFee.Text + '  = ' +
           floatToStrF(CurrencyConverter.calculate(strToFloatDef(wvFee.Text,
           0) * 66666 * CurrentCoin.rate / (1000000.0 * 1000000.0 * 1000000.0)),
           ffFixed, 18, 6) + ' ' + CurrencyConverter.symbol;
@@ -1986,7 +2010,17 @@ begin
       frmhome.BCHCashAddrButtonClick(Sender);
     end;
 
-    // changeYbutton.Text := 'Change address (' + intToStr(CurrentCoin.x) +','+inttoStr(CurrentCoin.y) + ')';
+    if TWalletInfo(CurrentCryptoCurrency).coin = 8 then
+    begin
+      frmhome.ShowAdvancedLayout.Visible := false;
+      frmhome.TransactionFeeLayout.Visible := false;
+      frmhome.YAddresses.Visible := false;
+      frmhome.btnNewAddress.Visible := false;
+      frmhome.btnPrevAddress.Visible := false;
+    end
+    else
+      frmhome.ShowAdvancedLayout.Visible := True;
+
     if pageControl.ActiveTab = HOME_TABITEM then
       WVTabControl.ActiveTab := WVBalance;
 
@@ -2028,6 +2062,17 @@ begin
     end
     else
       CurrentCoin := TWalletInfo(CurrentCryptoCurrency);
+    NanoUnlocker.Visible := (CurrentCoin.coin = 8) and
+      (CurrentCryptoCurrency.unconfirmed <> 0);
+    NanoUnlocker.Text := 'Click here to pocket ' + BigIntegerBeautifulStr
+      (CurrentCryptoCurrency.unconfirmed, CurrentCryptoCurrency.decimals)
+      + ' NANO';
+    if frmhome.NanoUnlocker.Enabled = false then
+      frmhome.NanoUnlocker.Text := 'Mining NANO...';
+
+    NanoUnlocker.Height := 48;
+    NanoUnlocker.Cursor := crHandPoint;
+    NanoUnlocker.TagObject := CurrentCryptoCurrency;
 
     createHistoryList(CurrentCryptoCurrency, 0, lastHistCC);
 
@@ -2037,8 +2082,8 @@ begin
     else
       frmhome.wvAddress.Text := CurrentCryptoCurrency.addr;
 
-    if (TWalletInfo(CurrentCryptoCurrency).coin <> 4) and (not isTokenTransfer)
-    then
+    if (not(TWalletInfo(CurrentCryptoCurrency).coin in [4, 8])) and
+      (not isTokenTransfer) then
     begin
       sumConfirmed := 0;
       sumUnconfirmed := 0;
@@ -2102,6 +2147,22 @@ begin
         floatToStrF(CurrentCryptoCurrency.getUNConfirmedFiat, ffFixed, 15, 2) +
         ' ' + CurrencyConverter.symbol;
 
+      if TWalletInfo(CurrentCryptoCurrency).coin = 8 then
+      begin
+        TopInfoConfirmedValue.Text := ' ' + BigIntegerBeautifulStr
+          (CurrentCryptoCurrency.confirmed, CurrentCryptoCurrency.decimals) +
+          ' ' + CurrentCryptoCurrency.shortcut;
+        TopInfoConfirmedFiatLabel.Text :=
+          floatToStrF(CurrentCryptoCurrency.getConfirmedFiat, ffFixed, 15, 2) +
+          ' ' + CurrencyConverter.symbol;
+
+        TopInfoUnconfirmedValue.Text := ' ' + BigIntegerBeautifulStr
+          (CurrentCryptoCurrency.unconfirmed, CurrentCryptoCurrency.decimals) +
+          ' ' + CurrentCryptoCurrency.shortcut;
+        TopInfoUnconfirmedFiatLabel.Text :=
+          floatToStrF(CurrentCryptoCurrency.getUNConfirmedFiat, ffFixed, 15, 2)
+          + ' ' + CurrencyConverter.symbol;
+      end;
       ShortcutFiatLabel.Text := floatToStrF(CurrentCryptoCurrency.getFiat(),
         ffFixed, 15, 2);
     end;
@@ -2166,7 +2227,7 @@ begin
       popupWindow.Create(dictionary('FailedToDecrypt'));
       exit;
     end;
-    if not((isEthereum) or (isTokenTransfer)) then
+    if not((isEthereum) or (isTokenTransfer) or (CurrentCoin.coin=8)) then
       if Length(CurrentAccount.aggregateUTXO(CurrentCoin)) = 0 then
       begin
         popupWindow.Create
@@ -2177,6 +2238,8 @@ begin
     begin
       Fee := StrFloatToBigInteger(wvFee.Text, AvailableCoin[CurrentCoin.coin]
         .decimals);
+      if currentcoin.coin=8 then fee:=0;
+      
       tempFee := Fee;
     end
     else
@@ -2213,7 +2276,7 @@ begin
       end;
 
     end;
-    if ((Amount) = 0) or ((Fee) = 0) then
+    if ((Amount) = 0) or (((Fee) = 0) and (CurrentCoin.coin<>8)) then
     begin
       popupWindowOK.Create(
         procedure
@@ -2281,7 +2344,8 @@ begin
   for i := 0 to Length(Token.availableToken) - 1 do
   begin
 
-    if Token.availableToken[i].Address = '' then // if token is no longer exist
+    if Token.availableToken[i].Address = '' then
+      // if token is no longer exist
       Continue;
 
     with frmhome.AvailableTokensBox do
@@ -2360,16 +2424,16 @@ begin
 
   if walletAddressForNewToken <> '' then
   begin
-    T := Token.Create(Tcomponent(Sender).Tag, walletAddressForNewToken);
+  T := Token.Create(Tcomponent(Sender).Tag, walletAddressForNewToken);
 
-    T.idInWallet := Length(CurrentAccount.myTokens) + 10000;
+  T.idInWallet := Length(CurrentAccount.myTokens) + 10000;
 
-    CurrentAccount.addToken(T);
-    CreatePanel(T);
-    holder := TfmxObject.Create(nil);
-    holder.TagObject := T;
-    frmhome.OpenWalletView(holder, PointF(0, 0));
-    holder.DisposeOf;
+  CurrentAccount.addToken(T);
+  CreatePanel(T);
+  holder := TfmxObject.Create(nil);
+  holder.TagObject := T;
+  frmhome.OpenWalletView(holder, PointF(0, 0));
+  holder.DisposeOf;
   end
   else
   begin
@@ -3041,3 +3105,4 @@ begin
 end;
 
 end.
+

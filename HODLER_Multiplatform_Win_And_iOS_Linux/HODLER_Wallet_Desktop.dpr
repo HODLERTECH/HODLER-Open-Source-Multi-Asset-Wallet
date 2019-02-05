@@ -135,10 +135,11 @@ uses
   debugAnalysis in 'additionalUnits\debugAnalysis.pas',
   KeypoolRelated in 'additionalUnits\KeypoolRelated.pas',
   AssetsMenagerData in 'additionalUnits\AssetsMenagerData.pas',
-  Nano in 'coinCode\Nano.pas',
   PopupWindowData in 'additionalUnits\PopupWindowData.pas',
   CrossPlatformHeaders in 'CrossPlatformHeaders.pas',
-  NotificationLayoutData in 'components\NotificationLayoutData.pas';
+  NotificationLayoutData in 'components\NotificationLayoutData.pas',
+  ED25519_Blake2b in 'coinCode\ED25519_Blake2b.pas',
+  Nano in 'coinCode\Nano.pas';
 
 {$R *.res}
 

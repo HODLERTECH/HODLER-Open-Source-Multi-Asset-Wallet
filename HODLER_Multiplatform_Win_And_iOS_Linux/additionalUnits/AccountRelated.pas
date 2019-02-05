@@ -94,6 +94,7 @@ var
     rec.Align := TAlignLayout.Contents;
     rec.Opacity := 0.1;
     AEditControl.Repaint;
+
   end;
 
   procedure fixEditBG;
@@ -113,7 +114,8 @@ begin
   begin
     KeypoolSanitizer.Interval := 30000;
     gathener.Enabled := true;
-
+    NanoUnlocker.Visible:=False;
+    NanoUnlocker.TagString:='LOADMORE';
     if not isWalletDatExists then
     begin
       createWalletDat();
@@ -719,9 +721,6 @@ begin
       NotificationLayout.Parent := frmhome;
       NotificationLayout.Align := TAlignLayout.Contents;
       NotificationLayout.Visible := true;
-
-     
-
 
     end;
 

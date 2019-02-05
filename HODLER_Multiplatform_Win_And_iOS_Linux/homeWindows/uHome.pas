@@ -15,7 +15,9 @@ unit uHome;
 interface
 
 uses
-  SysUtils, System.Types, System.UITypes, System.Classes, strUtils,
+  {$IFDEF MSWINDOWS}
+   Windows,
+{$ENDIF}SysUtils, System.Types, System.UITypes, System.Classes, strUtils,
   SyncThr, System.Generics.Collections, System.character,
   System.DateUtils, System.Messaging,
   System.Variants, System.IOUtils,
@@ -257,7 +259,7 @@ type
     SendVertScrollBox: TVertScrollBox;
     StyleBook1: TStyleBook;
     SendAmountLayout: TLayout;
-    Layout3: TLayout;
+    ShowAdvancedLayout: TLayout;
     TransactionFeeLayout: TLayout;
     SendToLayout: TLayout;
     AutomaticFeeLayout: TLayout;
@@ -817,6 +819,7 @@ type
     Label27: TLabel;
     TokenListLayout: TLayout;
     Label28: TLabel;
+    NanoUnlocker: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1084,12 +1087,14 @@ type
     procedure btnChangeDescryptionBackClick(Sender: TObject);
     procedure SendErrorMsgSwitchClick(Sender: TObject);
     procedure AddWalletButtonClick(Sender: TObject);
+    procedure NanoUnlockerClick(Sender: TObject);
     //procedure UserReportSendLogsSwitchClick(Sender: TObject);
 
   private
     { Private declarations }
 
     procedure GetImage();
+    procedure MineNano(Sender: TObject);
   public
     { Public declarations }
 
@@ -1228,7 +1233,7 @@ implementation
 
 uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
   TokenData, AccountRelated, QRRelated, FileManagerRelated, WalletViewRelated,
-  BackupRelated, debugAnalysis, KeypoolRelated
+  BackupRelated, debugAnalysis, KeypoolRelated,Nano
 {$IFDEF ANDRIOD}
 {$ENDIF}
 {$IFDEF MSWINDOWS}
@@ -2946,6 +2951,19 @@ procedure TfrmHome.notPrivTCA2Change(Sender: TObject);
 begin
   notPrivTCA1.IsChecked := notPrivTCA2.IsChecked;
 end;
+procedure TfrmHome.MineNano(Sender: TObject);
+begin
+  nano_DoMine(cryptoCurrency(NanoUnlocker.TagObject),passwordForDecrypt.Text);
+  passwordForDecrypt.Text:='';
+  PageControl.ActiveTab:=walletView;
+end;
+procedure TfrmHome.NanoUnlockerClick(Sender: TObject);
+begin
+     btnDecryptSeed.onclick := MIneNano;
+  decryptSeedBackTabItem := PageControl.ActiveTab;
+  PageControl.ActiveTab := descryptSeed;
+  btnDSBack.onclick := backBtnDecryptSeed;
+end;
 
 procedure TfrmHome.NewCoinPrivKeyOKButtonClick(Sender: TObject);
 begin
@@ -3127,7 +3145,7 @@ procedure TfrmHome.ShowHideAdvancedButtonClick(Sender: TObject);
 begin
 
   TransactionFeeLayout.Visible := not TransactionFeeLayout.Visible;
-  TransactionFeeLayout.Position.Y := Layout3.Position.Y + 1;
+  TransactionFeeLayout.Position.Y := ShowAdvancedLayout.Position.Y + 1;
 
   if TransactionFeeLayout.Visible then
   begin
@@ -3621,7 +3639,9 @@ procedure TfrmHome.FormShow(Sender: TObject);
       TControl(Obj).Opacity := 0;
   end;
 
+
 begin
+
   LabelEditApplyStyleLookup(HistoryTransactionValue);
   LabelEditApplyStyleLookup(HistoryTransactionDate);
   LabelEditApplyStyleLookup(historyTransactionConfirmation);

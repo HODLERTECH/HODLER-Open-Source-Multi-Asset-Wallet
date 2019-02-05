@@ -256,7 +256,7 @@ type
     SendVertScrollBox: TVertScrollBox;
     StyleBook1: TStyleBook;
     SendAmountLayout: TLayout;
-    Layout3: TLayout;
+    ShowAdvancedLayout: TLayout;
     TransactionFeeLayout: TLayout;
     SendToLayout: TLayout;
     AutomaticFeeLayout: TLayout;
@@ -801,7 +801,7 @@ type
     exportemptyaddressesSwitch: TCheckBox;
     SendErrorMsgSwitch: TCheckBox;
     UserReportSendLogsSwitch: TCheckBox;
-    UserReportDeviceInfoSwitch: TCheckBox;
+    UserReportDeviceInfoSwitch: TCheckBox; 
     Layout22: TLayout;
     LightButtonQR: TButton;
     DebugQRImage: TImage;
@@ -814,7 +814,8 @@ type
     TokenListLayout: TLayout;
     Label8: TLabel;
     Label11: TLabel;
-    AddWalletButton: TButton;
+    AddWalletButton: TButton; 
+    NanoUnlocker: TButton; 
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1047,9 +1048,11 @@ type
     procedure KeypoolSanitizerTimer(Sender: TObject);
     procedure FileMenagerCancelButtonClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure wvFeeChange(Sender: TObject);
+    procedure wvFeeChange(Sender: TObject); 
     procedure LightButtonQRClick(Sender: TObject);
-    procedure AddWalletButtonClick(Sender: TObject);
+    procedure AddWalletButtonClick(Sender: TObject); 
+    procedure MineNano(Sender:TObject);
+    procedure NanoUnlockerClick(Sender: TObject); 
     //procedure DayNightModeSwitchClick(Sender: TObject);
 
 
@@ -1189,7 +1192,7 @@ implementation
 
 uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
   AccountRelated,
-  TokenData, QRRelated, FileManagerRelated, WalletViewRelated, BackupRelated ,debugAnalysis,KeypoolRelated ;
+  TokenData, QRRelated, FileManagerRelated, WalletViewRelated, BackupRelated ,debugAnalysis,KeypoolRelated,Nano ;
 {$R *.fmx}
 {$R *.SmXhdpiPh.fmx ANDROID}
 {$R *.iPhone55in.fmx IOS}
@@ -2876,6 +2879,19 @@ begin
   generateNewYAddress(Sender);
 end;
 
+procedure TfrmHome.MineNano(Sender: TObject);
+begin
+  nano_DoMine(cryptoCurrency(NanoUnlocker.TagObject),passwordForDecrypt.Text);
+  passwordForDecrypt.Text:='';
+  PageControl.ActiveTab:=walletView;
+end;
+procedure TfrmHome.NanoUnlockerClick(Sender: TObject);
+begin
+     btnDecryptSeed.onclick := MIneNano;
+  decryptSeedBackTabItem := PageControl.ActiveTab;
+  PageControl.ActiveTab := descryptSeed;
+  btnDSBack.onclick := backBtnDecryptSeed;
+end;
 procedure TfrmHome.NewCoinPrivKeyOKButtonClick(Sender: TObject);
 begin
   WalletViewRelated.newCoinFromPrivateKey(Sender);
@@ -3013,7 +3029,7 @@ procedure TfrmHome.ShowHideAdvancedButtonClick(Sender: TObject);
 begin
 
   TransactionFeeLayout.Visible := not TransactionFeeLayout.Visible;
-  TransactionFeeLayout.Position.Y := Layout3.Position.Y + 1;
+  TransactionFeeLayout.Position.Y := ShowAdvancedLayout.Position.Y + 1;
 
   if TransactionFeeLayout.Visible then
   begin

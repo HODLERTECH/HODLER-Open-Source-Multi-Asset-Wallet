@@ -45,7 +45,8 @@ type
     deleted: boolean;
     EncryptedPrivKey: AnsiString;
     name, ShortCut: AnsiString;
-
+    lastBlock:AnsiString;
+    lastPendingBlock:AnsiString;
     constructor Create();
     destructor Destroy(); override;
 

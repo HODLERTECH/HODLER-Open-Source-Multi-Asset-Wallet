@@ -12,7 +12,7 @@ uses
   FMX.Layouts, FMX.ExtCtrls, Velthuis.BigIntegers, FMX.ScrollBox, FMX.Memo,
   FMX.Platform, System.Threading, Math, DelphiZXingQRCode,
   FMX.TabControl, FMX.Edit,
-  FMX.Clipboard, FMX.VirtualKeyBoard, JSON,
+  FMX.Clipboard, FMX.VirtualKeyBoard, JSON, Nano,
   languages, WalletStructureData, popupwindowData ,
 
   FMX.Media, FMX.Objects, uEncryptedZipFile, System.Zip
@@ -987,9 +987,13 @@ begin
       end;
       startFullfillingKeypool(MasterSeed);
       lblPrivateKey.Text := priv256forhd(wd.coin, wd.X, wd.Y, MasterSeed);
-      lblWIFKey.Text := PrivKeyToWIF(lblPrivateKey.Text, wd.coin <> 4,
+     if wd.coin <> 4 then lblWIFKey.Text := PrivKeyToWIF(lblPrivateKey.Text, wd.coin <> 4,
         AvailableCoin[TWalletInfo(wd).coin].wifByte);
+      if wd.coin=8 then begin
 
+       lblPrivateKey.Text:= nano_getPriv(wd.x,wd.Y,MasterSeed);
+        lblWIFKey.Text:='';
+end;
       wipeAnsiString(MasterSeed);
 
     end;
@@ -999,8 +1003,10 @@ begin
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     lblPrivateKey.Text := cutEveryNChar(length(lblPrivateKey.Text) div 2,
       lblPrivateKey.Text);
+if wd.coin<>8 then
     lblWIFKey.Text := cutEveryNChar(length(lblWIFKey.Text) div 2,
-      lblWIFKey.Text);
+      lblWIFKey.Text) else
+lblWIFKey.Text := '';
 {$ENDIF}
     bitmap := StrToQRBitmap(removeSpace(lblPrivateKey.Text));
     PrivKeyQRImage.bitmap.Assign(bitmap);

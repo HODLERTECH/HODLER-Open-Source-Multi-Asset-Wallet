@@ -89,12 +89,14 @@ type
       icon: integer = 2);
 
 
+
   end; }
 
 implementation
 uses Uhome;
 
 {constructor PopupWindowProtectYesNo.Create(Yes: TProc; No: TProc; mess: AnsiString; YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No'; icon: Integer = 2);
+
 var
   panel : TPanel;
 
@@ -133,12 +135,14 @@ begin
   end;
 
 end;
+
        }
 
 
 
 
 {constructor popupWindowYesNo.Create(Yes: TProc; No: TProc; mess: AnsiString;
+
 YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No'; icon: integer = 2);
 var
   panel, Panel2: TPanel;
@@ -278,6 +282,7 @@ begin
 
   ClosePopup();
   // Release;
+
 
 end;  }
 
