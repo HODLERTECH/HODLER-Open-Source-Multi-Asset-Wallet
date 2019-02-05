@@ -151,8 +151,10 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             Size.Width = 245.000000000000000000
             inherited globalBalance: TLabel
               Size.Width = 245.000000000000000000
+              Size.Height = 58.000000000000000000
             end
             inherited globalCurrency: TLabel
+              Position.Y = 58.000000000000000000
               Size.Width = 245.000000000000000000
             end
             inherited SearchLayout: TLayout
@@ -178,7 +180,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             Position.X = 181.000000000000000000
           end
           inherited AddWalletButton: TButton
-            Size.Width = 116.000000000000000000
+            Size.Width = 245.000000000000000000
           end
         end
         inherited WalletList: TVertScrollBox

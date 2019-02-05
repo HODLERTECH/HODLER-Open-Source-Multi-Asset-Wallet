@@ -228,15 +228,15 @@ inherited frmHome_Surface: TfrmHome_Surface
           Size.Width = 759.000000000000000000
         end
       end
-      inherited DebugQRImage: TImage
+      inherited imgCamera: TImage
+        MultiResBitmap.Height = 117
+        MultiResBitmap.Width = 117
+        MultiResBitmap.LoadSize = 1
         Size.Width = 759.000000000000000000
-        Size.Height = 1920.000000000000000000
-        inherited imgCamera: TImage
-          MultiResBitmap.Height = 117
-          MultiResBitmap.Width = 117
-          MultiResBitmap.LoadSize = 1
+        Size.Height = 1872.000000000000000000
+        inherited DebugQRImage: TImage
           Size.Width = 759.000000000000000000
-          Size.Height = 1920.000000000000000000
+          Size.Height = 1872.000000000000000000
         end
       end
     end
@@ -3461,21 +3461,33 @@ inherited frmHome_Surface: TfrmHome_Surface
         Size.Height = 1872.000000000000000000
         Viewport.Width = 759.000000000000000000
         Viewport.Height = 1872.000000000000000000
+        inherited CoinListLayout: TLayout
+          Size.Width = 759.000000000000000000
+          inherited Label27: TLabel
+            Size.Width = 759.000000000000000000
+          end
+        end
+        inherited TokenListLayout: TLayout
+          Size.Width = 759.000000000000000000
+          inherited Label28: TLabel
+            Size.Width = 759.000000000000000000
+          end
+        end
       end
     end
   end
   inherited Panel8: TPanel
     Size.Height = 1920.000000000000000000
     inherited AccountsListPanel: TPanel
-      Size.Height = 1632.000000000000000000
+      Size.Height = 1728.000000000000000000
       inherited AccountsListVertScrollBox: TVertScrollBox
-        Size.Height = 1632.000000000000000000
+        Size.Height = 1728.000000000000000000
         Viewport.Width = 161.000000000000000000
-        Viewport.Height = 1632.000000000000000000
+        Viewport.Height = 1728.000000000000000000
       end
     end
     inherited Layout37: TLayout
-      Position.Y = 1728.000000000000000000
+      Position.Y = 1824.000000000000000000
     end
   end
   inherited DashBrdPanel: TPanel

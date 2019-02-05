@@ -586,6 +586,7 @@ object frmHome: TfrmHome
             Size.PlatformDefault = False
             TabOrder = 0
             Text = 'New Coin'
+            Visible = False
             OnClick = btnAddNewCoinClick
           end
           object NewTokenButton: TButton
@@ -596,15 +597,16 @@ object frmHome: TfrmHome
             Size.PlatformDefault = False
             TabOrder = 1
             Text = 'New Token'
+            Visible = False
             OnClick = btnAddNewTokenClick
           end
           object AddWalletButton: TButton
             Align = Client
-            Size.Width = 239.000000000000000000
+            Size.Width = 368.000000000000000000
             Size.Height = 36.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 2
-            Text = 'Add Wallet'
+            Text = 'Add Coin/Token'
             OnClick = AddWalletButtonClick
           end
         end

@@ -249,12 +249,10 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 200.000000000000000000
         end
       end
-      inherited DebugQRImage: TImage
-        inherited imgCamera: TImage
-          MultiResBitmap.Height = 117
-          MultiResBitmap.Width = 117
-          MultiResBitmap.LoadSize = 1
-        end
+      inherited imgCamera: TImage
+        MultiResBitmap.Height = 117
+        MultiResBitmap.Width = 117
+        MultiResBitmap.LoadSize = 1
       end
     end
     inherited walletView: TTabItem
@@ -3243,15 +3241,15 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
   inherited Panel8: TPanel
     Size.Height = 375.000000000000000000
     inherited AccountsListPanel: TPanel
-      Size.Height = 87.000000000000000000
+      Size.Height = 183.000000000000000000
       inherited AccountsListVertScrollBox: TVertScrollBox
-        Size.Height = 87.000000000000000000
+        Size.Height = 183.000000000000000000
         Viewport.Width = 161.000000000000000000
-        Viewport.Height = 87.000000000000000000
+        Viewport.Height = 183.000000000000000000
       end
     end
     inherited Layout37: TLayout
-      Position.Y = 183.000000000000000000
+      Position.Y = 279.000000000000000000
     end
   end
   inherited DashBrdPanel: TPanel

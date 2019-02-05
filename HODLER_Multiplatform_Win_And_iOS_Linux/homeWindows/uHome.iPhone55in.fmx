@@ -280,15 +280,15 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Size.Height = 44.000000000000000000
         end
       end
-      inherited DebugQRImage: TImage
+      inherited imgCamera: TImage
+        MultiResBitmap.Height = 117
+        MultiResBitmap.Width = 117
+        MultiResBitmap.LoadSize = 1
         Size.Width = 93.000000000000000000
-        Size.Height = 716.000000000000000000
-        inherited imgCamera: TImage
-          MultiResBitmap.Height = 117
-          MultiResBitmap.Width = 117
-          MultiResBitmap.LoadSize = 1
+        Size.Height = 672.000000000000000000
+        inherited DebugQRImage: TImage
           Size.Width = 93.000000000000000000
-          Size.Height = 716.000000000000000000
+          Size.Height = 672.000000000000000000
         end
       end
     end
@@ -3902,21 +3902,33 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Height = 672.000000000000000000
         Viewport.Width = 93.000000000000000000
         Viewport.Height = 672.000000000000000000
+        inherited CoinListLayout: TLayout
+          Size.Width = 93.000000000000000000
+          inherited Label27: TLabel
+            Size.Width = 93.000000000000000000
+          end
+        end
+        inherited TokenListLayout: TLayout
+          Size.Width = 93.000000000000000000
+          inherited Label28: TLabel
+            Size.Width = 93.000000000000000000
+          end
+        end
       end
     end
   end
   inherited Panel8: TPanel
     Size.Height = 716.000000000000000000
     inherited AccountsListPanel: TPanel
-      Size.Height = 428.000000000000000000
+      Size.Height = 524.000000000000000000
       inherited AccountsListVertScrollBox: TVertScrollBox
-        Size.Height = 428.000000000000000000
+        Size.Height = 524.000000000000000000
         Viewport.Width = 161.000000000000000000
-        Viewport.Height = 428.000000000000000000
+        Viewport.Height = 524.000000000000000000
       end
     end
     inherited Layout37: TLayout
-      Position.Y = 524.000000000000000000
+      Position.Y = 620.000000000000000000
     end
   end
   inherited DashBrdPanel: TPanel

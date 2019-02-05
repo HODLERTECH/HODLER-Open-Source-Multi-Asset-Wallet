@@ -170,7 +170,7 @@ inherited frmHome_Surface: TfrmHome_Surface
             Position.X = 1000.000000000000000000
           end
           inherited AddWalletButton: TButton
-            Size.Width = 935.000000000000000000
+            Size.Width = 1064.000000000000000000
           end
         end
         inherited WalletList: TVertScrollBox
