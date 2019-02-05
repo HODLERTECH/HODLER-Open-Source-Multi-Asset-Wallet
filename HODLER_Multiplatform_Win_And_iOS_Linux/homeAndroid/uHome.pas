@@ -815,7 +815,7 @@ type
     Label8: TLabel;
     Label11: TLabel;
     AddWalletButton: TButton; 
-    NanoUnlocker: TButton; 
+    NanoUnlocker: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -2887,7 +2887,7 @@ begin
 end;
 procedure TfrmHome.NanoUnlockerClick(Sender: TObject);
 begin
-     btnDecryptSeed.onclick := MIneNano;
+  btnDecryptSeed.onclick := MIneNano;
   decryptSeedBackTabItem := PageControl.ActiveTab;
   PageControl.ActiveTab := descryptSeed;
   btnDSBack.onclick := backBtnDecryptSeed;

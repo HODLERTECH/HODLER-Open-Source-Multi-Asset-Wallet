@@ -62,6 +62,25 @@ type
     account: AnsiString;
   end;
 
+type
+  TAutoReceive = class
+
+    password : AnsiString;
+    coin : TwalletInfo;
+    protected
+      procedure Confirm;
+
+  end;
+
+type
+  NanoCoin = class ( TwalletInfo )
+
+    ConfirmThread : TAutoReceive;
+
+    procedure runAutoConfirm();
+
+  end;
+
 function nano_pow(Hash: AnsiString): AnsiString;
 
 procedure removePow(Hash: AnsiString);
@@ -102,6 +121,30 @@ implementation
 
 uses
   ED25519_Blake2b, uHome, PopupWindowData, keypoolrelated, walletviewrelated;
+
+ //////////////////////////////////////////////////////////////////////
+
+
+procedure TAutoReceive.Confirm;
+begin
+
+  while ( coin.unconfirmed <> 0 )do
+  begin
+
+    nano_DoMine( coin ,password);
+
+  end;
+
+end;
+
+
+
+
+
+
+
+
+  //////////////////////////////////////////////////////////////////////
 
 type
   precalculatedPow = record
@@ -391,7 +434,7 @@ begin
   while True do
   begin
     if counter mod 1000000 = 0 then Sleep(500); //no luck, let's cool down CPU :)
-    
+
     workBytes[0] := random(255);
     workBytes[1] := random(255);
     workBytes[2] := random(255);
@@ -967,12 +1010,21 @@ begin
   TThread.CreateAnonymousThread(
     procedure
     begin
-      frmhome.NanoUnlocker.Enabled := false;
-      frmhome.NanoUnlocker.Text := 'Mining NANO...';
+      tthread.Synchronize(nil , procedure
+      begin
+        frmhome.NanoUnlocker.Enabled := false;
+        frmhome.NanoUnlocker.Text := 'Mining NANO...';
+      end);
+      
       nano_minePendings(cc, getDataOverHTTP('https://hodlernode.net/nano.php?addr=' + cc.addr, false, true), pw);
 
-      frmhome.NanoUnlocker.Enabled := true;
-      wipeAnsiString(pw);
+      tthread.Synchronize(nil , procedure
+      begin
+        frmhome.NanoUnlocker.Enabled := true;
+        wipeAnsiString(pw);
+      end);
+
+      
     end).Start();
 
 end;
