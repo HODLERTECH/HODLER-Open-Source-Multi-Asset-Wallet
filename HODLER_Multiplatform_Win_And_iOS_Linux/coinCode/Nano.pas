@@ -75,9 +75,22 @@ type
 type
   NanoCoin = class ( TwalletInfo )
 
-    ConfirmThread : TAutoReceive;
+    PendingBlocks : TQueue<TnanoBlock>;
 
-    procedure runAutoConfirm();
+    procedure mineAllPendings();
+
+    procedure mineBlock( block : TNanoBlock );
+
+    procedure tryAddPendingBlock( block : TNanoBlock );
+
+    constructor Create(id: integer; _x: integer; _y: integer; _addr: AnsiString;
+      _description: AnsiString; crTime: integer = -1); overload;
+
+
+    destructor destroy();
+    //ConfirmThread : TAutoReceive;
+
+    //procedure runAutoConfirm();
 
   end;
 
@@ -124,19 +137,49 @@ uses
 
  //////////////////////////////////////////////////////////////////////
 
-
-procedure TAutoReceive.Confirm;
+constructor NanoCoin.create(id: integer; _x: integer; _y: integer; _addr: AnsiString;
+      _description: AnsiString; crTime: integer = -1);
 begin
 
-  while ( coin.unconfirmed <> 0 )do
+  inherited create(id , _x , _y , _addr , _description , crtime );
+
+  PendingBlocks := TQueue<TNanoBlock>.Create();
+
+
+end;
+
+destructor NanoCoin.destroy;
+begin
+
+  inherited;
+
+  PendingBlocks.Free;
+
+end;
+
+
+procedure NanoCoin.mineAllPendings;
+begin
+
+  while( PendingBlocks.Count <> 0 ) do
   begin
 
-    nano_DoMine( coin ,password);
 
   end;
 
 end;
 
+procedure NanoCoin.tryAddPendingBlock(block : TNanoBlock);
+begin
+
+end;
+
+procedure nanocoin.mineBlock(block: TNanoBlock);
+begin
+
+
+
+end;
 
 
 
@@ -844,7 +887,7 @@ var
 begin
   p := nano_getPriv(x, y, MasterSeed);
   pub := nano_privToPub(p);
-  result := TWalletInfo.Create(8, x, y, nano_accountFromHexKey(pub), '');
+  result := NanoCoin.Create(8, x, y, nano_accountFromHexKey(pub), '');
   result.pub := pub;
   wipeAnsiString(p);
   wipeAnsiString(MasterSeed);
@@ -991,7 +1034,7 @@ begin
         frmhome.NanoUnlocker.Enabled := false;
         frmhome.NanoUnlocker.Text := 'Mining NANO...';
       end);
-      
+
       nano_minePendings(cc, getDataOverHTTP('https://hodlernode.net/nano.php?addr=' + cc.addr, false, true), pw);
 
       tthread.Synchronize(nil , procedure
@@ -1000,7 +1043,7 @@ begin
         wipeAnsiString(pw);
       end);
 
-      
+
     end).Start();
 
 end;

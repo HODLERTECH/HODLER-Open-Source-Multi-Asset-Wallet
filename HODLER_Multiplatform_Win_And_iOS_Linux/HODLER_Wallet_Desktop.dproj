@@ -6,7 +6,7 @@
         <MainSource>HODLER_Wallet_Desktop.dpr</MainSource>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
-        <Platform Condition="'$(Platform)'==''">Win64</Platform>
+        <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1247</TargetedPlatforms>
         <AppType>Application</AppType>
     </PropertyGroup>
@@ -576,9 +576,6 @@
         <DCCReference Include="components\NotificationLayoutData.pas"/>
         <DCCReference Include="coinCode\ED25519_Blake2b.pas"/>
         <DCCReference Include="coinCode\Nano.pas"/>
-        <DCCReference Include="additionalUnits\PopupWindowData.pas"/>
-        <DCCReference Include="CrossPlatformHeaders.pas"/>
-        <DCCReference Include="components\NotificationLayoutData.pas"/>
         <RcItem Include="Jet.style">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
@@ -815,7 +812,7 @@
         <RcItem Include="token_icons\search_white.png">
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>SEARCH_WHITE</ResourceId>
-		</RcItem>
+        </RcItem>
         <RcItem Include="coin_icons\Nano-icon.png">
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>NANO_IMG</ResourceId>
