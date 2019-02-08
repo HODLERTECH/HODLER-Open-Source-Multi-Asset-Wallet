@@ -453,7 +453,7 @@ var
   btn: TImageTextButton;
 begin
 
-
+  Randomize;
   Application.OnException := frmhome.ExceptionHandler;
   ResourceMenager := AssetsMenager.Create();
 
@@ -656,6 +656,9 @@ begin
       // HistoryTransactionDate.TagString := 'copyable';
       // HistoryTransactionValue.TagString := 'copyable';
       // historyTransactionConfirmation.TagString := 'copyable';
+
+      UnlockNanoImage.Bitmap.LoadFromStream( resourceMenager.getAssets('CLOSED') );
+
       CreateCopyImageButtonOnTEdits();
       /// ///// Restore form HSB
       btn := TImageTextButton.Create(HSBbackupLayout);
@@ -699,7 +702,7 @@ begin
       refreshLocalImage := TRotateImage.Create(RefreshLayout);
       refreshLocalImage.Parent := RefreshLayout;
       refreshLocalImage.Visible := true;
-      refreshLocalImage.Align := TAlignLayout.Right;
+      refreshLocalImage.Align := TAlignLayout.MostRight;
       refreshLocalImage.Width := 32;
       refreshLocalImage.OnClick := RefreshCurrentWallet;
       refreshLocalImage.Margins.Right := 15;

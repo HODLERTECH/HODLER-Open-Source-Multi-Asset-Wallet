@@ -820,6 +820,7 @@ type
     TokenListLayout: TLayout;
     Label28: TLabel;
     NanoUnlocker: TButton;
+    UnlockNanoImage: TImage;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1088,6 +1089,7 @@ type
     procedure SendErrorMsgSwitchClick(Sender: TObject);
     procedure AddWalletButtonClick(Sender: TObject);
     procedure NanoUnlockerClick(Sender: TObject);
+    procedure UnlockPengingTransactionClick(Sender: TObject);
     //procedure UserReportSendLogsSwitchClick(Sender: TObject);
 
   private
@@ -1154,6 +1156,7 @@ type
     procedure GenerateETHAddressWithToken(Sender : TObject);
     procedure AddTokenFromWalletList(Sender : TObject );
     procedure AddNewTokenETHPanelClick(sender : Tobject );
+    procedure UnlockPendingNano(sender : TObject);
     // procedure PrivateKeyPasswordCheck
   var
     refreshLocalImage: TRotateImage;
@@ -1254,6 +1257,37 @@ begin
 end;
 
 {$ENDIF}
+
+
+
+procedure tfrmhome.UnlockPendingNano(sender : TObject);
+var
+  tced: AnsiString;
+  MasterSeed: AnsiString;
+  nano : NanoCoin;
+begin
+
+  //nano_DoMine(cryptoCurrency(NanoUnlocker.TagObject),passwordForDecrypt.Text);
+
+  tced := TCA(passwordForDecrypt.Text);
+  MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
+    passwordForDecrypt.Text := '';
+    if not isHex(masterseed) then
+    begin
+      popupWindow.create(dictionary('FailedToDecrypt'));
+      exit;
+    end;
+
+  nano := NanoCoin(currentcryptoCurrency);
+
+  nano.unlock( MasterSeed );
+
+  wipeansistring(masterseed);
+
+  PageControl.ActiveTab:=decryptSeedBackTabItem;
+
+
+end;
 
 
 procedure tfrmhome.GenerateETHAddressWithToken(Sender : TObject);
@@ -2513,6 +2547,51 @@ begin
   WalletViewRelated.TrySendTransaction(Sender);
 end;
 
+procedure TfrmHome.UnlockPengingTransactionClick(Sender: TObject);
+var
+  nano : NanoCoin;
+begin
+    if currentCryptocurrency is NanoCoin then
+    begin
+
+     NotificationLayout.popupPasswordConfirm(procedure (pass : AnsiString)
+     var
+        tced , MasterSeed : AnsiString;
+     begin
+
+        tced := TCA( pass );
+        MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
+          passwordForDecrypt.Text := '';
+          if not isHex(masterseed) then
+          begin
+            popupWindow.create(dictionary('FailedToDecrypt'));
+            exit;
+          end;
+
+        nano := NanoCoin(currentcryptoCurrency);
+
+        nano.unlock( MasterSeed );
+
+        wipeansistring(masterseed);
+        frmhome.UnlockNanoImage.Bitmap.LoadFromStream( resourceMenager.getAssets('OPENED') );
+
+        //PageControl.ActiveTab:=decryptSeedBackTabItem;
+
+     end, procedure ( pass : AnsiString )
+     begin
+
+     end
+     , 'Insert password to continue' );
+
+
+  //btnDecryptSeed.onclick := UnlockPendingNano;
+  //decryptSeedBackTabItem := PageControl.ActiveTab;
+  //PageControl.ActiveTab := descryptSeed;
+  //btnDSBack.onclick := backBtnDecryptSeed;
+
+    end
+end;
+
 procedure TfrmHome.updateBtnClick(Sender: TObject);
 begin
 {$IFDEF ANDROID}
@@ -3092,10 +3171,10 @@ var
   actionListener: TActionList;
 begin
 
-  NotificationLayout.popupProtectedConfirm(procedure
+  NotificationLayout.popupPasswordConfirm(procedure (pass : AnsiString )
   begin
 
-  end , procedure
+  end , procedure (pass : AnsiString )
   begin
 
 

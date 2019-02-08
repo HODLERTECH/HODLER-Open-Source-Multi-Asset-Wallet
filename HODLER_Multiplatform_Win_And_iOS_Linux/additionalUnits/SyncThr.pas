@@ -164,6 +164,9 @@ var
   ts: TStringList;
   i: integer;
   masterseed, tced: ansistring;
+
+  pendings: TJsonArray;
+  temp : TpendingNanoBlock;
 begin
   try
 
@@ -171,31 +174,55 @@ begin
     cc.rate := StrToFloatDef(js.GetValue('price').Value, 0.0);
     cc.confirmed := BigInteger.Parse(js.GetValue('balance').GetValue < string > ('balance'));
     cc.unconfirmed := BigInteger.Parse(js.GetValue('balance').GetValue < string > ('pending'));
-    history := js.GetValue<TJSONArray>('history') as TJSONArray;
-    if history.Count > 0 then
-    begin
-      firstblock := nano_buildFromJSON(history.Items[0].ToJSON, '', false);
-      cc.lastPendingBlock := firstblock.hash;
-      nano_precalculate(cc.lastPendingBlock);
-      SetLength(cc.history, history.count);
-      for i := 0 to history.Count - 1 do
+    //{history := }js.TryGetValue<TJSONArray>('history' , history) {as TJSONArray};
+    //{pendings :=} js.tryGetValue<TJsonArray>('pending' , pendings) {as TJsonArray};
+
+    if js.tryGetValue<TJsonArray>('pending' , pendings ) then
+      if pendings.Count > 0 then
       begin
-        block := nano_buildFromJSON(history.Items[i].ToJSON, '', false);
-        SetLength(cc.history[i].values, 1);
-        SetLength(cc.history[i].addresses, 2);
-        cc.history[i].values[0] := BigInteger.Abs(block.blockAmount);
-        cc.history[i].TransactionID := block.Hash;
-        cc.history[i].addresses[0] := nano_accountFromHexKey(block.account);
-        cc.history[i].addresses[1] := nano_accountFromHexKey(block.source);
-        cc.history[i].data := IntToStr(history.Count - 1 - i);
-        if block.blocktype = 'send' then
-          cc.history[i].typ := 'OUT'
-        else
-          cc.history[i].typ := 'IN';
-        cc.history[i].CountValues := cc.history[i].values[0];
-        cc.history[i].confirmation := 1;
+        for i := 0 to (pendings.Count div 2) - 1 do
+        begin
+
+          temp.Block := nano_buildFromJSON(pendings.Items[(i * 2)].GetValue < TjsonObject > ('data').GetValue('contents').Value, '');
+          temp.Hash := pendings.Items[(i * 2) + 1].GetValue < Ansistring > ('hash');
+
+          NanoCoin(cc).tryAddPendingBlock(temp);
+
+        end;
       end;
-    end;
+
+    if js.TryGetValue<TJSONArray>('history' , history)  then
+      if history.Count > 0 then
+      begin
+        firstblock := nano_buildFromJSON(history.Items[0].ToJSON, '', false);
+        cc.lastPendingBlock := firstblock.hash;
+        nano_precalculate(cc.lastPendingBlock);
+        SetLength(cc.history, history.count);
+        for i := 0 to history.Count - 1 do
+        begin
+
+          block := nano_buildFromJSON(history.Items[i].ToJSON, '', false);
+
+
+
+
+
+          SetLength(cc.history[i].values, 2);
+          SetLength(cc.history[i].addresses, 2);
+          cc.history[i].values[0] := BigInteger.Abs(block.blockAmount);
+          cc.history[i].values[1] := 0; // length(hitory.Values) must be the same as length(history.addresses)
+          cc.history[i].TransactionID := block.Hash;
+          cc.history[i].addresses[0] := nano_accountFromHexKey(block.account);
+          cc.history[i].addresses[1] := nano_accountFromHexKey(block.source);
+          cc.history[i].data := IntToStr(history.Count - 1 - i);
+          if block.blocktype = 'send' then
+            cc.history[i].typ := 'OUT'
+          else
+            cc.history[i].typ := 'IN';
+          cc.history[i].CountValues := cc.history[i].values[0];
+          cc.history[i].confirmation := 1;
+        end;
+      end;
 
   except
     on e: exception do

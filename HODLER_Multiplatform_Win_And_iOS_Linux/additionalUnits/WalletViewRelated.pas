@@ -97,7 +97,7 @@ implementation
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, AccountRelated, TCopyableEditData, BackupRelated, debugAnalysis,
-  KeypoolRelated;
+  KeypoolRelated , nano , ED25519_Blake2b;
 
 
 
@@ -1561,6 +1561,16 @@ begin
         wd.isCompressed := isCompressed;
       end
       else
+      if newCoinID = 8 then
+      begin
+
+        pub := nano_privToPub(frmhome.CoinPrivKeyDescriptionEdit.Text);
+        wd := NanoCoin.Create(8 , -1 , -1 ,nano_accountFromHexKey(pub), '' );
+        wd.pub := pub;
+        wd.EncryptedPrivKey := speckEncrypt((TCA(MasterSeed)), frmhome.CoinPrivKeyDescriptionEdit.Text );
+
+      end
+      else
       begin
         wd := TWalletInfo.Create(newcoinID, -1, -1,
           Bitcoin_PublicAddrToWallet(pub, AvailableCoin[newcoinID].p2pk),
@@ -2009,7 +2019,7 @@ begin
     begin
       frmhome.BCHCashAddrButtonClick(Sender);
     end;
-
+    UnlockNanoImage.Visible := TWalletInfo(CurrentCryptoCurrency).coin = 8;
     if TWalletInfo(CurrentCryptoCurrency).coin = 8 then
     begin
       frmhome.ShowAdvancedLayout.Visible := false;
@@ -2017,6 +2027,15 @@ begin
       frmhome.YAddresses.Visible := false;
       frmhome.btnNewAddress.Visible := false;
       frmhome.btnPrevAddress.Visible := false;
+      if NanoCoin(CurrentCryptoCurrency).isUnlocked then
+      begin
+        UnlockNanoImage.Bitmap.LoadFromStream( ResourceMenager.getAssets('OPENED') );
+      end
+      else
+      begin
+        UnlockNanoImage.Bitmap.LoadFromStream( ResourceMenager.getAssets('CLOSED') );
+      end;
+
     end
     else
       frmhome.ShowAdvancedLayout.Visible := True;
@@ -2919,7 +2938,7 @@ begin
 
           LoadingKeyDataAniIndicator.Enabled := True;
           LoadingKeyDataAniIndicator.Visible := True;
-          if newcoinID <> 4 then
+          if not newcoinID in [4 , 8] then
           begin
 
             { tthread.CreateAnonymousThread(
@@ -2936,7 +2955,7 @@ begin
             comkey := secp256k1_get_public(WIFEdit.Text, false);
             notkey := secp256k1_get_public(WIFEdit.Text, True);
 
-            wd := TWalletInfo.Create(newcoinID, -1, -1,
+            wd := coinData.createCoin(newcoinID, -1, -1,
               Bitcoin_PublicAddrToWallet(comkey, AvailableCoin[newcoinID].p2pk),
               'Imported');
             wd.pub := comkey;
@@ -3041,9 +3060,10 @@ begin
             // end).Start();
 
             exit;
-          end;
+          end
           // Parsing for ETH
-          if newcoinID = 4 then
+          //if newcoinID = 4 then   ?
+          else
           begin
             { tthread.CreateAnonymousThread(
               procedure
@@ -3055,11 +3075,12 @@ begin
               wd: TwalletInfo;
               request: AnsiString;
               begin }
-            comkey := secp256k1_get_public(WIFEdit.Text, True);
+
+            {comkey := secp256k1_get_public(WIFEdit.Text, True);
 
             wd := TWalletInfo.Create(newcoinID, -1, -1,
               Ethereum_PublicAddrToWallet(comkey), 'Imported');
-            wd.pub := comkey;
+            wd.pub := comkey;  }
 
             TThread.Synchronize(nil,
               procedure
@@ -3070,7 +3091,7 @@ begin
                 HexPrivKeyNotCompressedRadioButton.IsChecked := True;
               end);
 
-            wd.Free;
+            //wd.Free;
 
             // end).Start();
             exit;

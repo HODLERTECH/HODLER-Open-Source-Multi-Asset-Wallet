@@ -57,7 +57,7 @@ var
   flock: TObject;
   ts: TStringList;
 begin
-{$IFDEF  DEBUG}
+(*{$IFDEF  DEBUG}
   flock := TObject.Create;
   TMonitor.Enter(flock);
   ts := TStringList.Create;
@@ -75,7 +75,7 @@ begin
   ts.Free;
   TMonitor.Exit(flock);
   flock.Free;
-{$ENDIF}
+{$ENDIF}  *)
 end;
 
 procedure TFillKeypoolThread.setCC(cc: cryptoCurrency);

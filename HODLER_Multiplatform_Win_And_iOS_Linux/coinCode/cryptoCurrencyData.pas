@@ -33,6 +33,7 @@ type
 type
   cryptoCurrency = class
 
+    name, ShortCut: AnsiString;
     creationTime: integer;
     history: TxHistory;
     confirmed: BigInteger;
@@ -44,7 +45,7 @@ type
     orderInWallet: integer;
     deleted: boolean;
     EncryptedPrivKey: AnsiString;
-    name, ShortCut: AnsiString;
+
     lastBlock:AnsiString;
     lastPendingBlock:AnsiString;
     constructor Create();

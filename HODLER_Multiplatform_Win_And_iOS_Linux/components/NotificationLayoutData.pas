@@ -8,6 +8,42 @@ uses
   System.Types, StrUtils, FMX.Dialogs , crossplatformHeaders ,System.Generics.Collections;
 
 type
+  PasswordDialog = class( TLayout )
+    public
+    //protectWord : AnsiString;
+
+   _protectLayout : TLayout;
+    _staticInfoLabel : TLabel;
+    _edit : TEdit;
+    //_ProtectWordLabel : TLAbel;
+
+    _lblMessage: TLabel;
+
+    _ImageLayout: TLayout;
+    _Image: TImage;
+
+    _ButtonLayout: TLayout;
+    _YesButton: TButton;
+    _NoButton: TButton;
+
+    _onYesPress: TProc<AnsiString>;
+    _onNoPress: TProc<AnsiString>;
+
+    procedure _onYesClick(sender: TObject);
+    procedure _onNoClick(sender: TObject);
+    //procedure _OnExit(sender: TObject);
+    //procedure checkProtect(Sender : TObject );
+
+
+    constructor create( Owner : TComponent ; Yes, No: TProc<AnsiString>; mess: AnsiString;
+      YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
+      icon: integer = 2);
+
+    destructor destroy(); Override;
+
+  end;
+
+type
   ProtectedConfirmDialog = class( Tlayout )
     public
     protectWord : AnsiString;
@@ -93,6 +129,9 @@ type
   procedure popupProtectedConfirm(Yes: TProc; No: TProc; mess: AnsiString;
     YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No'; icon: integer = 2);
 
+  procedure popupPasswordConfirm(Yes: TProc<AnsiString>; No: TProc<AnsiString>; mess: AnsiString;
+    YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No'; icon: integer = 2);
+
   procedure popupConfirm(Yes, No: TProc; mess: AnsiString;
       YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
       icon: integer = 2);
@@ -138,6 +177,32 @@ procedure TNotificationLayout.backgroundClick(Sender : TObject);
 begin
 
   ClosePopup;
+
+end;
+
+procedure TNotificationLayout.popupPasswordConfirm(Yes, No: TProc<AnsiString>; mess: AnsiString;
+      YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
+      icon: integer = 2);
+var
+  popup : Tlayout;
+begin
+
+  popup := PasswordDialog.create( self , yes , no , mess , yesText , noText , icon);
+  popup.Parent := self;
+  popup.Align := TAlignLayout.None;
+  popup.Position.Y := ( Self.Height / 2 ) - ( popup.Height / 2 );
+  popup.Position.X := - popup.Width;
+  popup.Visible := true;
+
+  CurrentPOpup := popup;
+
+  self.BringToFront;
+
+  popup.AnimateFloat( 'position.x' , (Self.Width /2 ) - (popup.width /2 ) , 0.2 );
+  backGround.HitTest := true;
+  background.Visible := true;
+  backGround.AnimateFloat( 'opacity' , 1 , 0.2 )
+
 
 end;
 
@@ -505,5 +570,150 @@ begin
   inherited;
 
 end;
+
+
+/////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+procedure PasswordDialog._onYesClick(Sender : Tobject);
+begin
+
+   _onYesPress( _edit.text );
+    TNotificationLayout( Owner ).ClosePopup;
+
+end;
+procedure PasswordDialog._onNoClick(Sender : Tobject);
+begin
+
+  _onNoPress( _edit.text );
+  TNotificationLayout( Owner ).ClosePopup;
+
+end;
+
+
+constructor  PasswordDialog.create( Owner : TComponent ; Yes, No: TProc<AnsiString>; mess: AnsiString;
+      YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
+      icon: integer = 2);
+var
+  panel : TPanel;
+begin
+
+  inherited Create( owner );
+
+  _onYesPress := Yes;
+  _onNoPress := No;
+
+  //parent := TfmxObject ( owner );
+  self.Height := 250;
+  self.Width := 350 ;//min( 400 , owner.Width );
+
+  //Align := TAlignLayout.None;
+  //position.Y := ( TControl( owner ).Height / 2 ) - ( height / 2);
+  //position.X := - Width;
+
+  //AnimateFloat('position.x' , ( TControl( owner ).Width / 2 ) - ( width / 2 ));
+
+  panel := TPanel.Create(self);
+  panel.Parent := self;
+  panel.Align := TAlignlayout.Contents;
+  panel.Visible := true;
+
+  _protectLayout := TLayout.Create(panel);
+  _protectLayout.Parent := panel;
+  _protectLayout.Align := TAlignLayout.Bottom;
+  _protectLayout.Height := 48 ;
+  _protectLayout.Visible := true;
+
+ { _staticInfoLabel := TLabel.Create(_protectLayout);
+  _staticInfoLabel.Parent := _protectLayout;
+  _staticInfoLabel.Visible := true;
+  _staticInfoLabel.Align := TAlignLayout.Top;
+  _staticInfoLabel.Text := 'Rewrite text to confirm';
+  _staticInfoLabel.Height := 24;
+  _staticInfoLabel.TextAlign := TTextAlign.Center; }
+
+
+  _edit := Tedit.Create( _protectLayout );
+  _edit.Parent := _protectLayout;
+  _edit.Align := TAlignLayout.MostBottom;
+  _edit.Visible := true;
+  _edit.Height := 48;
+  _edit.TextAlign := TTextAlign.Center;
+  _edit.Password := true;
+
+  _ImageLayout := TLayout.Create(panel);
+  _ImageLayout.Visible := true;
+  _ImageLayout.Align := TAlignLayout.MostTop;
+  _ImageLayout.parent := panel;
+  _ImageLayout.Height := 96;
+
+  _Image := TImage.Create(_ImageLayout);
+  _Image.Align := TAlignLayout.Center;
+  _Image.Width := 64;
+  _Image.Height := 64;
+  _Image.Visible := true;
+  _Image.parent := _ImageLayout;
+  case icon of
+    0:
+      _Image.Bitmap := frmhome.OKImage.Bitmap;
+    1:
+      _Image.Bitmap := frmhome.InfoImage.Bitmap;
+    2:
+      _Image.Bitmap := frmhome.warningImage.Bitmap;
+    3:
+      _Image.Bitmap := frmhome.ErrorImage.Bitmap;
+  end;
+
+  _lblMessage := TLabel.Create(panel);
+  _lblMessage.Align := TAlignLayout.Client;
+  _lblMessage.Visible := true;
+  _lblMessage.parent := panel;
+  _lblMessage.Text := mess;
+  _lblMessage.TextSettings.HorzAlign := TTextAlign.Center;
+  _lblMessage.Margins.Left := 10;
+  _lblMessage.Margins.Right := 10;
+
+  _ButtonLayout := TLayout.Create(panel);
+  _ButtonLayout.Visible := true;
+  _ButtonLayout.Align := TAlignLayout.MostBottom;
+  _ButtonLayout.parent := panel;
+  _ButtonLayout.Height := 48;
+
+  _YesButton := TButton.Create(_ButtonLayout);
+  _YesButton.Align := TAlignLayout.Right;
+  _YesButton.Width := _ButtonLayout.Width / 2;
+  _YesButton.Visible := true;
+  _YesButton.parent := _ButtonLayout;
+  _YesButton.Text := YesText;
+  _YesButton.OnClick := _onYesClick;
+
+  _NoButton := TButton.Create(_ButtonLayout);
+  _NoButton.Align := TAlignLayout.Left;
+  _NoButton.Width := _ButtonLayout.Width / 2;
+  _NoButton.Visible := true;
+  _NoButton.parent := _ButtonLayout;
+  _NoButton.Text := NoText;
+  _NoButton.OnClick := _onNoClick;
+
+
+end;
+
+destructor PasswordDialog.Destroy;
+begin
+
+  inherited;
+
+end;
+
+
+
+
+
+
+
+
 
 end.
