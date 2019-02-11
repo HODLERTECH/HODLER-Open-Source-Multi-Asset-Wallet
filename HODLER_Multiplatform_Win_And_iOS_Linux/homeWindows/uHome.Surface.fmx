@@ -831,6 +831,12 @@ inherited frmHome_Surface: TfrmHome_Surface
                   end
                 end
               end
+              inherited ShowAdvancedLayout: TLayout
+                Size.Width = 759.000000000000000000
+                inherited ShowHideAdvancedButton: TButton
+                  Size.Width = 759.000000000000000000
+                end
+              end
               inherited TransactionFeeLayout: TLayout
                 Size.Width = 759.000000000000000000
                 inherited AutomaticFeeLayout: TLayout

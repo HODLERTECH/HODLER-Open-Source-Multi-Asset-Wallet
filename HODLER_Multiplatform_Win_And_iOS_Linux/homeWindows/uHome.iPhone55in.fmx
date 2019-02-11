@@ -894,43 +894,98 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
               Size.Height = 591.000000000000000000
               Viewport.Width = 88.000000000000000000
               Viewport.Height = 591.000000000000000000
+              inherited btnSend: TButton
+                Size.Width = 88.000000000000000000
+              end
               inherited SendAmountLayout: TLayout
+                Size.Width = 88.000000000000000000
                 inherited lblAmount: TLabel
+                  Size.Width = 88.000000000000000000
                   Size.Height = 22.000000000000000000
                 end
                 inherited wvAmount: TEdit
                   Position.Y = 62.000000000000000000
+                  Size.Width = 88.000000000000000000
                   Size.Height = 30.000000000000000000
                   inherited lblCoinShort: TLabel
-                    Position.X = 317.825073242187500000
-                    Size.Width = 106.174926757812500000
-                    Size.Height = 29.999996185302730000
+                    Position.Y = 3.637824058532715000
+                    Size.Width = 78.000000000000000000
+                    Size.Height = 22.724349975585940000
                   end
                 end
                 inherited WVRealCurrency: TEdit
                   Position.Y = 32.000000000000000000
+                  Size.Width = 88.000000000000000000
                   Size.Height = 30.000000000000000000
                   inherited lblCoinFiat: TLabel
-                    Position.X = 310.250000000000000000
-                    Size.Width = 113.750000000000000000
-                    Size.Height = 30.000000000000000000
+                    Position.Y = 4.333332061767578000
+                    Size.Width = 78.000000000000000000
+                    Size.Height = 21.333335876464840000
+                  end
+                end
+              end
+              inherited ShowAdvancedLayout: TLayout
+                Size.Width = 88.000000000000000000
+                inherited ShowHideAdvancedButton: TButton
+                  Size.Width = 88.000000000000000000
+                  inherited Layout2: TLayout
+                    Position.X = 40.000000000000000000
                   end
                 end
               end
               inherited TransactionFeeLayout: TLayout
+                Size.Width = 88.000000000000000000
                 inherited AutomaticFeeLayout: TLayout
+                  Size.Width = 88.000000000000000000
                   inherited FeeSpin: TSpinBox
+                    Position.X = 8.000000000000000000
                     Position.Y = 1.000000000000000000
                     Size.Height = 30.000000000000000000
                   end
                 end
+                inherited FixedFeeLayout: TLayout
+                  Size.Width = 88.000000000000000000
+                  inherited wvFee: TEdit
+                    Size.Width = 0.000000000000000000
+                  end
+                end
+                inherited Layout5: TLayout
+                  Size.Width = 88.000000000000000000
+                  inherited lblFee: TLabel
+                    Size.Width = 88.000000000000000000
+                  end
+                  inherited lblFeeHeader: TLabel
+                    Size.Width = 88.000000000000000000
+                  end
+                end
+                inherited SendSettingsFlowLayout: TFlowLayout
+                  Size.Width = 88.000000000000000000
+                end
+                inherited PerByteFeeLayout: TLayout
+                  Size.Width = 88.000000000000000000
+                  inherited PerByteFeeEdit: TEdit
+                    Size.Width = 0.000000000000000000
+                  end
+                end
               end
               inherited SendToLayout: TLayout
+                Size.Width = 88.000000000000000000
+                inherited lblSendTo: TLabel
+                  Size.Width = 88.000000000000000000
+                end
                 inherited AddressQRLayout: TLayout
+                  Size.Width = 88.000000000000000000
+                  inherited btnAddressQR: TButton
+                    Position.X = 40.000000000000000000
+                  end
                   inherited WVsendTO: TEdit
+                    Size.Width = 40.000000000000000000
                     Size.Height = 30.000000000000000000
                   end
                 end
+              end
+              inherited SendInfoLabel: TLabel
+                Size.Width = 58.000000000000000000
               end
             end
           end

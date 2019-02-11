@@ -2022,6 +2022,11 @@ begin
     UnlockNanoImage.Visible := TWalletInfo(CurrentCryptoCurrency).coin = 8;
     if TWalletInfo(CurrentCryptoCurrency).coin = 8 then
     begin
+
+      SendSettingsFlowLayout.Parent := SendVertScrollBox;
+      SendSettingsFlowLayout.Position.Y := SendAmountLayout.Position.Y +1 ;
+      FeeFromAmountLayout.Visible := false;
+
       frmhome.ShowAdvancedLayout.Visible := false;
       frmhome.TransactionFeeLayout.Visible := false;
       frmhome.YAddresses.Visible := false;
@@ -2038,7 +2043,23 @@ begin
 
     end
     else
+    begin
+
+      SendSettingsFlowLayout.Parent := TransactionFeeLayout;
+      SendSettingsFlowLayout.Position.Y := -1 ;
+      FeeFromAmountLayout.Visible := true;
+
       frmhome.ShowAdvancedLayout.Visible := True;
+      if TransactionFeeLayout.Visible then
+      begin
+        ShowAdvancedLayout.Position.Y := TransactionFeeLayout.Position.Y - 1;
+      end
+      else
+      begin
+        ShowAdvancedLayout.Position.Y := btnSend.Position.Y - 1;
+      end;
+
+    end;
 
     if pageControl.ActiveTab = HOME_TABITEM then
       WVTabControl.ActiveTab := WVBalance;
