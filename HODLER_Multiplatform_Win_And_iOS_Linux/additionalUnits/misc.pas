@@ -1893,6 +1893,8 @@ begin
     price.Margins.Bottom := 2;
     panel.Visible :=
       (ccEmpty or (not frmhome.HideZeroWalletsCheckBox.IsChecked));
+
+
   end;
 end;
 
@@ -3872,6 +3874,11 @@ var
   b: System.UInt8;
   bb: Tbytes;
 begin
+
+  //if not IsHex(h) then
+  //  raise Exception.Create(H + ' is not hex');
+
+
   SetLength(bb, (Length(H) div 2));
 {$IF (DEFINED(ANDROID) OR DEFINED(IOS))}
   for i := 0 to (Length(H) div 2) - 1 do

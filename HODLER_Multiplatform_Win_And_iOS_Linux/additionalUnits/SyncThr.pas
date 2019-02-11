@@ -588,7 +588,8 @@ begin
       8:
         begin
           data := getDataOverHTTP('https://hodlernode.net/nano.php?addr=' + TWalletInfo(cc).addr, false);
-          syncNano(cc, data);
+          if data <> '' then
+            syncNano(cc, data);
 
         end;
     end;

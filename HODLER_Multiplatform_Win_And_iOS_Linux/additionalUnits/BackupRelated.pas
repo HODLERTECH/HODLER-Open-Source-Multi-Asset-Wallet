@@ -991,7 +991,7 @@ begin
         AvailableCoin[TWalletInfo(wd).coin].wifByte);
       if wd.coin=8 then begin
 
-       lblPrivateKey.Text:= nano_getPriv(wd.x,wd.Y,MasterSeed);
+       lblPrivateKey.Text:= nano_getPriv( NanoCoin(wd) ,MasterSeed);
         lblWIFKey.Text:='';
 end;
       wipeAnsiString(MasterSeed);

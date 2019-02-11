@@ -1564,10 +1564,10 @@ begin
       if newCoinID = 8 then
       begin
 
-        pub := nano_privToPub(frmhome.CoinPrivKeyDescriptionEdit.Text);
+        pub := nano_privToPub(frmhome.WIFEdit.Text);
         wd := NanoCoin.Create(8 , -1 , -1 ,nano_accountFromHexKey(pub), '' );
         wd.pub := pub;
-        wd.EncryptedPrivKey := speckEncrypt((TCA(MasterSeed)), frmhome.CoinPrivKeyDescriptionEdit.Text );
+        wd.EncryptedPrivKey := speckEncrypt((TCA(MasterSeed)), frmhome.WIFEdit.Text );
 
       end
       else

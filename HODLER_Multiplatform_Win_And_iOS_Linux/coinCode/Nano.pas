@@ -118,7 +118,8 @@ procedure nano_precalculate(Hash: AnsiString);
 
 function nano_accountFromHexKey(adr: AnsiString): AnsiString;
 
-function nano_getPriv(x, y: System.UInt32; MasterSeed: AnsiString): AnsiString;
+function nano_getPriv(x, y: System.UInt32; MasterSeed: AnsiString): AnsiString; overload;
+function nano_getPriv(wd : NanoCoin; MasterSeed: AnsiString): AnsiString; overload;
 
 function nano_keyFromAccount(adr: AnsiString): AnsiString;
 
@@ -198,7 +199,7 @@ var
   i : Integer;
 begin
 
-  unlockpriv := nano_getPriv( x,  y, masterSeed );
+  unlockpriv := nano_getPriv( self, masterSeed );
   SetLength( sessionKey , length( UnlockPriv ) );
   for i := low(UnlockPriv) to High(UnlockPriv) do
   begin
@@ -595,7 +596,8 @@ begin
       begin
         workBytes[7] := i;
 
-
+        if Terminated then
+          exit();
         //inc(counter);
 
         Blake2b.TransformBytes(workBytes);
@@ -1011,6 +1013,25 @@ begin
     result.Hash := nano_getBlockHash(result);
 end;
 
+function nano_getPriv(wd : NanoCoin; MasterSeed: AnsiString): AnsiString;
+begin
+
+  if (wd.x = -1) and (wd.Y = -1) then
+  begin
+              ///speckDecrypt(TCA(masterSeed), sender.EncryptedPrivKey);
+    result := speckDecrypt(TCA(masterSeed), wd.EncryptedPrivKey );
+
+  end
+  else
+  begin
+
+    Result := nano_getPriv(wd.x , wd.Y , MasterSeed);
+
+  end;
+
+
+end;
+
 function nano_getPriv(x, y: System.UInt32; MasterSeed: AnsiString): AnsiString;
 var
   Blake2b: IHash;
@@ -1041,7 +1062,7 @@ var
   pub: AnsiString;
   p: AnsiString;
 begin
-  p := nano_getPriv(TWalletInfo(cc).x, TWalletInfo(cc).y, ms);
+  p := nano_getPriv(nanocoin(cc), ms);
   pub := nano_privToPub(p);
   blockHash := nano_getBlockHash(block);
   nano_setSignature(block, nano_signature(blockHash, p, pub));
@@ -1232,7 +1253,7 @@ var
   p: AnsiString;
   ts: TStringList;
 begin
-  p := nano_getPriv(TWalletInfo(from).x, TWalletInfo(from).y, MasterSeed);
+  p := nano_getPriv(Nanocoin(from), MasterSeed);
   pub := nano_privToPub(p);
   block := nano_newBlock(true);
   nano_setSendParameters(block, from.lastPendingBlock, sendto, BigInteger(from.confirmed - amount).ToString(16));
