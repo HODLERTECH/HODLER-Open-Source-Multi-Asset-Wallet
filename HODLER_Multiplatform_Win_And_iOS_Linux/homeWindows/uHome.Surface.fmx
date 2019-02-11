@@ -195,6 +195,12 @@ inherited frmHome_Surface: TfrmHome_Surface
           Position.X = 711.000000000000000000
         end
       end
+      inherited Panel27: TPanel
+        Size.Width = 759.000000000000000000
+        inherited PasswordInfoStaticLabel: TLabel
+          Size.Width = 739.000000000000000000
+        end
+      end
     end
     inherited seedGenerated: TTabItem
       ExplicitSize.cx = 8.000000000000000000
@@ -2444,20 +2450,23 @@ inherited frmHome_Surface: TfrmHome_Surface
         inherited CTIHeaderLabel: TLabel
           Size.Width = 759.000000000000000000
         end
-        inherited SweepQRButton: TButton
-          Position.X = 711.000000000000000000
-        end
       end
       inherited Panel18: TPanel
         Size.Width = 759.000000000000000000
-        inherited PrivateKeyEditSV: TEdit
-          Size.Width = 759.000000000000000000
-        end
         inherited Label7: TLabel
           Size.Width = 729.000000000000000000
         end
         inherited CompressedPrivKeySVCheckBox: TCheckBox
           Size.Width = 729.000000000000000000
+        end
+        inherited Layout48: TLayout
+          Size.Width = 759.000000000000000000
+          inherited PrivateKeyEditSV: TEdit
+            Size.Width = 711.000000000000000000
+          end
+          inherited SweepQRButton: TButton
+            Position.X = 711.000000000000000000
+          end
         end
       end
       inherited Panel19: TPanel
@@ -2534,9 +2543,6 @@ inherited frmHome_Surface: TfrmHome_Surface
         inherited Label14: TLabel
           Size.Width = 759.000000000000000000
         end
-        inherited Button11: TButton
-          Position.X = 710.000000000000000000
-        end
       end
       inherited Panel21: TPanel
         Size.Width = 759.000000000000000000
@@ -2557,8 +2563,14 @@ inherited frmHome_Surface: TfrmHome_Surface
       inherited ImportPrivKeyLabel: TLabel
         Size.Width = 744.000000000000000000
       end
-      inherited WIFEdit: TEdit
+      inherited Layout46: TLayout
         Size.Width = 759.000000000000000000
+        inherited WIFEdit: TEdit
+          Size.Width = 710.000000000000000000
+        end
+        inherited CoinFromPrivKeyQRButton: TButton
+          Position.X = 710.000000000000000000
+        end
       end
     end
     inherited PrivOptionsTabItem: TTabItem

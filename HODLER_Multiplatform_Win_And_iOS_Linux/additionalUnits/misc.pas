@@ -257,7 +257,8 @@ function keccak256String(s: AnsiString): AnsiString;
 function keccak256Hex(s: AnsiString): AnsiString;
 procedure createAddWalletView();
 function cutEveryNChar(n: integer; Str: AnsiString; sep: AnsiChar = ' ')
-  : AnsiString;
+  : AnsiString; overload;
+function cutEveryNChar(n: integer; Str: AnsiString; sep: AnsiString) : AnsiString; overload;
 function removeSpace(Str: AnsiString): AnsiString;
 function generateIcon(hex: AnsiString): TBitmap;
 procedure wipeTokenDat();
@@ -373,6 +374,7 @@ var
   AddCoinBackTabItem: TTabItem;
   createPasswordBackTabItem: TTabItem;
   RestoreFromFileBackTabItem: TTabItem;
+  SelectGenerateCoinViewBackTabItem  : TTabItem;
   QRMask : TBitmap;
 
   newcoinID: nativeint;
@@ -967,6 +969,8 @@ var
   lbl: TLabel;
 begin
 
+  SelectGenerateCoinViewBackTabItem := frmhome.PageControl.ActiveTab;
+
   if frmhome.GenerateCoinVertScrollBox.Content.ChildrenCount <> 0 then
   begin
 
@@ -1070,6 +1074,8 @@ begin
     image.Width := 15 + (48 - 8 * 2) + 15;
 
   end;
+
+
 
 end;
 
@@ -3175,9 +3181,29 @@ begin
 
 end;
 
+function cutEveryNChar(n: integer; Str: AnsiString; sep: AnsiString)
+  : AnsiString;
+var
+  i, j: integer;
+begin
+
+  result := str;
+  J := 0;
+  for I := Low(sep) to High(sep) do
+  begin
+
+    result := cutEveryNChar( n + j , result , sep[i]);
+
+    J := j + 1 ;
+  end;
+
+
+end;
+
 function removeSpace(Str: AnsiString): AnsiString;
 begin
   result := Str;
+  result := StringReplace(result, #13#10, '', [rfReplaceAll]);
   result := StringReplace(result, ' ', '', [rfReplaceAll]);
 end;
 

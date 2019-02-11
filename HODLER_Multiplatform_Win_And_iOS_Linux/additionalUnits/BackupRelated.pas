@@ -13,7 +13,7 @@ uses
   FMX.Platform, System.Threading, Math, DelphiZXingQRCode,
   FMX.TabControl, FMX.Edit,
   FMX.Clipboard, FMX.VirtualKeyBoard, JSON, Nano,
-  languages, WalletStructureData, popupwindowData ,
+  languages, WalletStructureData, popupwindowData,
 
   FMX.Media, FMX.Objects, uEncryptedZipFile, System.Zip
 {$IFDEF ANDROID},
@@ -145,7 +145,8 @@ begin
 
                 image := TImage.create(panel);
                 image.parent := panel;
-                image.bitmap.LoadFromStream( getcoinIconResource( CurrentAccount.myCoins[i].coin ) );
+                image.bitmap.LoadFromStream(getcoinIconResource
+                  (CurrentAccount.myCoins[i].coin));
                 image.align := TAlignLayout.left;
                 image.width := 32 + 2 * 15;
                 image.visible := true;
@@ -218,7 +219,8 @@ begin
 
       image := TImage.create(panel);
       image.parent := panel;
-      image.bitmap.loadFromStream( getcoinIconResource( CurrentAccount.myCoins[i].coin ) );
+      image.bitmap.LoadFromStream
+        (getcoinIconResource(CurrentAccount.myCoins[i].coin));
       image.align := TAlignLayout.left;
       image.width := 32 + 2 * 15;
       image.visible := true;
@@ -987,13 +989,15 @@ begin
       end;
       startFullfillingKeypool(MasterSeed);
       lblPrivateKey.Text := priv256forhd(wd.coin, wd.X, wd.Y, MasterSeed);
-     if wd.coin <> 4 then lblWIFKey.Text := PrivKeyToWIF(lblPrivateKey.Text, wd.coin <> 4,
-        AvailableCoin[TWalletInfo(wd).coin].wifByte);
-      if wd.coin=8 then begin
+      if wd.coin <> 4 then
+        lblWIFKey.Text := PrivKeyToWIF(lblPrivateKey.Text, wd.coin <> 4,
+          AvailableCoin[TWalletInfo(wd).coin].wifByte);
+      if wd.coin = 8 then
+      begin
 
-       lblPrivateKey.Text:= nano_getPriv( NanoCoin(wd) ,MasterSeed);
-        lblWIFKey.Text:='';
-end;
+        lblPrivateKey.Text := nano_getPriv(NanoCoin(wd), MasterSeed);
+        lblWIFKey.Text := '';
+      end;
       wipeAnsiString(MasterSeed);
 
     end;
@@ -1002,11 +1006,12 @@ end;
     PrivateKeyAddressInfoLabel.Text := wd.addr;
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     lblPrivateKey.Text := cutEveryNChar(length(lblPrivateKey.Text) div 2,
-      lblPrivateKey.Text);
-if wd.coin<>8 then
-    lblWIFKey.Text := cutEveryNChar(length(lblWIFKey.Text) div 2,
-      lblWIFKey.Text) else
-lblWIFKey.Text := '';
+      lblPrivateKey.Text , #13#10);
+    if wd.coin <> 8 then
+      lblWIFKey.Text := cutEveryNChar(length(lblWIFKey.Text) div 2,
+        lblWIFKey.Text , #13#10)
+    else
+      lblWIFKey.Text := '';
 {$ENDIF}
     bitmap := StrToQRBitmap(removeSpace(lblPrivateKey.Text));
     PrivKeyQRImage.bitmap.Assign(bitmap);

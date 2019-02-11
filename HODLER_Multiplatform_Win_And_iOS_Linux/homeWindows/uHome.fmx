@@ -34,7 +34,7 @@ object frmHome: TfrmHome
     Size.Height = 687.000000000000000000
     Size.PlatformDefault = False
     TabHeight = 49.000000000000000000
-    TabIndex = 33
+    TabIndex = 41
     TabOrder = 8
     TabPosition = None
     OnChange = closeVirtualKeyBoard
@@ -390,7 +390,7 @@ object frmHome: TfrmHome
       object passwordMessage: TLabel
         Align = Top
         StyledSettings = [Family, Size, Style]
-        Position.Y = 441.000000000000000000
+        Position.Y = 489.000000000000000000
         Size.Width = 450.000000000000000000
         Size.Height = 36.000000000000000000
         Size.PlatformDefault = False
@@ -730,7 +730,7 @@ object frmHome: TfrmHome
       end
       object btnCreateWallet: TButton
         Align = Top
-        Position.Y = 393.000000000000000000
+        Position.Y = 441.000000000000000000
         Size.Width = 450.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
@@ -789,6 +789,26 @@ object frmHome: TfrmHome
           Size.PlatformDefault = False
           TabOrder = 0
           OnChange = notPrivTCA2Change
+        end
+      end
+      object Panel27: TPanel
+        Align = Top
+        Position.Y = 393.000000000000000000
+        Size.Width = 450.000000000000000000
+        Size.Height = 48.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 12
+        object PasswordInfoStaticLabel: TLabel
+          Align = Client
+          Margins.Left = 10.000000000000000000
+          Margins.Right = 10.000000000000000000
+          Size.Width = 430.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          Text = 
+            'The password must have at least 8 characters (including one uppe' +
+            'rcase letter, one lowercase letter, and one number)'
+          TabOrder = 0
         end
       end
     end
@@ -1313,7 +1333,7 @@ object frmHome: TfrmHome
           Size.Height = 611.000000000000000000
           Size.PlatformDefault = False
           TabHeight = 49.000000000000000000
-          TabIndex = 0
+          TabIndex = 2
           TabOrder = 0
           TabPosition = PlatformDefault
           OnChange = closeVirtualKeyBoard
@@ -1330,7 +1350,7 @@ object frmHome: TfrmHome
             CustomIcon = <
               item
               end>
-            IsSelected = True
+            IsSelected = False
             Size.Width = 58.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
@@ -3486,7 +3506,7 @@ object frmHome: TfrmHome
             CustomIcon = <
               item
               end>
-            IsSelected = False
+            IsSelected = True
             Size.Width = 47.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
@@ -14900,7 +14920,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -15563,16 +15583,6 @@ object frmHome: TfrmHome
           Text = 'Back'
           OnClick = CTIHeaderBackButtonClick
         end
-        object SweepQRButton: TButton
-          Align = MostRight
-          Position.X = 402.000000000000000000
-          Size.Width = 48.000000000000000000
-          Size.Height = 48.000000000000000000
-          Size.PlatformDefault = False
-          TabOrder = 2
-          Text = 'QR'
-          OnClick = SweepQRButtonClick
-        end
       end
       object Panel18: TPanel
         Align = Top
@@ -15581,15 +15591,6 @@ object frmHome: TfrmHome
         Size.Height = 120.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 5
-        object PrivateKeyEditSV: TEdit
-          Touch.InteractiveGestures = [LongTap, DoubleTap]
-          Align = Bottom
-          TabOrder = 0
-          Position.Y = 24.000000000000000000
-          Size.Width = 450.000000000000000000
-          Size.Height = 48.000000000000000000
-          Size.PlatformDefault = False
-        end
         object Label7: TLabel
           Align = Client
           Margins.Left = 15.000000000000000000
@@ -15609,8 +15610,34 @@ object frmHome: TfrmHome
           Size.Width = 420.000000000000000000
           Size.Height = 48.000000000000000000
           Size.PlatformDefault = False
-          TabOrder = 1
+          TabOrder = 0
           Text = 'Compressed Private Key'
+        end
+        object Layout48: TLayout
+          Align = Bottom
+          Position.Y = 24.000000000000000000
+          Size.Width = 450.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          object PrivateKeyEditSV: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Client
+            TabOrder = 0
+            Size.Width = 402.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+          end
+          object SweepQRButton: TButton
+            Align = MostRight
+            Position.X = 402.000000000000000000
+            Size.Width = 48.000000000000000000
+            Size.Height = 48.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            Text = 'QR'
+            OnClick = SweepQRButtonClick
+          end
         end
       end
       object Panel19: TPanel
@@ -15804,7 +15831,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -15838,16 +15865,6 @@ object frmHome: TfrmHome
           TabOrder = 1
           Text = 'Back'
           OnClick = btnACBackClick
-        end
-        object Button11: TButton
-          Align = Right
-          Position.X = 401.000000000000000000
-          Size.Width = 49.000000000000000000
-          Size.Height = 48.000000000000000000
-          Size.PlatformDefault = False
-          TabOrder = 2
-          Text = 'QR'
-          OnClick = Button11Click
         end
       end
       object Panel21: TPanel
@@ -15996,15 +16013,32 @@ object frmHome: TfrmHome
         Size.Height = 89.000000000000000000
         Size.PlatformDefault = False
       end
-      object WIFEdit: TEdit
-        Touch.InteractiveGestures = [LongTap, DoubleTap]
+      object Layout46: TLayout
         Align = Top
-        TabOrder = 10
         Position.Y = 192.000000000000000000
         Size.Width = 450.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
-        OnKeyUp = WIFEditKeyUp
+        TabOrder = 10
+        object WIFEdit: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Align = Client
+          TabOrder = 0
+          Size.Width = 401.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          OnKeyUp = WIFEditKeyUp
+        end
+        object CoinFromPrivKeyQRButton: TButton
+          Align = Right
+          Position.X = 401.000000000000000000
+          Size.Width = 49.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Text = 'QR'
+          OnClick = CoinFromPrivKeyQRButtonClick
+        end
       end
     end
     object PrivOptionsTabItem: TTabItem

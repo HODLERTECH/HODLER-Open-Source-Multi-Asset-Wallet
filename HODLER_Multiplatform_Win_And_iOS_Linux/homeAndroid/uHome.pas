@@ -763,7 +763,6 @@ type
     ReportIssueHeaderLabel: TLabel;
     Button5: TButton;
     UserReportMessageMemo: TMemo;
-    SendReportIssuesButton: TButton;
     Label22: TLabel;
     Label24: TLabel;
     Panel25: TPanel;
@@ -816,6 +815,7 @@ type
     Label11: TLabel;
     AddWalletButton: TButton; 
     NanoUnlocker: TButton;
+    SendReportIssuesButton: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1052,7 +1052,10 @@ type
     procedure LightButtonQRClick(Sender: TObject);
     procedure AddWalletButtonClick(Sender: TObject); 
     procedure MineNano(Sender:TObject);
-    procedure NanoUnlockerClick(Sender: TObject); 
+    procedure NanoUnlockerClick(Sender: TObject);
+    procedure lblSendAllFundsClick(Sender: TObject);
+    procedure lblFromFeeClick(Sender: TObject);
+    procedure Label5Click(Sender: TObject);
     //procedure DayNightModeSwitchClick(Sender: TObject);
 
 
@@ -1921,9 +1924,24 @@ begin
 
 end;
 
+procedure TfrmHome.Label5Click(Sender: TObject);
+begin
+  InstantSendSwitch.Change;
+end;
+
 procedure TfrmHome.LanguageBoxChange(Sender: TObject);
 begin
   WalletViewRelated.changeLanguage(Sender);
+end;
+
+procedure TfrmHome.lblFromFeeClick(Sender: TObject);
+begin
+  FeeFromAmountSwitch.Change;
+end;
+
+procedure TfrmHome.lblSendAllFundsClick(Sender: TObject);
+begin
+  SendAllFundsSwitch.Change;
 end;
 
 procedure TfrmHome.SwitchViewToOrganize(Sender: TObject;
@@ -2756,7 +2774,7 @@ end;
 
 procedure TfrmHome.btnSBackClick(Sender: TObject);
 begin
-  switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
+  switchTab(PageControl, SelectGenerateCoinViewBackTabItem );
 end;
 
 procedure TfrmHome.btnSCBackClick(Sender: TObject);

@@ -235,6 +235,12 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Position.X = 45.000000000000000000
         end
       end
+      inherited Panel27: TPanel
+        Size.Width = 93.000000000000000000
+        inherited PasswordInfoStaticLabel: TLabel
+          Size.Width = 73.000000000000000000
+        end
+      end
     end
     inherited seedGenerated: TTabItem
       Size.Width = 11.000000000000000000
@@ -886,7 +892,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             inherited SendVertScrollBox: TVertScrollBox
               Size.Width = 93.000000000000000000
               Size.Height = 591.000000000000000000
-              Viewport.Width = 93.000000000000000000
+              Viewport.Width = 88.000000000000000000
               Viewport.Height = 591.000000000000000000
               inherited SendAmountLayout: TLayout
                 inherited lblAmount: TLabel
@@ -907,6 +913,21 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
                   inherited lblCoinFiat: TLabel
                     Position.X = 310.250000000000000000
                     Size.Width = 113.750000000000000000
+                    Size.Height = 30.000000000000000000
+                  end
+                end
+              end
+              inherited TransactionFeeLayout: TLayout
+                inherited AutomaticFeeLayout: TLayout
+                  inherited FeeSpin: TSpinBox
+                    Position.Y = 1.000000000000000000
+                    Size.Height = 30.000000000000000000
+                  end
+                end
+              end
+              inherited SendToLayout: TLayout
+                inherited AddressQRLayout: TLayout
+                  inherited WVsendTO: TEdit
                     Size.Height = 30.000000000000000000
                   end
                 end
@@ -1501,6 +1522,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             Size.Width = 88.000000000000000000
             inherited LanguageBox: TPopupBox
               Position.X = -24.000000000000000000
+              Position.Y = 9.000000000000000000
+              Size.Height = 30.000000000000000000
             end
             inherited SettingsLanguageLabel: TLabel
               Size.Width = 0.000000000000000000
@@ -1510,6 +1533,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             Size.Width = 88.000000000000000000
             inherited CurrencyBox: TPopupBox
               Position.X = -24.000000000000000000
+              Position.Y = 9.000000000000000000
+              Size.Height = 30.000000000000000000
             end
             inherited SettingsCurrencyLabel: TLabel
               Size.Width = 0.000000000000000000
@@ -2474,6 +2499,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited RestoreNameEdit: TEdit
           Position.X = -107.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
         end
       end
       inherited Panel7: TPanel
@@ -2481,6 +2508,8 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited RestorePasswordEdit: TEdit
           Position.X = -107.000000000000000000
+          Position.Y = 9.000000000000000000
+          Size.Height = 30.000000000000000000
         end
       end
       inherited ToolBar6: TToolBar
@@ -2804,25 +2833,25 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         inherited CTIHeaderBackButton: TButton
           Size.Height = 44.000000000000000000
         end
-        inherited SweepQRButton: TButton
-          Position.X = 45.000000000000000000
-          Size.Height = 44.000000000000000000
-        end
       end
       inherited Panel18: TPanel
         Position.Y = 44.000000000000000000
         Size.Width = 93.000000000000000000
-        inherited PrivateKeyEditSV: TEdit
-          Position.Y = 42.000000000000000000
-          Size.Width = 93.000000000000000000
-          Size.Height = 30.000000000000000000
-        end
         inherited Label7: TLabel
           Size.Width = 63.000000000000000000
-          Size.Height = 42.000000000000000000
         end
         inherited CompressedPrivKeySVCheckBox: TCheckBox
           Size.Width = 63.000000000000000000
+        end
+        inherited Layout48: TLayout
+          Size.Width = 93.000000000000000000
+          inherited PrivateKeyEditSV: TEdit
+            Size.Width = 45.000000000000000000
+            Size.Height = 30.000000000000000000
+          end
+          inherited SweepQRButton: TButton
+            Position.X = 45.000000000000000000
+          end
         end
       end
       inherited Panel19: TPanel
@@ -2926,10 +2955,6 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         inherited Button9: TButton
           Size.Height = 44.000000000000000000
         end
-        inherited Button11: TButton
-          Position.X = 44.000000000000000000
-          Size.Height = 44.000000000000000000
-        end
       end
       inherited Panel21: TPanel
         Position.Y = 44.000000000000000000
@@ -2957,10 +2982,16 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Position.Y = 140.000000000000000000
         Size.Width = 78.000000000000000000
       end
-      inherited WIFEdit: TEdit
+      inherited Layout46: TLayout
         Position.Y = 188.000000000000000000
         Size.Width = 93.000000000000000000
-        Size.Height = 30.000000000000000000
+        inherited WIFEdit: TEdit
+          Size.Width = 44.000000000000000000
+          Size.Height = 30.000000000000000000
+        end
+        inherited CoinFromPrivKeyQRButton: TButton
+          Position.X = 44.000000000000000000
+        end
       end
     end
     inherited PrivOptionsTabItem: TTabItem

@@ -803,7 +803,7 @@ type
     DayNightModeSwitch: TCheckBox;
     SearchInDashBrdImage: TImage;
     SweepQRButton: TButton;
-    Button11: TButton;
+    CoinFromPrivKeyQRButton: TButton;
     exportemptyaddressesSwitch: TCheckBox;
     SendErrorMsgSwitch: TCheckBox;
     UserReportSendLogsSwitch: TCheckBox;
@@ -821,6 +821,10 @@ type
     Label28: TLabel;
     NanoUnlocker: TButton;
     UnlockNanoImage: TImage;
+    Layout46: TLayout;
+    Layout48: TLayout;
+    Panel27: TPanel;
+    PasswordInfoStaticLabel: TLabel;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1083,7 +1087,7 @@ type
     procedure WVsendTOChange(Sender: TObject);
     procedure wvFeeChange(Sender: TObject);
     procedure exportemptyaddressesSwitchClick(Sender: TObject);
-    procedure Button11Click(Sender: TObject);
+    procedure CoinFromPrivKeyQRButtonClick(Sender: TObject);
     procedure SweepQRButtonClick(Sender: TObject);
     procedure btnChangeDescryptionBackClick(Sender: TObject);
     procedure SendErrorMsgSwitchClick(Sender: TObject);
@@ -2919,7 +2923,7 @@ end;
 
 procedure TfrmHome.btnSBackClick(Sender: TObject);
 begin
-  switchTab(PageControl, HOME_TABITEM);
+  switchTab(PageControl, SelectGenerateCoinViewBackTabItem);
 end;
 
 procedure TfrmHome.btnSCBackClick(Sender: TObject);
@@ -3104,7 +3108,7 @@ begin
   switchTab(PageControl, Settings);
 end;
 
-procedure TfrmHome.Button11Click(Sender: TObject);
+procedure TfrmHome.CoinFromPrivKeyQRButtonClick(Sender: TObject);
 begin
   QRRelated.scanQR(Sender);
 end;

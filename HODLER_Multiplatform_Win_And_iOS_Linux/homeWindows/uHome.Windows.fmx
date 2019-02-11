@@ -198,6 +198,12 @@ inherited frmHome_Windows: TfrmHome_Windows
           Position.X = 452.000000000000000000
         end
       end
+      inherited Panel27: TPanel
+        Size.Width = 500.000000000000000000
+        inherited PasswordInfoStaticLabel: TLabel
+          Size.Width = 480.000000000000000000
+        end
+      end
     end
     inherited seedGenerated: TTabItem
       ExplicitSize.cx = 8.000000000000000000
@@ -808,7 +814,7 @@ inherited frmHome_Windows: TfrmHome_Windows
             inherited SendVertScrollBox: TVertScrollBox
               Size.Width = 500.000000000000000000
               Size.Height = 546.000000000000000000
-              Viewport.Width = 500.000000000000000000
+              Viewport.Width = 484.000000000000000000
               Viewport.Height = 546.000000000000000000
             end
           end
@@ -2378,20 +2384,23 @@ inherited frmHome_Windows: TfrmHome_Windows
         inherited CTIHeaderLabel: TLabel
           Size.Width = 500.000000000000000000
         end
-        inherited SweepQRButton: TButton
-          Position.X = 452.000000000000000000
-        end
       end
       inherited Panel18: TPanel
         Size.Width = 500.000000000000000000
-        inherited PrivateKeyEditSV: TEdit
-          Size.Width = 500.000000000000000000
-        end
         inherited Label7: TLabel
           Size.Width = 470.000000000000000000
         end
         inherited CompressedPrivKeySVCheckBox: TCheckBox
           Size.Width = 470.000000000000000000
+        end
+        inherited Layout48: TLayout
+          Size.Width = 500.000000000000000000
+          inherited PrivateKeyEditSV: TEdit
+            Size.Width = 452.000000000000000000
+          end
+          inherited SweepQRButton: TButton
+            Position.X = 452.000000000000000000
+          end
         end
       end
       inherited Panel19: TPanel
@@ -2468,9 +2477,6 @@ inherited frmHome_Windows: TfrmHome_Windows
         inherited Label14: TLabel
           Size.Width = 500.000000000000000000
         end
-        inherited Button11: TButton
-          Position.X = 451.000000000000000000
-        end
       end
       inherited Panel21: TPanel
         Size.Width = 500.000000000000000000
@@ -2491,8 +2497,14 @@ inherited frmHome_Windows: TfrmHome_Windows
       inherited ImportPrivKeyLabel: TLabel
         Size.Width = 485.000000000000000000
       end
-      inherited WIFEdit: TEdit
+      inherited Layout46: TLayout
         Size.Width = 500.000000000000000000
+        inherited WIFEdit: TEdit
+          Size.Width = 451.000000000000000000
+        end
+        inherited CoinFromPrivKeyQRButton: TButton
+          Position.X = 451.000000000000000000
+        end
       end
     end
     inherited PrivOptionsTabItem: TTabItem

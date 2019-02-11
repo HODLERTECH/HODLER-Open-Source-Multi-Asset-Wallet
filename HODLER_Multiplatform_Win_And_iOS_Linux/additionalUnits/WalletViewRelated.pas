@@ -1582,11 +1582,11 @@ begin
       end;
 
       // Issue 112 CurrentAccount.userSaveSeed := false;
-      CurrentAccount.SaveFiles();
+      //CurrentAccount.SaveFiles();
 
       // askforBackup(1000);
 
-      TThread.Synchronize(nil,
+      TThread.Synchronize(tthread.CurrentThread,
         procedure
         begin
           CurrentAccount.AddCoin(wd);
@@ -1600,7 +1600,7 @@ begin
         // SearchTokens(wd.addr);
       end;
 
-      TThread.Synchronize(nil,
+      TThread.Synchronize(tthread.CurrentThread,
         procedure
         begin
           holder := TfmxObject.Create(nil);
@@ -2918,13 +2918,26 @@ begin
 
         if HexPrivKeyCompressedRadioButton.IsChecked then
         begin
-          LoadingKeyDataAniIndicator.Enabled := false;
-          LoadingKeyDataAniIndicator.Visible := false;
+
+          tthread.Synchronize(nil , procedure
+          begin
+
+            LoadingKeyDataAniIndicator.Enabled := false;
+            LoadingKeyDataAniIndicator.Visible := false;
+
+          end);
+
+          
         end
         else if HexPrivKeyNotCompressedRadioButton.IsChecked then
         begin
-          LoadingKeyDataAniIndicator.Enabled := false;
-          LoadingKeyDataAniIndicator.Visible := false;
+
+          tthread.Synchronize(nil , procedure
+          begin
+            LoadingKeyDataAniIndicator.Enabled := false;
+            LoadingKeyDataAniIndicator.Visible := false;
+          end);
+
         end
         else
         begin
@@ -2936,8 +2949,13 @@ begin
             exit;
           end;
 
-          LoadingKeyDataAniIndicator.Enabled := True;
-          LoadingKeyDataAniIndicator.Visible := True;
+          tthread.Synchronize(nil , procedure
+          begin
+            LoadingKeyDataAniIndicator.Enabled := True;
+            LoadingKeyDataAniIndicator.Visible := True;
+          end);
+
+
           if not newcoinID in [4 , 8] then
           begin
 

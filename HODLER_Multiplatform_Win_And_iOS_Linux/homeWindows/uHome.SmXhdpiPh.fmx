@@ -2264,20 +2264,23 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         inherited CTIHeaderLabel: TLabel
           Size.Width = 200.000000000000000000
         end
-        inherited SweepQRButton: TButton
-          Position.X = 152.000000000000000000
-        end
       end
       inherited Panel18: TPanel
         Size.Width = 200.000000000000000000
-        inherited PrivateKeyEditSV: TEdit
-          Size.Width = 200.000000000000000000
-        end
         inherited Label7: TLabel
           Size.Width = 170.000000000000000000
         end
         inherited CompressedPrivKeySVCheckBox: TCheckBox
           Size.Width = 170.000000000000000000
+        end
+        inherited Layout48: TLayout
+          Size.Width = 200.000000000000000000
+          inherited PrivateKeyEditSV: TEdit
+            Size.Width = 152.000000000000000000
+          end
+          inherited SweepQRButton: TButton
+            Position.X = 152.000000000000000000
+          end
         end
       end
       inherited Panel19: TPanel
@@ -2354,9 +2357,6 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         inherited Label14: TLabel
           Size.Width = 200.000000000000000000
         end
-        inherited Button11: TButton
-          Position.X = 151.000000000000000000
-        end
       end
       inherited Panel21: TPanel
         Size.Width = 200.000000000000000000
@@ -2371,8 +2371,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
       inherited ImportPrivKeyLabel: TLabel
         Size.Width = 185.000000000000000000
       end
-      inherited WIFEdit: TEdit
-        Size.Width = 200.000000000000000000
+      inherited Layout46: TLayout
+        Position.X = 8.000000000000000000
       end
     end
     inherited PrivOptionsTabItem: TTabItem
