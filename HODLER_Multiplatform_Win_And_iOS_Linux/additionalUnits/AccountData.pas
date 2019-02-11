@@ -81,7 +81,7 @@ type
 implementation
 
 uses
-  misc, uHome , coinData;
+  misc, uHome , coinData , nano;
 
 function Account.getDescription( id , X : Integer ): AnsiString;
 var
@@ -599,7 +599,7 @@ var
   inPool: AnsiString;
   s: string;
   wd: TWalletInfo;
-  procedure setupCoin(dataJson: TJSONObject);
+  procedure setupCoin(coinName : AnsiString ; dataJson: TJSONObject);
   var
     wd: TWalletInfo;
     innerID, X, Y, address, description, creationTime, panelYPosition,
@@ -619,8 +619,12 @@ var
     isCompressed := dataJson.GetValue<string>('isCompressed');
     // confirmed := dataJson.GetValue<string>('confirmed');
 
-    wd := TWalletInfo.Create(strtoInt(innerID), strtoInt(X), strtoInt(Y),
-      address, description, strtoInt(creationTime));
+    if coinName = 'Nano' then
+      wd := NanoCoin.create(strtoInt(innerID), strtoInt(X), strtoInt(Y),
+      address, description, strtoInt(creationTime))
+    else
+      wd := TWalletInfo.Create(strtoInt(innerID), strtoInt(X), strtoInt(Y),
+        address, description, strtoInt(creationTime));
     wd.inPool := strToBoolDef(inPool, false);
     wd.pub := publicKey;
     wd.orderInWallet := strtoInt(panelYPosition);
@@ -640,6 +644,7 @@ var
 
 var
   flock: TObject;
+  coinName : AnsiString;
 begin
 
   mutexCoinFile.Acquire;
@@ -666,7 +671,7 @@ begin
 
     for coinJson in JsonArray do
     begin
-
+      coinName := coinJson.GetValue<String>('name');
       dataJson := coinJson.GetValue<TJSONObject>('data');
       inPool := '0';
       try
@@ -677,7 +682,7 @@ begin
         end;
         // Do nothing - preKeypool .dat
       end;
-      setupCoin(dataJson);
+      setupCoin(coinName , dataJson );
 
     end;
 
@@ -887,48 +892,61 @@ begin
   {flock := TObject.Create;
   TMonitor.Enter(flock);   }
   mutexCoinFile.Acquire();
-
-  JsonArray := TJsonArray.Create();
-
-  for data in myCoins do
-  begin
-    if data.deleted then
-      continue;
-
-    dataJson := TJSONObject.Create();
-    dataJson.AddPair('innerID', inttoStr(data.coin));
-    dataJson.AddPair('X', inttoStr(data.X));
-    dataJson.AddPair('Y', inttoStr(data.Y));
-    dataJson.AddPair('address', data.addr);
-    dataJson.AddPair('description', data.description);
-    dataJson.AddPair('creationTime', inttoStr(data.creationTime));
-    dataJson.AddPair('panelYPosition', inttoStr(data.orderInWallet));
-    dataJson.AddPair('publicKey', data.pub);
-    dataJson.AddPair('EncryptedPrivateKey', data.EncryptedPrivKey);
-    dataJson.AddPair('isCompressed', booltoStr(data.isCompressed));
-    dataJson.AddPair('inPool', booltoStr(data.inPool));
-    coinJson := TJSONObject.Create();
-    coinJson.AddPair('name', data.name);
-    coinJson.AddPair('data', dataJson);
-    coinJson.AddPair('CryptoCurrencyData', getCryptoCurrencyJsonData(data));
-
-    JsonArray.AddElement(coinJson);
-
-  end;
-
-  ts := TStringLIst.Create();
   try
-    ts.Text := JsonArray.ToString;
-    ts.SaveToFile(CoinFilePath);
-  except
-    on E: Exception do
-    begin
-      //
-    end;
-  end;
-  ts.Free;
-  JsonArray.Free;
 
+
+    JsonArray := TJsonArray.Create();
+
+    for data in myCoins do
+    begin
+      if data.deleted then
+        continue;
+
+      dataJson := TJSONObject.Create();
+      dataJson.AddPair('innerID', inttoStr(data.coin));
+      dataJson.AddPair('X', inttoStr(data.X));
+      dataJson.AddPair('Y', inttoStr(data.Y));
+      dataJson.AddPair('address', data.addr);
+      dataJson.AddPair('description', data.description);
+      dataJson.AddPair('creationTime', inttoStr(data.creationTime));
+      dataJson.AddPair('panelYPosition', inttoStr(data.orderInWallet));
+      dataJson.AddPair('publicKey', data.pub);
+      dataJson.AddPair('EncryptedPrivateKey', data.EncryptedPrivKey);
+      dataJson.AddPair('isCompressed', booltoStr(data.isCompressed));
+      dataJson.AddPair('inPool', booltoStr(data.inPool));
+      coinJson := TJSONObject.Create();
+      coinJson.AddPair('name', data.name);
+      coinJson.AddPair('data', dataJson);
+      coinJson.AddPair('CryptoCurrencyData', getCryptoCurrencyJsonData(data));
+
+      JsonArray.AddElement(coinJson);
+
+    end;
+
+    ts := TStringLIst.Create();
+    try
+      ts.Text := JsonArray.ToString;
+      ts.SaveToFile(CoinFilePath);
+    except
+      on E: Exception do
+      begin
+        //
+      end;
+    end;
+    ts.Free;
+    JsonArray.Free;
+
+
+  except on E: Exception do
+  begin
+    tthread.synchronize( nil , procedure
+    begin
+      showmessage( e.Message );
+    end);
+
+
+  end;
+  end;
   mutexCoinFile.Release;
 
   {TMonitor.exit(flock);
@@ -990,6 +1008,8 @@ begin
   dataJson.AddPair('USDPrice', floattoStr(cc.rate));
 
   JsonHistArray := TJsonArray.Create();
+
+
 
   for i := 0 to Length(cc.history) - 1 do
   begin

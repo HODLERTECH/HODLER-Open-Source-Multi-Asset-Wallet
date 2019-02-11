@@ -50,7 +50,7 @@ type
 
   end;
 
-type
+{type
   popupWindowYesNo = class(TPopup)
   private
     _lblMessage: TLabel;
@@ -73,9 +73,9 @@ type
     constructor Create(Yes, No: TProc; mess: AnsiString;
       YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
       icon: integer = 2);
-  end;
+  end;  }
 
-type
+{type
   PopupWindowProtectYesNo = class(popupWindowYesNo)
   private
     _edit : Tedit;
@@ -89,12 +89,14 @@ type
       icon: integer = 2);
 
 
-  end;
+
+  end; }
 
 implementation
 uses Uhome;
 
-constructor PopupWindowProtectYesNo.Create(Yes: TProc; No: TProc; mess: AnsiString; YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No'; icon: Integer = 2);
+{constructor PopupWindowProtectYesNo.Create(Yes: TProc; No: TProc; mess: AnsiString; YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No'; icon: Integer = 2);
+
 var
   panel : TPanel;
 
@@ -134,26 +136,13 @@ begin
 
 end;
 
-{constructor A.create;
-begin
-  i := 5;
-  Tthread.Synchronize(nil,
-  procedure
-  begin
-    showmessage('A');
-  end);
-end;
-constructor B.create;
-begin
+       }
 
-  Tthread.Synchronize(nil,
-  procedure
-  begin
-    showmessage('B' + intToStr(i) );
-  end);inherited;
-end;  }
 
-constructor popupWindowYesNo.Create(Yes: TProc; No: TProc; mess: AnsiString;
+
+
+{constructor popupWindowYesNo.Create(Yes: TProc; No: TProc; mess: AnsiString;
+
 YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No'; icon: integer = 2);
 var
   panel, Panel2: TPanel;
@@ -294,7 +283,8 @@ begin
   ClosePopup();
   // Release;
 
-end;
+
+end;  }
 
 constructor popupWindowOK.Create(OK: TProc; mess: AnsiString;
 ButtonText: AnsiString = 'OK'; icon: integer = 1);

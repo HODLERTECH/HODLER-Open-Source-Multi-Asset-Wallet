@@ -808,7 +808,19 @@ type
     SendErrorMsgSwitch: TCheckBox;
     UserReportSendLogsSwitch: TCheckBox;
     UserReportDeviceInfoSwitch: TCheckBox;
+    DebugQRImage: TImage;
+    AddWalletButton: TButton;
+    AddWalletList: TTabItem;
+    ToolBar22: TToolBar;
+    Label26: TLabel;
+    Button12: TButton;
+    VertScrollBox4: TVertScrollBox;
+    CoinListLayout: TLayout;
+    Label27: TLabel;
+    TokenListLayout: TLayout;
+    Label28: TLabel;
     NanoUnlocker: TButton;
+    UnlockNanoImage: TImage;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1075,7 +1087,9 @@ type
     procedure SweepQRButtonClick(Sender: TObject);
     procedure btnChangeDescryptionBackClick(Sender: TObject);
     procedure SendErrorMsgSwitchClick(Sender: TObject);
+    procedure AddWalletButtonClick(Sender: TObject);
     procedure NanoUnlockerClick(Sender: TObject);
+    procedure UnlockPengingTransactionClick(Sender: TObject);
     //procedure UserReportSendLogsSwitchClick(Sender: TObject);
 
   private
@@ -1139,7 +1153,10 @@ type
 
     procedure ExceptionHandler(Sender: TObject; E: Exception);
     procedure FoundTokenPanelOnClick(Sender: TObject);
-
+    procedure GenerateETHAddressWithToken(Sender : TObject);
+    procedure AddTokenFromWalletList(Sender : TObject );
+    procedure AddNewTokenETHPanelClick(sender : Tobject );
+    procedure UnlockPendingNano(sender : TObject);
     // procedure PrivateKeyPasswordCheck
   var
     refreshLocalImage: TRotateImage;
@@ -1240,6 +1257,43 @@ begin
 end;
 
 {$ENDIF}
+
+
+
+procedure tfrmhome.UnlockPendingNano(sender : TObject);
+var
+  tced: AnsiString;
+  MasterSeed: AnsiString;
+  nano : NanoCoin;
+begin
+
+  //nano_DoMine(cryptoCurrency(NanoUnlocker.TagObject),passwordForDecrypt.Text);
+
+  tced := TCA(passwordForDecrypt.Text);
+  MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
+    passwordForDecrypt.Text := '';
+    if not isHex(masterseed) then
+    begin
+      popupWindow.create(dictionary('FailedToDecrypt'));
+      exit;
+    end;
+
+  nano := NanoCoin(currentcryptoCurrency);
+
+  nano.unlock( MasterSeed );
+
+  wipeansistring(masterseed);
+
+  PageControl.ActiveTab:=decryptSeedBackTabItem;
+
+
+end;
+
+
+procedure tfrmhome.GenerateETHAddressWithToken(Sender : TObject);
+begin
+  WalletViewRelated.GenerateETHAddressWithToken(Sender);
+end;
 
 procedure TfrmHome.FoundTokenPanelOnClick(Sender: TObject);
 begin
@@ -2493,6 +2547,52 @@ begin
   WalletViewRelated.TrySendTransaction(Sender);
 end;
 
+procedure TfrmHome.UnlockPengingTransactionClick(Sender: TObject);
+var
+  nano : NanoCoin;
+begin
+    if currentCryptocurrency is NanoCoin then
+    begin
+     if NanoCoin(currentCryptocurrency).isUnlocked then exit;
+     frmhome.UnlockNanoImage.Hint:='When unlocked, receive blocks will be autopocketed';
+     NotificationLayout.popupPasswordConfirm(procedure (pass : AnsiString)
+     var
+        tced , MasterSeed : AnsiString;
+     begin
+
+        tced := TCA( pass );
+        MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
+          passwordForDecrypt.Text := '';
+          if not isHex(masterseed) then
+          begin
+            popupWindow.create(dictionary('FailedToDecrypt'));
+            exit;
+          end;
+
+        nano := NanoCoin(currentcryptoCurrency);
+
+        nano.unlock( MasterSeed );
+
+        wipeansistring(masterseed);
+        frmhome.UnlockNanoImage.Bitmap.LoadFromStream( resourceMenager.getAssets('OPENED') );
+
+        //PageControl.ActiveTab:=decryptSeedBackTabItem;
+
+     end, procedure ( pass : AnsiString )
+     begin
+
+     end
+     , 'Enter the password to pocket the pending NANO' );
+
+
+  //btnDecryptSeed.onclick := UnlockPendingNano;
+  //decryptSeedBackTabItem := PageControl.ActiveTab;
+  //PageControl.ActiveTab := descryptSeed;
+  //btnDSBack.onclick := backBtnDecryptSeed;
+
+    end
+end;
+
 procedure TfrmHome.updateBtnClick(Sender: TObject);
 begin
 {$IFDEF ANDROID}
@@ -2814,16 +2914,7 @@ procedure TfrmHome.btnAddContractClick(Sender: TObject);
 var
   t: Token;
 begin
-
-  t := Token.CreateCustom(frmHome.ContractAddress.Text,
-    frmHome.TokenNameField.Text, frmHome.SymbolField.Text,
-    strtoint(frmHome.DecimalsField.Text), walletAddressForNewToken);
-  t.idInWallet := length(CurrentAccount.myTokens) + 10000;
-  CurrentAccount.addToken(t);
-  CurrentAccount.SaveFiles();
-  CreatePanel(T);
-  btnSyncClick(nil);
-  switchTab(PageControl, walletView);
+   WalletViewRelated.btnAddContractClick(Sender);
 
 end;
 
@@ -3081,10 +3172,10 @@ var
   actionListener: TActionList;
 begin
 
-  NotificationLayout.popupProtectedConfirm(procedure
+  NotificationLayout.popupPasswordConfirm(procedure (pass : AnsiString )
   begin
 
-  end , procedure
+  end , procedure (pass : AnsiString )
   begin
 
 
@@ -3272,8 +3363,8 @@ end;
 // Show available ETH wallet during adding new Token
 procedure TfrmHome.btnAddNewTokenClick(Sender: TObject);
 begin
-  WalletViewRelated.ShowETHWallets(Sender);
-  switchTab(PageControl, AddNewToken);
+  WalletViewRelated.ShowETHWallets();
+
 end;
 
 procedure TfrmHome.btnAddNewCoinClick(Sender: TObject);
@@ -4303,6 +4394,224 @@ begin
 end;
 
 // must be in the end        caused ide error
+procedure TfrmHome.AddWalletButtonClick(Sender: TObject);
+var
+  panel: TPanel;
+  coinName: TLabel;
+  balLabel: TLabel;
+  coinIMG: TImage;
+  i: Integer;
+  countToken : Integer;
+
+begin
+
+  if frmhome.CoinListLayout.ChildrenCount = 1 then
+  begin
+
+    for I := 0 to length(availableCoin) - 1 do
+    begin
+
+      with frmhome.SelectNewCoinBox do
+      begin
+        panel := TPanel.Create(frmhome.CoinListLayout);
+        panel.Align := panel.Align.alTop;
+        panel.Height := 48;
+        panel.Visible := true;
+        panel.tag := i;
+        panel.parent := frmhome.CoinListLayout;
+        panel.OnClick := frmhome.addNewWalletPanelClick;
+
+        coinName := TLabel.Create(Panel);
+        coinName.parent := panel;
+        coinName.Text := availableCoin[i].Displayname;
+        coinName.Visible := true;
+        coinName.Width := 500;
+        coinName.Position.x := 52;
+        coinName.Position.Y := 16;
+        coinName.tag := i;
+        coinName.HitTest := false;
+        //coinName.OnClick := frmhome.addNewWalletPanelClick;
+
+        coinIMG := TImage.Create(panel);
+        coinIMG.parent := panel;
+        coinIMG.Bitmap.LoadFromStream( ResourceMenager.getAssets( AvailableCoin[i].resourceName ) );
+        coinIMG.Height := 32.0;
+        coinIMG.Width := 50;
+        coinIMG.Position.x := 4;
+        coinIMG.Position.Y := 8;
+        coinIMG.HitTest := false;
+        //coinIMG.OnClick := frmhome.addNewWalletPanelClick;
+        coinIMG.tag := i;
+
+      end;
+
+
+    end;
+
+    countToken := 0;
+
+    for I := 0 to length(Token.availableToken) - 1 do
+    begin
+
+      if token.availableToken[i].address = '' then
+        Continue;
+
+      countToken := countToken + 1;
+
+      with frmhome.SelectNewCoinBox do
+      begin
+        panel := TPanel.Create(frmhome.TokenListLayout);
+        panel.Align := panel.Align.alTop;
+        panel.Height := 48;
+        panel.Visible := true;
+        panel.tag := i;
+        panel.parent := frmhome.TokenListLayout;
+        panel.OnClick := frmhome.AddTokenFromWalletList;
+
+        coinName := TLabel.Create(Panel);
+        coinName.parent := panel;
+        coinName.Text := Token.availableToken[i].name;
+        coinName.Visible := true;
+        coinName.Width := 500;
+        coinName.Position.x := 52;
+        coinName.Position.Y := 16;
+        coinName.tag := i;
+        coinName.HitTest := false;
+        //coinName.OnClick := frmhome.addNewWalletPanelClick;
+
+        coinIMG := TImage.Create(panel);
+        coinIMG.parent := panel;
+        coinIMG.Bitmap.LoadFromStream( ResourceMenager.getAssets( Token.availableToken[i].resourceName ) );
+        coinIMG.Height := 32.0;
+        coinIMG.Width := 50;
+        coinIMG.Position.x := 4;
+        coinIMG.Position.Y := 8;
+        coinIMG.HitTest := false;
+        //coinIMG.OnClick := frmhome.addNewWalletPanelClick;
+        coinIMG.tag := i;
+
+      end;
+
+
+    end;
+
+    frmhome.TokenListLayout.Height := ( countToken + 1 ) * 48 ; // +1 label '--TOKENS--'
+    frmhome.CoinListLayout.Height := ( length(availablecoin) + 1 ) * 48 ; // +1 label '--COINS--'
+
+
+  end;
+
+
+
+
+
+
+
+
+  HexPrivKeyDefaultRadioButton.IsChecked := true;
+  Layout31.Visible := false;
+  WIFEdit.Text := '';
+  // PrivateKeySettingsLayout.Visible := false;
+  NewCoinDescriptionEdit.Text := '';
+  OwnXEdit.Text := '';
+  OwnXCheckBox.IsChecked := false;
+  IsPrivKeySwitch.IsChecked := false;
+  IsPrivKeySwitch.Enabled := false;
+  NewCoinDescriptionPassEdit.Text := '';
+  NewCoinDescriptionEdit.Text := '';
+  newCoinListNextTAbItem := frmHome.AddNewCoinSettings;
+  AddCoinBackTabItem := pageControl.ActiveTab;
+
+  switchTab( pageControl , AddWalletList );
+
+end;
+
+
+procedure tfrmhome.AddTokenFromWalletList(Sender : TObject );
+var
+  i , countETH : Integer;
+  ETHAddress : AnsiString;
+  T : Token;
+  holder: TfmxObject;
+begin
+
+  for i  := 0 to length(CurrentAccount.myCoins) - 1 do
+  begin
+
+    if CurrentAccount.myCoins[i].coin = 4 then
+    begin
+
+      countETH := countETH + 1;
+      if countETH = 1 then
+      begin
+
+        ETHAddress := CurrentAccount.myCoins[i].addr;
+
+      end;
+
+    end;
+
+  end;
+
+  if countETH = 0 then
+  begin
+
+    newTokenID := Tcomponent(Sender).Tag;
+    frmhome.btnDecryptSeed.OnClick := frmhome.GenerateETHAddressWithToken;
+    decryptSeedBackTabItem := frmhome.pageControl.ActiveTab;
+    frmhome.pageControl.ActiveTab := frmhome.descryptSeed;
+    frmhome.btnDSBack.OnClick := frmhome.backBtnDecryptSeed;
+
+  end
+  else if countETH = 1 then
+  begin
+
+    T := Token.Create(Tcomponent(Sender).Tag, ETHAddress );
+
+    T.idInWallet := Length(CurrentAccount.myTokens) + 10000;
+
+    CurrentAccount.addToken(T);
+    CreatePanel(T);
+    holder := TfmxObject.Create(nil);
+    holder.TagObject := T;
+    frmhome.OpenWalletView(holder, PointF(0, 0));
+    holder.DisposeOf;
+
+    refreshLocalImage.Start;
+
+  end
+  else
+  begin
+    newTokenID := Tcomponent(Sender).Tag;
+    WalletViewRelated.ShowETHWalletsForNewToken( );
+    switchTab( pageControl , AddNewToken );
+  end;
+
+
+
+end;
+
+procedure tfrmhome.AddNewTokenETHPanelClick(sender : Tobject );
+var
+  T : Token;
+  holder: TfmxObject;
+begin
+
+  T := Token.Create(newTokenID , TFmxObject(Sender).TagString );
+
+  T.idInWallet := Length(CurrentAccount.myTokens) + 10000;
+
+  CurrentAccount.addToken(T);
+  CreatePanel(T);
+  holder := TfmxObject.Create(nil);
+  holder.TagObject := T;
+  frmhome.OpenWalletView(holder, PointF(0, 0));
+  holder.DisposeOf;
+
+  refreshLocalImage.Start;
+
+end;
+
 procedure TfrmHome.APICheckCompressed(Sender: TObject);
 begin
   WalletViewRelated.importCheck;

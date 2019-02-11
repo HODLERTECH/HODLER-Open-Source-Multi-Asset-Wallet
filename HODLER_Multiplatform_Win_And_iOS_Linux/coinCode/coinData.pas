@@ -2,6 +2,7 @@ unit coinData;
 
 interface
 
+
 uses
   System.IOUtils, sysutils, StrUtils, System.classes, FMX.Graphics, base58, FMX.Dialogs,
   WalletStructureData, Nano;
@@ -189,7 +190,9 @@ end;
 
 function getCoinIconResource(id: Integer): TStream;
 begin
-  result := resourceMenager.getAssets(AvailableCoin[id].Resourcename);
+
+  result := resourceMenager.getAssets( AvailableCoin[id].Resourcename );
+  
 end;
 
 function CreateCoin(id, x, y: Integer; MasterSeed: AnsiString; description: AnsiString = ''): TWalletInfo;

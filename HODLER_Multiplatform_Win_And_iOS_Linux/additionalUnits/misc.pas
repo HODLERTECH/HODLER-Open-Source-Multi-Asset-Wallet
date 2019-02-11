@@ -373,11 +373,14 @@ var
   AddCoinBackTabItem: TTabItem;
   createPasswordBackTabItem: TTabItem;
   RestoreFromFileBackTabItem: TTabItem;
+  QRMask : TBitmap;
 
   newcoinID: nativeint;
   ImportCoinID: integer;
+  newTokenID : Integer;
   AccountForSearchToken: Account;
   ResourceMenager: AssetsMenager;
+
 
   globalLoadCacheTime: Double = 0;
   globalVerifyKeypoolTime: Double = 0;
@@ -1015,7 +1018,7 @@ begin
     image := TImage.Create(panel);
     image.parent := panel;
     image.Visible := true;
-    image.Bitmap.LoadFromStream(getCoinIconResource(i));
+    image.Bitmap.LoadFromStream( getCoinIconResource(i) );
     image.Align := TAlignLayout.Left;
     image.Margins.Left := 0;
     image.Margins.Right := 0;
@@ -1056,6 +1059,7 @@ begin
     image := TImage.Create(panel);
     image.parent := panel;
     image.Visible := true;
+
     image.Bitmap.LoadFromStream
       (ResourceMenager.getAssets(Token.availableToken[i].resourcename));
     image.Align := TAlignLayout.Left;
@@ -1088,7 +1092,7 @@ begin
         begin
 
           with frmhome do
-            popupWindowYesNo.Create(
+            frmhome.NotificationLayout.popupConfirm(
               procedure()
               begin
 
@@ -1574,7 +1578,7 @@ begin
           img.Visible := true;
           img.Align := TAlignLayout.Left;
           img.Width := 64;
-          img.Bitmap.LoadFromStream(T.getIconResource);
+          img.Bitmap.LoadFromStream( T.getIconResource );
           img.Margins.top := 8;
           img.Margins.Bottom := 8;
           img.HitTest := false;
@@ -3214,6 +3218,7 @@ begin
 
       coinIMG := TImage.Create(frmhome.SelectNewCoinBox);
       coinIMG.parent := panel;
+
       coinIMG.Bitmap.LoadFromStream
         (ResourceMenager.getAssets(availableCoin[i].resourcename));
       { := frmhome.coinIconsList.Source[i].MultiResBitmap
@@ -3665,7 +3670,7 @@ var
   LResponse: IHTTPResponse;
   urlHash: AnsiString;
 begin
-     req := THTTPClient.Create();
+req := THTTPClient.Create();
   aURL := ensureURL(aURL);
   urlHash := GetStrHashSHA256(aURL);
   if (firstSync and useCache) then
@@ -3699,9 +3704,10 @@ begin
         result := apiStatus(aURL, '', true);
     end;
   except
-    on E: Exception do
+  on E: Exception do
     begin
-      result := apiStatus(aURL, '', true);
+        result := e.message;
+        result := apiStatus(aURL, '', true);
 
     end;
 
@@ -4312,6 +4318,7 @@ begin
 
   if ac = nil then
     raise Exception.Create('GenerateCoinsData() nullptr Exception');
+
 
   Tthread.Synchronize(nil,
     procedure

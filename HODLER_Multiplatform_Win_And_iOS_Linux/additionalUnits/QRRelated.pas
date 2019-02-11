@@ -43,6 +43,8 @@ procedure changeQR(Sender: TObject);
 procedure scanQR(Sender: TObject);
 procedure parseCamera;
 
+procedure createQRMask(height , width : integer);
+
 implementation
 
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
@@ -152,28 +154,106 @@ begin
 
 end;
 
+procedure createQRMask(height , width : integer);
+var
+  maskBitmapData : Tbitmapdata;
+  i , j: Integer;
+  window : TRectF;
+  dist : Integer;
+begin
+
+  dist := ceil (0.4 * Min( height , width ));
+
+  window := RectF( (width/2) - dist , (height/2) - dist , (width/2) + dist , (height/2) + dist   );
+
+
+  QRMask := TBitmap.Create;
+  QRMask.SetSize( width , height );
+
+  if QRMask.map(TMapAccess.ReadWrite ,maskBitmapData) then
+  begin
+    for i := 0 to height do
+    begin
+      for j := 0 to width do
+      begin
+
+        if not window.Contains( Point(j , i) ) then
+          maskBitmapData.SetPixel( j , i , TAlphaColorF.Create( 0 , 0 , 0 , 0.6 ).ToAlphaColor );
+
+      end;
+    end;
+
+    QRmask.unmap( maskBitmapData );
+
+  end;
+  frmHome.DebugQRImage.Bitmap.Assign( QRMask );
+
+end;
+
 procedure parseCamera;
 var
   scanBitmap: TBitmap;
   tempBitmap: TBitmap;
   ReadResult: TReadResult;
-  QRRect: TRectF;
+
   ts: TStringList;
   scale: double;
   ac: Account;
+
+  QRRect: TRectF;
+  QRfieldRect : TRect;
+  dist : integer;
 
 begin
   with frmhome do
   begin
 
+
     if PageControl.ActiveTab = ReadOCR then
     begin
-      CameraComponent1.SampleBufferToBitmap(imgCameraOCR.Bitmap, true);
+      //CameraComponent1.SampleBufferToBitmap(imgCameraOCR.Bitmap, true);
       exit;
     end;
-    CameraComponent1.SampleBufferToBitmap(imgCamera.Bitmap, true);
+
+    if CameraComponent1.Active then
+    begin
+      CameraComponent1.SampleBufferToBitmap(imgCamera.Bitmap, true);
+    end
+    else
+    begin
+      switchTab( pagecontrol , cameraBackTabItem);
+      exit;
+
+    end;
+
+    if QRMask = nil then
+    begin
+      createQRMask( imgCamera.Bitmap.Height , imgCamera.Bitmap.Width );
+    end;
+
+    dist := ceil (0.4 * Min( imgCamera.Bitmap.height , imgCamera.Bitmap.width ));
+
+    QRRect := RectF( (imgCamera.Bitmap.width/2) - dist , (imgCamera.Bitmap.height/2) - dist , (imgCamera.Bitmap.width/2) + dist , (imgCamera.Bitmap.height/2) + dist   );
+
+
+    QRfieldRect := Rect( Round( qrrECT.Left ) ,Round( qrrECT.tOP ) , Round( qrrECT.Right ) ,Round( qrrECT.Bottom ) ) ;
+
     scanBitmap := TBitmap.Create();
-    scanBitmap.Assign(imgCamera.Bitmap);
+    scanBitmap.Height := QRfieldRect.Height;
+    scanBitmap.Width :=  QRfieldRect.Width;
+    scanBitmap.CopyFromBitmap(imgCamera.Bitmap , QRFIELDRect , 0 , 0 );
+
+
+
+    //imgCamera.Bitmap.ApplyMask( QRMask.CreateMask );
+
+    //imgCamera.Bitmap.Assign( QRMask );
+
+    //if frmhome.DebugQRImage.Bitmap = nil then
+    //  frmhome.DebugQRImage.Bitmap := TBitmap.Create();
+    //frmhome.DebugQRImage.bitmap.assign(scanBitmap);
+    frmhome.Layout22.BringToFront;
+
     ReadResult := nil;
 {$IFDEF IOS} if not FScanInProgress then {$ENDIF}
       tthread.CreateAnonymousThread(
@@ -187,7 +267,9 @@ begin
             except
               on E: Exception do
               begin
-
+                ReadResult.free;
+                scanBitmap.free;
+                FScanInProgress := false;
                 exit;
               end;
             end;
@@ -213,34 +295,31 @@ begin
                     end
                     else
                     begin
-                      if lowercase(ts.Strings[0]) <>
-                        lowercase(AvailableCoin[CurrentCoin.coin].name) then
+                      if (lowercase(ts.Strings[0]) <>
+                        lowercase(AvailableCoin[CurrentCoin.coin].name) ) and not ( CurrentCoin.coin in [3, 7] ) then
                       begin
-                        if CurrentCoin.coin in [3, 7] then
-                        begin
 
-                        end
-                        else
-                        begin
                           popupWindow.Create(dictionary('QRCodeFor') + ' ' +
                             ts.Strings[0]);
-                          ts.free;
-                          exit;
+                      end
+                      else
+                      begin
+
+                        WVsendTO.Text := ts.Strings[1];
+                        for i := 2 to ts.Count - 2 do
+                        begin
+                          if ts.Strings[i] = 'amount' then
+                          begin
+                            wvAmount.Text := ts.Strings[i + 1];
+                            WVRealCurrency.Text :=
+                              floatToStrF(CurrencyConverter.calculate
+                              (strToFloatDef(wvAmount.Text, 0)) *
+                              (CurrentCryptoCurrency.rate), ffFixed, 18, 2);
+                          end;
                         end;
 
                       end;
-                      WVsendTO.Text := ts.Strings[1];
-                      for i := 2 to ts.Count - 2 do
-                      begin
-                        if ts.Strings[i] = 'amount' then
-                        begin
-                          wvAmount.Text := ts.Strings[i + 1];
-                          WVRealCurrency.Text :=
-                            floatToStrF(CurrencyConverter.calculate
-                            (strToFloatDef(wvAmount.Text, 0)) *
-                            (CurrentCryptoCurrency.rate), ffFixed, 18, 2);
-                        end;
-                      end;
+                      
                     end;
                     ts.free;
 
@@ -308,13 +387,13 @@ begin
                   begin
                     WIFEdit.Text := ReadResult.Text;
                     switchTab(PageControl, AddCoinFromPrivKeyTabItem);
-                    exit;
+                    //exit;
                   end
                   else if cameraBackTabItem = ClaimTabItem then
                   begin
                     PrivateKeyEditSV.Text := ReadResult.Text;
                     switchTab(PageControl, ClaimTabItem);
-                    exit;
+                    //exit;
                   end
                   else if cameraBackTabItem = HOME_TABITEM then
                   begin
@@ -329,51 +408,57 @@ begin
                     end
                     else
                     begin
+
                       if ts[0] = 'bitcoincash' then
                       begin
                         addressFromQR := ts[1];
                         createTransactionWalletList(getCoinsIDFromAddress
                           (addressFromQR));
-                        exit;
-                      end;
-                      foundWallet := false;
-                      for i := 0 to frmhome.WalletList.Content.
-                        ChildrenCount - 1 do
-                      begin
-                        if (frmhome.WalletList.Content.Children[i]
-                          .TagObject is TwalletInfo) and
-                          (AvailableCoin
-                          [TwalletInfo(frmhome.WalletList.Content.Children[i]
-                          .TagObject).coin].qrname = ts[0]) then
-                        begin
-
-                          addressFromQR := ts[1];
-                          createTransactionWalletList
-                            ([TwalletInfo(frmhome.WalletList.Content.Children[i]
-                            .TagObject).coin]);
-                          // switchTab(pageControl , WalletTransactionListTabItem);
-
-                          { openWalletView(frmhome.WalletList.Content.
-                            Children[i]);
-                            switchTab(WVTabControl, WVSend);
-                            WVsendTO.Text := ts.Strings[1]; }
-                          for j := 2 to ts.Count - 2 do
-                          begin
-                            if ts.Strings[j] = 'amount' then
-                              amountFromQR := ts.Strings[j + 1];
-                          end;
-                          foundWallet := true;
-                          break;
-                        end;
-
-                      end;
-
-                      if not foundWallet then
-                      begin
-                        switchTab(PageControl, HOME_TABITEM);
-                        popupWindow.Create(dictionary('WalletNotDetermined'));
 
                       end
+                      else
+                      begin
+
+                        foundWallet := false;
+                        for i := 0 to frmhome.WalletList.Content.
+                          ChildrenCount - 1 do
+                        begin
+                          if (frmhome.WalletList.Content.Children[i]
+                            .TagObject is TwalletInfo) and
+                            (AvailableCoin
+                            [TwalletInfo(frmhome.WalletList.Content.Children[i]
+                            .TagObject).coin].qrname = ts[0]) then
+                          begin
+
+                            addressFromQR := ts[1];
+                            createTransactionWalletList
+                              ([TwalletInfo(frmhome.WalletList.Content.Children[i]
+                              .TagObject).coin]);
+                            // switchTab(pageControl , WalletTransactionListTabItem);
+
+                            { openWalletView(frmhome.WalletList.Content.
+                              Children[i]);
+                              switchTab(WVTabControl, WVSend);
+                              WVsendTO.Text := ts.Strings[1]; }
+                            for j := 2 to ts.Count - 2 do
+                            begin
+                              if ts.Strings[j] = 'amount' then
+                                amountFromQR := ts.Strings[j + 1];
+                            end;
+                            foundWallet := true;
+                            break;
+                          end;
+
+                        end;
+
+                        if not foundWallet then
+                        begin
+                          switchTab(PageControl, HOME_TABITEM);
+                          popupWindow.Create(dictionary('WalletNotDetermined'));
+
+                        end
+
+                      end;
 
                     end;
 

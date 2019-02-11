@@ -1,5 +1,5 @@
 unit WalletViewRelated;
-
+
 interface
 
 uses
@@ -52,7 +52,7 @@ procedure OpenWallet(Sender: TObject);
 procedure organizeView(Sender: TObject);
 procedure newCoin(Sender: TObject);
 procedure CreateWallet(Sender: TObject; Option: AnsiString = '');
-procedure ShowETHWallets(Sender: TObject);
+procedure ShowETHWallets();
 procedure synchro;
 procedure SendClick(Sender: TObject);
 procedure calcFeeWithSpin;
@@ -83,6 +83,11 @@ procedure SendReportIssuesButtonClick(Sender: TObject);
 procedure FoundTokenOKButtonClick(Sender: TObject);
 procedure SearchTokenButtonClick(Sender: TObject);
 procedure ExportPrivateKeyButtonClick(Sender: TObject);
+procedure GenerateETHAddressWithToken(Sender : TObject);
+procedure btnAddContractClick(Sender: TObject);
+procedure ShowETHWalletsForNewToken( );
+
+
 
 var
   SyncOpenWallet: TThread;
@@ -92,7 +97,137 @@ implementation
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, AccountRelated, TCopyableEditData, BackupRelated, debugAnalysis,
-  KeypoolRelated;
+  KeypoolRelated , nano , ED25519_Blake2b;
+
+
+
+
+procedure btnAddContractClick(Sender: TObject);
+var
+  t: Token;
+begin
+
+  if walletAddressForNewToken = '' then
+  begin
+
+    //GenerateETHAddressWithToken(sender);
+
+    newTokenID := Tcomponent(Sender).Tag;
+    frmhome.btnDecryptSeed.OnClick := frmhome.GenerateETHAddressWithToken;
+    decryptSeedBackTabItem := frmhome.pageControl.ActiveTab;
+    frmhome.PageControl.ActiveTab := frmhome.descryptSeed;
+    frmhome.btnDSBack.OnClick := frmhome.backBtnDecryptSeed;
+
+  end
+  else
+  begin
+    t := Token.CreateCustom(frmHome.ContractAddress.Text,
+      frmHome.TokenNameField.Text, frmHome.SymbolField.Text,
+      strtoint(frmHome.DecimalsField.Text), walletAddressForNewToken);
+    t.idInWallet := length(CurrentAccount.myTokens) + 10000;
+    CurrentAccount.addToken(t);
+    CurrentAccount.SaveFiles();
+    CreatePanel(T);
+    frmhome.btnSyncClick(nil);
+    switchTab(frmhome.PageControl, HOME_TABITEM);
+  end;
+
+
+
+end;
+
+procedure GenerateETHAddressWithToken(Sender : TObject);
+var
+  ts: TStringList;
+  path: AnsiString;
+  out : AnsiString;
+  wd: TWalletInfo;
+  T: Token;
+  isCompressed: Boolean;
+  WData: WIFAddressData;
+  pub: AnsiString;
+
+  tced: AnsiString;
+  MasterSeed: AnsiString;
+  holder : TfmxObject;
+begin
+  with frmhome do
+  begin
+
+    tced := TCA(passwordForDecrypt.Text);
+    passwordForDecrypt.Text := '';
+    MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
+    if not isHex(MasterSeed) then
+    begin
+      popupWindow.create(dictionary('FailedToDecrypt'));
+      exit;
+    end;
+
+
+
+    wd := coinData.createCoin(4 , 0, 0, MasterSeed, 'Ethereum (ETH)' );  // if ETH not exist in account -> create first or restore (0,0)
+
+    CurrentAccount.AddCoin(wd);
+    TThread.Synchronize(nil,
+      procedure
+      begin
+        CreatePanel(wd);
+      end);
+
+    // Issue 112 CurrentAccount.userSaveSeed := false;
+    //CurrentAccount.SaveFiles();
+    // askforBackup(1000);
+    startFullfillingKeypool(MasterSeed);
+    MasterSeed := '';
+
+
+    if (decryptSeedBackTabItem = ChoseToken) or (decryptSeedBackTabItem = AddWalletList ) then
+    begin
+
+      T := Token.Create( newTokenID , wd.addr );
+
+      T.idInWallet := Length(CurrentAccount.myTokens) + 10000;
+
+      CurrentAccount.addToken(T);
+      CreatePanel(T);
+
+
+
+
+    end
+    else if decryptSeedBackTabItem = ManuallyToken then
+    begin
+
+      t := Token.CreateCustom(frmHome.ContractAddress.Text,
+        frmHome.TokenNameField.Text, frmHome.SymbolField.Text,
+        strtoint(frmHome.DecimalsField.Text), wd.addr );
+
+      t.idInWallet := length(CurrentAccount.myTokens) + 10000;
+
+      CurrentAccount.addToken(t);
+      // CurrentAccount.SaveFiles();
+      CreatePanel(T);
+
+      //switchTab(PageControl, walletView);
+
+    end;
+
+     holder := TfmxObject.Create(nil);
+      holder.TagObject := T;
+      frmhome.OpenWalletView(holder, PointF(0, 0));
+      holder.DisposeOf;
+
+
+     btnSyncClick(nil);
+
+
+
+
+
+  end;
+end;
+
+
 
 procedure ExportPrivateKeyButtonClick(Sender: TObject);
 begin
@@ -721,11 +856,23 @@ begin
     begin
       if SendAllFundsSwitch.IsChecked then
       begin
+
+        if CurrentCryptoCurrency is TWalletInfo then
+        begin
+
         wvAmount.Text := BigIntegertoFloatStr
           ((BigInteger.Min(CurrentAccount.getSpendable
           (TWalletInfo(CurrentCryptoCurrency)),
           CurrentAccount.aggregateBalances(TWalletInfo(CurrentCryptoCurrency))
-          .confirmed)), CurrentCryptoCurrency.decimals);;
+            .confirmed)), CurrentCryptoCurrency.decimals);
+
+        end
+        else
+        begin
+          wvAmount.Text := BigIntegertoFloatStr(CurrentCryptoCurrency.confirmed,
+            CurrentCryptoCurrency.decimals);
+        end;
+
         WVRealCurrency.Text :=
           floatToStrF(CurrencyConverter.calculate(strToFloatDef(wvAmount.Text,
           0) * CurrentCryptoCurrency.rate), ffFixed, 18, 2);
@@ -755,10 +902,10 @@ begin
     if isTokenTransfer then
     begin
       lblFeeHeader.Text := languages.dictionary('GasPriceWEI') + ': ';
-      lblFee.Text := wvFee.Text + ' ' +
+      lblFee.Text := wvFee.Text + ' = ' +
         floatToStrF(CurrencyConverter.calculate(strToFloatDef(wvFee.Text,
-        0) * 66666 * CurrentCryptoCurrency.rate / (1000000.0 * 1000000.0 *
-        1000000.0)), ffFixed, 18, 6) + ' ' + CurrencyConverter.symbol;
+        0) * 66666 * CurrentCoin.rate / (1000000.0 * 1000000.0 * 1000000.0)),
+        ffFixed, 18, 6) + ' ' + CurrencyConverter.symbol;
     end
     else if isEthereum then
     begin
@@ -978,7 +1125,7 @@ begin
   end;
 end;
 
-procedure ShowETHWallets(Sender: TObject);
+procedure ShowETHWalletsForNewToken( );
 var
   i: Integer;
   Panel: TPanel;
@@ -986,15 +1133,104 @@ var
   balLabel: TLabel;
   coinIMG: TImage;
   wd: TWalletInfo;
+  CountETH: Integer;
 begin
-
+  //CountETH := 0;
   clearVertScrollBox(frmhome.AvailableCoinsBox);
 
   for i := 0 to Length(CurrentAccount.myCoins) - 1 do
   begin
     if CurrentAccount.myCoins[i].coin = 4 then // if ETH
     begin
+      //CountETH := CountETH + 1;
+      with frmhome.AvailableCoinsBox do
+      begin
+        wd := CurrentAccount.myCoins[i];
+        Panel := TPanel.Create(frmhome.AvailableCoinsBox);
+        Panel.Align := Panel.Align.alTop;
+        Panel.Height := 48;
+        Panel.Width := frmhome.AvailableCoinsBox.Width;
+        Panel.Visible := True;
+        Panel.Parent := frmhome.AvailableCoinsBox;
+        Panel.TagString := CurrentAccount.myCoins[i].addr;
+        Panel.OnClick := frmhome.AddNewTokenETHPanelClick;
 
+        adrLabel := TLabel.Create(frmhome.AvailableCoinsBox);
+        adrLabel.StyledSettings := adrLabel.StyledSettings -
+          [TStyledSetting.Size];
+        adrLabel.TextSettings.Font.Size := dashBoardFontSize;
+
+        adrLabel.Parent := Panel;
+        adrLabel.TagString := CurrentAccount.myCoins[i].addr;
+
+        if wd.description = '' then
+        begin
+          adrLabel.Text := AvailableCoin[wd.coin].displayName + ' (' +
+            AvailableCoin[wd.coin].shortcut + ')';
+        end
+        else
+        begin
+
+          adrLabel.Text := wd.description;
+        end;
+        adrLabel.Visible := True;
+        adrLabel.Width := 500;
+        adrLabel.Height := 48;
+        adrLabel.Position.x := 52;
+        adrLabel.Position.Y := 0;
+        adrLabel.hittest := False;
+
+        balLabel := TLabel.Create(frmhome.WalletList);
+        balLabel.StyledSettings := balLabel.StyledSettings -
+          [TStyledSetting.Size];
+        balLabel.TextSettings.Font.Size := 12;
+        balLabel.Parent := Panel;
+        balLabel.TagString := CurrentAccount.myCoins[i].addr;
+        balLabel.Text := CurrentAccount.myCoins[i].addr;
+
+        balLabel.TextSettings.HorzAlign := TTextAlign.Center;
+        balLabel.Visible := True;
+        balLabel.Width := 500;
+        balLabel.Height := 14;
+        balLabel.Align := TAlignLayout.Bottom;
+        balLabel.hittest := False;
+
+        coinIMG := TImage.Create(frmhome.AvailableCoinsBox);
+        coinIMG.Parent := Panel;
+
+        coinIMG.Bitmap.loadFromStream(getCoinIconResource(wd.coin));
+
+        coinIMG.Height := 32.0;
+        coinIMG.Width := 50;
+        coinIMG.Position.x := 4;
+        coinIMG.Position.Y := 8;
+        coinIMG.hittest := False;
+        coinIMG.TagString := CurrentAccount.myCoins[i].addr;
+      end;
+
+    end;
+
+  end;
+end;
+
+procedure ShowETHWallets( );
+var
+  i: Integer;
+  Panel: TPanel;
+  adrLabel: TLabel;
+  balLabel: TLabel;
+  coinIMG: TImage;
+  wd: TWalletInfo;
+  CountETH: Integer;
+begin
+  CountETH := 0;
+  clearVertScrollBox(frmhome.AvailableCoinsBox);
+
+  for i := 0 to Length(CurrentAccount.myCoins) - 1 do
+  begin
+    if CurrentAccount.myCoins[i].coin = 4 then // if ETH
+    begin
+      CountETH := CountETH + 1;
       with frmhome.AvailableCoinsBox do
       begin
         wd := CurrentAccount.myCoins[i];
@@ -1064,6 +1300,15 @@ begin
 
   end;
 
+  if CountETH = 0 then
+  begin
+
+    frmhome.AvailableCoinsBox.TagString := '';
+    frmhome.addToken(frmhome.AvailableCoinsBox);
+
+  end
+  else
+    switchTab(frmhome.pageControl, frmhome.AddNewToken);
 end;
 
 procedure synchro;
@@ -1314,6 +1559,16 @@ begin
         wd.pub := pub;
         wd.EncryptedPrivKey := speckEncrypt((TCA(MasterSeed)), out);
         wd.isCompressed := isCompressed;
+      end
+      else
+      if newCoinID = 8 then
+      begin
+
+        pub := nano_privToPub(frmhome.CoinPrivKeyDescriptionEdit.Text);
+        wd := NanoCoin.Create(8 , -1 , -1 ,nano_accountFromHexKey(pub), '' );
+        wd.pub := pub;
+        wd.EncryptedPrivKey := speckEncrypt((TCA(MasterSeed)), frmhome.CoinPrivKeyDescriptionEdit.Text );
+
       end
       else
       begin
@@ -1598,8 +1853,8 @@ begin
       begin
         lblFee.Text := wvFee.Text + '  = ' +
           floatToStrF(CurrencyConverter.calculate(strToFloatDef(wvFee.Text,
-          0) * 66666 * CurrentCryptoCurrency.rate / (1000000.0 * 1000000.0 *
-          1000000.0)), ffFixed, 18, 6) + ' ' + CurrencyConverter.symbol;
+          0) * 66666 * CurrentCoin.rate / (1000000.0 * 1000000.0 * 1000000.0)),
+          ffFixed, 18, 6) + ' ' + CurrencyConverter.symbol;
       end;
 
     end
@@ -1764,7 +2019,7 @@ begin
     begin
       frmhome.BCHCashAddrButtonClick(Sender);
     end;
-
+    UnlockNanoImage.Visible := TWalletInfo(CurrentCryptoCurrency).coin = 8;
     if TWalletInfo(CurrentCryptoCurrency).coin = 8 then
     begin
       frmhome.ShowAdvancedLayout.Visible := false;
@@ -1772,6 +2027,17 @@ begin
       frmhome.YAddresses.Visible := false;
       frmhome.btnNewAddress.Visible := false;
       frmhome.btnPrevAddress.Visible := false;
+      if NanoCoin(CurrentCryptoCurrency).isUnlocked then
+      begin
+        UnlockNanoImage.Bitmap.LoadFromStream( ResourceMenager.getAssets('OPENED') );
+
+      end
+      else
+      begin
+        UnlockNanoImage.Bitmap.LoadFromStream( ResourceMenager.getAssets('CLOSED') );
+      end;
+      UnlockNanoImage.Size.Width:=18;
+UnlockNanoImage.Margins.Right:=24;
     end
     else
       frmhome.ShowAdvancedLayout.Visible := True;
@@ -1818,7 +2084,7 @@ begin
     else
       CurrentCoin := TWalletInfo(CurrentCryptoCurrency);
     NanoUnlocker.Visible := (CurrentCoin.coin = 8) and
-      (CurrentCryptoCurrency.unconfirmed <> 0);
+      (CurrentCryptoCurrency.unconfirmed <> 0) and ( not  NanoCoin(CurrentCryptoCurrency).isUnlocked);
     NanoUnlocker.Text := 'Click here to pocket ' + BigIntegerBeautifulStr
       (CurrentCryptoCurrency.unconfirmed, CurrentCryptoCurrency.decimals)
       + ' NANO';
@@ -2177,6 +2443,8 @@ begin
 
   end;
 
+  if walletAddressForNewToken <> '' then
+  begin
   T := Token.Create(Tcomponent(Sender).Tag, walletAddressForNewToken);
 
   T.idInWallet := Length(CurrentAccount.myTokens) + 10000;
@@ -2187,6 +2455,16 @@ begin
   holder.TagObject := T;
   frmhome.OpenWalletView(holder, PointF(0, 0));
   holder.DisposeOf;
+  end
+  else
+  begin
+    newTokenID := Tcomponent(Sender).Tag;
+    frmhome.btnDecryptSeed.OnClick := frmhome.GenerateETHAddressWithToken;
+    decryptSeedBackTabItem := frmhome.pageControl.ActiveTab;
+    frmhome.pageControl.ActiveTab := frmhome.descryptSeed;
+    frmhome.btnDSBack.OnClick := frmhome.backBtnDecryptSeed;
+  end;
+
 end;
 
 procedure backToBalance(Sender: TObject);
@@ -2227,6 +2505,9 @@ begin
 
       lastClosedAccount := CurrentAccount.name;
       refreshWalletDat();
+
+      currentAccount.Free;
+      CurrentAccount := nil;
 
       TLabel(frmhome.FindComponent('globalBalance')).Text := '0.00';
       AccountRelated.afterInitialize;
@@ -2659,7 +2940,7 @@ begin
 
           LoadingKeyDataAniIndicator.Enabled := True;
           LoadingKeyDataAniIndicator.Visible := True;
-          if newcoinID <> 4 then
+          if not newcoinID in [4 , 8] then
           begin
 
             { tthread.CreateAnonymousThread(
@@ -2676,7 +2957,7 @@ begin
             comkey := secp256k1_get_public(WIFEdit.Text, false);
             notkey := secp256k1_get_public(WIFEdit.Text, True);
 
-            wd := TWalletInfo.Create(newcoinID, -1, -1,
+            wd := coinData.createCoin(newcoinID, -1, -1,
               Bitcoin_PublicAddrToWallet(comkey, AvailableCoin[newcoinID].p2pk),
               'Imported');
             wd.pub := comkey;
@@ -2781,9 +3062,10 @@ begin
             // end).Start();
 
             exit;
-          end;
+          end
           // Parsing for ETH
-          if newcoinID = 4 then
+          //if newcoinID = 4 then   ?
+          else
           begin
             { tthread.CreateAnonymousThread(
               procedure
@@ -2795,11 +3077,12 @@ begin
               wd: TwalletInfo;
               request: AnsiString;
               begin }
-            comkey := secp256k1_get_public(WIFEdit.Text, True);
+
+            {comkey := secp256k1_get_public(WIFEdit.Text, True);
 
             wd := TWalletInfo.Create(newcoinID, -1, -1,
               Ethereum_PublicAddrToWallet(comkey), 'Imported');
-            wd.pub := comkey;
+            wd.pub := comkey;  }
 
             TThread.Synchronize(nil,
               procedure
@@ -2810,7 +3093,7 @@ begin
                 HexPrivKeyNotCompressedRadioButton.IsChecked := True;
               end);
 
-            wd.Free;
+            //wd.Free;
 
             // end).Start();
             exit;
@@ -2845,4 +3128,4 @@ begin
 end;
 
 end.
-
+
