@@ -816,6 +816,7 @@ type
     AddWalletButton: TButton; 
     NanoUnlocker: TButton;
     SendReportIssuesButton: TButton;
+    UnlockNanoImage: TImage;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1056,6 +1057,8 @@ type
     procedure lblSendAllFundsClick(Sender: TObject);
     procedure lblFromFeeClick(Sender: TObject);
     procedure Label5Click(Sender: TObject);
+    procedure UnlockNanoImageClick(Sender: TObject);
+    procedure UnlockNanoImageTap(Sender: TObject; const Point: TPointF);
     //procedure DayNightModeSwitchClick(Sender: TObject);
 
 
@@ -2475,6 +2478,58 @@ end;
 procedure TfrmHome.TrySendTX(Sender: TObject);
 begin
   WalletViewRelated.TrySendTransaction(Sender);
+end;
+
+procedure TfrmHome.UnlockNanoImageClick(Sender: TObject);
+var
+  nano : NanoCoin;
+begin
+ShowMessage('aaaa');
+    if currentCryptocurrency is NanoCoin then
+    begin
+     if NanoCoin(currentCryptocurrency).isUnlocked then exit;
+   //  frmhome.UnlockNanoImage.Hint:='When unlocked, receive blocks will be autopocketed';
+     NotificationLayout.popupPasswordConfirm(procedure (pass : AnsiString)
+     var
+        tced , MasterSeed : AnsiString;
+     begin
+
+        tced := TCA( pass );
+        MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
+          passwordForDecrypt.Text := '';
+          if not isHex(masterseed) then
+          begin
+            popupWindow.create(dictionary('FailedToDecrypt'));
+            exit;
+          end;
+
+        nano := NanoCoin(currentcryptoCurrency);
+
+        nano.unlock( MasterSeed );
+
+        wipeansistring(masterseed);
+        frmhome.UnlockNanoImage.Bitmap.LoadFromStream( resourceMenager.getAssets('OPENED') );
+
+        //PageControl.ActiveTab:=decryptSeedBackTabItem;
+
+     end, procedure ( pass : AnsiString )
+     begin
+
+     end
+     , 'Enter the password to pocket the pending NANO' );
+
+
+  //btnDecryptSeed.onclick := UnlockPendingNano;
+  //decryptSeedBackTabItem := PageControl.ActiveTab;
+  //PageControl.ActiveTab := descryptSeed;
+  //btnDSBack.onclick := backBtnDecryptSeed;
+
+    end
+end;
+
+procedure TfrmHome.UnlockNanoImageTap(Sender: TObject; const Point: TPointF);
+begin
+  UnlockNanoImageClick(Sender);
 end;
 
 procedure TfrmHome.updateBtnClick(Sender: TObject);

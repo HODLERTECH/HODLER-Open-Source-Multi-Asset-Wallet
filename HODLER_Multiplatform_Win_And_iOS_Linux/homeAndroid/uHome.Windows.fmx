@@ -345,6 +345,9 @@ inherited frmHome_Windows: TfrmHome_Windows
             inherited RefreshWalletView: TButton
               ImageIndex = 1
             end
+            inherited UnlockNanoImage: TImage
+              OnClick = nil
+            end
           end
         end
         inherited WVTabControl: TTabControl

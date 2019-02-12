@@ -369,6 +369,9 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             inherited RefreshWalletView: TButton
               ImageIndex = 1
             end
+            inherited UnlockNanoImage: TImage
+              OnClick = nil
+            end
           end
           inherited btnBack: TButton
             Size.Width = 48.000000000000000000
@@ -475,7 +478,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
                   end>
               end
               inherited lblFiat: TLabel
-                Position.X = 135.758605957031300000
+                Position.X = 135.758605957031200000
                 Size.Width = 109.241394042968800000
               end
             end

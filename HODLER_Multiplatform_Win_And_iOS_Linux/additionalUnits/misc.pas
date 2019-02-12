@@ -3698,7 +3698,7 @@ var
   LResponse: IHTTPResponse;
   urlHash: AnsiString;
 begin
-     req := THTTPClient.Create();
+req := THTTPClient.Create();
   aURL := ensureURL(aURL);
   urlHash := GetStrHashSHA256(aURL);
   if (firstSync and useCache) then
@@ -3732,9 +3732,10 @@ begin
         result := apiStatus(aURL, '', true);
     end;
   except
-    on E: Exception do
+  on E: Exception do
     begin
-      result := apiStatus(aURL, '', true);
+        result := e.message;
+        result := apiStatus(aURL, '', true);
 
     end;
 

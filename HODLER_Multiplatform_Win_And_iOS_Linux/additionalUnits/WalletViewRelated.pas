@@ -1569,6 +1569,7 @@ begin
         wd.pub := pub;
         wd.EncryptedPrivKey := speckEncrypt((TCA(MasterSeed)), frmhome.WIFEdit.Text );
 
+
       end
       else
       begin
@@ -1582,11 +1583,13 @@ begin
       end;
 
       // Issue 112 CurrentAccount.userSaveSeed := false;
+
       //CurrentAccount.SaveFiles();
 
       // askforBackup(1000);
 
       TThread.Synchronize(tthread.CurrentThread,
+
         procedure
         begin
           CurrentAccount.AddCoin(wd);
@@ -1599,6 +1602,7 @@ begin
       begin
         // SearchTokens(wd.addr);
       end;
+
 
       TThread.Synchronize(tthread.CurrentThread,
         procedure
@@ -2021,12 +2025,13 @@ begin
     end;
     UnlockNanoImage.Visible := TWalletInfo(CurrentCryptoCurrency).coin = 8;
     if TWalletInfo(CurrentCryptoCurrency).coin = 8 then
-    begin
-
+    begin 
+	
       SendSettingsFlowLayout.Parent := SendVertScrollBox;
       SendSettingsFlowLayout.Position.Y := SendAmountLayout.Position.Y +1 ;
       FeeFromAmountLayout.Visible := false;
 
+ 
       frmhome.ShowAdvancedLayout.Visible := false;
       frmhome.TransactionFeeLayout.Visible := false;
       frmhome.YAddresses.Visible := false;
@@ -2035,11 +2040,14 @@ begin
       if NanoCoin(CurrentCryptoCurrency).isUnlocked then
       begin
         UnlockNanoImage.Bitmap.LoadFromStream( ResourceMenager.getAssets('OPENED') );
+
       end
       else
       begin
         UnlockNanoImage.Bitmap.LoadFromStream( ResourceMenager.getAssets('CLOSED') );
       end;
+	  UnlockNanoImage.Size.Width:=18;
+	  UnlockNanoImage.Margins.Right:=24;
 
     end
     else
@@ -2060,6 +2068,7 @@ begin
       end;
 
     end;
+      
 
     if pageControl.ActiveTab = HOME_TABITEM then
       WVTabControl.ActiveTab := WVBalance;
@@ -2102,8 +2111,9 @@ begin
     end
     else
       CurrentCoin := TWalletInfo(CurrentCryptoCurrency);
-    NanoUnlocker.Visible := (CurrentCoin.coin = 8) and
-      (CurrentCryptoCurrency.unconfirmed <> 0);
+    NanoUnlocker.Visible := (CurrentCoin.coin = 8) and 
+      (CurrentCryptoCurrency.unconfirmed <> 0) and ( not  NanoCoin(CurrentCryptoCurrency).isUnlocked);
+	  
     NanoUnlocker.Text := 'Click here to pocket ' + BigIntegerBeautifulStr
       (CurrentCryptoCurrency.unconfirmed, CurrentCryptoCurrency.decimals)
       + ' NANO';
@@ -2975,7 +2985,6 @@ begin
             LoadingKeyDataAniIndicator.Enabled := True;
             LoadingKeyDataAniIndicator.Visible := True;
           end);
-
 
           if not newcoinID in [4 , 8] then
           begin

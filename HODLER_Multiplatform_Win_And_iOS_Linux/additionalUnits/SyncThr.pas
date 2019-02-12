@@ -177,23 +177,15 @@ begin
     //{history := }js.TryGetValue<TJSONArray>('history' , history) {as TJSONArray};
     //{pendings :=} js.tryGetValue<TJsonArray>('pending' , pendings) {as TJsonArray};
 
-    if js.tryGetValue<TJsonArray>('pending' , pendings ) then
-      if pendings.Count > 0 then
-      begin
-        for i := 0 to (pendings.Count div 2) - 1 do
-        begin
 
-          temp.Block := nano_buildFromJSON(pendings.Items[(i * 2)].GetValue < TjsonObject > ('data').GetValue('contents').Value, '');
-          temp.Hash := pendings.Items[(i * 2) + 1].GetValue < Ansistring > ('hash');
+    if (Length(NanoCoin(cc).PendingBlocks.ToArray)=0) and (Length(NanoCoin(cc).PendingSendBlocks)=0) then
+    NanoCoin(cc).lastBlockAmount:=cc.confirmed;
 
-          NanoCoin(cc).tryAddPendingBlock(temp);
-
-        end;
-      end;
-
+	
     if js.TryGetValue<TJSONArray>('history' , history)  then
       if history.Count > 0 then
       begin
+
         firstblock := nano_buildFromJSON(history.Items[0].ToJSON, '', false);
         cc.lastPendingBlock := firstblock.hash;
         nano_precalculate(cc.lastPendingBlock);
@@ -224,6 +216,19 @@ begin
         end;
       end;
 
+      if js.tryGetValue<TJsonArray>('pending' , pendings ) then
+      if pendings.Count > 0 then
+      begin
+        for i := 0 to (pendings.Count div 2) - 1 do
+        begin
+
+          temp.Block := nano_buildFromJSON(pendings.Items[(i * 2)].GetValue < TjsonObject > ('data').GetValue('contents').Value, '');
+          temp.Hash := pendings.Items[(i * 2) + 1].GetValue < Ansistring > ('hash');
+          if not firstSync then
+          NanoCoin(cc).tryAddPendingBlock(temp);
+
+        end;
+      end;
   except
     on e: exception do
     begin
@@ -587,9 +592,11 @@ begin
         end;
       8:
         begin
-          data := getDataOverHTTP('https://hodlernode.net/nano.php?addr=' + TWalletInfo(cc).addr, false);
+		
+          data := getDataOverHTTP('https://hodlernode.net/nano.php?addr=' + TWalletInfo(cc).addr, false , true);
           if data <> '' then
             syncNano(cc, data);
+			
 
         end;
     end;

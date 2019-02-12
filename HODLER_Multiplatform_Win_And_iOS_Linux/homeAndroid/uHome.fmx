@@ -1541,6 +1541,21 @@ object frmHome: TfrmHome
                 Value = 50.000000000000000000
               end
             end
+            object UnlockNanoImage: TImage
+              OnTap = UnlockNanoImageTap
+              MultiResBitmap = <
+                item
+                end>
+              Align = Right
+              Margins.Top = 8.000000000000000000
+              Margins.Bottom = 8.000000000000000000
+              Position.X = 96.000000000000000000
+              Position.Y = 8.000000000000000000
+              Size.Width = 48.000000000000000000
+              Size.Height = 32.000000000000000000
+              Size.PlatformDefault = False
+              OnClick = UnlockNanoImageClick
+            end
           end
           object btnBack: TButton
             Align = Left
@@ -3643,7 +3658,7 @@ object frmHome: TfrmHome
                     Align = FitRight
                     StyledSettings = [Family, Style, FontColor]
                     Margins.Right = 10.000000000000000000
-                    Position.X = 228.080017089843800000
+                    Position.X = 228.080017089843700000
                     Size.Width = 113.919982910156300000
                     Size.Height = 31.999998092651370000
                     Size.PlatformDefault = False

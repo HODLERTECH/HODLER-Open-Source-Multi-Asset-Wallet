@@ -432,6 +432,10 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
                 Size.Height = 4.000000000000000000
               end
             end
+            inherited UnlockNanoImage: TImage
+              Size.Height = 28.000000000000000000
+              OnClick = nil
+            end
           end
           inherited btnBack: TButton
             Size.Height = 44.000000000000000000

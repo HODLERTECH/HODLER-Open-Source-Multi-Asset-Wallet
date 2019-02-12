@@ -2558,6 +2558,9 @@ begin
     if currentCryptocurrency is NanoCoin then
     begin
 
+     if NanoCoin(currentCryptocurrency).isUnlocked then exit;
+     frmhome.UnlockNanoImage.Hint:='When unlocked, receive blocks will be autopocketed';
+
      NotificationLayout.popupPasswordConfirm(procedure (pass : AnsiString)
      var
         tced , MasterSeed : AnsiString;
@@ -2585,7 +2588,8 @@ begin
      begin
 
      end
-     , 'Insert password to continue' );
+     , 'Enter the password to pocket the pending NANO' );
+
 
 
   //btnDecryptSeed.onclick := UnlockPendingNano;
