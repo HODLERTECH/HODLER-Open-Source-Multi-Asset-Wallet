@@ -821,10 +821,14 @@ type
     Label28: TLabel;
     NanoUnlocker: TButton;
     UnlockNanoImage: TImage;
-    Layout46: TLayout;
-    Layout48: TLayout;
+    //Layout46: TLayout;
+    //Layout48: TLayout;
     Panel27: TPanel;
     PasswordInfoStaticLabel: TLabel;
+    Layout46: TLayout;
+    Layout48: TLayout;
+    //Panel27: TPanel;
+    //PasswordInfoStaticLabel: TLabel;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -3111,6 +3115,7 @@ procedure TfrmHome.Button10Click(Sender: TObject);
 begin
   switchTab(PageControl, Settings);
 end;
+
 
 procedure TfrmHome.CoinFromPrivKeyQRButtonClick(Sender: TObject);
 begin

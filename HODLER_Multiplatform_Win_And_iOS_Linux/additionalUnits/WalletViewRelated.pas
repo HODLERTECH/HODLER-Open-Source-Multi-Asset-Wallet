@@ -2046,8 +2046,9 @@ begin
       begin
         UnlockNanoImage.Bitmap.LoadFromStream( ResourceMenager.getAssets('CLOSED') );
       end;
-	  UnlockNanoImage.Size.Width:=18;
-	  UnlockNanoImage.Margins.Right:=24;
+
+      UnlockNanoImage.Size.Width:=18;
+      UnlockNanoImage.Margins.Right:=24;
 
     end
     else

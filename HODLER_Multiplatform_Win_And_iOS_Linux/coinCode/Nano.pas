@@ -4,7 +4,7 @@ unit Nano;
 interface
 
 uses
-  Androidapi.JNI,AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA, IdSSLOpenSSL, languages,
+  {$IFDEF ANDROID} Androidapi.JNI,AESObj,{$ENDIF} SPECKObj, FMX.Objects, IdHash, IdHashSHA, IdSSLOpenSSL, languages,
   System.Hash, MiscOBJ, SysUtils, System.IOUtils, HashObj, System.Types,
   System.UITypes,
   System.DateUtils, System.Generics.Collections, System.Classes,
@@ -180,23 +180,29 @@ function nano_pushBlock(b: AnsiString): AnsiString;
 procedure nano_signBlock(var Block: TNanoBlock; cc: NanoCoin); overload;
 procedure nano_signBlock(var Block: TNanoBlock; cc: cryptoCurrency;
   ms: AnsiString); overload;
+
+{$IFDEF ANDROID}
 function AcquireWakeLock: Boolean;
 procedure ReleaseWakeLock;
+{$ENDIF}
 
-function nano_pushBlock(b: AnsiString): AnsiString;
+{$IFDEF ANDROID}
 
-procedure nano_signBlock(var block: TNanoBlock; cc: NanoCoin); overload;
-procedure nano_signBlock(var block: TNanoBlock; cc: cryptoCurrency; ms: AnsiString); overload;
 
+
+{$ENDIF}
 
 
 implementation
 
 uses
-  ED25519_Blake2b, uHome, PopupWindowData, keypoolrelated, walletviewrelated,
-  FMX.Helpers.Android;
+  ED25519_Blake2b, uHome, PopupWindowData, keypoolrelated, walletviewrelated
+{$IFDEF ANDROID},
+  FMX.Helpers.Android
+{$ENDIF};
 
 /// ///////////////////////////////////////////////////////////////////
+{$IFDEF ANDROID}
 function GetPowerManager: JPowerManager;
 var
   PowerServiceNative: JObject;
@@ -244,6 +250,7 @@ begin
     WakeLock := nil
   end;
 end;
+{$ENDIF}
 
 
 constructor NanoCoin.Create(id: integer; _x: integer; _y: integer;
@@ -517,164 +524,6 @@ end;
 
 /// ///////////////////////////////////////////////////////////////////
 
- //////////////////////////////////////////////////////////////////////
-
-constructor NanoCoin.create(id: integer; _x: integer; _y: integer; _addr: AnsiString;
-      _description: AnsiString; crTime: integer = -1);
-begin
-
-  inherited create(id , _x , _y , _addr , _description , crtime );
-
-  PendingBlocks := TQueue<TpendingNanoBlock>.Create();
-  mutexMining := TSemaphore.Create();
-  isUnlocked := false;
-
-
-end;
-
-destructor NanoCoin.destroy;
-begin
-
-  inherited;
-  wipeAnsiString( UnlockPriv );
-
-  PendingBlocks.Free;
-  mutexMining.Free;
-
-end;
-
-function nanocoin.getPrivFromSession;
-var
-  i : integer;
-begin
-  if isUnlocked = false then
-    raise Exception.Create('nano must be unlocked first');
-
-  SetLength( result , length( UnlockPriv ) );
-  for i := low(UnlockPriv) to High(UnlockPriv) do
-  begin
-    result[i] := AnsiChar( ord(sessionkey[i]) xor ord(unlockPriv[i])) ;
-  end;
-
-end;
-procedure NanoCoin.unlock(masterSeed: AnsiString);
-var
-  i : Integer;
-begin
-
-  unlockpriv := nano_getPriv( self, masterSeed );
-  SetLength( sessionKey , length( UnlockPriv ) );
-  for i := low(UnlockPriv) to High(UnlockPriv) do
-  begin
-    sessionKey[i] := Ansichar( random(255) );
-  end;
-
-  for i := low(UnlockPriv) to High(UnlockPriv) do
-  begin
-    UnlockPriv[i] := AnsiChar( ord(sessionkey[i]) xor ord(unlockPriv[i])) ;
-  end;
-
-  isUnlocked := true;
-
-  mineAllPendings();
-
-end;
-
-procedure NanoCoin.mineAllPendings( MasterSeed : AnsiString = '' );
-begin
-  if (isUnlocked = false) and ( masterSeed = '' ) then
-    raise Exception.Create('nano must be unlocked first');
-
-
-
-  if (PendingThread = nil) or (PendingThread.Finished) then
-  begin
-
-    if (PendingThread <> nil) and (PendingThread.Finished) then
-      PendingThread.Free;
-
-    PendingThread := TThread.CreateAnonymousThread(procedure
-    begin
-
-      while( PendingBlocks.Count <> 0 ) do
-      begin
-
-        if MasterSeed = '' then
-          mineBlock( PendingBlocks.Dequeue )
-        else
-          mineBlock( PendingBlocks.Dequeue , masterSeed );
-
-      end;
-
-
-    end);
-
-    PendingThread.FreeOnTerminate := false;
-    PendingThread.Start;
-  end;
-
-
-end;
-
-procedure NanoCoin.tryAddPendingBlock(block : TpendingNanoBlock);
-var
-  it : TQueue<TpendingNanoBlock>.TEnumerator;
-begin
-
-  it := PendingBlocks.GetEnumerator;
-
-  while it.MoveNext do
-  begin
-    if it.Current.hash = block.Hash then
-    begin
-      exit;
-    end;
-
-  end;
-
-  PendingBlocks.Enqueue(block);
-
-  if isUnlocked then
-    mineAllPendings();
-
-end;
-
-procedure nanocoin.mineBlock(block: TpendingNanoBlock ; MasterSeed : AnsiString);
-var
-  temp : TNanoBLock;
-begin
-  mutexMining.Acquire;
-
-  temp := nano_addPendingReceiveBlock( block.Hash , self , block.Block.source, MasterSeed, block.block.blockAmount);
-  nano_pushBlock(nano_getJSONBlock(temp));
-
-  wipeAnsiString(Masterseed);
-
-  mutexMining.Release;
-end;
-
-procedure nanocoin.mineBlock(block: TpendingNanoBlock);
-var
-  temp : TNanoBLock;
-begin
-  if isUnlocked = false then
-    raise Exception.Create('nano must be unlocked first');
-
-  mutexMining.Acquire;
-
-  temp := nano_addPendingReceiveBlock( block.Hash , self , block.Block.source, block.block.blockAmount);
-  nano_pushBlock(nano_getJSONBlock(temp));
-
-  mutexMining.Release;
-end;
-
-
-
-
-
-
-
-  //////////////////////////////////////////////////////////////////////
 
 type
   precalculatedPow = record
@@ -1040,7 +889,13 @@ begin
     // Exit(nano_pow(Hash));
 	
   end;
-  AcquireWakeLock;
+
+  {$IFDEF ANDROID}
+
+    AcquireWakeLock;
+
+{$ENDIF}
+
   setPrecalculated(Hash, 'MINING');
 
   for i := 0 to powworkers do
@@ -1058,7 +913,15 @@ begin
       if workers[i].foundWork <> '' then
       begin
         work := workers[i].foundWork;
-        ReleaseWakeLock;
+
+        {$IFDEF ANDROID}
+
+            ReleaseWakeLock;
+
+{$ENDIF}
+
+
+
         setPrecalculated(Hash, work);
         result := work;
         break;
@@ -1503,19 +1366,6 @@ begin
   wipeAnsiString(p);
 end;
 
-procedure nano_signBlock(var Block: TNanoBlock; cc: NanoCoin);
-var
-  blockHash: AnsiString;
-  pub: AnsiString;
-  p: AnsiString;
-begin
-  p := cc.getPrivFromSession();
-  pub := nano_privToPub(p);
-  blockHash := nano_getBlockHash(Block);
-  nano_setSignature(Block, nano_signature(blockHash, p, pub));
-  nano_setAccount(Block, cc.addr);
-  wipeAnsiString(p);
-end;
 
 function nano_addPendingReceiveBlock(sourceBlockHash: AnsiString;
 cc: cryptoCurrency; from: AnsiString; ms: AnsiString; amount: BigInteger)
