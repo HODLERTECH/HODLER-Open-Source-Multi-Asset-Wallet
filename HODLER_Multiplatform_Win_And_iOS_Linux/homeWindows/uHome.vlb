@@ -1,5 +1,5 @@
 ﻿[]
-Coordinates=1670,1210,71,69
+Coordinates=826,375,94,51
 Visible=True
 ExplicitSubNodes=ItemIndex;Items.Text
 
@@ -361,9 +361,6 @@ Coordinates=597,155,152,51
 
 [Layout15]
 Coordinates=1936,617,59,33
-
-[btnAddManually]
-Coordinates=826,375,94,51
 
 [lblReceiveAmount]
 Coordinates=926,944,104,51

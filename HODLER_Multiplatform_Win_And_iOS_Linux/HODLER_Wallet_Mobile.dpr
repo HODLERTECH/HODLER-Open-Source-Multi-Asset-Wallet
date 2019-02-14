@@ -138,7 +138,8 @@ uses
   PopupWindowData in 'additionalUnits\PopupWindowData.pas',
   NotificationLayoutData in 'components\NotificationLayoutData.pas',
   ED25519_Blake2b in 'coinCode\ED25519_Blake2b.pas',
-  Nano in 'coinCode\Nano.pas';
+  Nano in 'coinCode\Nano.pas',
+  TAddressLabelData in 'components\TAddressLabelData.pas';
 
 {$R *.res}
 

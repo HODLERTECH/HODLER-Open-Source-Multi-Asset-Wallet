@@ -86,7 +86,10 @@ procedure ExportPrivateKeyButtonClick(Sender: TObject);
 procedure GenerateETHAddressWithToken(Sender : TObject);
 procedure btnAddContractClick(Sender: TObject);
 procedure ShowETHWalletsForNewToken( );
-
+procedure AddWalletButtonClick(Sender: TObject);
+procedure AddTokenFromWalletList(Sender: TObject);
+procedure FindERC20autoButtonClick(Sender: TObject);
+procedure AddNewTokenETHPanelClick(sender : Tobject );
 
 
 var
@@ -100,14 +103,346 @@ uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   KeypoolRelated , nano , ED25519_Blake2b;
 
 
+procedure AddNewTokenETHPanelClick(sender : Tobject );
+var
+  T : Token;
+  holder: TfmxObject;
+  found : integer;
+begin
 
+  if chooseETHWalletBackTabItem  = frmhome.ManuallyToken then
+  begin
+
+      t := Token.CreateCustom(frmHome.ContractAddress.Text,
+        frmHome.TokenNameField.Text, frmHome.SymbolField.Text,
+        strtoint(frmHome.DecimalsField.Text),  TFmxObject(Sender).TagString );
+
+      t.idInWallet := length(CurrentAccount.myTokens) + 10000;
+
+  end
+  else
+  begin
+
+    if newTokenID = -1 then
+    begin
+
+      found := SearchTokens( TFmxObject(Sender).TagString , nil);
+      if found = 0 then
+      begin
+        switchTab(frmhome.pageControl, HOME_TABITEM );
+        popupWindow.Create('Not found new Tokens');
+      end
+      else
+      begin
+
+        switchTab(frmhome.pageControl, frmhome.foundTokenTabItem);
+      end;
+      exit;
+
+    end;
+
+
+    T := Token.Create(newTokenID , TFmxObject(Sender).TagString );
+
+    T.idInWallet := Length(CurrentAccount.myTokens) + 10000;
+
+
+
+  end;
+
+   CurrentAccount.addToken(T);
+    CreatePanel(T);
+    holder := TfmxObject.Create(nil);
+    holder.TagObject := T;
+    frmhome.OpenWalletView(holder, PointF(0, 0));
+    holder.DisposeOf;
+  frmhome.refreshLocalImage.Start;
+
+end;
+
+procedure FindERC20autoButtonClick(Sender: TObject);
+var
+  found: Integer;
+  i , countETH : Integer;
+  EthAddress : AnsiString;
+begin
+
+  countETH := 0;
+
+  for i  := 0 to length(CurrentAccount.myCoins) - 1 do
+  begin
+
+    if CurrentAccount.myCoins[i].coin = 4 then
+    begin
+
+      countETH := countETH + 1;
+      if countETH = 1 then
+      begin
+
+        ETHAddress := CurrentAccount.myCoins[i].addr;
+
+      end;
+
+    end;
+
+  end;
+
+  if countETH = 1 then
+  begin
+    found := SearchTokens( EthAddress , nil);
+    if found = 0 then
+    begin
+      popupWindow.Create('Not found new Tokens');
+    end
+    else
+    begin
+
+      switchTab(frmhome.pageControl, frmhome.foundTokenTabItem);
+    end;
+  end
+  else if countETH > 1 then
+  begin
+    newTokenID := -1;
+    chooseETHWalletBackTabItem := frmhome.PageControl.ActiveTab;
+    WalletViewRelated.ShowETHWalletsForNewToken( );
+    switchTab( frmhome.pageControl , frmhome.AddNewToken );
+  end
+  else
+  begin
+    popupWindow.Create('ERC20 Tokens work under Ethereum network. Create ETH address before you use this option.');
+  end;
+end;
+
+procedure AddTokenFromWalletList(Sender: TObject);
+var
+  i , countETH : Integer;
+  ETHAddress : AnsiString;
+  T : Token;
+  holder: TfmxObject;
+begin
+
+  countETH := 0;
+
+  for i  := 0 to length(CurrentAccount.myCoins) - 1 do
+  begin
+
+    if CurrentAccount.myCoins[i].coin = 4 then
+    begin
+
+      countETH := countETH + 1;
+      if countETH = 1 then
+      begin
+
+        ETHAddress := CurrentAccount.myCoins[i].addr;
+
+      end;
+
+    end;
+
+  end;
+
+  if countETH = 0 then
+  begin
+
+    newTokenID := Tcomponent(Sender).Tag;
+    frmhome.btnDecryptSeed.OnClick := frmhome.GenerateETHAddressWithToken;
+    decryptSeedBackTabItem := frmhome.pageControl.ActiveTab;
+    frmhome.pageControl.ActiveTab := frmhome.descryptSeed;
+    frmhome.btnDSBack.OnClick := frmhome.backBtnDecryptSeed;
+
+  end
+  else if countETH = 1 then
+  begin
+
+    T := Token.Create(Tcomponent(Sender).Tag, ETHAddress );
+
+    T.idInWallet := Length(CurrentAccount.myTokens) + 10000;
+
+    CurrentAccount.addToken(T);
+    CreatePanel(T);
+    holder := TfmxObject.Create(nil);
+    holder.TagObject := T;
+    frmhome.OpenWalletView(holder, PointF(0, 0));
+    holder.DisposeOf;
+
+    frmhome.refreshLocalImage.Start;
+
+  end
+  else
+  begin
+    newTokenID := Tcomponent(Sender).Tag;
+    chooseETHWalletBackTabItem := frmhome.PageControl.ActiveTab;
+    WalletViewRelated.ShowETHWalletsForNewToken( );
+    switchTab( frmhome.pageControl , frmhome.AddNewToken );
+  end;
+
+
+
+end;
+
+
+procedure AddWalletButtonClick(Sender: TObject);
+var
+  panel: TPanel;
+  coinName: TLabel;
+  balLabel: TLabel;
+  coinIMG: TImage;
+  i: Integer;
+  countToken : Integer;
+
+begin
+
+  if frmhome.CoinListLayout.ChildrenCount = 1 then
+  begin
+
+    for I := 0 to length(availableCoin) - 1 do
+    begin
+
+      with frmhome.SelectNewCoinBox do
+      begin
+        panel := TPanel.Create(frmhome.CoinListLayout);
+        panel.Align := panel.Align.alTop;
+        panel.Height := 48;
+        panel.Position.Y := 48 + i * 48;
+        panel.Visible := true;
+        panel.tag := i;
+        panel.parent := frmhome.CoinListLayout;
+        panel.OnClick := frmhome.addNewWalletPanelClick;
+
+        coinName := TLabel.Create(Panel);
+        coinName.parent := panel;
+        coinName.Text := availableCoin[i].Displayname;
+        coinName.Visible := true;
+        coinName.Width := 500;
+        coinName.Position.x := 52;
+        coinName.Position.Y := 16;
+        coinName.tag := i;
+        coinName.HitTest := false;
+        //coinName.OnClick := frmhome.addNewWalletPanelClick;
+
+        coinIMG := TImage.Create(panel);
+        coinIMG.parent := panel;
+        coinIMG.Bitmap.LoadFromStream( ResourceMenager.getAssets( AvailableCoin[i].resourceName ) );
+        coinIMG.Height := 32.0;
+        coinIMG.Width := 50;
+        coinIMG.Position.x := 4;
+        coinIMG.Position.Y := 8;
+        coinIMG.HitTest := false;
+        //coinIMG.OnClick := frmhome.addNewWalletPanelClick;
+        coinIMG.tag := i;
+
+      end;
+
+
+    end;
+
+    countToken := 0;
+
+    for I := 0 to length(Token.availableToken) - 1 do
+    begin
+
+      if token.availableToken[i].address = '' then
+        Continue;
+
+      countToken := countToken + 1;
+
+      with frmhome.SelectNewCoinBox do
+      begin
+        panel := TPanel.Create(frmhome.TokenListLayout);
+        panel.Align := panel.Align.alTop;
+        panel.Position.Y := 48 * 3 + i*48;
+        panel.Height := 48;
+        panel.Visible := true;
+        panel.tag := i;
+        panel.parent := frmhome.TokenListLayout;
+        panel.OnClick := frmhome.AddTokenFromWalletList;
+
+        coinName := TLabel.Create(Panel);
+        coinName.parent := panel;
+        coinName.Text := Token.availableToken[i].name;
+        coinName.Visible := true;
+        coinName.Width := 500;
+        coinName.Position.x := 52;
+        coinName.Position.Y := 16;
+        coinName.tag := i;
+        coinName.HitTest := false;
+        //coinName.OnClick := frmhome.addNewWalletPanelClick;
+
+        coinIMG := TImage.Create(panel);
+        coinIMG.parent := panel;
+        coinIMG.Bitmap.LoadFromStream( ResourceMenager.getAssets( Token.availableToken[i].resourceName ) );
+        coinIMG.Height := 32.0;
+        coinIMG.Width := 50;
+        coinIMG.Position.x := 4;
+        coinIMG.Position.Y := 8;
+        coinIMG.HitTest := false;
+        //coinIMG.OnClick := frmhome.addNewWalletPanelClick;
+        coinIMG.tag := i;
+
+      end;
+
+
+    end;
+
+    frmhome.TokenListLayout.Height := ( countToken + 3 ) * 48 ; // +1 label '--TOKENS--'  +1 'Add manually' +1 'Find ERC20'
+    frmhome.CoinListLayout.Height := ( length(availablecoin) + 1 ) * 48 ; // +1 label '--COINS--'
+
+
+  end;
+
+
+
+
+
+
+
+
+  frmhome.HexPrivKeyDefaultRadioButton.IsChecked := true;
+  frmhome.Layout31.Visible := false;
+  frmhome.WIFEdit.Text := '';
+  // PrivateKeySettingsLayout.Visible := false;
+  frmhome.NewCoinDescriptionEdit.Text := '';
+  frmhome.OwnXEdit.Text := '';
+  frmhome.OwnXCheckBox.IsChecked := false;
+  frmhome.IsPrivKeySwitch.IsChecked := false;
+  frmhome.IsPrivKeySwitch.Enabled := false;
+  frmhome.NewCoinDescriptionPassEdit.Text := '';
+  frmhome.NewCoinDescriptionEdit.Text := '';
+  newCoinListNextTAbItem := frmHome.AddNewCoinSettings;
+  AddCoinBackTabItem := frmhome.pageControl.ActiveTab;
+
+  switchTab( frmhome.pageControl , frmhome.AddWalletList );
+end;
 
 procedure btnAddContractClick(Sender: TObject);
 var
   t: Token;
+  i , countETH : Integer;
+  ETHADDRESS :AnsiString;
 begin
 
-  if walletAddressForNewToken = '' then
+
+  countETH := 0;
+
+  for i  := 0 to length(CurrentAccount.myCoins) - 1 do
+  begin
+
+    if CurrentAccount.myCoins[i].coin = 4 then
+    begin
+
+      countETH := countETH + 1;
+      if countETH = 1 then
+      begin
+
+        ETHAddress := CurrentAccount.myCoins[i].addr;
+
+      end;
+
+    end;
+
+  end;
+
+  if countETH = 0 then
   begin
 
     //GenerateETHAddressWithToken(sender);
@@ -119,17 +454,26 @@ begin
     frmhome.btnDSBack.OnClick := frmhome.backBtnDecryptSeed;
 
   end
-  else
+  else if countETH = 1 then
   begin
     t := Token.CreateCustom(frmHome.ContractAddress.Text,
       frmHome.TokenNameField.Text, frmHome.SymbolField.Text,
-      strtoint(frmHome.DecimalsField.Text), walletAddressForNewToken);
+      strtoint(frmHome.DecimalsField.Text), ETHADDRESS);
     t.idInWallet := length(CurrentAccount.myTokens) + 10000;
     CurrentAccount.addToken(t);
     CurrentAccount.SaveFiles();
     CreatePanel(T);
     frmhome.btnSyncClick(nil);
     switchTab(frmhome.PageControl, HOME_TABITEM);
+  end
+  else
+  begin
+
+    newTokenID := Tcomponent(Sender).Tag;
+    chooseETHWalletBackTabItem := frmhome.PageControl.ActiveTab;
+    WalletViewRelated.ShowETHWalletsForNewToken( );
+    switchTab( frmhome.pageControl , frmhome.AddNewToken );
+
   end;
 
 
@@ -320,7 +664,7 @@ begin
 
   end;
 
-  switchTab(frmhome.pageControl, frmhome.walletView);
+  switchTab(frmhome.pageControl, HOME_TABITEM);
 end;
 
 procedure SendReportIssuesButtonClick(Sender: TObject);

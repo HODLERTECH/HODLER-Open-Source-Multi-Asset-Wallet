@@ -562,6 +562,7 @@ var
 begin
   result := adr;
   adr := stringreplace(adr, 'xrb_', '', [rfReplaceAll]);
+  adr := stringreplace(adr, 'nano_', '', [rfReplaceAll]);
   chk := Copy(adr, 52 + 1, 100);
   adr := '1111' + Copy(adr, 1, 52);
   SetLength(rAdr, Length(adr));

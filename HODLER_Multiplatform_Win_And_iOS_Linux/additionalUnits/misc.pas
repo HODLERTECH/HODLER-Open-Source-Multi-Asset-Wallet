@@ -104,7 +104,7 @@ uses AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA, IdSSLOpenSSL, languages,
   ClpSecureRandom,
   ClpISecureRandom,
   ClpCryptoApiRandomGenerator,
-  ClpICryptoApiRandomGenerator, PopupWindowData,
+  ClpICryptoApiRandomGenerator, PopupWindowData, TaddressLabelData,
   AssetsMenagerData
 
 {$IFDEF ANDROID},
@@ -375,6 +375,7 @@ var
   createPasswordBackTabItem: TTabItem;
   RestoreFromFileBackTabItem: TTabItem;
   SelectGenerateCoinViewBackTabItem  : TTabItem;
+  chooseETHWalletBackTabItem : TTabItem;
   QRMask : TBitmap;
 
   newcoinID: nativeint;
@@ -2538,7 +2539,7 @@ var
   panel: TPanel;
   image: TImage;
   lbl: TLabel;
-  addrLbl: TLabel;
+  addrLbl: TAddressLabel;
   datalbl: TLabel;
   fmxObj: TfmxObject;
   i: integer;
@@ -2609,19 +2610,23 @@ begin
     (panel.TagObject as THistoryHolder).history := hist[i];
     panel.Margins.Bottom := 2;
     panel.Margins.top := 2;
-
-    addrLbl := TLabel.Create(panel);
-    addrLbl.Visible := true;
-    addrLbl.parent := panel;
-    addrLbl.Width := 400;
-    addrLbl.Height := 18;
-    addrLbl.Position.x := 36;
-    addrLbl.Position.Y := 0;
-    if Length(hist[i].addresses) = 0 then
-      addrLbl.Text := 'history damaged'
-    else
-      addrLbl.Text := hist[i].addresses[0];
-    addrLbl.TextSettings.HorzAlign := TTextAlign.Leading;
+    try
+      addrLbl := TAddressLabel.Create(panel);
+      addrLbl.Visible := true;
+      addrLbl.parent := panel;
+      addrLbl.Width := 400;
+      addrLbl.Height := 18;
+      addrLbl.Position.x := 36;
+      addrLbl.Position.Y := 0;
+      if Length(hist[i].addresses) = 0 then
+        addrLbl.Text := 'history damaged'
+      else
+        addrLbl.Text := hist[i].addresses[0];
+      addrLbl.TextSettings.HorzAlign := TTextAlign.Leading;
+    except on E: Exception do
+      ShowMessage(e.Message);
+    end;
+    
 
     datalbl := TLabel.Create(panel);
     datalbl.Visible := true;
