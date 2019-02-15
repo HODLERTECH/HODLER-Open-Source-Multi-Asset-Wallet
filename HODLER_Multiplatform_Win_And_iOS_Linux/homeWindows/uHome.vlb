@@ -88,9 +88,6 @@ Coordinates=1074,1,81,33
 [globalCurrency]
 Coordinates=656,386,89,51
 
-[wvAddress]
-Coordinates=716,558,69,51
-
 [btnDecryptSeed]
 Coordinates=493,155,93,51
 
@@ -1060,9 +1057,6 @@ Coordinates=2350,1018,53,33
 [SelectFilePath]
 Coordinates=1195,750,84,51
 
-[receiveAddress]
-Coordinates=1391,867,91,51
-
 [Layout5]
 Coordinates=2350,1191,53,33
 
@@ -1170,4 +1164,10 @@ Coordinates=1644,1136,59,33
 
 [EncrypredQRBackupLayout]
 Coordinates=1338,1136,59,33
+
+[wvAddressOld]
+Coordinates=716,558,69,51
+
+[receiveAddressOld]
+Coordinates=1391,867,91,51
 

@@ -541,9 +541,9 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             end
             inherited txHistory: TVertScrollBox
               Size.Width = 409.000000000000000000
-              Size.Height = 513.000000000000000000
+              Size.Height = 542.000000000000000000
               Viewport.Width = 409.000000000000000000
-              Viewport.Height = 513.000000000000000000
+              Viewport.Height = 542.000000000000000000
               inherited BTCNoTransactionLayout: TLayout
                 Size.Width = 409.000000000000000000
                 inherited motransactionStaticLabel: TLabel
@@ -778,7 +778,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
                 Size.Width = 409.000000000000000000
               end
             end
-            inherited wvAddress: TEdit
+            inherited wvAddressold: TEdit
               Size.Width = 409.000000000000000000
               Size.Height = 29.000000000000000000
             end
@@ -793,7 +793,6 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
               Viewport.Width = 409.000000000000000000
               Viewport.Height = 542.000000000000000000
               inherited ReceiveAmountLayout: TLayout
-                Position.Y = 174.000000000000000000
                 Size.Width = 409.000000000000000000
                 inherited ReceiveValue: TEdit
                   Size.Width = 409.000000000000000000
@@ -816,7 +815,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
                   Size.Width = 409.000000000000000000
                 end
               end
-              inherited receiveAddress: TEdit
+              inherited receiveAddressold: TEdit
                 Size.Width = 409.000000000000000000
                 Size.Height = 30.000000000000000000
                 inherited CopyTextButton: TButton
@@ -835,10 +834,10 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
               end
               inherited QRCodeRecvLayout: TLayout
                 Size.Width = 409.000000000000000000
-                Size.Height = 232.000000000000000000
+                Size.Height = 262.000000000000000000
                 inherited QRCodeImage: TImage
                   Size.Width = 409.000000000000000000
-                  Size.Height = 184.000000000000000000
+                  Size.Height = 214.000000000000000000
                 end
                 inherited QREnlargeLabel: TLabel
                   Size.Width = 409.000000000000000000

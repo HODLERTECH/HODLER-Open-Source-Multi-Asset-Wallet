@@ -27,7 +27,7 @@ uses
   FMX.Clipboard, bech32, cryptoCurrencyData, FMX.VirtualKeyBoard, JSON,
   languages, WIF, AccountData, WalletStructureData,
   System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
-  popupWindowData,
+  popupWindowData,  TCopyableAddressPanelData ,
 
   FMX.Media, FMX.Objects, CurrencyConverter, uEncryptedZipFile, System.Zip,
   TRotateImageData
@@ -132,7 +132,7 @@ type
     btnSend: TButton;
     FeeSpin: TSpinBox;
     btnAddNewWallet: TButton;
-    wvAddress: TEdit;
+    wvAddressold: TEdit;
     btnOCR: TButton;
     ReadOCR: TTabItem;
     imgCameraOCR: TImage;
@@ -299,7 +299,7 @@ type
     receiveImage: TImage;
     txHistory: TVertScrollBox;
     Layout1: TLayout;
-    receiveAddress: TEdit;
+    receiveAddressold: TEdit;
     GenerateSeedProgressBar: TProgressBar;
     NewCoinButton: TButton;
     NewTokenButton: TButton;
@@ -961,7 +961,7 @@ type
     procedure switchLegacyp2pkhButtonClick(Sender: TObject);
     procedure switchCompatiblep2shButtonClick(Sender: TObject);
     procedure SwitchSegwitp2wpkhButtonClick(Sender: TObject);
-    procedure receiveAddressChange(Sender: TObject);
+    procedure receiveAddressoldChange(Sender: TObject);
     procedure BCHLegacyButtonClick(Sender: TObject);
     procedure BCHCashAddrButtonClick(Sender: TObject);
     procedure IPKBackClick(Sender: TObject);
@@ -1130,6 +1130,7 @@ type
     refreshLocalImage: TRotateImage;
     refreshGlobalImage: TRotateImage;
     NotificationLayout: TNotificationLayout;
+    receiveAddress , wvAddress : TCopyableAddressPanel;
 
   var
     cpTimeout: int64;
@@ -2736,9 +2737,9 @@ end;
 
 procedure TfrmHome.SwitchSegwitp2wpkhButtonClick(Sender: TObject);
 begin
-  receiveAddress.Text := Bitcoin.generatep2wpkh
+  receiveAddress.setText( Bitcoin.generatep2wpkh
     (TwalletInfo(CurrentCryptoCurrency).pub,
-    availableCoin[TwalletInfo(CurrentCryptoCurrency).coin].hrp);
+    availableCoin[TwalletInfo(CurrentCryptoCurrency).coin].hrp) , 3 );
 
   receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar,
     receiveAddress.Text, ' ');
@@ -3835,7 +3836,7 @@ begin
   switchTab(PageControl, walletView);
 end;
 
-procedure TfrmHome.receiveAddressChange(Sender: TObject);
+procedure TfrmHome.receiveAddressoldChange(Sender: TObject);
 begin
   //
   QRChangeTimerTimer(nil);

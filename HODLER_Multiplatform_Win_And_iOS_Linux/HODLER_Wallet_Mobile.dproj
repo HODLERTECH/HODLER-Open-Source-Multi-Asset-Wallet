@@ -666,6 +666,8 @@
         <DCCReference Include="coinCode\ED25519_Blake2b.pas"/>
         <DCCReference Include="coinCode\Nano.pas"/>
         <DCCReference Include="components\TAddressLabelData.pas"/>
+        <DCCReference Include="components\TCopyableAddressLabelData.pas"/>
+        <DCCReference Include="components\TCopyableAddressPanelData.pas"/>
         <RcItem Include="Languages\PT.lang">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>

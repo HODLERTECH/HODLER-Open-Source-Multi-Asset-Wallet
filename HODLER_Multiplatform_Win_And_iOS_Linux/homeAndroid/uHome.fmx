@@ -248,8 +248,8 @@ object frmHome: TfrmHome
     TouchTargetExpansion.Right = 50.000000000000000000
     AutoHide = False
     ShowSizeGrip = True
-    Viewport.Width = 368.000000000000000000
-    Viewport.Height = 551.000000000000000000
+    Viewport.Width = 384.000000000000000000
+    Viewport.Height = 567.000000000000000000
     object PageControl: TTabControl
       Touch.InteractiveGestures = [LongTap]
       Align = Client
@@ -1752,11 +1752,11 @@ object frmHome: TfrmHome
               Touch.GestureManager = GestureManager1
               Align = Client
               Size.Width = 368.000000000000000000
-              Size.Height = 346.000000000000000000
+              Size.Height = 378.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 3
               Viewport.Width = 368.000000000000000000
-              Viewport.Height = 346.000000000000000000
+              Viewport.Height = 378.000000000000000000
               object LoadMore: TButton
                 Align = Top
                 Position.Y = 294.000000000000000000
@@ -3287,7 +3287,7 @@ object frmHome: TfrmHome
                 OnClick = NanoUnlockerClick
               end
             end
-            object wvAddress: TEdit
+            object wvAddressold: TEdit
               Touch.GestureManager = GestureManager1
               Touch.InteractiveGestures = [LongTap, DoubleTap]
               Align = Top
@@ -3299,6 +3299,7 @@ object frmHome: TfrmHome
               Size.Width = 368.000000000000000000
               Size.Height = 32.000000000000000000
               Size.PlatformDefault = False
+              Visible = False
             end
           end
           object WVReceive: TTabItem
@@ -3324,7 +3325,7 @@ object frmHome: TfrmHome
               Viewport.Height = 378.000000000000000000
               object ReceiveAmountLayout: TLayout
                 Align = Top
-                Position.Y = 176.000000000000000000
+                Position.Y = 144.000000000000000000
                 Size.Width = 368.000000000000000000
                 Size.Height = 88.000000000000000000
                 Size.PlatformDefault = False
@@ -3408,7 +3409,7 @@ object frmHome: TfrmHome
                   TabOrder = 2
                 end
               end
-              object receiveAddress: TEdit
+              object receiveAddressold: TEdit
                 Touch.GestureManager = GestureManager1
                 Touch.InteractiveGestures = [LongTap, DoubleTap]
                 Align = Top
@@ -3420,7 +3421,8 @@ object frmHome: TfrmHome
                 Size.Width = 368.000000000000000000
                 Size.Height = 32.000000000000000000
                 Size.PlatformDefault = False
-                OnChange = receiveAddressChange
+                Visible = False
+                OnChange = receiveAddressoldChange
                 object CopyTextButton: TButton
                   Align = Right
                   Position.X = 296.000000000000000000
@@ -3471,7 +3473,7 @@ object frmHome: TfrmHome
               object QRCodeRecvLayout: TLayout
                 Align = Client
                 Size.Width = 368.000000000000000000
-                Size.Height = 66.000000000000000000
+                Size.Height = 98.000000000000000000
                 Size.PlatformDefault = False
                 TabOrder = 3
                 object QRCodeImage: TImage
@@ -3482,7 +3484,7 @@ object frmHome: TfrmHome
                   Margins.Top = 16.000000000000000000
                   Margins.Bottom = 16.000000000000000000
                   Size.Width = 368.000000000000000000
-                  Size.Height = 18.000000000000000000
+                  Size.Height = 50.000000000000000000
                   Size.PlatformDefault = False
                   OnClick = QRCodeImageClick
                 end
@@ -3599,7 +3601,7 @@ object frmHome: TfrmHome
               Size.Height = 378.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
-              Viewport.Width = 352.000000000000000000
+              Viewport.Width = 368.000000000000000000
               Viewport.Height = 378.000000000000000000
               object btnSend: TButton
                 Align = Top
@@ -10740,7 +10742,7 @@ object frmHome: TfrmHome
           Size.Height = 503.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 6
-          Viewport.Width = 352.000000000000000000
+          Viewport.Width = 368.000000000000000000
           Viewport.Height = 503.000000000000000000
           object LocalSettingsLayout: TLayout
             Align = MostTop

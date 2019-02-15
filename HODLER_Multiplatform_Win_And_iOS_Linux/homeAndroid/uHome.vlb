@@ -86,9 +86,6 @@ Coordinates=1074,1,81,33
 [globalCurrency]
 Coordinates=656,386,89,51
 
-[wvAddress]
-Coordinates=716,558,69,51
-
 [btnDecryptSeed]
 Coordinates=493,155,93,51
 
@@ -1043,9 +1040,6 @@ Coordinates=597,1,131,51
 [Layout7]
 Coordinates=2350,1018,53,33
 
-[receiveAddress]
-Coordinates=1391,867,91,51
-
 [Layout5]
 Coordinates=2350,1191,53,33
 
@@ -1167,4 +1161,10 @@ Coordinates=1338,1136,59,33
 
 [RefreshLayout]
 Coordinates=2177,133,53,33
+
+[wvAddressold]
+Coordinates=716,558,69,51
+
+[receiveAddressold]
+Coordinates=1391,867,91,51
 

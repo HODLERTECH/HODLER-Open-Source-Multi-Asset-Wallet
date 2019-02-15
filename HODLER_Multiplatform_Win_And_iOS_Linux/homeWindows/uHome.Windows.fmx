@@ -415,9 +415,9 @@ inherited frmHome_Windows: TfrmHome_Windows
             ExplicitSize.cy = 26.000000000000000000
             inherited txHistory: TVertScrollBox
               Size.Width = 500.000000000000000000
-              Size.Height = 514.000000000000000000
+              Size.Height = 546.000000000000000000
               Viewport.Width = 500.000000000000000000
-              Viewport.Height = 514.000000000000000000
+              Viewport.Height = 546.000000000000000000
               inherited BTCNoTransactionLayout: TLayout
                 Size.Width = 500.000000000000000000
                 inherited motransactionStaticLabel: TLabel
@@ -652,7 +652,7 @@ inherited frmHome_Windows: TfrmHome_Windows
                 Size.Width = 500.000000000000000000
               end
             end
-            inherited wvAddress: TEdit
+            inherited wvAddressOld: TEdit
               Size.Width = 500.000000000000000000
             end
           end
@@ -662,7 +662,7 @@ inherited frmHome_Windows: TfrmHome_Windows
             inherited ReceiveVertScrollBox: TVertScrollBox
               Size.Width = 500.000000000000000000
               Size.Height = 546.000000000000000000
-              Viewport.Width = 500.000000000000000000
+              Viewport.Width = 484.000000000000000000
               Viewport.Height = 546.000000000000000000
               inherited ReceiveAmountLayout: TLayout
                 Size.Width = 484.000000000000000000
@@ -682,7 +682,7 @@ inherited frmHome_Windows: TfrmHome_Windows
                   Size.Width = 484.000000000000000000
                 end
               end
-              inherited receiveAddress: TEdit
+              inherited receiveAddressOld: TEdit
                 Size.Width = 484.000000000000000000
               end
               inherited AddressTypelayout: TLayout

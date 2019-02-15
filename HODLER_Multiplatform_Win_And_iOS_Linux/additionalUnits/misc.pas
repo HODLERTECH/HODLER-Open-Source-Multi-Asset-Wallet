@@ -2587,9 +2587,11 @@ begin
       exit;
     if Length(hist[i].addresses) = 0 then
       continue;
+
     panel := TPanel.Create(frmhome.TxHistory);
 
     panel.Height := 40;
+    panel.Width := frmhome.TxHistory.Width;
     panel.Visible := true;
     panel.tag := i;
     panel.TagFloat := strToFloatDef(hist[i].data, 0);
@@ -2610,25 +2612,38 @@ begin
     (panel.TagObject as THistoryHolder).history := hist[i];
     panel.Margins.Bottom := 2;
     panel.Margins.top := 2;
-    try
+
       addrLbl := TAddressLabel.Create(panel);
-      addrLbl.Visible := true;
       addrLbl.parent := panel;
-      addrLbl.Width := 400;
+      addrlbl.Align := TAlignLayout.Top;
+      addrLbl.Visible := true;
+      //addrlbl.Margins.Right := 36;
+      //addrLbl.Width := 400;
       addrLbl.Height := 18;
-      addrLbl.Position.x := 36;
-      addrLbl.Position.Y := 0;
-      if Length(hist[i].addresses) = 0 then
-        addrLbl.Text := 'history damaged'
+
+      //addrLbl.Position.x := 36;
+      //addrLbl.Position.Y := 0;
+
+      addrLbl.TextSettings.HorzAlign := TTextAlign.Leading;
+      if wallet is TWalletInfo then
+      begin
+        if TWalletInfo(wallet).coin = 8 then
+          addrLbl.SetText(  hist[i].addresses[0] , 4  )
+        else if TWalletInfo(wallet).coin = 4 then
+          addrLbl.SetText(  hist[i].addresses[0] , 2  )
+        else if TWalletInfo(wallet).coin = 3 then
+          addrLbl.SetText(  hist[i].addresses[0] , 12  )
+        else
+          addrLbl.Text := hist[i].addresses[0];
+      end
       else
         addrLbl.Text := hist[i].addresses[0];
-      addrLbl.TextSettings.HorzAlign := TTextAlign.Leading;
-    except on E: Exception do
-      ShowMessage(e.Message);
-    end;
+
+
     
 
     datalbl := TLabel.Create(panel);
+    //datalbl.Align := TAlignLayout.Bottom;
     datalbl.Visible := true;
     datalbl.parent := panel;
     datalbl.Width := 400;
@@ -2640,11 +2655,16 @@ begin
       UnixToDateTime(strToIntdef(hist[i].data, 0)));
     datalbl.TextSettings.HorzAlign := TTextAlign.Leading;
     datalbl.Visible := TWalletInfo(wallet).coin <> 8;
+
+
     image := TImage.Create(panel);
+    image.Align := TAlignLayout.MostLeft;
+    image.Margins.Left := 9;
+    image.Margins.Right := 9;
     image.Width := 18;
-    image.Height := 18;
-    image.Position.x := 9;
-    image.Position.Y := 9;
+    //image.Height := 18;
+    //image.Position.x := 9;
+    //image.Position.Y := 9;
     image.Visible := true;
     image.parent := panel;
 
@@ -2654,6 +2674,7 @@ begin
       image.Bitmap := frmhome.receiveImage.Bitmap;
     if hist[i].typ = 'INTERNAL' then
       image.Bitmap := frmhome.internalImage.Bitmap;
+
     lbl := TLabel.Create(panel);
     lbl.Align := TAlignLayout.Bottom;
     lbl.Height := 18;

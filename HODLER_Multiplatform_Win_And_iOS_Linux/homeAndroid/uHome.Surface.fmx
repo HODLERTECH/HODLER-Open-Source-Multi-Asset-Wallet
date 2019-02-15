@@ -446,9 +446,9 @@ inherited frmHome_Surface: TfrmHome_Surface
             end
             inherited txHistory: TVertScrollBox
               Size.Width = 1064.000000000000000000
-              Size.Height = 1699.000000000000000000
+              Size.Height = 1731.000000000000000000
               Viewport.Width = 1064.000000000000000000
-              Viewport.Height = 1699.000000000000000000
+              Viewport.Height = 1731.000000000000000000
               inherited BTCNoTransactionLayout: TLayout
                 Size.Width = 1064.000000000000000000
                 inherited motransactionStaticLabel: TLabel
@@ -683,7 +683,7 @@ inherited frmHome_Surface: TfrmHome_Surface
                 Size.Width = 1064.000000000000000000
               end
             end
-            inherited wvAddress: TEdit
+            inherited wvAddressold: TEdit
               Size.Width = 1064.000000000000000000
             end
           end
@@ -713,7 +713,7 @@ inherited frmHome_Surface: TfrmHome_Surface
                   Size.Width = 1064.000000000000000000
                 end
               end
-              inherited receiveAddress: TEdit
+              inherited receiveAddressold: TEdit
                 Size.Width = 1064.000000000000000000
                 inherited CopyTextButton: TButton
                   Position.X = 992.000000000000000000
@@ -730,10 +730,10 @@ inherited frmHome_Surface: TfrmHome_Surface
               end
               inherited QRCodeRecvLayout: TLayout
                 Size.Width = 1064.000000000000000000
-                Size.Height = 1419.000000000000000000
+                Size.Height = 1451.000000000000000000
                 inherited QRCodeImage: TImage
                   Size.Width = 1064.000000000000000000
-                  Size.Height = 1371.000000000000000000
+                  Size.Height = 1403.000000000000000000
                 end
                 inherited QREnlargeLabel: TLabel
                   Size.Width = 1064.000000000000000000

@@ -140,7 +140,9 @@ uses
   NotificationLayoutData in 'components\NotificationLayoutData.pas',
   ED25519_Blake2b in 'coinCode\ED25519_Blake2b.pas',
   Nano in 'coinCode\Nano.pas',
-  TAddressLabelData in 'components\TAddressLabelData.pas';
+  TAddressLabelData in 'components\TAddressLabelData.pas',
+  TCopyableAddressLabelData in 'components\TCopyableAddressLabelData.pas',
+  TCopyableAddressPanelData in 'components\TCopyableAddressPanelData.pas';
 
 {$R *.res}
 

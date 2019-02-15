@@ -481,9 +481,9 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             end
             inherited txHistory: TVertScrollBox
               Size.Width = 245.000000000000000000
-              Size.Height = 165.000000000000000000
+              Size.Height = 197.000000000000000000
               Viewport.Width = 245.000000000000000000
-              Viewport.Height = 165.000000000000000000
+              Viewport.Height = 197.000000000000000000
               inherited BTCNoTransactionLayout: TLayout
                 Size.Width = 240.000000000000000000
                 inherited motransactionStaticLabel: TLabel
@@ -718,7 +718,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
                 Size.Width = 240.000000000000000000
               end
             end
-            inherited wvAddress: TEdit
+            inherited wvAddressold: TEdit
               Size.Width = 245.000000000000000000
             end
           end
@@ -748,7 +748,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
                   Size.Width = 240.000000000000000000
                 end
               end
-              inherited receiveAddress: TEdit
+              inherited receiveAddressold: TEdit
                 Size.Width = 240.000000000000000000
                 inherited CopyTextButton: TButton
                   Position.X = 168.000000000000000000

@@ -439,9 +439,9 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             ExplicitSize.cy = 26.000000000000000000
             inherited txHistory: TVertScrollBox
               Size.Width = 200.000000000000000000
-              Size.Height = 43.000000000000000000
+              Size.Height = 75.000000000000000000
               Viewport.Width = 200.000000000000000000
-              Viewport.Height = 43.000000000000000000
+              Viewport.Height = 75.000000000000000000
               inherited BTCNoTransactionLayout: TLayout
                 inherited Layout26: TLayout
                   inherited Image10: TImage
@@ -666,7 +666,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
                 Position.Y = 202.000000000000000000
               end
             end
-            inherited wvAddress: TEdit
+            inherited wvAddressOld: TEdit
               Size.Width = 200.000000000000000000
             end
           end

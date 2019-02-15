@@ -13,7 +13,7 @@ uses
   FMX.Platform, System.Threading, Math, DelphiZXingQRCode,
   FMX.TabControl, FMX.Edit,
   FMX.Clipboard, FMX.VirtualKeyBoard, JSON, popupwindowData,
-  languages, WalletStructureData,
+  languages, WalletStructureData,  TCopyableAddressPanelData,
 
   FMX.Media, FMX.Objects, uEncryptedZipFile, System.Zip
 {$IFDEF ANDROID},
@@ -2275,12 +2275,19 @@ begin
     lblCoinShort.Text := CurrentCryptoCurrency.shortcut + '';
     lblReceiveCoinShort.Text := CurrentCryptoCurrency.shortcut + '';
     QRChangeTimerTimer(nil);
-{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
-    receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar,
-      CurrentCryptoCurrency.addr);
-{$ELSE}
-    receiveAddress.Text := CurrentCryptoCurrency.addr;
-{$ENDIF}
+
+    if CurrentCryptoCurrency is TwalletInfo then
+
+      if TWalletInfo(CurrentCryptoCurrency).coin = 8 then
+         receiveAddress.SetText(  CurrentCryptoCurrency.addr , 4  )
+        else if TWalletInfo(CurrentCryptoCurrency).coin = 4 then
+          receiveAddress.SetText(  CurrentCryptoCurrency.addr , 2  )
+        else
+       receiveAddress.Text := CurrentCryptoCurrency.addr
+
+    else
+      receiveAddress.Text := CurrentCryptoCurrency.addr;
+
     WVsendTO.Text := '';
     SendAllFundsSwitch.IsChecked := false;
     FeeFromAmountSwitch.IsChecked := false;
@@ -2476,6 +2483,16 @@ begin
         (CurrentCryptoCurrency.addr, false)
     else
       frmhome.wvAddress.Text := CurrentCryptoCurrency.addr;
+
+    if CurrentCryptoCurrency is TwalletInfo then
+
+      if TWalletInfo(CurrentCryptoCurrency).coin = 8 then
+         frmhome.wvAddress.SetText(  CurrentCryptoCurrency.addr , 4  )
+        else if TWalletInfo(CurrentCryptoCurrency).coin = 4 then
+          frmhome.wvAddress.SetText(  CurrentCryptoCurrency.addr , 2  );
+
+
+
 
     if (not(TWalletInfo(CurrentCryptoCurrency).coin in [4, 8])) and
       (not isTokenTransfer) then
@@ -3106,7 +3123,7 @@ var
   fmxObject: TfmxObject;
   i: Integer;
   Panel: TPanel;
-  addrlbl: TCopyableEdit;
+  addrlbl: TCopyableAddressPanel;
   valuelbl: TLabel;
   leftLayout: TLayout;
   rightLayout: TLayout;
@@ -3199,15 +3216,15 @@ begin
       valuelbl.TagString := th.addresses[i];
       valuelbl.HitTest := True;
 
-      addrlbl := TCopyableEdit.Create(Panel);
-      addrlbl.ReadOnly := True;
+      addrlbl := TCopyableAddressPanel.Create(Panel);
+      //addrlbl.ReadOnly := True;
       // addrlbl.StyleLookup := 'transparentedit';
       addrlbl.Height := 21;
       addrlbl.Align := TAlignLayout.Top;
       addrlbl.Visible := True;
       addrlbl.Parent := Panel;
       addrlbl.Text := th.addresses[i];
-      addrlbl.TextSettings.HorzAlign := TTextAlign.Leading;
+      addrlbl.addrlbl.TextSettings.HorzAlign := TTextAlign.Leading;
       addrlbl.TagString := th.addresses[i];
       addrlbl.HitTest := True;
       // addrlbl.TagString := 'copyable';

@@ -409,9 +409,9 @@ inherited frmHome_Surface: TfrmHome_Surface
             ExplicitSize.cy = 26.000000000000000000
             inherited txHistory: TVertScrollBox
               Size.Width = 759.000000000000000000
-              Size.Height = 1763.000000000000000000
+              Size.Height = 1795.000000000000000000
               Viewport.Width = 759.000000000000000000
-              Viewport.Height = 1763.000000000000000000
+              Viewport.Height = 1795.000000000000000000
               inherited BTCNoTransactionLayout: TLayout
                 Size.Width = 759.000000000000000000
                 inherited motransactionStaticLabel: TLabel
@@ -646,7 +646,7 @@ inherited frmHome_Surface: TfrmHome_Surface
                 Size.Width = 759.000000000000000000
               end
             end
-            inherited wvAddress: TEdit
+            inherited wvAddressOld: TEdit
               Size.Width = 759.000000000000000000
             end
           end
@@ -676,7 +676,7 @@ inherited frmHome_Surface: TfrmHome_Surface
                   Size.Width = 759.000000000000000000
                 end
               end
-              inherited receiveAddress: TEdit
+              inherited receiveAddressOld: TEdit
                 Size.Width = 759.000000000000000000
               end
               inherited AddressTypelayout: TLayout

@@ -9,8 +9,8 @@ inherited frmHome_Windows: TfrmHome_Windows
   inherited ScrollBox: TVertScrollBox
     Size.Width = 640.000000000000000000
     Size.Height = 480.000000000000000000
-    Viewport.Width = 640.000000000000000000
-    Viewport.Height = 480.000000000000000000
+    Viewport.Width = 624.000000000000000000
+    Viewport.Height = 464.000000000000000000
     inherited PageControl: TTabControl
       Size.Width = 624.000000000000000000
       Size.Height = 464.000000000000000000
@@ -452,9 +452,9 @@ inherited frmHome_Windows: TfrmHome_Windows
             end
             inherited txHistory: TVertScrollBox
               Size.Width = 624.000000000000000000
-              Size.Height = 259.000000000000000000
+              Size.Height = 291.000000000000000000
               Viewport.Width = 624.000000000000000000
-              Viewport.Height = 259.000000000000000000
+              Viewport.Height = 291.000000000000000000
               inherited BTCNoTransactionLayout: TLayout
                 Size.Width = 624.000000000000000000
                 inherited motransactionStaticLabel: TLabel
@@ -689,7 +689,7 @@ inherited frmHome_Windows: TfrmHome_Windows
                 Size.Width = 624.000000000000000000
               end
             end
-            inherited wvAddress: TEdit
+            inherited wvAddressold: TEdit
               Size.Width = 624.000000000000000000
             end
           end
@@ -719,7 +719,7 @@ inherited frmHome_Windows: TfrmHome_Windows
                   Size.Width = 624.000000000000000000
                 end
               end
-              inherited receiveAddress: TEdit
+              inherited receiveAddressold: TEdit
                 Size.Width = 624.000000000000000000
                 inherited CopyTextButton: TButton
                   Position.X = 552.000000000000000000
@@ -736,7 +736,7 @@ inherited frmHome_Windows: TfrmHome_Windows
               end
               inherited QRCodeRecvLayout: TLayout
                 Size.Width = 624.000000000000000000
-                Size.Height = 0.000000000000000000
+                Size.Height = 11.000000000000000000
                 inherited QRCodeImage: TImage
                   Size.Width = 624.000000000000000000
                   Size.Height = 0.000000000000000000

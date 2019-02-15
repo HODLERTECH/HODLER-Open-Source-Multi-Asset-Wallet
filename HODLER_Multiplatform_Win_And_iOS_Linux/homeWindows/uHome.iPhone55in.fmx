@@ -477,14 +477,14 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             93s
             591s)
           inherited WVBalance: TTabItem
-            Size.Width = 39.000000000000000000
+            Size.Width = 23.000000000000000000
             ExplicitSize.cx = 61.000000000000000000
             ExplicitSize.cy = 26.000000000000000000
             inherited txHistory: TVertScrollBox
               Size.Width = 93.000000000000000000
-              Size.Height = 562.000000000000000000
+              Size.Height = 591.000000000000000000
               Viewport.Width = 93.000000000000000000
-              Viewport.Height = 562.000000000000000000
+              Viewport.Height = 591.000000000000000000
               inherited BTCNoTransactionLayout: TLayout
                 Size.Width = 93.000000000000000000
                 inherited motransactionStaticLabel: TLabel
@@ -719,13 +719,13 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
                 Size.Width = 93.000000000000000000
               end
             end
-            inherited wvAddress: TEdit
+            inherited wvAddressOld: TEdit
               Size.Width = 93.000000000000000000
               Size.Height = 29.000000000000000000
             end
           end
           inherited WVReceive: TTabItem
-            Size.Width = 41.000000000000000000
+            Size.Width = 23.000000000000000000
             ExplicitSize.cx = 60.000000000000000000
             ExplicitSize.cy = 26.000000000000000000
             inherited ReceiveVertScrollBox: TVertScrollBox
@@ -734,59 +734,57 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
               Viewport.Width = 93.000000000000000000
               Viewport.Height = 591.000000000000000000
               inherited ReceiveAmountLayout: TLayout
-                Position.Y = 174.000000000000000000
-                Size.Width = 88.000000000000000000
+                Size.Width = 93.000000000000000000
                 inherited ReceiveValue: TEdit
-                  Size.Width = 88.000000000000000000
+                  Size.Width = 93.000000000000000000
                   Size.Height = 30.000000000000000000
                   inherited lblReceiveCoinShort: TLabel
-                    Position.X = -74.000000000000000000
+                    Position.X = -69.000000000000000000
                     Size.Height = 30.000000000000000000
                   end
                 end
                 inherited ReceiveAmountRealCurrency: TEdit
                   Position.Y = 58.000000000000000000
-                  Size.Width = 88.000000000000000000
+                  Size.Width = 93.000000000000000000
                   Size.Height = 30.000000000000000000
                   inherited lblReceiveRealCurrency: TLabel
-                    Position.X = -98.000000000000000000
+                    Position.X = -93.000000000000000000
                     Size.Height = 30.000000000000000000
                   end
                 end
                 inherited lblReceiveAmount: TLabel
-                  Size.Width = 88.000000000000000000
+                  Size.Width = 93.000000000000000000
                 end
               end
-              inherited receiveAddress: TEdit
+              inherited receiveAddressOld: TEdit
                 Size.Width = 88.000000000000000000
                 Size.Height = 30.000000000000000000
               end
               inherited AddressTypelayout: TLayout
-                Size.Width = 88.000000000000000000
+                Size.Width = 93.000000000000000000
                 inherited switchCompatiblep2shButton: TButton
                   Size.Width = 0.000000000000000000
                 end
                 inherited SwitchSegwitp2wpkhButton: TButton
-                  Position.X = -40.000000000000000000
+                  Position.X = -35.000000000000000000
                 end
               end
               inherited Layout33: TLayout
-                Position.Y = 262.000000000000000000
-                Size.Width = 88.000000000000000000
+                Size.Width = 93.000000000000000000
                 inherited Layout32: TLayout
-                  Size.Width = 88.000000000000000000
+                  Size.Width = 93.000000000000000000
                 end
                 inherited ArtificialSpace: TLayout
-                  Size.Width = 88.000000000000000000
+                  Size.Width = 93.000000000000000000
                 end
                 inherited QRCodeImage: TImage
-                  Size.Width = 88.000000000000000000
+                  Size.Width = 93.000000000000000000
                 end
               end
               inherited BCHAddressesLayout: TLayout
-                Size.Width = 88.000000000000000000
+                Size.Width = 93.000000000000000000
                 inherited BCHLegacyButton: TButton
-                  Position.X = -104.000000000000000000
+                  Position.X = -99.000000000000000000
                 end
                 inherited BCHCashAddrButton: TButton
                   Size.Width = 0.000000000000000000
@@ -794,13 +792,13 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
               end
               inherited Yaddresses: TLayout
                 Position.Y = 543.000000000000000000
-                Size.Width = 88.000000000000000000
+                Size.Width = 93.000000000000000000
                 inherited changeYbutton: TButton
-                  Position.X = -80.000000000000000000
+                  Position.X = -75.000000000000000000
                 end
               end
               inherited RavencoinAddrTypeLayout: TLayout
-                Size.Width = 88.000000000000000000
+                Size.Width = 93.000000000000000000
                 inherited SegwitRavenAddrButton: TButton
                   Size.Width = 0.000000000000000000
                 end
@@ -808,7 +806,7 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             end
           end
           inherited WVSend: TTabItem
-            Size.Width = 30.000000000000000000
+            Size.Width = 23.000000000000000000
             ExplicitSize.cx = 95.000000000000000000
             ExplicitSize.cy = 49.000000000000000000
             inherited SendVertScrollBox: TVertScrollBox
@@ -839,10 +837,25 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
                   end
                 end
               end
+              inherited TransactionFeeLayout: TLayout
+                inherited AutomaticFeeLayout: TLayout
+                  inherited FeeSpin: TSpinBox
+                    Position.Y = 1.000000000000000000
+                    Size.Height = 30.000000000000000000
+                  end
+                end
+              end
+              inherited SendToLayout: TLayout
+                inherited AddressQRLayout: TLayout
+                  inherited WVsendTO: TEdit
+                    Size.Height = 30.000000000000000000
+                  end
+                end
+              end
             end
           end
           inherited WVSettings: TTabItem
-            Size.Width = 43.000000000000000000
+            Size.Width = 24.000000000000000000
             ExplicitSize.cx = 63.000000000000000000
             ExplicitSize.cy = 26.000000000000000000
             inherited btnExportPrivKey: TButton
