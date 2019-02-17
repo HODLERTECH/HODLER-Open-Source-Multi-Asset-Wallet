@@ -2466,7 +2466,7 @@ procedure TfrmHome.UnlockNanoImageClick(Sender: TObject);
 var
   nano : NanoCoin;
 begin
-ShowMessage('aaaa');
+
     if currentCryptocurrency is NanoCoin then
     begin
      if NanoCoin(currentCryptocurrency).isUnlocked then exit;

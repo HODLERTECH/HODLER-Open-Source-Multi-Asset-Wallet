@@ -3566,6 +3566,7 @@ begin
 {$IF NOT DEFINED(LINUX)}
   MotionSensor := TMotionSensor.Create(frmHome);
   OrientationSensor := TOrientationSensor.Create(frmHome);
+
 {$ENDIF}
   AccountRelated.InitializeHodler;
   BackupInfoLabel.Position.Y := 100000;

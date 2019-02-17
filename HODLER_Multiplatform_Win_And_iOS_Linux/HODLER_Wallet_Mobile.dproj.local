@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<ActiveMobileDevice>
-		<NoProfile iOSSimulator="iPhone5" Android="5200ee705b6ac4f9"/>
+		<NoProfile iOSSimulator="iPhone5" Android=""/>
 		<PMacOSSierra iOSSimulator="_iossimulatornotsupported_2B2D1066-6FED-43BB-BAA8-8C7A233C4685" iOSDevice32="_iosdevice_808c41194537326c328275d3c4fa3fd0aa9c8a87" iOSDevice64=""/>
 		<PVMwareSierra iOSDevice32="_iosdevice_808c41194537326c328275d3c4fa3fd0aa9c8a87"/>
 		<Pstarasierra11 iOSDevice64="" iOSSimulator="iPhone5" iOSDevice32=""/>
