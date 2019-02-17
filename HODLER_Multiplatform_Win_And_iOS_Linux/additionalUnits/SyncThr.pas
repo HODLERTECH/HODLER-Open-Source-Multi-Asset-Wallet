@@ -7,7 +7,7 @@ uses
   StrUtils, WalletStructureData, CryptoCurrencyData, tokenData, System.SyncObjs,
 
 
-  JSON, System.TimeSpan, System.Diagnostics, Nano;
+  JSON, System.TimeSpan, System.Diagnostics, Nano{$IFDEF MSWINDOWS},Winapi.ShellAPI,Winapi.Windows{$ENDIF};
 
 type
   SynchronizeBalanceThread = class(TThread)
@@ -168,6 +168,11 @@ var
   pendings: TJsonArray;
   temp : TpendingNanoBlock;
 begin
+ {$IFDEF MSWINDOWS}
+  if TOSVersion.Architecture=arIntelX64 then
+  ShellExecute(0,'open','NanoPoW64.exe','',PWideChar(ExtractFileDir(ParamStr(0))),SW_HIDE) else
+  ShellExecute(0,'open','NanoPoW32.exe','',PWideChar(ExtractFileDir(ParamStr(0))),SW_HIDE);
+ {$ENDIF}
   try
 
     js := TJSONObject.ParseJSONValue(data) as TJSONObject;
@@ -177,9 +182,10 @@ begin
     //{history := }js.TryGetValue<TJSONArray>('history' , history) {as TJSONArray};
     //{pendings :=} js.tryGetValue<TJsonArray>('pending' , pendings) {as TJsonArray};
 
-
-    if (Length(NanoCoin(cc).PendingBlocks.ToArray)=0) and (Length(NanoCoin(cc).PendingSendBlocks)=0) then
+    if (Length(NanoCoin(cc).pendingChain)>0) then
+    NanoCoin(cc).lastBlockAmount:=BigInteger.Parse(NanoCoin(cc).curBlock.balance) else
     NanoCoin(cc).lastBlockAmount:=cc.confirmed;
+    cc.confirmed:=NanoCoin(cc).lastBlockAmount;
 
 	
     if js.TryGetValue<TJSONArray>('history' , history)  then
@@ -224,9 +230,14 @@ begin
 
           temp.Block := nano_buildFromJSON(pendings.Items[(i * 2)].GetValue < TjsonObject > ('data').GetValue('contents').Value, '');
           temp.Hash := pendings.Items[(i * 2) + 1].GetValue < Ansistring > ('hash');
+          if NanoCoin(cc).BlockByLink(temp.Hash).account<>'' then
+          begin
+           cc.unconfirmed:=cc.unconfirmed-temp.Block.blockAmount;
+          end else begin
+
           if not firstSync then
           NanoCoin(cc).tryAddPendingBlock(temp);
-
+          end;
         end;
       end;
   except

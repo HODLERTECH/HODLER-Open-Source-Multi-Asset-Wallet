@@ -4,7 +4,10 @@ unit Nano;
 interface
 
 uses
-  {$IFDEF ANDROID} Androidapi.JNI,AESObj,{$ENDIF} SPECKObj, FMX.Objects, IdHash, IdHashSHA, IdSSLOpenSSL, languages,
+ 
+  {$IFDEF  ANDROID}}Androidapi.JNI,{$ENDIF} AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA,
+  IdSSLOpenSSL, languages,
+ 
   System.Hash, MiscOBJ, SysUtils, System.IOUtils, HashObj, System.Types,
   System.UITypes,
   System.DateUtils, System.Generics.Collections, System.Classes,
@@ -20,7 +23,8 @@ uses
   System.Net.HttpClientComponent,
   System.Net.HttpClient, keccak_n, tokenData, bech32, cryptoCurrencyData,
   WalletStructureData, AccountData, ClpCryptoLibTypes, ClpSecureRandom,
-  ClpISecureRandom, ClpCryptoApiRandomGenerator, ClpICryptoApiRandomGenerator,
+  ClpISecureRandom,  ClpCryptoApiRandomGenerator,
+  ClpICryptoApiRandomGenerator,
   AssetsMenagerData, HlpBlake2BConfig, HlpBlake2B, HlpHashFactory,
   ClpDigestUtilities, HlpIHash, misc, ClpIX9ECParameters,
   ClpIECDomainParameters,
@@ -48,7 +52,7 @@ const
     '0000000000000000000000000000000000000000000000000000000000000006';
   STATE_BLOCK_ZERO =
     '0000000000000000000000000000000000000000000000000000000000000000';
-
+var hashcounter:cardinal; //100k tries
 type
   TNanoBlock = record
     blockType: AnsiString;
@@ -81,11 +85,11 @@ type
     Hash: AnsiString;
 
   end;
-
+type TNanoBlockChain= array of TNanoBlock;
 type
   NanoCoin = class(TwalletInfo)
-    chain: array of TNanoBlock;
-    pendingSendBlocks: array of TNanoBlock;
+    pendingChain: TNanoBlockChain;
+
     PendingBlocks: TQueue<TpendingNanoBlock>;
     PendingThread: TThread;
     mutexMining: TSemaphore;
@@ -93,22 +97,27 @@ type
     UnlockPriv: AnsiString;
     isUnlocked: Boolean;
     sessionKey: AnsiString;
+    chaindir:string;
   private
 
-    function getPreviousHash: AnsiString;
-    procedure removePendingBlock(prev: AnsiString);
-    procedure addToChain(block: TNanoBlock);
-    function inChain(hash: AnsiString): Boolean;
+
+
+  public
+  procedure removeBlock(Hash: string);
+      function getPreviousHash: AnsiString;
+    procedure addToChain(Block: TNanoBlock);
+    function inChain(Hash: AnsiString): Boolean;
     function isFork(prev: AnsiString): Boolean;
     function findUnusedPrevious: AnsiString;
-    function BlockByPrev(prev: ansistring): TNanoBlock;
-    function BlockByHash(hash: ansistring): TNanoBlock;
-    function nextBlock(block:TNanoBlock):TNanoBlock;
-    function prevBlock(block: TNanoBlock): TNanoBlock;
-  public
+    function BlockByPrev(prev: AnsiString): TNanoBlock;
+    function BlockByHash(Hash: AnsiString): TNanoBlock;
+    function BlockByLink(Hash: AnsiString): TNanoBlock;
+    function nextBlock(Block: TNanoBlock): TNanoBlock;
+    function prevBlock(Block: TNanoBlock): TNanoBlock;
+    procedure loadChain;
+    function firstBlock: TNanoBlock;
+    function curBlock: TNanoBlock;
     procedure mineAllPendings(MasterSeed: AnsiString = '');
-    procedure loadSendBlocks;
-    procedure saveSendBlocks;
     procedure unlock(MasterSeed: AnsiString);
     function getPrivFromSession(): AnsiString;
 
@@ -120,19 +129,20 @@ type
 
     constructor Create(id: integer; _x: integer; _y: integer; _addr: AnsiString;
       _description: AnsiString; crTime: integer = -1); overload;
-
-
+ 
+    constructor Create();overload;
+ 
     destructor destroy();
     // ConfirmThread : TAutoReceive;
 
     // procedure runAutoConfirm();
 
   end;
-
+procedure saveBlockToJSON(Block: TNanoBlock);
 function nano_pow(Hash: AnsiString): AnsiString;
-
+ function nano_getWork(var Block: TNanoBlock): AnsiString;
 procedure removePow(Hash: AnsiString);
-
+ function nano_builtToJSON(Block: TNanoBlock): string;
 procedure setPrecalculated(Hash, work: AnsiString);
 
 function findPrecalculated(Hash: AnsiString): AnsiString;
@@ -155,10 +165,10 @@ function nano_obtainBlock(Hash: AnsiString): AnsiString;
 
 
 function nano_addPendingReceiveBlock(sourceBlockHash: AnsiString;
-  cc: cryptoCurrency; from: AnsiString; ms: AnsiString; amount: BigInteger)
+  cc: cryptoCurrency; from: AnsiString; ms: AnsiString; amount: BigInteger; doWork: Boolean = True)
   : TNanoBlock; overload;
 function nano_addPendingReceiveBlock(sourceBlockHash: AnsiString; cc: NanoCoin;
-  from: AnsiString; amount: BigInteger): TNanoBlock; overload;
+from: AnsiString; amount: BigInteger; doWork: Boolean = True): TNanoBlock;overload;
 
 function nano_buildFromJSON(JSON, prev: AnsiString; hexBalance: Boolean = false)
   : TNanoBlock;
@@ -180,37 +190,35 @@ function nano_pushBlock(b: AnsiString): AnsiString;
 procedure nano_signBlock(var Block: TNanoBlock; cc: NanoCoin); overload;
 procedure nano_signBlock(var Block: TNanoBlock; cc: cryptoCurrency;
   ms: AnsiString); overload;
-
-{$IFDEF ANDROID}
+  
+  procedure nano_mineBuilt(cc:NanoCoin);
+function nano_loadChain(dir:string;limitTo:string=''):TNanoBlockchain;
+  {$IFDEF  ANDROID}
 function AcquireWakeLock: Boolean;
 procedure ReleaseWakeLock;
 {$ENDIF}
-
-{$IFDEF ANDROID}
-
-
-
-{$ENDIF}
-
-
+  
+  
 implementation
 
 uses
   ED25519_Blake2b, uHome, PopupWindowData, keypoolrelated, walletviewrelated
-{$IFDEF ANDROID},
-  FMX.Helpers.Android
-{$ENDIF};
+ 
+  {$IFDEF  ANDROID},FMX.Helpers.Android{$ENDIF};
 
 /// ///////////////////////////////////////////////////////////////////
-{$IFDEF ANDROID}
+{$IFDEF  ANDROID}
+ 
 function GetPowerManager: JPowerManager;
 var
   PowerServiceNative: JObject;
 begin
-  PowerServiceNative := TAndroidHelper.Context.getSystemService(TJContext.JavaClass.POWER_SERVICE);
+  PowerServiceNative := TAndroidHelper.Context.getSystemService
+    (TJContext.JavaClass.POWER_SERVICE);
   if not Assigned(PowerServiceNative) then
     raise Exception.Create('Could not locate Power Service');
-  Result := TJPowerManager.Wrap((PowerServiceNative as ILocalObject).GetObjectID);
+  Result := TJPowerManager.Wrap((PowerServiceNative as ILocalObject)
+    .GetObjectID);
   if not Assigned(Result) then
     raise Exception.Create('Could not access Power Manager');
 end;
@@ -228,7 +236,8 @@ begin
   if not Result then
   begin
     PowerManager := GetPowerManager;
-    WakeLock := PowerManager.newWakeLock(TJPowerManager.JavaClass.SCREEN_BRIGHT_WAKE_LOCK,
+    WakeLock := PowerManager.newWakeLock
+      (TJPowerManager.JavaClass.SCREEN_BRIGHT_WAKE_LOCK,
       StringToJString('NANOMinerHodler'));
     Result := Assigned(WakeLock);
   end;
@@ -251,95 +260,21 @@ begin
   end;
 end;
 {$ENDIF}
-
-
-constructor NanoCoin.Create(id: integer; _x: integer; _y: integer;
-  _addr: AnsiString; _description: AnsiString; crTime: integer = -1);
+ 
+function nano_builtFromJSON(JSON: TJSONValue): TNanoBlock;
 begin
+  Result.blockType := JSON.GetValue<string>('type');
+  Result.previous := JSON.GetValue<string>('previous');
+  Result.account := JSON.GetValue<string>('account');
+  Result.representative := JSON.GetValue<string>('representative');
+  Result.balance := JSON.GetValue<string>('balance');
+  Result.destination := JSON.GetValue<string>('link');
+  Result.work := JSON.GetValue<string>('work');
+  Result.signature := JSON.GetValue<string>('signature');
+end;
+ 
 
-  inherited Create(id, _x, _y, _addr, _description, crTime);
-
-  PendingBlocks := TQueue<TpendingNanoBlock>.Create();
-  mutexMining := TSemaphore.Create();
-  isUnlocked := false;
-  loadSendBlocks;
-
-end;
-
-destructor NanoCoin.destroy;
-begin
-
-  inherited;
-  wipeAnsiString(UnlockPriv);
-
-  PendingBlocks.Free;
-  mutexMining.Free;
-
-end;
-function NanoCoin.inChain(hash:AnsiString):Boolean;
-var i:integer;
-begin
-result:=False;
-for i := 0 to Length(chain)-1 do
-if Self.chain[i].Hash=hash then Exit(True);
-
-end;
-function NanoCoin.isFork(prev:AnsiString):Boolean;
-var i:integer;
-begin
-result:=False;
-for i := 0 to Length(chain)-1 do
-if chain[i].previous=prev then Exit(True);
-
-end;
-procedure NanoCoin.addToChain(block:TNanoBlock);
-begin
-if (not inChain(block.hash)) and (not isFork(block.previous)) then begin
-SetLength(chain,Length(chain)+1);
-chain[high(chain)]:=block;
-end;
-end;
-function NanoCoin.findUnusedPrevious:AnsiString;
-var i:integer;
-begin
-result:='0000000000000000000000000000000000000000000000000000000000000000';
-for i := 0 to Length(chain)-1 do
-if not isFork(chain[i].hash) then Exit(chain[i].hash);
-end;
-function NanoCoin.BlockByPrev(prev:ansistring):TNanoBlock;
-var i:integer;
-begin
-for i := 0 to Length(chain)-1 do
-if chain[i].previous=prev then Exit(chain[i]);
-end;
-function NanoCoin.BlockByHash(hash:ansistring):TNanoBlock;
-var i:integer;
-begin
-for i := 0 to Length(chain)-1 do
-if chain[i].hash=hash then Exit(chain[i]);
-end;
-function NanoCoin.nextBlock(block:TNanoBlock):TNanoBlock;
-begin
-result:=BlockByPrev(block.Hash);
-end;
-function NanoCoin.prevBlock(block:TNanoBlock):TNanoBlock;
-begin
- result:=blockByHash(block.previous);
-end;
-
-function nano_sendFromJSON(JSON: TJSONValue): TNanoBlock;
-begin
-  result.blockType := JSON.GetValue<string>('type');
-  result.previous := JSON.GetValue<string>('previous');
-  result.account := JSON.GetValue<string>('account');
-  result.representative := JSON.GetValue<string>('representative');
-  result.balance := JSON.GetValue<string>('balance');
-  result.destination := JSON.GetValue<string>('link');
-  result.work := '';
-  result.signature := JSON.GetValue<string>('signature');
-end;
-
-function nano_sendToJSON(Block: TNanoBlock): string;
+function nano_builtToJSON(Block: TNanoBlock): string;
 var
   obj: TJSONObject;
 begin
@@ -354,50 +289,196 @@ begin
   obj.AddPair(TJSONPair.Create('link', Block.destination));
   obj.AddPair(TJSONPair.Create('work', Block.work));
   obj.AddPair(TJSONPair.Create('signature', Block.signature));
-  result := obj.tojson;
+  Result := obj.tojson;
   obj.Free;
 end;
 
-procedure NanoCoin.saveSendBlocks;
-var
-  js: TJSONArray;
-  Block: TNanoBlock;
-  ts: TStringList;
+
+function nano_loadChain(dir:string;limitTo:string=''):TNanoBlockchain;
+ var
+    path : string;
+    ts:TStringList;
+    block:TNanoBlock;
 begin
-Exit;
-  js := TJSONArray.Create;
-  for Block in self.pendingSendBlocks do
-    if Block.work = '' then
+SetLength(Result,0);
+ts:=TStringList.Create;
+try
+    for Path in TDirectory.GetFiles(dir)  do
     begin
-      try
-        js.AddElement(TJSONObject.ParseJSONValue(nano_sendToJSON(Block))
-          as TJSONValue);
-      except
-      end;
+     ts.LoadFromFile(path);
+     block:=nano_builtFromJSON(TJSONObject.ParseJSONValue(ts.Text) as TJSONValue);
+     if limitTo<>'' then
+     if block.account<>limitTo then Continue;
+     block.Hash:=StringReplace(ExtractFileName(path),'.block.json','',[rfReplaceAll]);
+     SetLength(Result,Length(Result)+1);
+     Result[High(Result)]:=block;
     end;
 
-  ts := TStringList.Create;
-  ts.Add(js.tojson);
-  ts.SaveToFile(TPath.Combine(CurrentAccount.DirPath,
-    self.addr + '.send.json'));
-  ts.Free;
-  js.Free;
+finally
+ts.Free;
 end;
 
-procedure NanoCoin.removePendingBlock(prev: AnsiString);
+end;
+procedure NanoCoin.loadChain;
+begin
+Self.chaindir:=TPath.Combine(CurrentAccount.DirPath, 'Pendings');
+Self.pendingChain:= nano_loadChain(chaindir,Self.addr)
+end;
+
+constructor NanoCoin.Create(id: integer; _x: integer; _y: integer;
+  _addr: AnsiString; _description: AnsiString; crTime: integer = -1);
+begin
+
+  inherited Create(id, _x, _y, _addr, _description, crTime);
+
+  PendingBlocks := TQueue<TpendingNanoBlock>.Create();
+  mutexMining := TSemaphore.Create();
+  isUnlocked := false;
+  loadChain;
+
+end;
+constructor NanoCoin.Create();
+begin
+
+  //inherited Create(id, _x, _y, _addr, _description, crTime);
+
+  PendingBlocks := TQueue<TpendingNanoBlock>.Create();
+  mutexMining := TSemaphore.Create();
+  isUnlocked := false;
+ // loadChain;
+
+end;
+destructor NanoCoin.destroy;
+begin
+
+  inherited;
+  wipeAnsiString(UnlockPriv);
+
+  PendingBlocks.Free;
+  mutexMining.Free;
+
+end;
+
+function NanoCoin.inChain(Hash: AnsiString): Boolean;
 var
   i: integer;
 begin
-  for i := 0 to Length(self.pendingSendBlocks) - 1 do
-    if self.pendingSendBlocks[i].previous = prev then
+  Result := false;
+  for i := 0 to Length(pendingchain) - 1 do
+    if Self.pendingchain[i].Hash = Hash then
+      Exit(True);
+
+end;
+
+function NanoCoin.isFork(prev: AnsiString): Boolean;
+var
+  i: integer;
+begin
+  Result := false;
+  for i := 0 to Length(pendingchain) - 1 do
+    if pendingchain[i].previous = prev then
+      Exit(True);
+
+end;
+
+procedure NanoCoin.addToChain(Block: TNanoBlock);
+begin
+  if (not inChain(Block.Hash)) and (not isFork(Block.previous)) then
+  begin
+    SetLength(pendingchain, Length(pendingchain) + 1);
+    pendingchain[high(pendingchain)] := Block;
+  end;
+end;
+procedure NanoCoin.removeBlock(Hash:string);
+var i:Integer;
+begin
+   for i := 0 to Length(pendingchain) - 1 do
+    if pendingchain[i].hash = hash then
     begin
-      self.pendingSendBlocks[i] := self.pendingSendBlocks
-        [High(self.pendingSendBlocks)];
-      SetLength(self.pendingSendBlocks, Length(self.pendingSendBlocks) - 1);
-      break;
+      pendingchain[i]:=pendingchain[High(pendingchain)];
+      SetLength(pendingchain,Length(pendingchain)-1);
+      DeleteFile(TPath.Combine(chaindir,hash+'.block.json'));
     end;
 
 end;
+function NanoCoin.findUnusedPrevious: AnsiString;
+var
+  i: integer;
+begin
+  Result := '0000000000000000000000000000000000000000000000000000000000000000';
+  for i := 0 to Length(pendingchain) - 1 do
+    if not isFork(pendingchain[i].Hash) then
+      Exit(pendingchain[i].Hash);
+end;
+
+function NanoCoin.BlockByPrev(prev: AnsiString): TNanoBlock;
+var
+  i: integer;
+begin
+result.account:='';
+  for i := 0 to Length(pendingchain) - 1 do
+    if pendingchain[i].previous = prev then
+      Exit(pendingchain[i]);
+end;
+
+function NanoCoin.BlockByHash(Hash: AnsiString): TNanoBlock;
+var
+  i: integer;
+begin
+result.account:='';
+  for i := 0 to Length(pendingchain) - 1 do
+    if pendingchain[i].Hash = Hash then
+      Exit(pendingchain[i]);
+end;
+function NanoCoin.BlockByLink(Hash: AnsiString): TNanoBlock;
+var
+  i: integer;
+begin
+result.account:='';
+  for i := 0 to Length(pendingchain) - 1 do
+    if pendingchain[i].destination = Hash then
+      Exit(pendingchain[i]);
+end;
+function NanoCoin.nextBlock(Block: TNanoBlock): TNanoBlock;
+begin
+  Result := BlockByPrev(Block.Hash);
+end;
+
+function NanoCoin.prevBlock(Block: TNanoBlock): TNanoBlock;
+begin
+  Result := BlockByHash(Block.previous);
+end;
+function NanoCoin.firstBlock:TNanoBlock;
+var prev,cur:TNanoBlock;
+begin
+if Length(Self.pendingChain)=0 then Exit;
+
+cur:=Self.pendingChain[0];
+repeat
+prev:=prevBlock(cur);
+if prev.account<>'' then
+cur:=prev;
+until prev.account='';
+result:=cur;
+end;
+function NanoCoin.curBlock:TNanoBlock;
+var next,cur:TNanoBlock;
+begin
+if Length(Self.pendingChain)=0 then Exit;
+
+cur:=Self.pendingChain[0];
+repeat
+next:=nextBlock(cur);
+if next.account<>'' then
+cur:=next;
+until next.account='';
+result:=cur;
+end;
+
+
+
+
+
 
 function NanoCoin.getPrivFromSession;
 var
@@ -406,10 +487,10 @@ begin
   if isUnlocked = false then
     raise Exception.Create('nano must be unlocked first');
 
-  SetLength(result, Length(UnlockPriv));
+  SetLength(Result, Length(UnlockPriv));
   for i := low(UnlockPriv) to High(UnlockPriv) do
   begin
-    result[i] := AnsiChar(ord(sessionKey[i]) xor ord(UnlockPriv[i]));
+    Result[i] := AnsiChar(ord(sessionKey[i]) xor ord(UnlockPriv[i]));
   end;
 
 end;
@@ -431,7 +512,7 @@ begin
     UnlockPriv[i] := AnsiChar(ord(sessionKey[i]) xor ord(UnlockPriv[i]));
   end;
 
-  isUnlocked := true;
+  isUnlocked := True;
 
   mineAllPendings();
 
@@ -475,26 +556,28 @@ function NanoCoin.getPreviousHash(): AnsiString;
 var
   i, l: integer;
 begin
-  result := self.lastPendingBlock;
-  if self.lastBlock <> '' then
+  Result := Self.lastPendingBlock;
+  if Length(Self.PendingChain)>0 then
+  Exit(curBlock.hash);
+
+  if Self.lastBlock <> '' then
   begin
-    result := self.lastBlock;
-    self.lastBlock := '';
-    exit;
+    Result := Self.lastBlock;
+    Self.lastBlock := '';
+    Exit;
   end;
-  l := Length(self.PendingBlocks.ToArray);
+  l := Length(Self.PendingBlocks.ToArray);
   if l > 0 then
   begin
     for i := 0 to l - 1 do
     begin
-      result := self.PendingBlocks.ToArray[i].Hash;
+      Result := Self.PendingBlocks.ToArray[i].Hash;
 
     end;
 
   end;
 
 end;
-
 procedure NanoCoin.tryAddPendingBlock(Block: TpendingNanoBlock);
 var
   it: TQueue<TpendingNanoBlock>.TEnumerator;
@@ -506,7 +589,7 @@ begin
   begin
     if it.Current.Hash = Block.Hash then
     begin
-      exit;
+      Exit;
     end;
 
   end;
@@ -517,10 +600,6 @@ begin
     mineAllPendings();
 
 end;
-
-
-
-
 
 /// ///////////////////////////////////////////////////////////////////
 
@@ -551,7 +630,7 @@ var
 
 function nano_getWalletRepresentative: AnsiString;
 begin
-  result := 'xrb_1nanode8ngaakzbck8smq6ru9bethqwyehomf79sae1k7xd47dkidjqzffeg';
+  Result := 'xrb_1nanode8ngaakzbck8smq6ru9bethqwyehomf79sae1k7xd47dkidjqzffeg';
 end;
 
 function nano_keyFromAccount(adr: AnsiString): AnsiString;
@@ -560,7 +639,7 @@ var
   rAdr, rChk: TIntegerArray;
   i: integer;
 begin
-  result := adr;
+  Result := adr;
   adr := stringreplace(adr, 'xrb_', '', [rfReplaceAll]);
   adr := stringreplace(adr, 'nano_', '', [rfReplaceAll]);
   chk := Copy(adr, 52 + 1, 100);
@@ -572,20 +651,20 @@ begin
 
   for i := 0 to Length(chk) - 1 do
     rChk[i] := Pos(chk[i{$IFDEF MSWINDOWS} + 1{$ENDIF}], nano_charset) - 1;
-  result := '';
-  rAdr := ChangeBits(rAdr, 5, 8, true);
+  Result := '';
+  rAdr := ChangeBits(rAdr, 5, 8, True);
   for i := 3 to Length(rAdr) - 1 do
-    result := result + inttohex(rAdr[i], 2)
+    Result := Result + inttohex(rAdr[i], 2)
 end;
 
 function nano_encodeBase32(values: TIntegerArray): string;
 var
   i: integer;
 begin
-  result := '';
+  Result := '';
   for i := 0 to Length(values) - 1 do
   begin
-    result := result + nano_charset[values[i] + low(nano_charset)];
+    Result := Result + nano_charset[values[i] + low(nano_charset)];
   end;
 end;
 
@@ -596,42 +675,42 @@ begin
   Blake2b := THashFactory.TCrypto.CreateBlake2B(TBlake2BConfig.Create(5));
   Blake2b.Initialize();
   Blake2b.TransformBytes(hexatotbytes(m), 0, Length(m) div 2);
-  result := Blake2b.TransformFinal.ToString();
-  result := reversehexorder(result);
+  Result := Blake2b.TransformFinal.ToString();
+  Result := reversehexorder(Result);
 end;
 
 function nano_accountFromHexKey(adr: AnsiString): AnsiString;
 var
   data, chk: TIntegerArray;
 begin
-  result := 'FAILED';
+  Result := 'FAILED';
   chk := hexatotintegerarray(nano_addressChecksum(adr));
   adr := '303030' + adr;
   data := hexatotintegerarray(adr);
   // Copy(adr,4{$IFDEF MSWINDOWS}+1{$ENDIF},100)
 
-  data := ChangeBits(data, 8, 5, true);
-  chk := ChangeBits(chk, 8, 5, true);
+  data := ChangeBits(data, 8, 5, True);
+  chk := ChangeBits(chk, 8, 5, True);
   Delete(data, 0, 4);
-  result := 'xrb_' + nano_encodeBase32(data) + nano_encodeBase32(chk);
+  Result := 'xrb_' + nano_encodeBase32(data) + nano_encodeBase32(chk);
 end;
 
 function nano_newBlock(state: Boolean = false): TNanoBlock;
 begin
-  result.state := state;
-  result.signed := false;
-  result.worked := false;
-  result.signature := '';
-  result.work := '';
-  result.blockAmount := 0;
-  result.immutable := false;
+  Result.state := state;
+  Result.signed := false;
+  Result.worked := false;
+  Result.signature := '';
+  Result.work := '';
+  Result.blockAmount := 0;
+  Result.immutable := false;
 end;
 
 function nano_getPrevious(Block: TNanoBlock): AnsiString;
 begin
   if Block.blockType = 'open' then
-    exit(Block.account);
-  result := Block.previous;
+    Exit(Block.account);
+  Result := Block.previous;
 end;
 
 function nano_getBlockHash(var Block: TNanoBlock): AnsiString;
@@ -693,8 +772,8 @@ begin
       Blake2b.TransformBytes(hexatotbytes(Block.representative));
     end;
   end;
-  result := Blake2b.TransformFinal.ToString();
-  Block.Hash := result;
+  Result := Blake2b.TransformFinal.ToString();
+  Block.Hash := Result;
 end;
 
 procedure nano_setSendParameters(var Block: TNanoBlock;
@@ -783,7 +862,7 @@ end;
 procedure nano_setSignature(var Block: TNanoBlock; hex: AnsiString);
 begin
   Block.signature := hex;
-  Block.signed := true;
+  Block.signed := True;
 end;
 
 procedure TPowWorker.execute;
@@ -799,8 +878,8 @@ var
 begin
 
   try
-    self.foundWork := '';
-    counter := 0;
+    Self.foundWork := '';
+    counter := 1;
     Blake2b := THashFactory.TCrypto.CreateBlake2B(TBlake2BConfig.Create(8));
     Blake2b.Initialize();
 
@@ -809,22 +888,29 @@ begin
     random := TSecureRandom.GetInstance('SHA256PRNG');
     ran := random.NextInt64;
     Move(ran, workBytes[0], 8);
-
-	
-    while true do
+ 
+    while True do
+ 
     begin
-
-      // if counter mod 1000000 = 0 then
-      // Sleep(50); //no luck, let's cool down CPU :)
+      Inc(hashcounter,256);
+      {if counter mod 100000 = 0 then
+      begin
+        TThread.Synchronize(nil,procedure begin Inc(hashcounter); end);
+           end;
+       }
 
       for i := 0 to 255 do
       begin
         workBytes[7] := i;
 
 
+ 
         if Terminated then
           exit();
    
+ 
+         inc(counter);
+ 
 
         Blake2b.TransformBytes(workBytes);
         t := Blake2b.TransformFinal.GetBytes;
@@ -836,9 +922,10 @@ begin
                 work := '';
                 for j := 7 downto 0 do
                   work := work + inttohex(workBytes[j], 2);
-
-                self.foundWork := work;
-                exit;
+ 
+                Self.foundWork := work;
+                Exit;
+ 
               end;
       end;
       // Move(t[0],ran,8);
@@ -868,12 +955,12 @@ var
 begin
   // Randomize; moved to AccountRelated.InitializeHodler
   if Length(Hash) <> 64 then
-    exit;
+    Exit;
 
   work := findPrecalculated(Hash);
   if (work <> '') and (work <> 'MINING') then
   begin
-    exit(work);
+    Exit(work);
   end;
   if work = 'MINING' then
   begin // We are mining this one already, so let's wait
@@ -884,24 +971,21 @@ begin
       Sleep(100);
       work := findPrecalculated(Hash);
     end;
-
-	
-    exit(work);
+ 
+ 
+    Exit(work);
+ 
     // Exit(nano_pow(Hash));
 	
   end;
-
-  {$IFDEF ANDROID}
-
-    AcquireWakeLock;
-
-{$ENDIF}
-
+ 
+  {$IFDEF  ANDROID}AcquireWakeLock;{$ENDIF}
+ 
   setPrecalculated(Hash, 'MINING');
 
   for i := 0 to powworkers do
   begin
-    workers[i] := TPowWorker.Create(true);
+    workers[i] := TPowWorker.Create(True);
 {$IFDEF MSWINDOWS} workers[i].Priority := tpHighest; {$ENDIF}
     workers[i].Hash := Hash;
     workers[i].Start;
@@ -914,17 +998,11 @@ begin
       if workers[i].foundWork <> '' then
       begin
         work := workers[i].foundWork;
-
-        {$IFDEF ANDROID}
-
-            ReleaseWakeLock;
-
-{$ENDIF}
-
-
-
+ 
+       {$IFDEF  ANDROID} ReleaseWakeLock; {$ENDIF}
+ 
         setPrecalculated(Hash, work);
-        result := work;
+        Result := work;
         break;
       end;
 
@@ -936,7 +1014,7 @@ end;
 function nano_getWork(var Block: TNanoBlock): AnsiString;
 begin
   Block.work := nano_pow(nano_getPrevious(Block));
-  Block.worked := true;
+  Block.worked := True;
 
 end;
 
@@ -957,7 +1035,7 @@ var
   Blake2b: IHash;
   toHash: AnsiString;
 begin
-  result := false;
+  Result := false;
   Blake2b := THashFactory.TCrypto.CreateBlake2B(TBlake2BConfig.Create(8));
   Blake2b.Initialize();
   toHash := '';
@@ -973,7 +1051,7 @@ begin
     if t2[1] = t[1] then
       if t2[2] = t[2] then
         if t2[3] >= t[3] then
-          result := true;
+          Result := True;
 end;
 
 procedure nano_setWork(var Block: TNanoBlock; hex: AnsiString);
@@ -981,7 +1059,7 @@ begin
   if not nano_checkWork(Block, hex) then
     raise Exception.Create('Work not valid for block');
   Block.work := hex;
-  Block.worked := true;
+  Block.worked := True;
 end;
 
 procedure nano_setAccount(var Block: TNanoBlock; acc: AnsiString);
@@ -1005,18 +1083,18 @@ end;
 function nano_getOrigin(Block: TNanoBlock): AnsiString;
 begin
   if (Block.blockType = 'receive') or (Block.blockType = 'open') then
-    exit(Block.origin);
+    Exit(Block.origin);
   if (Block.blockType = 'send') then
-    exit(Block.blockAccount);
-  result := '';
+    Exit(Block.blockAccount);
+  Result := '';
 end;
 
 function nano_getDestination(Block: TNanoBlock): AnsiString;
 begin
   if (Block.blockType = 'send') then
-    exit(nano_accountFromHexKey(Block.destination));
+    Exit(nano_accountFromHexKey(Block.destination));
   if (Block.blockType = 'receive') or (Block.blockType = 'open') then
-    exit(Block.blockAccount);
+    Exit(Block.blockAccount);
 
 end;
 
@@ -1024,15 +1102,15 @@ function nano_getRepresentative(Block: TNanoBlock): AnsiString;
 begin
   if (Block.state) or (Block.blockType = 'change') or (Block.blockType = 'open')
   then
-    exit(nano_accountFromHexKey(Block.representative))
+    Exit(nano_accountFromHexKey(Block.representative))
   else
-    result := '';
+    Result := '';
 
 end;
 
 function nano_isReady(Block: TNanoBlock): Boolean;
 begin
-  result := Block.signed and Block.worked;
+  Result := Block.signed and Block.worked;
 end;
 
 procedure nano_changePrevious(var Block: TNanoBlock; newPrevious: AnsiString);
@@ -1043,7 +1121,7 @@ begin
   begin
     nano_setReceiveParameters(Block, newPrevious, Block.source);
     nano_getBlockHash(Block);
-    exit;
+    Exit;
   end;
   if Block.blockType = 'send' then
   begin
@@ -1051,13 +1129,13 @@ begin
       Block.balance);
     // api.setSendParameters(newPrevious, destination, stringFromHex(balance).replace(RAI_TO_RAW, ''))
     nano_getBlockHash(Block);
-    exit;
+    Exit;
   end;
   if Block.blockType = 'change' then
   begin
     nano_setChangeParameters(Block, newPrevious, Block.representative);
     nano_getBlockHash(Block);
-    exit;
+    Exit;
   end;
   raise Exception.Create('Invalid block type');
 end;
@@ -1125,7 +1203,7 @@ begin
   end;
   obj.AddPair(TJSONPair.Create('work', Block.work));
   obj.AddPair(TJSONPair.Create('signature', Block.signature));
-  result := obj.tojson;
+  Result := obj.tojson;
   obj.Free;
 end;
 
@@ -1136,7 +1214,7 @@ begin
   data := '{}';
   try
     data := getDataOverHTTP('https://hodlernode.net/nano.php?h=' + Hash);
-    result := data;
+    Result := data;
 
   except
     on E: Exception do
@@ -1153,7 +1231,7 @@ var
 var
   state: Boolean;
 begin
-  result := nano_newBlock(false);
+  Result := nano_newBlock(false);
   obj := TJSONObject.ParseJSONValue(TEncoding.ASCII.GetBytes(JSON), 0)
     as TJSONObject;
   if (Length(obj.GetValue('previous').Value) = 64) and (prev = '') then
@@ -1165,76 +1243,76 @@ begin
     as TJSONObject;
   state := obj.GetValue('type').Value = 'state';
 
-  result.state := state or false;
-  result.blockType := obj.GetValue('type').Value;
-  if result.state then
+  Result.state := state or false;
+  Result.blockType := obj.GetValue('type').Value;
+  if Result.state then
   begin
 
-    result.send := false;
+    Result.send := false;
     if prevObj <> nil then
     begin
       if prevObj.GetValue('type').Value <> 'state' then
       begin
         if not hexBalance then
-          result.send := BigInteger.Parse
+          Result.send := BigInteger.Parse
             ( { '0x0' + } prevObj.GetValue('balance').Value) >
             BigInteger.Parse( { '0x0' + } obj.GetValue('balance').Value)
         else
-          result.send := BigInteger.Parse('0x0' + prevObj.GetValue('balance')
+          Result.send := BigInteger.Parse('0x0' + prevObj.GetValue('balance')
             .Value) > BigInteger.Parse('0x0' + obj.GetValue('balance').Value)
       end
       else
       begin
         if obj.GetValue('subtype') <> nil then
-          result.send := obj.GetValue('subtype').Value = 'send';
+          Result.send := obj.GetValue('subtype').Value = 'send';
       end;
     end;
-    result.previous := obj.GetValue('previous').Value;
+    Result.previous := obj.GetValue('previous').Value;
     if not hexBalance then
-      result.balance := BigInteger.Parse(obj.GetValue('balance').Value)
+      Result.balance := BigInteger.Parse(obj.GetValue('balance').Value)
         .ToString(10)
     else
-      result.balance := BigInteger.Parse(obj.GetValue('balance').Value)
+      Result.balance := BigInteger.Parse(obj.GetValue('balance').Value)
         .ToString(16);
-    result.account := nano_keyFromAccount(obj.GetValue('account').Value);
-    result.representative := nano_keyFromAccount
+    Result.account := nano_keyFromAccount(obj.GetValue('account').Value);
+    Result.representative := nano_keyFromAccount
       (obj.GetValue('representative').Value);
-    if result.send then
+    if Result.send then
     begin
-      result.blockType := 'send';
-      result.destination := obj.GetValue('link').Value;
+      Result.blockType := 'send';
+      Result.destination := obj.GetValue('link').Value;
       if not hexBalance then
-        result.blockAmount := BigInteger.Parse(prevObj.GetValue('balance')
+        Result.blockAmount := BigInteger.Parse(prevObj.GetValue('balance')
           .Value) - BigInteger.Parse(obj.GetValue('balance').Value)
       else
-        result.blockAmount :=
+        Result.blockAmount :=
           BigInteger.Parse('0x0' + prevObj.GetValue('balance').Value) -
           BigInteger.Parse('0x0' + obj.GetValue('balance').Value)
     end
     else
     begin
       if obj.GetValue('link').Value = STATE_BLOCK_ZERO then
-        result.blockType := 'change'
+        Result.blockType := 'change'
       else
       begin
-        if result.previous = STATE_BLOCK_ZERO then
+        if Result.previous = STATE_BLOCK_ZERO then
         begin
-          result.blockType := 'open';
-          result.source := obj.GetValue('link').Value;
+          Result.blockType := 'open';
+          Result.source := obj.GetValue('link').Value;
           if not hexBalance then
-            result.blockAmount := BigInteger.Parse(result.balance)
+            Result.blockAmount := BigInteger.Parse(Result.balance)
           else
-            result.blockAmount := BigInteger.Parse('0x0' + result.balance)
+            Result.blockAmount := BigInteger.Parse('0x0' + Result.balance)
         end
         else
         begin
-          result.blockType := 'receive';
-          result.source := obj.GetValue('link').Value;
+          Result.blockType := 'receive';
+          Result.source := obj.GetValue('link').Value;
           if not hexBalance then
-            result.blockAmount := BigInteger.Parse(prevObj.GetValue('balance')
+            Result.blockAmount := BigInteger.Parse(prevObj.GetValue('balance')
               .Value) - BigInteger.Parse(obj.GetValue('balance').Value)
           else
-            result.blockAmount :=
+            Result.blockAmount :=
               BigInteger.Parse('0x0' + prevObj.GetValue('balance').Value) -
               BigInteger.Parse('0x0' + obj.GetValue('balance').Value)
         end;
@@ -1245,51 +1323,51 @@ begin
   end
   else
   begin
-    if result.blockType = 'send' then
+    if Result.blockType = 'send' then
     begin
-      result.previous := obj.GetValue('previous').Value;
-      result.destination := nano_keyFromAccount
+      Result.previous := obj.GetValue('previous').Value;
+      Result.destination := nano_keyFromAccount
         (obj.GetValue('destination').Value);
-      result.balance := obj.GetValue('balance').Value;
+      Result.balance := obj.GetValue('balance').Value;
       if not hexBalance then
-        result.blockAmount := BigInteger.Parse(prevObj.GetValue('balance')
+        Result.blockAmount := BigInteger.Parse(prevObj.GetValue('balance')
           .Value) - BigInteger.Parse(obj.GetValue('balance').Value)
       else
-        result.blockAmount :=
+        Result.blockAmount :=
           BigInteger.Parse('0x0' + prevObj.GetValue('balance').Value) -
           BigInteger.Parse('0x0' + obj.GetValue('balance').Value)
     end;
-    if result.blockType = 'receive' then
+    if Result.blockType = 'receive' then
     begin
-      result.previous := obj.GetValue('previous').Value;
-      result.source := obj.GetValue('source').Value;
+      Result.previous := obj.GetValue('previous').Value;
+      Result.source := obj.GetValue('source').Value;
 
     end;
-    if result.blockType = 'open' then
+    if Result.blockType = 'open' then
     begin
-      result.source := obj.GetValue('source').Value;
-      result.representative := nano_keyFromAccount
+      Result.source := obj.GetValue('source').Value;
+      Result.representative := nano_keyFromAccount
         (obj.GetValue('representative').Value);
-      result.account := nano_keyFromAccount(obj.GetValue('account').Value);
+      Result.account := nano_keyFromAccount(obj.GetValue('account').Value);
     end;
-    if result.blockType = 'change' then
+    if Result.blockType = 'change' then
     begin
-      result.previous := obj.GetValue('previous').Value;
-      result.representative := nano_keyFromAccount
+      Result.previous := obj.GetValue('previous').Value;
+      Result.representative := nano_keyFromAccount
         (obj.GetValue('representative').Value)
 
     end;
   end;
-  result.signature := obj.GetValue('signature').Value;
-  result.work := obj.GetValue('work').Value;
-  if result.work <> '' then
-    result.worked := true;
-  if result.signature <> '' then
-    result.signed := true;
+  Result.signature := obj.GetValue('signature').Value;
+  Result.work := obj.GetValue('work').Value;
+  if Result.work <> '' then
+    Result.worked := True;
+  if Result.signature <> '' then
+    Result.signed := True;
   if not(obj.GetValue('hash') = nil) then
-    result.Hash := obj.GetValue('hash').Value
+    Result.Hash := obj.GetValue('hash').Value
   else
-    result.Hash := nano_getBlockHash(result);
+    Result.Hash := nano_getBlockHash(Result);
 end;
 
 function nano_getPriv(wd : NanoCoin; MasterSeed: AnsiString): AnsiString;
@@ -1321,7 +1399,7 @@ begin
   Blake2b.TransformBytes(hexatotbytes(GetStrHashSHA256(MasterSeed + inttohex(x,
     32) + inttohex(y, 32)) + MasterSeed + inttohex(x, 32) + inttohex(y,
     32)), 0);
-  result := Blake2b.TransformFinal.ToString;
+  Result := Blake2b.TransformFinal.ToString;
 end;
 
 function nano_createHD(x, y: System.UInt32; MasterSeed: AnsiString)
@@ -1332,8 +1410,8 @@ var
 begin
   p := nano_getPriv(x, y, MasterSeed);
   pub := nano_privToPub(p);
-  result := NanoCoin.Create(8, x, y, nano_accountFromHexKey(pub), '');
-  result.pub := pub;
+  Result := NanoCoin.Create(8, x, y, nano_accountFromHexKey(pub), '');
+  Result.pub := pub;
   wipeAnsiString(p);
   wipeAnsiString(MasterSeed);
 end;
@@ -1369,61 +1447,90 @@ end;
 
 
 function nano_addPendingReceiveBlock(sourceBlockHash: AnsiString;
-cc: cryptoCurrency; from: AnsiString; ms: AnsiString; amount: BigInteger)
+cc: cryptoCurrency; from: AnsiString; ms: AnsiString; amount: BigInteger;doWork: Boolean = True)
   : TNanoBlock;
 begin
-  result := nano_newBlock(true);
+  Result := nano_newBlock(True);
   if (Length(cc.lastPendingBlock) = 64) and (Length(cc.History) > 0) then
-    nano_setReceiveParameters(result, NanoCoin(cc).getPreviousHash,
+    nano_setReceiveParameters(Result, NanoCoin(cc).getPreviousHash,
       sourceBlockHash)
   else
-    nano_setOpenParameters(result, sourceBlockHash, cc.addr,
+    nano_setOpenParameters(Result, sourceBlockHash, cc.addr,
       nano_getWalletRepresentative);
-  nano_setStateParameters(result, cc.addr, nano_getWalletRepresentative,
+  nano_setStateParameters(Result, cc.addr, nano_getWalletRepresentative,
     BigInteger(cc.confirmed + amount).ToString(16));
-  result.Hash := nano_getBlockHash(result);
-  cc.lastBlock := result.Hash;
+  Result.Hash := nano_getBlockHash(Result);
+  cc.lastBlock := Result.Hash;
   NanoCoin(cc).lastBlockAmount := NanoCoin(cc).lastBlockAmount + amount;
-  nano_getWork(result);
-  // Result.work := 'B99E3C6668B87AEF';
-  result.worked := true;
-  nano_signBlock(result, cc, ms);
-  nano_checkWork(result, result.work, result.Hash);
-  nano_setAccount(result, cc.addr);
+  nano_signBlock(Result, cc, ms);
+  nano_setAccount(Result, cc.addr);
+  saveBlockToJSON(Result);
+  NanoCoin(cc).loadChain;
+  if doWork then
+  begin
+
+    nano_getWork(Result);
+    Result.worked := True;
+    nano_checkWork(Result, Result.work, Result.Hash);
+  end;
+
   cc.confirmed := cc.confirmed + amount;
   cc.unconfirmed := cc.unconfirmed - amount;
-  cc.lastBlock := result.Hash;
+  cc.lastBlock := Result.Hash;
   wipeAnsiString(ms);
 end;
 
+ 
+procedure saveBlockToJSON(Block: TNanoBlock);
+var
+  ts: TStringList;
+  dir: String;
+begin
+
+  dir := TPath.Combine(CurrentAccount.DirPath, 'Pendings');
+  TDirectory.CreateDirectory(dir);
+  ts := TStringList.Create;
+  ts.Add(nano_getJSONBlock(Block));
+  ts.SaveToFile(TPath.Combine(dir, Block.Hash + '.block.json'));
+  ts.Free;
+
+end;
+ 
 
 function nano_addPendingReceiveBlock(sourceBlockHash: AnsiString; cc: NanoCoin;
-from: AnsiString; amount: BigInteger): TNanoBlock;
+from: AnsiString; amount: BigInteger; doWork: Boolean = True): TNanoBlock;
 var
   ph: AnsiString;
 begin
-  result := nano_newBlock(true);
+  Result := nano_newBlock(True);
   ph := cc.getPreviousHash;
   if (Length(ph) = 64) and (Length(cc.History) > 0) then
-    nano_setReceiveParameters(result, ph, sourceBlockHash)
+    nano_setReceiveParameters(Result, ph, sourceBlockHash)
   else
-    nano_setOpenParameters(result, sourceBlockHash, cc.addr,
+    nano_setOpenParameters(Result, sourceBlockHash, cc.addr,
       nano_getWalletRepresentative);
 
-  nano_setStateParameters(result, cc.addr, nano_getWalletRepresentative,
+  nano_setStateParameters(Result, cc.addr, nano_getWalletRepresentative,
     BigInteger(cc.confirmed + amount).ToString(16));
-  result.Hash := nano_getBlockHash(result);
-  cc.lastBlock := result.Hash;
+  Result.Hash := nano_getBlockHash(Result);
+  cc.lastBlock := Result.Hash;
   NanoCoin(cc).lastBlockAmount := NanoCoin(cc).lastBlockAmount + amount;
-  nano_getWork(result);
-  // Result.work := 'B99E3C6668B87AEF';
-  result.worked := true;
-  nano_signBlock(result, cc);
-  nano_checkWork(result, result.work, result.Hash);
-  nano_setAccount(result, cc.addr);
+  nano_signBlock(Result, cc);
+  nano_setAccount(Result, cc.addr);
+  saveBlockToJSON(Result);
+  NanoCoin(cc).loadChain;
+  if doWork then
+  begin
+
+    nano_getWork(Result);
+    Result.worked := True;
+    nano_checkWork(Result, Result.work, Result.Hash);
+  end;
+
   cc.confirmed := cc.confirmed + amount;
   cc.unconfirmed := cc.unconfirmed - amount;
 
+ 
   // cc.lastPendingBlock := result.Hash; 
 end;
 
@@ -1457,8 +1564,8 @@ end;
 
 function nano_pushBlock(b: AnsiString): AnsiString;
 begin
-  result := getDataOverHTTP('https://hodlernode.net/nano.php?b=' + b,
-    false, true);
+  Result := getDataOverHTTP('https://hodlernode.net/nano.php?b=' + b,
+    false, True);
 end;
 
 procedure nano_minePendings(cc: cryptoCurrency; data: AnsiString;
@@ -1495,7 +1602,7 @@ begin
           popupWindow.Create(dictionary('FailedToDecrypt'));
         end);
 
-      exit;
+      Exit;
     end;
     startFullfillingKeypool(MasterSeed);
     if pendings.Count > 0 then
@@ -1506,8 +1613,10 @@ begin
           ].GetValue<TJSONObject>('data').GetValue('contents').Value, '');
         testblock := nano_addPendingReceiveBlock
           (pendings.Items[(i * 2) + 1].GetValue<string>('hash'), cc,
-          testblock.source, MasterSeed, testblock.blockAmount);
+          testblock.source, MasterSeed, testblock.blockAmount{$IFDEF MSWINDOWS},false{$ENDIF});
+          {$IFNDEF MSWINDOWS}
         nano_pushBlock(nano_getJSONBlock(testblock));
+        {$ENDIF}
         TThread.Synchronize(TThread.CurrentThread,
           procedure
           begin
@@ -1549,12 +1658,12 @@ begin
 
       nano_minePendings(cc,
         getDataOverHTTP('https://hodlernode.net/nano.php?addr=' + cc.addr,
-        false, true), pw);
+        false, True), pw);
 
       TThread.Synchronize(nil,
         procedure
         begin
-          frmhome.NanoUnlocker.Enabled := true;
+          frmhome.NanoUnlocker.Enabled := True;
           wipeAnsiString(pw);
         end);
 
@@ -1570,14 +1679,14 @@ var
   pub: AnsiString;
   p: AnsiString;
   ts: TStringList;
-  pb:TPendingNanoBlock;
+  pb: TpendingNanoBlock;
 begin
 
 
   p := nano_getPriv(Nanocoin(from), MasterSeed);
   
   pub := nano_privToPub(p);
-  Block := nano_newBlock(true);
+  Block := nano_newBlock(True);
   nano_setSendParameters(Block, NanoCoin(from).getPreviousHash, sendto,
     BigInteger(NanoCoin(from).lastBlockAmount - amount).ToString(16));
   nano_setStateParameters(Block, from.addr, nano_getWalletRepresentative,
@@ -1585,21 +1694,24 @@ begin
   NanoCoin(from).lastBlock := nano_getBlockHash(Block);
   nano_setSignature(Block, nano_signature(nano_getBlockHash(Block), p, pub));
   from.lastBlock := Block.Hash;
-  pb.Block:=block;
-  pb.Hash:=Block.Hash;
+  pb.Block := Block;
+  pb.Hash := Block.Hash;
   NanoCoin(from).lastBlockAmount := NanoCoin(from).lastBlockAmount - amount;
+  saveBlockToJSON(Block);
+  NanoCoin(from).loadChain;
   if NanoCoin(from).isUnlocked then
-  NanoCoin(from).tryAddPendingBlock(pb) else
-  NanoCoin(from).mineBlock(pb,masterseed);
-//  SetLength(NanoCoin(from).pendingSendBlocks,
-//    Length(NanoCoin(from).pendingSendBlocks) + 1);
-//  NanoCoin(from).pendingSendBlocks[High(NanoCoin(from).pendingSendBlocks)
-//    ] := Block;
- // NanoCoin(from).saveSendBlocks;
-//  nano_getWork(Block);
-//  from.confirmed := from.confirmed - amount;
-//  result := nano_pushBlock(nano_getJSONBlock(Block));
-//  NanoCoin(from).removePendingBlock(block.previous);
+    NanoCoin(from).tryAddPendingBlock(pb)
+  else
+    NanoCoin(from).mineBlock(pb, MasterSeed);
+  // SetLength(NanoCoin(from).pendingSendBlocks,
+  // Length(NanoCoin(from).pendingSendBlocks) + 1);
+  // NanoCoin(from).pendingSendBlocks[High(NanoCoin(from).pendingSendBlocks)
+  // ] := Block;
+  // NanoCoin(from).saveSendBlocks;
+  // nano_getWork(Block);
+  // from.confirmed := from.confirmed - amount;
+  // result := nano_pushBlock(nano_getJSONBlock(Block));
+  // NanoCoin(from).removePendingBlock(block.previous);
   wipeAnsiString(MasterSeed);
   wipeAnsiString(p);
 end;
@@ -1608,11 +1720,11 @@ function findPrecalculated(Hash: AnsiString): AnsiString;
 var
   pow: precalculatedPow;
 begin
-  result := '';
+  Result := '';
   Hash := LowerCase(Hash);
   for pow in pows do
     if pow.Hash = Hash then
-      exit(pow.work);
+      Exit(pow.work);
 end;
 
 procedure setPrecalculated(Hash, work: AnsiString);
@@ -1620,13 +1732,13 @@ var
   i: integer;
 begin
   if Length(Hash) <> 64 then
-    exit;
+    Exit;
   Hash := LowerCase(Hash);
   for i := 0 to Length(pows) - 1 do
     if pows[i].Hash = Hash then
     begin
       pows[i].work := work;
-      exit;
+      Exit;
     end;
   SetLength(pows, Length(pows) + 1);
 
@@ -1644,7 +1756,7 @@ begin
     begin
       pows[i] := pows[High(pows)];
       SetLength(pows, Length(pows) - 1);
-      exit;
+      Exit;
     end;
   end;
 end;
@@ -1702,85 +1814,36 @@ begin
 
 end;
 
-procedure NanoCoin.loadSendBlocks;
-var
-  js: TJSONArray;
-  jo: TJSONObject;
-  ts: TStringList;
-  i: integer;
-  b: TNanoBlock;
-begin
-exit;
-  SetLength(self.pendingSendBlocks, 0);
-  ts := TStringList.Create();
-  jo := TJSONObject.Create;
-  try
-    if FileExists(TPath.Combine(CurrentAccount.DirPath,
-      self.addr + '.send.json')) then
-    begin
 
-      ts.LoadFromFile(TPath.Combine(CurrentAccount.DirPath,
-        self.addr + '.send.json'));
-      js := jo.ParseJSONValue(ts.Text) as TJSONArray;
-      for i := 0 to js.Count - 1 do
-      begin
-        b := nano_sendFromJSON(js.Get(i));
-        SetLength(self.pendingSendBlocks, Length(self.pendingSendBlocks) + 1);
-        self.pendingSendBlocks[High(self.pendingSendBlocks)] := b;
-      end;
 
-      js.Free;
-    end;
-    self.lastBlockAmount := BigInteger.Parse
-      (self.pendingSendBlocks[High(self.pendingSendBlocks)].balance);
-    self.lastBlock := nano_getBlockHash
-      (self.pendingSendBlocks[High(self.pendingSendBlocks)]);
-
-  except
-  end;
-  ts.Free;
-  jo.Free;
-  TThread.CreateAnonymousThread(
-    procedure
-    var
-      Block, bx: TNanoBlock;
-    var
-      work: AnsiString;
-    begin
-      for bx in self.pendingSendBlocks do
-      begin
-        Block := bx;
-        work := nano_pow(Block.previous);
-        Block.work := work;
-        nano_pushBlock(nano_sendToJSON(Block));
-        self.removePendingBlock(Block.previous);
-        self.saveSendBlocks;
-      end;
-
-    end).Start;
-end;
 procedure NanoCoin.mineBlock(Block: TpendingNanoBlock; MasterSeed: AnsiString);
 var
   temp: TNanoBlock;
 begin
-  mutexMining.Acquire;
-  if Block.Block.blockType<>'send' then
+  mutexMining.acquire;
+  if Block.Block.blockType <> 'send' then
   begin
 
-  temp := nano_addPendingReceiveBlock(Block.Hash, self, Block.Block.source,
-    MasterSeed, Block.Block.blockAmount);
-   end else
+    temp := nano_addPendingReceiveBlock(Block.Hash, Self, Block.Block.source,
+      MasterSeed, Block.Block.blockAmount{$IFDEF MSWINDOWS},false{$ENDIF});
+  end
+  else
   begin
-   temp:=Block.block;
-   nano_getWork(temp);
+    temp := Block.Block;
+    {$IFNDEF MSWINDOWS}
+    nano_getWork(temp);
+    {$ENDIF}
 
   end;
+  {$IFDEF MSWINDOWS}
   nano_pushBlock(nano_getJSONBlock(temp));
+  {$ENDIF}
 
   wipeAnsiString(MasterSeed);
 
-  mutexMining.Release;
+  mutexMining.release;
 end;
+
 procedure NanoCoin.mineBlock(Block: TpendingNanoBlock);
 var
   temp: TNanoBlock;
@@ -1788,26 +1851,34 @@ begin
   if isUnlocked = false then
     raise Exception.Create('nano must be unlocked first');
 
-  mutexMining.Acquire;
-  if Block.Block.blockType<>'send' then
+  mutexMining.acquire;
+  if Block.Block.blockType <> 'send' then
   begin
-  temp := nano_addPendingReceiveBlock(Block.Hash, self, Block.Block.source,
-    Block.Block.blockAmount);
-  end else
+    temp := nano_addPendingReceiveBlock(Block.Hash, Self, Block.Block.source,
+      Block.Block.blockAmount{$IFDEF MSWINDOWS},false{$ENDIF});
+  end
+  else
   begin
-   temp:=Block.block;
-   nano_getWork(temp);
-
+    temp := Block.Block;
+    {$IFNDEF MSWINDOWS}
+    nano_getWork(temp);
+    {$ENDIF}
   end;
+  {$IFDEF MSWINDOWS}
   nano_pushBlock(nano_getJSONBlock(temp));
-
-  mutexMining.Release;
+  {$ENDIF}
+  mutexMining.release;
 end;
 
-
-procedure auxPOW;
+procedure nano_mineBuilt(cc:NanoCoin);
+var block:TNanoBlock;
 begin
-
+repeat
+block:=cc.firstBlock;
+nano_getWork(block);
+nano_pushBlock(nano_builtToJSON(block));
+cc.removeBlock(block.hash);
+until Length(cc.pendingChain)=0;
 end;
 
 initialization

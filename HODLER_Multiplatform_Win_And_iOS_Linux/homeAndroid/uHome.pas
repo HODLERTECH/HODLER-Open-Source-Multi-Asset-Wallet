@@ -2307,18 +2307,18 @@ var
   Nano: NanoCoin;
 begin
 
-  if CurrentCryptoCurrency is NanoCoin then
-  begin
-    if NanoCoin(CurrentCryptoCurrency).isUnlocked then
-      exit;
-    // frmhome.UnlockNanoImage.Hint:='When unlocked, receive blocks will be autopocketed';
-    NotificationLayout.popupPasswordConfirm(
-      procedure(pass: AnsiString)
-      var
-        tced, MasterSeed: AnsiString;
-      begin
+ 
+    if currentCryptocurrency is NanoCoin then
+    begin
+     if NanoCoin(currentCryptocurrency).isUnlocked then exit;
+   //  frmhome.UnlockNanoImage.Hint:='When unlocked, receive blocks will be autopocketed';
+     NotificationLayout.popupPasswordConfirm(procedure (pass : AnsiString)
+     var
+        tced , MasterSeed : AnsiString;
+     begin
 
-        tced := TCA(pass);
+        tced := TCA( pass );
+ 
         MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
         passwordForDecrypt.Text := '';
         if not isHex(MasterSeed) then

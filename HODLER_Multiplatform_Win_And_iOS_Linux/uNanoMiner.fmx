@@ -1,0 +1,72 @@
+object frmNanoPoW: TfrmNanoPoW
+  Left = 0
+  Top = 0
+  Caption = 'Nano PoW'
+  ClientHeight = 480
+  ClientWidth = 640
+  Position = ScreenCenter
+  WindowState = wsMinimized
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnCloseQuery = FormCloseQuery
+  OnDestroy = FormDestroy
+  OnShow = FormShow
+  DesignerMasterStyle = 0
+  object lblName: TLabel
+    Align = Top
+    StyledSettings = [Family, Style, FontColor]
+    Margins.Top = 24.000000000000000000
+    Position.Y = 24.000000000000000000
+    Size.Width = 640.000000000000000000
+    Size.Height = 52.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.Font.Size = 32.000000000000000000
+    TextSettings.HorzAlign = Center
+    Text = 'Nano PoW'
+    TabOrder = 0
+  end
+  object grpBlocks: TGroupBox
+    Align = Client
+    Size.Width = 640.000000000000000000
+    Size.Height = 404.000000000000000000
+    Size.PlatformDefault = False
+    Text = 'Blocks'
+    TabOrder = 1
+    object list: TListBox
+      Align = Client
+      Margins.Left = 16.000000000000000000
+      Margins.Top = 24.000000000000000000
+      Margins.Right = 16.000000000000000000
+      Margins.Bottom = 16.000000000000000000
+      Size.Width = 608.000000000000000000
+      Size.Height = 364.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      DisableFocusEffect = True
+      DefaultItemStyles.ItemStyle = ''
+      DefaultItemStyles.GroupHeaderStyle = ''
+      DefaultItemStyles.GroupFooterStyle = ''
+      Viewport.Width = 604.000000000000000000
+      Viewport.Height = 360.000000000000000000
+    end
+  end
+  object SpeedCounter: TTimer
+    OnTimer = SpeedCounterTimer
+    Left = 564
+    Top = 148
+  end
+  object PopupMenu: TPopupMenu
+    Left = 509
+    Top = 29
+    object MenuItem1: TMenuItem
+      Text = 'Show NanoPoW'
+      OnClick = MenuItem1Click
+    end
+    object MenuItem2: TMenuItem
+      Text = 'Kill NanoPoW'
+      OnClick = MenuItem2Click
+    end
+  end
+end
