@@ -5,7 +5,7 @@ interface
 
 uses
  
-  {$IFDEF  ANDROID}}Androidapi.JNI,{$ENDIF} AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA,
+  {$IFDEF  ANDROID}Androidapi.JNI,{$ENDIF} AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA,
   IdSSLOpenSSL, languages,
  
   System.Hash, MiscOBJ, SysUtils, System.IOUtils, HashObj, System.Types,
@@ -321,8 +321,14 @@ end;
 end;
 procedure NanoCoin.loadChain;
 begin
+if CurrentAccount<> nil then begin
+
 Self.chaindir:=TPath.Combine(CurrentAccount.DirPath, 'Pendings');
-Self.pendingChain:= nano_loadChain(chaindir,Self.addr)
+if directoryexists(self.chaindir) then
+Self.pendingChain:= nano_loadChain(chaindir,Self.addr) else
+SetLength(Self.pendingChain,0);
+end else
+SetLength(Self.pendingChain,0);
 end;
 
 constructor NanoCoin.Create(id: integer; _x: integer; _y: integer;
@@ -708,8 +714,12 @@ end;
 
 function nano_getPrevious(Block: TNanoBlock): AnsiString;
 begin
-  if Block.blockType = 'open' then
+  if Block.previous = STATE_BLOCK_ZERO then
+  begin
+  if Pos('_',Block.account)>0 then
+  Exit(nano_keyFromAccount(Block.account)) else
     Exit(Block.account);
+  end;
   Result := Block.previous;
 end;
 
@@ -893,12 +903,6 @@ begin
  
     begin
       Inc(hashcounter,256);
-      {if counter mod 100000 = 0 then
-      begin
-        TThread.Synchronize(nil,procedure begin Inc(hashcounter); end);
-           end;
-       }
-
       for i := 0 to 255 do
       begin
         workBytes[7] := i;
@@ -908,10 +912,6 @@ begin
         if Terminated then
           exit();
    
- 
-         inc(counter);
- 
-
         Blake2b.TransformBytes(workBytes);
         t := Blake2b.TransformFinal.GetBytes;
         if t[7] = 255 then
@@ -936,11 +936,8 @@ begin
     end;
   except
     on E: Exception do
-      TThread.Synchronize(nil,
-        procedure
-        begin
-          showmessage(E.Message);
-        end);
+   begin
+   end;
   end;
   
 end;

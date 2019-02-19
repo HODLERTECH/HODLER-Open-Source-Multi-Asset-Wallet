@@ -151,28 +151,31 @@ uses
 
 procedure TNotificationLayout.moveCurrentPopupToTop();
 begin
-
+  try
   if currentpopup <> nil then
     Currentpopup.AnimateFloat( 'position.y' , 0 , 0.2 );
+  except
+  on E:Exception do begin end;
 
+  end;
 end;
 
 procedure TNotificationLayout.centerCurrentPopup();
 begin
-
+ try
   if currentpopup <> nil then
     Currentpopup.AnimateFloat( 'position.y' , ( Self.Height / 2 ) - (currentPopup.Height / 2 )  , 0.2 );
-
+  Except on E:Exception do begin end; end;
 end;
 
 procedure TNotificationLayout.ClosePopup;
 var
   KeyboardService: IFMXVirtualKeyboardService;
 begin
-
+ try
 {$IFDEF ANDROID}
   if TPlatformServices.Current.SupportsPlatformService(IFMXVirtualKeyboardService, IInterface(KeyboardService)) then
-    KeyboardService.HideVirtualKeyboard;
+   if KeyboardService<>nil then KeyboardService.HideVirtualKeyboard;
 {$ENDIF}
 
 
@@ -196,8 +199,8 @@ begin
     del.DisposeOf;
     del := nil;
 
-  end);
-
+  end).Start;
+except on E:Exception do begin end; end;
 
 end;
 

@@ -3481,7 +3481,7 @@ var
   FService: IFMXVirtualKeyboardService;
   X: Integer;
 begin
-
+  try
   NotificationLayout.centerCurrentPopup;
 
   if PageControl.ActiveTab = EQRView then
@@ -3498,7 +3498,9 @@ begin
   ScrollBox.RealignContent;
   frmHome.realign;
   ScrollBox.ShowScrollBars := false;
-  ScrollBox.ViewportPosition := PointF(0, 0);
+  ScrollBox.ViewportPosition := PointF(0, 0);   Except on E:Exception do begin
+
+  end;end;
 end;
 
 procedure TfrmHome.FormVirtualKeyboardShown(Sender: TObject;
@@ -3509,7 +3511,7 @@ var
   X, Y: Integer;
   sameY: Integer;
 begin
-
+  try
   NotificationLayout.moveCurrentPopupToTop;
 
   if PageControl.ActiveTab = EQRView then
@@ -3577,6 +3579,7 @@ begin
 
     until abs(Y - round(ScrollBox.ViewportPosition.Y)) < 15;
   end;
+  Except on E:Exception do begin end; end;
 
 end;
 

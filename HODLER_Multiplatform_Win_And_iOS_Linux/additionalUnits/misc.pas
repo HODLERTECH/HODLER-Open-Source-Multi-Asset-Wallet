@@ -344,7 +344,7 @@ const
   API_PRIV = {$I 'private_key.key' };
 
 resourcestring
-  CURRENT_VERSION = '0.4.0';
+  CURRENT_VERSION = '0.4.1';
 
 var
   AccountsNames: array of AccountItem;
@@ -1792,7 +1792,7 @@ begin
     setBlackBackground(panel);
     panel.Position.Y := crypto.orderInWallet;
     panel.Opacity := 0;
-    panel.AnimateFloat('Opacity', 1, 3);
+
     panel.Touch.InteractiveGestures := [TInteractiveGesture.LongTap];
     panel.OnGesture := frmhome.SwitchViewToOrganize;
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
@@ -1900,7 +1900,7 @@ begin
     price.Margins.Bottom := 2;
     panel.Visible :=
       (ccEmpty or (not frmhome.HideZeroWalletsCheckBox.IsChecked));
-
+    panel.AnimateFloat('Opacity', 1, 2);
 
   end;
 end;
@@ -2698,7 +2698,7 @@ begin
       addrLbl.Opacity := 0.5;
       datalbl.Opacity := 0.5;
     end;
-
+  // Application.ProcessMessages;
   end;
 
   { frmhome.TxHistory.Sort( function (a , b : TfmxObject) : integer

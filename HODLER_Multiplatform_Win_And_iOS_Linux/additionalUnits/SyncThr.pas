@@ -194,7 +194,7 @@ begin
 
         firstblock := nano_buildFromJSON(history.Items[0].ToJSON, '', false);
         cc.lastPendingBlock := firstblock.hash;
-        nano_precalculate(cc.lastPendingBlock);
+        //nano_precalculate(cc.lastPendingBlock);
         SetLength(cc.history, history.count);
         for i := 0 to history.Count - 1 do
         begin

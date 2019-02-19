@@ -2463,14 +2463,20 @@ begin
     end
     else
       CurrentCoin := TWalletInfo(CurrentCryptoCurrency);
-    NanoUnlocker.Visible := (CurrentCoin.coin = 8) and 
-      (CurrentCryptoCurrency.unconfirmed <> 0) and ( not  NanoCoin(CurrentCryptoCurrency).isUnlocked);
-	  
-    NanoUnlocker.Text := 'Click here to pocket ' + BigIntegerBeautifulStr
+    if (CurrentCoin.coin = 8) and
+      (CurrentCryptoCurrency.unconfirmed <> 0) and ( not  NanoCoin(CurrentCryptoCurrency).isUnlocked) then
+    begin
+    if NotificationLayout.CurrentPopup=nil then
+    UnlockNanoImage.OnClick(NanoCoin(CurrentCryptoCurrency)) else
+    if NotificationLayout.CurrentPopup.visible=false then
+    UnlockNanoImage.OnClick(NanoCoin(CurrentCryptoCurrency))
+end;
+ NanoUnlocker.Visible:=False;
+{    NanoUnlocker.Text := 'Click here to pocket ' + BigIntegerBeautifulStr
       (CurrentCryptoCurrency.unconfirmed, CurrentCryptoCurrency.decimals)
       + ' NANO';
     if frmhome.NanoUnlocker.Enabled = false then
-      frmhome.NanoUnlocker.Text := 'Mining NANO...';
+      frmhome.NanoUnlocker.Text := 'Mining NANO...'; }
 
     NanoUnlocker.Height := 48;
     NanoUnlocker.Cursor := crHandPoint;
@@ -3261,7 +3267,7 @@ begin
       Panel := TPanel(TfmxObject(Sender).Parent);
 
       if (Panel.TagObject is TWalletInfo) and
-        (TWalletInfo(Panel.TagObject).coin <> 4) then
+        (not (TWalletInfo(Panel.TagObject).coin in [4,8])) then
       begin
 
         wdArray := CurrentAccount.getWalletWithX(TWalletInfo(Panel.TagObject).x,
