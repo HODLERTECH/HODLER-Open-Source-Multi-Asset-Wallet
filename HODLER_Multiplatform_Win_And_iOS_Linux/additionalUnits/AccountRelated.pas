@@ -13,7 +13,7 @@ uses
   FMX.Platform, System.Threading, Math, DelphiZXingQRCode,
   FMX.TabControl, FMX.Edit,
   FMX.Clipboard, FMX.VirtualKeyBoard, JSON , popupwindowData,
-  languages,
+  languages,  TCopyableAddressLabelData ,  TCopyableAddressPanelData,
 
   FMX.Media, FMX.Objects, uEncryptedZipFile, System.Zip, TRotateImageData
 {$IFDEF ANDROID},
@@ -457,6 +457,8 @@ begin
   Application.OnException := frmhome.ExceptionHandler;
   ResourceMenager := AssetsMenager.Create();
 
+
+
   // frmHome.Quality := TCanvasQuality.HighPerformance;
 
   // %appdata% to %appdata%/hodlertech
@@ -513,6 +515,8 @@ begin
 
     with frmHome do
     begin
+
+
 
 {$IFDEF IOS}
       StyloSwitch.Visible := false;
@@ -646,9 +650,26 @@ begin
 {$ELSE}
       DebugBtn.Visible := false;
 {$ENDIF}
+
+
+      wvAddress := TCopyableAddressPanel.Create(wvBalance);
+      wvAddress.parent := WVBalance;
+      wvAddress.Visible := true;
+      wvAddress.Align := TAlignLayout.MostTop;
+      wvAddress.Height := 32;
+      wvAddress.addrlbl.TextSettings.HorzAlign := TTextAlign.Center;
+
+      receiveAddress := TCopyableAddressPanel.Create(WVReceive);
+      receiveAddress.parent := WVReceive;
+      receiveAddress.Visible := true;
+      receiveAddress.Align := TAlignLayout.MostTop;
+      receiveAddress.Height := 32;
+      receiveAddress.addrlbl.TextSettings.HorzAlign := TTextAlign.Center;
+
+
       // wvAddress := TCopyableEdit.CreateFrom(wvAddress);
-      wvAddress.TagString := 'copyable';
-      receiveAddress.TagString := 'copyable';
+      //wvAddress.TagString := 'copyable';
+      //receiveAddress.TagString := 'copyable';
       lblPrivateKey.TagString := 'copyable';
       lblWIFKey.TagString := 'copyable';
 
@@ -724,6 +745,8 @@ begin
       NotificationLayout.Parent := frmhome;
       NotificationLayout.Align := TAlignLayout.Contents;
       NotificationLayout.Visible := true;
+
+
 
     end;
 
@@ -1032,7 +1055,7 @@ procedure changeY(Sender: Tobject);
 var
   Panel: TPanel;
   bilanceLbl: TLabel;
-  addrLbl: TCopyableLabel;
+  addrLbl: TCopyableAddressLabel;
   deleteBtn: TLabel;
   generateNewAddresses: TButton;
   copyBtn: TButton;
@@ -1073,7 +1096,7 @@ begin
               Panel.OnClick := OpenWalletViewFromYWalletList;
               Panel.Position.y := i * Panel.Height;
               Panel.Margins.Bottom := 1;
-              addrLbl := TCopyableLabel.Create(Panel);
+              addrLbl := TCopyableAddresslabel.Create(Panel);
               addrLbl.image.Align := TAlignLayout.Right;
               addrLbl.Align := TAlignLayout.MostTop;
               addrLbl.Parent := Panel;

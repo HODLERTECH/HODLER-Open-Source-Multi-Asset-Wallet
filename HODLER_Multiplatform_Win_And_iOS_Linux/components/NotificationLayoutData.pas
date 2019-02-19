@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, System.Classes, FMX.Types, FMX.Controls, FMX.Layouts, System.uiTypes,
   FMX.Edit, FMX.StdCtrls, FMX.Clipboard, FMX.Platform, FMX.Objects, fmx.graphics,
-  System.Types, StrUtils, FMX.Dialogs , crossplatformHeaders ,System.Generics.Collections;
+  System.Types, StrUtils, FMX.Dialogs , crossplatformHeaders ,System.Generics.Collections  ,FMX.VirtualKeyboard;
 
 type
   PasswordDialog = class( TLayout )
@@ -113,6 +113,7 @@ type
   notificationStack : TStack<Tlayout>;
 
   CurrentPOpup : Tlayout;
+  PopupQueue : TQueue<Tlayout>;
 
   backGround : TRectangle;
 
@@ -122,6 +123,9 @@ type
   procedure backGroundClick(Sender : TObject);
 
   procedure ClosePopup();
+
+  procedure moveCurrentPopupToTop();
+  procedure centerCurrentPopup();
   //procedure layoutClick(Sender : TObject);
 
   //procedure AddNotification( msg : AnsiString ; time : integer = 15 );
@@ -145,8 +149,35 @@ implementation
 uses
   uhome;
 
-procedure TNotificationLayout.ClosePopup;
+procedure TNotificationLayout.moveCurrentPopupToTop();
 begin
+  try
+  if currentpopup <> nil then
+    Currentpopup.AnimateFloat( 'position.y' , 0 , 0.2 );
+  except
+  on E:Exception do begin end;
+
+  end;
+end;
+
+procedure TNotificationLayout.centerCurrentPopup();
+begin
+ try
+  if currentpopup <> nil then
+    Currentpopup.AnimateFloat( 'position.y' , ( Self.Height / 2 ) - (currentPopup.Height / 2 )  , 0.2 );
+  Except on E:Exception do begin end; end;
+end;
+
+procedure TNotificationLayout.ClosePopup;
+var
+  KeyboardService: IFMXVirtualKeyboardService;
+begin
+ try
+{$IFDEF ANDROID}
+  if TPlatformServices.Current.SupportsPlatformService(IFMXVirtualKeyboardService, IInterface(KeyboardService)) then
+   if KeyboardService<>nil then KeyboardService.HideVirtualKeyboard;
+{$ENDIF}
+
 
   Currentpopup.AnimateFloat( 'position.x' ,  self.width + currentpopup.width  , 0.2 );
 
@@ -168,8 +199,8 @@ begin
     del.DisposeOf;
     del := nil;
 
-  end);
-
+  end).Start;
+except on E:Exception do begin end; end;
 
 end;
 

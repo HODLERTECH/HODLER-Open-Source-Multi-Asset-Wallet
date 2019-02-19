@@ -116,10 +116,6 @@ uses
   AccountRelated in 'additionalUnits\AccountRelated.pas',
   QRRelated in 'additionalUnits\QRRelated.pas',
   FileManagerRelated in 'additionalUnits\FileManagerRelated.pas',
-  TCopyableEditData in 'components\TCopyableEditData.pas',
-  TCopyableLabelData in 'components\TCopyableLabelData.pas',
-  TRotateImageData in 'components\TRotateImageData.pas',
-  TImageTextButtonData in 'components\TImageTextButtonData.pas',
   CompilerAndRTLVersions in 'additionalUnits\bi\CompilerAndRTLVersions.pas',
   Velthuis.BigDecimals in 'additionalUnits\bi\Velthuis.BigDecimals.pas',
   Velthuis.BigIntegers in 'additionalUnits\bi\Velthuis.BigIntegers.pas',
@@ -138,9 +134,16 @@ uses
   AssetsMenagerData in 'additionalUnits\AssetsMenagerData.pas',
   PopupWindowData in 'additionalUnits\PopupWindowData.pas',
   CrossPlatformHeaders in 'CrossPlatformHeaders.pas',
-  NotificationLayoutData in 'components\NotificationLayoutData.pas',
   ED25519_Blake2b in 'coinCode\ED25519_Blake2b.pas',
-  Nano in 'coinCode\Nano.pas';
+  Nano in 'coinCode\Nano.pas',
+  NotificationLayoutData in 'components\NotificationLayoutData.pas',
+  TAddressLabelData in 'components\TAddressLabelData.pas',
+  TCopyableAddressLabelData in 'components\TCopyableAddressLabelData.pas',
+  TCopyableAddressPanelData in 'components\TCopyableAddressPanelData.pas',
+  TCopyableEditData in 'components\TCopyableEditData.pas',
+  TCopyableLabelData in 'components\TCopyableLabelData.pas',
+  TImageTextButtonData in 'components\TImageTextButtonData.pas',
+  TRotateImageData in 'components\TRotateImageData.pas';
 
 {$R *.res}
 

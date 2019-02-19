@@ -252,50 +252,52 @@ begin
     Exit(tx);
 
 
-  end else begin
-
-
-
-  if CurrentCoin.coin <> 4 then
-  begin
-    if ((CurrentCoin.coin in [0, 1, 5, 6])) and
-      canSegwit(currentaccount.aggregateUTXO(from)) then
-    begin
-      TX := createSegwitTransaction(from, sendto, Amount, Fee,
-        currentaccount.aggregateUTXO(from), MasterSeed);
-    end
-    else
-    begin
-      TX := createTransaction(from, sendto, Amount, Fee,
-        currentaccount.aggregateUTXO(from), MasterSeed);
-    end;
   end
   else
   begin
-    TXBuilder := TXBuilder_ETH.Create;
-    TXBuilder.sender := CurrentCoin;
-    TXBuilder.nonce := TXBuilder.sender.nonce;
-    TXBuilder.gasPrice := Fee;
-    TXBuilder.value := Amount;
-    TXBuilder.gasLimit := 21000;
-    TXBuilder.receiver := StringReplace(sendto, '0x', '', [rfReplaceAll]);
-    TXBuilder.data := '';
-    if frmHome.isTokenTransfer then
+
+
+    if CurrentCoin.coin <> 4 then
     begin
+      if ((CurrentCoin.coin in [0, 1, 5, 6])) and
+        canSegwit(currentaccount.aggregateUTXO(from)) then
+      begin
+        TX := createSegwitTransaction(from, sendto, Amount, Fee,
+          currentaccount.aggregateUTXO(from), MasterSeed);
+      end
+      else
+      begin
+        TX := createTransaction(from, sendto, Amount, Fee,
+          currentaccount.aggregateUTXO(from), MasterSeed);
+      end;
+    end
+    else
+    begin
+      TXBuilder := TXBuilder_ETH.Create;
+      TXBuilder.sender := CurrentCoin;
+      TXBuilder.nonce := TXBuilder.sender.nonce;
+      TXBuilder.gasPrice := Fee;
+      TXBuilder.value := Amount;
+      TXBuilder.gasLimit := 21000;
+      TXBuilder.receiver := StringReplace(sendto, '0x', '', [rfReplaceAll]);
+      TXBuilder.data := '';
+      if frmHome.isTokenTransfer then
+      begin
 
-      TXBuilder.value := BigInteger.Zero;
-      TXBuilder.receiver := StringReplace(Token(CurrentCryptoCurrency)
-        .ContractAddress, '0x', '', [rfReplaceAll]);
-      TXBuilder.gasLimit := 66666;
-      TXBuilder.data := 'a9059cbb000000000000000000000000' +
-        StringReplace(sendto, '0x', '', [rfReplaceAll]) +
-        BIntTo256Hex(Amount, 64);
+        TXBuilder.value := BigInteger.Zero;
+        TXBuilder.receiver := StringReplace(Token(CurrentCryptoCurrency)
+          .ContractAddress, '0x', '', [rfReplaceAll]);
+        TXBuilder.gasLimit := 66666;
+        TXBuilder.data := 'a9059cbb000000000000000000000000' +
+          StringReplace(sendto, '0x', '', [rfReplaceAll]) +
+          BIntTo256Hex(Amount, 64);
+      end;
+
+      TXBuilder.createPreImage;
+      TXBuilder.sign(MasterSeed);
+      TX := TXBuilder.Image;
     end;
-
-    TXBuilder.createPreImage;
-    TXBuilder.sign(MasterSeed);
-    TX := TXBuilder.Image;
-  end;  end;
+  end;
   result := TX;
   if TX <> '' then
   begin

@@ -181,17 +181,20 @@ begin
     cc.unconfirmed := BigInteger.Parse(js.GetValue('balance').GetValue < string > ('pending'));
     //{history := }js.TryGetValue<TJSONArray>('history' , history) {as TJSONArray};
     //{pendings :=} js.tryGetValue<TJsonArray>('pending' , pendings) {as TJsonArray};
+
     if (Length(NanoCoin(cc).pendingChain)>0) then
     NanoCoin(cc).lastBlockAmount:=BigInteger.Parse(NanoCoin(cc).curBlock.balance) else
     NanoCoin(cc).lastBlockAmount:=cc.confirmed;
     cc.confirmed:=NanoCoin(cc).lastBlockAmount;
 
+	
     if js.TryGetValue<TJSONArray>('history' , history)  then
       if history.Count > 0 then
       begin
+
         firstblock := nano_buildFromJSON(history.Items[0].ToJSON, '', false);
         cc.lastPendingBlock := firstblock.hash;
-        nano_precalculate(cc.lastPendingBlock);
+        //nano_precalculate(cc.lastPendingBlock);
         SetLength(cc.history, history.count);
         for i := 0 to history.Count - 1 do
         begin
@@ -600,8 +603,11 @@ begin
         end;
       8:
         begin
-          data := getDataOverHTTP('https://hodlernode.net/nano.php?addr=' + TWalletInfo(cc).addr, false,true);
-          syncNano(cc, data);
+		
+          data := getDataOverHTTP('https://hodlernode.net/nano.php?addr=' + TWalletInfo(cc).addr, false , true);
+          if data <> '' then
+            syncNano(cc, data);
+			
 
         end;
     end;

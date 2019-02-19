@@ -104,7 +104,7 @@ uses AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA, IdSSLOpenSSL, languages,
   ClpSecureRandom,
   ClpISecureRandom,
   ClpCryptoApiRandomGenerator,
-  ClpICryptoApiRandomGenerator, PopupWindowData,
+  ClpICryptoApiRandomGenerator, PopupWindowData, TaddressLabelData,
   AssetsMenagerData
 
 {$IFDEF ANDROID},
@@ -257,7 +257,8 @@ function keccak256String(s: AnsiString): AnsiString;
 function keccak256Hex(s: AnsiString): AnsiString;
 procedure createAddWalletView();
 function cutEveryNChar(n: integer; Str: AnsiString; sep: AnsiChar = ' ')
-  : AnsiString;
+  : AnsiString; overload;
+function cutEveryNChar(n: integer; Str: AnsiString; sep: AnsiString) : AnsiString; overload;
 function removeSpace(Str: AnsiString): AnsiString;
 function generateIcon(hex: AnsiString): TBitmap;
 procedure wipeTokenDat();
@@ -343,7 +344,7 @@ const
   API_PRIV = {$I 'private_key.key' };
 
 resourcestring
-  CURRENT_VERSION = '0.4.0';
+  CURRENT_VERSION = '0.4.1';
 
 var
   AccountsNames: array of AccountItem;
@@ -373,6 +374,8 @@ var
   AddCoinBackTabItem: TTabItem;
   createPasswordBackTabItem: TTabItem;
   RestoreFromFileBackTabItem: TTabItem;
+  SelectGenerateCoinViewBackTabItem  : TTabItem;
+  chooseETHWalletBackTabItem : TTabItem;
   QRMask : TBitmap;
 
   newcoinID: nativeint;
@@ -967,6 +970,8 @@ var
   lbl: TLabel;
 begin
 
+  SelectGenerateCoinViewBackTabItem := frmhome.PageControl.ActiveTab;
+
   if frmhome.GenerateCoinVertScrollBox.Content.ChildrenCount <> 0 then
   begin
 
@@ -1070,6 +1075,8 @@ begin
     image.Width := 15 + (48 - 8 * 2) + 15;
 
   end;
+
+
 
 end;
 
@@ -1785,7 +1792,7 @@ begin
     setBlackBackground(panel);
     panel.Position.Y := crypto.orderInWallet;
     panel.Opacity := 0;
-    panel.AnimateFloat('Opacity', 1, 3);
+
     panel.Touch.InteractiveGestures := [TInteractiveGesture.LongTap];
     panel.OnGesture := frmhome.SwitchViewToOrganize;
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
@@ -1893,6 +1900,8 @@ begin
     price.Margins.Bottom := 2;
     panel.Visible :=
       (ccEmpty or (not frmhome.HideZeroWalletsCheckBox.IsChecked));
+    panel.AnimateFloat('Opacity', 1, 2);
+
   end;
 end;
 
@@ -2530,7 +2539,7 @@ var
   panel: TPanel;
   image: TImage;
   lbl: TLabel;
-  addrLbl: TLabel;
+  addrLbl: TAddressLabel;
   datalbl: TLabel;
   fmxObj: TfmxObject;
   i: integer;
@@ -2578,9 +2587,11 @@ begin
       exit;
     if Length(hist[i].addresses) = 0 then
       continue;
+
     panel := TPanel.Create(frmhome.TxHistory);
 
     panel.Height := 40;
+    panel.Width := frmhome.TxHistory.Width;
     panel.Visible := true;
     panel.tag := i;
     panel.TagFloat := strToFloatDef(hist[i].data, 0);
@@ -2602,20 +2613,37 @@ begin
     panel.Margins.Bottom := 2;
     panel.Margins.top := 2;
 
-    addrLbl := TLabel.Create(panel);
-    addrLbl.Visible := true;
-    addrLbl.parent := panel;
-    addrLbl.Width := 400;
-    addrLbl.Height := 18;
-    addrLbl.Position.x := 36;
-    addrLbl.Position.Y := 0;
-    if Length(hist[i].addresses) = 0 then
-      addrLbl.Text := 'history damaged'
-    else
-      addrLbl.Text := hist[i].addresses[0];
-    addrLbl.TextSettings.HorzAlign := TTextAlign.Leading;
+      addrLbl := TAddressLabel.Create(panel);
+      addrLbl.parent := panel;
+      addrlbl.Align := TAlignLayout.Top;
+      addrLbl.Visible := true;
+      //addrlbl.Margins.Right := 36;
+      //addrLbl.Width := 400;
+      addrLbl.Height := 18;
+
+      //addrLbl.Position.x := 36;
+      //addrLbl.Position.Y := 0;
+
+      addrLbl.TextSettings.HorzAlign := TTextAlign.Leading;
+      if wallet is TWalletInfo then
+      begin
+        if TWalletInfo(wallet).coin = 8 then
+          addrLbl.SetText(  hist[i].addresses[0] , 4  )
+        else if TWalletInfo(wallet).coin = 4 then
+          addrLbl.SetText(  hist[i].addresses[0] , 2  )
+        else if TWalletInfo(wallet).coin = 3 then
+          addrLbl.SetText(  hist[i].addresses[0] , 12  )
+        else
+          addrLbl.Text := hist[i].addresses[0];
+      end
+      else
+        addrLbl.Text := hist[i].addresses[0];
+
+
+    
 
     datalbl := TLabel.Create(panel);
+    //datalbl.Align := TAlignLayout.Bottom;
     datalbl.Visible := true;
     datalbl.parent := panel;
     datalbl.Width := 400;
@@ -2627,11 +2655,16 @@ begin
       UnixToDateTime(strToIntdef(hist[i].data, 0)));
     datalbl.TextSettings.HorzAlign := TTextAlign.Leading;
     datalbl.Visible := TWalletInfo(wallet).coin <> 8;
+
+
     image := TImage.Create(panel);
+    image.Align := TAlignLayout.MostLeft;
+    image.Margins.Left := 9;
+    image.Margins.Right := 9;
     image.Width := 18;
-    image.Height := 18;
-    image.Position.x := 9;
-    image.Position.Y := 9;
+    //image.Height := 18;
+    //image.Position.x := 9;
+    //image.Position.Y := 9;
     image.Visible := true;
     image.parent := panel;
 
@@ -2641,6 +2674,7 @@ begin
       image.Bitmap := frmhome.receiveImage.Bitmap;
     if hist[i].typ = 'INTERNAL' then
       image.Bitmap := frmhome.internalImage.Bitmap;
+
     lbl := TLabel.Create(panel);
     lbl.Align := TAlignLayout.Bottom;
     lbl.Height := 18;
@@ -2664,7 +2698,7 @@ begin
       addrLbl.Opacity := 0.5;
       datalbl.Opacity := 0.5;
     end;
-
+  // Application.ProcessMessages;
   end;
 
   { frmhome.TxHistory.Sort( function (a , b : TfmxObject) : integer
@@ -3173,9 +3207,29 @@ begin
 
 end;
 
+function cutEveryNChar(n: integer; Str: AnsiString; sep: AnsiString)
+  : AnsiString;
+var
+  i, j: integer;
+begin
+
+  result := str;
+  J := 0;
+  for I := Low(sep) to High(sep) do
+  begin
+
+    result := cutEveryNChar( n + j , result , sep[i]);
+
+    J := j + 1 ;
+  end;
+
+
+end;
+
 function removeSpace(Str: AnsiString): AnsiString;
 begin
   result := Str;
+  result := StringReplace(result, #13#10, '', [rfReplaceAll]);
   result := StringReplace(result, ' ', '', [rfReplaceAll]);
 end;
 
@@ -3873,6 +3927,11 @@ var
   b: System.UInt8;
   bb: Tbytes;
 begin
+
+  //if not IsHex(h) then
+  //  raise Exception.Create(H + ' is not hex');
+
+
   SetLength(bb, (Length(H) div 2));
 {$IF (DEFINED(ANDROID) OR DEFINED(IOS))}
   for i := 0 to (Length(H) div 2) - 1 do
