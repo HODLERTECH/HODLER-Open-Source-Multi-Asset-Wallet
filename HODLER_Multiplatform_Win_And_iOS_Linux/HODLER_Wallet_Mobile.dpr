@@ -141,7 +141,8 @@ uses
   Nano in 'coinCode\Nano.pas',
   TAddressLabelData in 'components\TAddressLabelData.pas',
   TCopyableAddressLabelData in 'components\TCopyableAddressLabelData.pas',
-  TCopyableAddressPanelData in 'components\TCopyableAddressPanelData.pas';
+  TCopyableAddressPanelData in 'components\TCopyableAddressPanelData.pas',
+  ThreadKindergartenData in 'additionalUnits\ThreadKindergartenData.pas';
 
 {$R *.res}
 

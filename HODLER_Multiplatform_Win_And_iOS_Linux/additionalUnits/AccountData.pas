@@ -3,7 +3,7 @@ unit AccountData;
 interface
 
 uses tokenData, WalletStructureData, cryptoCurrencyData, System.IOUtils,
-  Sysutils, Classes, FMX.Dialogs, Json, Velthuis.BigIntegers, math ,System.Generics.Collections , System.SyncObjs;
+  Sysutils, Classes, FMX.Dialogs, Json, Velthuis.BigIntegers, math ,System.Generics.Collections , System.SyncObjs , THreadKindergartenData;
 
 procedure loadCryptoCurrencyJSONData(data: TJSONValue; cc: cryptoCurrency);
 function getCryptoCurrencyJsonData(cc: cryptoCurrency): TJSONObject;
@@ -31,6 +31,8 @@ type
     SeedFilePath: AnsiString;
     DescriptionFilePath : AnsiString;
     Paths: Array of AnsiString;
+
+    SynchronizeThreadGuardian : ThreadKindergarten;
 
     DescriptionDict: TObjectDictionary< TPair<Integer , Integer> , AnsiString >;
 
@@ -131,7 +133,10 @@ begin
     str := TJsonString.Create( it.Current.Value );
 
     obj.AddPair( TJsonPair.Create( pair , str ) );
+
   end;
+
+  it.Free;
 
   ts := TStringList.Create();
 
@@ -149,16 +154,16 @@ procedure Account.LoadDescriptionFile();
 var
   obj : TJsonObject;
   it : TJSONPairEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
-  pair : TJSONString;
-  str : TJSONString;
+
+
   ts , temp : TstringList;
 begin
   mutexDescriptionFile.Acquire;
+
   if not FileExists( DescriptionFilePath ) then
   begin
     mutexDescriptionFile.Release;
     exit();
-
   end;
 
   ts := TStringList.Create();
@@ -169,6 +174,7 @@ begin
     mutexDescriptionFile.Release;
     exit();
   end;
+
 
   obj := TJsonObject(TJSONObject.ParseJSONValue( ts.Text ));
 
@@ -184,6 +190,7 @@ begin
     temp.Free();
   end;
 
+  it.Free;
   ts.Free();
 
   obj.Free();
@@ -383,6 +390,7 @@ end;
 
 constructor Account.Create(_name: AnsiString);
 begin
+  inherited Create;
   name := _name;
 
   DirPath := TPath.Combine(HOME_PATH, name);
@@ -417,6 +425,8 @@ begin
   mutexSeedFile := TSemaphore.Create();
   mutexDescriptionFile := TSemaphore.Create();
 
+  SynchronizeThreadGuardian := ThreadKindergarten.Create();
+
 end;
 
 destructor Account.Destroy();
@@ -433,12 +443,21 @@ begin
   if SyncBalanceThr <> nil then
 
   SyncBalanceThr.Terminate;
-  TThread.CreateAnonymousThread(procedure begin
-      SyncBalanceThr.DisposeOf;
-      end).Start();
-      SyncBalanceThr := nil;
+  SynchronizeThreadGuardian.DisposeOf;
+  SynchronizeThreadGuardian := nil;
 
 
+  TThread.CreateAnonymousThread(procedure
+  begin
+
+    SyncBalanceThr.DisposeOf;
+
+    SyncBalanceThr := nil;
+
+  end).Start();
+  
+
+  inherited;
 end;
 
 procedure Account.SaveSeedFile();
@@ -686,6 +705,8 @@ begin
 
     end;
 
+    Jsonarray.Free;
+
   end
   else
   begin
@@ -778,6 +799,7 @@ begin
 
       end;
 
+      JsonArray.Free;
     end
     else
     begin
@@ -840,8 +862,6 @@ var
   tokenJson: TJSONObject;
   flock: TObject;
 begin
-  {flock := TObject.Create;
-  TMonitor.Enter(flock); }
 
   mutexTokenFile.Acquire;
 
@@ -868,15 +888,16 @@ begin
 
     ts.Text := TokenArray.ToString;
     ts.SaveToFile(TokenFilePath);
+    TokenArray.Free;
   except
     on E: Exception do
     begin
     end;
   end;
+
   ts.Free;
   mutexTokenFile.Release;
-  {TMonitor.exit(flock);
-  flock.Free; }
+
 end;
 
 procedure Account.SaveCoinFile();

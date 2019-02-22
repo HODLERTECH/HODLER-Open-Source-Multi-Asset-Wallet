@@ -3,6 +3,7 @@ program HODLER_Wallet_Desktop;
 {$R *.dres}
 
 uses
+  {$IFDEF DEBUG}fastMM4,  {$ENDIF}
   SafeDLLPath in 'SafeDLLPath.pas',
   System.StartUpCopy,
   FMX.Forms,
@@ -142,7 +143,8 @@ uses
   Nano in 'coinCode\Nano.pas',
   TAddressLabelData in 'components\TAddressLabelData.pas',
   TCopyableAddressLabelData in 'components\TCopyableAddressLabelData.pas',
-  TCopyableAddressPanelData in 'components\TCopyableAddressPanelData.pas';
+  TCopyableAddressPanelData in 'components\TCopyableAddressPanelData.pas',
+  ThreadKindergartenData in 'additionalUnits\ThreadKindergartenData.pas';
 
 {$R *.res}
 
@@ -150,6 +152,7 @@ var
   H: THandle;
 
 begin
+
   Application.OnException := frmhome.ExceptionHandler;
   VKAutoShowMode := TVKAutoShowMode.Never;
 

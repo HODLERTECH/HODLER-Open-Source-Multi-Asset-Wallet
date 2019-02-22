@@ -668,6 +668,7 @@
         <DCCReference Include="components\TAddressLabelData.pas"/>
         <DCCReference Include="components\TCopyableAddressLabelData.pas"/>
         <DCCReference Include="components\TCopyableAddressPanelData.pas"/>
+        <DCCReference Include="additionalUnits\ThreadKindergartenData.pas"/>
         <RcItem Include="Languages\PT.lang">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
@@ -1352,7 +1353,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="token_icons\1715.png" Configuration="Release" Class="ProjectFile">
+                <DeployFile LocalName="token_icons\Encrypted_512_White.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -1369,7 +1370,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="token_icons\Encrypted_512_White.png" Configuration="Debug" Class="ProjectFile">
+                <DeployFile LocalName="token_icons\1715.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>

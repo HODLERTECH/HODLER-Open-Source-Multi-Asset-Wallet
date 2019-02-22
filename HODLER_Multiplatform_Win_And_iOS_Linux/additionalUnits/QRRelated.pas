@@ -296,7 +296,7 @@ begin
                     else
                     begin
                       if (lowercase(ts.Strings[0]) <>
-                        lowercase(AvailableCoin[CurrentCoin.coin].name) ) and not ( CurrentCoin.coin in [3, 7] ) then
+                        lowercase(AvailableCoin[CurrentCoin.coin].name) ) and not ( CurrentCoin.coin in [3, 7 ,8] ) then
                       begin
 
                           popupWindow.Create(dictionary('QRCodeFor') + ' ' +

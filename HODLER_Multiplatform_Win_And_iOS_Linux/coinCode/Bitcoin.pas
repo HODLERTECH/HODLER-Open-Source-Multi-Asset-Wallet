@@ -32,7 +32,7 @@ implementation
 
 uses
   uHome, transactions, tokenData, bech32, misc, SyncThr, WalletViewRelated,
-  KeypoolRelated,Nano;
+  KeypoolRelated,Nano , debugAnalysis ;
 
 function Bitcoin_createHD(coinid, x, y: integer; MasterSeed: AnsiString)
   : TWalletInfo;
@@ -82,7 +82,7 @@ end;
 
 function generatep2sh(pub, netbyte: AnsiString): AnsiString;
 var
-  s, r: AnsiString;
+  s, r ,t: AnsiString;
 begin
   s := GetSHA256FromHex(pub);
   s := hash160FromHex(s);
@@ -91,13 +91,15 @@ begin
   s := hash160FromHex(s);
   s := netbyte + s;
   r := GetSHA256FromHex(s);
-  r := GetSHA256FromHex(r);
+  t := GetSHA256FromHex(r);
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
-  s := s + copy(r, 0, 8);
+  s := s + copy(t, 0, 8);
 {$ELSE}
-  s := s + copy(r, 1, 8);
+  s := s + copy(t, 1, 8);
 {$ENDIF}
-  result := Encode58(s);
+  result := Encode58(s) ;
+
+
 end;
 
 function generatep2wpkh(pub: AnsiString; hrp: AnsiString = 'bc'): AnsiString;

@@ -690,7 +690,8 @@ var
   &random: ISecureRandom;
 begin
   random := TSecureRandom.GetInstance('SHA256PRNG');
-  result := ToHex(random.GenerateSeed(256), 256)
+  result := ToHex(random.GenerateSeed(256), 256);
+
 end;
 
 function ISecureRandomBuffer: AnsiString;
@@ -1156,6 +1157,7 @@ var
 var
   Stream: TResourceStream;
 begin
+
 {$IFDEF IOS}
   exit;
 {$ENDIF}
@@ -1166,9 +1168,10 @@ begin
 {$IFDEF IOS}
   name := name + '_IOS';
 {$ENDIF}
-  stylo.TrySetStyleFromResource(name);
-  currentStyle := name;
 
+  currentStyle := name;
+   //exit;
+  stylo.TrySetStyleFromResource(name);
   tmp := getComponentsWithTagString('copy_image', frmhome);
   if Length(tmp) <> 0 then
     for fmxObj in tmp do
@@ -2325,7 +2328,9 @@ begin
 
     with frmhome do
     begin
+
       it := sourceDictionary.GetEnumerator();
+
       While (it.MoveNext) do
       begin
 
@@ -2340,6 +2345,9 @@ begin
             showmessage('Forgotten component ' + component.ToString);
         end;
       end;
+
+      it.Free;
+
     end;
 
   except
@@ -2378,6 +2386,10 @@ begin
     frmhome.sourceDictionary.AddOrSetValue(trim(it.Key), it.AsString);
   end;
 
+  it.Free;
+
+  JSONTextReader.Free;
+  StringReader.Free;
 end;
 
 procedure Vibrate(ms: int64);
@@ -2777,7 +2789,10 @@ begin
     end;
 
     result.Unmap(temp);
+
   end;
+
+
 
 end;
 
@@ -3057,6 +3072,10 @@ begin
   begin
     if VSB.Components[i].ClassType = TPanel then
     begin
+
+      if TPanel(VSB.Components[i]).TagObject is THistoryHolder then
+        TPanel(VSB.Components[i]).TagObject.Free;
+
       VSB.Components[i].DisposeOf;
       i := VSB.ComponentCount - 1
     end
@@ -4304,7 +4323,7 @@ begin
     ts.Text := JsonObject.ToString;
     ts.SaveToFile(tpath.Combine(HOME_PATH, 'hodler.wallet.dat'));
     ts.Free;
-
+     jsonObject.Free;
   finally
     TMonitor.exit(Flock);
     Flock.Free;
