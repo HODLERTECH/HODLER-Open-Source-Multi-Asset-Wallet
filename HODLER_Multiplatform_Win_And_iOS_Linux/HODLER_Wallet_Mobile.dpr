@@ -142,7 +142,8 @@ uses
   TAddressLabelData in 'components\TAddressLabelData.pas',
   TCopyableAddressLabelData in 'components\TCopyableAddressLabelData.pas',
   TCopyableAddressPanelData in 'components\TCopyableAddressPanelData.pas',
-  ThreadKindergartenData in 'additionalUnits\ThreadKindergartenData.pas';
+  ThreadKindergartenData in 'additionalUnits\ThreadKindergartenData.pas',
+  uNanoPowAS in 'NanoPoWAndroidService\uNanoPowAS.pas' {DM: TAndroidService};
 
 {$R *.res}
 
@@ -172,7 +173,8 @@ begin
     try
       Application.Initialize;
 
-      Application.FormFactor.Orientations := [TFormOrientation.Portrait];
+      AApplication.CreateForm(TDM, DM);
+  pplication.FormFactor.Orientations := [TFormOrientation.Portrait];
       AApplication.CreateForm(TfrmHome, frmHome);
   pplication.Run;
     finally

@@ -671,7 +671,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             end
           end
           inherited WVReceive: TTabItem
-            Size.Width = 56.000000000000000000
+            Size.Width = 55.000000000000000000
             ExplicitSize.cx = 60.000000000000000000
             ExplicitSize.cy = 26.000000000000000000
             inherited ReceiveVertScrollBox: TVertScrollBox
@@ -693,7 +693,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             end
           end
           inherited WVSettings: TTabItem
-            Size.Width = 65.000000000000000000
+            Size.Width = 64.000000000000000000
             ExplicitSize.cx = 63.000000000000000000
             ExplicitSize.cy = 26.000000000000000000
             inherited btnExportPrivKey: TButton
