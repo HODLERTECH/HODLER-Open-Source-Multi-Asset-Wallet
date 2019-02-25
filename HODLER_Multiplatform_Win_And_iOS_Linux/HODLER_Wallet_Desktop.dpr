@@ -97,7 +97,6 @@ uses
   coinData in 'coinCode\coinData.pas',
   tokenData in 'coinCode\tokenData.pas',
   bech32 in 'additionalUnits\bech32.pas',
-  FMX.Ani in 'FMX.Ani.pas',
   DW.ThreadedTimer in 'DW.ThreadedTimer.pas',
   cryptoCurrencyData in 'coinCode\cryptoCurrencyData.pas',
   SyncThr in 'additionalUnits\SyncThr.pas',

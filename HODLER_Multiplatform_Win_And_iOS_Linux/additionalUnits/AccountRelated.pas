@@ -454,7 +454,9 @@ var
 begin
 
   Randomize;
+
   Application.OnException := frmhome.ExceptionHandler;
+
   ResourceMenager := AssetsMenager.Create();
 
 

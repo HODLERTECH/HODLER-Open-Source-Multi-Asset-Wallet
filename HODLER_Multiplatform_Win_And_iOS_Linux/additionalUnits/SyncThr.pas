@@ -80,7 +80,7 @@ implementation
 
 uses
   uhome, misc, coinData, Velthuis.BigIntegers, Bitcoin, WalletViewRelated,
-  keyPoolRelated;
+  keyPoolRelated{$IFDEF ANDROID},System.Android.Service{$ENDIF};
 
 function prepareBatch(wi: TWalletInfo; i: string): string;
 var
@@ -135,7 +135,8 @@ var
   i: Integer;
 begin
   i := 0;
-
+  if not (coinid in [0..8]) then exit;
+  
   result := 'coin=' + availablecoin[coinid].name;
   for wi in CurrentAccount.myCoins do
   begin
@@ -173,6 +174,7 @@ begin
   ShellExecute(0,'open','NanoPoW64.exe','',PWideChar(ExtractFileDir(ParamStr(0))),SW_HIDE) else
   ShellExecute(0,'open','NanoPoW32.exe','',PWideChar(ExtractFileDir(ParamStr(0))),SW_HIDE);
  {$ENDIF}
+
   try
 
     js := TJSONObject.ParseJSONValue(data) as TJSONObject;
@@ -270,6 +272,8 @@ var
   err: string;
   wd: TWalletInfo;
 begin
+if LeftStr(s,7)=('Invalid') then exit;
+
   err := '';
   if (s = '[]') or (s = '') then
     Exit;
@@ -1099,7 +1103,8 @@ var
   i: Integer;
   bc: Integer;
 begin
-
+  if LeftStr(s,7)='Invalid' then exit;
+  
   ts := TStringList.Create;
   ts.text := s;
   try

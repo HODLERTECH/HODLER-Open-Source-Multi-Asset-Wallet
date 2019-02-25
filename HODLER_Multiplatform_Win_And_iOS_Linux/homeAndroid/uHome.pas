@@ -44,7 +44,7 @@ uses
   Androidapi.JNI.WebKit,
   Androidapi.JNI.Os,
   Androidapi.NativeActivity,
-  Androidapi.JNIBridge, SystemApp
+  Androidapi.JNIBridge,System.Android.Service, SystemApp
 {$ELSE}
 {$ENDIF},
   misc, FMX.Menus,
@@ -1070,6 +1070,7 @@ type
     procedure GetImage();
   public
     { Public declarations }
+    FServiceConnection: TLocalServiceConnection;
     FScanManager: TScanManager;
     FScanInProgress: Boolean;
     FFrameTake: Integer;
@@ -2824,6 +2825,9 @@ end;
 
 procedure TfrmHome.ChangeAccountButtonClick(Sender: TObject);
 begin
+ {$IFDEF ANDROID}
+
+ {$ENDIF}
   AccountRelated.changeAccount(Sender);
 end;
 
@@ -3465,9 +3469,13 @@ end;
 
 procedure TfrmHome.FormShow(Sender: TObject);
 begin
-
+FServiceConnection:=TLocalServiceConnection.Create;
+  FServiceConnection.StartService('NanoPowAS');
+  FServiceConnection.BindService('NanoPoWAS');
   try
     AccountRelated.afterInitialize;
+      FServiceConnection := TLocalServiceConnection.Create;
+//  ;
   except
     on E: Exception do
       showmessage(E.Message);

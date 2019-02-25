@@ -17,7 +17,7 @@ type
     prefix, AddrPrefix, address, AddrSuffix: Tlabel;
     ftext: AnsiString;
     lastPrefixLength : Integer;
-
+    FLastWidth: Single;
     function getText(): AnsiString;
   protected
     procedure DoRealign; override;
@@ -72,6 +72,9 @@ var
 
 begin
   inherited resize;
+  if Self.Width=FLastWidth then Exit;
+  FLastWidth:=Self.Width;
+
   try
   //Realign;
   //RecalcSize;
@@ -193,7 +196,7 @@ end;
 constructor TAddressLabel.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-
+  FLastWidth:=Self.Width;
   TextSettings := TTextSettings.Create(self);
   lastPrefixLength := 0;
   //width := Tcontrol(AOwner).width;
@@ -299,6 +302,8 @@ begin
   AddrSufW := BoltCanvas.Canvas.TextWidth(AddrSuffix.Text);
 
   avr := (prefW + addrPrefW + AddrSufW ) / (8 + prefixLength);
+  if avr=0 then exit;
+  
   propLen := round((width * 0.4) / avr) - (8 + prefixLength);
 
 

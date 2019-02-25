@@ -148,11 +148,12 @@ end;
 procedure Account.LoadDescriptionFile();
 var
   obj : TJsonObject;
-  it : TJSONPairEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
+  it : TJSONObject.TEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
   pair : TJSONString;
   str : TJSONString;
   ts , temp : TstringList;
 begin
+
   mutexDescriptionFile.Acquire;
   if not FileExists( DescriptionFilePath ) then
   begin
@@ -939,10 +940,7 @@ begin
 
   except on E: Exception do
   begin
-    tthread.synchronize( nil , procedure
-    begin
-      showmessage( e.Message );
-    end);
+
 
 
   end;
@@ -961,19 +959,19 @@ var
 
   HistArrayIt: TJSONValue;
 
-  confirmed, unconfirmed, rate: AnsiString;
+  confirmed, unconfirmed, rate: string;
   i: Integer;
 begin
 
-  if data.TryGetValue<AnsiString>('confirmed', confirmed) then
+  if data.TryGetValue<string>('confirmed', confirmed) then
   begin
     BigInteger.TryParse(confirmed, 10, cc.confirmed);
   end;
-  if data.TryGetValue<AnsiString>('unconfirmed', unconfirmed) then
+  if data.TryGetValue<string>('unconfirmed', unconfirmed) then
   begin
     BigInteger.TryParse(unconfirmed, 10, cc.unconfirmed);
   end;
-  if data.TryGetValue<AnsiString>('USDPrice', rate) then
+  if data.TryGetValue<string>('USDPrice', rate) then
   begin
     cc.rate := StrToFloatDef(rate, 0);
   end;

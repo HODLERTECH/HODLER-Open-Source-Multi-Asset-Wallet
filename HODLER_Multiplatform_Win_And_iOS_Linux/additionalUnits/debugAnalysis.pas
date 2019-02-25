@@ -238,7 +238,7 @@ var
   temp: TStringList;
   Y, m, d: Word;
 begin
-
+  {$IFDEF MSWINDOWS}
   if (logData <> nil) and (logData.Count > 0) then
   begin
     { temp := TStringList.Create();
@@ -255,7 +255,7 @@ begin
     logData.DisposeOf;
     logData := nil;
   end;
-
+ {$ENDIF}
 end;
 
 procedure ExceptionHandler(sender: TObject; E: Exception);

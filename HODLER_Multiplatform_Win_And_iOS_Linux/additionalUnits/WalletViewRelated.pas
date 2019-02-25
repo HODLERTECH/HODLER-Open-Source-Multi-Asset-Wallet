@@ -2463,13 +2463,19 @@ begin
     end
     else
       CurrentCoin := TWalletInfo(CurrentCryptoCurrency);
+    if CurrentCoin=nil then exit;
+    
     if (CurrentCoin.coin = 8) and
       (CurrentCryptoCurrency.unconfirmed <> 0) and ( not  NanoCoin(CurrentCryptoCurrency).isUnlocked) then
     begin
+
+try
     if NotificationLayout.CurrentPopup=nil then
-    UnlockNanoImage.OnClick(NanoCoin(CurrentCryptoCurrency)) else
+    UnlockNanoImage.OnClick(NanoCoin(CurrentCoin))
+    else
     if NotificationLayout.CurrentPopup.visible=false then
-    UnlockNanoImage.OnClick(NanoCoin(CurrentCryptoCurrency))
+    UnlockNanoImage.OnClick(NanoCoin(CurrentCoin));
+except on E:Exception do begin end; end;
 end;
  NanoUnlocker.Visible:=False;
 {    NanoUnlocker.Text := 'Click here to pocket ' + BigIntegerBeautifulStr

@@ -147,7 +147,7 @@ procedure setPrecalculated(Hash, work: AnsiString);
 
 function findPrecalculated(Hash: AnsiString): AnsiString;
 
-procedure nano_test(cc: cryptoCurrency; data: AnsiString);
+procedure nano_test();
 
 procedure nano_precalculate(Hash: AnsiString);
 
@@ -165,10 +165,10 @@ function nano_obtainBlock(Hash: AnsiString): AnsiString;
 
 
 function nano_addPendingReceiveBlock(sourceBlockHash: AnsiString;
-  cc: cryptoCurrency; from: AnsiString; ms: AnsiString; amount: BigInteger; doWork: Boolean = True)
+  cc: cryptoCurrency; from: AnsiString; ms: AnsiString; amount: BigInteger; doWork: Boolean = false)
   : TNanoBlock; overload;
 function nano_addPendingReceiveBlock(sourceBlockHash: AnsiString; cc: NanoCoin;
-from: AnsiString; amount: BigInteger; doWork: Boolean = True): TNanoBlock;overload;
+from: AnsiString; amount: BigInteger; doWork: Boolean = false): TNanoBlock;overload;
 
 function nano_buildFromJSON(JSON, prev: AnsiString; hexBalance: Boolean = false)
   : TNanoBlock;
@@ -898,9 +898,9 @@ begin
     random := TSecureRandom.GetInstance('SHA256PRNG');
     ran := random.NextInt64;
     Move(ran, workBytes[0], 8);
- 
+
     while True do
- 
+
     begin
       Inc(hashcounter,256);
       for i := 0 to 255 do
@@ -908,10 +908,10 @@ begin
         workBytes[7] := i;
 
 
- 
+
         if Terminated then
           exit();
-   
+
         Blake2b.TransformBytes(workBytes);
         t := Blake2b.TransformFinal.GetBytes;
         if t[7] = 255 then
@@ -922,10 +922,10 @@ begin
                 work := '';
                 for j := 7 downto 0 do
                   work := work + inttohex(workBytes[j], 2);
- 
+
                 Self.foundWork := work;
                 Exit;
- 
+
               end;
       end;
       // Move(t[0],ran,8);
@@ -939,7 +939,7 @@ begin
    begin
    end;
   end;
-  
+
 end;
 
 function nano_pow(Hash: AnsiString): AnsiString;
@@ -1444,7 +1444,7 @@ end;
 
 
 function nano_addPendingReceiveBlock(sourceBlockHash: AnsiString;
-cc: cryptoCurrency; from: AnsiString; ms: AnsiString; amount: BigInteger;doWork: Boolean = True)
+cc: cryptoCurrency; from: AnsiString; ms: AnsiString; amount: BigInteger;doWork: Boolean = false)
   : TNanoBlock;
 begin
   Result := nano_newBlock(True);
@@ -1495,7 +1495,7 @@ end;
  
 
 function nano_addPendingReceiveBlock(sourceBlockHash: AnsiString; cc: NanoCoin;
-from: AnsiString; amount: BigInteger; doWork: Boolean = True): TNanoBlock;
+from: AnsiString; amount: BigInteger; doWork: Boolean = false): TNanoBlock;
 var
   ph: AnsiString;
 begin
@@ -1527,36 +1527,40 @@ begin
   cc.confirmed := cc.confirmed + amount;
   cc.unconfirmed := cc.unconfirmed - amount;
 
- 
-  // cc.lastPendingBlock := result.Hash; 
+
+  // cc.lastPendingBlock := result.Hash;
 end;
 
-procedure nano_test(cc: cryptoCurrency; data: AnsiString);
+procedure nano_test();
+var  blake2b:IHash;
+  i, j: System.Uint8;
+  workBytes, t: TArray<Byte>;
 var
-  js: TJSONObject;
-  newblock: string;
-  testblock: TNanoBlock;
-  pendings: TJSONArray;
+  work: AnsiString;
+  ran, thres: System.UInt64;
+  counter: Int64;
+var
+  &random: ISecureRandom;
 begin
+
   try
 
-    js := TJSONObject.ParseJSONValue(data) as TJSONObject;
+    Blake2b := THashFactory.TCrypto.CreateBlake2B(TBlake2BConfig.Create(8));
+    Blake2b.Initialize();
 
-    cc.confirmed := BigInteger.Parse(js.GetValue('balance')
-      .GetValue<string>('balance'));
-    cc.unconfirmed := BigInteger.Parse(js.GetValue('balance')
-      .GetValue<string>('pending'));
-    pendings := js.GetValue<TJSONArray>('pending') as TJSONArray;
-    testblock := nano_buildFromJSON(pendings.Items[0].GetValue<TJSONObject>
-      ('data').GetValue('contents').Value, '');
-    // testblock:=nano_addPendingReceiveBlock(testblock.hash,cc,testblock.source,speckDecrypt(TCA('Azymut1337n'),CurrentAccount.EncryptedMasterSeed),testblock.blockAmout);
+    thres := $FFFFFFC000000000;
+    workBytes := hexatotbytes('00');
+
+        Blake2b.TransformBytes(workBytes);
+        t := Blake2b.TransformFinal.GetBytes;
+
   except
     on E: Exception do
-    begin
-    end;
-
+   begin
+   end;
   end;
-  js.Free;
+
+
 end;
 
 function nano_pushBlock(b: AnsiString): AnsiString;

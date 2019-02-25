@@ -158,7 +158,7 @@ type
 
 type
   AccountItem = record
-    name: AnsiString;
+    name: string;
     order: integer;
   end;
 
@@ -763,6 +763,7 @@ function getUnusedAccountName(): AnsiString;
 var
   i, nr: integer;
   found: boolean;
+  r:string;
 begin
   found := false;
   nr := 1;
@@ -771,8 +772,8 @@ begin
     found := true;
     for i := 0 to Length(AccountsNames) - 1 do
     begin
-
-      if AccountsNames[i].name = 'Wallet' + intToStr(nr) then
+      r:='Wallet' + intToStr(nr);
+      if string(AccountsNames[i].name) = (r) then
       begin
         nr := nr + 1;
         found := false;
@@ -1156,6 +1157,7 @@ var
 var
   Stream: TResourceStream;
 begin
+
 {$IFDEF IOS}
   exit;
 {$ENDIF}
@@ -1869,16 +1871,20 @@ begin
     //
     coinIMG := TImage.Create(frmhome.walletList);
     coinIMG.parent := panel;
+    try
     if crypto is TWalletInfo then
       coinIMG.Bitmap.LoadFromStream
         (ResourceMenager.getAssets(availableCoin[TWalletInfo(crypto).coin]
         .resourcename)) // getCoinIcon(TWalletInfo(crypto).coin)
     else
       coinIMG.Bitmap.LoadFromStream(Token(crypto).getIconResource);
+    except  on e:Exception do begin end; end;
     // getCoinIcon(TWalletInfo(crypto).coin)
+   if coinImg.bitmap<>nil then begin
 
     coinIMG.Height := 32.0;
     coinIMG.Width := 50;
+    end;
     coinIMG.Position.x := 4;
     coinIMG.Position.Y := 8;
     //
@@ -2345,7 +2351,7 @@ begin
   except
     on E: Exception do
     begin
-      showmessage(E.ToString);
+
     end
   end;
 
@@ -2521,6 +2527,8 @@ var
   tx: transactionHistory;
 begin
   SetLength(result, 0);
+
+try
   SetLength(tmp, 0);
   for cc in CCArray do
   begin
@@ -2531,6 +2539,7 @@ begin
   Sort(tmp);
   result := tmp;
   SetLength(tmp, 0);
+  except on E:Exception do begin end; end;
 end;
 
 procedure createHistoryList(wallet: cryptoCurrency; start: integer = 0;
@@ -3097,6 +3106,7 @@ var
   colors: array [0 .. 5] of TAlphaColor;
   j: integer;
 begin
+  if hex='' then exit;
 
   if not IsHex(hex) then
   begin
@@ -4588,7 +4598,7 @@ var
   JsonObject: TJsonObject;
   JSONArray: TJsonArray;
   JsonValue: TJsonValue;
-  temp, name, order: AnsiString;
+  temp, name, order: string;
 begin
   ts := TStringList.Create;
   ts.LoadFromFile(tpath.Combine(HOME_PATH, 'hodler.wallet.dat'));
@@ -4608,8 +4618,8 @@ begin
 
     currentStyle := JsonObject.GetValue<string>('styleName');
 
-    if JsonObject.TryGetValue<AnsiString>('AllowToSendData', temp) then
-      USER_ALLOW_TO_SEND_DATA := strToBool(temp)
+    if JsonObject.TryGetValue<string>('AllowToSendData', temp) then
+      USER_ALLOW_TO_SEND_DATA := strToBooldef(temp,false)
     else
       USER_ALLOW_TO_SEND_DATA := true;
     frmhome.SendErrorMsgSwitch.IsChecked := USER_ALLOW_TO_SEND_DATA;
@@ -4619,12 +4629,12 @@ begin
     i := 0;
     for JsonValue in JSONArray do
     begin
-      if JsonValue.TryGetValue<AnsiString>('name', name) then
+      if JsonValue.TryGetValue<string>('name', name) then
       begin
         AccountsNames[i].name := name;
         try
           AccountsNames[i].order :=
-            StrToInt(JsonValue.GetValue<string>('order'));
+            StrToIntDef(JsonValue.GetValue<string>('order'),i);
         except
           on E: Exception do
             AccountsNames[i].order := i;
