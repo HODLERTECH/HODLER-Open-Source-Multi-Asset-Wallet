@@ -3751,6 +3751,7 @@ var
   req: THTTPClient;
   LResponse: IHTTPResponse;
   urlHash: AnsiString;
+  ares: iasyncresult;
 begin
 req := THTTPClient.Create();
   aURL := ensureURL(aURL);
@@ -3772,7 +3773,18 @@ req := THTTPClient.Create();
       end;
       aURL := aURL + buildAuth(aURL);
 
-      LResponse := req.get(aURL);
+
+
+      ares := req.BeginGet(aURL);
+      while not(ares.IsCompleted or ares.isCancelled) do
+      begin
+        sleep(50);
+        if Tthread.CurrentThread.CheckTerminated then
+          exit();
+      end;
+      LResponse := req.EndAsyncHTTP(ares);
+
+      //LResponse := req.get(aURL);
       result := apiStatus(aURL, LResponse.ContentAsString());
       try
         saveCache(urlHash, result);

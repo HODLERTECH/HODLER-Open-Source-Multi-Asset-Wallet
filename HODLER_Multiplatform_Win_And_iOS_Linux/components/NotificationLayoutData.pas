@@ -178,12 +178,16 @@ begin
    if KeyboardService<>nil then KeyboardService.HideVirtualKeyboard;
 {$ENDIF}
 
- {$IFNDEF ANDROID}
+ //{$IFNDEF ANDROID}
   Currentpopup.AnimateFloat( 'position.x' ,  self.width + currentpopup.width  , 0.2 );
 
   backGround.AnimateFloat( 'opacity' , 0 , 0.2 );
-  backGround.AnimateInt( 'visible' , 0 , 0.2);
-  {$ENDIF}
+  //backGround.AnimateInt( 'visible' , 0 , 0.2);
+  //{$ELSE}
+  //CurrentPOpup.Position.X := self.width + currentpopup.width;
+
+
+  //{$ENDIF}
   background.HitTest :=false;
 
 
