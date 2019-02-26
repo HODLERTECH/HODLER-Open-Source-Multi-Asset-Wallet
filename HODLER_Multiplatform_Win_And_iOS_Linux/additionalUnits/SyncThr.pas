@@ -112,7 +112,7 @@ begin
   begin
     if (wi.coin = coinid) then
     begin
-      wi.uniq := abs((coinid * 1000) + StrToInt64Def('$' + Copy(GetStrHashSHA256(CurrentAccount.name), 0, 5), 0) + i); // moreUniq
+      wi.uniq := abs((coinid * 1000) + StrToInt64Def('$' + Copy(GetStrHashSHA256(CurrentAccount.name+inttostr(coinid)+inttostr(wi.x)+inttostr(wi.y)), 0, 7), 0) + i); // moreUniq
       if (wi.inPool = false) or (wi.Y >= changeDelimiter) then
       begin
 
@@ -142,7 +142,7 @@ begin
   begin
     if (wi.coin = coinid) and ((wi.inPool = True) or (wi.Y >= changeDelimiter)) then
     begin
-      wi.uniq := abs((coinid * 1000) + StrToInt64Def('$' + Copy(GetStrHashSHA256(CurrentAccount.name), 0, 5), 0) + i); // moreUniq
+      wi.uniq := abs((coinid * 1000) + StrToInt64Def('$' + Copy(GetStrHashSHA256(CurrentAccount.name+inttostr(coinid)+inttostr(wi.x)+inttostr(wi.y)), 0, 7), 0) + i); // moreUniq
 
       if (X <> -1) then
       begin

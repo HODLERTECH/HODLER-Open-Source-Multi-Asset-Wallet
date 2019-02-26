@@ -177,7 +177,7 @@ begin
   if TPlatformServices.Current.SupportsPlatformService(IFMXVirtualKeyboardService, IInterface(KeyboardService)) then
    if KeyboardService<>nil then KeyboardService.HideVirtualKeyboard;
 {$ENDIF}
-
+ 
  //{$IFNDEF ANDROID}
   Currentpopup.AnimateFloat( 'position.x' ,  self.width + currentpopup.width  , 0.2 );
 
@@ -188,6 +188,7 @@ begin
 
 
   //{$ENDIF}
+ 
   background.HitTest :=false;
 
 

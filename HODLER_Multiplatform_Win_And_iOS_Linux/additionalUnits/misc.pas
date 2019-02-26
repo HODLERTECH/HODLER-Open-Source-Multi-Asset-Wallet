@@ -1172,7 +1172,9 @@ begin
 
   currentStyle := name;
    //exit;
-  stylo.TrySetStyleFromResource(name);
+ 
+  //stylo.TrySetStyleFromResource(name);
+ 
   tmp := getComponentsWithTagString('copy_image', frmhome);
   if Length(tmp) <> 0 then
     for fmxObj in tmp do
@@ -3764,12 +3766,11 @@ req := THTTPClient.Create();
     if ((result = 'NOCACHE') or (not firstSync) or (not useCache)) then
     begin
 
-
       if not noTimeout then
       begin
 
-        req.ConnectionTimeout := 5000;
-        req.ResponseTimeout := 5000;
+        req.ConnectionTimeout := 3000;
+        req.ResponseTimeout := 3000;
       end;
       aURL := aURL + buildAuth(aURL);
 

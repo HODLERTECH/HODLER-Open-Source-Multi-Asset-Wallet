@@ -416,7 +416,7 @@
         <AUP_CALL_PHONE>false</AUP_CALL_PHONE>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <AUP_VIBRATE>true</AUP_VIBRATE>
-        <PF_KeyStorePass>857647CD5F9D0784CF73E526A4457B91819E0544A01C97EF97BC0FF08E723CD8DB42A384E34B1C30C1EA5730FA9DC338BAE2360A044B22FC162B45DFE5E522CFC948F34CD576FAD0BFE4AF4607021D58F7E9331BC35F7254EB066E79120CECAA1B30641BBE9E834000E1779D62FD570A38D4679D57CC9CFA29D027DC3A91F24FFDA40DFA8D2DBF8C2DA48F2392E6B68F10B9995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_KeyStorePass>
+        <PF_KeyStorePass>857647CD645855D8A342711DD129E36881D0051BA043979397B40FAB8E363C94DB04A3D7E3401C39C1CC5752FACFC338BAF83613042722C3164B45C2E5BA22DBC90AF35DEE83A8CFD3D03B04723485A9F7E9331BC35F7254EB066E79120CECAA1B30641BBE9E834000E1779D62FD570A38D4679D57CC9CFA29D027DC3A91F24FFDA40DFA8D2DBF8C2DA48F2392E6B68F10B9995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_KeyStorePass>
         <BT_BuildType>Debug</BT_BuildType>
         <DCC_UnitSearchPath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;CryptoLib_output\Android\Release;C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <Debugger_DebugSourcePath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
@@ -1247,7 +1247,7 @@
                 </DeployFile>
                 <DeployFile LocalName="NanoPoWAndroidService\libsodium.a" Configuration="Debug" Class="File">
                     <Platform Name="Android">
-                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <RemoteDir>.\assets\internal\nacl2\</RemoteDir>
                         <RemoteName>libsodium.so</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>

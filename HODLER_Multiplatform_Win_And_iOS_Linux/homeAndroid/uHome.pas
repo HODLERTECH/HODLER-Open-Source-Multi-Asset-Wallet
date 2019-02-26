@@ -3247,7 +3247,7 @@ end;
 
 procedure TfrmHome.FormFocusChanged(Sender: TObject);
 begin
-  SetCopyButtonPosition;
+ // SetCopyButtonPosition;
 end;
 
 procedure TfrmHome.FormGesture(Sender: TObject;

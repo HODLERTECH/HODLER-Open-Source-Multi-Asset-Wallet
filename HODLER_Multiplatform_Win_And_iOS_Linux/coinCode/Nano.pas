@@ -1614,10 +1614,8 @@ begin
           ].GetValue<TJSONObject>('data').GetValue('contents').Value, '');
         testblock := nano_addPendingReceiveBlock
           (pendings.Items[(i * 2) + 1].GetValue<string>('hash'), cc,
-          testblock.source, MasterSeed, testblock.blockAmount{$IFDEF MSWINDOWS},false{$ENDIF});
-          {$IFNDEF MSWINDOWS}
-        nano_pushBlock(nano_getJSONBlock(testblock));
-        {$ENDIF}
+          testblock.source, MasterSeed, testblock.blockAmount,false);
+
         TThread.Synchronize(TThread.CurrentThread,
           procedure
           begin
@@ -1826,19 +1824,15 @@ begin
   begin
 
     temp := nano_addPendingReceiveBlock(Block.Hash, Self, Block.Block.source,
-      MasterSeed, Block.Block.blockAmount{$IFDEF MSWINDOWS},false{$ENDIF});
+      MasterSeed, Block.Block.blockAmount,false);
   end
   else
   begin
     temp := Block.Block;
-    {$IFNDEF MSWINDOWS}
-    nano_getWork(temp);
-    {$ENDIF}
+
 
   end;
-  {$IFDEF MSWINDOWS}
-  nano_pushBlock(nano_getJSONBlock(temp));
-  {$ENDIF}
+
 
   wipeAnsiString(MasterSeed);
 
@@ -1856,18 +1850,13 @@ begin
   if Block.Block.blockType <> 'send' then
   begin
     temp := nano_addPendingReceiveBlock(Block.Hash, Self, Block.Block.source,
-      Block.Block.blockAmount{$IFDEF MSWINDOWS},false{$ENDIF});
+      Block.Block.blockAmount,false);
   end
   else
   begin
     temp := Block.Block;
-    {$IFNDEF MSWINDOWS}
-    nano_getWork(temp);
-    {$ENDIF}
+
   end;
-  {$IFDEF MSWINDOWS}
-  nano_pushBlock(nano_getJSONBlock(temp));
-  {$ENDIF}
   mutexMining.release;
 end;
 
