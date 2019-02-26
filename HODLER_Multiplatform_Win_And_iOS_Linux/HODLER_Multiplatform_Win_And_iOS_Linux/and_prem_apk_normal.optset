@@ -1,0 +1,35 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <Android_SplashImage426>gfx\splash426x320.png</Android_SplashImage426>
+        <Android_LauncherIcon96>gfx\Icon96x96.png</Android_LauncherIcon96>
+        <Android_LauncherIcon48>gfx\Icon48x48.png</Android_LauncherIcon48>
+        <Android_LauncherIcon144>gfx\Icon144x144.png</Android_LauncherIcon144>
+        <Android_SplashImage960>gfx\splash960x720.png</Android_SplashImage960>
+        <Android_SplashImage470>gfx\splash470x320.png</Android_SplashImage470>
+        <Android_SplashImage640>gfx\splash640x480.png</Android_SplashImage640>
+        <Android_LauncherIcon72>gfx\Icon72x72.png</Android_LauncherIcon72>
+        <Android_LauncherIcon36>gfx\Icon36x36.png</Android_LauncherIcon36>
+        <VerInfo_Build>1</VerInfo_Build>
+        <DCC_UnitSearchPath>C:\Users\hodlerapp\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <AUP_READ_CALENDAR>false</AUP_READ_CALENDAR>
+        <AUP_WRITE_CALENDAR>false</AUP_WRITE_CALENDAR>
+        <AUP_CALL_PHONE>false</AUP_CALL_PHONE>
+        <VerInfo_Keys>package=tech.hodler.core;label=HODLER Core;versionCode=1;versionName=0.0.5.07092150;persistent=False;restoreAnyVersion=False;installLocation=preferExternal;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
+        <AUP_VIBRATE>true</AUP_VIBRATE>
+        <PF_KeyStorePass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D497F76E2718773C8C20A3767CA1473B87E8DA47E658CFDA0A978428620DC94ADB50B791AE0A6B9DF513A073AF34532BDE10DC90C94A7BA3DBEDD719FEE659F9ADB22E87D7C462AE82B921BF3F9965AE9E1DE5FC01EB35CC2E7A77556E2E8635348533E5F8E34B7FF62AFA09167C7C81AE8DABB5B091528D3B33096AD0E03A4A648</PF_KeyStorePass>
+        <PF_AliasKey>hodler.tech</PF_AliasKey>
+        <PF_AliasKeyPass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D497F76E2718773C8C20A3767CA1473B87E8DA422D0162645C7E58822D6C902F311D544FA8ABFAAAF4307511D50924D3E441DF80960E3B616CD441778DD659C9AC722B27D104661E811924BF3E5964BE9B3DE0D9CFA29D027DC3A91F24FFDA40DFA8D2DBF8C2DA48F2392E6B68F10B9995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_AliasKeyPass>
+        <AUP_READ_PHONE_STATE>false</AUP_READ_PHONE_STATE>
+        <AUP_ACCESS_COARSE_LOCATION>false</AUP_ACCESS_COARSE_LOCATION>
+        <AUP_ACCESS_FINE_LOCATION>false</AUP_ACCESS_FINE_LOCATION>
+        <AUP_CAMERA>false</AUP_CAMERA>
+    </PropertyGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Delphi.Personality.12</Borland.Personality>
+        <Borland.ProjectType>OptionSet</Borland.ProjectType>
+        <BorlandProject>
+            <Delphi.Personality/>
+        </BorlandProject>
+        <ProjectFileVersion>12</ProjectFileVersion>
+    </ProjectExtensions>
+</Project>
