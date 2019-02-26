@@ -112,7 +112,7 @@ begin
   begin
     if (wi.coin = coinid) then
     begin
-      wi.uniq := abs((coinid * 1000) + StrToInt64Def('$' + Copy(GetStrHashSHA256(CurrentAccount.name), 0, 5), 0) + i); // moreUniq
+      wi.uniq := abs((coinid * 1000) + StrToInt64Def('$' + Copy(GetStrHashSHA256(CurrentAccount.name+inttostr(coinid)+inttostr(wi.x)+inttostr(wi.y)), 0, 7), 0) + i); // moreUniq
       if (wi.inPool = false) or (wi.Y >= changeDelimiter) then
       begin
 
@@ -142,7 +142,7 @@ begin
   begin
     if (wi.coin = coinid) and ((wi.inPool = True) or (wi.Y >= changeDelimiter)) then
     begin
-      wi.uniq := abs((coinid * 1000) + StrToInt64Def('$' + Copy(GetStrHashSHA256(CurrentAccount.name), 0, 5), 0) + i); // moreUniq
+      wi.uniq := abs((coinid * 1000) + StrToInt64Def('$' + Copy(GetStrHashSHA256(CurrentAccount.name+inttostr(coinid)+inttostr(wi.x)+inttostr(wi.y)), 0, 7), 0) + i); // moreUniq
 
       if (X <> -1) then
       begin
@@ -282,24 +282,37 @@ if LeftStr(s,7)=('Invalid') then exit;
     Delete(s, Low(s), 1);
     Delete(s, High(s), 1);
   end;
+
 {$IFDEF  ANDROID}     s := StringReplace(s, '\\', '\', [rfReplaceAll]); {$ENDIF}
+
+
   try
 
     coinJson := TJSONObject.ParseJSONValue(s) as TJSONObject;
-
     if coinJson.Count = 0 then
+    begin
+      coinJson.Free;
       Exit;
+    end;
+
+
     for i := 0 to coinJson.Count - 1 do
     begin
+
       if SyncBalanceThr <> nil then
         if SyncBalanceThr.Terminated then
-          Exit();
+        begin
+          coinJson.Free;
+          Exit;
+        end;
 
       wd := nil;
       JsonPair := coinJson.Pairs[i];
       wd := findWDByAddr(JsonPair.JsonValue.GetValue<Int64>('wid'));
+
       if wd = nil then
         continue;
+
       if not verifyKeypool then
       begin
 
@@ -312,14 +325,19 @@ if LeftStr(s,7)=('Invalid') then exit;
           end;
 
         end;
+
         wd.UTXO := parseUTXO(JsonPair.JsonValue.GetValue<string>('utxo'), wd.Y);
+
         if (wd.inPool = True) {or (wd.Y >= changeDelimiter)} then
           wd.inPool := trim(JsonPair.JsonValue.GetValue<string>('history')) = '';
+
       end
       else
       begin
+
         if (wd.inPool = True) {or (wd.Y >= changeDelimiter)} then
           wd.inPool := trim(JsonPair.JsonValue.GetValue<string>('history')) = '';
+
         try
           parseCoinHistory(JsonPair.JsonValue.GetValue<string>('history'), wd);
         except
@@ -328,8 +346,12 @@ if LeftStr(s,7)=('Invalid') then exit;
           end;
 
         end;
+
       end;
+
     end;
+
+    coinJson.Free;
 
   except
     on e: Exception do
@@ -368,7 +390,7 @@ begin
       Exit();
     mutex.Acquire();
 
-    TThread.CurrentThread.CreateAnonymousThread(
+    CurrentAccount.SynchronizeThreadGuardian.CreateAnonymousThread(
       procedure
       var
         id: Integer;
@@ -429,7 +451,7 @@ begin
 
     mutex.Acquire();
 
-    TThread.CurrentThread.CreateAnonymousThread(
+    CurrentAccount.SynchronizeThreadGuardian.CreateAnonymousThread(
       procedure
       var
         id: Integer;
@@ -527,7 +549,7 @@ begin
       Exit();
     mutex.Acquire();
 
-    TThread.CurrentThread.CreateAnonymousThread(
+    CurrentAccount.SynchronizeThreadGuardian.CreateAnonymousThread(
       procedure
       var
         id: Integer;

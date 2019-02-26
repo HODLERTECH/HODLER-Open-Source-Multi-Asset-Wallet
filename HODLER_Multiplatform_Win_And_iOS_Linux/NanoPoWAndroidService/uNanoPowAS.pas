@@ -183,10 +183,11 @@ end;
 function findwork(Hash: string): string;
 var
   state: crypto_generichash_blake2b_state;
-  workbytes, res: TBytes;
+  workbytes:Tbytes;
+   res: array of system.uint8;
   j, i: Integer;
 begin
-  randomize;
+  randomize;         SetLength(res,8);
   workbytes := hexatotbytes('0000000000000000' + Hash);
   repeat
     workbytes[0] := random(255);
@@ -201,11 +202,12 @@ begin
       workbytes[7] := i;
       blake2b_init(state, nil, 0, 8);
       blake2b_update(state, workbytes, Length(workbytes));
+
       blake2b_final(state, res, 8);
       if res[7] = 255 then
         if res[6] = 255 then
           if res[5] = 255 then
-            if res[4] = 192 then
+            if res[4] >= 192 then
             begin
               result := '';
               for j := 7 downto 0 do
@@ -624,16 +626,16 @@ begin
   err := 'la';
   try
     try
-      err := TPath.GetDocumentsPath + '/libsodium.so';
+      err := TPath.GetDocumentsPath + '/nacl2/libsodium.so';
       if fileexists(err) then
         ex := 'isthere'
       else
-        ex := 'isntthere';
-      LibHandle := LoadLibrary(PCHAR(err));
+        ex := 'uuuuu';
+      LibHandle := LoadLibrary(PwideChar(err));
       if LibHandle <> 0 then
       begin
         blake2b_init := getprocaddress(LibHandle,
-          PCHAR('crypto_generichash_blake2b_init'));
+          PwideChar('crypto_generichash_blake2b_init'));
         blake2b_update := getprocaddress(LibHandle,
           'crypto_generichash_blake2b_update');
         blake2b_final := getprocaddress(LibHandle,

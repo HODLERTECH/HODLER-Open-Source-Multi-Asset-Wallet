@@ -662,7 +662,7 @@ inherited frmHome_Windows: TfrmHome_Windows
             inherited ReceiveVertScrollBox: TVertScrollBox
               Size.Width = 500.000000000000000000
               Size.Height = 546.000000000000000000
-              Viewport.Width = 484.000000000000000000
+              Viewport.Width = 500.000000000000000000
               Viewport.Height = 546.000000000000000000
               inherited ReceiveAmountLayout: TLayout
                 Size.Width = 484.000000000000000000

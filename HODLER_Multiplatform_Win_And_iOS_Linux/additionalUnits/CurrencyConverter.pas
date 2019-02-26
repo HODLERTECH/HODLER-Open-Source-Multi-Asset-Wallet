@@ -31,6 +31,7 @@ type
     function calculate(value: double): double;
 
     constructor Create();
+    destructor destroy(); override;
 
     procedure updateCurrencyRatio(symbol: AnsiString; ratio: double);
     procedure setCurrency(_symbol: AnsiString);
@@ -76,6 +77,13 @@ begin
   availableCurrency.Add('INR', 69.07);
   ratio := 1.0;
   symbol := 'USD';
+
+end;
+
+destructor TCurrencyConverter.destroy;
+begin
+
+  availableCurrency.Free;
 
 end;
 

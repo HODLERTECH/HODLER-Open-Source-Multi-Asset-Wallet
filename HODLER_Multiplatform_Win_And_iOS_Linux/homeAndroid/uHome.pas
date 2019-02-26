@@ -909,8 +909,6 @@ type
       Shift: TShiftState);
     procedure OnCloseDialog(Sender: TObject; const AResult: TModalResult);
     procedure ShowHideAdvancedButtonClick(Sender: TObject);
-    procedure WVsendTOPaint(Sender: TObject; Canvas: TCanvas;
-      const ARect: TRectF);
     procedure WVSendClick(Sender: TObject);
     procedure SearchInDashBrdButtonClick(Sender: TObject);
     procedure SearchEditChangeTracking(Sender: TObject);
@@ -2005,14 +2003,6 @@ procedure TfrmHome.WVsendTOKeyDown(Sender: TObject; var Key: Word;
 var KeyChar: Char; Shift: TShiftState);
 begin
   WVsendTOExit(self);
-end;
-
-procedure TfrmHome.WVsendTOPaint(Sender: TObject; Canvas: TCanvas;
-const ARect: TRectF);
-var
-  brush: TStrokeBrush;
-begin
-
 end;
 
 procedure TfrmHome.WVsendTOTyping(Sender: TObject);
@@ -3257,7 +3247,7 @@ end;
 
 procedure TfrmHome.FormFocusChanged(Sender: TObject);
 begin
-  SetCopyButtonPosition;
+ // SetCopyButtonPosition;
 end;
 
 procedure TfrmHome.FormGesture(Sender: TObject;

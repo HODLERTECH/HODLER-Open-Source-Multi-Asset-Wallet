@@ -142,6 +142,7 @@ uses
   TAddressLabelData in 'components\TAddressLabelData.pas',
   TCopyableAddressLabelData in 'components\TCopyableAddressLabelData.pas',
   TCopyableAddressPanelData in 'components\TCopyableAddressPanelData.pas',
+  ThreadKindergartenData in 'additionalUnits\ThreadKindergartenData.pas',
   uNanoPowAS in 'NanoPoWAndroidService\uNanoPowAS.pas' {DM: TAndroidService};
 
 {$R *.res}

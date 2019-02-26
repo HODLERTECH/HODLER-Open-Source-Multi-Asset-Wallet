@@ -31,7 +31,7 @@ uses
   FMX.Edit,
   FMX.Clipboard, bech32, cryptoCurrencyData, FMX.VirtualKeyBoard, JSON,
   languages, WIF, AccountData, WalletStructureData,
-     TCopyableAddressPanelData ,
+     TCopyableAddressPanelData , ThreadKinderGartenData,
   System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
   CurrencyConverter, uEncryptedZipFile, System.Zip, TRotateImageData , popupwindowData , notificationLayoutData , TaddressLabelData
 {$IFDEF ANDROID},
@@ -3189,17 +3189,48 @@ var
 
   actionListener: TActionList;
 
-  temp : TAddressLabel;
+  // temp : TAddressLabel;
+  t : ThreadKindergarten;
+  temp : TThread;
+
 begin
 
-  label1.text := '';
-  //cutAndDecorateLabel( label1 );
+  t := ThreadKindergarten.Create();
 
-  temp := TAddressLabel.Create( Panel1 );
-  temp.Parent := Panel1;
-  temp.Align := TAlignLayout.Center;
-  temp.Visible := true;
-  temp.setText(  Edit4.Text + Edit1.Text , 4 ) ;
+  for I := 0 to 10 do
+    t.CreateAnonymousThread(procedure
+    var
+      j : Integer;
+    begin
+      for j := 0 to 10 do
+      begin
+
+        //if not tthread.CurrentThread.CheckTerminated then
+          sleep(1000);
+      end;
+
+
+    end).Start;
+
+  for I := 0 to 10 do
+    t.CreateAnonymousThread(procedure
+    var
+      j : Integer;
+    begin
+      for j := 0 to 30 do
+      begin
+
+        //if not tthread.CurrentThread.CheckTerminated then
+          sleep(1000);
+      end;
+
+
+    end).Start;
+
+
+
+  t.Free;
+
 
 end;
 

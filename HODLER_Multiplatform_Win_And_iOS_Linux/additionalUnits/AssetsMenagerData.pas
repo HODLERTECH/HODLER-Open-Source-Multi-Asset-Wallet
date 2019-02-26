@@ -115,15 +115,17 @@ end;
 
 constructor AssetsMenager.create();
 begin
-  map := TObjectDictionary<AnsiString, TStream>.create();
+  inherited;
+  map := TObjectDictionary<AnsiString, TStream>.create([doOwnsValues]);
   addToMap('IMG_NOT_FOUND');
 end;
 
 destructor AssetsMenager.Destroy();
 begin
-  inherited;
+
   map.Clear;
   map.free;
+  inherited;
 end;
 
 end.

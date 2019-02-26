@@ -210,6 +210,8 @@ begin
     result := '04' + BIToHEX(q.XCoordinate) + BIToHEX(q.YCoordinate);
   wipeAnsiString(ss);
   wipeAnsiString(privkey);
+
+
 end;
 
 function GetDetermisticRandomForSign(e, d: AnsiString): BigInteger;

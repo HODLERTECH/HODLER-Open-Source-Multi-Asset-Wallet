@@ -13,7 +13,7 @@ uses
   FMX.Platform, System.Threading, Math, DelphiZXingQRCode,
   FMX.TabControl, FMX.Edit,
   FMX.Clipboard, FMX.VirtualKeyBoard, JSON , popupwindowData,
-  languages,  TCopyableAddressLabelData ,  TCopyableAddressPanelData,
+  languages,  TCopyableAddressLabelData ,  TCopyableAddressPanelData, CrossPlatformHeaders ,
 
   FMX.Media, FMX.Objects, uEncryptedZipFile, System.Zip, TRotateImageData
 {$IFDEF ANDROID},
@@ -273,7 +273,7 @@ begin
     end;
 {$ENDIF}
     clearVertScrollBox(frmHome.WalletList);
-
+    frmhome.syncTimer.Enabled := false;
     if (SyncBalanceThr <> nil) and (not SyncBalanceThr.Finished) then
     begin
       SyncBalanceThr.Suspend;
@@ -293,6 +293,7 @@ begin
       SyncBalanceThr := nil;
 
     end;
+
 
     frmHome.ChangeAccountButton.Text := name;
 
@@ -350,6 +351,7 @@ begin
     refreshCurrencyValue;
 
     SyncBalanceThr := SynchronizeBalanceThread.Create();
+    frmhome.syncTimer.Enabled := true;
     Tthread.CreateAnonymousThread(
       procedure
       begin
@@ -431,8 +433,20 @@ end;
 
 procedure CloseHodler();
 begin
+
   ResourceMenager.free;
   currentAccount.Free;
+  frmhome.CurrencyConverter.free;
+  frmhome.SourceDictionary.Free;
+
+  mutex.Free;
+  semaphore.Free;
+  VerifyKeypoolSemaphore.Free;
+
+  clearVertScrollBox(frmhome.TxHistory); // Panel.TagObject can contain THistoryHolder
+
+  frmhome.FScanManager.free;
+
   frmhome.refreshLocalImage.Stop();
   frmhome.refreshGlobalImage.Stop();
 end;
@@ -451,7 +465,15 @@ var
   JSONArray: TJsonArray;
   JsonValue: TJsonvalue;
   btn: TImageTextButton;
+   TimeLog : TimeLogger;
+   ass : AssetsMenager;
+
 begin
+
+
+  TimeLog := TimeLogger.Create();
+  timeLog.StartLog('InitializeHodler');
+
 
   Randomize;
 
@@ -582,7 +604,7 @@ begin
       loadDictionary(loadLanguageFile('ENG'));
       refreshComponentText();
 
-      Randomize;
+     // Randomize;      // moved to first line
 
       saveSeedInfoShowed := false;
       FormatSettings.DecimalSeparator := '.';
@@ -757,6 +779,10 @@ begin
       showmessage(E.Message);
 
   end;
+
+  //showmessage( floatToStr(TimeLog.GetInterval('InitializeHodler')) );
+
+   TimeLog.Free;
 
 end;
 
