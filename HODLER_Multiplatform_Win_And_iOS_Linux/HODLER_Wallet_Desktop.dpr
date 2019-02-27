@@ -155,10 +155,10 @@ begin
   Application.OnException := frmhome.ExceptionHandler;
   VKAutoShowMode := TVKAutoShowMode.Never;
 
-  FMX.Types.GlobalUseDX := true;
-
+ FMX.Types.GlobalUseDX := true;
+//  FMX.Types.GlobalUseGPUCanvas:=true;
   GlobalUseDXInDX9Mode := true;
-  GlobalUseDXSoftware := true;
+//  GlobalUseDXSoftware := true;
   FMX.Types.GlobalDisableFocusEffect := true;
 {$IF NOT DEFINED(LINUX)}
   H := CreateMutex(nil, False, 'HODLERTECHMUTEX');

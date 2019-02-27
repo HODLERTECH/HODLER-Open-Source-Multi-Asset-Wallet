@@ -52,7 +52,10 @@ implementation
 procedure nano_mineBuilt64(cc: NanoCoin);
 var
   block: TNanoBlock;
+  lastHash,s:string;
+  i:integer;
 begin
+     lastHash:='';
   repeat
     block := cc.firstBlock;
 
@@ -69,10 +72,20 @@ begin
       hashCounter := 0;
       nano_getWork(block);
       hashCounter := 0;
-      nano_pushBlock(nano_builtToJSON(block));
-    end;
+
+     s:= nano_pushBlock(nano_builtToJSON(block));
+  lastHash:=StringReplace(s,'https://www.nanode.co/block/','',[rfReplaceAll]);
+  if isHex(lastHash)=false then lastHash:='';
+  if cc.BlockByPrev(lastHash).account='' then  
+    if lastHash<>'' then
+      nano_pow(lastHash);
+      end;
     cc.removeBlock(block.Hash);
   until Length(cc.pendingChain) = 0;
+  loadPows;
+  for i:=0 to Length(pows)-1 do
+    if pows[i].work='' then
+    nano_pow(pows[i].hash);
 end;
 
 procedure HideAppOnTaskbar(AMainForm: TForm);
@@ -202,6 +215,10 @@ end;
 
 procedure TfrmNanoPoW.FormCreate(Sender: TObject);
 begin
+        HOME_PATH := IncludeTrailingPathDelimiter
+        ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetDocumentsPath{$ELSE}System.
+        IOUtils.TPath.combine(System.SysUtils.GetEnvironmentVariable('APPDATA'),
+        'hodlertech'){$ENDIF});
   TrayWnd := AllocateHWnd(TrayWndProc);
   with TrayIconData do
   begin

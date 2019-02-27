@@ -134,7 +134,7 @@ type
     YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No'; icon: integer = 2);
 
   procedure popupPasswordConfirm(Yes: TProc<AnsiString>; No: TProc<AnsiString>; mess: AnsiString;
-    YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No'; icon: integer = 2);
+    YesText: AnsiString = 'OK'; NoText: AnsiString = 'Cancel'; icon: integer = 2);
 
   procedure popupConfirm(Yes, No: TProc; mess: AnsiString;
       YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
@@ -211,8 +211,8 @@ begin
 
 end;
 
-procedure TNotificationLayout.popupPasswordConfirm(Yes, No: TProc<AnsiString>; mess: AnsiString;
-      YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
+procedure TNotificationLayout.popupPasswordConfirm(Yes, No: TProc<String>; mess: AnsiString;
+      YesText: AnsiString = 'OK'; NoText: AnsiString = 'Cancel';
       icon: integer = 2);
 var
   popup : Tlayout;

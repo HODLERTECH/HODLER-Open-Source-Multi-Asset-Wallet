@@ -1,12 +1,6 @@
 unit CrossPlatformHeaders;
 
 interface
-
-{$IF DEFINED(ANDROID) OR DEFINED(IOS) OR DEFINED(LINUX)}
-
-const
-  StrStartIteration = {$IFNDEF LINUX} 0 {$ELSE}1{$ENDIF};
-
 type
   AnsiString = string;
 
@@ -15,6 +9,12 @@ type
 
 type
   AnsiChar = Char;
+{$IF DEFINED(ANDROID) OR DEFINED(IOS) OR DEFINED(LINUX)}
+
+const
+  StrStartIteration = {$IFNDEF LINUX} 0 {$ELSE}1{$ENDIF};
+
+
 {$ELSE}
 
 const

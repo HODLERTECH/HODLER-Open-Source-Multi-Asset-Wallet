@@ -5,7 +5,7 @@
         <FrameworkType>FMX</FrameworkType>
         <MainSource>NanoMiner64.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win64</Platform>
         <TargetedPlatforms>1119</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -508,6 +508,7 @@
         <DCCReference Include="components\TCopyableLabelData.pas"/>
         <DCCReference Include="components\TImageTextButtonData.pas"/>
         <DCCReference Include="components\TRotateImageData.pas"/>
+        <DCCReference Include="additionalUnits\ThreadKindergartenData.pas"/>
         <RcItem Include="Win10ModernDark.Style">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>

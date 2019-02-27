@@ -143,6 +143,15 @@ type
     destructor destroy();
 
   end;
+type
+  precalculatedPow = record
+    Hash: string;
+    work: string;
+  end;
+type
+  precalculatedPows = array of precalculatedPow;
+var
+  pows: precalculatedPows;
 
 implementation
 
@@ -151,7 +160,118 @@ implementation
 uses
   AndroidApi.JNI.App, System.DateUtils;
 {$R *.dfm}
+function findPrecalculated(Hash: string): string;
+var
+  pow: precalculatedPow;
+begin
+  Result := '';
+  Hash := LowerCase(Hash);
+  for pow in pows do
+    if pow.Hash = Hash then
+      Exit(pow.work);
+end;
 
+procedure setPrecalculated(Hash, work: string);
+var
+  i: integer;
+begin
+  if Length(Hash) <> 64 then
+    Exit;
+  Hash := LowerCase(Hash);
+  for i := 0 to Length(pows) - 1 do
+    if pows[i].Hash = Hash then
+    begin
+      pows[i].work := work;
+      Exit;
+    end;
+  SetLength(pows, Length(pows) + 1);
+
+  pows[high(pows)].Hash := Hash;
+  pows[High(pows)].work := work;
+end;
+
+procedure removePow(Hash: string);
+var
+  i: integer;
+begin
+  for i := 0 to Length(pows) - 1 do
+  begin
+    if pows[i].Hash = Hash then
+    begin
+      pows[i] := pows[High(pows)];
+      SetLength(pows, Length(pows) - 1);
+      Exit;
+    end;
+  end;
+end;
+
+procedure savePows;
+var
+  ts: TStringList;
+  i: integer;
+begin
+  ts := TStringList.Create;
+  try
+    for i := 0 to Length(pows) - 1 do
+    begin
+      if Length(pows[i].Hash) <> 64 then
+        continue;
+
+      ts.Add(pows[i].Hash + ' ' + pows[i].work);
+    end;
+    ts.SaveToFile(TPath.GetDocumentsPath +'/nanopows.dat');
+  finally
+    ts.Free;
+  end;
+end;
+function SplitString(Str: string; separator: char = ' '): TStringList;
+var
+  ts: TStringList;
+  i: integer;
+begin
+  Str := StringReplace(Str, separator, #13#10, [rfReplaceAll]);
+  ts := TStringList.Create;
+  ts.Text := Str;
+  result := ts;
+
+end;
+procedure loadPows;
+var
+  ts: TStringList;
+  i: integer;
+  t: TStringList;
+begin
+  SetLength(pows, 0);
+  ts := TStringList.Create;
+  try
+    if FileExists((TPath.GetDocumentsPath +'/nanopows.dat')) then
+    begin
+      ts.LoadFromFile(TPath.GetDocumentsPath +'/nanopows.dat');
+      SetLength(pows, ts.Count);
+      for i := 0 to ts.Count - 1 do
+      begin
+        t := SplitString(ts.Strings[i], ' ');
+                if t.Count = 1 then begin
+        pows[i].hash:=t[0];
+        pows[i].work:='';
+        continue;
+        end;
+        if t.Count <> 2 then
+          continue;
+
+        pows[i].Hash := t[0];
+        pows[i].work := t[1];
+        if pows[i].work = 'MINING' then
+          pows[i].work := '';
+
+        t.Free;
+      end;
+    end;
+  finally
+    ts.Free;
+  end;
+
+end;
 function hexatotbytes(h: string): TBytes;
 var
   i: Integer;
@@ -186,7 +306,12 @@ var
   workbytes:Tbytes;
    res: array of system.uint8;
   j, i: Integer;
+  work:string;
 begin
+loadPows;
+work:=findPrecalculated(hash);
+if (work<>'') and (work<>'MINING') then
+exit(work);
   randomize;         SetLength(res,8);
   workbytes := hexatotbytes('0000000000000000' + Hash);
   repeat
@@ -202,7 +327,6 @@ begin
       workbytes[7] := i;
       blake2b_init(state, nil, 0, 8);
       blake2b_update(state, workbytes, Length(workbytes));
-
       blake2b_final(state, res, 8);
       if res[7] = 255 then
         if res[6] = 255 then
@@ -212,6 +336,8 @@ begin
               result := '';
               for j := 7 downto 0 do
                 result := result + inttohex(workbytes[j], 2);
+                setPrecalculated(Hash,result);
+                SavePows;
               exit;
             end;
     end;
@@ -573,10 +699,27 @@ begin
   result := getDataOverHTTP('https://hodlernode.net/nano.php?b=' + b,
     false, true);
 end;
+function IsHex(s: string): boolean;
+var
+  i: integer;
+begin
+  // Odd string or empty string is not valid hexstring
+  if (Length(s) = 0) or (Length(s) mod 2 <> 0) then
+    exit(false);
 
+  s := UpperCase(s);
+  result := true;
+  for i := 0 to Length(s) - 1 do
+    if not(Char(s[i]) in ['0' .. '9']) and not(Char(s[i]) in ['A' .. 'F']) then
+    begin
+      result := false;
+      exit;
+    end;
+end;
 procedure nano_mineBuilt64(cc: NanoCoin);
 var
   Block: TNanoBlock;
+  lastHash,s:string;
 begin
   repeat
     Block := cc.firstBlock;
@@ -585,7 +728,13 @@ begin
     begin
       nano_getWork(Block);
 
-      nano_pushBlock(nano_builtToJSON(Block));
+    s:=  nano_pushBlock(nano_builtToJSON(Block));
+      lastHash:=StringReplace(s,'https://www.nanode.co/block/','',[rfReplaceAll]);
+  if isHex(lastHash)=false then lastHash:='';
+  if cc.BlockByPrev(lastHash).account='' then
+    if lastHash<>'' then
+      findWork(lastHash);
+
     end;
     cc.removeBlock(Block.Hash);
   until Length(cc.pendingChain) = 0;
@@ -595,7 +744,7 @@ procedure mineAll;
 var
   cc: NanoCoin;
   path: string;
-
+  i:integer;
 begin
 
   repeat
@@ -612,6 +761,10 @@ begin
       end;
       Sleep(100);
     end;
+      loadPows;
+  for i:=0 to Length(pows)-1 do
+    if pows[i].work='' then
+    findWork(pows[i].hash);
   until true = false;
 end;
 

@@ -2471,10 +2471,10 @@ begin
 
 try
     if NotificationLayout.CurrentPopup=nil then
-    UnlockNanoImageClick(NanoCoin(CurrentCoin))
+    {$IFDEF MSWINDOWS}UnlockNanoImage.OnClick(NanoCoin(CurrentCoin)) {$ELSE}UnlockNanoImageClick(NanoCoin(CurrentCoin)){$ENDIF}
     else
     if NotificationLayout.CurrentPopup.visible=false then
-    UnlockNanoImageClick(NanoCoin(CurrentCoin));
+        {$IFDEF MSWINDOWS}UnlockNanoImage.OnClick(NanoCoin(CurrentCoin)) {$ELSE}UnlockNanoImageClick(NanoCoin(CurrentCoin)){$ENDIF}
 except on E:Exception do begin end; end;
 end;
  NanoUnlocker.Visible:=False;

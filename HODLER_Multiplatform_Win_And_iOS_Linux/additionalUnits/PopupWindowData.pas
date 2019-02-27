@@ -389,12 +389,12 @@ var
   i: integer;
   rect: TRectangle;
 begin
-  inherited Create(frmhome.pageControl);
+  inherited Create(frmhome);
 
-  parent := frmhome.pageControl;
+  parent := frmhome;
   Height := 100;
   Width := 300;
-  Placement := TPlacement.Center;
+
 
   Visible := true;
   PlacementRectangle := TBounds.Create(RectF(0, 0, 0, 0));
@@ -418,7 +418,7 @@ begin
   messageLabel.TextSettings.HorzAlign := TTextAlign.Center;
 
   self.OnClosePopup := _onEnd;
-
+  Placement := TPlacement.Center;
   Popup();
 end;
 

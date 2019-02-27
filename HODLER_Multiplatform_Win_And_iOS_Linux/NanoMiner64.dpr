@@ -142,7 +142,8 @@ uses
   TCopyableEditData in 'components\TCopyableEditData.pas',
   TCopyableLabelData in 'components\TCopyableLabelData.pas',
   TImageTextButtonData in 'components\TImageTextButtonData.pas',
-  TRotateImageData in 'components\TRotateImageData.pas';
+  TRotateImageData in 'components\TRotateImageData.pas',
+  ThreadKindergartenData in 'additionalUnits\ThreadKindergartenData.pas';
 
 {$R *.res}
 

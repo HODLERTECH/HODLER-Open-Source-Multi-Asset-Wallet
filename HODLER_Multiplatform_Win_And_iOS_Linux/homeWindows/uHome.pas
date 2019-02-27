@@ -2475,12 +2475,12 @@ begin
 end;
 
 procedure TfrmHome.AddNewAccountButtonClick(Sender: TObject);
-// var od:TOpenDialog;
+var od:TOpenDialog;
 begin
-  { od:=TOpenDialog.Create(nil);
+   od:=TOpenDialog.Create(nil);
     if od.execute then
     stylo.SetStyleFromFile(od.FileName);
-    od.Free; }
+    od.Free;
 
   switchTab(PageControl, AddAccount);
   // AccountsListPanel.Visible := false;
@@ -2571,7 +2571,7 @@ begin
      if NanoCoin(currentCryptocurrency).isUnlocked then exit;
      frmhome.UnlockNanoImage.Hint:='When unlocked, receive blocks will be autopocketed';
 
-     NotificationLayout.popupPasswordConfirm(procedure (pass : AnsiString)
+     NotificationLayout.popupPasswordConfirm(procedure (pass : string)
      var
         tced , MasterSeed : AnsiString;
      begin
@@ -2594,7 +2594,8 @@ begin
 
         //PageControl.ActiveTab:=decryptSeedBackTabItem;
 
-     end, procedure ( pass : AnsiString )
+     end,
+     procedure ( pass : string )
      begin
 
      end
