@@ -118,20 +118,25 @@ end;
 destructor ThreadKindergarten.Destroy();
 var
   it : TDictionary< integer , TCareThread >.TPairEnumerator;
+  i: integer;
 begin
 
   it := map.GetEnumerator;
-
-  while it.MoveNext do
+  for i := 0 to Length(map.ToArray)-1 do
+    map.ToArray[i].Value.Terminate;
+{  while it.MoveNext do
   begin
 
     terminateThread( it.Current.Key );
 
-  end;
-
+  end; }
   while map.Count <> 0 do
   begin
+  try
     Application.ProcessMessages;
+except on e:Exception do begin end;
+
+  end;
     Sleep(100);
 
   end;

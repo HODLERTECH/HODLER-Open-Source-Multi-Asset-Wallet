@@ -159,7 +159,7 @@ begin
   except
     on e: Exception do
     begin
-      showmessage(e.Message);
+      //showmessage(e.Message);
     end;
 
   end;
@@ -279,14 +279,17 @@ var
 begin
   // Realign;
   // RecalcSize;
-  lastPrefixLength := prefixLength;
+
+
+  ftext := Value;
+  TThread.CreateAnonymousThread(procedure begin TThread.Synchronize(nil,procedure begin
+
+
+ lastPrefixLength := prefixLength;
   prefix.width := 0;
   AddrPrefix.width := 0;
   address.width := 0;
   AddrSuffix.width := 0;
-
-  ftext := Value;
-
   normalCanvas := TBitmap.Create(10, 10);
   BoltCanvas := TBitmap.Create(10, 10);
 
@@ -304,7 +307,7 @@ begin
   addrPrefW := BoltCanvas.Canvas.TextWidth(AddrPrefix.Text);
   AddrSufW := BoltCanvas.Canvas.TextWidth(AddrSuffix.Text);
 
-  
+
   avr := (prefW + addrPrefW + AddrSufW ) / (8 + prefixLength);
   if avr=0 then
   begin
@@ -369,7 +372,7 @@ begin
 
   normalCanvas.Free;
   BoltCanvas.Free;
-
+   end) end).Start;
 end;
 
 procedure cutAndDecorateLabel(lbl: Tlabel);

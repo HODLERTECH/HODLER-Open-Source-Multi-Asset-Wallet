@@ -627,6 +627,7 @@ var
   procedure setupCoin(coinName : AnsiString ; dataJson: TJSONObject);
   var
     wd: TWalletInfo;
+    nn:NanoCoin;
     innerID, X, Y, address, description, creationTime, panelYPosition,
       publicKey, EncryptedPrivateKey, isCompressed: AnsiString;
   begin
@@ -644,9 +645,11 @@ var
     isCompressed := dataJson.GetValue<string>('isCompressed');
     // confirmed := dataJson.GetValue<string>('confirmed');
 
-    if coinName = 'Nano' then
-      wd := NanoCoin.create(strtoInt(innerID), strtoInt(X), strtoInt(Y),
-      address, description, strtoInt(creationTime))
+    if coinName = 'Nano' then begin
+      NN := NanoCoin.create(strtoInt(innerID), strtoInt(X), strtoInt(Y),
+      string(address), string(description), strtoInt(creationTime));
+      wd:=TWalletInfo(nn);
+    end
     else
       wd := TWalletInfo.Create(strtoInt(innerID), strtoInt(X), strtoInt(Y),
         address, description, strtoInt(creationTime));
@@ -1001,7 +1004,7 @@ begin
   begin
     cc.rate := StrToFloatDef(rate, 0);
   end;
-  if data.TryGetValue<TJsonArray>('history', JsonHistArray) then
+  {if data.TryGetValue<TJsonArray>('history', JsonHistArray) then
   begin
 
     SetLength(cc.history, JsonHistArray.Count);
@@ -1013,7 +1016,7 @@ begin
       inc(i);
     end;
 
-  end;
+  end;}
 
 end;
 
