@@ -672,7 +672,6 @@
         <DCCReference Include="FMX.Ani.pas"/>
         <DCCReference Include="DW.ThreadedTimer.pas"/>
         <DCCReference Include="coinCode\cryptoCurrencyData.pas"/>
-        <DCCReference Include="additionalUnits\SyncThr.pas"/>
         <DCCReference Include="Languages\languages.pas"/>
         <DCCReference Include="additionalUnits\CurrencyConverter.pas"/>
         <DCCReference Include="additionalUnits\WIF.pas"/>
@@ -718,6 +717,9 @@
             <FormType>dfm</FormType>
             <DesignClass>TAndroidService</DesignClass>
         </DCCReference>
+        <DCCReference Include="components\HistoryPanelData.pas"/>
+        <DCCReference Include="additionalUnits\SyncThr.pas"/>
+        <DCCReference Include="additionalUnits\additionalClass\ComponentPoolData.pas"/>
         <RcItem Include="Languages\PT.lang">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
@@ -1424,7 +1426,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="token_icons\1715.png" Configuration="Release" Class="ProjectFile">
+                <DeployFile LocalName="token_icons\Encrypted_512_White.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -1441,7 +1443,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="token_icons\Encrypted_512_White.png" Configuration="Debug" Class="ProjectFile">
+                <DeployFile LocalName="token_icons\1715.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -3306,11 +3308,6 @@
                 <DeployFile LocalName="OKSterling.style" Configuration="Release" Class="ProjectFile">
                     <Platform Name="iOSDevice64">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(NDKBasePath)\prebuilt\android-arm\gdbserver\gdbserver" Configuration="Debug" Class="AndroidGDBServer">
-                    <Platform Name="Android">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

@@ -95,7 +95,7 @@ uses AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA, IdSSLOpenSSL, languages,
   FMX.Platform,
   FMX.TabControl, {$IF NOT DEFINED(LINUX)}System.Sensors,
   System.Sensors.Components, {$ENDIF} FMX.Edit, JSON,
-  JSON.Builders, JSON.Readers, DelphiZXingQRCode,
+  JSON.Builders, JSON.Readers, DelphiZXingQRCode, historyPanelData,
 
   System.Net.HttpClientComponent, System.Net.HttpClient, keccak_n, tokenData,
   bech32,
@@ -105,7 +105,7 @@ uses AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA, IdSSLOpenSSL, languages,
   ClpISecureRandom,
   ClpCryptoApiRandomGenerator,
   ClpICryptoApiRandomGenerator, PopupWindowData, TaddressLabelData,
-  AssetsMenagerData
+  AssetsMenagerData, ComponentPoolData
 
 {$IFDEF ANDROID},
 
@@ -287,7 +287,7 @@ procedure updateBalanceLabels();
 
 Function StrToQRBitmap(Str: AnsiString; pixelSize: integer = 6): TBitmap;
 procedure shareFile(path: AnsiString; deleteSourceFile: boolean = true);
-procedure synchronizeCurrencyValue();
+procedure synchronizeCurrencyValue(data: AnsiString);
 procedure LoadCurrencyFiatFromFile();
 function bitcoinCashAddressToCashAddress(address: AnsiString;
   showName: boolean = true): AnsiString;
@@ -387,6 +387,7 @@ var
 
   globalLoadCacheTime: Double = 0;
   globalVerifyKeypoolTime: Double = 0;
+  HistoryPanelPool : TComponentPool<ThistoryPanel>;
 
 implementation
 
@@ -1173,7 +1174,7 @@ begin
   currentStyle := name;
    //exit;
  
-  //stylo.TrySetStyleFromResource(name);
+  stylo.TrySetStyleFromResource(name);
  
   tmp := getComponentsWithTagString('copy_image', frmhome);
   if Length(tmp) <> 0 then
@@ -2019,15 +2020,15 @@ begin
 
 end;
 
-procedure synchronizeCurrencyValue();
+procedure synchronizeCurrencyValue(data: AnsiString);
 var
-  data: AnsiString;
+
   ts: TStringList;
   line: AnsiString;
   pair: TStringList;
   symbol: AnsiString;
 begin
-  data := getDataOverHTTP(HODLER_URL + 'fiat.php');
+
 
   ts := TStringList.Create();
   try
@@ -2558,11 +2559,11 @@ end;
 procedure createHistoryList(wallet: cryptoCurrency; start: integer = 0;
 stop: integer = 10);
 var
-  panel: TPanel;
-  image: TImage;
-  lbl: TLabel;
-  addrLbl: TAddressLabel;
-  datalbl: TLabel;
+  panel: THistoryPanel;
+  //image: TImage;
+  //lbl: TLabel;
+  //addrLbl: TAddressLabel;
+  //datalbl: TLabel;
   fmxObj: TfmxObject;
   i: integer;
 
@@ -2581,7 +2582,25 @@ begin
   frmhome.LoadMore.Visible := false;
   // {$ENDIF}
   if start = 0 then
-    clearVertScrollBox(frmhome.TxHistory);
+  begin
+
+    i := frmhome.TxHistory.Content.ChildrenCount - 1;
+    while i >= 0 do
+    begin
+      if frmhome.TxHistory.Content.Children[i].ClassType = THistoryPanel then
+      begin
+        if ThistoryPanel(frmhome.TxHistory.Content.Children[i]).TagObject is THistoryHolder then
+          THistoryPanel(frmhome.TxHistory.Content.Children[i]).TagObject.Free;
+
+        HistoryPanelPool.returnComponent( THistoryPanel(frmhome.TxHistory.Content.Children[i]) );
+        i := frmhome.TxHistory.Content.ChildrenCount - 1
+      end
+      else
+        dec(i);
+    end;
+
+  end;
+    //clearVertScrollBox(frmhome.TxHistory);
 
   if (wallet is TWalletInfo) and (TWalletInfo(wallet).x <> -1) then
   begin
@@ -2610,10 +2629,11 @@ begin
     if Length(hist[i].addresses) = 0 then
       continue;
 
-    panel := TPanel.Create(frmhome.TxHistory);
+    //panel := THistoryPanel.Create(frmhome.TxHistory);
+    panel := HistoryPanelPool.getComponent();
 
     panel.Height := 40;
-    panel.Width := frmhome.TxHistory.Width;
+
     panel.Visible := true;
     panel.tag := i;
     panel.TagFloat := strToFloatDef(hist[i].data, 0);
@@ -2634,92 +2654,55 @@ begin
     (panel.TagObject as THistoryHolder).history := hist[i];
     panel.Margins.Bottom := 2;
     panel.Margins.top := 2;
+    panel.Width := frmhome.TxHistory.Width;
 
-      addrLbl := TAddressLabel.Create(panel);
-      addrLbl.parent := panel;
-      addrlbl.Align := TAlignLayout.Top;
-      addrLbl.Visible := true;
-      //addrlbl.Margins.Right := 36;
-      //addrLbl.Width := 400;
-      addrLbl.Height := 18;
 
-      //addrLbl.Position.x := 36;
-      //addrLbl.Position.Y := 0;
 
-      addrLbl.TextSettings.HorzAlign := TTextAlign.Leading;
+      //panel.addrLbl.TextSettings.HorzAlign := TTextAlign.Leading;
       if wallet is TWalletInfo then
       begin
         if TWalletInfo(wallet).coin = 8 then
-          addrLbl.SetText(  hist[i].addresses[0] , 4  )
+          panel.addrLbl.SetText(  hist[i].addresses[0] , 4  )
         else if TWalletInfo(wallet).coin = 4 then
-          addrLbl.SetText(  hist[i].addresses[0] , 2  )
+          panel.addrLbl.SetText(  hist[i].addresses[0] , 2  )
         else if TWalletInfo(wallet).coin = 3 then
-          addrLbl.SetText(  hist[i].addresses[0] , 12  )
+          panel.addrLbl.SetText(  hist[i].addresses[0] , 12  )
         else
-          addrLbl.Text := hist[i].addresses[0];
+          panel.addrLbl.Text := hist[i].addresses[0];
       end
       else
-        addrLbl.Text := hist[i].addresses[0];
+        panel.addrLbl.Text := hist[i].addresses[0];
 
 
-    
-
-    datalbl := TLabel.Create(panel);
-    //datalbl.Align := TAlignLayout.Bottom;
-    datalbl.Visible := true;
-    datalbl.parent := panel;
-    datalbl.Width := 400;
-    datalbl.Height := 18;
-    datalbl.Position.x := 36;
-
-    datalbl.Position.Y := 18;
-    datalbl.Text := FormatDateTime('dd mmm yyyy hh:mm',
+    panel.datalbl.Text := FormatDateTime('dd mmm yyyy hh:mm',
       UnixToDateTime(strToIntdef(hist[i].data, 0)));
-    datalbl.TextSettings.HorzAlign := TTextAlign.Leading;
-    datalbl.Visible := TWalletInfo(wallet).coin <> 8;
-
-
-    image := TImage.Create(panel);
-    image.Align := TAlignLayout.MostLeft;
-    image.Margins.Left := 9;
-    image.Margins.Right := 9;
-    image.Width := 18;
-    //image.Height := 18;
-    //image.Position.x := 9;
-    //image.Position.Y := 9;
-    image.Visible := true;
-    image.parent := panel;
+    panel.datalbl.Visible := TWalletInfo(wallet).coin <> 8;
 
     if hist[i].typ = 'OUT' then
-      image.Bitmap := frmhome.sendImage.Bitmap;
+      panel.image.Bitmap := frmhome.sendImage.Bitmap;
     if hist[i].typ = 'IN' then
-      image.Bitmap := frmhome.receiveImage.Bitmap;
+      panel.image.Bitmap := frmhome.receiveImage.Bitmap;
     if hist[i].typ = 'INTERNAL' then
-      image.Bitmap := frmhome.internalImage.Bitmap;
+      panel.image.Bitmap := frmhome.internalImage.Bitmap;
 
-    lbl := TLabel.Create(panel);
-    lbl.Align := TAlignLayout.Bottom;
-    lbl.Height := 18;
-    lbl.TextSettings.HorzAlign := TTextAlign.taTrailing;
-    lbl.Visible := true;
-    lbl.parent := panel;
+
     if (wallet is TWalletInfo) and (TWalletInfo(wallet).coin = 4) and
       (hist[i].CountValues = 0) then
     begin
-      lbl.Text := 'Token transfer';
+      panel.lbl.Text := 'Token transfer';
     end
     else
-      lbl.Text := BigIntegerBeautifulStr(hist[i].CountValues, wallet.decimals);
-    lbl.Margins.Right := 5;
+      panel.lbl.Text := BigIntegerBeautifulStr(hist[i].CountValues, wallet.decimals);
 
-    if hist[i].confirmation = 0 then
+    panel.setConfirmed( hist[i].confirmation <> 0 );
+    {if hist[i].confirmation = 0 then
     begin
       panel.Opacity := 0.5;
       lbl.Opacity := 0.5;
       image.Opacity := 0.5;
       addrLbl.Opacity := 0.5;
       datalbl.Opacity := 0.5;
-    end;
+    end; }
   // Application.ProcessMessages;
   end;
 
@@ -3089,6 +3072,14 @@ begin
       VSB.Components[i].DisposeOf;
       i := VSB.ComponentCount - 1
     end
+    else if VSB.Components[i].ClassType = THistoryPanel then
+    begin
+      if TPanel(VSB.Components[i]).TagObject is THistoryHolder then
+        TPanel(VSB.Components[i]).TagObject.Free;
+
+      HistoryPanelPool.returnComponent( THistoryPanel(vsb.Components[i]) );
+      i := VSB.ComponentCount - 1
+    end
     else
       dec(i);
   end;
@@ -3107,6 +3098,8 @@ begin
   end;
 
 end;
+
+
 
 procedure wipeTokenDat();
 begin

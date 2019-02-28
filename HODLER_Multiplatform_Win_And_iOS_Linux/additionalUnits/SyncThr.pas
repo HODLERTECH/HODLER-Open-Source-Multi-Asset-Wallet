@@ -397,6 +397,7 @@ begin
         wi: TWalletInfo;
         wd: TObject;
         url, s: string;
+        temp : String;
 
       begin
 
@@ -416,9 +417,11 @@ begin
           begin
             s := batchSync(id);
             url := HODLER_URL + '/batchSync0.3.2.php?coin=' + availablecoin[id].name;
+
+            temp := postDataOverHTTP(url, s, firstSync, True);
             if TThread.CurrentThread.CheckTerminated then
               Exit();
-            parseSync(postDataOverHTTP(url, s, firstSync, True));
+            parseSync( temp );
           end;
           TThread.CurrentThread.Synchronize(nil,
             procedure
@@ -793,6 +796,8 @@ begin
 end;
 
 procedure SynchronizeBalanceThread.Execute();
+var
+dataTemp : ansiString;
 begin
 
   inherited;
@@ -804,12 +809,14 @@ begin
 
   with frmHome do
   begin
-
+      dataTemp := getDataOverHTTP(HODLER_URL + 'fiat.php');
+      if TThread.CurrentThread.CheckTerminated then
+      Exit();
     TThread.Synchronize(TThread.CurrentThread,
       procedure
       begin
 
-        synchronizeCurrencyValue();
+        synchronizeCurrencyValue(dataTemp);
 
         RefreshWalletView.Enabled := false;
         RefreshProgressBar.Visible := True;
@@ -1157,6 +1164,7 @@ var
   twi: TWalletInfo;
 var
   segwit, cash, compatible, legacy: AnsiString;
+  pub : ansiString;
 begin
 
   result := false;
@@ -1166,12 +1174,21 @@ begin
   for twi in CurrentAccount.myCoins do
   begin
 
+    if tthread.CurrentThread.CheckTerminated then
+    begin
+      exit();
+    end;
+    pub := twi.pub;
+
+
     if twi.coin <> coinid then
       continue;
 
-    segwit := lowercase(generatep2wpkh(twi.pub, availablecoin[twi.coin].hrp));
-    compatible := lowercase(generatep2sh(twi.pub, availablecoin[twi.coin].p2sh));
-    legacy := generatep2pkh(twi.pub, availablecoin[twi.coin].p2pk);
+
+
+    segwit := lowercase(generatep2wpkh( pub, availablecoin[twi.coin].hrp));
+    compatible := lowercase(generatep2sh( pub, availablecoin[twi.coin].p2sh));
+    legacy := generatep2pkh( pub, availablecoin[ coinid ].p2pk);
     cash := lowercase(bitcoinCashAddressToCashAddress(legacy, false));
     legacy := LowerCase(legacy);
     cash := StringReplace(cash, 'bitcoincash:', '', [rfReplaceAll]);

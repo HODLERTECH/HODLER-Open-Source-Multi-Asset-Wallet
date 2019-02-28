@@ -31,7 +31,7 @@ uses
   FMX.Edit,
   FMX.Clipboard, bech32, cryptoCurrencyData, FMX.VirtualKeyBoard, JSON,
   languages, WIF, AccountData, WalletStructureData,
-     TCopyableAddressPanelData , ThreadKinderGartenData,
+     TCopyableAddressPanelData , ThreadKinderGartenData,ComponentPoolData,
   System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
   CurrencyConverter, uEncryptedZipFile, System.Zip, TRotateImageData , popupwindowData , notificationLayoutData , TaddressLabelData
 {$IFDEF ANDROID},
@@ -1101,6 +1101,7 @@ type
     procedure AddWalletButtonClick(Sender: TObject);
     procedure NanoUnlockerClick(Sender: TObject);
     procedure UnlockPengingTransactionClick(Sender: TObject);
+    procedure UnlockNanoImageClick(Sender: TObject);
     //procedure UserReportSendLogsSwitchClick(Sender: TObject);
 
   private
@@ -1273,6 +1274,11 @@ end;
 {$ENDIF}
 
 
+
+procedure TfrmHome.UnlockNanoImageClick(Sender: TObject);
+begin
+  UnlockPengingTransactionClick(sender);
+end;
 
 procedure tfrmhome.UnlockPendingNano(sender : TObject);
 var
@@ -3191,46 +3197,28 @@ var
 
   // temp : TAddressLabel;
   t : ThreadKindergarten;
-  temp : TThread;
+  temp : TLabel;
+  pool : TcomponentPool<TLabel>;
+
 
 begin
 
-  t := ThreadKindergarten.Create();
+  pool := TcomponentPool<TLabel>.create;
 
-  for I := 0 to 10 do
-    t.CreateAnonymousThread(procedure
-    var
-      j : Integer;
-    begin
-      for j := 0 to 10 do
-      begin
-
-        //if not tthread.CurrentThread.CheckTerminated then
-          sleep(1000);
-      end;
-
-
-    end).Start;
-
-  for I := 0 to 10 do
-    t.CreateAnonymousThread(procedure
-    var
-      j : Integer;
-    begin
-      for j := 0 to 30 do
-      begin
-
-        //if not tthread.CurrentThread.CheckTerminated then
-          sleep(1000);
-      end;
-
-
-    end).Start;
+  sleep(1000);
+  for i := 0 to 5 do
+  begin
+    temp:= pool.getComponent();
+    temp.Parent := Panel1;
+    temp.Visible := true;
+    temp.Text := 'test' + inttoStr(i);
+    temp.Align:= TAlignLayout.Bottom;
 
 
 
-  t.Free;
+  end;
 
+  pool.Free;
 
 end;
 

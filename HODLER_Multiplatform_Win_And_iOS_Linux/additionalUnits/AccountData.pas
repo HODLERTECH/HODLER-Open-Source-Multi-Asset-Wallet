@@ -437,13 +437,9 @@ end;
 destructor Account.Destroy();
 begin
 
-  clearArrays();
+
   DescriptionDict.Free();
 
-  mutexTokenFile.Free;
-  mutexCoinFile.Free;
-  mutexSeedFile.Free;
-  mutexDescriptionFile.Free;
 
   if SyncBalanceThr <> nil then
 
@@ -460,7 +456,12 @@ begin
     SyncBalanceThr := nil;
 
   end).Start();
-  
+
+  mutexTokenFile.Free;
+  mutexCoinFile.Free;
+  mutexSeedFile.Free;
+  mutexDescriptionFile.Free;
+  clearArrays();
 
   inherited;
 end;

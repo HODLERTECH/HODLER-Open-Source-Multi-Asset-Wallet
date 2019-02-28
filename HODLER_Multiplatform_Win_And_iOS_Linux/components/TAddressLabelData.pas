@@ -140,6 +140,10 @@ begin
     else
       startPosition := 0;
 
+    prefix.RecalcSize;
+    AddrPrefix.RecalcSize;
+    address.RecalcSize;
+    AddrSuffix.RecalcSize;
     prefix.Position.X := startPosition;
     AddrPrefix.Position.X := prefix.Position.X + prefix.width;
     address.Position.X := startPosition + prefix.width + AddrPrefix.width;
@@ -303,12 +307,12 @@ begin
   
   avr := (prefW + addrPrefW + AddrSufW ) / (8 + prefixLength);
   if avr=0 then
-begin  
+  begin
 
-  normalCanvas.Free;
-  BoltCanvas.Free;
-exit;
-end;
+    normalCanvas.Free;
+    BoltCanvas.Free;
+  exit;
+  end;
 
   propLen := round((width * 0.4) / avr) - (8 + prefixLength);
 
@@ -351,7 +355,10 @@ end;
       AddrSuffix.width))
   else
     startPosition := 0;
-
+   prefix.RecalcSize;
+    AddrPrefix.RecalcSize;
+    address.RecalcSize;
+    AddrSuffix.RecalcSize;
   prefix.Position.X := startPosition;
   AddrPrefix.Position.X := prefix.Position.X + prefix.width;
   address.Position.X := startPosition + prefix.width + AddrPrefix.width;
