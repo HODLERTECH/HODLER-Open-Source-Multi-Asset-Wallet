@@ -1761,6 +1761,10 @@ var
   ts: TStringList;
   i: integer;
 begin
+      HOME_PATH := IncludeTrailingPathDelimiter
+        ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetDocumentsPath{$ELSE}System.
+        IOUtils.TPath.combine(System.SysUtils.GetEnvironmentVariable('APPDATA'),
+        'hodlertech'){$ENDIF});
   ts := TStringList.Create;
   try
     for i := 0 to Length(pows) - 1 do

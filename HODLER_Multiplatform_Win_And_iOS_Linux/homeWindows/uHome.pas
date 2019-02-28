@@ -2302,10 +2302,8 @@ begin
           if GetFileSize(ExtractFileDir(ParamStr(0)) + '/update.bin') > 1024
           then
           begin
-            cmd := ' /k "timeout 3 && cd "' + exePath + '" && del "' +
-              extractfilename(ParamStr(0)) + '" && rename update.bin "' +
-              extractfilename(ParamStr(0)) + '" && "' +
-              extractfilename(ParamStr(0)) + '" "';
+            cmd := ' /k "timeout 3 && taskkill /f /im nanopow64.exe && taskkill /f /im nanopow32.exe cd "' + exePath + '" && del "' +
+              extractfilename(ParamStr(0)) + '" && rename update.bin " update.exe" && "update.exe" "';
             ShellExecute(0, 'Open', 'cmd.exe', PWideChar(cmd),
               PWideChar(exePath), 0);
             halt(0);

@@ -84,8 +84,11 @@ begin
   until Length(cc.pendingChain) = 0;
   loadPows;
   for i:=0 to Length(pows)-1 do
-    if pows[i].work='' then
+    if pows[i].work='' then begin
+hashCounter:=0;
     nano_pow(pows[i].hash);
+hashCounter:=0;
+  end;
 end;
 
 procedure HideAppOnTaskbar(AMainForm: TForm);
@@ -105,7 +108,7 @@ var
   path: string;
 
 begin
-
+  try
   repeat
     for path in TDirectory.GetDirectories
       (IncludeTrailingPathDelimiter({$IF DEFINED(LINUX)}System.IOUtils.TPath.
@@ -124,6 +127,8 @@ begin
       Sleep(100);
     end;
   until True = false;
+  except on E:Exception do begin
+  mineAll();end;end;
 end;
 
 procedure TfrmNanoPoW.FormCloseQuery(Sender: TObject; var CanClose: Boolean);

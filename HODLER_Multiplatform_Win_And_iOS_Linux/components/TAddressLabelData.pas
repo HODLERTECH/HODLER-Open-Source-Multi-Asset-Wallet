@@ -155,7 +155,7 @@ begin
   except
     on e: Exception do
     begin
-      showmessage(e.Message);
+      //showmessage(e.Message);
     end;
 
   end;

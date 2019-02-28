@@ -199,14 +199,17 @@ begin
       .GetValue<string>('pending'));
     // {history := }js.TryGetValue<TJSONArray>('history' , history) {as TJSONArray};
     // {pendings :=} js.tryGetValue<TJsonArray>('pending' , pendings) {as TJsonArray};
-
+    try
+    NanoCoin(cc).loadChain;
+    except on E:Exception do begin end;
+    end;
     if (Length(NanoCoin(cc).pendingChain) > 0) then
       NanoCoin(cc).lastBlockAmount :=
         BigInteger.Parse(NanoCoin(cc).curBlock.balance)
     else
       NanoCoin(cc).lastBlockAmount := cc.confirmed;
     cc.confirmed := NanoCoin(cc).lastBlockAmount;
-
+   try
     if js.TryGetValue<TJsonArray>('history', history) then
       if history.Count > 0 then
       begin
@@ -238,6 +241,7 @@ begin
           cc.history[i].confirmation := 1;
         end;
       end;
+   except on E:Exception do begin end; end;
 
     if js.TryGetValue<TJsonArray>('pending', pendings) then
       if pendings.Count > 0 then
@@ -440,7 +444,8 @@ begin
             if TThread.CurrentThread.CheckTerminated then
               exit();
             parseSync(postDataOverHTTP(url, s, firstSync, True));
-          end;
+          end;              if TThread.CurrentThread.CheckTerminated then
+              exit();
           TThread.CurrentThread.Synchronize(nil,
             procedure
             begin
@@ -470,7 +475,8 @@ begin
   end;
   for i := 0 to Length(CurrentAccount.myTokens) - 1 do
   begin
-
+               if TThread.CurrentThread.CheckTerminated then
+              exit();
     mutex.Acquire();
 
     CurrentAccount.SynchronizeThreadGuardian.CreateAnonymousThread(
@@ -502,7 +508,8 @@ begin
           end);
 
       end).Start();
-
+              if TThread.CurrentThread.CheckTerminated then
+              exit();
     mutex.Acquire();
     mutex.Release();
 
@@ -630,7 +637,7 @@ end;
 
 procedure SynchronizeCryptoCurrency(cc: cryptoCurrency);
 var
-  data, url: string;
+  data, url,s: string;
 begin
 
   /// ////////////////HISTORY//////////////////////////
@@ -642,8 +649,11 @@ begin
         begin
           url := HODLER_URL + '/batchSync0.3.2.php?coin=' + availablecoin
             [TWalletInfo(cc).coin].name;
-          parseSync(postDataOverHTTP(url, batchSync(TWalletInfo(cc).coin,
-            TWalletInfo(cc).X), false, True));
+            s:=postDataOverHTTP(url, batchSync(TWalletInfo(cc).coin,
+            TWalletInfo(cc).X), false, True);
+            if TThread.CurrentThread.CheckTerminated then
+              exit();
+          parseSync(s);
         end;
       4:
         begin
@@ -661,6 +671,8 @@ begin
 
           data := getDataOverHTTP('https://hodlernode.net/nano.php?addr=' +
             TWalletInfo(cc).addr, false, True);
+                      if TThread.CurrentThread.CheckTerminated then
+            exit();
           if data <> '' then
             syncNano(cc, data);
 

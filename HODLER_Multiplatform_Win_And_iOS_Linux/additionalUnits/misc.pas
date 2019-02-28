@@ -3811,6 +3811,7 @@ begin
         while not(ares.IsCompleted or ares.isCancelled) do
         begin
           sleep(50);
+          if not TThread.CurrentThread.ExternalThread then
           if Tthread.CurrentThread.CheckTerminated then
             exit();
         end;

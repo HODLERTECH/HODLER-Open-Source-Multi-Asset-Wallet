@@ -1104,7 +1104,7 @@ begin
               end;
             except
               on E: Exception do
-                showmessage(E.Message);
+                //showmessage(E.Message);
             end;
           end);
 

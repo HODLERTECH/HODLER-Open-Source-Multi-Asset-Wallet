@@ -298,7 +298,7 @@ begin
     frmHome.ChangeAccountButton.Text := name;
 
     if currentAccount <> nil then
-      currentAccount.free;
+      currentAccount.disposeof;
 
     lastClosedAccount := name;
     currentAccount := Account.Create(name);
@@ -776,7 +776,7 @@ begin
 
   except
     on E: Exception do
-      showmessage(E.Message);
+      //showmessage(E.Message);
 
   end;
 
