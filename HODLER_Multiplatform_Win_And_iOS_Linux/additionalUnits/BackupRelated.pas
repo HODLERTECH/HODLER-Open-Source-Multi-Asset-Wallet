@@ -923,8 +923,8 @@ begin
 
       seedFromWords := '';
       inputWordsList.Free;
-      LoadCurrentAccount(AccountNameEdit.Text);
-      AccountRelated.afterInitialize;
+      //LoadCurrentAccount(AccountNameEdit.Text);
+      //AccountRelated.afterInitialize;
       {
         Dodaæ obs³ugê b³êdów
       }

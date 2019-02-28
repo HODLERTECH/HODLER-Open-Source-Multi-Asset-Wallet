@@ -2481,10 +2481,10 @@ end;
 procedure TfrmHome.AddNewAccountButtonClick(Sender: TObject);
 var od:TOpenDialog;
 begin
-   od:=TOpenDialog.Create(nil);
+   {od:=TOpenDialog.Create(nil);
     if od.execute then
     stylo.SetStyleFromFile(od.FileName);
-    od.Free;
+    od.Free;    }
 
   switchTab(PageControl, AddAccount);
   // AccountsListPanel.Visible := false;

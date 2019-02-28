@@ -143,7 +143,9 @@ uses
   TCopyableLabelData in 'components\TCopyableLabelData.pas',
   TImageTextButtonData in 'components\TImageTextButtonData.pas',
   TRotateImageData in 'components\TRotateImageData.pas',
-  ThreadKindergartenData in 'additionalUnits\ThreadKindergartenData.pas';
+  ThreadKindergartenData in 'additionalUnits\ThreadKindergartenData.pas',
+  HistoryPanelData in 'components\HistoryPanelData.pas',
+  ComponentPoolData in 'additionalUnits\additionalClass\ComponentPoolData.pas';
 
 {$R *.res}
 

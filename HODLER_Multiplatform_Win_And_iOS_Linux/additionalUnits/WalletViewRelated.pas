@@ -2132,7 +2132,7 @@ begin
 
   reloadWalletView; // po co  jak jest w watku ?
 
-  if SyncOpenWallet <> nil then
+ { if SyncOpenWallet <> nil then
   begin
     if not SyncOpenWallet.Finished then
     begin
@@ -2173,7 +2173,7 @@ begin
     SyncOpenWallet.FreeOnTerminate := false;
     SyncOpenWallet.Start;
 
-  end;
+  end;  }
 
   with frmhome do
   begin

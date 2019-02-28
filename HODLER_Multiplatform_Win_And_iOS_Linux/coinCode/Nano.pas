@@ -590,7 +590,11 @@ begin
     Self.lastBlock := '';
     Exit;
   end;
+
+
+
   l := Length(Self.PendingBlocks.ToArray);
+
   if l > 0 then
   begin
     for i := 0 to l - 1 do
@@ -1308,8 +1312,13 @@ begin
           Result.blockType := 'receive';
           Result.source := obj.GetValue('link').Value;
           if not hexBalance then
-            Result.blockAmount := BigInteger.Parse(prevObj.GetValue('balance')
-              .Value) - BigInteger.Parse(obj.GetValue('balance').Value)
+          begin
+            if prevObj <> nil then
+              Result.blockAmount := BigInteger.Parse(prevObj.GetValue('balance')
+                .Value) - BigInteger.Parse(obj.GetValue('balance').Value)
+            else
+              Result.blockAmount := - BigInteger.Parse(obj.GetValue('balance').Value);
+          end
           else
             Result.blockAmount :=
               BigInteger.Parse('0x0' + prevObj.GetValue('balance').Value) -
@@ -1760,8 +1769,9 @@ procedure savePows;
 var
   ts: TStringList;
   i: integer;
+  path : AnsiString;
 begin
-      HOME_PATH := IncludeTrailingPathDelimiter
+       PATH := IncludeTrailingPathDelimiter
         ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetDocumentsPath{$ELSE}System.
         IOUtils.TPath.combine(System.SysUtils.GetEnvironmentVariable('APPDATA'),
         'hodlertech'){$ENDIF});
@@ -1774,7 +1784,7 @@ begin
 
       ts.Add(pows[i].Hash + ' ' + pows[i].work);
     end;
-    ts.SaveToFile(TPath.combine(HOME_PATH, 'nanopows.dat'));
+    ts.SaveToFile(TPath.combine( PATH, 'nanopows.dat'));
   except on e:Exception do begin end;
 
   end;
