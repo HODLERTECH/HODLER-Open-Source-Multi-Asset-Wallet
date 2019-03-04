@@ -3202,22 +3202,11 @@ var
 
 begin
 
-  pool := TcomponentPool<TLabel>.create;
+  NotificationLayout.popupConfirm(procedure begin end, procedure begin end, 'popup1');
+  NotificationLayout.popupConfirm(procedure begin end, procedure begin end, 'popup2');
+  NotificationLayout.popupConfirm(procedure begin end, procedure begin end, 'popup3');
+  NotificationLayout.popupConfirm(procedure begin end, procedure begin end, 'popup4');
 
-  sleep(1000);
-  for i := 0 to 5 do
-  begin
-    temp:= pool.getComponent();
-    temp.Parent := Panel1;
-    temp.Visible := true;
-    temp.Text := 'test' + inttoStr(i);
-    temp.Align:= TAlignLayout.Bottom;
-
-
-
-  end;
-
-  pool.Free;
 
 end;
 

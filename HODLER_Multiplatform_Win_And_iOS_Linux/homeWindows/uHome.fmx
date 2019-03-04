@@ -35,7 +35,7 @@ object frmHome: TfrmHome
     Size.Height = 687.000000000000000000
     Size.PlatformDefault = False
     TabHeight = 49.000000000000000000
-    TabIndex = 5
+    TabIndex = 18
     TabOrder = 8
     TabPosition = None
     OnChange = closeVirtualKeyBoard
@@ -871,8 +871,8 @@ object frmHome: TfrmHome
         Size.Height = 544.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 2
-        Viewport.Width = 450.000000000000000000
-        Viewport.Height = 544.000000000000000000
+        Viewport.Width = 446.000000000000000000
+        Viewport.Height = 540.000000000000000000
       end
       object btnSeedGeneratedProceed: TButton
         Align = Bottom
@@ -949,7 +949,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -3241,7 +3241,7 @@ object frmHome: TfrmHome
               Size.Height = 562.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
-              Viewport.Width = 450.000000000000000000
+              Viewport.Width = 434.000000000000000000
               Viewport.Height = 562.000000000000000000
               object ReceiveAmountLayout: TLayout
                 Align = Top
@@ -3526,7 +3526,7 @@ object frmHome: TfrmHome
               Size.Height = 562.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
-              Viewport.Width = 450.000000000000000000
+              Viewport.Width = 434.000000000000000000
               Viewport.Height = 562.000000000000000000
               object btnSend: TButton
                 Align = Top
@@ -7318,8 +7318,8 @@ object frmHome: TfrmHome
           Size.Height = 145.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 5
-          Viewport.Width = 97.000000000000000000
-          Viewport.Height = 145.000000000000000000
+          Viewport.Width = 77.000000000000000000
+          Viewport.Height = 141.000000000000000000
         end
         object WarningImage: TImage
           MultiResBitmap = <
@@ -11144,7 +11144,7 @@ object frmHome: TfrmHome
         Size.Height = 639.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 7
-        Viewport.Width = 450.000000000000000000
+        Viewport.Width = 434.000000000000000000
         Viewport.Height = 639.000000000000000000
         object GlobalSettingsLayout: TLayout
           Align = Top
@@ -11642,8 +11642,8 @@ object frmHome: TfrmHome
         Size.Height = 543.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 5
-        Viewport.Width = 450.000000000000000000
-        Viewport.Height = 543.000000000000000000
+        Viewport.Width = 446.000000000000000000
+        Viewport.Height = 539.000000000000000000
       end
     end
     object AddNewCoin: TTabItem
@@ -11840,8 +11840,8 @@ object frmHome: TfrmHome
         StyleLookup = 'memostyle'
         TabOrder = 6
         Visible = False
-        Viewport.Width = 384.000000000000000000
-        Viewport.Height = 88.000000000000000000
+        Viewport.Width = 380.000000000000000000
+        Viewport.Height = 84.000000000000000000
       end
       object lblRetypeSeed: TLabel
         Align = Top
@@ -12419,7 +12419,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -16325,8 +16325,8 @@ object frmHome: TfrmHome
           Size.PlatformDefault = False
           StyleLookup = 'EQRInstrctionStyle1'
           TabOrder = 1
-          Viewport.Width = 450.000000000000000000
-          Viewport.Height = 73.000000000000000000
+          Viewport.Width = 446.000000000000000000
+          Viewport.Height = 69.000000000000000000
         end
         object lblEQRDescription: TLabel
           Align = Bottom
@@ -16479,8 +16479,8 @@ object frmHome: TfrmHome
         Size.Height = 224.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 1
-        Viewport.Width = 450.000000000000000000
-        Viewport.Height = 224.000000000000000000
+        Viewport.Width = 446.000000000000000000
+        Viewport.Height = 220.000000000000000000
       end
       object SendReportIssuesButton: TButton
         Align = Bottom

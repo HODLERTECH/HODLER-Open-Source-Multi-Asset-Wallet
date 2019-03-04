@@ -111,23 +111,23 @@ begin
     if length(source) <= prefSufLength * 2 then
     begin
       outText := source;
-    end;
+    end else
 
-    while (normalCanvas.Canvas.TextWidth(outText) + prefW + addrPrefW +
-      AddrSufW) < Width * 0.85 do
-    begin
-
-      if length(source) <= prefSufLength * 2 then
+      while (normalCanvas.Canvas.TextWidth(outText) + prefW + addrPrefW +
+        AddrSufW) < Width * 0.85 do
       begin
-        outText := source;
-        break;
-      end
-      else
-        outText := LeftStr(source, prefSufLength) + '...' +
-          RightStr(source, prefSufLength);
-      prefSufLength := prefSufLength + 1;
 
-    end;
+        if length(source) <= prefSufLength * 2 then
+        begin
+          outText := source;
+          break;
+        end
+        else
+          outText := LeftStr(source, prefSufLength) + '...' +
+            RightStr(source, prefSufLength);
+        prefSufLength := prefSufLength + 1;
+
+      end;
 
     address.Text := outText;
 
@@ -279,12 +279,12 @@ begin
   // RecalcSize;
 
   ftext := Value;
-  TThread.CreateAnonymousThread(
+  {TThread.CreateAnonymousThread(
     procedure
     begin
       TThread.Synchronize(nil,
         procedure
-        begin
+        begin }
 
           lastPrefixLength := prefixLength;
           prefix.Width := 0;
@@ -325,23 +325,23 @@ begin
           if length(source) <= prefSufLength * 2 then
           begin
             outText := source;
-          end;
-
-          while (normalCanvas.Canvas.TextWidth(outText) + prefW + addrPrefW +
-            AddrSufW) < Width * 0.85 do
-          begin
-
-            if length(source) <= prefSufLength * 2 then
+          end
+          else
+            while (normalCanvas.Canvas.TextWidth(outText) + prefW + addrPrefW +
+              AddrSufW) < Width * 0.85 do
             begin
-              outText := source;
-              break;
-            end
-            else
-              outText := LeftStr(source, prefSufLength) + '...' +
-                RightStr(source, prefSufLength);
-            prefSufLength := prefSufLength + 1;
 
-          end;
+              if length(source) <= prefSufLength * 2 then
+              begin
+                outText := source;
+                break;
+              end
+              else
+                outText := LeftStr(source, prefSufLength) + '...' +
+                  RightStr(source, prefSufLength);
+              prefSufLength := prefSufLength + 1;
+
+            end;
 
           address.Text := outText;
 
@@ -373,8 +373,8 @@ begin
 
           normalCanvas.Free;
           BoltCanvas.Free;
-        end)
-    end).Start;
+   //     end)
+   // end).Start;
 end;
 
 procedure cutAndDecorateLabel(lbl: Tlabel);
