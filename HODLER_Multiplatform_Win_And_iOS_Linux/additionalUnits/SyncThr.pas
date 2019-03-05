@@ -432,9 +432,17 @@ begin
         try
           if id in [4, 8] then
           begin
+
+
             for wi in CurrentAccount.myCoins do
+            begin
+
+              if TThread.CurrentThread.CheckTerminated then
+                Exit();
+
               if wi.coin in [4, 8] then
                 SynchronizeCryptoCurrency(wi);
+            end;
 
           end
           else
@@ -520,16 +528,16 @@ begin
 
   end;
 
-  while semaphore.CurrentCount <> 8 do
+  while ( semaphore <> nil ) and ( semaphore.CurrentCount <> 8 ) do
   begin
     if TThread.CurrentThread.CheckTerminated then
       exit();
     sleep(50);
   end;
-  { tthread.Synchronize(nil , procedure
+   {tthread.Synchronize(nil , procedure
     begin
     showmessage( floatToStr( globalLoadCacheTime ) );
-    end); }
+    end);   }
 
   CurrentAccount.SaveFiles();
   firstSync := false;
@@ -851,8 +859,8 @@ begin
 
   inherited;
 
-  frmHome.DashBrdProgressBar.value := 0;
-  frmHome.RefreshProgressBar.value := 0;
+  //frmHome.DashBrdProgressBar.value := 0;
+  //frmHome.RefreshProgressBar.value := 0;
 
   startTime := now;
 
@@ -901,16 +909,28 @@ begin
       procedure
       begin
         repaintWalletList;
+      end);
 
+    TThread.Synchronize(TThread.CurrentThread,
+      procedure
+      begin
         if PageControl.ActiveTab = walletView then
         begin
+          try
+            reloadWalletView;
+          except on E: Exception do
+          end;
 
-          reloadWalletView;
 
 
           // createHistoryList( CurrentCryptoCurrency );
 
         end;
+      end);
+
+        TThread.Synchronize(TThread.CurrentThread,
+      procedure
+      begin
 
         TLabel(frmHome.FindComponent('globalBalance')).text :=
           floatToStrF(currencyConverter.calculate(globalFiat), ffFixed, 9, 2);
@@ -1231,6 +1251,9 @@ begin
   for twi in CurrentAccount.myCoins do
   begin
 
+    if twi.coin <> coinid then
+      continue;
+
     if tthread.CurrentThread.CheckTerminated then
     begin
       exit();
@@ -1238,11 +1261,10 @@ begin
     pub := twi.pub;
 
 
-    if twi.coin <> coinid then
-      continue;
- 
-    segwit := lowercase(generatep2wpkh( pub, availablecoin[twi.coin].hrp));
-    compatible := lowercase(generatep2sh( pub, availablecoin[twi.coin].p2sh));
+    
+
+    segwit := lowercase(generatep2wpkh( pub, availablecoin[ coinid ].hrp));
+    compatible := lowercase(generatep2sh( pub, availablecoin[ coinid ].p2sh));
     legacy := generatep2pkh( pub, availablecoin[ coinid ].p2pk);
  
     cash := lowercase(bitcoinCashAddressToCashAddress(legacy, false));

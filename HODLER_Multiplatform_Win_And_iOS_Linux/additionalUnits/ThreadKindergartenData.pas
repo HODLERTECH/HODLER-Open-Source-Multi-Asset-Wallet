@@ -3,7 +3,7 @@ unit ThreadKindergartenData;
 interface
 
 uses System.SysUtils, System.Classes, CrossPlatformHeaders, fmx.Forms,
-  System.Generics.Collections, System.Diagnostics, System.SyncObjs;
+  System.Generics.Collections, System.Diagnostics, System.SyncObjs ,FMX.Dialogs;
 
 type
   ThreadKindergarten = class
@@ -39,6 +39,8 @@ type
 implementation
 
 { ThreadKindergarten }
+
+uses SyncThr;
 
 procedure ThreadKindergarten.removeThread(id: Integer);
 var
@@ -145,6 +147,11 @@ except on e:Exception do begin end;
   map.Free;
   Addmutex.Free;
   removeMutex.Free();
+
+
+  semaphore.Free;
+  semaphore := nil;
+
   inherited;
 
 end;

@@ -2404,18 +2404,18 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="token_icons\Encrypted_512_White.png" Condition="'$(Config)'=='Debug'">
+        <DeployFile Include="token_icons\1715.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
-            <RemoteName>Encrypted_512_White.png</RemoteName>
+            <RemoteName>1715.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="token_icons\1715.png" Condition="'$(Config)'=='Release'">
+        <DeployFile Include="token_icons\Encrypted_512_White.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
-            <RemoteName>1715.png</RemoteName>
+            <RemoteName>Encrypted_512_White.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -2596,6 +2596,15 @@
         <DeployFile Include="token_icons\2071.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
             <RemoteName>2071.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="token_icons\CharocalExpressive.style" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
+            <RemoteName>CharocalExpressive.style</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -3162,6 +3171,15 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="Jet.style" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
+            <RemoteName>Jet.style</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="token_icons\Encrypted_512_Dark.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
             <RemoteName>Encrypted_512_Dark.png</RemoteName>
@@ -3189,15 +3207,6 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="Dark.style" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
-            <RemoteName>Dark.style</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
         <DeployFile Include="coin_icons\RVN.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
             <RemoteName>RVN.png</RemoteName>
@@ -3219,15 +3228,6 @@
         <DeployFile Include="token_icons\BTM.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
             <RemoteName>BTM.png</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="Dark.style" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
-            <RemoteName>Dark.style</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>

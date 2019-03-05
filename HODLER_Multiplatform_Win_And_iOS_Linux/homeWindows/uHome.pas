@@ -1102,6 +1102,14 @@ type
     procedure NanoUnlockerClick(Sender: TObject);
     procedure UnlockPengingTransactionClick(Sender: TObject);
     procedure UnlockNanoImageClick(Sender: TObject);
+    procedure CoinPrivKeyPassEditKeyUp(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
+    procedure PrivateKeyEditSVKeyUp(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
+    procedure ConfirmSendPasswordEditKeyUp(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
+    procedure NewCoinDescriptionPassEditKeyUp(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
     //procedure UserReportSendLogsSwitchClick(Sender: TObject);
 
   private
@@ -1378,6 +1386,16 @@ begin
 
         end);
     end).Start;
+end;
+
+procedure TfrmHome.CoinPrivKeyPassEditKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  if Key = vkReturn then
+  begin
+    NewCoinPrivKeyOKButtonClick( nil );
+
+  end;
 end;
 
 procedure TfrmHome.CoinListCreateFromQR(Sender: TObject);
@@ -1806,6 +1824,16 @@ begin
   switchTab(PageControl, PrivacyAndSecuritySettings);
 end;
 
+procedure TfrmHome.PrivateKeyEditSVKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  if Key = vkReturn then
+  begin
+    ClaimYourBCHSVButtonClick(nil);
+    //btnCreateWallet.OnClick();
+  end;
+end;
+
 procedure TfrmHome.PrivateKeyManageButtonClick(Sender: TObject);
 begin
   switchTab(PageControl, PrivOptionsTabItem);
@@ -1908,16 +1936,16 @@ end;
 procedure switchTab(TabControl: TTabControl; TabItem: TTabItem);
 begin
   backTabItem := frmHome.PageControl.ActiveTab;
-  if not frmHome.shown then
-  begin
+  //if not frmHome.shown then
+  //begin
     TabControl.ActiveTab := TabItem;
-  end
+  {end
   else
   begin
     frmHome.tabAnim.Tab := TabItem;
 
     frmHome.tabAnim.ExecuteTarget(TabControl);
-  end;
+  end; }
   frmHome.passwordForDecrypt.Text := '';
   frmHome.DecryptSeedMessage.Text := '';
 
@@ -2081,7 +2109,8 @@ var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = vkReturn then
   begin
-    btnCreateWalletClick(nil);
+    btnCreateWalletClick( btnCreateWallet );
+    //btnCreateWallet.OnClick();
   end;
 end;
 
@@ -2726,6 +2755,23 @@ begin
   // CurrentCoin := temp;
 end;
 
+procedure TfrmHome.ConfirmSendPasswordEditKeyUp(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+if Key = vkReturn then
+  begin
+  if ConfirmSendClaimCoinButton.Visible then
+  begin
+    ConfirmSendClaimCoinButtonClick(nil);
+  end
+  else
+  if SendTransactionButton.Visible then
+  begin
+    SendTransactionButtonClick(nil);
+  end;
+  end;
+end;
+
 procedure TfrmHome.ContractAddressKeyUp(Sender: TObject; var Key: Word;
 var KeyChar: Char; Shift: TShiftState);
 begin
@@ -3065,6 +3111,15 @@ begin
   decryptSeedBackTabItem := PageControl.ActiveTab;
   PageControl.ActiveTab := descryptSeed;
   btnDSBack.onclick := backBtnDecryptSeed;
+end;
+
+procedure TfrmHome.NewCoinDescriptionPassEditKeyUp(Sender: TObject;
+  var Key: Word; var KeyChar: Char; Shift: TShiftState);
+begin
+  if Key = vkReturn then
+  begin
+    btnOKAddNewCoinSettingsClick(nil);
+  end;
 end;
 
 procedure TfrmHome.NewCoinPrivKeyOKButtonClick(Sender: TObject);

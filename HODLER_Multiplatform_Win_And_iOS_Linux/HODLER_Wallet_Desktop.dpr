@@ -170,6 +170,7 @@ begin
   begin
     try
       Application.Initialize;
+
       Application.FormFactor.Orientations := [TFormOrientation.Portrait];
       Application.CreateForm(TfrmHome, frmhome);
       Application.Run;

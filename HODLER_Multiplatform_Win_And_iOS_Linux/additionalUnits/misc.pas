@@ -1171,7 +1171,7 @@ begin
   currentStyle := name;
  
  
-  stylo.TrySetStyleFromResource(name);
+  stylo.TrySetStyleFromResource('RT_DARK');
   
   tmp := getComponentsWithTagString('copy_image', frmhome);
   if Length(tmp) <> 0 then
@@ -1285,9 +1285,11 @@ begin
 
   for i := 0 to Length(AccountsNames) - 1 do
   begin
+
     if AccountsNames[i].name = name then
     begin
       delete(AccountsNames, i, 1);
+      break;
     end;
   end;
   ac.Free;
@@ -1917,7 +1919,8 @@ begin
     price.Margins.Bottom := 2;
     panel.Visible :=
       (ccEmpty or (not frmhome.HideZeroWalletsCheckBox.IsChecked));
-    panel.AnimateFloat('Opacity', 1, 2);
+    //panel.AnimateFloat('Opacity', 1, 2);
+    panel.Opacity := 1;
 
   end;
 end;

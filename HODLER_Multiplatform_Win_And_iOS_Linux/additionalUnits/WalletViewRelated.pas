@@ -712,9 +712,7 @@ begin
   with frmhome do
   begin
     BackupRelated.SendEQR;
-    pngName := System.IOUtils.TPath.Combine(
-{$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
-      (){$ENDIF}, CurrentAccount.name + '_EQR_SMALL' + '.png');
+    pngName := CurrentAccount.SmallQRImagePath;
     EQRPreview.Visible := True;
     // PageControl.ActiveTab := EQRView;
     EQRPreview.Bitmap.LoadFromFile(pngName);
@@ -2437,7 +2435,12 @@ var
   cc: cryptoCurrency;
   sumConfirmed, sumUnconfirmed: BigInteger;
   SumFiat: Double;
+  localCurrentCryptoCurrency : cryptoCurrency;
 begin
+
+  //localCurrentCryptoCurrency := cryptoCurrency.Create( currentCryptoCurrency );
+  //localCurrentCryptoCurrency.assign( CurrentCryptoCurrency );
+
 
   with frmhome do
   begin

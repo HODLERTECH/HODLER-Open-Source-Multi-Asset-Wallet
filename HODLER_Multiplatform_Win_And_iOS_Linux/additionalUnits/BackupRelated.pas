@@ -584,6 +584,9 @@ var
   MasterSeed, tced: AnsiString;
   Y, m, d: Word;
 begin
+
+  CurrentAccount.GenerateSeedEncryptredQR;
+ (*
   with frmhome do
   begin
     FileName := CurrentAccount.name + '_EQR_BIG';
@@ -634,7 +637,7 @@ begin
     refreshWalletDat();
     // switchTab(pageControl, BackupTabItem);
     // frmhome.SendEncryptedSeedButtonClick(nil);
-  end;
+  end;  *)
 end;
 
 procedure restoreEQR(Sender: TObject);

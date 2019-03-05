@@ -165,10 +165,12 @@ begin
 
     self.BringToFront;
 
-    popup.AnimateFloat( 'position.x' , (Self.Width /2 ) - (popup.width /2 ) , 0.2 );
+    //popup.AnimateFloat( 'position.x' , (Self.Width /2 ) - (popup.width /2 ) , 0.2 );
+    popup.Position.X :=   (Self.Width /2 ) - (popup.width /2 ) ;
     backGround.HitTest := true;
     background.Visible := true;
-    backGround.AnimateFloat( 'opacity' , 1 , 0.2 );
+    //backGround.AnimateFloat( 'opacity' , 1 , 0.2 );
+    backGround.Opacity := 1;
     popup.bringTofront();
 
   end
@@ -187,6 +189,7 @@ begin
   try
   if currentpopup <> nil then
     Currentpopup.AnimateFloat( 'position.y' , 0 , 0.2 );
+
   except
   on E:Exception do begin end;
 
@@ -212,7 +215,8 @@ begin
 {$ENDIF}
  
 
-  Currentpopup.AnimateFloat( 'position.x' ,  self.width + currentpopup.width  , 0.2 );
+  //Currentpopup.AnimateFloat( 'position.x' ,  self.width + currentpopup.width  , 0.2 );
+  CurrentPOpup.Position.X := self.width + currentpopup.width;
 
   if popupStack.Count <> 0 then
   begin
@@ -224,7 +228,8 @@ begin
   else
   begin
 
-    backGround.AnimateFloat( 'opacity' , 0 , 0.2 );
+    //backGround.AnimateFloat( 'opacity' , 0 , 0.2 );
+    backGround.Opacity := 0;
     background.HitTest :=false;
 
     tthread.CreateAnonymousThread(procedure
