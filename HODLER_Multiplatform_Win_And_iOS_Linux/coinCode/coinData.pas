@@ -16,6 +16,9 @@ function isValidForCoin(id: Integer; address: AnsiString): Boolean;
 function getURLToExplorer(id: Integer; hash: AnsiString): AnsiString;
 
 type
+  CoinType = ( Bitcoin , Litecoin , Dash , BitcoinCash , Ethereum , RavenCoin , DigiByte , BitcoinSV , Nano );
+
+type
   coinInfo = record
     id: Integer;
     displayName: AnsiString;
@@ -162,19 +165,19 @@ uses
 function getURLToExplorer(id: Integer; hash: AnsiString): AnsiString;
 var
   URL: AnsiString;
-begin
+begin         // ethereum
 
   case id of
     0:
-      URL := 'https://www.blockchain.com/btc/tx/';
+      URL := 'https://blockchair.com/bitcoin/transaction/';
     1:
-      URL := 'https://chain.so/tx/LTC/';
+      URL := 'https://blockchair.com/litecoin/transaction/';
     2:
       URL := 'https://chainz.cryptoid.info/dash/tx.dws?';
     3:
       URL := 'https://blockchair.com/bitcoin-cash/transaction/';
     4:
-      URL := 'https://etherscan.io/tx/';
+      URL := 'https://blockchair.com/ethereum/transaction/';
     5:
       URL := 'https://ravencoin.network/tx/';
     6:

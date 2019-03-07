@@ -2017,9 +2017,6 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
             Size.Width = 99.000000000000000000
           end
         end
-        inherited BackupInfoLabel: TLabel
-          Size.Width = 99.000000000000000000
-        end
       end
     end
     inherited fileManager: TTabItem

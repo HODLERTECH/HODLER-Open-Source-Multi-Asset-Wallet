@@ -400,13 +400,13 @@ begin
     mutex := TSemaphore.Create();
   end;
 
-  TThread.Synchronize(TThread.CurrentThread,
+  {TThread.Synchronize(TThread.CurrentThread,
     procedure
     begin
       frmHome.DashBrdProgressBar.Max := Length(CurrentAccount.myCoins) +
         Length(CurrentAccount.myTokens);
       frmHome.DashBrdProgressBar.value := 0;
-    end);
+    end);   }
 
   for i in [0, 1, 2, 3, 4, 5, 6, 7] do
   begin
@@ -463,7 +463,7 @@ begin
             procedure
             begin
 
-              updateBalanceLabels;
+              updateBalanceLabels(id);
             end);
         except
           on e: exception do
@@ -473,12 +473,12 @@ begin
         end;
         semaphore.Release();
 
-        TThread.CurrentThread.Synchronize(nil,
+        {TThread.CurrentThread.Synchronize(nil,
           procedure
           begin
             frmHome.DashBrdProgressBar.value :=
               frmHome.RefreshProgressBar.value + 1;
-          end);
+          end);   }
 
       end).Start();
 

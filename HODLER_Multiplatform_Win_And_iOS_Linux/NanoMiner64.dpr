@@ -3,6 +3,7 @@ program NanoMiner64;
 {$R *.dres}
 
 uses
+{$IFDEF DEBUG} FastMM4 , {$ENDIF}
   System.StartUpCopy,
   FMX.Forms,
   uNanoMiner in 'uNanoMiner.pas' {frmNanoPoW},

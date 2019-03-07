@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes,
-  System.Variants,
+  System.Variants,  StrUtils,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, Nano,
   System.IOUtils, misc, FMX.Styles,
   FMX.StdCtrls, FMX.Controls.Presentation, Windows, FMX.Layouts, FMX.Platform,
@@ -55,8 +55,10 @@ var
   block: TNanoBlock;
   lastHash, s: string;
   i: integer;
+  isCorrupted : boolean;
 begin
   lastHash := '';
+  iscorrupted := false;
   repeat
     block := cc.firstBlock;
 
@@ -68,16 +70,31 @@ begin
         begin
           frmNanoPoW.list.Items.Add(block.Hash + '  Account: ' + block.account);
         end);
-      q1 := GetTickCount;
-      hashCounter := 0;
-      nano_getWork(block);
-      hashCounter := 0;
+      if not isCorrupted then
+      begin
+        q1 := GetTickCount;
+        hashCounter := 0;
+        nano_getWork(block);
+        hashCounter := 0;
+      end;
+
 
       s := nano_pushBlock(nano_builtToJSON(block));
       lastHash := StringReplace(s, 'https://www.nanode.co/block/', '',
         [rfReplaceAll]);
       if isHex(lastHash) = false then
+      begin
+
+        if LeftStr( lastHash  , length( 'Transaction failed' ) ) = 'Transaction failed' then
+        begin
+          iscorrupted := true;
+        end;
+
+        //showmessage(lasthash);
+
         lastHash := '';
+      end;
+
       if cc.BlockByPrev(lastHash).account = '' then
         if lastHash <> '' then
           nano_pow(lastHash);
@@ -154,7 +171,7 @@ procedure TfrmNanoPoW.FormShow(Sender: TObject);
 begin
   if shown then
     Exit;
-  frmNanoPoW.Visible := false;
+  frmNanoPoW.Visible := true;
   shown := True;
 end;
 
@@ -202,6 +219,8 @@ var
 begin
   HideAppOnTaskbar(frmNanoPoW);
   s := (GetTickCount - q1) div 1000;
+  if s = 0 then
+    s := 1;
   speed := ((hashCounter) div s) / 1000;
   frmNanoPoW.Caption := 'Nano PoW Speed: ' + FloatToStrF(speed, ffGeneral, 8, 2)
     + ' kHash/s';

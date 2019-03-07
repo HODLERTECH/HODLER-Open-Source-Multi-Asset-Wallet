@@ -4029,8 +4029,14 @@ var
 
 {$ENDIF}
 begin
-  myURI := getURLToExplorer(CurrentCoin.coin,
-    StringReplace(HistoryTransactionID.Text, ' ', '', [rfReplaceAll]));
+
+  if CurrentCryptoCurrency is Token then
+  begin
+    myUri := getURLToTokenExplorer( StringReplace(HistoryTransactionID.Text, ' ', '', [rfReplaceAll]) );
+  end
+  else
+    myURI := getURLToExplorer(CurrentCoin.coin,
+      StringReplace(HistoryTransactionID.Text, ' ', '', [rfReplaceAll]));
 {$IFDEF ANDROID}
   Intent := TJIntent.Create;
   Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);

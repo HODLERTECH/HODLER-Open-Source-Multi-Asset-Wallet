@@ -1921,9 +1921,6 @@ inherited frmHome_Windows: TfrmHome_Windows
             Size.Width = 470.000000000000000000
           end
         end
-        inherited BackupInfoLabel: TLabel
-          Size.Width = 470.000000000000000000
-        end
       end
     end
     inherited fileManager: TTabItem

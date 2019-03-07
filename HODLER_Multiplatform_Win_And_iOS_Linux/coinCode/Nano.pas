@@ -1902,6 +1902,7 @@ repeat
 block:=cc.firstBlock;
 nano_getWork(block);
 nano_pushBlock(nano_builtToJSON(block));
+
 cc.removeBlock(block.hash);
 until Length(cc.pendingChain)=0;
 end;

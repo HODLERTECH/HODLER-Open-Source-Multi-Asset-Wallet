@@ -2235,9 +2235,6 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
             Size.Width = 63.000000000000000000
           end
         end
-        inherited BackupInfoLabel: TLabel
-          Size.Width = 63.000000000000000000
-        end
       end
     end
     inherited fileManager: TTabItem

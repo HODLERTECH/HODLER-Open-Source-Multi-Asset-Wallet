@@ -7,6 +7,10 @@ uses System.IOUtils, sysutils, StrUtils, Velthuis.BigIntegers, System.Classes,
   base58, JSon,
   FMX.Dialogs, cryptoCurrencydata;
 
+
+
+function getURLToTokenExplorer( hash: AnsiString): AnsiString;
+
 type
   tokenInfo = record
     id: integer;
@@ -181,6 +185,16 @@ type
 implementation
 
 uses misc, uHome;
+
+function getURLToTokenExplorer( hash: AnsiString): AnsiString;
+var
+  URL: AnsiString;
+begin         // ethereum
+
+  URL := 'https://etherscan.io/tx/';
+
+  result := URL + hash;
+end;
 
 function Token.getIconResource(): TStream;
 var
