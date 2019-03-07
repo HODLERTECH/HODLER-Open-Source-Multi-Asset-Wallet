@@ -1064,8 +1064,14 @@ begin
 
                 StringReplace(ans, #$A, ' ', [rfReplaceAll]);
                 ts := SplitString(ans, ' ');
-                TransactionWaitForSendLinkLabel.TagString :=
-                  getURLToExplorer(CurrentCoin.coin, ts[ts.Count - 1]);
+
+                if isTokenTransfer then
+                  TransactionWaitForSendLinkLabel.TagString :=
+                    getURLToTokenExplorer( ts[ts.Count - 1])
+                else
+                  TransactionWaitForSendLinkLabel.TagString :=
+                    getURLToExplorer(CurrentCoin.coin, ts[ts.Count - 1]);
+
                 TransactionWaitForSendLinkLabel.Text :=
                   TransactionWaitForSendLinkLabel.TagString;
                 ts.Free;
