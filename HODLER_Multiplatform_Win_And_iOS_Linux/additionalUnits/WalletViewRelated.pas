@@ -2312,6 +2312,7 @@ begin
     AddressTypelayout.Visible := false;
     BCHAddressesLayout.Visible := false;
     RavencoinAddrTypeLayout.Visible := false;
+    BCHCashAddrButton.Text := 'Cash Address';
 
     if CurrentCryptoCurrency is TWalletInfo then
     begin
@@ -2327,6 +2328,10 @@ begin
 
       if TWalletInfo(CurrentCryptoCurrency).coin in [3, 7] then
         BCHAddressesLayout.Visible := True;
+
+      if TwalletInfo(CurrentCryptoCurrency).coin = 7 then
+        BCHCashAddrButton.Text := 'Modern';
+
 
       if (TWalletInfo(CurrentCryptoCurrency).coin = 5) or
         (TWalletInfo(CurrentCryptoCurrency).coin = 6) then

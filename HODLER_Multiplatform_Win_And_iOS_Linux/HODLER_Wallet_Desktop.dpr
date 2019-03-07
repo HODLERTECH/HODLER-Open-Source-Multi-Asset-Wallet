@@ -147,7 +147,8 @@ uses
   TCopyableAddressPanelData in 'components\TCopyableAddressPanelData.pas',
   ThreadKindergartenData in 'additionalUnits\ThreadKindergartenData.pas',
   ComponentPoolData in 'additionalUnits\additionalClass\ComponentPoolData.pas',
-  HistoryPanelData in 'components\HistoryPanelData.pas';
+  HistoryPanelData in 'components\HistoryPanelData.pas',
+  CoinPanelData in 'components\CoinPanelData.pas';
 
 {$R *.res}
 

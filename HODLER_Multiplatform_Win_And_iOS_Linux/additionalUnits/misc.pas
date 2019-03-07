@@ -284,7 +284,7 @@ procedure refreshOrderInDashBrd();
 procedure loadDictionary(langData: WideString);
 procedure refreshComponentText();
 procedure refreshCurrencyValue();
-procedure updateBalanceLabels(coinID : Integer = -1);
+procedure updateBalanceLabels(coinid: integer = -1);
 
 Function StrToQRBitmap(Str: AnsiString; pixelSize: integer = 6): TBitmap;
 procedure shareFile(path: AnsiString; deleteSourceFile: boolean = true);
@@ -4738,7 +4738,7 @@ begin
 
 end;
 
-procedure updateBalanceLabels(coinID : Integer = -1);
+procedure updateBalanceLabels(coinid: integer = -1);
 var
   i: integer;
   component: TLabel;
@@ -4755,11 +4755,9 @@ begin
 
     if cc is TWalletInfo then
     begin
-      if (TwalletInfo(cc).coin <> coinID) and (coinID <> -1) then
-        Continue;
+      if (TWalletInfo(cc).coin <> coinid) and (coinid <> -1) then
+        continue;
     end;
-
-
 
     for fmxObj in panel.Children do
     begin
@@ -4809,10 +4807,9 @@ begin
             else
             begin
 
-              TLabel(fmxObj).Text := BigIntegerBeautifulStr
-                (cc.confirmed + bal.unconfirmed.AsInt64, cc.decimals) + '    ' +
-                floatToStrF(cc.getFiat(), ffFixed, 15, 2) + ' ' +
-                frmhome.CurrencyConverter.symbol;
+              TLabel(fmxObj).Text := BigIntegerBeautifulStr(cc.confirmed,
+                cc.decimals) + '    ' + floatToStrF(cc.getFiat(), ffFixed, 15,
+                2) + ' ' + frmhome.CurrencyConverter.symbol;
 
             end;
           end
