@@ -330,6 +330,7 @@ function postDataOverHTTP(var aURL: String; postdata: string;
 procedure saveSendCacheToFile();
 procedure loadSendCacheFromFile();
 procedure clearSendCache();
+function LowOrderBitSet( Value: integer ): boolean;
 
 
 
@@ -398,6 +399,11 @@ uses Bitcoin, uHome, base58, Ethereum, coinData, strutils, secp256k1,
 
 var
   bitmapData: TBitmapData;
+
+function LowOrderBitSet( Value: integer ): boolean;
+begin
+  Result := ((Value and 1) > 0);
+end;
 
 procedure clearSendCache();
 var

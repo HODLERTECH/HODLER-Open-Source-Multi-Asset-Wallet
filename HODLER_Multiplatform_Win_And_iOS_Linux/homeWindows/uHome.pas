@@ -830,6 +830,8 @@ type
     FindERC20autoButton: TButton;
     Label29: TLabel;
     Label30: TLabel;
+    CapsLockWarningPanel: TPanel;
+    CapsLockWarningLabel: TLabel;
     //Panel27: TPanel;
     //PasswordInfoStaticLabel: TLabel;
 
@@ -3613,6 +3615,8 @@ end;
 
 procedure TfrmHome.FormCreate(Sender: TObject);
 begin
+  frmhome.Position := TFormPosition.ScreenCenter;
+  CapsLockWarningPanel.visible := LowOrderBitSet(GetKeyState(VK_CAPITAL));
 {$IF NOT DEFINED(LINUX)}
   MotionSensor := TMotionSensor.Create(frmHome);
   OrientationSensor := TOrientationSensor.Create(frmHome);
@@ -3670,6 +3674,19 @@ Shift: TShiftState);
 var
   FService: IFMXVirtualKeyboardService;
 begin
+
+  if key = vkCapital then
+  begin
+
+    CapsLockWarningPanel.Position.Y := PanelRetypePassword.Position.Y + 1;
+    CapsLockWarningPanel.visible := LowOrderBitSet(GetKeyState(VK_CAPITAL));
+
+    CapsLockWarningPanel.Align := TAlignLayout.Top;
+
+  end;
+
+
+
   if Key = vkHardwareBack then
   begin
     Key := 0;
