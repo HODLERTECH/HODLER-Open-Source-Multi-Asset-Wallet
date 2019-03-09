@@ -3645,6 +3645,10 @@ end;
 
 procedure TfrmHome.FormCreate(Sender: TObject);
 begin
+
+  frmhome.Height := min( frmhome.Height , round(Screen.Height * 0.8) );
+  frmhome.Width := min( frmhome.Width , round(Screen.Width * 0.8) );
+  frmhome.Position := TFormPosition.ScreenCenter;
 {$IF NOT DEFINED(LINUX)}
   MotionSensor := TMotionSensor.Create(frmHome);
   OrientationSensor := TOrientationSensor.Create(frmHome);

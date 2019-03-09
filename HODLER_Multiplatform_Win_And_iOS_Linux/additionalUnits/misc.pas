@@ -2211,7 +2211,7 @@ begin
   saveDialog.FileName := ExtractFileName(path);
 
   saveDialog.InitialDir :=
-{$IFDEF IOS}tpath.GetSharedDocumentsPath{$ELSE}GetCurrentDir{$ENDIF};
+{$IFDEF IOS}tpath.GetSharedDocumentsPath{$ELSE}TPath.GetDocumentsPath{$ENDIF};
 
   saveDialog.Filter := 'Zip File|*.zip';
 
