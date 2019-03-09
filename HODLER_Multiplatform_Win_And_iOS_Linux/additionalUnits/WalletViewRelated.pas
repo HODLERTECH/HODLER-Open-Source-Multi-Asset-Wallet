@@ -331,6 +331,8 @@ begin
         //coinIMG.OnClick := frmhome.addNewWalletPanelClick;
         coinIMG.tag := i;
 
+
+
       end;
 
 

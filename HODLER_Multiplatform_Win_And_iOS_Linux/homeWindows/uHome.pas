@@ -33,7 +33,7 @@ uses
   languages, WIF, AccountData, WalletStructureData,
      TCopyableAddressPanelData , ThreadKinderGartenData,
   System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
-  CurrencyConverter, uEncryptedZipFile, System.Zip, TRotateImageData , popupwindowData , notificationLayoutData , TaddressLabelData
+  CurrencyConverter, uEncryptedZipFile, System.Zip, TRotateImageData , popupwindowData , notificationLayoutData , TaddressLabelData ,TAddNewCryptoPanelData
 {$IFDEF ANDROID},
   FMX.VirtualKeyBoard.Android,
   Androidapi.JNI,
@@ -832,6 +832,13 @@ type
     Label30: TLabel;
     CapsLockWarningPanel: TPanel;
     CapsLockWarningLabel: TLabel;
+    AddCurrencyListTabItem: TTabItem;
+    Button11: TButton;
+    VertScrollBox5: TVertScrollBox;
+    CreateCurrencyFromList: TButton;
+    ToolBar20: TToolBar;
+    Label31: TLabel;
+    Button13: TButton;
     //Panel27: TPanel;
     //PasswordInfoStaticLabel: TLabel;
 
@@ -1103,6 +1110,8 @@ type
     procedure AddWalletButtonClick(Sender: TObject);
     procedure NanoUnlockerClick(Sender: TObject);
     procedure UnlockPengingTransactionClick(Sender: TObject);
+    procedure Button11Click(Sender: TObject);
+    procedure CreateCurrencyFromListClick(Sender: TObject);
     //procedure UserReportSendLogsSwitchClick(Sender: TObject);
 
   private
@@ -2799,6 +2808,31 @@ begin
   switchTab(PageControl, BackupTabItem);
 end;
 
+procedure TfrmHome.CreateCurrencyFromListClick(Sender: TObject);
+var
+  i : Integer;
+  ancp : TAddNewCryptoPanel;
+begin
+
+  for I := 0 to VertScrollBox5.content.children.count do
+  begin
+
+    if VertScrollBox5.content.children[i] is TAddNewCryptoPanel then
+      ancp := TAddNewCryptoPanel( VertScrollBox5.content.children[i] )
+    else
+      Continue;
+
+    if ancp.checkBox.IsChecked then
+    begin
+
+
+
+    end;
+
+  end;
+
+end;
+
 procedure TfrmHome.CurrencyBoxChange(Sender: TObject);
 begin
   CurrencyConverter.setCurrency(CurrencyBox.Items[CurrencyBox.ItemIndex]);
@@ -3123,6 +3157,31 @@ begin
   switchTab(PageControl, Settings);
 end;
 
+
+procedure TfrmHome.Button11Click(Sender: TObject);
+var
+  panel : TPanel;
+  i : Integer;
+begin
+
+  for I := 0 to length(availableCoin) - 1 do
+  begin
+
+
+    panel := TAddNewCryptoPanel.Create( VertScrollBox5 );
+        panel.Align := panel.Align.alTop;
+        panel.Height := 48;
+        panel.Position.Y := 48 + i * 48;
+        panel.Visible := true;
+        panel.tag := i;
+        panel.parent := VertScrollBox5;
+        //panel.OnClick := frmhome.addNewWalletPanelClick;
+
+  end;
+
+  switchTab( pagecontrol , AddCurrencyListTabItem);
+
+end;
 
 procedure TfrmHome.CoinFromPrivKeyQRButtonClick(Sender: TObject);
 begin
