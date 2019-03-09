@@ -4,7 +4,7 @@ unit uNanoPowAS;
 interface
 
 uses
-  System.SysUtils, System.IOUtils,
+  System.SysUtils, System.IOUtils, StrUtils,
   System.Classes, System.JSON,
   System.Android.Service,
   AndroidApi.JNI.GraphicsContentViewText,
@@ -720,21 +720,35 @@ procedure nano_mineBuilt64(cc: NanoCoin);
 var
   Block: TNanoBlock;
   lastHash,s:string;
+  isCorrupted : boolean;
 begin
+  isCorrupted := false;
   repeat
     Block := cc.firstBlock;
 
     if Block.account <> '' then
     begin
-      nano_getWork(Block);
 
-    s:=  nano_pushBlock(nano_builtToJSON(Block));
-      lastHash:=StringReplace(s,'https://www.nanode.co/block/','',[rfReplaceAll]);
-  if isHex(lastHash)=false then lastHash:='';
-  if cc.BlockByPrev(lastHash).account='' then
-    if lastHash<>'' then
-      findWork(lastHash);
+      if not isCorrupted then
+      begin
+        nano_getWork(Block);
 
+        s:=  nano_pushBlock(nano_builtToJSON(Block));
+
+        lastHash:=StringReplace(s,'https://www.nanode.co/block/','',[rfReplaceAll]);
+
+        if isHex(lastHash)=false then
+        begin
+          if LeftStr( lastHash  , length( 'Transaction failed' ) ) = 'Transaction failed' then
+          begin
+            iscorrupted := true;
+          end;
+          lastHash:='';
+        end;
+        if cc.BlockByPrev(lastHash).account='' then
+          if lastHash<>'' then
+            findWork(lastHash);
+      end;
     end;
     cc.removeBlock(Block.Hash);
   until Length(cc.pendingChain) = 0;

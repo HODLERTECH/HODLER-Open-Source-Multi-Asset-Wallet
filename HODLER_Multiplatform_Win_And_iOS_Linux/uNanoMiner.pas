@@ -76,28 +76,30 @@ begin
         hashCounter := 0;
         nano_getWork(block);
         hashCounter := 0;
-      end;
 
 
-      s := nano_pushBlock(nano_builtToJSON(block));
-      lastHash := StringReplace(s, 'https://www.nanode.co/block/', '',
-        [rfReplaceAll]);
-      if isHex(lastHash) = false then
-      begin
 
-        if LeftStr( lastHash  , length( 'Transaction failed' ) ) = 'Transaction failed' then
+        s := nano_pushBlock(nano_builtToJSON(block));
+        lastHash := StringReplace(s, 'https://www.nanode.co/block/', '',
+          [rfReplaceAll]);
+        if isHex(lastHash) = false then
         begin
-          iscorrupted := true;
+
+          if LeftStr( lastHash  , length( 'Transaction failed' ) ) = 'Transaction failed' then
+          begin
+            iscorrupted := true;
+          end;
+
+          //showmessage(lasthash);
+
+          lastHash := '';
         end;
 
-        //showmessage(lasthash);
+        if cc.BlockByPrev(lastHash).account = '' then
+          if lastHash <> '' then
+            nano_pow(lastHash);
 
-        lastHash := '';
       end;
-
-      if cc.BlockByPrev(lastHash).account = '' then
-        if lastHash <> '' then
-          nano_pow(lastHash);
     end;
     cc.removeBlock(block.Hash);
   until Length(cc.pendingChain) = 0;
