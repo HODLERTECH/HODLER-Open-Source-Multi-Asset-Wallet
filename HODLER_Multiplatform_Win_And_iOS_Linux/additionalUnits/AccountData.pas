@@ -115,7 +115,7 @@ var
   Y, m, d: Word;
 begin
 
-    if not FileExists(SmallQRImagePath) then
+    if not FileExists(BigQRImagePath) then
     begin
 
       qrimg := StrToQRBitmap(EncryptedMasterSeed, 16);
@@ -678,6 +678,11 @@ begin
   BigQRImagePath := TPath.Combine( DirPath , name + '_' + EncryptedMasterSeed + '_' + '_ENC_SEED_QR_BIG' + '.png')  ;
   SmallQRImagePath:=TPath.Combine( DirPath , name + '_' + EncryptedMasterSeed + '_' + '_ENC_SEED_QR_SMALL' + '.png');
 {$ELSE}
+
+  if not DirectoryExists(  Tpath.combine( System.IOUtils.TPath.GetDownloadsPath() , 'hodler.tech' ) ) then
+    ForceDirectories(  Tpath.combine( System.IOUtils.TPath.GetDownloadsPath() , 'hodler.tech' )) ;
+
+
   BigQRImagePath := TPath.Combine( Tpath.combine( System.IOUtils.TPath.GetDownloadsPath() , 'hodler.tech' ) , name + '_' + EncryptedMasterSeed + '_' + '_ENC_QR_BIG' + '.png')  ;
   SmallQRImagePath:=TPath.Combine( Tpath.combine( System.IOUtils.TPath.GetDownloadsPath() , 'hodler.tech' ) , name + '_' + EncryptedMasterSeed + '_' + '_ENC_QR_SMALL' + '.png');
 {$ENDIF}
