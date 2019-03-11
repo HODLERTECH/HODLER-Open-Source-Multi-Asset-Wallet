@@ -172,9 +172,9 @@ begin
 
   if QRMask.map(TMapAccess.ReadWrite ,maskBitmapData) then
   begin
-    for i := 0 to height do
+    for i := 0 to height-1 do
     begin
-      for j := 0 to width do
+      for j := 0 to width-1 do
       begin
 
         if not window.Contains( Point(j , i) ) then

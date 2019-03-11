@@ -56,6 +56,8 @@ type
 
     function getDescription( id , X : Integer ): AnsiString;
     procedure changeDescription( id , X : Integer ; newDesc : AnsiString );
+
+    function getDecryptedMasterSeed( Password : String ): AnsiString;
     
   private
 
@@ -83,7 +85,30 @@ type
 implementation
 
 uses
-  misc, uHome , coinData , nano;
+  misc, uHome , coinData , nano , languages;
+
+function Account.getDecryptedMasterSeed( Password : String ): AnsiString;
+var
+  MasterSeed, tced: AnsiString;
+begin
+
+  tced := TCA( password );
+  MasterSeed := SpeckDecrypt(tced, EncryptedMasterSeed);
+  if not isHex(MasterSeed) then
+  begin
+
+    raise Exception.Create( dictionary('FailedToDecrypt') );
+
+    {TThread.Synchronize(nil,
+          procedure
+                begin
+                        popupWindow.Create(dictionary('FailedToDecrypt'));
+                              end);
+
+                                  exit;}
+  end;
+
+end;
 
 function Account.getDescription( id , X : Integer ): AnsiString;
 var
