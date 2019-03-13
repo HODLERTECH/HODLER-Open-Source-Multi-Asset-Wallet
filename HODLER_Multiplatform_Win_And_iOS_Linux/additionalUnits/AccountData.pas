@@ -220,7 +220,7 @@ var
   obj : TJsonObject;
 
  
-  it : TJSONPairEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
+  it : TJSONObject.TEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
 
  // it : TJSONObject.TEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
  
@@ -255,7 +255,7 @@ begin
 
     temp := SplitString(it.Current.JsonString.Value , '_' );
 
-    changeDescriptionwithoutSave( strToInt(temp[0]) , strToInt(temp[1]) ,  it.Current.JsonValue.Value );
+    changeDescriptionwithoutSave( strToIntdef(temp[0],0) , strToIntdef(temp[1],0) ,  it.Current.JsonValue.Value );
 
     temp.Free();
   end;
@@ -574,7 +574,7 @@ begin
 
   ts.LoadFromFile(SeedFilePath);
 
-  TCAIterations := strtoInt(ts.Strings[0]);
+  TCAIterations := strtoIntdef(ts.Strings[0],0);
   EncryptedMasterSeed := ts.Strings[1];
   userSaveSeed := strToBool(ts.Strings[2]);
   if ts.Count > 4 then
@@ -674,7 +674,7 @@ begin
   LoadTokenFile();
   LoadDescriptionFile();
 
-  {$IFDEF MSWINDOWS}
+  {$IF (DEFINED(MSWINDOWS) OR DEFINED(LINUX))}
   BigQRImagePath := TPath.Combine( DirPath , name + '_' + EncryptedMasterSeed + '_' + '_ENC_SEED_QR_BIG' + '.png')  ;
   SmallQRImagePath:=TPath.Combine( DirPath , name + '_' + EncryptedMasterSeed + '_' + '_ENC_SEED_QR_SMALL' + '.png');
 {$ELSE}
@@ -724,16 +724,16 @@ var
     // confirmed := dataJson.GetValue<string>('confirmed');
 
     if coinName = 'Nano' then begin
-      NN := NanoCoin.create(strtoInt(innerID), strtoInt(X), strtoInt(Y),
-      string(address), string(description), strtoInt(creationTime));
+      NN := NanoCoin.create(strtoIntdef(innerID,0), strtoIntdef(X,0), strtoIntdef(Y,0),
+      string(address), string(description), strtoIntdef(creationTime,0));
       wd:=TWalletInfo(nn);
     end
     else
-      wd := TWalletInfo.Create(strtoInt(innerID), strtoInt(X), strtoInt(Y),
-        address, description, strtoInt(creationTime));
+      wd := TWalletInfo.Create(strtoIntdef(innerID,0), strtoIntdef(X,0), strtoIntdef(Y,0),
+        address, description, strtoIntdef(creationTime,0));
     wd.inPool := strToBoolDef(inPool, false);
     wd.pub := publicKey;
-    wd.orderInWallet := strtoInt(panelYPosition);
+    wd.orderInWallet := strtoIntdef(panelYPosition,0);
     wd.EncryptedPrivKey := EncryptedPrivateKey;
     wd.isCompressed := strToBool(isCompressed);
 
@@ -800,11 +800,11 @@ begin
     i := 0;
     while i < ts.Count - 1 do
     begin
-      wd := TWalletInfo.Create(strtoInt(ts.Strings[i]),
-        strtoInt(ts.Strings[i + 1]), strtoInt(ts.Strings[i + 2]),
-        ts.Strings[i + 3], ts.Strings[i + 4], strtoInt(ts[i + 5]));
+      wd := TWalletInfo.Create(strtoIntdef(ts.Strings[i],0),
+        strtoIntdef(ts.Strings[i + 1],0), strtoIntdef(ts.Strings[i + 2],0),
+        ts.Strings[i + 3], ts.Strings[i + 4], strtoIntdef(ts[i + 5],0));
 
-      wd.orderInWallet := strtoInt(ts[i + 6]);
+      wd.orderInWallet := strtoIntdef(ts[i + 6],0);
       wd.pub := ts[i + 7];
       wd.EncryptedPrivKey := ts[i + 8];
       wd.isCompressed := strToBool(ts[i + 9]);

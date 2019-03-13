@@ -658,10 +658,10 @@ begin
   SetLength(rAdr, Length(adr));
   SetLength(rChk, Length(chk));
   for i := 0 to Length(adr) - 1 do
-    rAdr[i] := Pos(adr[i{$IFDEF MSWINDOWS} + 1{$ENDIF}], nano_charset) - 1;
+    rAdr[i] := Pos(adr[i{$IF DEFINED(MSWINDOWS) OR DEFINED(LINUX)} + 1{$ENDIF}], nano_charset) - 1;
 
   for i := 0 to Length(chk) - 1 do
-    rChk[i] := Pos(chk[i{$IFDEF MSWINDOWS} + 1{$ENDIF}], nano_charset) - 1;
+    rChk[i] := Pos(chk[i{$IF DEFINED(MSWINDOWS) OR DEFINED(LINUX)} + 1{$ENDIF}], nano_charset) - 1;
   Result := '';
   rAdr := ChangeBits(rAdr, 5, 8, True);
   for i := 3 to Length(rAdr) - 1 do

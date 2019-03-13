@@ -115,7 +115,7 @@ begin
 
       t := Token.CreateCustom(frmHome.ContractAddress.Text,
         frmHome.TokenNameField.Text, frmHome.SymbolField.Text,
-        strtoint(frmHome.DecimalsField.Text),  TFmxObject(Sender).TagString );
+        strtointdef(frmHome.DecimalsField.Text,0),  TFmxObject(Sender).TagString );
 
       t.idInWallet := length(CurrentAccount.myTokens) + 10000;
 
@@ -458,7 +458,7 @@ begin
   begin
     t := Token.CreateCustom(frmHome.ContractAddress.Text,
       frmHome.TokenNameField.Text, frmHome.SymbolField.Text,
-      strtoint(frmHome.DecimalsField.Text), ETHADDRESS);
+      strtointdef(frmHome.DecimalsField.Text,0), ETHADDRESS);
     t.idInWallet := length(CurrentAccount.myTokens) + 10000;
     CurrentAccount.addToken(t);
     CurrentAccount.SaveFiles();
@@ -544,7 +544,7 @@ begin
 
       t := Token.CreateCustom(frmHome.ContractAddress.Text,
         frmHome.TokenNameField.Text, frmHome.SymbolField.Text,
-        strtoint(frmHome.DecimalsField.Text), wd.addr );
+        strtointdef(frmHome.DecimalsField.Text,0), wd.addr );
 
       t.idInWallet := length(CurrentAccount.myTokens) + 10000;
 
@@ -2010,7 +2010,7 @@ begin
   newID := getFirstUnusedXforCoin(newcoinID);
 
   if frmhome.OwnXCheckBox.IsChecked then
-    newID := strtoint(frmhome.OwnXEdit.Text);
+    newID := strtointdef(frmhome.OwnXEdit.Text,0);
 
   walletInfo := coinData.createCoin(newcoinID, newID, 0, MasterSeed,
     frmhome.NewCoinDescriptionEdit.Text);
@@ -2182,7 +2182,7 @@ begin
   with frmhome do
   begin
 
-{$IFDEF MSWINDOWS or LINUX}
+{$IF (DEFINED(MSWINDOWS) OR DEFINED(LINUX))}
     Splitter1.Visible := True;
     pageControl.Visible := True;
     WVTabControl.ActiveTab := WVBalance;

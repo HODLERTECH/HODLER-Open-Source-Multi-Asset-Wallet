@@ -76,7 +76,7 @@ begin
   SetLength(S, (Length(V) div 2));
   for i := 0 to (Length(V) div 2) - 1 do
   begin
-    sb := system.UInt8(StrToInt('$' + Copy(V, ((i) * 2) + 1, 2)));
+    sb := system.UInt8(StrToIntDef('$' + Copy(V, ((i) * 2) + 1, 2),0));
     S[i] := sb;
   end;
   n := ceil((Length(V)) * 10000 / 14645);
@@ -126,7 +126,7 @@ begin
   SetLength(S, (Length(V) div 2));
   for i := 1 to (Length(V) div 2) do
   begin
-    sb := system.UInt8(StrToInt('$' + Copy(V, ((i - 1) * 2) + 1, 2)));
+    sb := system.UInt8(StrToIntDef('$' + Copy(V, ((i - 1) * 2) + 1, 2),0));
     S[i - 1] := sb;
   end;
   n := size;

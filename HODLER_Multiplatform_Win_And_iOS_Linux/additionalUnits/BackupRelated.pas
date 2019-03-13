@@ -561,10 +561,10 @@ end;
 function isEQRGenerated: Boolean;
 begin
   result := FileExists(System.IOUtils.TPath.Combine(
-{$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
+{$IF DEFINED(MSWINDOWS) OR DEFINED(LINUX)}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
     (){$ENDIF}, CurrentAccount.name + '_EQR_BIG' + '.png')) and
     FileExists(System.IOUtils.TPath.Combine(
-{$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
+{$IF DEFINED(MSWINDOWS) OR DEFINED(LINUX)}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
     (){$ENDIF}, CurrentAccount.name + '_EQR_SMALL' + '.png'));
 end;
 
@@ -943,7 +943,7 @@ var
 var
   bitmap: TBitmap;
   tempStr: AnsiString;
-{$IFDEF MSWINDOWS}lblPrivateKey: TMemo; {$ENDIF}
+{$IF DEFINED(MSWINDOWS) OR DEFINED(LINUX)}lblPrivateKey: TMemo; {$ENDIF}
 begin
   if wd = nil then
   begin

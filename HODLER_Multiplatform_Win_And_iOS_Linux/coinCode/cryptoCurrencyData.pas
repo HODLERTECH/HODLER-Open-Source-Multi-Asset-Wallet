@@ -264,7 +264,7 @@ begin
   end;
   BigInteger.TryParse(list.Strings[4 + 2 * size], temp);
   CountValues := temp;
-  lastBlock := strToInt(list.Strings[5 + 2 * size]);
+  lastBlock := strToIntDef(list.Strings[5 + 2 * size],0);
 
   list.Free;
 

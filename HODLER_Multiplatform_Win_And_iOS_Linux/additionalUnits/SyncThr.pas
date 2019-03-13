@@ -7,7 +7,7 @@ uses
   StrUtils, WalletStructureData, CryptoCurrencyData, tokenData, System.SyncObjs,
 
   JSON, System.TimeSpan, System.Diagnostics, Nano{$IFDEF MSWINDOWS},
-  Winapi.ShellAPI, Winapi.Windows{$ENDIF};
+  Winapi.ShellAPI, Winapi.Windows{$ENDIF}{$IFDEF LINUX},Posix.Stdlib{$ENDIF};
 
 type
   SynchronizeBalanceThread = class(TThread)
@@ -180,6 +180,7 @@ var
   err:string;
   pendings: TJsonArray;
   temp: TpendingNanoBlock;
+  psxString:System.AnsiString;
 begin
 {$IFDEF MSWINDOWS}
   if TOSVersion.Architecture = arIntelX64 then
@@ -188,6 +189,10 @@ begin
   else
     ShellExecute(0, 'open', 'NanoPoW32.exe', '',
       PWideChar(ExtractFileDir(ParamStr(0))), SW_HIDE);
+{$ENDIF}
+{$IFDEF LINUX}
+  psxString := ExtractFileDir(Paramstr(0))+'/nanopow64';
+  _system(@psxString[1]);
 {$ENDIF}
   try
 
@@ -988,7 +993,7 @@ begin
 
     while (i < ts.Count - 1) do
     begin
-      number := strToInt(ts.Strings[i]);
+      number := strToIntDef(ts.Strings[i],0);
       Inc(i);
       // showmessage(inttostr(number));
 
@@ -1003,7 +1008,7 @@ begin
 
       tempts := SplitString(ts[i]);
       transHist.data := tempts.Strings[0];
-      transHist.confirmation := strToInt(tempts[1]);
+      transHist.confirmation := strToIntDef(tempts[1],0);
       tempts.Free;
       Inc(i);
 
@@ -1066,7 +1071,7 @@ begin
 
     while (i < ts.Count - 1) do
     begin
-      number := strToInt(ts.Strings[i]);
+      number := strToIntDef(ts.Strings[i],0);
       Inc(i);
       // showmessage(inttostr(number));
 
@@ -1081,7 +1086,7 @@ begin
 
       tempts := SplitString(ts[i]);
       transHist.data := tempts.Strings[0];
-      transHist.confirmation := strToInt(tempts[1]);
+      transHist.confirmation := strToIntDef(tempts[1],0);
       tempts.Free;
       Inc(i);
 
@@ -1219,7 +1224,7 @@ begin
     wd.confirmed := BigInteger.Parse(ts.Strings[1]);
     if (wd.id < 10000) or (not Token.AvailableToken[wd.id - 10000].stableCoin)
     then
-      wd.rate := strToFloat(ts[2])
+      wd.rate := strToFloatDef(ts[2],0)
     else
       wd.rate := Token.AvailableToken[wd.id - 10000].stableValue;
     // floattostrF(strtoint64def(ts.Strings[1],-1) /1000000000000000000,ffFixed,18,18);

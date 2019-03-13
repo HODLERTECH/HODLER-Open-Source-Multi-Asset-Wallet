@@ -15,8 +15,8 @@ unit uHome;
 interface
 
 uses
-  {$IFDEF MSWINDOWS}
-   Windows,
+{$IFDEF MSWINDOWS}
+  Windows,
 {$ENDIF}SysUtils, System.Types, System.UITypes, System.Classes, strUtils,
   SyncThr, System.Generics.Collections, System.character,
   System.DateUtils, System.Messaging,
@@ -31,9 +31,10 @@ uses
   FMX.Edit,
   FMX.Clipboard, bech32, cryptoCurrencyData, FMX.VirtualKeyBoard, JSON,
   languages, WIF, AccountData, WalletStructureData,
-     TCopyableAddressPanelData , ThreadKinderGartenData,ComponentPoolData,
+  TCopyableAddressPanelData, ThreadKinderGartenData, ComponentPoolData,
   System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
-  CurrencyConverter, uEncryptedZipFile, System.Zip, TRotateImageData , popupwindowData , notificationLayoutData , TaddressLabelData
+  CurrencyConverter, uEncryptedZipFile, System.Zip, TRotateImageData,
+  popupwindowData, notificationLayoutData, TaddressLabelData
 {$IFDEF ANDROID},
   FMX.VirtualKeyBoard.Android,
   Androidapi.JNI,
@@ -56,7 +57,7 @@ uses
   ZXing.BarcodeFormat,
   ZXing.ReadResult,
   ZXing.ScanManager,
-{$IF NOT DEFINED(LINUX)} System.Sensors, System.Sensors.Components, {$ENDIF} FMX.ComboEdit;
+{$IF NOT DEFINED(LINUX)} System.Sensors, System.Sensors.Components, {$ENDIF} FMX.ComboEdit{$IFDEF LINUX}, Posix.Stdlib{$ENDIF};
 
 type
 
@@ -820,8 +821,8 @@ type
     Label28: TLabel;
     NanoUnlocker: TButton;
     UnlockNanoImage: TImage;
-    //Layout46: TLayout;
-    //Layout48: TLayout;
+    // Layout46: TLayout;
+    // Layout48: TLayout;
     Panel27: TPanel;
     PasswordInfoStaticLabel: TLabel;
     Layout46: TLayout;
@@ -830,8 +831,8 @@ type
     FindERC20autoButton: TButton;
     Label29: TLabel;
     Label30: TLabel;
-    //Panel27: TPanel;
-    //PasswordInfoStaticLabel: TLabel;
+    // Panel27: TPanel;
+    // PasswordInfoStaticLabel: TLabel;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1110,7 +1111,7 @@ type
       var KeyChar: Char; Shift: TShiftState);
     procedure NewCoinDescriptionPassEditKeyUp(Sender: TObject; var Key: Word;
       var KeyChar: Char; Shift: TShiftState);
-    //procedure UserReportSendLogsSwitchClick(Sender: TObject);
+    // procedure UserReportSendLogsSwitchClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -1173,18 +1174,18 @@ type
 
     procedure ExceptionHandler(Sender: TObject; E: Exception);
     procedure FoundTokenPanelOnClick(Sender: TObject);
-    procedure GenerateETHAddressWithToken(Sender : TObject);
-    procedure AddTokenFromWalletList(Sender : TObject );
-    procedure AddNewTokenETHPanelClick(sender : Tobject );
-    procedure UnlockPendingNano(sender : TObject);
+    procedure GenerateETHAddressWithToken(Sender: TObject);
+    procedure AddTokenFromWalletList(Sender: TObject);
+    procedure AddNewTokenETHPanelClick(Sender: TObject);
+    procedure UnlockPendingNano(Sender: TObject);
+
     // procedure PrivateKeyPasswordCheck
   var
     refreshLocalImage: TRotateImage;
     refreshGlobalImage: TRotateImage;
-    NotificationLayout : TNotificationLayout;
+    NotificationLayout: TNotificationLayout;
 
-    wvAddress , receiveAddress : TCopyableAddressPanel;
-
+    wvAddress, receiveAddress: TCopyableAddressPanel;
 
   var
     HistoryMaxLength: Integer;
@@ -1259,7 +1260,7 @@ implementation
 
 uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
   TokenData, AccountRelated, QRRelated, FileManagerRelated, WalletViewRelated,
-  BackupRelated, debugAnalysis, KeypoolRelated,Nano
+  BackupRelated, debugAnalysis, KeypoolRelated, Nano
 {$IFDEF ANDRIOD}
 {$ENDIF}
 {$IFDEF MSWINDOWS}
@@ -1281,44 +1282,40 @@ end;
 
 {$ENDIF}
 
-
-
 procedure TfrmHome.UnlockNanoImageClick(Sender: TObject);
 begin
-  UnlockPengingTransactionClick(sender);
+  UnlockPengingTransactionClick(Sender);
 end;
 
-procedure tfrmhome.UnlockPendingNano(sender : TObject);
+procedure TfrmHome.UnlockPendingNano(Sender: TObject);
 var
   tced: AnsiString;
   MasterSeed: AnsiString;
-  nano : NanoCoin;
+  Nano: NanoCoin;
 begin
 
-  //nano_DoMine(cryptoCurrency(NanoUnlocker.TagObject),passwordForDecrypt.Text);
+  // nano_DoMine(cryptoCurrency(NanoUnlocker.TagObject),passwordForDecrypt.Text);
 
   tced := TCA(passwordForDecrypt.Text);
   MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
-    passwordForDecrypt.Text := '';
-    if not isHex(masterseed) then
-    begin
-      popupWindow.create(dictionary('FailedToDecrypt'));
-      exit;
-    end;
+  passwordForDecrypt.Text := '';
+  if not isHex(MasterSeed) then
+  begin
+    popupWindow.create(dictionary('FailedToDecrypt'));
+    exit;
+  end;
 
-  nano := NanoCoin(currentcryptoCurrency);
+  Nano := NanoCoin(CurrentCryptoCurrency);
 
-  nano.unlock( MasterSeed );
+  Nano.unlock(MasterSeed);
 
-  wipeansistring(masterseed);
+  wipeansistring(MasterSeed);
 
-  PageControl.ActiveTab:=decryptSeedBackTabItem;
-
+  PageControl.ActiveTab := decryptSeedBackTabItem;
 
 end;
 
-
-procedure tfrmhome.GenerateETHAddressWithToken(Sender : TObject);
+procedure TfrmHome.GenerateETHAddressWithToken(Sender: TObject);
 begin
   WalletViewRelated.GenerateETHAddressWithToken(Sender);
 end;
@@ -1389,11 +1386,11 @@ begin
 end;
 
 procedure TfrmHome.CoinPrivKeyPassEditKeyUp(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
+var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = vkReturn then
   begin
-    NewCoinPrivKeyOKButtonClick( nil );
+    NewCoinPrivKeyOKButtonClick(nil);
 
   end;
 end;
@@ -1669,7 +1666,7 @@ begin
     exit;
   end;
 
-  strArray := TJavaObjectArray<JString>.Create(1);
+  strArray := TJavaObjectArray<JString>.create(1);
   strArray.Items[0] := TAndroidHelper.StringToJString(permName);
   SharedActivity.requestPermissions(strArray, 1337);
   strArray.free;
@@ -1767,7 +1764,7 @@ procedure TfrmHome.PanelDragStart(Sender: TObject; Button: TMouseButton;
 Shift: TShiftState; X, Y: Single);
 begin
 
-  PanelDragStart(Sender, TPointF.Create(X, Y));
+  PanelDragStart(Sender, TPointF.create(X, Y));
 end;
 
 procedure TfrmHome.PanelDragStart(Sender: TObject; const Point: TPointF);
@@ -1825,12 +1822,12 @@ begin
 end;
 
 procedure TfrmHome.PrivateKeyEditSVKeyUp(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
+var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = vkReturn then
   begin
     ClaimYourBCHSVButtonClick(nil);
-    //btnCreateWallet.OnClick();
+    // btnCreateWallet.OnClick();
   end;
 end;
 
@@ -1936,16 +1933,16 @@ end;
 procedure switchTab(TabControl: TTabControl; TabItem: TTabItem);
 begin
   backTabItem := frmHome.PageControl.ActiveTab;
-  //if not frmHome.shown then
-  //begin
-    TabControl.ActiveTab := TabItem;
-  {end
-  else
-  begin
+  // if not frmHome.shown then
+  // begin
+  TabControl.ActiveTab := TabItem;
+  { end
+    else
+    begin
     frmHome.tabAnim.Tab := TabItem;
 
     frmHome.tabAnim.ExecuteTarget(TabControl);
-  end; }
+    end; }
   frmHome.passwordForDecrypt.Text := '';
   frmHome.DecryptSeedMessage.Text := '';
 
@@ -1960,8 +1957,8 @@ begin
   WVRealCurrency.Text := StringReplace(WVRealCurrency.Text, ',', '.',
     [rfReplaceAll]);
 
-    if frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
-  saveSendCacheToFile();
+  if frmHome.WVTabControl.ActiveTab = frmHome.WVSend then
+    saveSendCacheToFile();
 end;
 
 procedure TfrmHome.WVRealCurrencyClick(Sender: TObject);
@@ -2045,7 +2042,7 @@ begin
   failure := false;
   if length(RestoreFromFileAccountNameEdit.Text) < 3 then
   begin
-    popupWindow.Create(dictionary('AccountNameTooShort'));
+    popupWindow.create(dictionary('AccountNameTooShort'));
     exit;
   end;
 
@@ -2055,7 +2052,7 @@ begin
     if AccountsNames[i].name = RestoreFromFileAccountNameEdit.Text then
     begin
 
-      popupWindow.Create(dictionary('AccountNameOccupied'));
+      popupWindow.create(dictionary('AccountNameOccupied'));
       exit();
     end;
 
@@ -2063,7 +2060,7 @@ begin
 
   if not FileExists(RFFPathEdit.Text) then
   begin
-    popupWindow.Create(dictionary('FileDoesntExist'));
+    popupWindow.create(dictionary('FileDoesntExist'));
 
     exit;
   end;
@@ -2109,8 +2106,8 @@ var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = vkReturn then
   begin
-    btnCreateWalletClick( btnCreateWallet );
-    //btnCreateWallet.OnClick();
+    btnCreateWalletClick(btnCreateWallet);
+    // btnCreateWallet.OnClick();
   end;
 end;
 
@@ -2126,8 +2123,8 @@ end;
 
 procedure TfrmHome.WVsendTOChange(Sender: TObject);
 begin
-  if frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
-  saveSendCacheToFile();
+  if frmHome.WVTabControl.ActiveTab = frmHome.WVSend then
+    saveSendCacheToFile();
 end;
 
 procedure TfrmHome.WVsendTOExit(Sender: TObject);
@@ -2177,7 +2174,7 @@ end;
 procedure TfrmHome.BCHCashAddrButtonClick(Sender: TObject);
 begin
   receiveAddress.Text := bitcoinCashAddressToCashAddress
-    (TwalletInfo(CurrentCryptoCurrency).addr , false);
+    (TwalletInfo(CurrentCryptoCurrency).addr, false);
   receiveAddress.Text := receiveAddress.Text;
 end;
 
@@ -2337,8 +2334,9 @@ begin
           if GetFileSize(ExtractFileDir(ParamStr(0)) + '/update.bin') > 1024
           then
           begin
-            cmd := ' /k "timeout 3 && taskkill /f /im nanopow64.exe && taskkill /f /im nanopow32.exe cd "' + exePath + '" && del "' +
-              extractfilename(ParamStr(0)) + '" && rename update.bin " update.exe" && "update.exe" "';
+            cmd := ' /k "timeout 3 && taskkill /f /im nanopow64.exe && taskkill /f /im nanopow32.exe cd "'
+              + exePath + '" && del "' + extractfilename(ParamStr(0)) +
+              '" && rename update.bin " update.exe" && "update.exe" "';
             ShellExecute(0, 'Open', 'cmd.exe', PWideChar(cmd),
               PWideChar(exePath), 0);
             halt(0);
@@ -2351,13 +2349,13 @@ begin
   begin
     frmHome.Caption := 'HODLER Open Source Multi-Asset Wallet v' +
       CURRENT_VERSION + ' ( Unofficial Version )';
-    popupWindow.Create(' Unofficial Version ');
+    popupWindow.create(' Unofficial Version ');
   end
   else
   begin
-    popupWindow.Create(dictionary('LatestVersion'));
+    popupWindow.create(dictionary('LatestVersion'));
   end;
-  Application.ProcessMessages  ;
+  Application.ProcessMessages;
   frmHome.EndUpdate;
 end;
 
@@ -2406,7 +2404,7 @@ begin
   except
     on E: Exception do
     begin
-      popupWindow.Create(E.Message);
+      popupWindow.create(E.Message);
     end;
   end;
 
@@ -2476,7 +2474,7 @@ begin
   except
     on E: Exception do
     begin
-      popupWindow.Create(E.Message);
+      popupWindow.create(E.Message);
     end;
   end;
 
@@ -2508,12 +2506,13 @@ begin
 end;
 
 procedure TfrmHome.AddNewAccountButtonClick(Sender: TObject);
-var od:TOpenDialog;
+var
+  od: TOpenDialog;
 begin
-   {od:=TOpenDialog.Create(nil);
+  { od:=TOpenDialog.Create(nil);
     if od.execute then
     stylo.SetStyleFromFile(od.FileName);
-    od.Free;    }
+    od.Free; }
 
   switchTab(PageControl, AddAccount);
   // AccountsListPanel.Visible := false;
@@ -2580,7 +2579,7 @@ begin
   URL := myURI;
 
 {$IFDEF ANDROID}
-  Intent := TJIntent.Create;
+  Intent := TJIntent.create;
   Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
   Intent.setData(StrToJURI(myURI));
   SharedActivity.startActivity(Intent);
@@ -2596,52 +2595,55 @@ end;
 
 procedure TfrmHome.UnlockPengingTransactionClick(Sender: TObject);
 var
-  nano : NanoCoin;
+  Nano: NanoCoin;
 begin
-    if currentCryptocurrency is NanoCoin then
-    begin
+  if CurrentCryptoCurrency is NanoCoin then
+  begin
 
-     if NanoCoin(currentCryptocurrency).isUnlocked then exit;
-     frmhome.UnlockNanoImage.Hint:='When unlocked, receive blocks will be autopocketed';
+    if NanoCoin(CurrentCryptoCurrency).isUnlocked then
+      exit;
+    frmHome.UnlockNanoImage.Hint :=
+      'When unlocked, receive blocks will be autopocketed';
 
-     NotificationLayout.popupPasswordConfirm(procedure (pass : string)
-     var
-        tced , MasterSeed : AnsiString;
-     begin
+    NotificationLayout.popupPasswordConfirm(
+      procedure(pass: string)
+      var
+        tced, MasterSeed: AnsiString;
+      begin
 
-        tced := TCA( pass );
+        tced := TCA(pass);
         MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
-          passwordForDecrypt.Text := '';
-          if not isHex(masterseed) then
-          begin
-            popupWindow.create(dictionary('FailedToDecrypt'));
-            exit;
-          end;
+        passwordForDecrypt.Text := '';
+        if not isHex(MasterSeed) then
+        begin
+          popupWindow.create(dictionary('FailedToDecrypt'));
+          exit;
+        end;
 
-        nano := NanoCoin(currentcryptoCurrency);
+        Nano := NanoCoin(CurrentCryptoCurrency);
 
-        nano.unlock( MasterSeed );
+        Nano.unlock(MasterSeed);
 
-        wipeansistring(masterseed);
-        frmhome.UnlockNanoImage.Bitmap.LoadFromStream( resourceMenager.getAssets('OPENED') );
+        wipeansistring(MasterSeed);
+        frmHome.UnlockNanoImage.Bitmap.LoadFromStream
+          (resourceMenager.getAssets('OPENED'));
 
-        //PageControl.ActiveTab:=decryptSeedBackTabItem;
+        // PageControl.ActiveTab:=decryptSeedBackTabItem;
 
-     end,
-     procedure ( pass : string )
-     begin
+      end,
+      procedure(pass: string)
+      begin
 
-     end
-     , 'Enter the password to pocket the pending NANO' );
-
+      end, 'Enter the password to pocket the pending NANO');
 
 
-  //btnDecryptSeed.onclick := UnlockPendingNano;
-  //decryptSeedBackTabItem := PageControl.ActiveTab;
-  //PageControl.ActiveTab := descryptSeed;
-  //btnDSBack.onclick := backBtnDecryptSeed;
 
-    end
+    // btnDecryptSeed.onclick := UnlockPendingNano;
+    // decryptSeedBackTabItem := PageControl.ActiveTab;
+    // PageControl.ActiveTab := descryptSeed;
+    // btnDSBack.onclick := backBtnDecryptSeed;
+
+  end
 end;
 
 procedure TfrmHome.updateBtnClick(Sender: TObject);
@@ -2677,11 +2679,11 @@ procedure TfrmHome.wvAmountChange(Sender: TObject);
 var
   i: Single;
 begin
-   if frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
-  saveSendCacheToFile();
+  if frmHome.WVTabControl.ActiveTab = frmHome.WVSend then
+    saveSendCacheToFile();
 
-  //wvAmount.TextSettings.Font.Size := i;
-  //wvAmount.Text := StringReplace(wvAmount.Text, ',', '.', [rfReplaceAll]);
+  // wvAmount.TextSettings.Font.Size := i;
+  // wvAmount.Text := StringReplace(wvAmount.Text, ',', '.', [rfReplaceAll]);
 end;
 
 procedure TfrmHome.wvAmountClick(Sender: TObject);
@@ -2703,8 +2705,8 @@ end;
 
 procedure TfrmHome.wvFeeChange(Sender: TObject);
 begin
-  if frmhome.WVTabControl.ActiveTab = frmhome.WVSend then
-  saveSendCacheToFile();
+  if frmHome.WVTabControl.ActiveTab = frmHome.WVSend then
+    saveSendCacheToFile();
 end;
 
 procedure TfrmHome.CoinToUSD(Sender: TObject);
@@ -2756,19 +2758,18 @@ begin
 end;
 
 procedure TfrmHome.ConfirmSendPasswordEditKeyUp(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
+var KeyChar: Char; Shift: TShiftState);
 begin
-if Key = vkReturn then
+  if Key = vkReturn then
   begin
-  if ConfirmSendClaimCoinButton.Visible then
-  begin
-    ConfirmSendClaimCoinButtonClick(nil);
-  end
-  else
-  if SendTransactionButton.Visible then
-  begin
-    SendTransactionButtonClick(nil);
-  end;
+    if ConfirmSendClaimCoinButton.Visible then
+    begin
+      ConfirmSendClaimCoinButtonClick(nil);
+    end
+    else if SendTransactionButton.Visible then
+    begin
+      SendTransactionButtonClick(nil);
+    end;
   end;
 end;
 
@@ -2817,7 +2818,7 @@ begin
     begin
 
       svc.setClipboard(TPanel(Sender).TagString);
-      popupWindow.Create(dictionary('CopiedToClipboard'));
+      popupWindow.create(dictionary('CopiedToClipboard'));
 
       vibrate(200);
     end;
@@ -2828,7 +2829,7 @@ begin
       if svc.GetClipboard().ToString() <> removeSpace(TEdit(Sender).Text) then
       begin
         svc.setClipboard(removeSpace(TEdit(Sender).Text));
-        popupWindow.Create(dictionary('CopiedToClipboard'));
+        popupWindow.create(dictionary('CopiedToClipboard'));
 {$IFDEF ANDROID}
         Vibrator := TJvibrator.Wrap
           ((SharedActivityContext.getSystemService
@@ -2906,8 +2907,8 @@ end;
 procedure TfrmHome.btnSWipeClick(Sender: TObject);
 begin
 
-  //PopupWindowProtectYesNo.Create(
-    NotificationLayout.popupProtectedConfirm(
+  // PopupWindowProtectYesNo.Create(
+  NotificationLayout.popupProtectedConfirm(
     procedure()
     begin
       wipeWalletDat;
@@ -2982,7 +2983,7 @@ procedure TfrmHome.btnAddContractClick(Sender: TObject);
 var
   t: Token;
 begin
-   WalletViewRelated.btnAddContractClick(Sender);
+  WalletViewRelated.btnAddContractClick(Sender);
 
 end;
 
@@ -3007,7 +3008,7 @@ var
   ts: TStringList;
   i: Integer;
 begin
-  ts := TStringList.Create();
+  ts := TStringList.create();
 
   for i := 0 to ConfirmedSeedFlowLayout.ChildrenCount - 1 do
   begin
@@ -3022,7 +3023,7 @@ begin
   end
   else
   begin
-    popupWindow.Create(dictionary('SeedsArentSame'));
+    popupWindow.create(dictionary('SeedsArentSame'));
   end;
 
   ts.free;
@@ -3079,9 +3080,9 @@ end;
 procedure TfrmHome.SwitchSegwitp2wpkhButtonClick(Sender: TObject);
 begin
 
-  receiveAddress.setText( Bitcoin.generatep2wpkh
-    (TwalletInfo(CurrentCryptoCurrency).pub,
-    AvailableCoin[TwalletInfo(CurrentCryptoCurrency).coin].hrp) , 3 );
+  receiveAddress.setText
+    (Bitcoin.generatep2wpkh(TwalletInfo(CurrentCryptoCurrency).pub,
+    AvailableCoin[TwalletInfo(CurrentCryptoCurrency).coin].hrp), 3);
 
   receiveAddress.Text := receiveAddress.Text;
 end;
@@ -3099,22 +3100,24 @@ procedure TfrmHome.notPrivTCA2Change(Sender: TObject);
 begin
   notPrivTCA1.IsChecked := notPrivTCA2.IsChecked;
 end;
+
 procedure TfrmHome.MineNano(Sender: TObject);
 begin
-  nano_DoMine(cryptoCurrency(NanoUnlocker.TagObject),passwordForDecrypt.Text);
-  passwordForDecrypt.Text:='';
-  PageControl.ActiveTab:=walletView;
+  nano_DoMine(CryptoCurrency(NanoUnlocker.TagObject), passwordForDecrypt.Text);
+  passwordForDecrypt.Text := '';
+  PageControl.ActiveTab := walletView;
 end;
+
 procedure TfrmHome.NanoUnlockerClick(Sender: TObject);
 begin
-     btnDecryptSeed.onclick := MIneNano;
+  btnDecryptSeed.onclick := MineNano;
   decryptSeedBackTabItem := PageControl.ActiveTab;
   PageControl.ActiveTab := descryptSeed;
   btnDSBack.onclick := backBtnDecryptSeed;
 end;
 
 procedure TfrmHome.NewCoinDescriptionPassEditKeyUp(Sender: TObject;
-  var Key: Word; var KeyChar: Char; Shift: TShiftState);
+var Key: Word; var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = vkReturn then
   begin
@@ -3181,7 +3184,6 @@ procedure TfrmHome.Button10Click(Sender: TObject);
 begin
   switchTab(PageControl, Settings);
 end;
-
 
 procedure TfrmHome.CoinFromPrivKeyQRButtonClick(Sender: TObject);
 begin
@@ -3250,18 +3252,40 @@ var
   actionListener: TActionList;
 
   // temp : TAddressLabel;
-  t : ThreadKindergarten;
-  temp : TLabel;
-  pool : TcomponentPool<TLabel>;
-
+  t: ThreadKindergarten;
+  temp: TLabel;
+  pool: TcomponentPool<TLabel>;
 
 begin
 
-  NotificationLayout.popupConfirm(procedure begin end, procedure begin end, 'popup1');
-  NotificationLayout.popupConfirm(procedure begin end, procedure begin end, 'popup2');
-  NotificationLayout.popupConfirm(procedure begin end, procedure begin end, 'popup3');
-  NotificationLayout.popupConfirm(procedure begin end, procedure begin end, 'popup4');
-
+  NotificationLayout.popupConfirm(
+    procedure
+    begin
+    end,
+    procedure
+    begin
+    end, 'popup1');
+  NotificationLayout.popupConfirm(
+    procedure
+    begin
+    end,
+    procedure
+    begin
+    end, 'popup2');
+  NotificationLayout.popupConfirm(
+    procedure
+    begin
+    end,
+    procedure
+    begin
+    end, 'popup3');
+  NotificationLayout.popupConfirm(
+    procedure
+    begin
+    end,
+    procedure
+    begin
+    end, 'popup4');
 
 end;
 
@@ -3383,7 +3407,7 @@ end;
 
 procedure TfrmHome.btnChangeDescryptionBackClick(Sender: TObject);
 begin
-  switchTab(PageControl , walletView );
+  switchTab(PageControl, walletView);
 end;
 
 procedure TfrmHome.btnChangeDescryptionOKClick(Sender: TObject);
@@ -3413,7 +3437,7 @@ end;
 
 procedure TfrmHome.btnANTBackClick(Sender: TObject);
 begin
-  switchTab(PageControl, chooseETHWalletBackTabItem );
+  switchTab(PageControl, chooseETHWalletBackTabItem);
 end;
 
 procedure TfrmHome.btnEKSBackClick(Sender: TObject);
@@ -3432,7 +3456,7 @@ end;
 
 procedure TfrmHome.btnMTBackClick(Sender: TObject);
 begin
-  switchTab(PageControl, AddWalletList );
+  switchTab(PageControl, AddWalletList);
 end;
 
 procedure TfrmHome.btnSyncClick(Sender: TObject);
@@ -3519,7 +3543,7 @@ begin
 
     if not ValidateBitcoinAddress(str) = true then
     begin
-      popupWindowOK.Create(
+      popupWindowOK.create(
         procedure
         begin
         end, dictionary('OCRInaccurate'));
@@ -3542,7 +3566,7 @@ var
 {$ENDIF}
 begin
 {$IFDEF ANDROID}
-  Intent := TJIntent.Create;
+  Intent := TJIntent.create;
   Intent := TJIntent.JavaClass.init(TJSettings.JavaClass.ACTION_SETTINGS);
   TAndroidHelper.Activity.startActivity(Intent);
 {$ENDIF}
@@ -3632,11 +3656,11 @@ end;
 
 procedure TfrmHome.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-  //AccountRelated.CloseHodler();
+  // AccountRelated.CloseHodler();
 {$IFDEF WIN32 or WIN64}
   stylo.Destroy;
   try
-    //halt(0);
+    // halt(0);
   except
 
   end;
@@ -3646,12 +3670,12 @@ end;
 procedure TfrmHome.FormCreate(Sender: TObject);
 begin
 
-  frmhome.Height := min( frmhome.Height , round(Screen.Height * 0.8) );
-  frmhome.Width := min( frmhome.Width , round(Screen.Width * 0.8) );
-  frmhome.Position := TFormPosition.ScreenCenter;
+  frmHome.Height := min(frmHome.Height, round(Screen.Height * 0.8));
+  frmHome.Width := min(frmHome.Width, round(Screen.Width * 0.8));
+  frmHome.Position := TFormPosition.ScreenCenter;
 {$IF NOT DEFINED(LINUX)}
-  MotionSensor := TMotionSensor.Create(frmHome);
-  OrientationSensor := TOrientationSensor.Create(frmHome);
+  MotionSensor := TMotionSensor.create(frmHome);
+  OrientationSensor := TOrientationSensor.create(frmHome);
 
 {$ENDIF}
   AccountRelated.InitializeHodler;
@@ -3806,11 +3830,12 @@ procedure TfrmHome.FormShow(Sender: TObject);
       TControl(Obj).Opacity := 0;
   end;
 
-  var q1:SYSTEM.uint64;
+var
+  q1: System.uint64;
 begin
-{q1:=GetTickCount;
-nano_pow('fdd79b6607f83a44c499ee5c173dd90ba757ae910deb687bf3844e93780ccfa1');
-ShowMessage(IntToStr((GetTickCount-q1) div 1000));   }
+  { q1:=GetTickCount;
+    nano_pow('fdd79b6607f83a44c499ee5c173dd90ba757ae910deb687bf3844e93780ccfa1');
+    ShowMessage(IntToStr((GetTickCount-q1) div 1000)); }
   LabelEditApplyStyleLookup(HistoryTransactionValue);
   LabelEditApplyStyleLookup(HistoryTransactionDate);
   LabelEditApplyStyleLookup(historyTransactionConfirmation);
@@ -4002,7 +4027,7 @@ var
 {$ENDIF}
 begin
 {$IFDEF ANDROID}
-  Intent := TJIntent.Create;
+  Intent := TJIntent.create;
   Intent := TJIntent.JavaClass.init(TJSettings.JavaClass.ACTION_SETTINGS);
   TAndroidHelper.Activity.startActivity(Intent);
 {$ENDIF}
@@ -4032,24 +4057,33 @@ var
   Intent: JIntent;
 
 {$ENDIF}
+{$IFDEF LINUX}
+  psxString: System.AnsiString;
+{$ENDIF}
 begin
 
   if CurrentCryptoCurrency is Token then
   begin
-    myUri := getURLToTokenExplorer( StringReplace(HistoryTransactionID.Text, ' ', '', [rfReplaceAll]) );
+    myURI := getURLToTokenExplorer(StringReplace(HistoryTransactionID.Text, ' ',
+      '', [rfReplaceAll]));
   end
   else
     myURI := getURLToExplorer(CurrentCoin.coin,
       StringReplace(HistoryTransactionID.Text, ' ', '', [rfReplaceAll]));
 {$IFDEF ANDROID}
-  Intent := TJIntent.Create;
+  Intent := TJIntent.create;
   Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
   Intent.setData(StrToJURI(myURI));
   SharedActivity.startActivity(Intent);
 
-{$ELSE}
+{$ENDIF}
+{$IFDEF MSWINDOWS}
   URL := myURI;
   ShellExecute(0, 'OPEN', PWideChar(URL), '', '', { SW_SHOWNORMAL } 1);
+{$ENDIF}
+{$IFDEF LINUX}
+  psxString := 'xdg-open ' + myURI;
+  _system(@psxString[1]);
 {$ENDIF}
 end;
 
@@ -4081,7 +4115,7 @@ var
 begin
   myURI := 'https://www.coinbase.com/';
 {$IFDEF ANDROID}
-  Intent := TJIntent.Create;
+  Intent := TJIntent.create;
   Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
   Intent.setData(StrToJURI(myURI));
   SharedActivity.startActivity(Intent);
@@ -4311,7 +4345,7 @@ begin
   MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
   if not isHex(MasterSeed) then
   begin
-    popupWindow.Create(dictionary('FailedToDecrypt'));
+    popupWindow.create(dictionary('FailedToDecrypt'));
     passwordForDecrypt.Text := '';
     exit;
   end;
@@ -4329,7 +4363,7 @@ begin
 
   img.SaveToFile(ImgPath);
 
-  Zip := TEncryptedZipFile.Create(passwordForDecrypt.Text);
+  Zip := TEncryptedZipFile.create(passwordForDecrypt.Text);
 
   if FileExists(zipPath) then
     DeleteFile(zipPath);
@@ -4494,22 +4528,21 @@ begin
 
 end;
 
-
-procedure tfrmhome.AddTokenFromWalletList(Sender : TObject );
+procedure TfrmHome.AddTokenFromWalletList(Sender: TObject);
 begin
 
-  walletviewRelated.AddTokenFromWalletList(Sender);
+  WalletViewRelated.AddTokenFromWalletList(Sender);
 
 end;
 
-procedure tfrmhome.AddNewTokenETHPanelClick(sender : Tobject );
+procedure TfrmHome.AddNewTokenETHPanelClick(Sender: TObject);
 var
-  T : Token;
+  t: Token;
   holder: TfmxObject;
-  found : integer;
+  found: Integer;
 begin
 
-  walletViewRelated.AddNewTokenETHPanelClick(sender);
+  WalletViewRelated.AddNewTokenETHPanelClick(Sender);
 
 end;
 

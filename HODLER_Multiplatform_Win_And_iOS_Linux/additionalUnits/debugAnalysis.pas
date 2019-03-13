@@ -344,7 +344,7 @@ var
   temp: TStringList;
   Y, m, d: Word;
 begin
-  {$IFDEF MSWINDOWS}
+{$IF DEFINED(MSWINDOWS) }
   if (logData <> nil) and (logData.Count > 0) then
   begin
     { temp := TStringList.Create();

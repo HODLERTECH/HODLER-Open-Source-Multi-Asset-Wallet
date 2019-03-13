@@ -359,19 +359,19 @@ begin
       exit;
     end;
 
-    id := strToInt(list[0]);
+    id := strToIntDef(list[0],0);
     name := list[1];
     shortcut := list[2];
     _contractAddress := list[3];
-    decimals := strToInt(list[4]);
-    _WalletID := strToInt(list[5]);
+    decimals := strToIntdef(list[4],0);
+    _WalletID := strToIntDef(list[5],0);
     addr := list[6];
     lastBlock := strtointdef(trim(list[7]), 0);
     BigInteger.TryParse(list[8], 10, bi);
     confirmed := bi;
-    creationTime := strToInt(list[9]);
+    creationTime := strToIntDef(list[9],0);
     description := list[10];
-    orderInWallet := strToInt(list[11]);
+    orderInWallet := strToIntDef(list[11],0);
   except
     on E: Exception do
 

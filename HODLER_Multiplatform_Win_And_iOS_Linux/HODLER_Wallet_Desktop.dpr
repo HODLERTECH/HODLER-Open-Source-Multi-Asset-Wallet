@@ -3,14 +3,14 @@ program HODLER_Wallet_Desktop;
 {$R *.dres}
 
 uses
-  {$IFDEF DEBUG}
+  {$IF DEFINED(DEBUG) AND DEFINED(MSWINDOWS)}
   fastMM4,
   {$ENDIF }
   SafeDLLPath in 'SafeDLLPath.pas',
   System.StartUpCopy,
   FMX.Forms,
   FMX.Styles,
-  FontService,
+  FontService, System.Classes,SysUtils,IOUtils,
   uHome in 'homeWindows\uHome.pas' {frmHome},
   misc in 'additionalUnits\misc.pas',
   base58 in 'additionalUnits\base58.pas',
@@ -154,8 +154,20 @@ uses
 
 var
   H: THandle;
-
+{$IF DEFINED(LINUX)}
+var lockFile:TFilestream;
+function linuxCanLock:boolean;
 begin
+result:=false;
+try
+ lockFile := TFilestream.Create( TPath.GetDocumentsPath+'/.hlock', fmCreate or fmOpenRead or fmShareExclusive );
+except on E:Exception do begin exit(false); end; end;
+result:=true;
+end;
+{$ENDIF}
+begin
+
+{$IF NOT DEFINED(LINUX)}
 
   Application.OnException := frmhome.ExceptionHandler;
   VKAutoShowMode := TVKAutoShowMode.Never;
@@ -165,7 +177,6 @@ begin
   GlobalUseDXInDX9Mode := true;
 //  GlobalUseDXSoftware := true;
   FMX.Types.GlobalDisableFocusEffect := true;
-{$IF NOT DEFINED(LINUX)}
   H := CreateMutex(nil, False, 'HODLERTECHMUTEX');
   if (H <> 0) and (GetLastError <> ERROR_ALREADY_EXISTS) then
   begin
@@ -182,6 +193,8 @@ begin
   CloseHandle(H);
 {$ENDIF}
 {$IF DEFINED(LINUX)}
+if not linuxCanLock then halt(2);
+
   Application.Initialize;
 
   Application.FormFactor.Orientations := [TFormOrientation.Portrait];

@@ -6,11 +6,11 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes,
   System.Variants,  StrUtils,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, Nano,
-  System.IOUtils, misc, FMX.Styles,
-  FMX.StdCtrls, FMX.Controls.Presentation, Windows, FMX.Layouts, FMX.Platform,
-  FMX.Platform.Win, WinApi.ShellApi,
-  FMX.ListBox, WinApi.Messages, FMX.Menus, Registry;
-
+  System.IOUtils, misc, FMX.Styles, FMX.Layouts, FMX.Platform,
+  FMX.StdCtrls,  FMX.Menus,  FMX.ListBox,  FMX.Controls.Presentation {$IFNDEF LINUX},Windows,
+ FMX.Platform.Win, WinApi.ShellApi,
+WinApi.Messages,Registry{$ENDIF};
+ {$IFDEF LINUX}type HWND=integer;{$ENDIF}
 type
   TfrmNanoPoW = class(TForm)
     lblName: TLabel;
@@ -29,23 +29,23 @@ type
     procedure FormShow(Sender: TObject);
   private
     TrayWnd: HWND;
-    TrayIconData: TNotifyIconData;
+    {$IFNDEF LINUX}TrayIconData: TNotifyIconData;  {$ENDIF}
     TrayIconAdded: Boolean;
-    procedure TrayWndProc(var Message: TMessage);
+  {$IFNDEF LINUX}  procedure TrayWndProc(var Message: TMessage);   {$ENDIF}
 
   public
     { Public declarations }
   end;
-
+ {$IFNDEF LINUX}
 const
-  WM_ICONTRAY = WM_USER + 1;
+  WM_ICONTRAY = WM_USER + 1;      {$ENDIF}
 
 var
   frmNanoPoW: TfrmNanoPoW;
   stylo: TStyleManager;
   q1: System.Int64;
   shown: Boolean;
-
+  linuxSecs:integer=0;
 implementation
 
 {$R *.fmx}
@@ -72,7 +72,7 @@ begin
         end);
       if not isCorrupted then
       begin
-        q1 := GetTickCount;
+      {$IFNDEF LINUX}  q1 := GetTickCount;  {$ENDIF}
         hashCounter := 0;
         nano_getWork(block);
         hashCounter := 0;
@@ -117,11 +117,11 @@ procedure HideAppOnTaskbar(AMainForm: TForm);
 var
   AppHandle: HWND;
 begin
-
+ {$IFNDEF LINUX}
   AppHandle := ApplicationHWND; // GetParent(HWND(AMainForm.Handle));
   ShowWindow(AppHandle, SW_HIDE);
   SetWindowLong(AppHandle, GWL_EXSTYLE, GetWindowLong(AppHandle, GWL_EXSTYLE) or
-    WS_EX_TOOLWINDOW);
+    WS_EX_TOOLWINDOW);{$ENDIF}
 end;
 
 procedure mineAll;
@@ -160,13 +160,13 @@ end;
 procedure TfrmNanoPoW.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   CanClose := false;
-  frmNanoPoW.Hide;
+{$IFNDEF LINUX}  frmNanoPoW.Hide; {$ELSE}WindowState := TWindowState.wsMinimized;{$ENDIF}
 end;
 
 procedure TfrmNanoPoW.FormDestroy(Sender: TObject);
 begin
-  Shell_NotifyIcon(NIM_DELETE, @TrayIconData);
-  DeallocateHWnd(TrayWnd);
+  {$IFNDEF LINUX}Shell_NotifyIcon(NIM_DELETE, @TrayIconData);
+  DeallocateHWnd(TrayWnd);   {$ENDIF}
 end;
 
 procedure TfrmNanoPoW.FormShow(Sender: TObject);
@@ -193,7 +193,7 @@ begin
     Application.Terminate;
 
 end;
-
+{$IFNDEF LINUX}
 procedure TfrmNanoPoW.TrayWndProc(var Message: TMessage);
 var
   P: TPoint;
@@ -213,21 +213,22 @@ begin
     Message.Result := DefWindowProc(TrayWnd, Message.MSG, Message.WParam,
       Message.LParam);
 end;
-
+  {$ENDIF}
 procedure TfrmNanoPoW.SpeedCounterTimer(Sender: TObject);
 var
   s: Cardinal;
   speed: single;
+
 begin
   HideAppOnTaskbar(frmNanoPoW);
-  s := (GetTickCount - q1) div 1000;
+  s := {$IFNDEF LINUX}(GetTickCount - q1) div 1000{$ELSE} linuxSecs; inc(linuxSecs){$ENDIF};
   if s = 0 then
     s := 1;
   speed := ((hashCounter) div s) / 1000;
   frmNanoPoW.Caption := 'Nano PoW Speed: ' + FloatToStrF(speed, ffGeneral, 8, 2)
     + ' kHash/s';
 end;
-
+{$IFNDEF LINUX}
 procedure RunOnStartupHKCU(const sCmdLine: string);
 var
   sKey: string;
@@ -246,14 +247,14 @@ begin
       Free;
     end;
 end;
-
+ {$ENDIF}
 procedure TfrmNanoPoW.FormCreate(Sender: TObject);
 begin
   HOME_PATH := IncludeTrailingPathDelimiter
     ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetDocumentsPath{$ELSE}System.
     IOUtils.TPath.combine(System.SysUtils.GetEnvironmentVariable('APPDATA'),
     'hodlertech'){$ENDIF});
-  TrayWnd := AllocateHWnd(TrayWndProc);
+ {$IFNDEF LINUX} TrayWnd := AllocateHWnd(TrayWndProc);
   with TrayIconData do
   begin
     cbSize := SizeOf();
@@ -264,17 +265,17 @@ begin
     hIcon := GetClassLong(FmxHandleToHWND(self.Handle), GCL_HICONSM);
     szTip := 'Nano PoW';
   end;
-  Shell_NotifyIcon(NIM_ADD, @TrayIconData);
+  Shell_NotifyIcon(NIM_ADD, @TrayIconData); q1 := GetTickCount;{$ENDIF}
   stylo := TStyleManager.Create;
   stylo.TrySetStyleFromResource('MINER_STYLE');
-  q1 := GetTickCount;
+
   TThread.CreateAnonymousThread(
     procedure
     begin
       mineAll()
     end).Start;
-  RunOnStartupHKCU(ParamStr(0));
-  frmNanoPoW.Visible := false;
+ {$IFNDEF LINUX}  RunOnStartupHKCU(ParamStr(0));frmNanoPoW.Visible := false;{$ENDIF}
+   frmNanoPoW.Visible:=true;
   shown := false;
 end;
 

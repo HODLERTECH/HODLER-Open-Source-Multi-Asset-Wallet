@@ -184,7 +184,7 @@ type
 
   { --------------------------------------------------------------------------- }
 {$IFNDEF BIT16}
-{$IFDEF USE_64BITCODE OR IOS}
+{$IFDEF USE_64BITCODE OR IOS OR LINUX}
 {$I kperm_64.inc}
 {$IFDEF HAS_MSG}
 {$MESSAGE '* using 64-bit code'}

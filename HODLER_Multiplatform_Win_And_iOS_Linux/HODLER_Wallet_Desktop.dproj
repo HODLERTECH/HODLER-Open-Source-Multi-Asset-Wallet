@@ -5,8 +5,8 @@
         <FrameworkType>FMX</FrameworkType>
         <MainSource>HODLER_Wallet_Desktop.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release</Config>
-        <Platform Condition="'$(Platform)'==''">Win32</Platform>
+        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Platform Condition="'$(Platform)'==''">Linux64</Platform>
         <TargetedPlatforms>1247</TargetedPlatforms>
         <AppType>Application</AppType>
     </PropertyGroup>
@@ -410,7 +410,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Linux64)'!=''">
-        <DCC_UnitSearchPath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack;C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\libLinux;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack;C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\libLinux;C:\HODLER\HODLER_Multiplatform_Win_And_iOS_Linux\CryptoLib_output\Linux64\Release;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <Debugger_Launcher>/usr/bin/xterm -e &quot;%debuggee%&quot;</Debugger_Launcher>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_OSX32)'!=''">
@@ -455,7 +455,7 @@
         <BT_BuildType>Debug</BT_BuildType>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Linux64)'!=''">
-        <DCC_UnitSearchPath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack;C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\libLinux;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack;C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\libLinux;C:\HODLER\HODLER_Multiplatform_Win_And_iOS_Linux\CryptoLib_output\Linux64\Release;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <Debugger_Launcher>/usr/bin/xterm -e &quot;%debuggee%&quot;</Debugger_Launcher>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_OSX32)'!=''">
@@ -914,6 +914,12 @@
                 <Platform value="Win64">True</Platform>
             </Platforms>
             <Deployment Version="3">
+                <DeployFile LocalName="token_icons\2308.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\POLlang.json" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
@@ -926,6 +932,12 @@
                     </Platform>
                     <Platform Name="Android">
                         <RemoteName>ic_launcher.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="coin_icons\DGB.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -942,6 +954,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="Languages\DEU.lang" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\1982.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -964,8 +982,20 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\gemini_28.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="token_icons\HDL.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\1715.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -1006,6 +1036,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\2071.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\ENGlang.json" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
@@ -1030,6 +1066,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\BTM.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="gfx\splash960x720.png" Configuration="Release" Class="Android_SplashImage960">
                     <Platform Name="All Platforms">
                         <Overwrite>true</Overwrite>
@@ -1039,9 +1081,39 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\2918.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\DEU.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\2918.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\2502.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\closed.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\2457.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1057,8 +1129,32 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="coin_icons\1.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_180x180.png" Configuration="Debug" Class="iPhone_AppIcon180">
                     <Platform Name="iOSSimulator">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\opened.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\search_dark.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="coin_icons\RVN.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1082,6 +1178,12 @@
                 </DeployFile>
                 <DeployFile LocalName="token_icons\BTM.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="coin_icons\Nano-icon.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -1163,8 +1265,26 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\lib\android\release\x86\libnative-activity.so" Configuration="Release" Class="AndroidLibnativeX86File"/>
                 <DeployFile LocalName="Android\Debug\styles.xml" Configuration="Debug" Class="AndroidSplashStyles"/>
+                <DeployFile LocalName="token_icons\MKR.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_SpotlightSearchIcon_50x50.png" Configuration="Debug" Class="iPad_SpotLight50">
                     <Platform Name="iOSSimulator">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\Encrypted_512_White.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="coin_icons\ETH.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1189,6 +1309,18 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="coin_icons\7.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\1715.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="gfx\Icon36x36.png" Configuration="Debug" Class="Android_LauncherIcon36"/>
                 <DeployFile LocalName="gfx\Icon144x144.png" Configuration="Debug" Class="Android_LauncherIcon144">
                     <Platform Name="All Platforms">
@@ -1200,6 +1332,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="Android\Debug\AndroidManifest.xml" Configuration="Debug" Class="ProjectAndroidManifest"/>
+                <DeployFile LocalName="gfx\paperwallet\eqrsmall.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageLandscape_2048x1496.png" Configuration="Debug" Class="iPad_Launch2048">
                     <Platform Name="iOSDevice32">
                         <RemoteName>Default-Landscape@2x.png</RemoteName>
@@ -1218,6 +1356,18 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\search_white.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\MKR.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\ZHX.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSDevice32">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -1226,6 +1376,12 @@
                 </DeployFile>
                 <DeployFile LocalName="gfx\Icon36x36.png" Configuration="Release" Class="Android_LauncherIcon36"/>
                 <DeployFile LocalName="Android\Debug\splash_image_def.xml" Configuration="Debug" Class="AndroidSplashImageDef"/>
+                <DeployFile LocalName="token_icons\trueusd_28.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\PT.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
@@ -1234,6 +1390,12 @@
                 </DeployFile>
                 <DeployFile LocalName="token_icons\CharocalExpressive.style" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\paxos_28_2.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -1300,10 +1462,22 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="gfx\paperwallet\eqrbig.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Android\Release\styles.xml" Configuration="Release" Class="AndroidSplashStyles"/>
                 <DeployFile LocalName="Languages\JPN.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSSimulator">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\Encrypted_seed_Dark.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1315,6 +1489,12 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_SpotlightSearchIcon_100x100.png" Configuration="Debug" Class="iPad_SpotLight100">
                     <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\Encrypted_512_White.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1415,6 +1595,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\imgNotFound.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Android\Release\AndroidManifest.xml" Configuration="Release" Class="ProjectAndroidManifest"/>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_29x29.png" Configuration="Debug" Class="iPhone_Spotlight29">
                     <Platform Name="iOSSimulator">
@@ -1426,8 +1612,20 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\1776.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\DUT.lang" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="coin_icons\131.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -1440,6 +1638,12 @@
                 <DeployFile LocalName="Languages\SPA.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSDevice32">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\Encrypted_512_Dark.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1528,6 +1732,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="gfx\paperwallet\eqrsmall.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\JPN.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSDevice32">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -1542,6 +1752,12 @@
                 </DeployFile>
                 <DeployFile LocalName="token_icons\more_white.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\gemini_28.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -1567,6 +1783,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="coin_icons\2.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="gfx\Icon72x72.png" Configuration="Debug" Class="Android_LauncherIcon72">
                     <Platform Name="All Platforms">
                         <Overwrite>true</Overwrite>
@@ -1576,8 +1798,26 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\1908.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="coin_icons\DGB.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\2502.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\ALG.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -1588,13 +1828,37 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="coin_icons\1.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\DUT.lang" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\opened.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="coin_icons\DGB.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="gfx\Icon96x96.png" Configuration="Release" Class="Android_LauncherIcon96"/>
+                <DeployFile LocalName="token_icons\Encrypted_seed_White.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_ApplicationIcon_152x152.png" Configuration="Debug" Class="iPad_AppIcon152">
                     <Platform Name="iOSDevice32">
                         <Overwrite>true</Overwrite>
@@ -1661,14 +1925,14 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="OKSterling.style" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="Linux64">
+                <DeployFile LocalName="gfx\paperwallet\eqrbig.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="gfx\paperwallet\eqrbig.png" Configuration="Release" Class="ProjectFile">
-                    <Platform Name="Win32">
+                <DeployFile LocalName="token_icons\Encrypted_seed_White.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -1712,8 +1976,8 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="OKSterling.style" Configuration="Release" Class="ProjectFile">
-                    <Platform Name="Linux64">
+                <DeployFile LocalName="coin_icons\1831.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -1724,14 +1988,26 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="coin_icons\1831.png" Configuration="Debug" Class="ProjectFile">
+                <DeployFile LocalName="token_icons\BNB.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="token_icons\BNB.png" Configuration="Release" Class="ProjectFile">
-                    <Platform Name="Win32">
+                <DeployFile LocalName="token_icons\imgNotFound.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\more_white.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\search_white.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -1754,6 +2030,12 @@
                     </Platform>
                     <Platform Name="Android">
                         <RemoteName>ic_launcher.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\OMG.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1827,6 +2109,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="coin_icons\Nano-icon.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImagePortrait_1536x2008.png" Configuration="Debug" Class="iPad_Launch1536">
                     <Platform Name="iOSSimulator">
                         <RemoteName>Default-Portrait@2x.png</RemoteName>
@@ -1865,12 +2153,30 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\HDL.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\ZRX.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="gfx\Icon48x48.png" Configuration="Release" Class="Android_LauncherIcon48">
                     <Platform Name="All Platforms">
                         <Overwrite>true</Overwrite>
                     </Platform>
                     <Platform Name="Android">
                         <RemoteName>ic_launcher.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\Refresh-PNG-Transparent-Image.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1893,6 +2199,12 @@
                     </Platform>
                     <Platform Name="Android">
                         <RemoteName>splash_image.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="gfx\paperwallet\eqrbig.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1931,15 +2243,39 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\more_black.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\latoken.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_58x58.png" Configuration="Debug" Class="iPhone_Spotlight58">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="Android\Release\classes.dex" Configuration="Release" Class="AndroidClassesDexFile"/>
+                <DeployFile LocalName="token_icons\ALG.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageLandscape_1024x768.png" Configuration="Debug" Class="iPad_Launch1024x768">
                     <Platform Name="iOSSimulator">
                         <RemoteName>Default-Landscape~ipad.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\closed.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1958,6 +2294,12 @@
                 <DeployFile LocalName="Languages\DUT.lang" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\CharocalExpressive.style" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1984,6 +2326,12 @@
                 </DeployFile>
                 <DeployFile LocalName="coin_icons\1831.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\AE.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -2043,6 +2391,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\AE.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageLandscape_1024x768.png" Configuration="Debug" Class="iPad_Launch1024x768">
                     <Platform Name="iOSDevice32">
                         <RemoteName>Default-Landscape~ipad.png</RemoteName>
@@ -2073,6 +2427,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="gfx\splash470x320.png" Configuration="Debug" Class="Android_SplashImage470"/>
+                <DeployFile LocalName="token_icons\1982.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\ENG.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSDevice32">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -2161,7 +2521,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win10ModernDark.Style" Configuration="Debug" Class="ProjectFile">
+                <DeployFile LocalName="coin_icons\1831.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -2189,6 +2549,12 @@
                 </DeployFile>
                 <DeployFile LocalName="token_icons\2918.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="coin_icons\ETH.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -2223,6 +2589,12 @@
                 </DeployFile>
                 <DeployFile LocalName="coin_icons\Nano-icon.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\search_dark.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -2330,6 +2702,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\BNB.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_SettingIcon_58x58.png" Configuration="Debug" Class="iPad_Setting58">
                     <Platform Name="iOSSimulator">
                         <Overwrite>true</Overwrite>
@@ -2337,6 +2715,12 @@
                 </DeployFile>
                 <DeployFile LocalName="token_icons\1908.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\latoken.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -2362,6 +2746,18 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_SpotlightSearchIcon_40x40.png" Configuration="Debug" Class="iPad_SpotLight40">
                     <Platform Name="iOSDevice32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\CharocalExpressive.style" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\centre-usdc_28.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -2400,6 +2796,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\trueusd_28.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="token_icons\Encrypted_seed_White.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
@@ -2431,6 +2833,30 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\1908.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\more_white.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="coin_icons\7.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\Encrypted_512_Dark.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_60x60.png" Configuration="Debug" Class="iPhone_AppIcon60">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
@@ -2457,6 +2883,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\Refresh-PNG-Transparent-Image.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Android\Debug\classes.dex" Configuration="Debug" Class="AndroidClassesDexFile"/>
                 <DeployFile LocalName="gfx\splash470x320.png" Configuration="Debug" Class="Android_SplashImage470">
                     <Platform Name="All Platforms">
@@ -2476,6 +2908,12 @@
                 <DeployFile LocalName="Languages\FRA.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\2071.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -2524,12 +2962,6 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win10ModernDark.Style" Configuration="Release" Class="ProjectFile">
-                    <Platform Name="Linux64">
-                        <RemoteDir>.\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="Languages\ZHX.lang" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
@@ -2574,6 +3006,12 @@
                 </DeployFile>
                 <DeployFile LocalName="$(NDKBasePath)\prebuilt\android-arm\gdbserver\gdbserver" Configuration="Debug" Class="AndroidGDBServer">
                     <Platform Name="Android">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\BNB.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -2669,6 +3107,18 @@
                 <DeployFile LocalName="Win64\Debug\HODLER_Core.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="coin_icons\1.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\2308.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="coin_icons\131.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -2799,6 +3249,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\OMG.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="iOSDevice32\Debug\HODLER_Core.info.plist" Configuration="Debug" Class="ProjectiOSInfoPList">
                     <Platform Name="iOSDevice32">
                         <RemoteName>Info.plist</RemoteName>
@@ -2807,6 +3263,12 @@
                 </DeployFile>
                 <DeployFile LocalName="token_icons\BTM.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\copy-content_white.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -2844,6 +3306,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\copy-content.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Android\Release\styles.xml" Configuration="Release" Class="AndroidSplashStyles">
                     <Platform Name="All Platforms">
                         <Overwrite>true</Overwrite>
@@ -2852,8 +3320,26 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="coin_icons\1831.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\ZRX.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="token_icons\Encrypted_512_White.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\HDL.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -2904,8 +3390,20 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\BTM.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="token_icons\2457.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\copy-content_white.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -3068,6 +3566,12 @@
                 </DeployFile>
                 <DeployFile LocalName="..\..\Downloads\FireMonkey_Premium_Style_Pack_XE6\FireMonkey Premium Style Pack XE6\FireMonkey Premium Style Pack XE6\Win\Jet.style" Configuration="Release" Class="ProjectFile"/>
                 <DeployFile LocalName="Android\Release\libHODLER_Core.so" Configuration="Release" Class="ProjectOutput"/>
+                <DeployFile LocalName="token_icons\more_black.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="iOSSimulator\Debug\HODLER_Core.entitlements" Configuration="Debug" Class="ProjectiOSEntitlements">
                     <Platform Name="iOSSimulator">
                         <Overwrite>true</Overwrite>
@@ -3095,9 +3599,21 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\1954.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_640x960.png" Configuration="Debug" Class="iPhone_Launch640">
                     <Platform Name="iOSDevice32">
                         <RemoteName>Default@2x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\Encrypted_seed_Dark.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -3140,6 +3656,12 @@
                     </Platform>
                     <Platform Name="Android">
                         <RemoteName>libHODLER_Core.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\1954.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -3199,6 +3721,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="coin_icons\2.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="token_icons\1954.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
@@ -3206,6 +3734,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="Languages\ENGlang.json" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\2457.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -3226,6 +3760,18 @@
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_2208x1242.png" Configuration="Debug" Class="iPhone_Launch2208">
                     <Platform Name="iOSSimulator">
                         <RemoteName>Default-Landscape-736h@3x.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\copy-content.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\centre-usdc_28.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -3279,14 +3825,32 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\1776.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\FRA.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSDevice64">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\paxos_28_2.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="token_icons\1908.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="coin_icons\RVN.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
@@ -3300,7 +3864,6 @@
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="Win32">
-                        <RemoteDir>Contents\MacOS</RemoteDir>
                         <Operation>0</Operation>
                     </Platform>
                 </DeployClass>
@@ -3436,6 +3999,11 @@
                         <Operation>1</Operation>
                         <Extensions>.framework</Extensions>
                     </Platform>
+                    <Platform Name="OSX64">
+                        <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>1</Operation>
+                        <Extensions>.framework</Extensions>
+                    </Platform>
                     <Platform Name="Win32">
                         <Operation>0</Operation>
                     </Platform>
@@ -3454,6 +4022,11 @@
                         <Extensions>.dylib</Extensions>
                     </Platform>
                     <Platform Name="OSX32">
+                        <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="OSX64">
                         <RemoteDir>Contents\MacOS</RemoteDir>
                         <Operation>1</Operation>
                         <Extensions>.dylib</Extensions>
@@ -3481,6 +4054,11 @@
                         <Operation>1</Operation>
                         <Extensions>.dylib</Extensions>
                     </Platform>
+                    <Platform Name="OSX64">
+                        <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
                     <Platform Name="Win32">
                         <Operation>0</Operation>
                         <Extensions>.bpl</Extensions>
@@ -3500,6 +4078,10 @@
                         <Operation>0</Operation>
                     </Platform>
                     <Platform Name="OSX32">
+                        <RemoteDir>Contents\Resources\StartUp\</RemoteDir>
+                        <Operation>0</Operation>
+                    </Platform>
+                    <Platform Name="OSX64">
                         <RemoteDir>Contents\Resources\StartUp\</RemoteDir>
                         <Operation>0</Operation>
                     </Platform>
@@ -3650,15 +4232,27 @@
                         <RemoteDir>..\</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
+                    <Platform Name="OSX64">
+                        <RemoteDir>..\</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
                 </DeployClass>
                 <DeployClass Name="ProjectOSXInfoPList">
                     <Platform Name="OSX32">
                         <RemoteDir>Contents</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
+                    <Platform Name="OSX64">
+                        <RemoteDir>Contents</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
                 </DeployClass>
                 <DeployClass Name="ProjectOSXResource">
                     <Platform Name="OSX32">
+                        <RemoteDir>Contents\Resources</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="OSX64">
                         <RemoteDir>Contents\Resources</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -3681,6 +4275,10 @@
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="OSX32">
+                        <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="OSX64">
                         <RemoteDir>Contents\MacOS</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>

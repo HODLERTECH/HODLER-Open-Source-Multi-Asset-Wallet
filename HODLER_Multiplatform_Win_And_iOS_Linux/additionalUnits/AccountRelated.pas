@@ -188,12 +188,14 @@ begin
 {$IF DEFINED(MSWINDOWS) or DEFINED(LINUX)}
       frmHome.Caption := 'HODLER Open Source Multi-Asset Wallet v' +
         CURRENT_VERSION;
+        {$IFNDEF LINUX}
       Tthread.CreateAnonymousThread(
         procedure
         begin
           sleep(60 * 1000);
           CheckUpdateButtonClick(nil);
         end).Start;
+        {$ENDIF}
 {$ENDIF}
       if currentAccount <> nil then
       begin
@@ -364,13 +366,13 @@ begin
 
       // showmessage(E.Message);
       frmHome.AccountsListPanel.Enabled := true;
-      raise E;
+//      raise E;
     end;
   end;
   if (currentAccount.userSaveSeed = false) then
   begin
 
-    AskForBackup(1500);
+    AskForBackup(3500);
 
     saveSeedInfoShowed := true;
   end;
@@ -624,7 +626,7 @@ begin
       FFrameTake := 0;
       stylo := TStyleManager.Create;
       //LoadStyle(style);
-      LoadStyle('RT_DARK');
+      LoadStyle('RT_WHITE');
       if style = 'RT_DARK' then
         DayNightModeSwitch.IsChecked := true
       else
