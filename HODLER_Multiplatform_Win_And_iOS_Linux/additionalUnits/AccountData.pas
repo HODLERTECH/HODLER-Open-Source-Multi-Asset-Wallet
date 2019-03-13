@@ -58,7 +58,9 @@ type
     procedure changeDescription( id , X : Integer ; newDesc : AnsiString );
 
     function getDecryptedMasterSeed( Password : String ): AnsiString;
-    
+
+    function TokenExistInETH( TokenID : Integer ; ETHAddress : AnsiString ): boolean ;
+
   private
 
     var
@@ -87,6 +89,27 @@ implementation
 uses
   misc, uHome , coinData , nano , languages;
 
+function Account.TokenExistInETH( TokenID : Integer ; ETHAddress : AnsiString ): boolean ;
+var
+  i : Integer;
+begin
+  result := false;
+  for I := 0 to length( myTokens ) -1 do
+  begin
+
+    if myTokens[i].addr = EthAddress then
+    begin
+
+      if myTokens[i].id = TokenID then
+        exit(true);
+
+    end;
+
+  end;
+
+
+end;
+
 function Account.getDecryptedMasterSeed( Password : String ): AnsiString;
 var
   MasterSeed, tced: AnsiString;
@@ -107,6 +130,8 @@ begin
 
                                   exit;}
   end;
+
+  exit(Masterseed);
 
 end;
 

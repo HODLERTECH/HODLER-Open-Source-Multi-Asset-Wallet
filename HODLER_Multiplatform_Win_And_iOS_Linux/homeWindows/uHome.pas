@@ -2813,61 +2813,115 @@ begin
 end;
 
 procedure TfrmHome.CreateCurrencyFromListClick(Sender: TObject);
-var
-  i: Integer;
-  ancp: TNewCryptoVertScrollBox.TAddNewCryptoPanel;
-  WalletInfo: TwalletInfo;
+
 begin
 
-  NotificationLayout.popupPasswordConfirm(procedure ( password : String )
-  begin
-
-  end,
-  procedure ( password : String )
-  begin
-
-  end,
-  'test' );
-
-  for i := 0 to newCryptoVertScrollBox.CoinLayout.children.Count - 1 do
-  begin
-
-    if newCryptoVertScrollBox.CoinLayout.children[i] is TNewCryptoVertScrollBox.TAddNewCryptoPanel
-    then
-      ancp := TNewCryptoVertScrollBox.TAddNewCryptoPanel
-        (newCryptoVertScrollBox.CoinLayout.children[i])
-    else
-      Continue;
-
-    if ancp.checkBox.IsChecked then
+  NotificationLayout.popupPasswordConfirm(
+    procedure(password: String)
+    var
+      MasterSeed: AnsiString;
+    var
+      i: Integer;
+      ancp: TNewCryptoVertScrollBox.TAddNewCryptoPanel;
+      WalletInfo: TwalletInfo;
+      T: Token;
+      ETHAddressForNewToken : AnsiString;
+      countETH : Integer;
     begin
+      try
+        MasterSeed := CurrentAccount.getDecryptedMasterSeed(password);
+      except
+        on E: Exception do
+          popupWindow.create(E.Message);
+      end;
 
-      WalletInfo := coindata.createCoin(newcoinID,
-        getFirstUnusedXforCoin(ancp.Tag), 0, MasterSeed,
-        frmHome.NewCoinDescriptionEdit.Text);
+      for i := 0 to newCryptoVertScrollBox.CoinLayout.children.Count - 1 do
+      begin
 
-      CurrentAccount.AddCoin(WalletInfo);
+        if newCryptoVertScrollBox.CoinLayout.children[i]
+          is TNewCryptoVertScrollBox.TAddNewCryptoPanel then
+          ancp := TNewCryptoVertScrollBox.TAddNewCryptoPanel
+            (newCryptoVertScrollBox.CoinLayout.children[i])
+        else
+          Continue;
+
+        if ancp.checkBox.IsChecked then
+        begin
+
+          WalletInfo := coindata.createCoin(ancp.Tag,
+            getFirstUnusedXforCoin(ancp.Tag), 0, MasterSeed, ancp.Edit.Text);
+
+          CurrentAccount.AddCoin(WalletInfo);
+          TThread.Synchronize(nil,
+            procedure
+            begin
+              CreatePanel(WalletInfo);
+            end);
+
+          startFullfillingKeypool(MasterSeed);
+          MasterSeed := '';
+
+        end;
+
+      end;
+      countETH := 0;
+
+      for I := 0 to length(CurrentAccount.myCoins) -1 do
+      begin
+        if CurrentAccount.myCoins[i].coin = 4 then
+        begin
+
+          ETHAddressForNewToken := CurrentAccount.myCoins[i].addr;
+          countETH := countETH + 1;
+
+        end;
+      end;
+
+      //if countETH = 1 then
+      if true then
+      begin
+
+        {for i := 0 to newCryptoVertScrollBox.TokenLayout.children.Count - 1 do
+        begin
+          if newCryptoVertScrollBox.CoinLayout.children[i]
+            is TNewCryptoVertScrollBox.TAddNewCryptoPanel then
+            ancp := TNewCryptoVertScrollBox.TAddNewCryptoPanel
+              (newCryptoVertScrollBox.CoinLayout.children[i])
+          else
+            Continue;
+
+          T := Token.create(Tcomponent(Sender).Tag, ETHAddressForNewToken );
+
+          T.idInWallet := length(CurrentAccount.myTokens) + 10000;
+
+          CurrentAccount.addToken(T);
+          TThread.Synchronize(nil,
+            procedure
+            begin
+              CreatePanel(T);
+            end);
+
+        end;}
+
+      end
+      else
+      begin
+
+      end;
+      
+
       TThread.Synchronize(nil,
         procedure
         begin
-          CreatePanel(WalletInfo);
+          frmHome.btnSyncClick(nil);
         end);
 
-      // Issue 112 CurrentAccount.userSaveSeed := false;
-      // ?  CurrentAccount.SaveFiles();
-      // askforBackup(1000);
-      startFullfillingKeypool(MasterSeed);
-      MasterSeed := '';
-
-    end;
-
-  end;
-
-  TThread.Synchronize(nil,
-    procedure
+    end,
+    procedure(password: String)
     begin
-      frmHome.btnSyncClick(nil);
-    end);
+
+    end, 'test');
+
 end;
 
 procedure TfrmHome.CurrencyBoxChange(Sender: TObject);
@@ -3001,7 +3055,7 @@ end;
 
 procedure TfrmHome.btnAddContractClick(Sender: TObject);
 var
-  t: Token;
+  T: Token;
 begin
   WalletViewRelated.btnAddContractClick(Sender);
 
@@ -3203,7 +3257,7 @@ var
   VSB: TNewCryptoVertScrollBox;
 begin
 
-  newCryptoVertScrollBox := TNewCryptoVertScrollBox.create(frmHome);
+  newCryptoVertScrollBox := TNewCryptoVertScrollBox.create(frmHome , currentAccount);
   newCryptoVertScrollBox.Parent := AddCurrencyListTabItem;
   newCryptoVertScrollBox.Visible := true;
   newCryptoVertScrollBox.Align := TAlignLayout.Client;
@@ -3294,15 +3348,15 @@ var
   actionListener: TActionList;
 
   // temp : TAddressLabel;
-  t: ThreadKindergarten;
+  T: ThreadKindergarten;
   temp: TThread;
 
 begin
 
-  t := ThreadKindergarten.create();
+  T := ThreadKindergarten.create();
 
   for i := 0 to 10 do
-    t.CreateAnonymousThread(
+    T.CreateAnonymousThread(
       procedure
       var
         j: Integer;
@@ -3317,7 +3371,7 @@ begin
       end).Start;
 
   for i := 0 to 10 do
-    t.CreateAnonymousThread(
+    T.CreateAnonymousThread(
       procedure
       var
         j: Integer;
@@ -3331,7 +3385,7 @@ begin
 
       end).Start;
 
-  t.free;
+  T.free;
 
 end;
 
@@ -4577,7 +4631,7 @@ end;
 
 procedure TfrmHome.AddNewTokenETHPanelClick(Sender: TObject);
 var
-  t: Token;
+  T: Token;
   holder: TfmxObject;
   found: Integer;
 begin

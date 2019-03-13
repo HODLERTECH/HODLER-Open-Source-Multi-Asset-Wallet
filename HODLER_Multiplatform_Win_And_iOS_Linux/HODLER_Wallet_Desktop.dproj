@@ -876,6 +876,14 @@
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>OPENED</ResourceId>
         </RcItem>
+        <RcItem Include="token_icons\ETHTokenTree.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>ETH_TREE</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\ETHTokenTreeShort.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>ETH_TREE_SHORT</ResourceId>
+        </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -1777,6 +1785,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="Languages\PT.lang" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\ETHTokenTreeShort.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -2864,6 +2878,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="Languages\DEU.lang" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\ETHTokenTree.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
