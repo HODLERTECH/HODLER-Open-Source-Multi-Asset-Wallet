@@ -862,7 +862,7 @@ begin
       wd.isCompressed := false;
     end;
     CurrentAccount.AddCoin(wd);
-    CreatePanel(wd);
+    CreatePanel(wd , CurrentAccount , frmhome.walletList);
 
     MasterSeed := '';
 

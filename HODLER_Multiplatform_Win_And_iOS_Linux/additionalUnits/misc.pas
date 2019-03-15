@@ -299,7 +299,7 @@ procedure AddAccountToFile(ac: Account);
 Procedure CreateNewAccountAndSave(name, pass, seed: AnsiString;
   userSaveSeed: boolean);
 
-procedure CreatePanel(crypto: cryptoCurrency);
+procedure CreatePanel(crypto: cryptoCurrency ; FromAccount : Account; inBox : TVertScrollBox );
 
 // procedure creatImportPrivKeyCoinList();
 function getETHValidAddress(address: AnsiString): AnsiString;
@@ -850,13 +850,6 @@ begin
     end;
 
   end;
-  { DebugString := '';
-    for i := 0 to length(Arr) - 1 do
-    DebugString := DebugString + intTostr(arr[i]) + ' ';
-    tthread.Synchronize(nil , procedure
-    begin
-    showmessage(debugString);
-    end); }
 
   result := Length(arr);
   for i := 0 to Length(arr) - 1 do
@@ -1756,7 +1749,7 @@ begin
   // bg.Index
 end;
 
-procedure CreatePanel(crypto: cryptoCurrency);
+procedure CreatePanel(crypto: cryptoCurrency ; FromAccount : Account ; inBox : TVertScrollBox);
 var
   panel: TPanel;
   coinName: TLabel;
@@ -1780,7 +1773,7 @@ begin
     end
     else
     begin
-      tempBalances := CurrentAccount.aggregateBalances(TWalletInfo(crypto));
+      tempBalances := FromAccount.aggregateBalances(TWalletInfo(crypto));
       ccEmpty := (tempBalances.confirmed > 0);
 
     end;
@@ -1795,10 +1788,10 @@ begin
   with frmhome.walletList do
   begin
 
-    panel := TPanel.Create(frmhome.walletList);
+    panel := TPanel.Create( inbox );
     panel.Align := panel.Align.alTop;
     panel.Height := 48;
-    panel.parent := frmhome.walletList;
+    panel.parent := inbox ;
     panel.TagObject := crypto;
     setBlackBackground(panel);
     panel.Position.Y := crypto.orderInWallet;
@@ -1811,13 +1804,13 @@ begin
 {$ELSE}
     panel.OnClick := frmhome.OpenWalletView;
 {$ENDIF}
-    adrLabel := TLabel.Create(frmhome.walletList);
+    adrLabel := TLabel.Create(panel);
     adrLabel.StyledSettings := adrLabel.StyledSettings - [TStyledSetting.size];
     adrLabel.TextSettings.Font.size := dashBoardFontSize;
     adrLabel.parent := panel;
     if crypto is TWalletInfo then
     begin
-      adrLabel.Text := CurrentAccount.getDescription(TWalletInfo(crypto).coin,
+      adrLabel.Text := FromAccount.getDescription(TWalletInfo(crypto).coin,
         TWalletInfo(crypto).x);
     end
     else
@@ -1843,7 +1836,7 @@ begin
     adrLabel.TextSettings.WordWrap := false;
     adrLabel.TagString := 'name';
     //
-    balLabel := TLabel.Create(frmhome.walletList);
+    balLabel := TLabel.Create( panel );
     balLabel.StyledSettings := balLabel.StyledSettings - [TStyledSetting.size];
 
     balLabel.parent := panel;
@@ -1852,9 +1845,9 @@ begin
       if crypto is TWalletInfo then
       begin
         balLabel.Text := BigIntegerBeautifulStr
-          (CurrentAccount.aggregateBalances(TWalletInfo(crypto)).confirmed,
+          (FromAccount.aggregateBalances(TWalletInfo(crypto)).confirmed,
           crypto.decimals) + '    ' +
-          floatToStrF(CurrentAccount.aggregateConfirmedFiats(TWalletInfo(crypto)
+          floatToStrF(fromAccount.aggregateConfirmedFiats(TWalletInfo(crypto)
           ), ffFixed, 15, 2) + ' ' + frmhome.CurrencyConverter.symbol;
       end
       else
@@ -1878,7 +1871,7 @@ begin
     balLabel.Margins.Right := 15;
     balLabel.TagString := 'balance';
     //
-    coinIMG := TImage.Create(frmhome.walletList);
+    coinIMG := TImage.Create(panel);
     coinIMG.parent := panel;
     try
       if crypto is TWalletInfo then

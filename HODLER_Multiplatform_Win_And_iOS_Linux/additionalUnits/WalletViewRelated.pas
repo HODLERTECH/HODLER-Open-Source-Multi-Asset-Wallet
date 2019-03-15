@@ -151,7 +151,7 @@ begin
   end;
 
    CurrentAccount.addToken(T);
-    CreatePanel(T);
+    CreatePanel(T , CurrentAccount , frmhome.walletList);
     holder := TfmxObject.Create(nil);
     holder.TagObject := T;
     frmhome.OpenWalletView(holder, PointF(0, 0));
@@ -259,7 +259,7 @@ begin
     T.idInWallet := Length(CurrentAccount.myTokens) + 10000;
 
     CurrentAccount.addToken(T);
-    CreatePanel(T);
+    CreatePanel(T , CurrentAccount , frmhome.walletList);
     holder := TfmxObject.Create(nil);
     holder.TagObject := T;
     frmhome.OpenWalletView(holder, PointF(0, 0));
@@ -464,7 +464,7 @@ begin
     t.idInWallet := length(CurrentAccount.myTokens) + 10000;
     CurrentAccount.addToken(t);
     CurrentAccount.SaveFiles();
-    CreatePanel(T);
+    CreatePanel(T , CurrentAccount , frmhome.walletList);
     frmhome.btnSyncClick(nil);
     switchTab(frmhome.PageControl, HOME_TABITEM);
   end
@@ -517,7 +517,7 @@ begin
     TThread.Synchronize(nil,
       procedure
       begin
-        CreatePanel(wd);
+        CreatePanel(wd, CurrentAccount , frmhome.walletList);
       end);
 
     // Issue 112 CurrentAccount.userSaveSeed := false;
@@ -535,7 +535,7 @@ begin
       T.idInWallet := Length(CurrentAccount.myTokens) + 10000;
 
       CurrentAccount.addToken(T);
-      CreatePanel(T);
+      CreatePanel(T , CurrentAccount , frmhome.walletList);
 
 
 
@@ -552,7 +552,7 @@ begin
 
       CurrentAccount.addToken(t);
       // CurrentAccount.SaveFiles();
-      CreatePanel(T);
+      CreatePanel(T, CurrentAccount , frmhome.walletList);
 
       //switchTab(PageControl, walletView);
 
@@ -655,7 +655,7 @@ begin
         AccountForSearchToken.addToken(T);
         AccountForSearchToken.SaveFiles();
         if AccountForSearchToken = CurrentAccount then
-          CreatePanel(T);
+          CreatePanel(T, CurrentAccount , frmhome.walletList);
       end
       else
       begin
@@ -1939,7 +1939,7 @@ begin
         procedure
         begin
           CurrentAccount.AddCoin(wd);
-          CreatePanel(wd);
+          CreatePanel(wd, CurrentAccount , frmhome.walletList);
         end);
       CurrentAccount.SaveFiles();
       MasterSeed := '';
@@ -2017,7 +2017,7 @@ begin
   TThread.Synchronize(nil,
     procedure
     begin
-      CreatePanel(walletInfo);
+      CreatePanel(walletInfo, CurrentAccount , frmhome.walletList);
     end);
 
   // Issue 112 CurrentAccount.userSaveSeed := false;
@@ -2855,7 +2855,7 @@ begin
   T.idInWallet := Length(CurrentAccount.myTokens) + 10000;
 
   CurrentAccount.addToken(T);
-  CreatePanel(T);
+  CreatePanel(T, CurrentAccount , frmhome.walletList);
   holder := TfmxObject.Create(nil);
   holder.TagObject := T;
   frmhome.OpenWalletView(holder, PointF(0, 0));

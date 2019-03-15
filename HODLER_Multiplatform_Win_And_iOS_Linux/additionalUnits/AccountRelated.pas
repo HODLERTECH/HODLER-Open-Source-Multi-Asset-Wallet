@@ -332,13 +332,13 @@ begin
         end;
 
       if not exist then
-        CreatePanel(cc);
+        CreatePanel(cc , CurrentAccount , frmhome.walletList);
 
     end;
 
     for i := 0 to length(currentAccount.myTokens) - 1 do
     begin
-      CreatePanel(currentAccount.myTokens[i]);
+      CreatePanel(currentAccount.myTokens[i] , CurrentAccount , frmhome.walletList);
     end;
 
     refreshOrderInDashBrd();
