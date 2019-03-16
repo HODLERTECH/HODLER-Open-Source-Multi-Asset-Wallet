@@ -839,7 +839,7 @@ type
     CreateCurrencyFromList: TButton;
     ToolBar20: TToolBar;
     Label31: TLabel;
-    Button13: TButton;
+    AddNewCryptoBackButton: TButton;
     // Panel27: TPanel;
     // PasswordInfoStaticLabel: TLabel;
 
@@ -1113,6 +1113,7 @@ type
     procedure UnlockPengingTransactionClick(Sender: TObject);
     procedure Button11Click(Sender: TObject);
     procedure CreateCurrencyFromListClick(Sender: TObject);
+    procedure AddNewCryptoBackButtonClick(Sender: TObject);
     // procedure UserReportSendLogsSwitchClick(Sender: TObject);
 
   private
@@ -2496,6 +2497,11 @@ begin
   // AccountsListPanel.Visible := false;
 end;
 
+procedure TfrmHome.AddNewCryptoBackButtonClick(Sender: TObject);
+begin
+  switchTab(PageControl, HOME_TABITEM);
+end;
+
 procedure TfrmHome.addNewWalletPanelClick(Sender: TObject);
 begin
   WalletViewRelated.addNewWalletPanelClick(Sender);
@@ -3150,10 +3156,24 @@ var
   VSB: TNewCryptoVertScrollBox;
 begin
 
-  newCryptoVertScrollBox := TNewCryptoVertScrollBox.create(frmHome , currentAccount);
-  newCryptoVertScrollBox.Parent := AddCurrencyListTabItem;
-  newCryptoVertScrollBox.Visible := true;
-  newCryptoVertScrollBox.Align := TAlignLayout.Client;
+  if newCryptoVertScrollBox = nil then
+  begin
+    newCryptoVertScrollBox := TNewCryptoVertScrollBox.create(frmHome , currentAccount);
+    newCryptoVertScrollBox.Parent := AddCurrencyListTabItem;
+    newCryptoVertScrollBox.Visible := true;
+    newCryptoVertScrollBox.Align := TAlignLayout.Client;
+  end
+  else
+  if newCryptoVertScrollBox.ac <> CurrentAccount  then
+  begin
+    newCryptoVertScrollBox.DisposeOf;
+    newCryptoVertScrollBox := TNewCryptoVertScrollBox.create(frmHome , currentAccount);
+    newCryptoVertScrollBox.Parent := AddCurrencyListTabItem;
+    newCryptoVertScrollBox.Visible := true;
+    newCryptoVertScrollBox.Align := TAlignLayout.Client;
+  end;
+
+  
 
   { for I := 0 to length(availableCoin) - 1 do
     begin

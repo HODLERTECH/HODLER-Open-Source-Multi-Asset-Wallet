@@ -77,7 +77,8 @@ type
       public
         ETHAddress : AnsiString;
         coinName: TLabel;
-        coinIMG: TImage;
+        openImage, closeImage, coinIMG: TImage;
+
 
       constructor Create(AOwner: TComponent); override;
 
@@ -122,6 +123,7 @@ type
     procedure clear();
     procedure prepareForAccount(acc: Account);
     procedure createCryptoAndAddPanelTo(box: TVertScrollBox);
+    procedure RecalcETHAddTokenLayoutSize();
 
   end;
 
@@ -136,8 +138,25 @@ begin
   RegisterComponents('Samples', [TNewCryptoVertScrollBox]);
 end;
 
-procedure TNewCryptoVertScrollBox.createCryptoAndAddPanelTo
-  (box: TVertScrollBox);
+procedure TNewCryptoVertScrollBox.RecalcETHAddTokenLayoutSize();
+var
+  temp : Single ;
+  i : Integer;
+begin
+
+  temp := 0;
+
+  for I := 0 to ETHAddTokenLayout.children.count -1 do
+  begin
+    temp := temp + TETHListPanel( ETHAddTokenLayout.children[i] ).height;
+  end;
+
+
+  ETHAddTokenLayout.height := temp;
+
+end;
+
+procedure TNewCryptoVertScrollBox.createCryptoAndAddPanelTo(box: TVertScrollBox);
 begin
 
   frmhome.NotificationLayout.popupPasswordConfirm(
@@ -158,7 +177,10 @@ begin
         MasterSeed := CurrentAccount.getDecryptedMasterSeed(password);
       except
         on E: Exception do
+        begin
           popupWindow.Create(E.Message);
+          exit;
+        end;
       end;
 
       for i := 0 to CoinLayout.children.Count - 1 do
@@ -259,6 +281,14 @@ begin
                 begin
                   CreatePanel(T, ac, box);
                 end);
+
+            {end
+            else
+            begin
+              if ac.TokenExistInETH( ancp.Tag , tempTokenlist.ethPanel.ETHAddress) then
+              begin
+
+              end; }
 
             end;
           end;
@@ -376,9 +406,12 @@ end;
 
 procedure TNewCryptoVertScrollBox.TETHListPanel.PanelClick(Sender: TObject;
 const Point: TPointF);
+
 begin
 
   tokenList.Visible := not tokenList.Visible;
+  ethPanel.closeImage.Visible := tokenlist.Visible;
+  ethPanel.openImage.Visible := not TokenList.Visible;
   if tokenList.Visible = true then
   begin
     height := tokenList.height + 48;
@@ -387,6 +420,7 @@ begin
   begin
     height := 48;
   end;
+  TNewCryptoVertScrollBox( parent.parent.parent ).RecalcETHAddTokenLayoutSize();
 
 end;
 
@@ -435,6 +469,29 @@ begin
   coinIMG.Margins.Bottom := 8;
   coinIMG.width := 50;
   coinIMG.HitTest := false;
+
+  closeImage := TImage.create(Self);
+  closeImage.parent := self;
+  closeImage.Align := TAlignLayout.Mostright;
+  closeImage.Bitmap.loadFromStream( ResourceMenager.getAssets('UP_ARROW') );
+  closeImage.Margins.left := 14;
+  closeImage.Margins.Right := 0;
+  closeImage.Margins.Bottom := 20;
+  closeImage.Margins.Top := 20;
+  closeImage.width := 44;
+  CloseImage.hittest := false;
+  closeImage.WrapMode := TimageWrapMode.fit;
+
+  openImage := Timage.Create(self);
+  openImage.Parent := self;
+  openImage.Align := closeImage.Align;
+  openImage.Bitmap.loadFromStream( ResourceMenager.getAssets('DOWN_ARROW') );
+  openImage.Margins := closeImage.Margins;
+  openImage.Width := closeImage.Width;
+  openImage.HitTest := false;
+  openimage.Visible := false;
+  openImage.wrapmode := closeImage.WrapMode;
+
 end;
 
 constructor TNewCryptoVertScrollBox.TETHListPanel.Create(AOwner: TComponent;
@@ -526,7 +583,14 @@ begin
   begin
     if Token.availableToken[i].address = '' then
       Continue;
+    if (wd <> nil) and (ac <> nil) then
+    begin
+      if ac.TokenExistinETh(Token.availableToken[i].id, wd.addr) then
+      begin
 
+         continue;
+      end;
+    end;
     countToken := countToken + 1;
 
     ancp := TAddNewTokenPanel.Create(self);
@@ -549,8 +613,8 @@ begin
     begin
       if ac.TokenExistinETh(Token.availableToken[i].id, wd.addr) then
       begin
-
-        ancp.checkBox.IsChecked := true;
+        ancp.Visible :=false;
+        ancp.checkBox.IsChecked := false;
         // ancp.Edit.Visible := true;
 
       end;
