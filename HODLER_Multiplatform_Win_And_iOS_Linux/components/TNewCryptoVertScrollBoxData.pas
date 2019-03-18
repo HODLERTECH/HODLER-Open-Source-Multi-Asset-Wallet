@@ -6,7 +6,7 @@ uses
   System.SysUtils, System.Classes, FMX.Types, FMX.Controls, FMX.Layouts,
   FMX.Edit, FMX.StdCtrls, FMX.Clipboard, FMX.Platform, FMX.Objects, AccountData,
   System.Types, StrUtils, popupwindowData, coinData, TokenData,
-  walletStructureData;
+  walletStructureData , System.Generics.Collections , KeypoolRelated;
 
 type
   TNewCryptoVertScrollBox = class(TVertScrollBox)
@@ -61,6 +61,7 @@ type
 
     //private
     //  coinAddress: AnsiString;
+    list : Tlist<TAddNewTokenPanel>;
 
     public
       function countChecked(): Integer;
@@ -69,6 +70,7 @@ type
       constructor Create(AOwner: TComponent;
         coinPanel: TAddNewCryptoPanel); overload;
       // procedure setCoinAddress( address : AnsiString );
+      destructor destroy(); Override;
 
     end;
 
@@ -106,6 +108,7 @@ type
   published
 
     constructor Create(AOwner: TComponent; acc: Account);
+    destructor destroy(); Override;
 
   public
 
@@ -114,6 +117,8 @@ type
     ETHAddTokenLayout: Tlayout;
     ETHTokenLayout: Tlayout;
     tokenList: TNewTokenList;
+
+    coinlist : TList<TAddNewCryptoPanel>;
 
     ethPanel: TAddNewCryptoPanel;
 
@@ -298,7 +303,7 @@ begin
 
       end;
 
-      // startFullfillingKeypool(MasterSeed);
+      startFullfillingKeypool(MasterSeed);
       TThread.Synchronize(nil,
         procedure
         begin
@@ -309,7 +314,7 @@ begin
     procedure(password: String)
     begin
 
-    end, 'test');
+    end, 'Please insert password to continue.' , 'Continue', 'Cancel');
 
 end;
 
@@ -523,6 +528,11 @@ begin
   height := tokenList.height + ethPanel.height;
 
 end;
+destructor TNewCryptoVertScrollBox.TNewTokenList.destroy();
+begin
+  list.disposeof();
+  inherited;
+end;
 
 constructor TNewCryptoVertScrollBox.TNewTokenList.Create(AOwner: TComponent;
 coinPanel: TAddNewCryptoPanel);
@@ -533,6 +543,7 @@ var
 begin
 
   inherited Create(AOwner);
+  list := TList<TAddNewTokenPanel>.create();
   countToken := 0;
   for i := 0 to length(Token.availableToken) - 1 do
   begin
@@ -559,7 +570,7 @@ begin
 
     ancp.checkBox.IsChecked := false;
     ancp.Edit.Visible := false;
-
+    list.add(ancp);
   end;
 
   ancp.treeImage.Bitmap.LoadFromStream
@@ -578,6 +589,7 @@ var
 begin
 
   inherited Create(AOwner);
+  list := TList<TAddNewTokenPanel>.create();
   countToken := 0;
   for i := 0 to length(Token.availableToken) - 1 do
   begin
@@ -626,6 +638,7 @@ begin
       // ancp.Edit.Visible := false;
     end;
 
+    list.add(ancp);
   end;
 
   ancp.treeImage.Bitmap.LoadFromStream
@@ -636,30 +649,80 @@ begin
 end;
 
 procedure TNewCryptoVertScrollBox.prepareForAccount(acc: Account);
+var
+  i , CountETH : Integer;
+  ethp: TNewCryptoVertScrollBox.TETHListPanel;
+  countHeight : Single;
 begin
 
+  for i := ETHAddTokenLayout.Children.Count - 1 downto 0 do
+  begin
+    if ETHAddTOkenLayout.Children[i] is TETHListPanel then
+    begin
+       ETHAddTOkenLayout.Children[i].DisposeOf;
+    end;
+  end;
+
+  countETH := 0;
+  countHeight := 0;
+  for i := 0 to length(acc.myCoins) - 1 do
+  begin
+
+    if acc.myCoins[i].coin = 4 then
+    begin
+
+      countETH := countETH + 1;
+      ethp := TETHListPanel.Create(ETHAddTokenLayout, acc.myCoins[i], acc);
+      ethp.parent := ETHAddTokenLayout;
+      ethp.Align := tAlignLayout.Top;
+      countHeight := countHeight + ethp.Height;
+    end;
+
+  end;
+  if countETH = 0 then
+  begin
+
+  end
+  else
+  begin
+
+    ETHAddTokenLayout.height := countHeight + 48;
+
+  end;
 end;
 
 procedure TNewCryptoVertScrollBox.clear();
 var
-  i: Integer;
+  i , j: Integer;
 begin
 
-  for i := 0 to CoinLayout.ChildrenCount - 1 do
+  for i := 0 to coinlist.count - 1 do
   begin
-
-    if CoinLayout.children[i] is TEdit then
-      TEdit(CoinLayout.children[i]).Text := '';
-
+    coinlist[i].checkbox.ischecked := false;
   end;
 
-  { for I := 0 to TokenLayout.ChildrenCount -1  do
+  ethpanel.checkBox.Enabled := true;
+
+  for i := 0 to tokenList.list.count - 1 do
+  begin
+    tokenList.list[i].checkBox.IsChecked := false;
+  end;
+
+
+  for j := 0 to ETHAddTokenLayout.children.count - 1 do
+  begin
+
+    if ETHAddTokenLayout.children[j] is TETHListPanel then
     begin
 
-    if TokenLayout.Children[i] is TEdit then
-    Tedit(TokenLayout.Children[i]).Text := '';
+      for i := 0 to TETHListPanel( ETHAddTokenLayout.children[j] ).tokenList.list.Count - 1 do
+      begin
+        TETHListPanel( ETHAddTokenLayout.children[j] ).tokenList.list[i].checkBox.IsChecked := false;
+      end;
 
-    end; }
+    end;
+
+  end;
 
 end;
 
@@ -667,6 +730,14 @@ procedure TNewCryptoVertScrollBox.setETHWalletForNewTokens(newETH: TwalletInfo);
 begin
 
   ETHAddressForNewToken := newETH.addr;
+
+end;
+
+destructor TNewCryptoVertScrollBox.destroy();
+begin
+
+  coinlist.disposeof();
+  inherited;
 
 end;
 
@@ -682,7 +753,7 @@ var
 begin
 
   inherited Create(AOwner);
-
+  coinList := TList<TAddnewCryptoPanel>.create();
   ac := acc;
 
   countToken := 0;
@@ -730,7 +801,7 @@ begin
       ETHTokenLayout.height := ethPanel.height + tokenList.height;
 
     end;
-
+    coinList.add(ancp);
   end;
   CoinLayout.height := ETHTokenLayout.height + (length(availableCoin)) * 48;
 
@@ -745,7 +816,9 @@ begin
   AddTokenToETH.TextSettings.HorzAlign := TTextAlign.Center;
   AddTokenToETH.height := 48;
 
-  countETH := 0;
+  prepareForAccount(acc);
+
+  {countETH := 0;
   for i := 0 to length(acc.myCoins) - 1 do
   begin
 
@@ -769,7 +842,7 @@ begin
 
     ETHAddTokenLayout.height := countETH * (ethp.height) + 48;
 
-  end;
+  end;   }
 
   { for i := 0 to length(Token.availableToken) - 1 do
     begin

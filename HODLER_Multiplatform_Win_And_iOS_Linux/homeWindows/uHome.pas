@@ -3162,18 +3162,10 @@ begin
     newCryptoVertScrollBox.Parent := AddCurrencyListTabItem;
     newCryptoVertScrollBox.Visible := true;
     newCryptoVertScrollBox.Align := TAlignLayout.Client;
-  end
-  else
-  if newCryptoVertScrollBox.ac <> CurrentAccount  then
-  begin
-    newCryptoVertScrollBox.DisposeOf;
-    newCryptoVertScrollBox := TNewCryptoVertScrollBox.create(frmHome , currentAccount);
-    newCryptoVertScrollBox.Parent := AddCurrencyListTabItem;
-    newCryptoVertScrollBox.Visible := true;
-    newCryptoVertScrollBox.Align := TAlignLayout.Client;
   end;
+  newCryptoVertScrollBox.prepareForAccount( currentAccount );
+  newCryptoVertScrollBox.clear;
 
-  
 
   { for I := 0 to length(availableCoin) - 1 do
     begin
