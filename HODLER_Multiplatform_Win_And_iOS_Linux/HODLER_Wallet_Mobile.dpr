@@ -102,7 +102,6 @@ uses
   FMX.Ani in 'FMX.Ani.pas',
   DW.ThreadedTimer in 'DW.ThreadedTimer.pas',
   cryptoCurrencyData in 'coinCode\cryptoCurrencyData.pas',
-  SyncThr in 'additionalUnits\SyncThr.pas',
   languages in 'Languages\languages.pas',
   CurrencyConverter in 'additionalUnits\CurrencyConverter.pas',
   WIF in 'additionalUnits\WIF.pas',
@@ -143,7 +142,10 @@ uses
   TCopyableAddressLabelData in 'components\TCopyableAddressLabelData.pas',
   TCopyableAddressPanelData in 'components\TCopyableAddressPanelData.pas',
   ThreadKindergartenData in 'additionalUnits\ThreadKindergartenData.pas',
-  uNanoPowAS in 'NanoPoWAndroidService\uNanoPowAS.pas' {DM: TAndroidService};
+  uNanoPowAS in 'NanoPoWAndroidService\uNanoPowAS.pas' {DM: TAndroidService},
+  HistoryPanelData in 'components\HistoryPanelData.pas',
+  SyncThr in 'additionalUnits\SyncThr.pas',
+  ComponentPoolData in 'additionalUnits\additionalClass\ComponentPoolData.pas';
 
 {$R *.res}
 

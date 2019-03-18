@@ -34,9 +34,11 @@ type
 
     procedure _onYesClick(sender: TObject);
     procedure _onNoClick(sender: TObject);
-    // procedure _OnExit(sender: TObject);
-    // procedure checkProtect(Sender : TObject );
-
+ 
+    //procedure _OnExit(sender: TObject);
+    //procedure checkProtect(Sender : TObject );
+    procedure OnKeybaordPress(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+ 
     constructor create(Owner: TComponent; Yes, No: TProc<AnsiString>;
       mess: AnsiString; YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
       icon: integer = 2);
@@ -72,7 +74,10 @@ type
     // procedure _OnExit(sender: TObject);
     procedure checkProtect(sender: TObject);
 
-    constructor create(Owner: TComponent; Yes, No: TProc; mess: AnsiString;
+    procedure OnKeybaordPress(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
+
+
+    constructor create( Owner : TComponent ; Yes, No: TProc; mess: AnsiString;
       YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
       icon: integer = 2);
 
@@ -94,6 +99,8 @@ type
 
     _onYesPress: TProc;
     _onNoPress: TProc;
+
+
 
     procedure _onYesClick(sender: TObject);
     procedure _onNoClick(sender: TObject);
@@ -127,9 +134,11 @@ type
 
     procedure ClosePopup();
 
-    procedure moveCurrentPopupToTop();
-    procedure centerCurrentPopup();
-    // procedure layoutClick(Sender : TObject);
+  procedure moveCurrentPopupToTop();
+  procedure centerCurrentPopup();
+
+  procedure addPopupToStack( popup :TLayout );
+  //procedure layoutClick(Sender : TObject);
 
     // procedure AddNotification( msg : AnsiString ; time : integer = 15 );
 
@@ -161,6 +170,7 @@ implementation
 
 uses
   uhome;
+
 
 procedure TNotificationLayout.TryShowBackground();
 begin
@@ -223,14 +233,43 @@ begin
       inThinking.Visible := false;
       TryHideBackGround();
     end);
+end;
+procedure TNotificationLayout.addPopupToStack( popup :TLayout );
+begin
+
+  if (popupStack.Count = 0) and (CurrentPOpup = nil) then
+  begin
+
+    CurrentPOpup := popup;
+
+    self.BringToFront;
+
+    //popup.AnimateFloat( 'position.x' , (Self.Width /2 ) - (popup.width /2 ) , 0.2 );
+    popup.Position.X :=   (Self.Width /2 ) - (popup.width /2 ) ;
+    backGround.HitTest := true;
+    background.Visible := true;
+    //backGround.AnimateFloat( 'opacity' , 1 , 0.2 );
+    backGround.Opacity := 1;
+    popup.bringTofront();
+
+  end
+  else
+  begin
+
+    popupStack.Push( popup );
+    //popup.Position.X := (Self.Width /2 ) - (popup.width /2 ) ;
+
+  end;
 
 end;
 
 procedure TNotificationLayout.moveCurrentPopupToTop();
 begin
   try
+  
     if CurrentPOpup <> nil then
       CurrentPOpup.AnimateFloat('position.y', 0, 0.2);
+ 
   except
     on E: Exception do
     begin
@@ -263,32 +302,46 @@ begin
       if KeyboardService <> nil then
         KeyboardService.HideVirtualKeyboard;
 {$ENDIF}
-    CurrentPOpup.AnimateFloat('position.x',
-      Self.width + CurrentPOpup.width, 0.2);
 
-    backGround.AnimateFloat('opacity', 0, 0.2);
-    backGround.AnimateInt('visible', 0, 0.2);
-    backGround.HitTest := false;
+  //Currentpopup.AnimateFloat( 'position.x' ,  self.width + currentpopup.width  , 0.2 );
+  CurrentPOpup.Position.X := self.width + currentpopup.width;
 
-    tthread.CreateAnonymousThread(
-      procedure
-      var
-        del: TLayout;
-      begin
-        del := CurrentPOpup;
-        CurrentPOpup := nil;
+  if popupStack.Count <> 0 then
+  begin
 
-        sleep(1000);
+    currentPopup := popupStack.Pop;
+    currentpopup.position.X := (Self.Width /2 ) - (currentpopup.width /2 );
 
-        del.DisposeOf;
-        del := nil;
+  end
+  else
+  begin
 
-      end).Start;
-  except
-    on E: Exception do
+    //backGround.AnimateFloat( 'opacity' , 0 , 0.2 );
+    backGround.Opacity := 0;
+    background.HitTest :=false;
+
+    tthread.CreateAnonymousThread(procedure
+    var
+      del : TLayout;
     begin
-    end;
+      del := CurrentPOpup;
+      CurrentPOpup := nil;
+
+      sleep(1000);
+
+      del.DisposeOf;
+      del := nil;
+
+    end).Start;
+
   end;
+
+
+
+
+
+
+except on E:Exception do begin end; end;
 
 end;
 
@@ -313,14 +366,17 @@ begin
   popup.Position.X := -popup.width;
   popup.Visible := true;
 
-  CurrentPOpup := popup;
+  addPopupToStack( popup );
+
+  {CurrentPOpup := popup;
 
   Self.BringToFront;
 
   popup.AnimateFloat('position.x', (Self.width / 2) - (popup.width / 2), 0.2);
   backGround.HitTest := true;
-  backGround.Visible := true;
-  backGround.AnimateFloat('opacity', 1, 0.2);
+
+  background.Visible := true;
+  backGround.AnimateFloat( 'opacity' , 1 , 0.2 )  }
 
 end;
 
@@ -337,14 +393,17 @@ begin
   popup.Position.X := -popup.width;
   popup.Visible := true;
 
-  CurrentPOpup := popup;
+  addPopupToStack( popup );
+
+  {CurrentPOpup := popup;
 
   Self.BringToFront;
 
   popup.AnimateFloat('position.x', (Self.width / 2) - (popup.width / 2), 0.2);
   backGround.HitTest := true;
-  backGround.Visible := true;
-  backGround.AnimateFloat('opacity', 1, 0.2)
+
+  background.Visible := true;
+  backGround.AnimateFloat( 'opacity' , 1 , 0.2 )}
 
 end;
 
@@ -363,14 +422,16 @@ begin
   popup.Position.X := -popup.width;
   popup.Visible := true;
 
-  CurrentPOpup := popup;
+  addPopupToStack( popup );
+
+  {CurrentPOpup := popup;
 
   Self.BringToFront;
 
   popup.AnimateFloat('position.x', (Self.width / 2) - (popup.width / 2), 0.2);
   backGround.HitTest := true;
-  backGround.Visible := true;
-  backGround.AnimateFloat('opacity', 1, 0.2)
+  background.Visible := true;
+  backGround.AnimateFloat( 'opacity' , 1 , 0.2 ) }
 
 end;
 
@@ -569,6 +630,19 @@ begin
   _NoButton.Text := NoText;
   _NoButton.OnClick := _onNoClick;
 
+  _edit.OnKeyUp := OnKeybaordPress;
+
+
+end;
+
+procedure ProtectedConfirmDialog.OnKeybaordPress(Sender: TObject;
+  var Key: Word; var KeyChar: Char; Shift: TShiftState);
+begin
+  if Key = vkReturn then
+  begin
+    checkProtect(nil);
+  end;
+  
 end;
 
 destructor ProtectedConfirmDialog.destroy;
@@ -677,6 +751,7 @@ begin
   _NoButton.OnClick := _onNoClick;
 
 end;
+
 
 destructor YesNoDialog.destroy;
 begin
@@ -809,6 +884,18 @@ begin
   _NoButton.Parent := _ButtonLayout;
   _NoButton.Text := NoText;
   _NoButton.OnClick := _onNoClick;
+
+  _edit.OnKeyUp := OnkeyBaordPress;
+
+end;
+
+procedure PasswordDialog.OnKeybaordPress(Sender: TObject;
+  var Key: Word; var KeyChar: Char; Shift: TShiftState);
+begin
+  if Key = vkReturn then
+  begin
+    _onyesClick(nil);
+  end;
 
 end;
 

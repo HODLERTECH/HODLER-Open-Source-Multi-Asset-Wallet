@@ -40,9 +40,11 @@ end;
 destructor TRotateImage.destroy();
 begin
 
-  inherited;
-  stop();
 
+  stop();
+  if isOn then
+    timer.WaitFor;
+  inherited;
 end;
 
 procedure TRotateImage.Start();
@@ -52,7 +54,10 @@ begin
   isOn := true;
   timer := TThread.CreateAnonymousThread(
     procedure
-    begin
+
+  var
+    i: Integer;
+  begin
 
       while isOn do
       begin
@@ -63,8 +68,13 @@ begin
             AnimateFloat('RotationAngle', RotationAngle + 180, 1);
 
           end);
-
-        sleep(1000);
+        for i := 0 to 10 do
+        begin
+          if not ison then
+            break;
+          sleep(100);
+        end;
+        //sleep(1000);
 
       end;
 

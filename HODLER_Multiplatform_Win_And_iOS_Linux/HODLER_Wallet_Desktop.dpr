@@ -147,7 +147,10 @@ uses
   TCopyableAddressPanelData in 'components\TCopyableAddressPanelData.pas',
   ThreadKindergartenData in 'additionalUnits\ThreadKindergartenData.pas',
   TAddNewCryptoPanelData in 'components\TAddNewCryptoPanelData.pas',
-  TNewCryptoVertScrollBoxData in 'components\TNewCryptoVertScrollBoxData.pas';
+  TNewCryptoVertScrollBoxData in 'components\TNewCryptoVertScrollBoxData.pas',
+  ComponentPoolData in 'additionalUnits\additionalClass\ComponentPoolData.pas',
+  HistoryPanelData in 'components\HistoryPanelData.pas',
+  CoinPanelData in 'components\CoinPanelData.pas'; 
 
 {$R *.res}
 
@@ -170,6 +173,7 @@ begin
   begin
     try
       Application.Initialize;
+
       Application.FormFactor.Orientations := [TFormOrientation.Portrait];
       Application.CreateForm(TfrmHome, frmhome);
       Application.Run;

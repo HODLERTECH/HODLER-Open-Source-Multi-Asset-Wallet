@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes,
-  System.Variants,
+  System.Variants,  StrUtils,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, Nano,
   System.IOUtils, misc, FMX.Styles,
   FMX.StdCtrls, FMX.Controls.Presentation, Windows, FMX.Layouts, FMX.Platform,
@@ -44,7 +44,8 @@ var
   frmNanoPoW: TfrmNanoPoW;
   stylo: TStyleManager;
   q1: System.Int64;
-  shown:boolean;
+  shown: Boolean;
+
 implementation
 
 {$R *.fmx}
@@ -52,10 +53,12 @@ implementation
 procedure nano_mineBuilt64(cc: NanoCoin);
 var
   block: TNanoBlock;
-  lastHash,s:string;
-  i:integer;
+  lastHash, s: string;
+  i: integer;
+  isCorrupted : boolean;
 begin
-     lastHash:='';
+  lastHash := '';
+  iscorrupted := false;
   repeat
     block := cc.firstBlock;
 
@@ -65,30 +68,49 @@ begin
       TThread.Synchronize(nil,
         procedure
         begin
-          frmNanoPow.list.Items.Add(block.Hash + '  Account: ' +
-            block.account);
+          frmNanoPoW.list.Items.Add(block.Hash + '  Account: ' + block.account);
         end);
-      q1 := GetTickCount;
-      hashCounter := 0;
-      nano_getWork(block);
-      hashCounter := 0;
+      if not isCorrupted then
+      begin
+        q1 := GetTickCount;
+        hashCounter := 0;
+        nano_getWork(block);
+        hashCounter := 0;
 
-     s:= nano_pushBlock(nano_builtToJSON(block));
-  lastHash:=StringReplace(s,'https://www.nanode.co/block/','',[rfReplaceAll]);
-  if isHex(lastHash)=false then lastHash:='';
-  if cc.BlockByPrev(lastHash).account='' then  
-    if lastHash<>'' then
-      nano_pow(lastHash);
+
+
+        s := nano_pushBlock(nano_builtToJSON(block));
+        lastHash := StringReplace(s, 'https://www.nanode.co/block/', '',
+          [rfReplaceAll]);
+        if isHex(lastHash) = false then
+        begin
+
+          if LeftStr( lastHash  , length( 'Transaction failed' ) ) = 'Transaction failed' then
+          begin
+            iscorrupted := true;
+          end;
+
+          //showmessage(lasthash);
+
+          lastHash := '';
+        end;
+
+        if cc.BlockByPrev(lastHash).account = '' then
+          if lastHash <> '' then
+            nano_pow(lastHash);
+
       end;
+    end;
     cc.removeBlock(block.Hash);
   until Length(cc.pendingChain) = 0;
   loadPows;
-  for i:=0 to Length(pows)-1 do
-    if pows[i].work='' then begin
-hashCounter:=0;
-    nano_pow(pows[i].hash);
-hashCounter:=0;
-  end;
+  for i := 0 to Length(pows) - 1 do
+    if pows[i].work = '' then
+    begin
+      hashCounter := 0;
+      nano_pow(pows[i].Hash);
+      hashCounter := 0;
+    end;
 end;
 
 procedure HideAppOnTaskbar(AMainForm: TForm);
@@ -109,32 +131,36 @@ var
 
 begin
   try
-  repeat
-    for path in TDirectory.GetDirectories
-      (IncludeTrailingPathDelimiter({$IF DEFINED(LINUX)}System.IOUtils.TPath.
-      GetDocumentsPath{$ELSE}System.IOUtils.TPath.combine
-      (System.SysUtils.GetEnvironmentVariable('APPDATA'),
-      'hodlertech'){$ENDIF})) do
-    begin
-      if DirectoryExists(TPath.combine(path, 'Pendings')) then
+    repeat
+      for path in TDirectory.GetDirectories
+        (IncludeTrailingPathDelimiter({$IF DEFINED(LINUX)}System.IOUtils.TPath.
+        GetDocumentsPath{$ELSE}System.IOUtils.TPath.combine
+        (System.SysUtils.GetEnvironmentVariable('APPDATA'),
+        'hodlertech'){$ENDIF})) do
       begin
-        cc := NanoCoin.Create();
-        cc.chaindir := TPath.combine(path, 'Pendings');
-        cc.pendingChain := nano_loadChain(TPath.combine(path, 'Pendings'));
-        nano_mineBuilt64(cc);
-        cc.Free;
+        if DirectoryExists(TPath.combine(path, 'Pendings')) then
+        begin
+          cc := NanoCoin.Create();
+          cc.chaindir := TPath.combine(path, 'Pendings');
+          cc.pendingChain := nano_loadChain(TPath.combine(path, 'Pendings'));
+          nano_mineBuilt64(cc);
+          cc.Free;
+        end;
+        Sleep(100);
       end;
-      Sleep(100);
+    until True = false;
+  except
+    on E: Exception do
+    begin
+      mineAll();
     end;
-  until True = false;
-  except on E:Exception do begin
-  mineAll();end;end;
+  end;
 end;
 
 procedure TfrmNanoPoW.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   CanClose := false;
-  frmNanoPow.Hide;
+  frmNanoPoW.Hide;
 end;
 
 procedure TfrmNanoPoW.FormDestroy(Sender: TObject);
@@ -145,19 +171,20 @@ end;
 
 procedure TfrmNanoPoW.FormShow(Sender: TObject);
 begin
-if shown then Exit;
-frmNanoPow.Visible:=false;
-  shown:=true;
+  if shown then
+    Exit;
+  frmNanoPoW.Visible := true;
+  shown := True;
 end;
 
 procedure TfrmNanoPoW.MenuItem1Click(Sender: TObject);
 begin
-  frmNanoPow.Show;
+  frmNanoPoW.Show;
 end;
 
 procedure TfrmNanoPoW.MenuItem2Click(Sender: TObject);
 var
-  x: Integer;
+  x: integer;
 begin
   x := MessageDlg
     ('CAUTION! If you kill NanoPoW, it won''t mine any pending or send block from Hodler Wallet, do you really want to kill process?',
@@ -192,11 +219,13 @@ var
   s: Cardinal;
   speed: single;
 begin
-  HideAppOnTaskbar(frmNanoPow);
+  HideAppOnTaskbar(frmNanoPoW);
   s := (GetTickCount - q1) div 1000;
+  if s = 0 then
+    s := 1;
   speed := ((hashCounter) div s) / 1000;
-  frmNanoPow.Caption := 'Nano PoW Speed: ' + FloatToStrF(speed, ffGeneral,
-    8, 2) + ' kHash/s';
+  frmNanoPoW.Caption := 'Nano PoW Speed: ' + FloatToStrF(speed, ffGeneral, 8, 2)
+    + ' kHash/s';
 end;
 
 procedure RunOnStartupHKCU(const sCmdLine: string);
@@ -220,10 +249,10 @@ end;
 
 procedure TfrmNanoPoW.FormCreate(Sender: TObject);
 begin
-        HOME_PATH := IncludeTrailingPathDelimiter
-        ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetDocumentsPath{$ELSE}System.
-        IOUtils.TPath.combine(System.SysUtils.GetEnvironmentVariable('APPDATA'),
-        'hodlertech'){$ENDIF});
+  HOME_PATH := IncludeTrailingPathDelimiter
+    ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetDocumentsPath{$ELSE}System.
+    IOUtils.TPath.combine(System.SysUtils.GetEnvironmentVariable('APPDATA'),
+    'hodlertech'){$ENDIF});
   TrayWnd := AllocateHWnd(TrayWndProc);
   with TrayIconData do
   begin
@@ -245,8 +274,8 @@ begin
       mineAll()
     end).Start;
   RunOnStartupHKCU(ParamStr(0));
-  frmNanoPow.Visible:=false;
-  shown:=False;
+  frmNanoPoW.Visible := false;
+  shown := false;
 end;
 
 end.

@@ -4,8 +4,8 @@
         <ProjectVersion>18.6</ProjectVersion>
         <FrameworkType>FMX</FrameworkType>
         <MainSource>HODLER_Wallet_Mobile.dpr</MainSource>
-        <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Base>True</Base> 
+        <Config Condition="'$(Config)'==''">Release</Config> 
         <Platform Condition="'$(Platform)'==''">Android</Platform>
         <TargetedPlatforms>1247</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -674,8 +674,8 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="additionalUnits\bech32.pas"/>
         <DCCReference Include="FMX.Ani.pas"/>
         <DCCReference Include="DW.ThreadedTimer.pas"/>
-        <DCCReference Include="coinCode\cryptoCurrencyData.pas"/>
-        <DCCReference Include="additionalUnits\SyncThr.pas"/>
+        <DCCReference Include="coinCode\cryptoCurrencyData.pas"/> 
+        <DCCReference Include="additionalUnits\SyncThr.pas"/> 
         <DCCReference Include="Languages\languages.pas"/>
         <DCCReference Include="additionalUnits\CurrencyConverter.pas"/>
         <DCCReference Include="additionalUnits\WIF.pas"/>
@@ -721,6 +721,8 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <FormType>dfm</FormType>
             <DesignClass>TAndroidService</DesignClass>
         </DCCReference>
+        <DCCReference Include="components\HistoryPanelData.pas"/>         
+        <DCCReference Include="additionalUnits\additionalClass\ComponentPoolData.pas"/>
         <RcItem Include="Languages\PT.lang">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
@@ -962,6 +964,11 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <Disabled/>
         </JavaReference>
         <RcItem Include="Jet.style">
+            <ContainerId>ResourceItem</ContainerId>
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>RT_DARK_old</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\CharocalExpressive.style">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>RT_DARK</ResourceId>
@@ -1861,6 +1868,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="token_icons\2071.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\CharocalExpressive.style" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -4268,11 +4281,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
                 </DeployClass>
                 <DeployClass Name="DependencyFramework">
                     <Platform Name="OSX32">
-                        <RemoteDir>Contents\MacOS</RemoteDir>
-                        <Operation>1</Operation>
-                        <Extensions>.framework</Extensions>
-                    </Platform>
-                    <Platform Name="OSX64">
                         <RemoteDir>Contents\MacOS</RemoteDir>
                         <Operation>1</Operation>
                         <Extensions>.framework</Extensions>

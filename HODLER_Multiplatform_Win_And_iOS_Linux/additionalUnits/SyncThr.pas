@@ -400,13 +400,13 @@ begin
     mutex := TSemaphore.Create();
   end;
 
-  TThread.Synchronize(TThread.CurrentThread,
+  {TThread.Synchronize(TThread.CurrentThread,
     procedure
     begin
       frmHome.DashBrdProgressBar.Max := Length(CurrentAccount.myCoins) +
         Length(CurrentAccount.myTokens);
       frmHome.DashBrdProgressBar.value := 0;
-    end);
+    end);   }
 
   for i in [0, 1, 2, 3, 4, 5, 6, 7] do
   begin
@@ -421,6 +421,7 @@ begin
         wi: TWalletInfo;
         wd: TObject;
         url, s: string;
+        temp : String;
 
       begin
 
@@ -431,26 +432,38 @@ begin
         try
           if id in [4, 8] then
           begin
+
+
             for wi in CurrentAccount.myCoins do
+            begin
+
+              if TThread.CurrentThread.CheckTerminated then
+                Exit();
+
               if wi.coin in [4, 8] then
                 SynchronizeCryptoCurrency(wi);
+            end;
 
           end
           else
           begin
             s := batchSync(id);
-            url := HODLER_URL + '/batchSync0.3.2.php?coin=' +
-              availablecoin[id].name;
+ 
+            url := HODLER_URL + '/batchSync0.3.2.php?coin=' + availablecoin[id].name;
+
+            temp := postDataOverHTTP(url, s, firstSync, True);
             if TThread.CurrentThread.CheckTerminated then
+              Exit();
+            parseSync( temp );
+          end;
+          if TThread.CurrentThread.CheckTerminated then
               exit();
-            parseSync(postDataOverHTTP(url, s, firstSync, True));
-          end;              if TThread.CurrentThread.CheckTerminated then
-              exit();
+ 
           TThread.CurrentThread.Synchronize(nil,
             procedure
             begin
 
-              updateBalanceLabels;
+              updateBalanceLabels(id);
             end);
         except
           on e: exception do
@@ -460,12 +473,12 @@ begin
         end;
         semaphore.Release();
 
-        TThread.CurrentThread.Synchronize(nil,
+        {TThread.CurrentThread.Synchronize(nil,
           procedure
           begin
             frmHome.DashBrdProgressBar.value :=
               frmHome.RefreshProgressBar.value + 1;
-          end);
+          end);   }
 
       end).Start();
 
@@ -515,16 +528,16 @@ begin
 
   end;
 
-  while semaphore.CurrentCount <> 8 do
+  while ( semaphore <> nil ) and ( semaphore.CurrentCount <> 8 ) do
   begin
     if TThread.CurrentThread.CheckTerminated then
       exit();
     sleep(50);
   end;
-  { tthread.Synchronize(nil , procedure
+   {tthread.Synchronize(nil , procedure
     begin
     showmessage( floatToStr( globalLoadCacheTime ) );
-    end); }
+    end);   }
 
   CurrentAccount.SaveFiles();
   firstSync := false;
@@ -840,23 +853,30 @@ begin
 end;
 
 procedure SynchronizeBalanceThread.Execute();
+var
+dataTemp : ansiString;
 begin
 
   inherited;
 
-  frmHome.DashBrdProgressBar.value := 0;
-  frmHome.RefreshProgressBar.value := 0;
+  //frmHome.DashBrdProgressBar.value := 0;
+  //frmHome.RefreshProgressBar.value := 0;
 
   startTime := now;
 
   with frmHome do
   begin
+ 
+      dataTemp := getDataOverHTTP(HODLER_URL + 'fiat.php');
+      if TThread.CurrentThread.CheckTerminated then
+      Exit();
+ 
 
-    TThread.Synchronize(nil,
+    TThread.Synchronize(nil, 
       procedure
       begin
 
-        synchronizeCurrencyValue();
+        synchronizeCurrencyValue(dataTemp);
 
         RefreshWalletView.Enabled := false;
         RefreshProgressBar.Visible := True;
@@ -889,16 +909,28 @@ begin
       procedure
       begin
         repaintWalletList;
+      end);
 
+    TThread.Synchronize(TThread.CurrentThread,
+      procedure
+      begin
         if PageControl.ActiveTab = walletView then
         begin
+          try
+            reloadWalletView;
+          except on E: Exception do
+          end;
 
-          reloadWalletView;
 
 
           // createHistoryList( CurrentCryptoCurrency );
 
         end;
+      end);
+
+        TThread.Synchronize(TThread.CurrentThread,
+      procedure
+      begin
 
         TLabel(frmHome.FindComponent('globalBalance')).text :=
           floatToStrF(currencyConverter.calculate(globalFiat), ffFixed, 9, 2);
@@ -1209,6 +1241,7 @@ var
   twi: TWalletInfo;
 var
   segwit, cash, compatible, legacy: AnsiString;
+  pub : ansiString;
 begin
 
   result := false;
@@ -1221,10 +1254,19 @@ begin
     if twi.coin <> coinid then
       continue;
 
-    segwit := lowercase(generatep2wpkh(twi.pub, availablecoin[twi.coin].hrp));
-    compatible := lowercase(generatep2sh(twi.pub,
-      availablecoin[twi.coin].p2sh));
-    legacy := generatep2pkh(twi.pub, availablecoin[twi.coin].p2pk);
+    if tthread.CurrentThread.CheckTerminated then
+    begin
+      exit();
+    end;
+    pub := twi.pub;
+
+
+    
+
+    segwit := lowercase(generatep2wpkh( pub, availablecoin[ coinid ].hrp));
+    compatible := lowercase(generatep2sh( pub, availablecoin[ coinid ].p2sh));
+    legacy := generatep2pkh( pub, availablecoin[ coinid ].p2pk);
+ 
     cash := lowercase(bitcoinCashAddressToCashAddress(legacy, false));
     legacy := lowercase(legacy);
     cash := StringReplace(cash, 'bitcoincash:', '', [rfReplaceAll]);

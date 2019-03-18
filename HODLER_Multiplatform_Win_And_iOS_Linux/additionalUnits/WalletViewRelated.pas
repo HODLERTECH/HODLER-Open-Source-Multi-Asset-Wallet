@@ -714,9 +714,7 @@ begin
   with frmhome do
   begin
     BackupRelated.SendEQR;
-    pngName := System.IOUtils.TPath.Combine(
-{$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
-      (){$ENDIF}, CurrentAccount.name + '_EQR_SMALL' + '.png');
+    pngName := CurrentAccount.SmallQRImagePath;
     EQRPreview.Visible := True;
     // PageControl.ActiveTab := EQRView;
     EQRPreview.Bitmap.LoadFromFile(pngName);
@@ -1068,8 +1066,14 @@ begin
 
                 StringReplace(ans, #$A, ' ', [rfReplaceAll]);
                 ts := SplitString(ans, ' ');
-                TransactionWaitForSendLinkLabel.TagString :=
-                  getURLToExplorer(CurrentCoin.coin, ts[ts.Count - 1]);
+
+                if isTokenTransfer then
+                  TransactionWaitForSendLinkLabel.TagString :=
+                    getURLToTokenExplorer( ts[ts.Count - 1])
+                else
+                  TransactionWaitForSendLinkLabel.TagString :=
+                    getURLToExplorer(CurrentCoin.coin, ts[ts.Count - 1]);
+
                 TransactionWaitForSendLinkLabel.Text :=
                   TransactionWaitForSendLinkLabel.TagString;
                 ts.Free;
@@ -2134,7 +2138,7 @@ begin
 
   reloadWalletView; // po co  jak jest w watku ?
 
-  if SyncOpenWallet <> nil then
+ { if SyncOpenWallet <> nil then
   begin
     if not SyncOpenWallet.Finished then
     begin
@@ -2175,7 +2179,7 @@ begin
     SyncOpenWallet.FreeOnTerminate := false;
     SyncOpenWallet.Start;
 
-  end;
+  end;  }
 
   with frmhome do
   begin
@@ -2316,6 +2320,7 @@ begin
     AddressTypelayout.Visible := false;
     BCHAddressesLayout.Visible := false;
     RavencoinAddrTypeLayout.Visible := false;
+    BCHCashAddrButton.Text := 'Cash Address';
 
     if CurrentCryptoCurrency is TWalletInfo then
     begin
@@ -2331,6 +2336,10 @@ begin
 
       if TWalletInfo(CurrentCryptoCurrency).coin in [3, 7] then
         BCHAddressesLayout.Visible := True;
+
+      if TwalletInfo(CurrentCryptoCurrency).coin = 7 then
+        BCHCashAddrButton.Text := 'Modern';
+
 
       if (TWalletInfo(CurrentCryptoCurrency).coin = 5) or
         (TWalletInfo(CurrentCryptoCurrency).coin = 6) then
@@ -2439,7 +2448,12 @@ var
   cc: cryptoCurrency;
   sumConfirmed, sumUnconfirmed: BigInteger;
   SumFiat: Double;
+  localCurrentCryptoCurrency : cryptoCurrency;
 begin
+
+  //localCurrentCryptoCurrency := cryptoCurrency.Create( currentCryptoCurrency );
+  //localCurrentCryptoCurrency.assign( CurrentCryptoCurrency );
+
 
   with frmhome do
   begin

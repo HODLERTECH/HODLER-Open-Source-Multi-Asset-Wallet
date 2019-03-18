@@ -14,7 +14,7 @@ uses
   FMX.TabControl, FMX.Edit,
   FMX.Clipboard, FMX.VirtualKeyBoard, JSON , popupwindowData,
   languages,  TCopyableAddressLabelData ,  TCopyableAddressPanelData, CrossPlatformHeaders ,
-
+  ComponentPoolData , HistoryPanelData,
   FMX.Media, FMX.Objects, uEncryptedZipFile, System.Zip, TRotateImageData
 {$IFDEF ANDROID},
   FMX.VirtualKeyBoard.Android,
@@ -352,7 +352,7 @@ begin
 
     SyncBalanceThr := SynchronizeBalanceThread.Create();
     frmhome.syncTimer.Enabled := true;
-    Tthread.CreateAnonymousThread(
+    CurrentAccount.SynchronizeThreadGuardian.CreateAnonymousThread(
       procedure
       begin
         verifyKeypool();
@@ -445,6 +445,8 @@ begin
 
   clearVertScrollBox(frmhome.TxHistory); // Panel.TagObject can contain THistoryHolder
 
+  HistoryPanelPool.Free;
+
   frmhome.FScanManager.free;
 
   frmhome.refreshLocalImage.Stop();
@@ -468,7 +470,12 @@ var
    TimeLog : TimeLogger;
    ass : AssetsMenager;
 
+   debug : TDictionary<integer , integer>;
+   debIt : TDictionary<integer , integer>.TPairEnumerator;
+
 begin
+
+
 
 
   TimeLog := TimeLogger.Create();
@@ -773,6 +780,8 @@ begin
 
 
     end;
+
+    HistoryPanelPool := TComponentPool<THistoryPanel>.create();
 
   except
     on E: Exception do

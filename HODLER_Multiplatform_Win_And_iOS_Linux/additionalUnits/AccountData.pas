@@ -2,7 +2,7 @@ unit AccountData;
 
 interface
 
-uses tokenData, WalletStructureData, cryptoCurrencyData, System.IOUtils,
+uses tokenData, WalletStructureData, cryptoCurrencyData, System.IOUtils, FMX.Graphics, System.types,
   Sysutils, Classes, FMX.Dialogs, Json, Velthuis.BigIntegers, math ,System.Generics.Collections , System.SyncObjs , THreadKindergartenData;
 
 procedure loadCryptoCurrencyJSONData(data: TJSONValue; cc: cryptoCurrency);
@@ -30,6 +30,10 @@ type
     TokenFilePath: AnsiString;
     SeedFilePath: AnsiString;
     DescriptionFilePath : AnsiString;
+
+    BigQRImagePath : AnsiString;
+    SmallQRImagePath : AnsiString;
+
     Paths: Array of AnsiString;
 
     SynchronizeThreadGuardian : ThreadKindergarten;
@@ -38,6 +42,8 @@ type
 
     constructor Create(_name: AnsiString);
     destructor Destroy(); override;
+
+    procedure GenerateSeedEncryptredQR();
 
     procedure LoadFiles();
     procedure SaveFiles();
@@ -61,6 +67,8 @@ type
 
     function TokenExistInETH( TokenID : Integer ; ETHAddress : AnsiString ): boolean ;
 
+    procedure wipeAccount();
+    
   private
 
     var
@@ -135,10 +143,67 @@ begin
 
 end;
 
+procedure Account.wipeAccount();
+begin
+
+end;
+
+procedure Account.GenerateSeedEncryptredQR();
+var
+  i: Integer;
+
+  img, qrimg: TBitmap;
+
+  tempStr: TStream;
+
+
+  FileName: string;
+var
+  Stream: TResourceStream;
+var
+  MasterSeed, tced: AnsiString;
+  Y, m, d: Word;
+begin
+
+    if not FileExists(BigQRImagePath) then
+    begin
+
+      qrimg := StrToQRBitmap(EncryptedMasterSeed, 16);
+      img := TBitmap.create();
+      Stream := TResourceStream.create(HInstance, 'IMG_EQR', RT_RCDATA);
+      try
+        img.LoadFromStream(Stream);
+      finally
+        Stream.Free;
+      end;
+      img.Canvas.BeginScene;
+      img.Canvas.DrawBitmap(qrimg, RectF(0, 0, 797, 797),
+        RectF(294, 514, 797 + 294, 797 + 514), 1);
+      img.Canvas.EndScene;
+
+      img.SaveToFile(BigQRImagePath);
+      img.Free;
+      qrimg.Free;
+
+    end;
+
+
+    if not FileExists( SmallQRImagePath ) then
+    begin
+      img := StrToQRBitmap( EncryptedMasterSeed );
+
+      img.SaveToFile(SmallQRImagePath);
+      img.free;
+    end;
+    userSaveSeed := true;
+    SaveSeedFile();
+    // ? userSavedSeed := true;
+    //refreshWalletDat();
+end;
+
 function Account.getDescription( id , X : Integer ): AnsiString;
 var
   middleNum : AnsiString;
-
 begin
   if (not DescriptionDict.tryGetValue( TPair<Integer , Integer>.Create(id , X) , result)) or (result = '') then
   begin
@@ -204,9 +269,11 @@ procedure Account.LoadDescriptionFile();
 var
   obj : TJsonObject;
 
-//  it : TJSONPairEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
+ 
+  //it : TJSONPairEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
 
   it : TJSONObject.TEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
+ 
 
   ts , temp : TstringList;
 begin
@@ -464,6 +531,8 @@ begin
 
   DescriptionFilePath := Tpath.Combine(DirPath, 'hodler.description.dat');
 
+  // System.IOUtils.TPath.GetDownloadsPath()
+
   SetLength(Paths, 4);
   Paths[0] := CoinFilePath;
   Paths[1] := TokenFilePath;
@@ -485,20 +554,11 @@ end;
 destructor Account.Destroy();
 begin
 
-  clearArrays();
-  DescriptionDict.Free();
-
-  mutexTokenFile.Free;
-  mutexCoinFile.Free;
-  mutexSeedFile.Free;
-  mutexDescriptionFile.Free;
-
   if SyncBalanceThr <> nil then
 
   SyncBalanceThr.Terminate;
-  SynchronizeThreadGuardian.DisposeOf;
-  SynchronizeThreadGuardian := nil;
 
+  
 
   TThread.CreateAnonymousThread(procedure
   begin
@@ -508,8 +568,16 @@ begin
     SyncBalanceThr := nil;
 
   end).Start();
-  
 
+  SynchronizeThreadGuardian.DisposeOf;
+  SynchronizeThreadGuardian := nil;
+
+  mutexTokenFile.Free;
+  mutexCoinFile.Free;
+  mutexSeedFile.Free;
+  mutexDescriptionFile.Free;
+  DescriptionDict.Free();
+  clearArrays();
   inherited;
 end;
 
@@ -655,6 +723,19 @@ begin
   LoadCoinFile();
   LoadTokenFile();
   LoadDescriptionFile();
+
+  {$IFDEF MSWINDOWS}
+  BigQRImagePath := TPath.Combine( DirPath , name + '_' + EncryptedMasterSeed + '_' + '_ENC_SEED_QR_BIG' + '.png')  ;
+  SmallQRImagePath:=TPath.Combine( DirPath , name + '_' + EncryptedMasterSeed + '_' + '_ENC_SEED_QR_SMALL' + '.png');
+{$ELSE}
+
+  if not DirectoryExists(  Tpath.combine( System.IOUtils.TPath.GetDownloadsPath() , 'hodler.tech' ) ) then
+    ForceDirectories(  Tpath.combine( System.IOUtils.TPath.GetDownloadsPath() , 'hodler.tech' )) ;
+
+
+  BigQRImagePath := TPath.Combine( Tpath.combine( System.IOUtils.TPath.GetDownloadsPath() , 'hodler.tech' ) , name + '_' + EncryptedMasterSeed + '_' + '_ENC_QR_BIG' + '.png')  ;
+  SmallQRImagePath:=TPath.Combine( Tpath.combine( System.IOUtils.TPath.GetDownloadsPath() , 'hodler.tech' ) , name + '_' + EncryptedMasterSeed + '_' + '_ENC_QR_SMALL' + '.png');
+{$ENDIF}
 
   //TMonitor.exit(flock);
   //flock.Free;

@@ -16,10 +16,10 @@ type
 
     prefix, AddrPrefix, address, AddrSuffix: Tlabel;
     ftext: AnsiString;
- 
-    lastPrefixLength : Integer;
+
+    lastPrefixLength: Integer;
     FLastWidth: Single;
- 
+
     function getText(): AnsiString;
   protected
     procedure DoRealign; override;
@@ -58,27 +58,28 @@ var
   outText: AnsiString;
   prefSufLength: Integer;
   source: AnsiString;
-  startPosition: single;
+  startPosition: Single;
   normalCanvas, BoltCanvas: TBitmap;
   DEBUGSTR: AnsiString;
 
-  prefW, addrPrefW, AddrSufW: single;
-  avr: single;
+  prefW, addrPrefW, AddrSufW: Single;
+  avr: Single;
   propLen: Integer;
 
 begin
- 
-  inherited resize;
-  if Self.Width=FLastWidth then Exit;
-  FLastWidth:=Self.Width;
- 
+
+  inherited Resize;
+  if Self.Width = FLastWidth then
+    Exit;
+  FLastWidth := Self.Width;
+
   try
     // Realign;
     // RecalcSize;
-    prefix.width := 0;
-    AddrPrefix.width := 0;
-    address.width := 0;
-    AddrSuffix.width := 0;
+    prefix.Width := 0;
+    AddrPrefix.Width := 0;
+    address.Width := 0;
+    AddrSuffix.Width := 0;
 
     normalCanvas := TBitmap.Create(10, 10);
     BoltCanvas := TBitmap.Create(10, 10);
@@ -100,62 +101,63 @@ begin
       normalCanvas.Free;
       BoltCanvas.Free;
 
-      exit;
+      Exit;
     end;
 
-
-    propLen := round((width * 0.4) / avr) - (8 + length(prefix.Text));
+    propLen := round((Width * 0.4) / avr) - (8 + length(prefix.Text));
 
     outText := LeftStr(source, propLen) + '...' + RightStr(source, propLen);
     prefSufLength := propLen + 1;
     if length(source) <= prefSufLength * 2 then
     begin
       outText := source;
-    end;
+    end else
 
-    while (normalCanvas.Canvas.TextWidth(outText) + prefW + addrPrefW +
-      AddrSufW) < width * 0.85 do
-    begin
-
-      if length(source) <= prefSufLength * 2 then
+      while (normalCanvas.Canvas.TextWidth(outText) + prefW + addrPrefW +
+        AddrSufW) < Width * 0.85 do
       begin
-        outText := source;
-        break;
-      end
-      else
-        outText := LeftStr(source, prefSufLength) + '...' +
-          RightStr(source, prefSufLength);
-      prefSufLength := prefSufLength + 1;
 
-    end;
+        if length(source) <= prefSufLength * 2 then
+        begin
+          outText := source;
+          break;
+        end
+        else
+          outText := LeftStr(source, prefSufLength) + '...' +
+            RightStr(source, prefSufLength);
+        prefSufLength := prefSufLength + 1;
+
+      end;
 
     address.Text := outText;
 
     if TextSettings.horzAlign = TTextAlign.Center then
-      startPosition := (width - (prefix.width + AddrPrefix.width + address.width
-        + AddrSuffix.width)) / 2
+      startPosition := (Width - (prefix.Width + AddrPrefix.Width + address.Width
+        + AddrSuffix.Width)) / 2
     else if TextSettings.horzAlign = TTextAlign.Trailing then
-      startPosition := (width - (prefix.width + AddrPrefix.width + address.width
-        + AddrSuffix.width))
+      startPosition := (Width - (prefix.Width + AddrPrefix.Width + address.Width
+        + AddrSuffix.Width))
     else
       startPosition := 0;
 
+    prefix.RecalcSize;
+    AddrPrefix.RecalcSize;
+    address.RecalcSize;
+    AddrSuffix.RecalcSize;
     prefix.Position.X := startPosition;
-    AddrPrefix.Position.X := prefix.Position.X + prefix.width;
-    address.Position.X := startPosition + prefix.width + AddrPrefix.width;
-    AddrSuffix.Position.X := startPosition + prefix.width + AddrPrefix.width +
-      address.width;
+    AddrPrefix.Position.X := prefix.Position.X + prefix.Width;
+    address.Position.X := startPosition + prefix.Width + AddrPrefix.Width;
+    AddrSuffix.Position.X := startPosition + prefix.Width + AddrPrefix.Width +
+      address.Width;
 
     // Repaint;
-
-
 
     normalCanvas.Free;
     BoltCanvas.Free;
   except
     on e: Exception do
     begin
-      //showmessage(e.Message);
+      // showmessage(e.Message);
     end;
 
   end;
@@ -163,7 +165,7 @@ end;
 
 procedure TAddressLabel.DoRealign;
 var
-  startPosition: single;
+  startPosition: Single;
 begin
 
   inherited;
@@ -203,37 +205,37 @@ end;
 constructor TAddressLabel.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  FLastWidth:=Self.Width;
-  TextSettings := TTextSettings.Create(self);
+  FLastWidth := Self.Width;
+  TextSettings := TTextSettings.Create(Self);
   lastPrefixLength := 0;
   // width := Tcontrol(AOwner).width;
 
-  prefix := Tlabel.Create(self);
-  prefix.Parent := self;
+  prefix := Tlabel.Create(Self);
+  prefix.Parent := Self;
   prefix.Align := TAlignLayout.Vertical;
   prefix.TextAlign := TTextAlign.Center;
   prefix.Visible := true;
   prefix.AutoSize := true;
   prefix.WordWrap := false;
 
-  AddrPrefix := Tlabel.Create(self);
-  AddrPrefix.Parent := self;
+  AddrPrefix := Tlabel.Create(Self);
+  AddrPrefix.Parent := Self;
   AddrPrefix.Align := TAlignLayout.Vertical;
   AddrPrefix.TextAlign := TTextAlign.Center;
   AddrPrefix.Visible := true;
   AddrPrefix.AutoSize := true;
   AddrPrefix.WordWrap := false;
 
-  address := Tlabel.Create(self);
-  address.Parent := self;
+  address := Tlabel.Create(Self);
+  address.Parent := Self;
   address.Align := TAlignLayout.Vertical;
   address.TextAlign := TTextAlign.Center;
   address.Visible := true;
   address.AutoSize := true;
   address.WordWrap := false;
 
-  AddrSuffix := Tlabel.Create(self);
-  AddrSuffix.Parent := self;
+  AddrSuffix := Tlabel.Create(Self);
+  AddrSuffix.Parent := Self;
   AddrSuffix.Align := TAlignLayout.Vertical;
   AddrSuffix.TextAlign := TTextAlign.Center;
   AddrSuffix.Visible := true;
@@ -265,107 +267,114 @@ var
   outText: AnsiString;
   prefSufLength: Integer;
   source: AnsiString;
-  startPosition: single;
+  startPosition: Single;
   normalCanvas, BoltCanvas: TBitmap;
   DEBUGSTR: AnsiString;
 
-  prefW, addrPrefW, AddrSufW: single;
-  avr: single;
+  prefW, addrPrefW, AddrSufW: Single;
+  avr: Single;
   propLen: Integer;
 begin
   // Realign;
   // RecalcSize;
 
-
   ftext := Value;
-  TThread.CreateAnonymousThread(procedure begin TThread.Synchronize(nil,procedure begin
-
-
- lastPrefixLength := prefixLength;
-  prefix.width := 0;
-  AddrPrefix.width := 0;
-  address.width := 0;
-  AddrSuffix.width := 0;
-  normalCanvas := TBitmap.Create(10, 10);
-  BoltCanvas := TBitmap.Create(10, 10);
-
-  normalCanvas.Canvas.Font.Assign(prefix.Font);
-  BoltCanvas.Canvas.Font.Assign(AddrPrefix.Font);
-
-  source := LeftStr(Value, length(Value) - 4);
-  source := RightStr(source, length(source) - (4 + prefixLength));
-
-  prefix.Text := LeftStr(Value, prefixLength);
-  AddrPrefix.Text := RightStr(LeftStr(Value, 4 + prefixLength), 4);
-  AddrSuffix.Text := RightStr(Value, 4);
-
-  prefW := normalCanvas.Canvas.TextWidth(prefix.Text);
-  addrPrefW := BoltCanvas.Canvas.TextWidth(AddrPrefix.Text);
-  AddrSufW := BoltCanvas.Canvas.TextWidth(AddrSuffix.Text);
-
-
-  avr := (prefW + addrPrefW + AddrSufW ) / (8 + prefixLength);
-  if avr=0 then
-begin  
-
-  normalCanvas.Free;
-  BoltCanvas.Free;
-exit;
-end;
-
-  propLen := round((width * 0.4) / avr) - (8 + prefixLength);
-
-  outText := LeftStr(source, propLen) + '...' + RightStr(source, propLen);
-  prefSufLength := propLen + 1;
-  if length(source) <= prefSufLength * 2 then
-  begin
-    outText := source;
-  end;
-
-  while (normalCanvas.Canvas.TextWidth(outText) + prefW + addrPrefW + AddrSufW)
-    < width * 0.85 do
-  begin
-
-    if length(source) <= prefSufLength * 2 then
+  {TThread.CreateAnonymousThread(
+    procedure
     begin
-      outText := source;
-      break;
-    end
-    else
-      outText := LeftStr(source, prefSufLength) + '...' +
-        RightStr(source, prefSufLength);
-    prefSufLength := prefSufLength + 1;
+      TThread.Synchronize(nil,
+        procedure
+        begin }
 
-  end;
+          lastPrefixLength := prefixLength;
+          prefix.Width := 0;
+          AddrPrefix.Width := 0;
+          address.Width := 0;
+          AddrSuffix.Width := 0;
+          normalCanvas := TBitmap.Create(10, 10);
+          BoltCanvas := TBitmap.Create(10, 10);
 
-  address.Text := outText;
+          normalCanvas.Canvas.Font.Assign(prefix.Font);
+          BoltCanvas.Canvas.Font.Assign(AddrPrefix.Font);
 
-  // prefix.width := normalCanvas.Canvas.TextWidth(prefix.Text);
-  // AddrPrefix.width := BoltCanvas.Canvas.TextWidth(AddrPrefix.Text);
-  // address.width := normalCanvas.Canvas.TextWidth(address.Text);
-  // AddrSuffix.width := BoltCanvas.Canvas.TextWidth(AddrSuffix.Text);
+          source := LeftStr(Value, length(Value) - 4);
+          source := RightStr(source, length(source) - (4 + prefixLength));
 
-  // startPosition := ( Width - ( prefix.Width + AddrPrefix.Width + address.Width + addrsuffix.Width ) ) /2;
-  if TextSettings.horzAlign = TTextAlign.Center then
-    startPosition := (width - (prefix.width + AddrPrefix.width + address.width +
-      AddrSuffix.width)) / 2
-  else if TextSettings.horzAlign = TTextAlign.Trailing then
-    startPosition := (width - (prefix.width + AddrPrefix.width + address.width +
-      AddrSuffix.width))
-  else
-    startPosition := 0;
+          prefix.Text := LeftStr(Value, prefixLength);
+          AddrPrefix.Text := RightStr(LeftStr(Value, 4 + prefixLength), 4);
+          AddrSuffix.Text := RightStr(Value, 4);
 
-  prefix.Position.X := startPosition;
-  AddrPrefix.Position.X := prefix.Position.X + prefix.width;
-  address.Position.X := startPosition + prefix.width + AddrPrefix.width;
-  AddrSuffix.Position.X := startPosition + prefix.width + AddrPrefix.width +
-    address.width;
+          prefW := normalCanvas.Canvas.TextWidth(prefix.Text);
+          addrPrefW := BoltCanvas.Canvas.TextWidth(AddrPrefix.Text);
+          AddrSufW := BoltCanvas.Canvas.TextWidth(AddrSuffix.Text);
 
-  // Repaint;
+          avr := (prefW + addrPrefW + AddrSufW) / (8 + prefixLength);
+          if avr = 0 then
+          begin
 
-  normalCanvas.Free;
-  BoltCanvas.Free;
-   end) end).Start;
+            normalCanvas.Free;
+            BoltCanvas.Free;
+            Exit;
+          end;
+
+          propLen := round((Width * 0.4) / avr) - (8 + prefixLength);
+
+          outText := LeftStr(source, propLen) + '...' +
+            RightStr(source, propLen);
+          prefSufLength := propLen + 1;
+          if length(source) <= prefSufLength * 2 then
+          begin
+            outText := source;
+          end
+          else
+            while (normalCanvas.Canvas.TextWidth(outText) + prefW + addrPrefW +
+              AddrSufW) < Width * 0.85 do
+            begin
+
+              if length(source) <= prefSufLength * 2 then
+              begin
+                outText := source;
+                break;
+              end
+              else
+                outText := LeftStr(source, prefSufLength) + '...' +
+                  RightStr(source, prefSufLength);
+              prefSufLength := prefSufLength + 1;
+
+            end;
+
+          address.Text := outText;
+
+          // prefix.width := normalCanvas.Canvas.TextWidth(prefix.Text);
+          // AddrPrefix.width := BoltCanvas.Canvas.TextWidth(AddrPrefix.Text);
+          // address.width := normalCanvas.Canvas.TextWidth(address.Text);
+          // AddrSuffix.width := BoltCanvas.Canvas.TextWidth(AddrSuffix.Text);
+
+          // startPosition := ( Width - ( prefix.Width + AddrPrefix.Width + address.Width + addrsuffix.Width ) ) /2;
+          if TextSettings.horzAlign = TTextAlign.Center then
+            startPosition := (Width - (prefix.Width + AddrPrefix.Width +
+              address.Width + AddrSuffix.Width)) / 2
+          else if TextSettings.horzAlign = TTextAlign.Trailing then
+            startPosition := (Width - (prefix.Width + AddrPrefix.Width +
+              address.Width + AddrSuffix.Width))
+          else
+            startPosition := 0;
+          prefix.RecalcSize;
+          AddrPrefix.RecalcSize;
+          address.RecalcSize;
+          AddrSuffix.RecalcSize;
+          prefix.Position.X := startPosition;
+          AddrPrefix.Position.X := prefix.Position.X + prefix.Width;
+          address.Position.X := startPosition + prefix.Width + AddrPrefix.Width;
+          AddrSuffix.Position.X := startPosition + prefix.Width +
+            AddrPrefix.Width + address.Width;
+
+          // Repaint;
+
+          normalCanvas.Free;
+          BoltCanvas.Free;
+   //     end)
+   // end).Start;
 end;
 
 procedure cutAndDecorateLabel(lbl: Tlabel);
@@ -382,7 +391,7 @@ begin
 
   lbl.Canvas.Font.Assign(lbl.Font);
 
-  while lbl.Canvas.TextWidth(outText) < lbl.width * 0.9 do
+  while lbl.Canvas.TextWidth(outText) < lbl.Width * 0.9 do
   begin
 
     outText := LeftStr(lbl.Text, prefSufLength) + '...' +
