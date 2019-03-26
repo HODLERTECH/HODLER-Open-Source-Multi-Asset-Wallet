@@ -513,12 +513,12 @@ begin
         end;
         semaphore.Release();
 
-        TThread.CurrentThread.Synchronize(nil,
+        {TThread.CurrentThread.Synchronize(nil,
           procedure
           begin
             frmHome.DashBrdProgressBar.value :=
               frmHome.RefreshProgressBar.value + 1;
-          end);
+          end);  }
 
       end).Start();
               if TThread.CurrentThread.CheckTerminated then

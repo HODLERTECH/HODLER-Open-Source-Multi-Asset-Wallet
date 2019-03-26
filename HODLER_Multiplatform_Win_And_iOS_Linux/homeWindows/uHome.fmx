@@ -35,7 +35,7 @@ object frmHome: TfrmHome
     Size.Height = 687.000000000000000000
     Size.PlatformDefault = False
     TabHeight = 49.000000000000000000
-    TabIndex = 49
+    TabIndex = 7
     TabOrder = 8
     TabPosition = None
     OnChange = closeVirtualKeyBoard
@@ -725,6 +725,16 @@ object frmHome: TfrmHome
           Size.Height = 639.000000000000000000
           Size.PlatformDefault = False
         end
+      end
+      object Image11: TImage
+        MultiResBitmap = <
+          item
+          end>
+        Position.X = 8.000000000000000000
+        Position.Y = 56.000000000000000000
+        Size.Width = 153.000000000000000000
+        Size.Height = 81.000000000000000000
+        Size.PlatformDefault = False
       end
     end
     object walletView: TTabItem
@@ -1571,8 +1581,8 @@ object frmHome: TfrmHome
             CustomIcon = <
               item
               end>
-            IsSelected = True
-            Size.Width = 61.000000000000000000
+            IsSelected = False
+            Size.Width = 60.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
             StyleLookup = ''
@@ -5753,7 +5763,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -5857,11 +5867,11 @@ object frmHome: TfrmHome
       object VertScrollBox3: TVertScrollBox
         Align = Client
         Size.Width = 450.000000000000000000
-        Size.Height = 639.000000000000000000
+        Size.Height = 591.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 7
         Viewport.Width = 434.000000000000000000
-        Viewport.Height = 639.000000000000000000
+        Viewport.Height = 591.000000000000000000
         object GlobalSettingsLayout: TLayout
           Align = Top
           Position.Y = 144.000000000000000000
@@ -6113,6 +6123,16 @@ object frmHome: TfrmHome
             'r funds!'
           TabOrder = 5
         end
+      end
+      object DeleteAccountButton: TButton
+        Align = Top
+        Position.Y = 48.000000000000000000
+        Size.Width = 450.000000000000000000
+        Size.Height = 48.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 8
+        Text = 'Delete this account'
+        OnClick = DeleteAccountButtonClick
       end
     end
     object descryptSeed: TTabItem
@@ -9081,7 +9101,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -9570,7 +9590,7 @@ object frmHome: TfrmHome
             Position.X = 15.000000000000000000
             Position.Y = 14.000000000000000000
             Size.Width = 300.000000000000000000
-            Size.Height = 20.000000000000000000
+            Size.Height = 19.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
             Value = 10.000000000000000000
@@ -10890,7 +10910,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -11665,11 +11685,11 @@ object frmHome: TfrmHome
     object WalletList: TVertScrollBox
       Align = Client
       Size.Width = 515.000000000000000000
-      Size.Height = 409.000000000000000000
+      Size.Height = 457.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 0
       Viewport.Width = 515.000000000000000000
-      Viewport.Height = 409.000000000000000000
+      Viewport.Height = 457.000000000000000000
     end
     object Layout1: TLayout
       Align = Top
@@ -11803,18 +11823,9 @@ object frmHome: TfrmHome
       Align = Top
       Position.Y = 134.000000000000000000
       Size.Width = 515.000000000000000000
-      Size.Height = 96.000000000000000000
+      Size.Height = 48.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 3
-      object DeleteAccountButton: TButton
-        Align = Top
-        Size.Width = 515.000000000000000000
-        Size.Height = 48.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 0
-        Text = 'Delete this account'
-        OnClick = DeleteAccountButtonClick
-      end
       object OrganizeDragInfoLabel: TLabel
         Align = Client
         Margins.Left = 15.000000000000000000
@@ -11822,7 +11833,7 @@ object frmHome: TfrmHome
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
         Text = 'Hold and drag wallet to change order.'
-        TabOrder = 1
+        TabOrder = 0
       end
       object PopupBox1: TPopupBox
         Align = Right
@@ -11833,11 +11844,10 @@ object frmHome: TfrmHome
           'Sort asstes')
         ItemIndex = 3
         Position.X = 335.000000000000000000
-        Position.Y = 48.000000000000000000
         Size.Width = 180.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 2
+        TabOrder = 1
         OnChange = PopupBox1Change
         OnClick = PopupBox1Click
       end

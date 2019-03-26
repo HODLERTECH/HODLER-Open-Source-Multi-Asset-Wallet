@@ -169,7 +169,7 @@ type
 implementation
 
 uses
-  uhome;
+  uhome , misc;
 
 
 procedure TNotificationLayout.TryShowBackground();
@@ -590,13 +590,13 @@ begin
   _Image.Parent := _ImageLayout;
   case icon of
     0:
-      _Image.Bitmap := frmhome.OKImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('OK_IMAGE') ); // := frmhome.OKImage.Bitmap;
     1:
-      _Image.Bitmap := frmhome.InfoImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('INFO_IMAGE') ); // := frmhome.InfoImage.Bitmap;
     2:
-      _Image.Bitmap := frmhome.warningImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('WARNING_IMAGE') ); // := frmhome.warningImage.Bitmap;
     3:
-      _Image.Bitmap := frmhome.ErrorImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('ERROR_IMAGE') ); // := frmhome.ErrorImage.Bitmap;
   end;
 
   _lblMessage := TLabel.create(panel);
@@ -710,13 +710,13 @@ begin
   _Image.Parent := _ImageLayout;
   case icon of
     0:
-      _Image.Bitmap := frmhome.OKImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('OK_IMAGE') ); // := frmhome.OKImage.Bitmap;
     1:
-      _Image.Bitmap := frmhome.InfoImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('INFO_IMAGE') ); // := frmhome.InfoImage.Bitmap;
     2:
-      _Image.Bitmap := frmhome.warningImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('WARNING_IMAGE') ); // := frmhome.warningImage.Bitmap;
     3:
-      _Image.Bitmap := frmhome.ErrorImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('ERROR_IMAGE') ); // := frmhome.ErrorImage.Bitmap;
   end;
 
   _lblMessage := TLabel.create(panel);
@@ -845,13 +845,13 @@ begin
   _Image.Parent := _ImageLayout;
   case icon of
     0:
-      _Image.Bitmap := frmhome.OKImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('OK_IMAGE') ); // := frmhome.OKImage.Bitmap;
     1:
-      _Image.Bitmap := frmhome.InfoImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('INFO_IMAGE') ); // := frmhome.InfoImage.Bitmap;
     2:
-      _Image.Bitmap := frmhome.warningImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('WARNING_IMAGE') ); // := frmhome.warningImage.Bitmap;
     3:
-      _Image.Bitmap := frmhome.ErrorImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('ERROR_IMAGE') ); // := frmhome.ErrorImage.Bitmap;
   end;
 
   _lblMessage := TLabel.create(panel);

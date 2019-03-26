@@ -5,7 +5,7 @@
         <FrameworkType>FMX</FrameworkType>
         <MainSource>HODLER_Wallet_Desktop.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1247</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -624,12 +624,12 @@
         <DCCReference Include="components\TAddressLabelData.pas"/>
         <DCCReference Include="components\TCopyableAddressLabelData.pas"/>
         <DCCReference Include="components\TCopyableAddressPanelData.pas"/>
-        <DCCReference Include="additionalUnits\ThreadKindergartenData.pas"/> 
+        <DCCReference Include="additionalUnits\ThreadKindergartenData.pas"/>
         <DCCReference Include="components\TAddNewCryptoPanelData.pas"/>
-        <DCCReference Include="components\TNewCryptoVertScrollBoxData.pas"/> 
+        <DCCReference Include="components\TNewCryptoVertScrollBoxData.pas"/>
         <DCCReference Include="additionalUnits\additionalClass\ComponentPoolData.pas"/>
         <DCCReference Include="components\HistoryPanelData.pas"/>
-        <DCCReference Include="components\CoinPanelData.pas"/> 
+        <DCCReference Include="components\CoinPanelData.pas"/>
         <RcItem Include="Jet.style">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
@@ -894,6 +894,34 @@
         <RcItem Include="token_icons\upArrow.png">
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>UP_ARROW</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\Check.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>OK_IMAGE</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\error.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>ERROR_IMAGE</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\Info.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>INFO_IMAGE</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\warning.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>WARNING_IMAGE</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\green.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>TRANSACTION_IN</ResourceId>
+        </RcItem>
+        <RcItem Include="gfx\insidetx.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>TRANSACTION_INTERNAL</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\red.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>TRANSACTION_OUT</ResourceId>
         </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
@@ -2279,6 +2307,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\warning.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\POLlang.json" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
@@ -2579,6 +2613,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\red.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_SpotlightSearchIcon_58x58.png" Configuration="Debug" Class="iPhone_Spotlight58">
                     <Platform Name="iOSDevice32">
                         <Overwrite>true</Overwrite>
@@ -2753,6 +2793,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="token_icons\2457.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\green.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -3185,6 +3231,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\Info.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="coin_icons\131.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
@@ -3214,6 +3266,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\error.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_114x114.png" Configuration="Debug" Class="iPhone_AppIcon114">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
@@ -3238,6 +3296,12 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_114x114.png" Configuration="Debug" Class="iPhone_AppIcon114">
                     <Platform Name="iOSDevice32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="gfx\insidetx.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -3289,6 +3353,12 @@
                 <DeployFile LocalName="Languages\SPA.lang" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\Check.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -3348,7 +3418,6 @@
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="Win32">
-                        <RemoteDir>Contents\MacOS</RemoteDir>
                         <Operation>0</Operation>
                     </Platform>
                 </DeployClass>
@@ -3484,6 +3553,11 @@
                         <Operation>1</Operation>
                         <Extensions>.framework</Extensions>
                     </Platform>
+                    <Platform Name="OSX64">
+                        <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>1</Operation>
+                        <Extensions>.framework</Extensions>
+                    </Platform>
                     <Platform Name="Win32">
                         <Operation>0</Operation>
                     </Platform>
@@ -3502,6 +3576,11 @@
                         <Extensions>.dylib</Extensions>
                     </Platform>
                     <Platform Name="OSX32">
+                        <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="OSX64">
                         <RemoteDir>Contents\MacOS</RemoteDir>
                         <Operation>1</Operation>
                         <Extensions>.dylib</Extensions>
@@ -3529,6 +3608,11 @@
                         <Operation>1</Operation>
                         <Extensions>.dylib</Extensions>
                     </Platform>
+                    <Platform Name="OSX64">
+                        <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
                     <Platform Name="Win32">
                         <Operation>0</Operation>
                         <Extensions>.bpl</Extensions>
@@ -3548,6 +3632,10 @@
                         <Operation>0</Operation>
                     </Platform>
                     <Platform Name="OSX32">
+                        <RemoteDir>Contents\Resources\StartUp\</RemoteDir>
+                        <Operation>0</Operation>
+                    </Platform>
+                    <Platform Name="OSX64">
                         <RemoteDir>Contents\Resources\StartUp\</RemoteDir>
                         <Operation>0</Operation>
                     </Platform>
@@ -3698,15 +3786,27 @@
                         <RemoteDir>..\</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
+                    <Platform Name="OSX64">
+                        <RemoteDir>..\</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
                 </DeployClass>
                 <DeployClass Name="ProjectOSXInfoPList">
                     <Platform Name="OSX32">
                         <RemoteDir>Contents</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
+                    <Platform Name="OSX64">
+                        <RemoteDir>Contents</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
                 </DeployClass>
                 <DeployClass Name="ProjectOSXResource">
                     <Platform Name="OSX32">
+                        <RemoteDir>Contents\Resources</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="OSX64">
                         <RemoteDir>Contents\Resources</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
@@ -3729,6 +3829,10 @@
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="OSX32">
+                        <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="OSX64">
                         <RemoteDir>Contents\MacOS</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>

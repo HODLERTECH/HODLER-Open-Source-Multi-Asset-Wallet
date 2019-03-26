@@ -192,12 +192,11 @@ end;
 
 procedure parseCamera;
 var
-  scanBitmap: TBitmap;
+
   tempBitmap: TBitmap;
   ReadResult: TReadResult;
 
   ts: TStringList;
-  scale: double;
   ac: Account;
 
   QRRect: TRectF;
@@ -238,10 +237,7 @@ begin
 
     QRfieldRect := Rect( Round( qrrECT.Left ) ,Round( qrrECT.tOP ) , Round( qrrECT.Right ) ,Round( qrrECT.Bottom ) ) ;
 
-    scanBitmap := TBitmap.Create();
-    scanBitmap.Height := QRfieldRect.Height;
-    scanBitmap.Width :=  QRfieldRect.Width;
-    scanBitmap.CopyFromBitmap(imgCamera.Bitmap , QRFIELDRect , 0 , 0 );
+    
 
 
 
@@ -257,18 +253,28 @@ begin
     ReadResult := nil;
 {$IFDEF IOS} if not FScanInProgress then {$ENDIF}
       tthread.CreateAnonymousThread(
-        procedure
-        begin
 
+        procedure
+        var
+          scanBitmap: TBitmap;
+        begin
+          scanBitmap := TBitmap.Create();
+          scanBitmap.Height := QRfieldRect.Height;
+          scanBitmap.Width :=  QRfieldRect.Width;
+          scanBitmap.CopyFromBitmap(imgCamera.Bitmap , QRFIELDRect , 0 , 0 );
+          tthread.Synchronize( nil , procedure
+          begin
+
+          end);
           try
             FScanInProgress := true;
             try
-              ReadResult := FScanManager.Scan(scanBitmap);
+                ReadResult := FScanManager.Scan(scanBitmap);
             except
               on E: Exception do
               begin
-                ReadResult.free;
-                scanBitmap.free;
+                //ReadResult.free;
+                //scanBitmap.free;
                 FScanInProgress := false;
                 exit;
               end;

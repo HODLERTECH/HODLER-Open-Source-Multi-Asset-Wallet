@@ -473,10 +473,8 @@ var
    debug : TDictionary<integer , integer>;
    debIt : TDictionary<integer , integer>.TPairEnumerator;
 
+
 begin
-
-
-
 
   TimeLog := TimeLogger.Create();
   timeLog.StartLog('InitializeHodler');

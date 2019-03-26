@@ -4,8 +4,8 @@
         <ProjectVersion>18.6</ProjectVersion>
         <FrameworkType>FMX</FrameworkType>
         <MainSource>HODLER_Wallet_Mobile.dpr</MainSource>
-        <Base>True</Base> 
-        <Config Condition="'$(Config)'==''">Release</Config> 
+        <Base>True</Base>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Android</Platform>
         <TargetedPlatforms>1247</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -176,7 +176,7 @@
         <Android_LauncherIcon72>gfx\Icon72x72.png</Android_LauncherIcon72>
         <Android_LauncherIcon36>gfx\Icon36x36.png</Android_LauncherIcon36>
         <VerInfo_Build>1</VerInfo_Build>
-        <DCC_UnitSearchPath>C:\Users\Publiczny\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>C:\Users\Publiczny\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;C:\Users\Public\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;C:\Program Files (x86)\tmssoftware\TMSCrypto RSXE12\libAndroid;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <AUP_READ_CALENDAR>false</AUP_READ_CALENDAR>
         <AUP_WRITE_CALENDAR>false</AUP_WRITE_CALENDAR>
         <AUP_CALL_PHONE>false</AUP_CALL_PHONE>
@@ -185,8 +185,6 @@
         <AUP_INTERNET>false</AUP_INTERNET>
         <AUP_READ_PHONE_STATE>false</AUP_READ_PHONE_STATE>
         <AUP_ACCESS_COARSE_LOCATION>false</AUP_ACCESS_COARSE_LOCATION>
-        <PF_KeyStore>alpharelease.keystore</PF_KeyStore>
-        <PF_KeyStorePass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D497F76E2718773C8C20A3767CA1473B87E8DA47E658CFDA0A978428620DC94ADB50B791AE0A6B9DF513A071D5A925E3E5D1DD70963E3E416AF443978C965CF9AD622A27D5A463CE8239256F3A09646E99DDE23C01FB355C2E8A73656A1E82B5320530C5FBC34B2FF63AFE3B68F10B9995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_KeyStorePass>
         <AUP_ACCESS_FINE_LOCATION>false</AUP_ACCESS_FINE_LOCATION>
         <AUP_CAMERA>false</AUP_CAMERA>
         <EnabledSysJars>android-support-v4.dex.jar;cloud-messaging.dex.jar;fmx.dex.jar;google-analytics-v2.dex.jar;google-play-billing.dex.jar;google-play-licensing.dex.jar;google-play-services.dex.jar</EnabledSysJars>
@@ -479,14 +477,11 @@
         <AUP_WRITE_CALENDAR>false</AUP_WRITE_CALENDAR>
         <AUP_CALL_PHONE>false</AUP_CALL_PHONE>
         <AUP_VIBRATE>true</AUP_VIBRATE>
-        <PF_KeyStorePass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D497F76E2718773C8C20A3767CA1473B87E0467228D166045F0E5FC2284C946F35DD502FA9EBFAAAF42070A1D1492013E451DA00963E3C216CD446B788E65DE9AC722B37D434642E83F924BF3AE961CE9B357CC9CFA29D027DC3A91F24FFDA40DFA8D2DBF8C2DA48F2392E6B68F10B9995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_KeyStorePass>
-        <PF_AliasKey>hodler.tech</PF_AliasKey>
-        <PF_AliasKeyPass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D49E31B1C3CC1FB5752FAC7C331BAF7365004232280162B458DE5AE22C0C90AF35CD51DFA96BFD6AF3F07501D5992423E071DBB0928E3DE16FF442578D8659D9A84BE9E834000E1779D62FD570A38D4679D57CC9CFA29D027DC3A91F24FFDA40DFA8D2DBF8C2DA48F2392E6B68F10B9995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_AliasKeyPass>
         <AUP_READ_PHONE_STATE>false</AUP_READ_PHONE_STATE>
         <AUP_ACCESS_COARSE_LOCATION>false</AUP_ACCESS_COARSE_LOCATION>
         <AUP_ACCESS_FINE_LOCATION>false</AUP_ACCESS_FINE_LOCATION>
         <AUP_CAMERA>false</AUP_CAMERA>
-        <BT_BuildType>AppStore</BT_BuildType>
+        <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_Keys>package=tech.hodler.core;label=HODLER Multi-Asset Wallet;versionCode=31;versionName=0.4.0;persistent=False;restoreAnyVersion=False;installLocation=preferExternal;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <Debugger_RunParams>-debugport=13376</Debugger_RunParams>
@@ -674,8 +669,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="additionalUnits\bech32.pas"/>
         <DCCReference Include="FMX.Ani.pas"/>
         <DCCReference Include="DW.ThreadedTimer.pas"/>
-        <DCCReference Include="coinCode\cryptoCurrencyData.pas"/> 
-        <DCCReference Include="additionalUnits\SyncThr.pas"/> 
+        <DCCReference Include="coinCode\cryptoCurrencyData.pas"/>
         <DCCReference Include="Languages\languages.pas"/>
         <DCCReference Include="additionalUnits\CurrencyConverter.pas"/>
         <DCCReference Include="additionalUnits\WIF.pas"/>
@@ -721,7 +715,8 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <FormType>dfm</FormType>
             <DesignClass>TAndroidService</DesignClass>
         </DCCReference>
-        <DCCReference Include="components\HistoryPanelData.pas"/>         
+        <DCCReference Include="components\HistoryPanelData.pas"/>
+        <DCCReference Include="additionalUnits\SyncThr.pas"/>
         <DCCReference Include="additionalUnits\additionalClass\ComponentPoolData.pas"/>
         <RcItem Include="Languages\PT.lang">
             <ContainerId>ResourceItem</ContainerId>
@@ -898,7 +893,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         </RcItem>
         <RcItem Include="token_icons\imgNotFound.png">
             <ResourceType>RCDATA</ResourceType>
-            <ResourceId>IMG_EQR_SMALL</ResourceId>
+            <ResourceId>IMG_NOT_FOUND</ResourceId>
         </RcItem>
         <RcItem Include="token_icons\latoken.png">
             <ResourceType>RCDATA</ResourceType>
@@ -994,7 +989,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
                     <Source Name="MainSource">HODLER_Wallet_Mobile.dpr</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\DataExplorerDBXPluginEnt260.bpl">DBExpress Enterprise Data Explorer Integration</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k260.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp260.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
@@ -2753,6 +2747,11 @@ $(PostBuildEvent)]]></PostBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="$(NDKBasePath)\prebuilt\android-arm\gdbserver\gdbserver" Configuration="Release" Class="AndroidGDBServer">
+                    <Platform Name="Android">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\PT.lang" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
@@ -3399,6 +3398,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageLandscape_2048x1536.png" Configuration="Debug" Class="iPad_Launch2048x1536">
                     <Platform Name="iOSDevice64">
                         <RemoteName>Default-Landscape@2x~ipad.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\CharocalExpressive.style" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -4281,6 +4286,11 @@ $(PostBuildEvent)]]></PostBuildEvent>
                 </DeployClass>
                 <DeployClass Name="DependencyFramework">
                     <Platform Name="OSX32">
+                        <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>1</Operation>
+                        <Extensions>.framework</Extensions>
+                    </Platform>
+                    <Platform Name="OSX64">
                         <RemoteDir>Contents\MacOS</RemoteDir>
                         <Operation>1</Operation>
                         <Extensions>.framework</Extensions>

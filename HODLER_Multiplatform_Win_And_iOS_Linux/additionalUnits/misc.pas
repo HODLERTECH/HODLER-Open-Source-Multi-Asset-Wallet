@@ -2711,12 +2711,14 @@ begin
       UnixToDateTime(strToIntdef(hist[i].data, 0)));
     panel.datalbl.Visible := TWalletInfo(wallet).coin <> 8;
 
-    if hist[i].typ = 'OUT' then
+    panel.setType( hist[i].typ );
+
+    {if hist[i].typ = 'OUT' then
       panel.image.Bitmap := frmhome.sendImage.Bitmap;
     if hist[i].typ = 'IN' then
       panel.image.Bitmap := frmhome.receiveImage.Bitmap;
     if hist[i].typ = 'INTERNAL' then
-      panel.image.Bitmap := frmhome.internalImage.Bitmap;
+      panel.image.Bitmap := frmhome.internalImage.Bitmap;   }
 
     if (wallet is TWalletInfo) and (TWalletInfo(wallet).coin = 4) and
       (hist[i].CountValues = 0) then
@@ -3770,6 +3772,7 @@ var
   LResponse: IHTTPResponse;
   urlHash: AnsiString;
   ares: iasyncresult;
+  debug : AnsiString;
 begin
   req := THTTPClient.Create();
   aURL := ensureURL(aURL);
@@ -3825,6 +3828,7 @@ begin
 
   end;
   req.Free;
+  debug := result;
 end;
 
 function postDataOverHTTP(var aURL: String; postdata: string;
@@ -3862,7 +3866,7 @@ begin
       aURL := aURL + buildAuth(aURL);
       ts := TStringList.Create;
       ts.Text := StringReplace(postdata, '&', #13#10, [rfReplaceAll]);
-{$IFDEF  DEBUG} ts.SaveToFile('params' + urlHash + '.json'); {$ENDIF}
+// {$IFDEF  DEBUG} ts.SaveToFile('params' + urlHash + '.json'); {$ENDIF}  // shoud be in debugAnalysis
       ares := req.BeginPost(aURL, ts);
       while not(ares.IsCompleted or ares.isCancelled) do
       begin
@@ -3876,7 +3880,7 @@ begin
 
       result := apiStatus(aURL, asyncResponse);
       ts.Text := asyncResponse;
-{$IFDEF  DEBUG} ts.SaveToFile(urlHash + '.json'); {$ENDIF}
+//{$IFDEF  DEBUG} ts.SaveToFile(urlHash + '.json'); {$ENDIF}
       ts.Free;
       try
         saveCache(urlHash, result);

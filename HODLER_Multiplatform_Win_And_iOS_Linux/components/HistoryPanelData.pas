@@ -15,17 +15,16 @@ type
 
   private
 
-
-
   public
-     image: TImage;
+    image: TImage;
     lbl: TLabel;
     addrLbl: TAddressLabel;
     datalbl: TLabel;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
-    procedure setConfirmed( confirmed : boolean );
+    procedure setConfirmed(confirmed: boolean);
+    procedure setType(inOutInternal: AnsiString);
 
   end;
 
@@ -41,6 +40,17 @@ begin
   RegisterComponents('Samples', [THistoryPanel]);
 end;
 
+procedure THistoryPanel.setType(inOutInternal: AnsiString);
+begin
+  image.Bitmap.LoadFromStream( ResourceMenager.getAssets('TRANSACTION_' + inOutInternal ));
+  {if inOutInternal = 'OUT' then
+    panel.image.Bitmap.LoadFromStream( ResourceMenager.getAssets(  ));
+  if inOutInternal = 'IN' then
+    panel.image.Bitmap := frmhome.receiveImage.Bitmap;
+  if inOutInternal = 'INTERNAL' then
+    panel.image.Bitmap := frmhome.internalImage.Bitmap; }
+end;
+
 constructor THistoryPanel.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
@@ -52,8 +62,6 @@ begin
   addrLbl.Height := 18;
 
   addrLbl.TextSettings.HorzAlign := TTextAlign.Leading;
-
-
 
   datalbl := TLabel.Create(self);
   datalbl.Visible := true;
@@ -83,7 +91,8 @@ begin
   lbl.parent := self;
 
 end;
-procedure ThistoryPanel.setConfirmed( confirmed : boolean );
+
+procedure THistoryPanel.setConfirmed(confirmed: boolean);
 begin
 
   if not confirmed then
@@ -93,12 +102,20 @@ begin
     image.Opacity := 0.5;
     addrLbl.Opacity := 0.5;
     datalbl.Opacity := 0.5;
-  end;
+  end
+  else
+  begin
+    self.Opacity := 1;
+    lbl.Opacity := 1;
+    image.Opacity := 1;
+    addrLbl.Opacity := 1;
+    datalbl.Opacity := 1;
 
+  end;
 
 end;
 
-destructor ThistoryPanel.destroy();
+destructor THistoryPanel.Destroy();
 begin
 
   inherited;

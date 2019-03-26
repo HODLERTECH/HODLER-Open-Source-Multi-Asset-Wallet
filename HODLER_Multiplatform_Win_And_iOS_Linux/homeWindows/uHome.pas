@@ -840,6 +840,7 @@ type
     ToolBar20: TToolBar;
     Label31: TLabel;
     AddNewCryptoBackButton: TButton;
+    Image11: TImage;
     // Panel27: TPanel;
     // PasswordInfoStaticLabel: TLabel;
 
