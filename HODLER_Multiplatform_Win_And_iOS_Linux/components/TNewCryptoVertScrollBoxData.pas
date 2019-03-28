@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, System.Classes, FMX.Types, FMX.Controls, FMX.Layouts,
   FMX.Edit, FMX.StdCtrls, FMX.Clipboard, FMX.Platform, FMX.Objects, AccountData,
-  System.Types, StrUtils, popupwindowData, coinData, TokenData,
+  System.Types, StrUtils, popupwindowData, coinData, TokenData, fmx.Dialogs,
   walletStructureData , System.Generics.Collections , KeypoolRelated;
 
 type
@@ -207,11 +207,11 @@ begin
             getFirstUnusedXforCoin(ancp.Tag), 0, MasterSeed, ancp.Edit.Text);
 
           ac.AddCoin(WalletInfo);
-          TThread.Synchronize(nil,
-            procedure
-            begin
+          //TThread.Synchronize(nil,
+            //procedure
+            //begin
               CreatePanel(WalletInfo, ac, box);
-            end);
+           // end);
 
         end;
 
@@ -223,11 +223,11 @@ begin
           MasterSeed, ethPanel.Edit.Text);
 
         ac.AddCoin(WalletInfo);
-        TThread.Synchronize(nil,
-          procedure
-          begin
+        //TThread.Synchronize(nil,
+         // procedure
+         // begin
             CreatePanel(WalletInfo, ac, box);
-          end);
+         // end);
 
         ETHAddressForNewToken := WalletInfo.addr;
       end;
@@ -247,11 +247,11 @@ begin
           T.idInWallet := length(ac.myTokens) + 10000;
 
           ac.addToken(T);
-          TThread.Synchronize(nil,
-            procedure
-            begin
+          //TThread.Synchronize(nil,
+            //procedure
+           // begin
               CreatePanel(T, ac, box);
-            end);
+           // end);
 
         end;
 
@@ -265,7 +265,7 @@ begin
 
 
           tempTokenList := TETHListPanel( ETHAddTokenLayout.children[i] );
-          for j := 0 to temptokenlist.tokenList.Children.Count - 1 do
+          for j := 0 to temptokenlist.tokenList.ChildrenCount - 1 do
           begin
 
             if temptokenList.tokenList.children[j] is TAddNewTokenPanel then
@@ -281,11 +281,11 @@ begin
               T.idInWallet := length(ac.myTokens) + 10000;
 
               ac.addToken(T);
-              TThread.Synchronize(nil,
-                procedure
-                begin
+              //TThread.Synchronize(nil,
+               // procedure
+               // begin
                   CreatePanel(T, ac, box);
-                end);
+                //end);
 
             {end
             else
@@ -304,12 +304,13 @@ begin
       end;
 
       startFullfillingKeypool(MasterSeed);
-      TThread.Synchronize(nil,
-        procedure
-        begin
+      //TThread.Synchronize(nil,
+        //procedure
+        //begin
           frmhome.btnSyncClick(nil);
-        end);
 
+        //end);
+      switchTab(frmhome.PageControl, HOME_TABITEM);
     end,
     procedure(password: String)
     begin
@@ -509,9 +510,14 @@ begin
   ethPanel.parent := self;
   ethPanel.Align := tAlignLayout.MostTop;
   ethPanel.height := 48;
-  ethPanel.coinName.Text := ac.getDescription(wd.coin, wd.X);
-  ethPanel.coinIMG.Bitmap.LoadFromStream
+
+    ethPanel.coinName.Text := ac.getDescription(wd.coin, wd.X);
+
+
+    ethPanel.coinIMG.Bitmap.LoadFromStream
     (ResourceMenager.getAssets(availableCoin[4].resourceName));
+
+  
   ethPanel.ETHAddress := wd.addr;
 
 {$IFDEF ANDROID}
@@ -519,10 +525,13 @@ begin
 {$ELSE}
   ethPanel.OnClick := PanelClick;
 {$ENDIF}
+
   tokenList := TNewTokenList.Create(self, wd, ac);
   tokenList.parent := self;
   tokenList.Align := tAlignLayout.Top;
   tokenList.Visible := true;
+
+  
   // tokenlist.Height := 480;
 
   height := tokenList.height + ethPanel.height;
@@ -589,6 +598,7 @@ var
 begin
 
   inherited Create(AOwner);
+  ancp := nil;
   list := TList<TAddNewTokenPanel>.create();
   countToken := 0;
   for i := 0 to length(Token.availableToken) - 1 do
@@ -597,17 +607,19 @@ begin
       Continue;
     if (wd <> nil) and (ac <> nil) then
     begin
-      if ac.TokenExistinETh(Token.availableToken[i].id, wd.addr) then
-      begin
 
-         continue;
-      end;
+        if ac.TokenExistinETh(Token.availableToken[i].id, wd.addr) then
+        begin
+
+           continue;
+        end;
+
+
     end;
     countToken := countToken + 1;
 
-    ancp := TAddNewTokenPanel.Create(self);
-    // ancp.Margins.Left := 10;
-    ancp.parent := self;
+      ancp := TAddNewTokenPanel.Create(self);
+        ancp.parent := self;
     ancp.Align := tAlignLayout.Top;
     ancp.height := 48;
     ancp.Position.Y := 48 + i * 48;
@@ -623,6 +635,7 @@ begin
 
     if (wd <> nil) and (ac <> nil) then
     begin
+
       if ac.TokenExistinETh(Token.availableToken[i].id, wd.addr) then
       begin
         ancp.Visible :=false;
@@ -631,18 +644,15 @@ begin
 
       end;
 
-    end
-    else
-    begin
-      ancp.checkBox.IsChecked := false;
-      // ancp.Edit.Visible := false;
+      
+
     end;
 
     list.add(ancp);
   end;
-
-  ancp.treeImage.Bitmap.LoadFromStream
-    (ResourceMenager.getAssets('ETH_TREE_SHORT'));
+  if ancp <> nil then
+    ancp.treeImage.Bitmap.LoadFromStream
+      (ResourceMenager.getAssets('ETH_TREE_SHORT'));
 
   self.height := countToken * 48;
 
@@ -655,30 +665,48 @@ var
   countHeight : Single;
 begin
 
-  for i := ETHAddTokenLayout.Children.Count - 1 downto 0 do
-  begin
-    if ETHAddTOkenLayout.Children[i] is TETHListPanel then
+
+
+  try
+     i := 0;
+    while( i <  ETHAddTokenLayout.Children.Count ) do
     begin
-       ETHAddTOkenLayout.Children[i].DisposeOf;
+      if ETHAddTOkenLayout.Children[i] is TETHListPanel then
+      begin
+         ETHAddTOkenLayout.Children[i].DisposeOf;
+        i := -1;
+      end;
+      inc(i);
     end;
+  except on E: Exception do
+  begin
+    showmessage('foo1');
+  end;
   end;
 
   countETH := 0;
   countHeight := 0;
-  for i := 0 to length(acc.myCoins) - 1 do
-  begin
-
-    if acc.myCoins[i].coin = 4 then
+  try
+    for i := 0 to length(acc.myCoins) - 1 do
     begin
 
-      countETH := countETH + 1;
-      ethp := TETHListPanel.Create(ETHAddTokenLayout, acc.myCoins[i], acc);
-      ethp.parent := ETHAddTokenLayout;
-      ethp.Align := tAlignLayout.Top;
-      countHeight := countHeight + ethp.Height;
-    end;
+      if acc.myCoins[i].coin = 4 then
+      begin
 
+        countETH := countETH + 1;
+        ethp := TETHListPanel.Create(ETHAddTokenLayout, acc.myCoins[i], acc);
+        ethp.parent := ETHAddTokenLayout;
+        ethp.Align := tAlignLayout.Top;
+        countHeight := countHeight + ethp.Height;
+      end;
+
+    end;
+  except on E: Exception do
+  begin
+    showmessage('foo2');
   end;
+  end;
+ 
   if countETH = 0 then
   begin
 
@@ -753,6 +781,9 @@ var
 begin
 
   inherited Create(AOwner);
+  try
+
+
   coinList := TList<TAddnewCryptoPanel>.create();
   ac := acc;
 
@@ -768,7 +799,13 @@ begin
   coinLabel.Text := '----ADD NEW COIN/TOKEN----';
   coinLabel.TextSettings.HorzAlign := TTextAlign.Center;
   coinLabel.height := 48;
+  except on E: Exception do
+  begin
+    showmessage('test1');
+  end;
+  end;
 
+  try
   for i := 0 to length(availableCoin) - 1 do
   begin
     ancp := TAddNewCryptoPanel.Create(CoinLayout);
@@ -803,6 +840,13 @@ begin
     end;
     coinList.add(ancp);
   end;
+  except on E: Exception do
+  begin
+    showmessage('test2');
+  end;
+  end;
+
+  try
   CoinLayout.height := ETHTokenLayout.height + (length(availableCoin)) * 48;
 
   ETHAddTokenLayout := Tlayout.Create(self);
@@ -815,8 +859,19 @@ begin
   AddTokenToETH.Text := '----ADD TOKEN TO EXISTING WALLET----';
   AddTokenToETH.TextSettings.HorzAlign := TTextAlign.Center;
   AddTokenToETH.height := 48;
-
+ except on E: Exception do
+  begin
+    showmessage('test4');
+  end;
+  end;
+  try
   prepareForAccount(acc);
+
+  except on E: Exception do
+  begin
+    showmessage('test3');
+  end;
+  end;
 
   {countETH := 0;
   for i := 0 to length(acc.myCoins) - 1 do

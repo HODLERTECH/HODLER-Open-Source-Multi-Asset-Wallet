@@ -27,7 +27,7 @@ uses
   FMX.Clipboard, bech32, cryptoCurrencyData, FMX.VirtualKeyBoard, JSON,
   languages, WIF, AccountData, WalletStructureData,
   System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
-  popupWindowData,  TCopyableAddressPanelData ,
+  popupWindowData,  TCopyableAddressPanelData ,TNewCryptoVertScrollBoxData,
 
   FMX.Media, FMX.Objects, CurrencyConverter, uEncryptedZipFile, System.Zip,
   TRotateImageData
@@ -819,6 +819,12 @@ type
     btnAddContract: TButton;
     btnAddManually: TButton;
     FindERC20autoButton: TButton;
+    AddCurrencyListTabItem: TTabItem;
+    ToolBar23: TToolBar;
+    Label31: TLabel;
+    CreateCurrencyFromList: TButton;
+    AddNewCryptoCurrencyButton: TButton;
+    AddNewCryptoBackButton: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1060,6 +1066,9 @@ type
     procedure UnlockNanoImageClick(Sender: TObject);
     procedure UnlockNanoImageTap(Sender: TObject; const Point: TPointF);
     procedure BackBtnSGCClick(Sender: TObject);
+    procedure AddNewCryptoCurrencyButtonClick(Sender: TObject);
+    procedure CreateCurrencyFromListClick(Sender: TObject);
+    procedure AddNewCryptoBackButtonClick(Sender: TObject);
     // procedure DayNightModeSwitchClick(Sender: TObject);
 
   private
@@ -1130,6 +1139,7 @@ type
     refreshGlobalImage: TRotateImage;
     NotificationLayout: TNotificationLayout;
     receiveAddress , wvAddress : TCopyableAddressPanel;
+    newCryptoVertScrollBox: TNewCryptoVertScrollBox;
 
   var
     cpTimeout: int64;
@@ -2231,6 +2241,18 @@ begin
   AccountsListPanel.Visible := false;
 end;
 
+procedure TfrmHome.AddNewCryptoBackButtonClick(Sender: TObject);
+begin
+  switchTab(PageControl, HOME_TABITEM);
+end;
+
+procedure TfrmHome.AddNewCryptoCurrencyButtonClick(Sender: TObject);
+begin
+
+    WalletViewRelated.AddNewCryptoCurrencyButtonClick(Sender);
+
+end;
+
 procedure TfrmHome.addNewWalletPanelClick(Sender: TObject);
 begin
   WalletViewRelated.addNewWalletPanelClick(Sender);
@@ -2504,6 +2526,11 @@ end;
 procedure TfrmHome.CreateBackupButtonClick(Sender: TObject);
 begin
   switchTab(PageControl, BackupTabItem);
+end;
+
+procedure TfrmHome.CreateCurrencyFromListClick(Sender: TObject);
+begin
+  newCryptoVertScrollBox.createCryptoAndAddPanelTo( frmhome.walletList );
 end;
 
 procedure TfrmHome.CurrencyBoxChange(Sender: TObject);

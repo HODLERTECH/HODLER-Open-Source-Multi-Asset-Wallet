@@ -835,7 +835,7 @@ type
     CapsLockWarningPanel: TPanel;
     CapsLockWarningLabel: TLabel;
     AddCurrencyListTabItem: TTabItem;
-    Button11: TButton;
+    AddNewCryptoCurrencyButton: TButton;
     CreateCurrencyFromList: TButton;
     ToolBar20: TToolBar;
     Label31: TLabel;
@@ -1112,7 +1112,7 @@ type
     procedure AddWalletButtonClick(Sender: TObject);
     procedure NanoUnlockerClick(Sender: TObject);
     procedure UnlockPengingTransactionClick(Sender: TObject);
-    procedure Button11Click(Sender: TObject);
+    procedure AddNewCryptoCurrencyButtonClick(Sender: TObject);
     procedure CreateCurrencyFromListClick(Sender: TObject);
     procedure AddNewCryptoBackButtonClick(Sender: TObject);
     // procedure UserReportSendLogsSwitchClick(Sender: TObject);
@@ -3214,40 +3214,14 @@ begin
   switchTab(PageControl, Settings);
 end;
 
-procedure TfrmHome.Button11Click(Sender: TObject);
+procedure TfrmHome.AddNewCryptoCurrencyButtonClick(Sender: TObject);
 var
   Panel: TPanel;
   i: Integer;
   VSB: TNewCryptoVertScrollBox;
 begin
 
-  if newCryptoVertScrollBox = nil then
-  begin
-    newCryptoVertScrollBox := TNewCryptoVertScrollBox.create(frmHome , currentAccount);
-    newCryptoVertScrollBox.Parent := AddCurrencyListTabItem;
-    newCryptoVertScrollBox.Visible := true;
-    newCryptoVertScrollBox.Align := TAlignLayout.Client;
-  end;
-  newCryptoVertScrollBox.prepareForAccount( currentAccount );
-  newCryptoVertScrollBox.clear;
-
-
-  { for I := 0 to length(availableCoin) - 1 do
-    begin
-
-
-    panel := TAddNewCryptoPanel.Create( VertScrollBox5 );
-    panel.Align := panel.Align.alTop;
-    panel.Height := 48;
-    panel.Position.Y := 48 + i * 48;
-    panel.Visible := true;
-    panel.tag := i;
-    panel.parent := VertScrollBox5;
-    //panel.OnClick := frmhome.addNewWalletPanelClick;
-
-    end; }
-
-  switchTab(PageControl, AddCurrencyListTabItem);
+  WalletViewRelated.AddNewCryptoCurrencyButtonClick(Sender);
 
 end;
 

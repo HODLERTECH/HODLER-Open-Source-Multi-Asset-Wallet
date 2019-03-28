@@ -203,8 +203,11 @@ begin
     begin
 
       ShowThinkingWindow();
+      tthread.Synchronize( nil , procedure
+      begin
+        proc();
+      end);
 
-      proc();
 
       CloseThinkingWindow();
 

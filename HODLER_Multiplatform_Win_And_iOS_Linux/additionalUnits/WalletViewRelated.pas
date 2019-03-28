@@ -13,7 +13,7 @@ uses
   FMX.Platform, System.Threading, Math, DelphiZXingQRCode,
   FMX.TabControl, FMX.Edit,
   FMX.Clipboard, FMX.VirtualKeyBoard, JSON, popupwindowData,
-  languages, WalletStructureData,  TCopyableAddressPanelData,
+  languages, WalletStructureData,  TCopyableAddressPanelData,TNewCryptoVertScrollBoxData,
 
   FMX.Media, FMX.Objects, uEncryptedZipFile, System.Zip
 {$IFDEF ANDROID},
@@ -90,7 +90,7 @@ procedure AddWalletButtonClick(Sender: TObject);
 procedure AddTokenFromWalletList(Sender: TObject);
 procedure FindERC20autoButtonClick(Sender: TObject);
 procedure AddNewTokenETHPanelClick(sender : Tobject );
-
+procedure AddNewCryptoCurrencyButtonClick(Sender: TObject);
 
 var
   SyncOpenWallet: TThread;
@@ -101,6 +101,32 @@ uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, AccountRelated, TCopyableEditData, BackupRelated, debugAnalysis,
   KeypoolRelated , nano , ED25519_Blake2b;
+
+
+procedure AddNewCryptoCurrencyButtonClick(Sender: TObject);
+var
+  Panel: TPanel;
+  i: Integer;
+  //VSB: TNewCryptoVertScrollBox;
+begin
+with frmhome do
+begin
+  if newCryptoVertScrollBox = nil then
+  begin
+    newCryptoVertScrollBox := TNewCryptoVertScrollBox.create(frmHome , currentAccount);
+    newCryptoVertScrollBox.Parent := AddCurrencyListTabItem;
+    newCryptoVertScrollBox.Visible := true;
+    newCryptoVertScrollBox.Align := TAlignLayout.Client;
+  end;
+
+  newCryptoVertScrollBox.prepareForAccount( currentAccount );
+  newCryptoVertScrollBox.clear;
+
+ 
+
+  switchTab(PageControl, AddCurrencyListTabItem);
+end;
+end;
 
 
 procedure AddNewTokenETHPanelClick(sender : Tobject );
@@ -2122,6 +2148,9 @@ begin
 
   if frmhome.pageControl.ActiveTab = HOME_TABITEM then
     frmhome.WVTabControl.ActiveTab := frmhome.WVBalance;
+
+  frmhome.BalanceTextLayout.Width := frmhome.topInfoUnconfirmed.Canvas.TextWidth( frmhome.topInfoUnconfirmed.Text ) * 1.25;
+  frmhome.btnWVShare.Width := max( 48 , frmhome.btnWVShare.Canvas.TextWidth( frmhome.btnWVShare.Text ) * 1.1 );
 
   frmhome.AutomaticFeeRadio.IsChecked := True;
   frmhome.TopInfoConfirmedValue.Text := ' Calculating...';
