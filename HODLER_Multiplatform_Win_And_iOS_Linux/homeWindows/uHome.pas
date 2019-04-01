@@ -31,11 +31,10 @@ uses
   FMX.Edit,
   FMX.Clipboard, bech32, cryptoCurrencyData, FMX.VirtualKeyBoard, JSON,
   languages, WIF, AccountData, WalletStructureData,
-  TCopyableAddressPanelData , ThreadKinderGartenData,ComponentPoolData,
+  TCopyableAddressPanelData, ThreadKinderGartenData, ComponentPoolData,
   System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
   CurrencyConverter, uEncryptedZipFile, System.Zip, TRotateImageData,
-  popupwindowData, notificationLayoutData, TaddressLabelData,
-  TNewCryptoVertScrollBoxData
+  popupwindowData, notificationLayoutData, TaddressLabelData , TNewCryptoVertScrollBoxData
 {$IFDEF ANDROID},
   FMX.VirtualKeyBoard.Android,
   Androidapi.JNI,
@@ -58,7 +57,7 @@ uses
   ZXing.BarcodeFormat,
   ZXing.ReadResult,
   ZXing.ScanManager,
-{$IF NOT DEFINED(LINUX)} System.Sensors, System.Sensors.Components, {$ENDIF} FMX.ComboEdit;
+{$IF NOT DEFINED(LINUX)} System.Sensors, System.Sensors.Components, {$ENDIF} FMX.ComboEdit{$IFDEF LINUX}, Posix.Stdlib{$ENDIF};
 
 type
 
@@ -841,6 +840,7 @@ type
     Label31: TLabel;
     AddNewCryptoBackButton: TButton;
     Image11: TImage;
+    NanoStateTimer: TTimer;
     // Panel27: TPanel;
     // PasswordInfoStaticLabel: TLabel;
 
@@ -1125,7 +1125,8 @@ type
       var KeyChar: Char; Shift: TShiftState);
     procedure NewCoinDescriptionPassEditKeyUp(Sender: TObject; var Key: Word;
       var KeyChar: Char; Shift: TShiftState);
-    //procedure UserReportSendLogsSwitchClick(Sender: TObject);
+    procedure NanoStateTimerTimer(Sender: TObject);
+    // procedure UserReportSendLogsSwitchClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -1299,10 +1300,10 @@ end;
 
 procedure TfrmHome.UnlockNanoImageClick(Sender: TObject);
 begin
-  UnlockPengingTransactionClick(sender);
+  UnlockPengingTransactionClick(Sender);
 end;
 
-procedure tfrmhome.UnlockPendingNano(sender : TObject);
+procedure TfrmHome.UnlockPendingNano(Sender: TObject);
 var
   tced: AnsiString;
   MasterSeed: AnsiString;
@@ -1401,11 +1402,11 @@ begin
 end;
 
 procedure TfrmHome.CoinPrivKeyPassEditKeyUp(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
+var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = vkReturn then
   begin
-    NewCoinPrivKeyOKButtonClick( nil );
+    NewCoinPrivKeyOKButtonClick(nil);
 
   end;
 end;
@@ -1651,7 +1652,10 @@ end;
 
 procedure TfrmHome.hideWallet(Sender: TObject);
 begin
+try
   WalletViewRelated.walletHide(Sender);
+  except on E:Exception do begin end;
+  end;
 end;
 
 procedure TfrmHome.HideZeroWalletsCheckBoxChange(Sender: TObject);
@@ -1838,12 +1842,12 @@ begin
 end;
 
 procedure TfrmHome.PrivateKeyEditSVKeyUp(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
+var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = vkReturn then
   begin
     ClaimYourBCHSVButtonClick(nil);
-    //btnCreateWallet.OnClick();
+    // btnCreateWallet.OnClick();
   end;
 end;
 
@@ -1949,16 +1953,16 @@ end;
 procedure switchTab(TabControl: TTabControl; TabItem: TTabItem);
 begin
   backTabItem := frmHome.PageControl.ActiveTab;
-  //if not frmHome.shown then
-  //begin
-    TabControl.ActiveTab := TabItem;
-  {end
-  else
-  begin
+  // if not frmHome.shown then
+  // begin
+  TabControl.ActiveTab := TabItem;
+  { end
+    else
+    begin
     frmHome.tabAnim.Tab := TabItem;
 
     frmHome.tabAnim.ExecuteTarget(TabControl);
-  end; }
+    end; }
   frmHome.passwordForDecrypt.Text := '';
   frmHome.DecryptSeedMessage.Text := '';
 
@@ -2122,8 +2126,8 @@ var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = vkReturn then
   begin
-    btnCreateWalletClick( btnCreateWallet );
-    //btnCreateWallet.OnClick();
+    btnCreateWalletClick(btnCreateWallet);
+    // btnCreateWallet.OnClick();
   end;
 end;
 
@@ -2526,10 +2530,11 @@ var
   od: TOpenDialog;
 begin
 
-   {od:=TOpenDialog.Create(nil);
+  { od:=TOpenDialog.Create(nil);
+
     if od.execute then
     stylo.SetStyleFromFile(od.FileName);
-    od.Free;    }
+    od.Free; }
 
 
   switchTab(PageControl, AddAccount);
@@ -2596,6 +2601,9 @@ var
 var
   Intent: JIntent;
 {$ENDIF}
+{$IFDEF LINUX}
+psxString:System.AnsiString;
+{$ENDIF}
 begin
   myURI := TfmxObject(Sender).TagString;
 
@@ -2606,9 +2614,14 @@ begin
   Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
   Intent.setData(StrToJURI(myURI));
   SharedActivity.startActivity(Intent);
-{$ELSE}
+{$ENDIF}
+{$IFDEF MSWINDOWS}
   ShellExecute(0, 'OPEN', PWideChar(URL), '', '', { SW_SHOWNORMAL } 1);
-{$ENDIF ANDROID}
+{$ENDIF}
+{$IFDEF LINUX}
+  psxString := 'xdg-open ' + myURI;
+  _system(@psxString[1]);
+{$ENDIF}
 end;
 
 procedure TfrmHome.TrySendTX(Sender: TObject);
@@ -2781,19 +2794,18 @@ begin
 end;
 
 procedure TfrmHome.ConfirmSendPasswordEditKeyUp(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
+var KeyChar: Char; Shift: TShiftState);
 begin
-if Key = vkReturn then
+  if Key = vkReturn then
   begin
-  if ConfirmSendClaimCoinButton.Visible then
-  begin
-    ConfirmSendClaimCoinButtonClick(nil);
-  end
-  else
-  if SendTransactionButton.Visible then
-  begin
-    SendTransactionButtonClick(nil);
-  end;
+    if ConfirmSendClaimCoinButton.Visible then
+    begin
+      ConfirmSendClaimCoinButtonClick(nil);
+    end
+    else if SendTransactionButton.Visible then
+    begin
+      SendTransactionButtonClick(nil);
+    end;
   end;
 end;
 
@@ -3135,6 +3147,14 @@ begin
   nano_DoMine(CryptoCurrency(NanoUnlocker.TagObject), passwordForDecrypt.Text);
   passwordForDecrypt.Text := '';
   PageControl.ActiveTab := walletView;
+
+end;
+
+procedure TfrmHome.NanoStateTimerTimer(Sender: TObject);
+begin
+if CurrentAccount<>nil then
+nano_checkMineState(CurrentAccount);
+
 end;
 
 procedure TfrmHome.NanoUnlockerClick(Sender: TObject);
@@ -3146,7 +3166,7 @@ begin
 end;
 
 procedure TfrmHome.NewCoinDescriptionPassEditKeyUp(Sender: TObject;
-  var Key: Word; var KeyChar: Char; Shift: TShiftState);
+var Key: Word; var KeyChar: Char; Shift: TShiftState);
 begin
   if Key = vkReturn then
   begin
@@ -3213,6 +3233,7 @@ procedure TfrmHome.Button10Click(Sender: TObject);
 begin
   switchTab(PageControl, Settings);
 end;
+
 
 procedure TfrmHome.AddNewCryptoCurrencyButtonClick(Sender: TObject);
 var
@@ -3292,6 +3313,7 @@ var
   actionListener: TActionList;
 
   // temp : TAddressLabel;
+
   T: ThreadKindergarten;
   temp: TThread;
 
@@ -3330,6 +3352,7 @@ begin
       end).Start;
 
   T.free;
+
 
 end;
 
@@ -3714,11 +3737,13 @@ end;
 procedure TfrmHome.FormCreate(Sender: TObject);
 begin
 
+
   frmHome.Position := TFormPosition.ScreenCenter;
   CapsLockWarningPanel.Visible := LowOrderBitSet(GetKeyState(VK_CAPITAL));
 
   frmhome.Height := min( frmhome.Height , round(Screen.Height * 0.8) );
   frmhome.Width := min( frmhome.Width , round(Screen.Width * 0.8) );
+
 
 {$IF NOT DEFINED(LINUX)}
   MotionSensor := TMotionSensor.create(frmHome);
@@ -4115,11 +4140,15 @@ var
   Intent: JIntent;
 
 {$ENDIF}
+{$IFDEF LINUX}
+  psxString: System.AnsiString;
+{$ENDIF}
 begin
 
   if CurrentCryptoCurrency is Token then
   begin
-    myUri := getURLToTokenExplorer( StringReplace(HistoryTransactionID.Text, ' ', '', [rfReplaceAll]) );
+    myURI := getURLToTokenExplorer(StringReplace(HistoryTransactionID.Text, ' ',
+      '', [rfReplaceAll]));
   end
   else
     myURI := getURLToExplorer(CurrentCoin.coin,
@@ -4130,9 +4159,14 @@ begin
   Intent.setData(StrToJURI(myURI));
   SharedActivity.startActivity(Intent);
 
-{$ELSE}
+{$ENDIF}
+{$IFDEF MSWINDOWS}
   URL := myURI;
   ShellExecute(0, 'OPEN', PWideChar(URL), '', '', { SW_SHOWNORMAL } 1);
+{$ENDIF}
+{$IFDEF LINUX}
+  psxString := 'xdg-open ' + myURI;
+  _system(@psxString[1]);
 {$ENDIF}
 end;
 

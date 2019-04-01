@@ -55,7 +55,7 @@ begin
 
   for i := 0 to (Length(V) div 2) - 1 do
   begin
-    sb := System.UInt8(StrToInt('$' + Copy(V, ((i) * 2) + 1, 2)));
+    sb := System.UInt8(StrToIntDef('$' + Copy(V, ((i) * 2) + 1, 2),0));
     S[i] := sb;
   end;
   n := 34;
@@ -102,7 +102,7 @@ begin
   SetLength(S, (Length(V) div 2) + 1);
   for i := 1 to (Length(V) div 2) do
   begin
-    sb := System.UInt8(StrToInt('$' + Copy(V, ((i - 1) * 2) + 1, 2)));
+    sb := System.UInt8(StrToIntDef('$' + Copy(V, ((i - 1) * 2) + 1, 2),0));
     S[i] := sb;
   end;
   n := 34;

@@ -93,25 +93,20 @@ begin
 end;
 
 procedure THistoryPanel.setConfirmed(confirmed: boolean);
+var
+  val: single;
 begin
 
   if not confirmed then
-  begin
-    self.Opacity := 0.5;
-    lbl.Opacity := 0.5;
-    image.Opacity := 0.5;
-    addrLbl.Opacity := 0.5;
-    datalbl.Opacity := 0.5;
-  end
+    val := 0.5
   else
-  begin
-    self.Opacity := 1;
-    lbl.Opacity := 1;
-    image.Opacity := 1;
-    addrLbl.Opacity := 1;
-    datalbl.Opacity := 1;
+    val := 1;
 
-  end;
+  self.Opacity := val;
+  lbl.Opacity := val;
+  image.Opacity := val;
+  addrLbl.Opacity := val;
+  datalbl.Opacity := val;
 
 end;
 

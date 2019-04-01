@@ -7,7 +7,7 @@ uses
   StrUtils, WalletStructureData, CryptoCurrencyData, tokenData, System.SyncObjs,
 
   JSON, System.TimeSpan, System.Diagnostics, Nano{$IFDEF MSWINDOWS},
-  Winapi.ShellAPI, Winapi.Windows{$ENDIF};
+  Winapi.ShellAPI, Winapi.Windows{$ENDIF}{$IFDEF LINUX}, Posix.Stdlib{$ENDIF};
 
 type
   SynchronizeBalanceThread = class(TThread)
@@ -169,25 +169,74 @@ begin
 end;
 
 procedure syncNano(var cc: cryptoCurrency; data: AnsiString);
+  procedure calcNanoBalances(var nn: NanoCoin);
+  var
+    nblock: TNanoBlock;   i:integer;
+    prevAmount: BigInteger;
+  begin
+    if Length(nn.pendingChain) = 0 then
+      exit;
+    prevAmount := nn.confirmed;
+    nblock := nn.firstBlock;
+    if not (nblock.balance='') then
+    if BigInteger.Parse(nblock.balance) < prevAmount then
+      nn.confirmed := prevAmount -
+        (prevAmount - BigInteger.Parse(nblock.balance));
+
+    repeat
+    if BigInteger.Parse(nblock.balance) < prevAmount then begin
+      SetLength(nn.history, Length(nn.history) + 1);
+      i:=length(nn.history)-1;
+      SetLength(nn.history[i].values, 2);
+      SetLength(nn.history[i].addresses, 2);
+      nn.history[i].values[0] :=
+        (prevAmount - BigInteger.Parse(nblock.balance));
+      nn.history[i].values[1] := 0;
+      nn.history[i].TransactionID := nblock.Hash;
+      nn.history[i].addresses[0] := (nblock.account);
+      nn.history[i].addresses[1] := (nblock.source);
+      nn.history[i].data := IntToStr(Length(nn.history) + 1);
+      nn.history[i].typ := 'OUT';
+      nn.history[i].CountValues := nn.history[i].values[0];
+      nn.history[i].confirmation := 0;
+    end;
+      prevAmount := BigInteger.Parse(nblock.balance);
+
+      nblock := nn.BlockByPrev(nblock.hash);
+      if not (nblock.balance='') then
+      if BigInteger.Parse(nblock.balance) < prevAmount then
+      begin
+        nn.confirmed := prevAmount -
+          (prevAmount - BigInteger.Parse(nblock.balance));
+      end;
+
+    until nblock.account = '';
+  end;
+
 var
   js: TJSONObject;
   newblock: string;
-  block, firstblock: TNanoBlock;
+  block, firstBlock: TNanoBlock;
   history: TJsonArray;
   ts: TStringList;
   i: Integer;
   masterseed, tced: AnsiString;
-  err:string;
+  err: string;
   pendings: TJsonArray;
   temp: TpendingNanoBlock;
+  psxString: AnsiString;   // System.AnsiString nie kompiluje siê na Androidzie
 begin
 {$IFDEF MSWINDOWS}
   if TOSVersion.Architecture = arIntelX64 then
     ShellExecute(0, 'open', 'NanoPoW64.exe', '',
-      PWideChar(ExtractFileDir(ParamStr(0))), SW_HIDE)
+      PWideChar(ExtractFileDir(ParamStr(0))), 6)
   else
     ShellExecute(0, 'open', 'NanoPoW32.exe', '',
-      PWideChar(ExtractFileDir(ParamStr(0))), SW_HIDE);
+      PWideChar(ExtractFileDir(ParamStr(0))), 6);
+{$ENDIF}
+{$IFDEF LINUX64}
+  psxString := '"' + ExtractFileDir(ParamStr(0)) + '/nanopow64"';
+  _system(@psxString[1]);
 {$ENDIF}
   try
 
@@ -200,74 +249,112 @@ begin
     // {history := }js.TryGetValue<TJSONArray>('history' , history) {as TJSONArray};
     // {pendings :=} js.tryGetValue<TJsonArray>('pending' , pendings) {as TJsonArray};
     try
-    NanoCoin(cc).loadChain;
-    except on E:Exception do begin end;
+      NanoCoin(cc).loadChain;
+    except
+      on E: Exception do
+      begin
+      end;
     end;
     if (Length(NanoCoin(cc).pendingChain) > 0) then
       NanoCoin(cc).lastBlockAmount :=
         BigInteger.Parse(NanoCoin(cc).curBlock.balance)
     else
       NanoCoin(cc).lastBlockAmount := cc.confirmed;
-    cc.confirmed := NanoCoin(cc).lastBlockAmount;
-   try
-    if js.TryGetValue<TJsonArray>('history', history) then
-      if history.Count > 0 then
-      begin
 
-        firstblock := nano_buildFromJSON(history.Items[0].ToJSON, '', false);
-        cc.lastPendingBlock := firstblock.hash;
-      //  if (Length(NanoCoin(cc).pendingChain) = 0) then
-          nano_precalculate(cc.lastPendingBlock);
-        SetLength(cc.history, history.Count);
-        for i := 0 to history.Count - 1 do
+    // cc.unconfirmed := cc.unconfirmed +
+    // (cc.confirmed - NanoCoin(cc).lastBlockAmount);
+    try
+      if js.TryGetValue<TJsonArray>('history', history) then
+        if history.Count > 0 then
         begin
 
-          block := nano_buildFromJSON(history.Items[i].ToJSON, '', false);
+          firstBlock := nano_buildFromJSON(history.Items[0].ToJSON, '', false);
+          cc.lastPendingBlock := firstBlock.Hash;
+          // if (Length(NanoCoin(cc).pendingChain) = 0) then
+          nano_precalculate(cc.lastPendingBlock);
+          SetLength(cc.history, history.Count);
+          for i := 0 to history.Count - 1 do
+          begin
 
-          SetLength(cc.history[i].values, 2);
-          SetLength(cc.history[i].addresses, 2);
-          cc.history[i].values[0] := BigInteger.abs(block.blockAmount);
-          cc.history[i].values[1] := 0;
-          // length(hitory.Values) must be the same as length(history.addresses)
-          cc.history[i].TransactionID := block.hash;
-          cc.history[i].addresses[0] := nano_accountFromHexKey(block.account);
-          cc.history[i].addresses[1] := nano_accountFromHexKey(block.source);
-          cc.history[i].data := IntToStr(history.Count - 1 - i);
-          if block.blocktype = 'send' then
-            cc.history[i].typ := 'OUT'
-          else
-            cc.history[i].typ := 'IN';
-          cc.history[i].CountValues := cc.history[i].values[0];
-          cc.history[i].confirmation := 1;
-        end;
+            block := nano_buildFromJSON(history.Items[i].ToJSON, '', false);
+
+            SetLength(cc.history[i].values, 2);
+            SetLength(cc.history[i].addresses, 2);
+            cc.history[i].values[0] := BigInteger.abs(block.blockAmount);
+            cc.history[i].values[1] := 0;
+            // length(hitory.Values) must be the same as length(history.addresses)
+            cc.history[i].TransactionID := block.Hash;
+            cc.history[i].addresses[0] := nano_accountFromHexKey(block.account);
+            cc.history[i].addresses[1] := nano_accountFromHexKey(block.source);
+            cc.history[i].data := IntToStr(history.Count - 1 - i);
+            if block.blocktype = 'send' then
+              cc.history[i].typ := 'OUT'
+            else
+              cc.history[i].typ := 'IN';
+            cc.history[i].CountValues := cc.history[i].values[0];
+            cc.history[i].confirmation := 1;
+          end
+        end
+        else
+          nano_precalculate(nano_keyFromAccount(cc.addr));
+    except
+      on E: Exception do
+      begin
+       err:=E.message;
       end;
-   except on E:Exception do begin end; end;
-
+    end;
+    calcNanoBalances(NanoCoin(cc));
     if js.TryGetValue<TJsonArray>('pending', pendings) then
       if pendings.Count > 0 then
       begin
         for i := 0 to (pendings.Count div 2) - 1 do
         begin
+          try
+            temp.block := nano_buildFromJSON(pendings.Items[(i * 2)
+              ].GetValue<TJSONObject>('data').GetValue('contents').value, '');
+            temp.Hash := pendings.Items[(i * 2) + 1].GetValue<string>('hash');
 
-          temp.block := nano_buildFromJSON(pendings.Items[(i * 2)
-            ].GetValue<TJSONObject>('data').GetValue('contents').value, '');
-          temp.hash := pendings.Items[(i * 2) + 1].GetValue<string>('hash');
-          if NanoCoin(cc).BlockByLink(temp.hash).account <> '' then
-          begin
-            cc.unconfirmed := cc.unconfirmed - temp.block.blockAmount;
-          end
-          else
-          begin
+            if NanoCoin(cc).BlockByLink(temp.Hash).account <> '' then
+            begin
 
-            if not firstSync then
-              NanoCoin(cc).tryAddPendingBlock(temp);
+              SetLength(cc.history, Length(cc.history) + 1);
+              block := temp.block;
+              // cc.unconfirmed := cc.unconfirmed + block.blockAmount;
+              SetLength(cc.history[i].values, 2);
+              SetLength(cc.history[i].addresses, 2);
+              cc.history[i].values[0] := BigInteger.abs(block.blockAmount);
+              cc.history[i].values[1] := 0;
+              // length(hitory.Values) must be the same as length(history.addresses)
+              cc.history[i].TransactionID := block.Hash;
+              cc.history[i].addresses[0] :=
+                nano_accountFromHexKey(block.account);
+              cc.history[i].addresses[1] :=
+                nano_accountFromHexKey(block.source);
+              cc.history[i].data := IntToStr(history.Count - 1 - i);
+              if block.blocktype = 'send' then
+                cc.history[i].typ := 'OUT'
+              else
+                cc.history[i].typ := 'IN';
+              cc.history[i].CountValues := cc.history[i].values[0];
+              cc.history[i].confirmation := 0;
+            end
+            else
+            begin
+
+              if not firstSync then
+                NanoCoin(cc).tryAddPendingBlock(temp);
+            end;
+          except
+            on E: Exception do
+            begin
+            end;
           end;
         end;
       end;
   except
-    on e: exception do
+    on E: Exception do
     begin
-    err:=e.message;
+      err := E.message;
     end;
 
   end;
@@ -341,7 +428,7 @@ begin
         try
           parseCoinHistory(JsonPair.JsonValue.GetValue<string>('history'), wd);
         except
-          on e: exception do
+          on E: Exception do
           begin
           end;
 
@@ -364,7 +451,7 @@ begin
         try
           parseCoinHistory(JsonPair.JsonValue.GetValue<string>('history'), wd);
         except
-          on e: exception do
+          on E: Exception do
           begin
           end;
 
@@ -377,8 +464,8 @@ begin
     coinJson.Free;
 
   except
-    on e: exception do
-      err := (e.Message);
+    on E: Exception do
+      err := (E.message);
   end;
 
 end;
@@ -400,13 +487,13 @@ begin
     mutex := TSemaphore.Create();
   end;
 
-  {TThread.Synchronize(TThread.CurrentThread,
+  { TThread.Synchronize(TThread.CurrentThread,
     procedure
     begin
-      frmHome.DashBrdProgressBar.Max := Length(CurrentAccount.myCoins) +
-        Length(CurrentAccount.myTokens);
-      frmHome.DashBrdProgressBar.value := 0;
-    end);   }
+    frmHome.DashBrdProgressBar.Max := Length(CurrentAccount.myCoins) +
+    Length(CurrentAccount.myTokens);
+    frmHome.DashBrdProgressBar.value := 0;
+    end); }
 
   for i in [0, 1, 2, 3, 4, 5, 6, 7] do
   begin
@@ -421,7 +508,7 @@ begin
         wi: TWalletInfo;
         wd: TObject;
         url, s: string;
-        temp : String;
+        temp: String;
 
       begin
 
@@ -433,12 +520,11 @@ begin
           if id in [4, 8] then
           begin
 
-
             for wi in CurrentAccount.myCoins do
             begin
 
               if TThread.CurrentThread.CheckTerminated then
-                Exit();
+                exit();
 
               if wi.coin in [4, 8] then
                 SynchronizeCryptoCurrency(wi);
@@ -448,17 +534,18 @@ begin
           else
           begin
             s := batchSync(id);
- 
-            url := HODLER_URL + '/batchSync0.3.2.php?coin=' + availablecoin[id].name;
+
+            url := HODLER_URL + '/batchSync0.3.2.php?coin=' +
+              availablecoin[id].name;
 
             temp := postDataOverHTTP(url, s, firstSync, True);
             if TThread.CurrentThread.CheckTerminated then
-              Exit();
-            parseSync( temp );
+              exit();
+            parseSync(temp);
           end;
           if TThread.CurrentThread.CheckTerminated then
-              exit();
- 
+            exit();
+
           TThread.CurrentThread.Synchronize(nil,
             procedure
             begin
@@ -466,19 +553,19 @@ begin
               updateBalanceLabels(id);
             end);
         except
-          on e: exception do
+          on E: Exception do
           begin
 
           end;
         end;
         semaphore.Release();
 
-        {TThread.CurrentThread.Synchronize(nil,
+        { TThread.CurrentThread.Synchronize(nil,
           procedure
           begin
-            frmHome.DashBrdProgressBar.value :=
-              frmHome.RefreshProgressBar.value + 1;
-          end);   }
+          frmHome.DashBrdProgressBar.value :=
+          frmHome.RefreshProgressBar.value + 1;
+          end); }
 
       end).Start();
 
@@ -488,8 +575,8 @@ begin
   end;
   for i := 0 to Length(CurrentAccount.myTokens) - 1 do
   begin
-               if TThread.CurrentThread.CheckTerminated then
-              exit();
+    if TThread.CurrentThread.CheckTerminated then
+      exit();
     mutex.Acquire();
 
     CurrentAccount.SynchronizeThreadGuardian.CreateAnonymousThread(
@@ -507,7 +594,7 @@ begin
             exit();
           SynchronizeCryptoCurrency(CurrentAccount.myTokens[id]);
         except
-          on e: exception do
+          on E: Exception do
           begin
           end;
         end;
@@ -521,23 +608,23 @@ begin
           end);  }
 
       end).Start();
-              if TThread.CurrentThread.CheckTerminated then
-              exit();
+    if TThread.CurrentThread.CheckTerminated then
+      exit();
     mutex.Acquire();
     mutex.Release();
 
   end;
 
-  while ( semaphore <> nil ) and ( semaphore.CurrentCount <> 8 ) do
+  while (semaphore <> nil) and (semaphore.CurrentCount <> 8) do
   begin
     if TThread.CurrentThread.CheckTerminated then
       exit();
     sleep(50);
   end;
-   {tthread.Synchronize(nil , procedure
+  { tthread.Synchronize(nil , procedure
     begin
     showmessage( floatToStr( globalLoadCacheTime ) );
-    end);   }
+    end); }
 
   CurrentAccount.SaveFiles();
   firstSync := false;
@@ -561,7 +648,7 @@ begin
     parseSync(s, True);
 
   except
-    on e: exception do
+    on E: Exception do
     begin
 
     end;
@@ -616,7 +703,7 @@ begin
           parseSync(postDataOverHTTP(url, s, false, True), True);
 
         except
-          on e: exception do
+          on E: Exception do
           begin
 
           end;
@@ -650,7 +737,7 @@ end;
 
 procedure SynchronizeCryptoCurrency(cc: cryptoCurrency);
 var
-  data, url,s: string;
+  data, url, s: string;
 begin
 
   /// ////////////////HISTORY//////////////////////////
@@ -662,10 +749,10 @@ begin
         begin
           url := HODLER_URL + '/batchSync0.3.2.php?coin=' + availablecoin
             [TWalletInfo(cc).coin].name;
-            s:=postDataOverHTTP(url, batchSync(TWalletInfo(cc).coin,
+          s := postDataOverHTTP(url, batchSync(TWalletInfo(cc).coin,
             TWalletInfo(cc).X), false, True);
-            if TThread.CurrentThread.CheckTerminated then
-              exit();
+          if TThread.CurrentThread.CheckTerminated then
+            exit();
           parseSync(s);
         end;
       4:
@@ -684,7 +771,7 @@ begin
 
           data := getDataOverHTTP('https://hodlernode.net/nano.php?addr=' +
             TWalletInfo(cc).addr, false, True);
-                      if TThread.CurrentThread.CheckTerminated then
+          if TThread.CurrentThread.CheckTerminated then
             exit();
           if data <> '' then
             syncNano(cc, data);
@@ -752,7 +839,7 @@ begin
     end
     else
     begin
-      //raise exception.Create('CryptoCurrency Type Error');
+      // raise exception.Create('CryptoCurrency Type Error');
     end;
 
     exit();
@@ -798,7 +885,7 @@ begin
   end
   else
   begin
-    //raise exception.Create('CryptoCurrency Type Error');
+    // raise exception.Create('CryptoCurrency Type Error');
   end;
 
 end;
@@ -854,25 +941,24 @@ end;
 
 procedure SynchronizeBalanceThread.Execute();
 var
-dataTemp : ansiString;
+  dataTemp: AnsiString;
 begin
 
   inherited;
 
-  //frmHome.DashBrdProgressBar.value := 0;
-  //frmHome.RefreshProgressBar.value := 0;
+  // frmHome.DashBrdProgressBar.value := 0;
+  // frmHome.RefreshProgressBar.value := 0;
 
   startTime := now;
 
   with frmHome do
   begin
- 
-      dataTemp := getDataOverHTTP(HODLER_URL + 'fiat.php');
-      if TThread.CurrentThread.CheckTerminated then
-      Exit();
- 
 
-    TThread.Synchronize(nil, 
+    dataTemp := getDataOverHTTP(HODLER_URL + 'fiat.php');
+    if TThread.CurrentThread.CheckTerminated then
+      exit();
+
+    TThread.Synchronize(nil,
       procedure
       begin
 
@@ -892,7 +978,7 @@ begin
     try
       SynchronizeAll();
     except
-      on e: exception do
+      on E: Exception do
       begin
       end;
     end;
@@ -918,7 +1004,8 @@ begin
         begin
           try
             reloadWalletView;
-          except on E: Exception do
+          except
+            on E: Exception do
           end;
 
 
@@ -928,7 +1015,7 @@ begin
         end;
       end);
 
-        TThread.Synchronize(TThread.CurrentThread,
+    TThread.Synchronize(TThread.CurrentThread,
       procedure
       begin
 
@@ -988,7 +1075,7 @@ begin
 
     while (i < ts.Count - 1) do
     begin
-      number := strToInt(ts.Strings[i]);
+      number := strToIntdef(ts.Strings[i], 0);
       Inc(i);
       // showmessage(inttostr(number));
 
@@ -1003,7 +1090,7 @@ begin
 
       tempts := SplitString(ts[i]);
       transHist.data := tempts.Strings[0];
-      transHist.confirmation := strToInt(tempts[1]);
+      transHist.confirmation := strToIntdef(tempts[1], 0);
       tempts.Free;
       Inc(i);
 
@@ -1033,7 +1120,7 @@ begin
     end;
     // ts.Free;
   except
-    on e: exception do
+    on E: Exception do
     begin
     end;
 
@@ -1066,7 +1153,7 @@ begin
 
     while (i < ts.Count - 1) do
     begin
-      number := strToInt(ts.Strings[i]);
+      number := strToIntdef(ts.Strings[i], 0);
       Inc(i);
       // showmessage(inttostr(number));
 
@@ -1081,7 +1168,7 @@ begin
 
       tempts := SplitString(ts[i]);
       transHist.data := tempts.Strings[0];
-      transHist.confirmation := strToInt(tempts[1]);
+      transHist.confirmation := strToIntdef(tempts[1], 0);
       tempts.Free;
       Inc(i);
 
@@ -1111,7 +1198,7 @@ begin
     /// ////////
 
   except
-    on e: exception do
+    on E: Exception do
     begin
 
     end;
@@ -1165,7 +1252,7 @@ begin
     wd.rate := StrToFloatDef(ts.Strings[9], 0);
 
   except
-    on e: exception do
+    on E: Exception do
     begin
     end;
   end;
@@ -1195,7 +1282,7 @@ begin
     wd.rate := StrToFloatDef(ts.Strings[4], 0);
 
   except
-    on e: exception do
+    on E: Exception do
 
   end;
 
@@ -1219,7 +1306,7 @@ begin
     wd.confirmed := BigInteger.Parse(ts.Strings[1]);
     if (wd.id < 10000) or (not Token.AvailableToken[wd.id - 10000].stableCoin)
     then
-      wd.rate := strToFloat(ts[2])
+      wd.rate := StrToFloatDef(ts[2], 0)
     else
       wd.rate := Token.AvailableToken[wd.id - 10000].stableValue;
     // floattostrF(strtoint64def(ts.Strings[1],-1) /1000000000000000000,ffFixed,18,18);
@@ -1229,7 +1316,7 @@ begin
     // globalFiat := globalFiat + StrToFloatDef(wd.fiat, 0);
 
   except
-    on e: exception do
+    on E: Exception do
 
   end;
 
@@ -1241,7 +1328,7 @@ var
   twi: TWalletInfo;
 var
   segwit, cash, compatible, legacy: AnsiString;
-  pub : ansiString;
+  pub: AnsiString;
 begin
 
   result := false;
@@ -1254,19 +1341,16 @@ begin
     if twi.coin <> coinid then
       continue;
 
-    if tthread.CurrentThread.CheckTerminated then
+    if TThread.CurrentThread.CheckTerminated then
     begin
       exit();
     end;
     pub := twi.pub;
 
+    segwit := lowercase(generatep2wpkh(pub, availablecoin[coinid].hrp));
+    compatible := lowercase(generatep2sh(pub, availablecoin[coinid].p2sh));
+    legacy := generatep2pkh(pub, availablecoin[coinid].p2pk);
 
-    
-
-    segwit := lowercase(generatep2wpkh( pub, availablecoin[ coinid ].hrp));
-    compatible := lowercase(generatep2sh( pub, availablecoin[ coinid ].p2sh));
-    legacy := generatep2pkh( pub, availablecoin[ coinid ].p2pk);
- 
     cash := lowercase(bitcoinCashAddressToCashAddress(legacy, false));
     legacy := lowercase(legacy);
     cash := StringReplace(cash, 'bitcoincash:', '', [rfReplaceAll]);

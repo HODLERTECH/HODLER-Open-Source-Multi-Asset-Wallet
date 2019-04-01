@@ -588,13 +588,13 @@ begin
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
   for i := 0 to (Length(H) div 2) - 1 do
   begin
-    b := System.Uint8(strtoInt('$' + Copy(H, ((i) * 2) + 1, 2)));
+    b := System.Uint8(strtoIntDef('$' + Copy(H, ((i) * 2) + 1, 2),0));
     bb[i] := b;
   end;
 {$ELSE}
   for i := 1 to (Length(H) div 2) do
   begin
-    b := System.Uint8(strtoInt('$' + Copy(H, ((i - 1) * 2) + 1, 2)));
+    b := System.Uint8(strtoIntDef('$' + Copy(H, ((i - 1) * 2) + 1, 2),0));
     bb[i - 1] := b;
   end;
 

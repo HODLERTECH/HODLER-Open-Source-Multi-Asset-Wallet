@@ -12013,6 +12013,11 @@ object frmHome: TfrmHome
     Left = 561
     Top = 422
   end
+  object NanoStateTimer: TTimer
+    OnTimer = NanoStateTimerTimer
+    Left = 545
+    Top = 558
+  end
   object TokenIcons3: TImageList
     Source = <
       item

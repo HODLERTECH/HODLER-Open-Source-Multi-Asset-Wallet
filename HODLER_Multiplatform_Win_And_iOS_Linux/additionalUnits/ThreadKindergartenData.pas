@@ -3,7 +3,7 @@ unit ThreadKindergartenData;
 interface
 
 uses System.SysUtils, System.Classes, CrossPlatformHeaders, fmx.Forms,
-  System.Generics.Collections, System.Diagnostics, System.SyncObjs ,FMX.Dialogs;
+  System.Generics.Collections, System.Diagnostics, System.SyncObjs, fmx.Dialogs{$IFDEF LINUX},Posix.Pthread,Posix.Signal{$ENDIF};
 
 type
   ThreadKindergarten = class
@@ -13,18 +13,19 @@ type
     private
       FProc: TProc;
       index: Integer;
-      owner : ThreadKindergarten;
+      owner: ThreadKindergarten;
     protected
 
     public
       procedure Execute; override;
-      constructor Create(const AProc: TProc; id: Integer ; Aowner : ThreadKindergarten);
+      constructor Create(const AProc: TProc; id: Integer;
+        Aowner: ThreadKindergarten);
     end;
 
   private
     map: TDictionary<Integer, TCareThread>;
     index: Integer;
-    Addmutex , removeMutex: TSemaphore;
+    Addmutex, removeMutex: TSemaphore;
 
   public
     constructor Create();
@@ -44,16 +45,15 @@ uses SyncThr;
 
 procedure ThreadKindergarten.removeThread(id: Integer);
 var
-  temp : TCareThread;
+  temp: TCareThread;
 begin
   removeMutex.Acquire;
   try
 
-    if map.TryGetValue( id , temp ) then
+    if map.TryGetValue(id, temp) then
     begin
 
-
-      map.Remove( id );
+      map.Remove(id);
 
     end;
 
@@ -64,12 +64,11 @@ end;
 
 procedure ThreadKindergarten.terminateThread(id: Integer);
 var
-  temp : TCareThread;
+  temp: TCareThread;
 begin
 
-  if map.TryGetValue( id , temp ) then
+  if map.TryGetValue(id, temp) then
   begin
-
 
     try
 
@@ -81,7 +80,8 @@ begin
       end;
 
       temp.Terminate;
-    except on E: Exception do
+    except
+      on E: Exception do
     end;
 
   end;
@@ -92,12 +92,13 @@ function ThreadKindergarten.CreateAnonymousThread(proc: TProc): TThread;
 var
   temp: TCareThread;
 begin
-  addmutex.Acquire;
+  Addmutex.Acquire;
   try
 
-    temp := TCareThread.create(proc, index , self);
-    //temp.Start;
-    map.Add(index, temp );
+    temp := TCareThread.Create(proc, index, self);
+    // temp.Start;
+    //temp.FreeOnTerminate:=true;
+    map.Add(index, temp);
 
     index := index + 1;
 
@@ -113,43 +114,72 @@ begin
   inherited;
   map := TDictionary<Integer, TCareThread>.Create();
   Addmutex := TSemaphore.Create();
-  removeMutex := TSemaphore.create();
+  removeMutex := TSemaphore.Create();
   index := 0;
 end;
 
 destructor ThreadKindergarten.Destroy();
 var
-  it : TDictionary< integer , TCareThread >.TPairEnumerator;
-  i: integer;
+  it: TDictionary<Integer, TCareThread>.TPairEnumerator;
+  i: Integer;
 begin
 
-  it := map.GetEnumerator;
-  for i := 0 to Length(map.ToArray)-1 do
-    map.ToArray[i].Value.Terminate;
-{  while it.MoveNext do
+  // it := map.GetEnumerator;
+
+  for i := Length(map.ToArray) - 1 downto 0 do
   begin
+    try
+      if map.ToArray[i].Value <> nil then
+      begin
+       // map.ToArray[i].Value.FreeOnTerminate := true;
+        map.ToArray[i].Value.Terminate;
+        //pthread_kill(map.ToArray[i].Value.ThreadID,9);
+      end;
+      //map.ToArray[High(map.ToArray)]:=map.ToArray[i];
+
+     // map.Remove(i);
+      except
+      on E: Exception do
+      begin
+       map.Remove(map.ToArray[i].Key);
+      end;
+
+    end;
+  end;
+
+  { while it.MoveNext do
+    begin
 
     terminateThread( it.Current.Key );
 
-  end; }
+    end; }
+//{$IF/NDEF LINUX}
   while map.Count <> 0 do
   begin
-  try
-    Application.ProcessMessages;
-except on e:Exception do begin end;
+    try
+      Application.ProcessMessages;
+    except
+      on E: Exception do
+      begin
+      end;
+
+    end;
+      for i := Length(map.ToArray) - 1 downto 0 do
+  begin
+if  map.ToArray[i].Value<>nil then
+    if map.ToArray[i].Value.Finished=true then
+      map.Remove(map.ToArray[i].Key);
+  end;
+    sleep(100);
 
   end;
-    Sleep(100);
+//{$EN/DIF}
+  // it.free;
+  map.free;
+  Addmutex.free;
+  removeMutex.free();
 
-  end;
-
-  it.free;
-  map.Free;
-  Addmutex.Free;
-  removeMutex.Free();
-
-
-  semaphore.Free;
+  semaphore.free;
   semaphore := nil;
 
   inherited;
@@ -160,14 +190,15 @@ procedure ThreadKindergarten.TCareThread.Execute;
 begin
 
   FProc();
-  owner.removeThread( index );
+  owner.removeThread(index);
 
 end;
 
-constructor ThreadKindergarten.TCareThread.Create(const AProc: TProc; id: Integer ; Aowner : ThreadKindergarten);
+constructor ThreadKindergarten.TCareThread.Create(const AProc: TProc;
+  id: Integer; Aowner: ThreadKindergarten);
 begin
 
-  inherited create(true);
+  inherited Create(true);
   owner := Aowner;
   FreeOnTerminate := true;
   FProc := AProc;

@@ -1088,6 +1088,7 @@ begin
     var
       msg: AnsiString;
     begin
+
       if afterChange then
         msg := dictionary('CreateBackupAfterChange')
       else
@@ -1168,9 +1169,11 @@ begin
   name := name + '_IOS';
 {$ENDIF}
   currentStyle := name;
-
+  {$IFDEF LINUX}
+   stylo.TrySetStyleFromResource(name);
+  {$ELSE}
   stylo.TrySetStyleFromResource('RT_DARK');
-
+   {$ENDIF}
   tmp := getComponentsWithTagString('copy_image', frmhome);
   if Length(tmp) <> 0 then
     for fmxObj in tmp do
@@ -1577,7 +1580,7 @@ begin
           end
           else
           begin
-            T := Token.CreateCustom(address, name, symbol, StrToInt(decimals),
+            T := Token.CreateCustom(address, name, symbol, StrToIntDef(decimals,0),
               InAddress);
           end;
 
@@ -1663,7 +1666,7 @@ begin
   for i := low(addr) to high(addr) do
   begin
 
-    if StrToInt('$' + hex[i]) > 7 then
+    if StrToIntDef('$' + hex[i],0) > 7 then
       ans := ans + UpperCase(addr[i])
     else
       ans := ans + lowercase(addr[i]);
@@ -2011,7 +2014,7 @@ begin
   for c in tempStr do
   begin
 
-    intarr[i] := StrToInt('$' + c);
+    intarr[i] := StrToIntDef('$' + c,0);
     Inc(i);
 
   end;
@@ -3900,7 +3903,7 @@ begin
 
     end;
   end;
-  req.Free;
+  req.DisposeOf;
 end;
 
 function hash160FromHex(H: AnsiString): AnsiString;
@@ -3916,13 +3919,13 @@ begin
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
   for i := 0 to (Length(H) div 2) - 1 do
   begin
-    b := Byte(StrToInt('$' + Copy(H, ((i) * 2) + 1, 2)));
+    b := Byte(StrToIntDef('$' + Copy(H, ((i) * 2) + 1, 2),0));
     memstr.Write(b, 1);
   end;
 {$ELSE}
   for i := 1 to (Length(H) div 2) do
   begin
-    b := Byte(StrToInt('$' + Copy(H, ((i - 1) * 2) + 1, 2)));
+    b := Byte(StrToIntDef('$' + Copy(H, ((i - 1) * 2) + 1, 2),0));
     memstr.Write(b, 1);
   end;
 
@@ -3959,7 +3962,7 @@ begin
 
   for i := 0 to (Length(H) div 2) - 1 do
   begin
-    b := System.UInt8(StrToInt('$' + Copy(H, (i) * 2, 2)));
+    b := System.UInt8(StrToIntDef('$' + Copy(H, (i) * 2, 2),0));
     memstr.Write(b, 1);
   end;
 end;
@@ -3976,7 +3979,7 @@ begin
   memstr.Seek(int64(0), soFromBeginning);
   for i := 1 to (Length(H) div 2) do
   begin
-    b := Byte(StrToInt('$' + Copy(H, (i - 1) * 2 + 1, 2)));
+    b := Byte(StrToIntDef('$' + Copy(H, (i - 1) * 2 + 1, 2),0));
     memstr.Write(b, 1);
   end;
 end;
@@ -3997,13 +4000,13 @@ begin
 {$IF (DEFINED(ANDROID) OR DEFINED(IOS))}
   for i := 0 to (Length(H) div 2) - 1 do
   begin
-    b := System.UInt8(StrToInt('$' + Copy(H, ((i) * 2) + 1, 2)));
+    b := System.UInt8(StrToIntDef('$' + Copy(H, ((i) * 2) + 1, 2),0));
     bb[i] := b;
   end;
 {$ELSE}
   for i := 1 to (Length(H) div 2) do
   begin
-    b := System.UInt8(StrToInt('$' + Copy(H, ((i - 1) * 2) + 1, 2)));
+    b := System.UInt8(StrToIntDef('$' + Copy(H, ((i - 1) * 2) + 1, 2),0));
     bb[i - 1] := b;
   end;
 
@@ -4206,13 +4209,13 @@ begin
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
   for i := 0 to (Length(tcaKey) div 2) - 1 do
   begin
-    b := System.UInt8(StrToInt('$' + Copy(tcaKey, ((i) * 2) + 1, 2)));
+    b := System.UInt8(StrToIntDef('$' + Copy(tcaKey, ((i) * 2) + 1, 2),0));
     bb[i] := b;
   end;
 {$ELSE}
   for i := 1 to (Length(tcaKey) div 2) do
   begin
-    b := System.UInt8(StrToInt('$' + Copy(tcaKey, ((i - 1) * 2) + 1, 2)));
+    b := System.UInt8(StrToIntDef('$' + Copy(tcaKey, ((i - 1) * 2) + 1, 2),0));
     bb[i - 1] := b;
   end;
 {$ENDIF}
@@ -4679,7 +4682,7 @@ begin
     JSONArray := TJsonArray(JsonObject.GetValue('accounts'));
 
     frmhome.LanguageBox.ItemIndex :=
-      StrToInt(JsonObject.GetValue<string>('languageIndex'));
+      StrToIntDef(JsonObject.GetValue<string>('languageIndex'),0);
     frmhome.CurrencyConverter.setCurrency
       (JsonObject.GetValue<string>('currency'));
 
@@ -4724,13 +4727,13 @@ begin
   else
   begin
 
-    frmhome.LanguageBox.ItemIndex := StrToInt(ts[0]);
+    frmhome.LanguageBox.ItemIndex := StrToIntDef(ts[0],0);
     frmhome.CurrencyConverter.setCurrency(ts[1]);
 
     lastClosedAccount := ts[2];
 
-    SetLength(AccountsNames, StrToInt(ts[3]));
-    for i := 0 to StrToInt(ts[3]) - 1 do
+    SetLength(AccountsNames, StrToIntDef(ts[3],0));
+    for i := 0 to StrToIntDef(ts[3],0) - 1 do
     begin
       AccountsNames[i].name := ts[4 + i];
     end;
@@ -4941,7 +4944,7 @@ begin
   for i := 0 to utxoCount - 1 do
   begin
     result[i].txid := ts.Strings[(i * 4) + 0];
-    result[i].n := StrToInt(ts.Strings[(i * 4) + 1]);
+    result[i].n := StrToIntDef(ts.Strings[(i * 4) + 1],0);
     result[i].ScriptPubKey := ts.Strings[(i * 4) + 2];
     result[i].amount := StrToInt64(ts.Strings[(i * 4) + 3]);
     result[i].Y := Y;

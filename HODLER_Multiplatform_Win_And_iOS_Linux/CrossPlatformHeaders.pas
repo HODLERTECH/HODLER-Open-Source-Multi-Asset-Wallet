@@ -9,10 +9,10 @@ type
 
 type
   AnsiChar = Char;
-{$IF DEFINED(ANDROID) OR DEFINED(IOS) OR DEFINED(LINUX)}
+{$IF DEFINED(ANDROID) OR DEFINED(IOS) }
 
 const
-  StrStartIteration = {$IFNDEF LINUX} 0 {$ELSE}1{$ENDIF};
+  StrStartIteration =  0 ;
 
 
 {$ELSE}

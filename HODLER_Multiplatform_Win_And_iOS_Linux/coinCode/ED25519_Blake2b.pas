@@ -251,7 +251,7 @@ begin
     sum := 0;
     for j := 0 to 7 do
     begin
-      bb := StrToInt(bitString[{$IFDEF MSWINDOWS}1 + {$ENDIF}(i * 8 + j)]);
+      bb := StrToIntdef(bitString[{$IF DEFINED(MSWINDOWS) OR DEFINED(LINUX)}1 + {$ENDIF}(i * 8 + j)],0);
       sum := sum + system.uint8(bb shl j)
     end;
     result := result + inttohex(sum, 2);
@@ -293,7 +293,7 @@ begin
     sum := 0;
     for j := 0 to 7 do
     begin
-      bb := StrToInt(bitString[{$IFDEF MSWINDOWS}1 + {$ENDIF}(i * 8 + j)]);
+      bb := StrToIntdef(bitString[{$IF DEFINED(MSWINDOWS) OR DEFINED(LINUX)}1 + {$ENDIF}(i * 8 + j)],0);
       sum := sum + system.uint8(bb shl j)
     end;
     result := result + inttohex(sum, 2);
