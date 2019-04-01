@@ -1851,16 +1851,16 @@ begin
   // if currentthread <> mainThread then Error
 
   backTabItem := frmHome.PageControl.ActiveTab;
-  if not frmHome.shown then
-  begin
+  //if not frmHome.shown then
+ // begin
     TabControl.ActiveTab := TabItem;
-  end
-  else
-  begin
-    frmHome.tabAnim.Tab := TabItem;
-    frmHome.AccountsListPanel.Visible := false;
-    frmHome.tabAnim.ExecuteTarget(TabControl);
-  end;
+ // end
+ // else
+  //begin
+  //  frmHome.tabAnim.Tab := TabItem;
+ //   frmHome.AccountsListPanel.Visible := false;
+ //   frmHome.tabAnim.ExecuteTarget(TabControl);
+  //end;
   frmHome.passwordForDecrypt.Text := '';
   frmHome.DecryptSeedMessage.Text := '';
 end;
@@ -4052,7 +4052,7 @@ end;
 
 procedure TfrmHome.ShowShareSheetAction1BeforeExecute(Sender: TObject);
 begin
-  ShowShareSheetAction1.TextMessage := CurrentCryptoCurrency.addr;
+  ShowShareSheetAction1.TextMessage := receiveAddress.Text;
 end;
 
 procedure TfrmHome.SpinBox1Change(Sender: TObject);

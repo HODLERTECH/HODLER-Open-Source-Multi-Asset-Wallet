@@ -3334,8 +3334,17 @@ begin
       begin
         cryptoCurrency(Panel.TagObject).deleted := True;
       end;
+      Panel.Visible := false;
+      tthread.CreateAnonymousThread(procedure
+      begin
+        sleep(10);
+        tthread.Synchronize(nil , procedure
+        begin
+          Panel.DisposeOf;
+        end);
 
-      Panel.DisposeOf;
+      end).Start;
+
     end;
   except
     on E: Exception do

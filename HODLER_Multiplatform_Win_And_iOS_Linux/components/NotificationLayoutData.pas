@@ -203,7 +203,7 @@ begin
     begin
 
       ShowThinkingWindow();
-      tthread.Synchronize( nil , procedure
+      tthread.Synchronize( tthread.Current , procedure
       begin
         proc();
       end);
@@ -218,7 +218,7 @@ end;
 procedure TNotificationLayout.ShowThinkingWindow();
 begin
 
-  tthread.Synchronize(nil,
+  tthread.Synchronize( tthread.current,
     procedure
     begin
       TryShowBackground();
@@ -230,7 +230,7 @@ end;
 procedure TNotificationLayout.CloseThinkingWindow();
 begin
 
-  tthread.Synchronize(nil,
+  tthread.Synchronize( tthread.current,
     procedure
     begin
       inThinking.Visible := false;
