@@ -628,11 +628,6 @@
         <DCCReference Include="additionalUnits\additionalClass\ComponentPoolData.pas"/>
         <DCCReference Include="components\HistoryPanelData.pas"/>
         <DCCReference Include="components\CoinPanelData.pas"/>
-        <RcItem Include="Jet.style">
-            <ContainerId>ResourceItem</ContainerId>
-            <ResourceType>RCDATA</ResourceType>
-            <ResourceId>RT_DARK_jet</ResourceId>
-        </RcItem>
         <RcItem Include="Languages\PT.lang">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
@@ -715,11 +710,6 @@
         <RcItem Include="gfx\paperwallet\eqrsmall.png">
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>IMG_EQR_SMALL</ResourceId>
-        </RcItem>
-        <RcItem Include="token_icons\CharocalExpressive.style">
-            <ContainerId>ResourceItem</ContainerId>
-            <ResourceType>RCDATA</ResourceType>
-            <ResourceId>RT_DARK</ResourceId>
         </RcItem>
         <RcItem Include="coin_icons\1.png">
             <ResourceType>RCDATA</ResourceType>
@@ -876,6 +866,11 @@
         <RcItem Include="token_icons\opened.png">
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>OPENED</ResourceId>
+        </RcItem>
+        <RcItem Include="UbuntuDarkClear.style">
+            <ContainerId>ResourceItem</ContainerId>
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>RT_DARK</ResourceId>
         </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
@@ -1161,12 +1156,6 @@
                 <DeployFile LocalName="Languages\ZHX.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSSimulator">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="Jet.style" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="Linux64">
-                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -2297,12 +2286,6 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="token_icons\CharocalExpressive.style" Configuration="Release" Class="ProjectFile">
-                    <Platform Name="Linux64">
-                        <RemoteDir>.\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="Languages\POLlang.json" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
@@ -2541,6 +2524,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="UbuntuDarkClear.style" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Jet.style" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSDevice32">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -2749,12 +2738,6 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="token_icons\CharocalExpressive.style" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="Linux64">
-                        <RemoteDir>.\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="token_icons\centre-usdc_28.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
@@ -2859,6 +2842,12 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_60x60.png" Configuration="Debug" Class="iPhone_AppIcon60">
                     <Platform Name="iOSDevice64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="UbuntuDarkClear.style" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -3612,12 +3601,6 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="token_icons\Encrypted_seed_Dark.png" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="Linux64">
-                        <RemoteDir>.\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="Jet.style" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>

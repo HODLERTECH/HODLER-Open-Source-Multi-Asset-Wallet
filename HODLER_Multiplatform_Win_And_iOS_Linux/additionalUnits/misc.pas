@@ -1170,9 +1170,11 @@ begin
   name := name + '_IOS';
 {$ENDIF}
   currentStyle := name;
- {$IFNDEF LINUX64}
+  {$IFDEF LINUX}
+   stylo.TrySetStyleFromResource(name);
+  {$ELSE}
   stylo.TrySetStyleFromResource('RT_DARK');
- {$ENDIF}
+   {$ENDIF}
   tmp := getComponentsWithTagString('copy_image', frmhome);
   if Length(tmp) <> 0 then
     for fmxObj in tmp do
@@ -3898,7 +3900,7 @@ begin
 
     end;
   end;
-  req.Free;
+  req.DisposeOf;
 end;
 
 function hash160FromHex(H: AnsiString): AnsiString;

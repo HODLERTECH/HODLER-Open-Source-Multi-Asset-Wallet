@@ -74,7 +74,26 @@
             <Overwrite>True</Overwrite>
             <Required>True</Required>
         </DeployFile>
+        <DeployFile Include="Linux64\Debug\NanoMiner64" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>NanoMiner64\</RemoteDir>
+            <RemoteName>NanoMiner64</RemoteName>
+            <DeployClass>ProjectOutput</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+            <Required>True</Required>
+        </DeployFile>
         <DeployFile Include="Win10ModernDark.Style" Condition="'$(Config)'=='Release'">
+            <RemoteDir>NanoMiner64\</RemoteDir>
+            <RemoteName>Win10ModernDark.Style</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="Win10ModernDark.Style" Condition="'$(Config)'=='Debug'">
             <RemoteDir>NanoMiner64\</RemoteDir>
             <RemoteName>Win10ModernDark.Style</RemoteName>
             <DeployClass>ProjectFile</DeployClass>

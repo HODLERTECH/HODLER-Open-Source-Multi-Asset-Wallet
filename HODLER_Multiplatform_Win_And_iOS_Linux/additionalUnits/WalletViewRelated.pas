@@ -3273,18 +3273,21 @@ begin
 end;
 
 procedure walletHide(Sender: TObject);
-var
-  Panel: TPanel;
-  fmxObj: TfmxObject;
-  wdArray: TCryptoCurrencyArray;
-  i: Integer;
 begin
+TThread.CreateAnonymousThread(procedure var xSender:TObject;
+ begin
 
+xSender:=Sender;
+sleep(100); TThread.Synchronize(nil,procedure var Panel: TPanel;
+  fmxObj: TfmxObject;
+
+  wdArray: TCryptoCurrencyArray;
+  i: Integer; begin
   try
-    if Sender is TButton then
+    if xSender is TButton then
     begin
 
-      Panel := TPanel(TfmxObject(Sender).Parent);
+      Panel := TPanel(TfmxObject(xSender).Parent);
 
       if (Panel.TagObject is TWalletInfo) and
         (not (TWalletInfo(Panel.TagObject).coin in [4,8])) then
@@ -3310,7 +3313,7 @@ begin
     on E: Exception do
     begin
     end;
-  end;
+  end; end);   end).Start;
 end;
 
 procedure importCheck;

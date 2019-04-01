@@ -3,7 +3,7 @@ unit ThreadKindergartenData;
 interface
 
 uses System.SysUtils, System.Classes, CrossPlatformHeaders, fmx.Forms,
-  System.Generics.Collections, System.Diagnostics, System.SyncObjs, fmx.Dialogs;
+  System.Generics.Collections, System.Diagnostics, System.SyncObjs, fmx.Dialogs{$IFDEF LINUX},Posix.Pthread,Posix.Signal{$ENDIF};
 
 type
   ThreadKindergarten = class
@@ -97,6 +97,7 @@ begin
 
     temp := TCareThread.Create(proc, index, self);
     // temp.Start;
+    //temp.FreeOnTerminate:=true;
     map.Add(index, temp);
 
     index := index + 1;
@@ -130,16 +131,17 @@ begin
     try
       if map.ToArray[i].Value <> nil then
       begin
-        map.ToArray[i].Value.FreeOnTerminate := true;
+       // map.ToArray[i].Value.FreeOnTerminate := true;
         map.ToArray[i].Value.Terminate;
-
+        //pthread_kill(map.ToArray[i].Value.ThreadID,9);
       end;
       //map.ToArray[High(map.ToArray)]:=map.ToArray[i];
-      map.Remove(i);
+
+     // map.Remove(i);
       except
       on E: Exception do
       begin
-        map.Remove(i);
+       map.Remove(map.ToArray[i].Key);
       end;
 
     end;
@@ -151,7 +153,7 @@ begin
     terminateThread( it.Current.Key );
 
     end; }
-{$IFNDEF LINUX}
+//{$IF/NDEF LINUX}
   while map.Count <> 0 do
   begin
     try
@@ -162,10 +164,16 @@ begin
       end;
 
     end;
+      for i := Length(map.ToArray) - 1 downto 0 do
+  begin
+if  map.ToArray[i].Value<>nil then
+    if map.ToArray[i].Value.Finished=true then
+      map.Remove(map.ToArray[i].Key);
+  end;
     sleep(100);
 
   end;
-{$ENDIF}
+//{$EN/DIF}
   // it.free;
   map.free;
   Addmutex.free;

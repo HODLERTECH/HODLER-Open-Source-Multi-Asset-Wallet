@@ -4025,7 +4025,7 @@ end;
 
 procedure TfrmHome.ShowShareSheetAction1BeforeExecute(Sender: TObject);
 begin
-  ShowShareSheetAction1.TextMessage := CurrentCryptoCurrency.addr;
+  ShowShareSheetAction1.TextMessage := receiveAddress.Text;
 end;
 
 procedure TfrmHome.SpinBox1Change(Sender: TObject);

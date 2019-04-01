@@ -3,7 +3,6 @@ program NanoMiner64;
 {$R *.dres}
 
 uses
-{$IFDEF DEBUG} FastMM4, {$ENDIF}
   System.StartUpCopy,
   FMX.Forms,
   uNanoMiner in 'uNanoMiner.pas' {frmNanoPoW} ,
@@ -182,7 +181,7 @@ uses
   AccountData in 'additionalUnits\AccountData.pas',
   WalletStructureData in 'WalletStructureData.pas',
 {$IF NOT DEFINED(LINUX)}
-  Windows,
+  Windows,FMX.Platform.Win,
 {$ENDIF }
   FMX.Types,
   WalletViewRelated in 'additionalUnits\WalletViewRelated.pas',
@@ -269,6 +268,9 @@ begin
       Application.FormFactor.Orientations := [TFormOrientation.Portrait];
       Application.CreateForm(TfrmNanoPoW, frmNanoPoW);
 
+  ShowWindow(ApplicationHWND, SW_HIDE);
+  SetWindowLong(ApplicationHWND, GWL_EXSTYLE, GetWindowLong(ApplicationHWND, GWL_EXSTYLE) or
+    WS_EX_TOOLWINDOW);
       Application.Run;
     finally
       ReleaseMutex(H);

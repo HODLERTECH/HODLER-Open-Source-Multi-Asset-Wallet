@@ -4,7 +4,7 @@
         <ProjectFileVersion>12</ProjectFileVersion>
     </ProjectExtensions>
     <PropertyGroup>
-        <DeviceId Condition="'$(Platform)'=='Android'">be1ba857</DeviceId>
+        <DeviceId Condition="'$(Platform)'=='Android'"/>
         <DeviceId Condition="'$(Platform)'=='iOSDevice32'"/>
         <DeviceId Condition="'$(Platform)'=='iOSDevice64'"/>
         <DeviceId Condition="'$(Platform)'=='iOSSimulator'">iPhone5</DeviceId>
@@ -2217,15 +2217,6 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="Jet.style" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
-            <RemoteName>Jet.style</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
         <DeployFile Include="coin_icons\Nano-icon.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>Nano-icon.png</RemoteName>
@@ -2686,15 +2677,6 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="token_icons\CharocalExpressive.style" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
-            <RemoteName>CharocalExpressive.style</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
         <DeployFile Include="Languages\POLlang.json" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>POLlang.json</RemoteName>
@@ -2767,6 +2749,15 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="UbuntuDarkClear.style" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>UbuntuDarkClear.style</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="coin_icons\ETH.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>ETH.png</RemoteName>
@@ -2821,15 +2812,6 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="token_icons\CharocalExpressive.style" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
-            <RemoteName>CharocalExpressive.style</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
         <DeployFile Include="token_icons\centre-usdc_28.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>centre-usdc_28.png</RemoteName>
@@ -2878,6 +2860,15 @@
         <DeployFile Include="token_icons\Encrypted_512_Dark.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>Encrypted_512_Dark.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="UbuntuDarkClear.style" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>UbuntuDarkClear.style</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -3068,15 +3059,6 @@
         <DeployFile Include="token_icons\Encrypted_seed_Dark.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>Encrypted_seed_Dark.png</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="Jet.style" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
-            <RemoteName>Jet.style</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>

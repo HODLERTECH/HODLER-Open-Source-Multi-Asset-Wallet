@@ -831,6 +831,7 @@ type
     FindERC20autoButton: TButton;
     Label29: TLabel;
     Label30: TLabel;
+    NanoStateTimer: TTimer;
     // Panel27: TPanel;
     // PasswordInfoStaticLabel: TLabel;
 
@@ -1111,6 +1112,7 @@ type
       var KeyChar: Char; Shift: TShiftState);
     procedure NewCoinDescriptionPassEditKeyUp(Sender: TObject; var Key: Word;
       var KeyChar: Char; Shift: TShiftState);
+    procedure NanoStateTimerTimer(Sender: TObject);
     // procedure UserReportSendLogsSwitchClick(Sender: TObject);
 
   private
@@ -1636,7 +1638,10 @@ end;
 
 procedure TfrmHome.hideWallet(Sender: TObject);
 begin
+try
   WalletViewRelated.walletHide(Sender);
+  except on E:Exception do begin end;
+  end;
 end;
 
 procedure TfrmHome.HideZeroWalletsCheckBoxChange(Sender: TObject);
@@ -2573,6 +2578,9 @@ var
 var
   Intent: JIntent;
 {$ENDIF}
+{$IFDEF LINUX}
+psxString:System.AnsiString;
+{$ENDIF}
 begin
   myURI := TfmxObject(Sender).TagString;
 
@@ -2583,9 +2591,14 @@ begin
   Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
   Intent.setData(StrToJURI(myURI));
   SharedActivity.startActivity(Intent);
-{$ELSE}
+{$ENDIF}
+{$IFDEF MSWINDOWS}
   ShellExecute(0, 'OPEN', PWideChar(URL), '', '', { SW_SHOWNORMAL } 1);
-{$ENDIF ANDROID}
+{$ENDIF}
+{$IFDEF LINUX}
+  psxString := 'xdg-open ' + myURI;
+  _system(@psxString[1]);
+{$ENDIF}
 end;
 
 procedure TfrmHome.TrySendTX(Sender: TObject);
@@ -3106,6 +3119,12 @@ begin
   nano_DoMine(CryptoCurrency(NanoUnlocker.TagObject), passwordForDecrypt.Text);
   passwordForDecrypt.Text := '';
   PageControl.ActiveTab := walletView;
+end;
+
+procedure TfrmHome.NanoStateTimerTimer(Sender: TObject);
+begin
+if CurrentAccount<>nil then
+nano_checkMineState(CurrentAccount);
 end;
 
 procedure TfrmHome.NanoUnlockerClick(Sender: TObject);

@@ -246,9 +246,12 @@ begin
 
   startFullfillingKeypool(MasterSeed);
   if CurrentCoin.coin=8 then begin
-  TThread.CreateAnonymousThread(procedure begin nano_send(from,sendto,Amount,MasterSeed); wipeAnsiString(masterseed);end).Start;
-  Sleep(1000);
-    TX:='Transaction sent '+#13#10+NanoCoin(from).lastBlock;
+  TThread.CreateAnonymousThread(procedure begin
+  nano_send(from,sendto,Amount,MasterSeed); wipeAnsiString(masterseed);end).Start;
+  Sleep(3000);
+  if NanoCoin(from).lastBlock<>'' then
+    TX:='Transaction sent '+#13#10+NanoCoin(from).lastBlock else
+    TX:='Transaction failed, please try again';
 
     cleanupSend;
     Exit(tx);

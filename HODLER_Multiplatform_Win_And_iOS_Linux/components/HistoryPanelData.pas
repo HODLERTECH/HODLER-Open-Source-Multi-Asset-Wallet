@@ -15,17 +15,15 @@ type
 
   private
 
-
-
   public
-     image: TImage;
+    image: TImage;
     lbl: TLabel;
     addrLbl: TAddressLabel;
     datalbl: TLabel;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
 
-    procedure setConfirmed( confirmed : boolean );
+    procedure setConfirmed(confirmed: boolean);
 
   end;
 
@@ -52,8 +50,6 @@ begin
   addrLbl.Height := 18;
 
   addrLbl.TextSettings.HorzAlign := TTextAlign.Leading;
-
-
 
   datalbl := TLabel.Create(self);
   datalbl.Visible := true;
@@ -83,22 +79,26 @@ begin
   lbl.parent := self;
 
 end;
-procedure ThistoryPanel.setConfirmed( confirmed : boolean );
+
+procedure THistoryPanel.setConfirmed(confirmed: boolean);
+var
+  val: single;
 begin
 
   if not confirmed then
-  begin
-    self.Opacity := 0.5;
-    lbl.Opacity := 0.5;
-    image.Opacity := 0.5;
-    addrLbl.Opacity := 0.5;
-    datalbl.Opacity := 0.5;
-  end;
+    val := 0.5
+  else
+    val := 1;
 
+  self.Opacity := val;
+  lbl.Opacity := val;
+  image.Opacity := val;
+  addrLbl.Opacity := val;
+  datalbl.Opacity := val;
 
 end;
 
-destructor ThistoryPanel.destroy();
+destructor THistoryPanel.Destroy();
 begin
 
   inherited;

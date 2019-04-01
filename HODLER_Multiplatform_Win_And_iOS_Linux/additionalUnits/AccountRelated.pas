@@ -115,7 +115,7 @@ begin
     KeypoolSanitizer.Interval := 30000;
     gathener.Enabled := true;
     NanoUnlocker.Visible:=False;
-    NanoUnlocker.TagString:='LOADMORE';
+  //  NanoUnlocker.TagString:='LOADMORE';
     if not isWalletDatExists then
     begin
       createWalletDat();
@@ -298,10 +298,13 @@ begin
 
 
     frmHome.ChangeAccountButton.Text := name;
-
+    try
     if currentAccount <> nil then
       currentAccount.disposeof;
-
+    except on E:Exception do begin
+     currentaccount:=nil;
+    end;
+    end;
     lastClosedAccount := name;
     currentAccount := Account.Create(name);
     currentAccount.LoadFiles;
@@ -563,12 +566,14 @@ begin
       debugAnalysis.LOG_FILE_PATH := System.ioutils.Tpath.combine( HOME_PATH , 'logs' );
 {$ELSE}
       HOME_PATH := IncludeTrailingPathDelimiter
-        ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetDocumentsPath{$ELSE}System.
+        ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetHomePath+'/.hodlertech'{$ELSE}System.
         IOUtils.TPath.combine(System.SysUtils.GetEnvironmentVariable('APPDATA'),
         'hodlertech'){$ENDIF});
       HOME_TABITEM := walletView;
       debugAnalysis.LOG_FILE_PATH := System.ioutils.Tpath.combine( HOME_PATH , 'logs' );
 {$ENDIF}
+  if not DirectoryExists(HOME_PATH) then
+    CreateDir(HOME_PATH);
 
 
 
@@ -626,12 +631,16 @@ begin
       FFrameTake := 0;
       stylo := TStyleManager.Create;
       //LoadStyle(style);
-      LoadStyle('RT_WHITE');
+      {$IFDEF LINUX}
+          style:='RT_DARK';
+          LoadStyle('RT_DARK');
+      {$ELSE}
+      LoadStyle('RT_DARK');
       if style = 'RT_DARK' then
         DayNightModeSwitch.IsChecked := true
       else
         DayNightModeSwitch.IsChecked := false;
-
+      {$ENDIF}
       FScanManager := TScanManager.Create(TBarcodeFormat.QR_CODE, nil);
       duringSync := false;
 

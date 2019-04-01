@@ -35,7 +35,7 @@ object frmHome: TfrmHome
     Size.Height = 687.000000000000000000
     Size.PlatformDefault = False
     TabHeight = 49.000000000000000000
-    TabIndex = 33
+    TabIndex = 5
     TabOrder = 8
     TabPosition = None
     OnChange = closeVirtualKeyBoard
@@ -708,7 +708,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -9058,7 +9058,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -12321,5 +12321,10 @@ object frmHome: TfrmHome
     Destination = <>
     Left = 80
     Top = 449
+  end
+  object NanoStateTimer: TTimer
+    OnTimer = NanoStateTimerTimer
+    Left = 545
+    Top = 558
   end
 end
