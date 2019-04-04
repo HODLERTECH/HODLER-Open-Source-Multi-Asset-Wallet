@@ -276,7 +276,7 @@ begin
 {$ENDIF}
     clearVertScrollBox(frmHome.WalletList);
     frmhome.syncTimer.Enabled := false;
-    if (SyncBalanceThr <> nil) and (not SyncBalanceThr.Finished) then
+    (*if (SyncBalanceThr <> nil) and (not SyncBalanceThr.Finished) then
     begin
       SyncBalanceThr.Suspend;
       SyncBalanceThr.Terminate;
@@ -294,20 +294,35 @@ begin
         end).Start();
       SyncBalanceThr := nil;
 
-    end;
+    end; *)
 
 
     frmHome.ChangeAccountButton.Text := name;
-    try
+    {try
     if currentAccount <> nil then
       currentAccount.disposeof;
     except on E:Exception do begin
      currentaccount:=nil;
     end;
-    end;
+    end;    }
     lastClosedAccount := name;
-    currentAccount := Account.Create(name);
-    currentAccount.LoadFiles;
+
+    if LoadedAccounts.ContainsKey(name) then
+    begin
+      LoadedAccounts.TryGetValue( name , currentAccount );
+    end
+    else
+    begin
+      currentAccount := Account.Create(name);
+      currentAccount.LoadFiles;
+      LoadedAccounts.Add( name , CurrentAccount );
+    end;
+
+    CurrentAccount.AsyncSynchronize();
+
+
+
+
     frmHome.HideZeroWalletsCheckBox.IsChecked := currentAccount.hideEmpties;
 
     for cc in currentAccount.myCoins do
@@ -355,7 +370,7 @@ begin
     refreshGlobalFiat();
     refreshCurrencyValue;
 
-    SyncBalanceThr := SynchronizeBalanceThread.Create();
+  {  SyncBalanceThr := SynchronizeBalanceThread.Create();}
     frmhome.syncTimer.Enabled := true;
     CurrentAccount.SynchronizeThreadGuardian.CreateAnonymousThread(
       procedure
@@ -440,7 +455,8 @@ procedure CloseHodler();
 begin
 
   ResourceMenager.free;
-  currentAccount.Free;
+  //currentAccount.Free;  // loadedAccount.free  remove all accounts
+  LoadedAccounts.Free;
   frmhome.CurrencyConverter.free;
   frmhome.SourceDictionary.Free;
 
@@ -478,12 +494,13 @@ var
    debug : TDictionary<integer , integer>;
    debIt : TDictionary<integer , integer>.TPairEnumerator;
 
-
+   //LoadedAccount : TObjectDictionary<AnsiString,Account>;
 begin
 
   TimeLog := TimeLogger.Create();
   timeLog.StartLog('InitializeHodler');
 
+  LoadedAccounts := TObjectDictionary<String,Account>.create([doOwnsValues]);
 
   Randomize;
 

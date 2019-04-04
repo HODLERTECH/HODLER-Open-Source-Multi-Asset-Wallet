@@ -299,7 +299,8 @@ procedure AddAccountToFile(ac: Account);
 Procedure CreateNewAccountAndSave(name, pass, seed: AnsiString;
   userSaveSeed: boolean);
 
-procedure CreatePanel(crypto: cryptoCurrency ; FromAccount : Account; inBox : TVertScrollBox );
+procedure CreatePanel(crypto: cryptoCurrency; FromAccount: Account;
+  inBox: TVertScrollBox);
 
 // procedure creatImportPrivKeyCoinList();
 function getETHValidAddress(address: AnsiString): AnsiString;
@@ -330,7 +331,7 @@ function postDataOverHTTP(var aURL: String; postdata: string;
 procedure saveSendCacheToFile();
 procedure loadSendCacheFromFile();
 procedure clearSendCache();
-function LowOrderBitSet( Value: integer ): boolean;
+function LowOrderBitSet(Value: integer): boolean;
 
 
 
@@ -350,6 +351,8 @@ resourcestring
 
 var
   AccountsNames: array of AccountItem;
+  //LoadedAccount : TObjectDictionary< AnsiString , Account>;
+  LoadedAccounts : TObjectDictionary<String,Account>;
   dashBoardFontSize: integer =
 {$IF (DEFINED(MSWINDOWS) OR DEFINED(LINUX))}14{$ELSE}14{$ENDIF};
   TCAIterations: integer;
@@ -401,7 +404,7 @@ uses Bitcoin, uHome, base58, Ethereum, coinData, strutils, secp256k1,
 var
   bitmapData: TBitmapData;
 
-function LowOrderBitSet( Value: integer ): boolean;
+function LowOrderBitSet(Value: integer): boolean;
 begin
   Result := ((Value and 1) > 0);
 end;
@@ -583,7 +586,7 @@ end;
 
 function TSecureRandoms.CheckSecureRandom(const random: ISecureRandom): boolean;
 begin
-  result := true = RunChiSquaredTests(random);
+  Result := true = RunChiSquaredTests(random);
 
 end;
 
@@ -664,7 +667,7 @@ begin
 
   chi2 := chi2 / total;
 
-  result := chi2;
+  Result := chi2;
 end;
 
 function TSecureRandoms.RunChiSquaredTests(const random: ISecureRandom)
@@ -689,7 +692,7 @@ begin
     System.Inc(tries);
   end;
 
-  result := passes > 75;
+  Result := passes > 75;
 end;
 
 function TSecureRandoms.GetSha256Prng: string;
@@ -697,7 +700,7 @@ var
   &random: ISecureRandom;
 begin
   random := TSecureRandom.GetInstance('SHA256PRNG');
-  result := ToHex(random.GenerateSeed(256), 256);
+  Result := ToHex(random.GenerateSeed(256), 256);
 
 end;
 
@@ -706,7 +709,7 @@ var
   SecureRandoms: TSecureRandoms;
 begin
   SecureRandoms := TSecureRandoms.Create();
-  result := misc.GetStrHashSHA256(SecureRandoms.GetSha256Prng);
+  Result := misc.GetStrHashSHA256(SecureRandoms.GetSha256Prng);
   SecureRandoms.Free;
 end;
 /// ////////////////////////////////////////////////////////////////
@@ -716,7 +719,7 @@ var
   a_arr, b_arr: TStringList;
 
 begin
-  result := 0;
+  Result := 0;
   a_arr := SplitString(a, '.');
   b_arr := SplitString(b, '.');
 
@@ -724,12 +727,12 @@ begin
   begin
     if StrToInt(a_arr[i]) > StrToInt(b_arr[i]) then
     begin
-      result := 1;
+      Result := 1;
       break;
     end;
     if StrToInt(a_arr[i]) < StrToInt(b_arr[i]) then
     begin
-      result := -1;
+      Result := -1;
       break;
     end;
 
@@ -750,18 +753,18 @@ var
   tmp: TArray<TfmxObject>;
 begin
 
-  result := [];
+  Result := [];
   if From.ChildrenCount <> 0 then
 
     for fmxObj in From.Children do
     begin
       if fmxObj.TagString = tag then
-        result := result + [fmxObj];
+        Result := Result + [fmxObj];
 
       tmp := getComponentsWithTagString(tag, fmxObj);
       if Length(tmp) <> 0 then
 
-        result := result + tmp;
+        Result := Result + tmp;
 
     end;
 
@@ -790,7 +793,7 @@ begin
     end;
 
   end;
-  result := 'Wallet' + intToStr(nr);
+  Result := 'Wallet' + intToStr(nr);
 end;
 
 function getFirstUnusedXForCoin(id: integer): integer;
@@ -852,12 +855,12 @@ begin
 
   end;
 
-  result := Length(arr);
+  Result := Length(arr);
   for i := 0 to Length(arr) - 1 do
   begin
     if arr[i] <> i then
     begin
-      result := i;
+      Result := i;
       break;
     end;
   end;
@@ -937,7 +940,7 @@ begin
     address := RightStr(address, Length(address) - Pos(':', address));
   end;
 
-  result := [];
+  Result := [];
   for i := 0 to Length(availableCoin) - 1 do
   begin
     existIN := false;
@@ -954,7 +957,7 @@ begin
     try
       if existIN and isValidForCoin(i, address) then
       begin
-        result := result + [i];
+        Result := Result + [i];
       end;
     except
       on E: Exception do
@@ -1126,11 +1129,11 @@ begin
 {$IFDEF ANDROID}
   if Os.major < 6 then
   begin
-    result := 0;
+    Result := 0;
     exit;
   end;
 
-  result := TAndroidHelper.context.checkCallingOrSelfPermission
+  Result := TAndroidHelper.context.checkCallingOrSelfPermission
     (StringToJString(name));
 {$ENDIF}
 end;
@@ -1169,11 +1172,11 @@ begin
   name := name + '_IOS';
 {$ENDIF}
   currentStyle := name;
-  {$IFDEF LINUX}
-   stylo.TrySetStyleFromResource(name);
-  {$ELSE}
+{$IFDEF LINUX}
+  stylo.TrySetStyleFromResource(name);
+{$ELSE}
   stylo.TrySetStyleFromResource('RT_DARK');
-   {$ENDIF}
+{$ENDIF}
   tmp := getComponentsWithTagString('copy_image', frmhome);
   if Length(tmp) <> 0 then
     for fmxObj in tmp do
@@ -1460,10 +1463,10 @@ begin
   try
     req := THTTPClient.Create();
     LResponse := req.get(aURL);
-    result := LResponse.ContentAsString();
+    Result := LResponse.ContentAsString();
   except
     on E: Exception do
-      result := '';
+      Result := '';
   end;
   req.Free;
 end;
@@ -1580,8 +1583,8 @@ begin
           end
           else
           begin
-            T := Token.CreateCustom(address, name, symbol, StrToIntDef(decimals,0),
-              InAddress);
+            T := Token.CreateCustom(address, name, symbol,
+              StrToIntDef(decimals, 0), InAddress);
           end;
 
           panel := TPanel.Create(frmhome.FoundTokenVertScrollBox);
@@ -1644,12 +1647,12 @@ begin
       end;
 
   end;
-  result := added;
+  Result := added;
 end;
 
 function isValidETHAddress(address: AnsiString): boolean;
 begin
-  result := address = getETHValidAddress(address);
+  Result := address = getETHValidAddress(address);
 end;
 
 function getETHValidAddress(address: AnsiString): AnsiString;
@@ -1666,13 +1669,13 @@ begin
   for i := low(addr) to high(addr) do
   begin
 
-    if StrToIntDef('$' + hex[i],0) > 7 then
+    if StrToIntDef('$' + hex[i], 0) > 7 then
       ans := ans + UpperCase(addr[i])
     else
       ans := ans + lowercase(addr[i]);
 
   end;
-  result := ans;
+  Result := ans;
 end;
 
 procedure AddAccountToFile(ac: Account);
@@ -1736,7 +1739,7 @@ begin
   ac.userSaveSeed := false;
   ac.privTCA := false; // not frmHome.notPrivTCA1.isChecked;
   GenetareCoinsData(seed, pass, ac);
-  result := ac;
+  Result := ac;
 end;
 
 procedure setBlackBackground(Owner: TComponent);
@@ -1756,7 +1759,8 @@ begin
   // bg.Index
 end;
 
-procedure CreatePanel(crypto: cryptoCurrency ; FromAccount : Account ; inBox : TVertScrollBox);
+procedure CreatePanel(crypto: cryptoCurrency; FromAccount: Account;
+inBox: TVertScrollBox);
 var
   panel: TPanel;
   coinName: TLabel;
@@ -1795,10 +1799,10 @@ begin
   with frmhome.walletList do
   begin
 
-    panel := TPanel.Create( inbox );
+    panel := TPanel.Create(inBox);
     panel.Align := panel.Align.alTop;
     panel.Height := 48;
-    panel.parent := inbox ;
+    panel.parent := inBox;
     panel.TagObject := crypto;
     setBlackBackground(panel);
     panel.Position.Y := crypto.orderInWallet;
@@ -1843,7 +1847,7 @@ begin
     adrLabel.TextSettings.WordWrap := false;
     adrLabel.TagString := 'name';
     //
-    balLabel := TLabel.Create( panel );
+    balLabel := TLabel.Create(panel);
     balLabel.StyledSettings := balLabel.StyledSettings - [TStyledSetting.size];
 
     balLabel.parent := panel;
@@ -1854,8 +1858,8 @@ begin
         balLabel.Text := BigIntegerBeautifulStr
           (FromAccount.aggregateBalances(TWalletInfo(crypto)).confirmed,
           crypto.decimals) + '    ' +
-          floatToStrF(fromAccount.aggregateConfirmedFiats(TWalletInfo(crypto)
-          ), ffFixed, 15, 2) + ' ' + frmhome.CurrencyConverter.symbol;
+          floatToStrF(FromAccount.aggregateConfirmedFiats(TWalletInfo(crypto)),
+          ffFixed, 15, 2) + ' ' + frmhome.CurrencyConverter.symbol;
       end
       else
       begin
@@ -1929,13 +1933,13 @@ end;
 function inputType(input: TBitcoinOutput): integer;
 begin
   if lowercase(Copy(input.ScriptPubKey, 0, 6)) = '76a914' then
-    result := 0;
+    Result := 0;
   if lowercase(Copy(input.ScriptPubKey, 0, 4)) = 'a914' then
-    result := 1;
+    Result := 1;
   if lowercase(Copy(input.ScriptPubKey, 0, 4)) = '0014' then
-    result := 2;
+    Result := 2;
   if lowercase(Copy(input.ScriptPubKey, 0, 4)) = '0020' then
-    result := 3;
+    Result := 3;
 end;
 
 function BCHCashAddrToLegacyAddr(address: AnsiString): AnsiString;
@@ -1983,7 +1987,7 @@ begin
 {$ELSE}
   s := s + Copy(r, 1, 8);
 {$ENDIF}
-  result := Encode58(s);
+  Result := Encode58(s);
 
 end;
 
@@ -2014,7 +2018,7 @@ begin
   for c in tempStr do
   begin
 
-    intarr[i] := StrToIntDef('$' + c,0);
+    intarr[i] := StrToIntDef('$' + c, 0);
     Inc(i);
 
   end;
@@ -2024,9 +2028,9 @@ begin
 
   temparr := concat(intarr, checksum);
   if showName then
-    result := 'bitcoincash:' + bech32.rawencode(temparr)
+    Result := 'bitcoincash:' + bech32.rawencode(temparr)
   else
-    result := bech32.rawencode(temparr)
+    Result := bech32.rawencode(temparr)
 
 end;
 
@@ -2113,13 +2117,13 @@ end;
 
 function isP2PKH(netbyte: AnsiString; coinid: integer): boolean;
 begin
-  result := availableCoin[coinid].p2pk = netbyte;
+  Result := availableCoin[coinid].p2pk = netbyte;
 
 end;
 
 function isSegwitAddress(address: AnsiString): boolean;
 begin
-  result := ((AnsiLeftStr(address, 3) = 'bc1') or
+  Result := ((AnsiLeftStr(address, 3) = 'bc1') or
     (AnsiLeftStr(address, 4) = 'ltc1')) and (Length(address) > 39);
 end;
 
@@ -2128,7 +2132,7 @@ var
   addrHash: AnsiString;
   netbyte: AnsiString;
 begin
-  result.scriptType := -1;
+  Result.scriptType := -1;
   if coinid = 4 then
     exit; // Ethereum doesnt need this
   if isSegwitAddress(address) = false then
@@ -2136,36 +2140,36 @@ begin
     addrHash := Copy(decode58(address), 0, 42);
     netbyte := Copy(addrHash, 0, 2);
     delete(addrHash, 1, 2);
-    result.Hash := addrHash;
+    Result.Hash := addrHash;
     if (netbyte <> coinData.availableCoin[coinid].p2sh) and
       (netbyte <> coinData.availableCoin[coinid].p2pk) then
       exit;
     if isP2PKH(netbyte, coinid) then
-      result.scriptType := 0
+      Result.scriptType := 0
     else
-      result.scriptType := 1;
+      Result.scriptType := 1;
   end
   else
   begin
-    result := segwit_addr_decode(address);
-    if Length(result.Hash) = 40 then
-      result.scriptType := 2;
-    if Length(result.Hash) = 64 then
-      result.scriptType := 3;
+    Result := segwit_addr_decode(address);
+    if Length(Result.Hash) = 40 then
+      Result.scriptType := 2;
+    if Length(Result.Hash) = 64 then
+      Result.scriptType := 3;
 
   end;
 
-  case result.scriptType of
+  case Result.scriptType of
     0:
-      result.outputScript := '76a914' + addrHash + '88ac';
+      Result.outputScript := '76a914' + addrHash + '88ac';
     1:
-      result.outputScript := 'a914' + addrHash + '87';
+      Result.outputScript := 'a914' + addrHash + '87';
     2:
-      result.outputScript := IntToHex(result.witver, 2) + '14' + result.Hash;
+      Result.outputScript := IntToHex(Result.witver, 2) + '14' + Result.Hash;
     3:
-      result.outputScript := IntToHex(result.witver, 2) + '20' + result.Hash;
+      Result.outputScript := IntToHex(Result.witver, 2) + '20' + Result.Hash;
   end;
-  result.scriptHash := reverseHexOrder(GetSHA256FromHex((result.outputScript)));
+  Result.scriptHash := reverseHexOrder(GetSHA256FromHex((Result.outputScript)));
 end;
 
 procedure shareFile(path: AnsiString; deleteSourceFile: boolean = true);
@@ -2213,7 +2217,7 @@ begin
   saveDialog.FileName := ExtractFileName(path);
 
   saveDialog.InitialDir :=
-{$IFDEF IOS}tpath.GetSharedDocumentsPath{$ELSE}TPath.GetDocumentsPath{$ENDIF};
+{$IFDEF IOS}tpath.GetSharedDocumentsPath{$ELSE}tpath.GetDocumentsPath{$ENDIF};
 
   saveDialog.Filter := 'Zip File|*.zip';
 
@@ -2306,8 +2310,8 @@ begin
     QRCode.Free;
   end;
 
-  result := TBitmap.Create();
-  result.Assign(bmp);
+  Result := TBitmap.Create();
+  Result.Assign(bmp);
 
   try
     if bmp <> nil then
@@ -2471,7 +2475,7 @@ function aggregateAndSortTX(CCArray: TCryptoCurrencyArray): TxHistory;
     tx: transactionHistory;
     ref: integer;
   begin
-    result := false;
+    Result := false;
     ref := 0;
     if Length(Tab) <= 1 then
       exit(false);
@@ -2503,7 +2507,7 @@ function aggregateAndSortTX(CCArray: TCryptoCurrencyArray): TxHistory;
       Inc(i);
     until i >= Length(Tab);
 
-    result := Tab;
+    Result := Tab;
   end;
   procedure Sort(var Tab: TxHistory);
   var
@@ -2549,18 +2553,18 @@ var
   tmp: TxHistory;
   tx: transactionHistory;
 begin
-  SetLength(result, 0);
+  SetLength(Result, 0);
 
   try
     SetLength(tmp, 0);
     for cc in CCArray do
     begin
-      SetLength(result, Length(tmp) + Length(cc.history));
+      SetLength(Result, Length(tmp) + Length(cc.history));
       insert(cc.history, tmp, Length(tmp) - Length(cc.history));
     end;
     tmp := removeDuplicatedTX(tmp);
     Sort(tmp);
-    result := tmp;
+    Result := tmp;
     SetLength(tmp, 0);
   except
     on E: Exception do
@@ -2573,7 +2577,7 @@ function HistoryRecycling(VSB: TVertScrollBox; Pos: single): TPanel;
 var
   i: integer;
 begin
-  result := nil;
+  Result := nil;
   if VSB.ComponentCount > 0 then
     for i := 0 to VSB.ComponentCount - 1 do
     begin
@@ -2583,14 +2587,14 @@ begin
       begin
         if VSB.Components[i] is TPanel then
         begin
-          result := TPanel(VSB.Components[i]);
+          Result := TPanel(VSB.Components[i]);
           exit;
         end;
       end;
 
     end;
-  if result = nil then
-    result := TPanel.Create(VSB);
+  if Result = nil then
+    Result := TPanel.Create(VSB);
 end;
 
 procedure createHistoryList(wallet: cryptoCurrency; start: integer = 0;
@@ -2711,17 +2715,17 @@ begin
       panel.addrLbl.Text := hist[i].addresses[0];
 
     panel.datalbl.Text := FormatDateTime('dd mmm yyyy hh:mm',
-      UnixToDateTime(strToIntdef(hist[i].data, 0)));
+      UnixToDateTime(StrToIntDef(hist[i].data, 0)));
     panel.datalbl.Visible := TWalletInfo(wallet).coin <> 8;
 
-    panel.setType( hist[i].typ );
+    panel.setType(hist[i].typ);
 
-    {if hist[i].typ = 'OUT' then
+    { if hist[i].typ = 'OUT' then
       panel.image.Bitmap := frmhome.sendImage.Bitmap;
-    if hist[i].typ = 'IN' then
+      if hist[i].typ = 'IN' then
       panel.image.Bitmap := frmhome.receiveImage.Bitmap;
-    if hist[i].typ = 'INTERNAL' then
-      panel.image.Bitmap := frmhome.internalImage.Bitmap;   }
+      if hist[i].typ = 'INTERNAL' then
+      panel.image.Bitmap := frmhome.internalImage.Bitmap; }
 
     if (wallet is TWalletInfo) and (TWalletInfo(wallet).coin = 4) and
       (hist[i].CountValues = 0) then
@@ -2772,12 +2776,12 @@ var
   i: integer;
 begin
   prefix := 'bc1';
-  result := true;
+  Result := true;
 
   for i := Low(prefix) to High(prefix) do
   begin
     if prefix[i] <> Str[i] then
-      result := false;
+      Result := false;
   end;
 
 end;
@@ -2789,8 +2793,8 @@ begin
   Str := StringReplace(Str, ':', #13#10, []);
   Str := StringReplace(Str, '&', #13#10, [rfReplaceAll]);
   Str := StringReplace(Str, '=', #13#10, [rfReplaceAll]);
-  result := TStringList.Create;
-  result.Text := Str;
+  Result := TStringList.Create;
+  Result.Text := Str;
 
 end;
 
@@ -2800,9 +2804,9 @@ var
   temp: TBitmapData;
 
 begin
-  result := TBitmap.Create(data.Width * scale, data.Height * scale);
+  Result := TBitmap.Create(data.Width * scale, data.Height * scale);
 
-  if result.Map(TMapAccess.maReadWrite, temp) then
+  if Result.Map(TMapAccess.maReadWrite, temp) then
   begin
     for Y := 0 to data.Height - 1 do
     begin
@@ -2820,7 +2824,7 @@ begin
       end;
     end;
 
-    result.Unmap(temp);
+    Result.Unmap(temp);
 
   end;
 
@@ -2831,12 +2835,12 @@ var
   i: integer;
   temp: AnsiString;
 begin
-  result := -1;
+  Result := -1;
   for i := 0 to frmhome.wordList.Lines.Count - 1 do
   begin
     if input = frmhome.wordList.Lines.Strings[i] then
     begin
-      result := i;
+      Result := i;
       exit;
     end;
   end;
@@ -2856,18 +2860,18 @@ begin
     temp := fromMnemonic(input[i]);
     if (temp < 0) or (temp > 2047) then
     begin
-      result := '';
+      Result := '';
       popupWindow.Create(input[i] + ' ' + dictionary('NotExistInWorldlist'));
       exit;
     end;
     bi := bi + fromMnemonic(input[i]);
   end;
 
-  result := bi.tohexString();
+  Result := bi.tohexString();
 
-  result := bi.tohexString();
-  while Length(result) < 64 do
-    result := '0' + result;
+  Result := bi.tohexString();
+  while Length(Result) < 64 do
+    Result := '0' + Result;
 
 end;
 
@@ -2879,7 +2883,7 @@ var
 begin
   part := 0;
   if (not IsHex(hex)) then
-    result := ''
+    Result := ''
   else
   begin
 
@@ -2887,7 +2891,7 @@ begin
 
     while IntSeed > 0 do
     begin
-      result := result + (frmhome.wordList.Lines.Strings[(IntSeed mod 2048)
+      Result := Result + (frmhome.wordList.Lines.Strings[(IntSeed mod 2048)
         .asInteger]) + ' ';
       IntSeed := IntSeed div 2048;
     end;
@@ -2898,13 +2902,13 @@ end;
 
 function getConfirmedAsString(wi: TWalletInfo): AnsiString;
 begin
-  result := BigIntegerToFloatStr(wi.confirmed, availableCoin[wi.coin].decimals);
+  Result := BigIntegerToFloatStr(wi.confirmed, availableCoin[wi.coin].decimals);
 end;
 
 function isEthereum: boolean;
 begin
 
-  result := CurrentCoin.coin = 4;
+  Result := CurrentCoin.coin = 4;
 
 end;
 
@@ -2921,7 +2925,7 @@ begin
 
   if num < 0 then
   begin
-    result := '0.00';
+    Result := '0.00';
     exit;
   end;
 
@@ -2932,7 +2936,7 @@ begin
   if temp > 8 then
   begin
     SetLength(Str, Length(Str) - decimals);
-    result := Str;
+    Result := Str;
   end
   else
   begin
@@ -2960,7 +2964,7 @@ begin
       SetLength(Str, Pos(FormatSettings.DecimalSeparator, Str) - 1);
     end;
 
-    result := Str;
+    Result := Str;
   end;
 
 end;
@@ -2984,7 +2988,7 @@ begin
     Str := LeftStr(Str, Pos(separator, Str) + decimals);
   end;
 
-  result := BigInteger.Create(0);
+  Result := BigInteger.Create(0);
   for i := Low(Str) to High(Str) do
   begin
 
@@ -2994,8 +2998,8 @@ begin
     if Char(Str[i]) <> separator then
     begin
 
-      result := result * 10;
-      result := result + integer(Str[i]) - integer('0');
+      Result := Result * 10;
+      Result := Result + integer(Str[i]) - integer('0');
 
     end
     else
@@ -3007,7 +3011,7 @@ begin
 
   while (counter < decimals) do
   begin
-    result := result * 10;
+    Result := Result * 10;
     Inc(counter);
   end;
 
@@ -3031,39 +3035,39 @@ begin
   // temp := BigInteger.Create(num);
   Str := num.ToDecimalString;
 
-  result := '';
+  Result := '';
 
   for i := 0 to decimals do
   begin
-    result := result + '0';
+    Result := Result + '0';
   end;
 
-  if Length(Str) >= Length(result) then
+  if Length(Str) >= Length(Result) then
   begin
-    result := Str;
+    Result := Str;
   end
   else
   begin
     for i := High(Str) downto Low(Str) do
     begin
-      result[High(result) - (high(Str) - i)] := Str[i];
+      Result[High(Result) - (high(Str) - i)] := Str[i];
     end;
 
   end;
 
-  insert(FormatSettings.DecimalSeparator, result, High(result) - decimals +
+  insert(FormatSettings.DecimalSeparator, Result, High(Result) - decimals +
     1{$IF DEFINED(ANDROID) OR DEFINED(IOS)} + 1{$ENDIF});
 
-  SetLength(result, Length(result) - (decimals - precision));
-  minus := Pos('-', result) > 1;
+  SetLength(Result, Length(Result) - (decimals - precision));
+  minus := Pos('-', Result) > 1;
   if minus then
   begin
-    result := StringReplace(result, '-', '0', [rfReplaceAll]);
-    result := '-' + result;
+    Result := StringReplace(Result, '-', '0', [rfReplaceAll]);
+    Result := '-' + Result;
 
   end;
-  if AnsiContainsText(result, '-.') then
-    result := StringReplace(result, '-.', '-0.', [rfReplaceAll]);
+  if AnsiContainsText(Result, '-.') then
+    Result := StringReplace(Result, '-.', '-0.', [rfReplaceAll]);
 end;
 
 // return index of array where  is wallet with given address
@@ -3171,10 +3175,10 @@ begin
 
   end;
 
-  result := TBitmap.Create();
-  result.SetSize(32, 32);
+  Result := TBitmap.Create();
+  Result.SetSize(32, 32);
 
-  if result.Map(TMapAccess.maReadWrite, bitmapData) then
+  if Result.Map(TMapAccess.maReadWrite, bitmapData) then
   begin
     // bitmap "8x8" coloring
     for Y := 0 to 7 do
@@ -3231,7 +3235,7 @@ begin
 
     end;
 
-  result.Unmap(bitmapData);
+  Result.Unmap(bitmapData);
 
 end;
 
@@ -3241,19 +3245,19 @@ function cutEveryNChar(n: integer; Str: AnsiString; sep: AnsiChar = ' ')
 var
   i, j: integer;
 begin
-  result := Str;
+  Result := Str;
   // exit;
   if n < 0 then
     exit(Str);
   Inc(n);
-  result := Str;
+  Result := Str;
 
   for i := n to Length(Str) + (Length(Str) - 1) div (n - 1) do
 
   begin
     if i mod n = 0 then
 
-      insert(sep, result, i);
+      insert(sep, Result, i);
 
   end;
 
@@ -3265,12 +3269,12 @@ var
   i, j: integer;
 begin
 
-  result := Str;
+  Result := Str;
   j := 0;
   for i := Low(sep) to High(sep) do
   begin
 
-    result := cutEveryNChar(n + j, result, sep[i]);
+    Result := cutEveryNChar(n + j, Result, sep[i]);
 
     j := j + 1;
   end;
@@ -3279,9 +3283,9 @@ end;
 
 function removeSpace(Str: AnsiString): AnsiString;
 begin
-  result := Str;
-  result := StringReplace(result, #13#10, '', [rfReplaceAll]);
-  result := StringReplace(result, ' ', '', [rfReplaceAll]);
+  Result := Str;
+  Result := StringReplace(Result, #13#10, '', [rfReplaceAll]);
+  Result := StringReplace(Result, ' ', '', [rfReplaceAll]);
 end;
 
 // return number of wallets of chosen coin     for example countWalletBy(0) return number of out BTC wallet
@@ -3343,9 +3347,9 @@ function TStateToHEX(bb: TKeccakMaxDigest): AnsiString;
 var
   i: integer;
 begin
-  result := '';
+  Result := '';
   for i := 0 to 31 do // keccack-256 digest
-    result := result + IntToHex(bb[i], 2);
+    Result := Result + IntToHex(bb[i], 2);
 end;
 
 function IsHex(s: string): boolean;
@@ -3357,11 +3361,11 @@ begin
     exit(false);
 
   s := UpperCase(s);
-  result := true;
+  Result := true;
   for i := StrStartIteration to Length(s){$IF DEFINED(ANDROID) OR DEFINED(IOS)} - 1{$ENDIF} do
     if not(Char(s[i]) in ['0' .. '9']) and not(Char(s[i]) in ['A' .. 'F']) then
     begin
-      result := false;
+      Result := false;
       exit;
     end;
 end;
@@ -3391,7 +3395,7 @@ begin
 
   update(K256State, buf, (Length(s)) * 8);
   Final(K256State, @K256Dig);
-  result := TStateToHEX(K256Dig);
+  Result := TStateToHEX(K256Dig);
 
 end;
 
@@ -3420,7 +3424,7 @@ begin
 
   update(K256State, buf, (Length(bb)) * 8);
   Final(K256State, @K256Dig);
-  result := TStateToHEX(K256Dig);
+  Result := TStateToHEX(K256Dig);
 
 end;
 
@@ -3432,7 +3436,7 @@ begin
   Str := StringReplace(Str, separator, #13#10, [rfReplaceAll]);
   ts := TStringList.Create;
   ts.Text := Str;
-  result := ts;
+  Result := ts;
 
 end;
 
@@ -3443,11 +3447,11 @@ end;
 
 function OCRFix(Str: AnsiString): AnsiString;
 begin
-  result := Str;
-  result := StringReplace(result, 'O', 'o', [rfReplaceAll]);
-  result := StringReplace(result, '0', 'o', [rfReplaceAll]);
-  result := StringReplace(result, 'I', 'J', [rfReplaceAll]);
-  result := StringReplace(result, 'l', 'J', [rfReplaceAll]);
+  Result := Str;
+  Result := StringReplace(Result, 'O', 'o', [rfReplaceAll]);
+  Result := StringReplace(Result, '0', 'o', [rfReplaceAll]);
+  Result := StringReplace(Result, 'I', 'J', [rfReplaceAll]);
+  Result := StringReplace(Result, 'l', 'J', [rfReplaceAll]);
 end;
 
 // try find wallet address in text and return it
@@ -3456,13 +3460,13 @@ var
   strArray: TStringList;
 begin
   strArray := SplitString(Str);
-  result := 'Not found';
+  Result := 'Not found';
   for i := 0 to strArray.Count - 1 do
   begin
 
     if base58.ValidateBitcoinAddress(trim(OCRFix(strArray[i]))) = true then
     begin
-      result := strArray[i];
+      Result := strArray[i];
       strArray.Free;
       exit;
     end;
@@ -3474,7 +3478,7 @@ begin
 
     if ((Length(strArray[i]) >= 25) and (Length(strArray[i]) <= 43)) then
     begin
-      result := strArray[i];
+      Result := strArray[i];
       strArray.Free;
       exit;
     end;
@@ -3486,13 +3490,13 @@ end;
 
 function satToBtc(sat: AnsiString; decimals: integer): AnsiString;
 begin
-  result := floatToStrF((strToIntdef(sat, 0) / Power(10, decimals)), ffFixed,
+  Result := floatToStrF((StrToIntDef(sat, 0) / Power(10, decimals)), ffFixed,
     15, decimals);
 end;
 
 function satToBtc(num: BigInteger; decimals: integer): AnsiString;
 begin
-  result := BigIntegerToFloatStr(num, decimals);
+  Result := BigIntegerToFloatStr(num, decimals);
 
 end;
 
@@ -3501,45 +3505,45 @@ var
   ll: integer;
 begin
   ll := ceil(Length(IntToHex(data, 0)) / 2);
-  result := IntToHex(data, ll * 2);
+  Result := IntToHex(data, ll * 2);
 end;
 
 function inttoeth(data: BigInteger): AnsiString;
 var
   ll: integer;
 begin
-  result := data.tohexString;
-  if Length(result) mod 2 = 1 then
-    result := '0' + result;
+  Result := data.tohexString;
+  if Length(Result) mod 2 = 1 then
+    Result := '0' + Result;
 
 end;
 
 function IntToTX(data: System.uint64; Padding: integer): AnsiString;
 Begin
   // Keep padding!
-  result := Copy(reverseHexOrder(IntToHex(data, Padding)), 0, Padding);
+  Result := Copy(reverseHexOrder(IntToHex(data, Padding)), 0, Padding);
 End;
 
 function BIntTo256Hex(data: BigInteger; Padding: integer): AnsiString;
 Begin
-  result := data.tohexString;
-  while Length(result) < Padding do
+  Result := data.tohexString;
+  while Length(Result) < Padding do
   begin
-    result := '0' + result;
+    Result := '0' + Result;
   end;
   // Keep padding!
-  result := Copy((result), 0, Padding);
+  Result := Copy((Result), 0, Padding);
 End;
 
 function IntToTX(data: BigInteger; Padding: integer): AnsiString;
 Begin
-  result := data.tohexString;
-  while Length(result) < Padding do
+  Result := data.tohexString;
+  while Length(Result) < Padding do
   begin
-    result := '0' + result;
+    Result := '0' + Result;
   end;
   // Keep padding!
-  result := Copy(reverseHexOrder(result), 0, Padding);
+  Result := Copy(reverseHexOrder(Result), 0, Padding);
 End;
 
 function buildAuth(aURL: String): AnsiString;
@@ -3553,13 +3557,13 @@ begin
     nonce := intToStr(10000000 + random(900000000)); // Get some random number
     Hash := lowercase(GetStrHashSHA256(API_PRIV));
     Hash := GetStrHashSHA256(nonce + Hash);
-    result := lowercase('&pub=' + API_PUB + '&nonce=' + nonce +
+    Result := lowercase('&pub=' + API_PUB + '&nonce=' + nonce +
       '&hash=' + Hash);
     if Pos('?', aURL) = 0 then
-      result := '?' + result;
+      Result := '?' + Result;
   end
   else
-    result := '';
+    Result := '';
 end;
 
 const
@@ -3572,7 +3576,7 @@ var
   x: integer;
   b: integer;
 begin
-  result := '';
+  Result := '';
   a := 0;
   b := 0;
   for i := Low(s) to High(s) do
@@ -3585,13 +3589,13 @@ begin
       a := a - 6;
       x := b div (1 shl a);
       b := b mod (1 shl a);
-      result := result + Codes64[x + 1];
+      Result := Result + Codes64[x + 1];
     end;
   end;
   if a > 0 then
   begin
     x := b shl (6 - a);
-    result := result + Codes64[x + 1];
+    Result := Result + Codes64[x + 1];
   end;
 end;
 
@@ -3602,7 +3606,7 @@ var
   x: integer;
   b: integer;
 begin
-  result := '';
+  Result := '';
   a := 0;
   b := 0;
   for i := Low(s) to High(s) do
@@ -3618,7 +3622,7 @@ begin
         x := b shr a;
         b := b mod (1 shl a);
         x := x mod 256;
-        result := result + chr(x);
+        Result := Result + chr(x);
       end;
     end
     else
@@ -3638,7 +3642,7 @@ var
 
 begin
 
-  result := 'NOCACHE';
+  Result := 'NOCACHE';
 
   if (CurrentAccount = nil) or
     (FileExists(CurrentAccount.DirPath + '/cache.dat') = false) then
@@ -3660,7 +3664,7 @@ begin
     begin
       conv := TConvert.Create(base64);
 
-      result := conv.FormattOstring(list.values[Hash]);
+      Result := conv.FormattOstring(list.values[Hash]);
       conv.Free;
     end;
   finally
@@ -3732,7 +3736,7 @@ begin
   TMonitor.Enter(Flock);
   try
     switch := exceptional;
-    result := '';
+    Result := '';
     if Pos('Transport endpoint is not connected', aResult) > 0 then
       switch := true;
 
@@ -3744,7 +3748,7 @@ begin
       HODLER_ETH2 := HODLER_ETH;
       HODLER_ETH := tmp;
       end; }
-    result := aResult;
+    Result := aResult;
   finally
     TMonitor.exit(Flock);
     Flock.Free;
@@ -3765,7 +3769,7 @@ begin
     aURL := StringReplace(aURL, 'hodler1.nq.pl', 'hodlerstream.net',
       [rfReplaceAll]);
   end;
-  result := aURL;
+  Result := aURL;
 end;
 
 function getDataOverHTTP(aURL: String; useCache: boolean = true;
@@ -3775,7 +3779,7 @@ var
   LResponse: IHTTPResponse;
   urlHash: AnsiString;
   ares: iasyncresult;
-  debug : AnsiString;
+  debug: AnsiString;
 begin
   req := THTTPClient.Create();
   aURL := ensureURL(aURL);
@@ -3783,10 +3787,10 @@ begin
   if (firstSync and useCache) then
 
   begin
-    result := loadCache(urlHash);
+    Result := loadCache(urlHash);
   end;
   try
-    if ((result = 'NOCACHE') or (not firstSync) or (not useCache)) then
+    if ((Result = 'NOCACHE') or (not firstSync) or (not useCache)) then
     begin
 
       if not noTimeout then
@@ -3809,9 +3813,9 @@ begin
       LResponse := req.EndAsyncHTTP(ares);
 
       // LResponse := req.get(aURL);
-      result := apiStatus(aURL, LResponse.ContentAsString());
+      Result := apiStatus(aURL, LResponse.ContentAsString());
       try
-        saveCache(urlHash, result);
+        saveCache(urlHash, Result);
       except
         on E: Exception do
         begin
@@ -3819,19 +3823,19 @@ begin
 
       end;
       if LResponse.StatusCode <> 200 then
-        result := apiStatus(aURL, '', true);
+        Result := apiStatus(aURL, '', true);
     end;
   except
     on E: Exception do
     begin
-      result := E.message;
-      result := apiStatus(aURL, '', true);
+      Result := E.message;
+      Result := apiStatus(aURL, '', true);
 
     end;
 
   end;
   req.Free;
-  debug := result;
+  debug := Result;
 end;
 
 function postDataOverHTTP(var aURL: String; postdata: string;
@@ -3853,10 +3857,10 @@ begin
   urlHash := GetStrHashSHA256(aURL);
   if (firstSync and useCache) then
   begin
-    result := loadCache(urlHash);
+    Result := loadCache(urlHash);
   end;
   try
-    if ((result = 'NOCACHE') or (not firstSync) or (not useCache)) then
+    if ((Result = 'NOCACHE') or (not firstSync) or (not useCache)) then
     begin
 
       req := THTTPClient.Create();
@@ -3869,7 +3873,7 @@ begin
       aURL := aURL + buildAuth(aURL);
       ts := TStringList.Create;
       ts.Text := StringReplace(postdata, '&', #13#10, [rfReplaceAll]);
-// {$IFDEF  DEBUG} ts.SaveToFile('params' + urlHash + '.json'); {$ENDIF}  // shoud be in debugAnalysis
+      // {$IFDEF  DEBUG} ts.SaveToFile('params' + urlHash + '.json'); {$ENDIF}  // shoud be in debugAnalysis
       ares := req.BeginPost(aURL, ts);
       while not(ares.IsCompleted or ares.isCancelled) do
       begin
@@ -3881,12 +3885,12 @@ begin
       asyncResponse := LResponse.ContentAsString();
       // asyncResponse:=req.EndAsyncHTTP(ares).ContentAsString();
 
-      result := apiStatus(aURL, asyncResponse);
+      Result := apiStatus(aURL, asyncResponse);
       ts.Text := asyncResponse;
-//{$IFDEF  DEBUG} ts.SaveToFile(urlHash + '.json'); {$ENDIF}
+      // {$IFDEF  DEBUG} ts.SaveToFile(urlHash + '.json'); {$ENDIF}
       ts.Free;
       try
-        saveCache(urlHash, result);
+        saveCache(urlHash, Result);
       except
         on E: Exception do
         begin
@@ -3894,12 +3898,12 @@ begin
 
       end;
       if LResponse.StatusCode <> 200 then
-        result := apiStatus(aURL, '', true);
+        Result := apiStatus(aURL, '', true);
     end;
   except
     on E: Exception do
     begin
-      result := apiStatus(aURL, '', true);
+      Result := apiStatus(aURL, '', true);
 
     end;
   end;
@@ -3919,13 +3923,13 @@ begin
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
   for i := 0 to (Length(H) div 2) - 1 do
   begin
-    b := Byte(StrToIntDef('$' + Copy(H, ((i) * 2) + 1, 2),0));
+    b := Byte(StrToIntDef('$' + Copy(H, ((i) * 2) + 1, 2), 0));
     memstr.Write(b, 1);
   end;
 {$ELSE}
   for i := 1 to (Length(H) div 2) do
   begin
-    b := Byte(StrToIntDef('$' + Copy(H, ((i - 1) * 2) + 1, 2),0));
+    b := Byte(StrToIntDef('$' + Copy(H, ((i - 1) * 2) + 1, 2), 0));
     memstr.Write(b, 1);
   end;
 
@@ -3934,7 +3938,7 @@ begin
   try
     ripemd160.OutputFormat := hexa;
     ripemd160.Unicode := noUni;
-    result := ripemd160.HashStream(memstr);
+    Result := ripemd160.HashStream(memstr);
   finally
     ripemd160.Free;
     memstr.Free;
@@ -3946,7 +3950,7 @@ var
   WDPath: AnsiString;
 begin
   WDPath := tpath.Combine(HOME_PATH, 'hodler.wallet.dat');
-  result := FileExists(WDPath);
+  Result := FileExists(WDPath);
 end;
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
 
@@ -3962,7 +3966,7 @@ begin
 
   for i := 0 to (Length(H) div 2) - 1 do
   begin
-    b := System.UInt8(StrToIntDef('$' + Copy(H, (i) * 2, 2),0));
+    b := System.UInt8(StrToIntDef('$' + Copy(H, (i) * 2, 2), 0));
     memstr.Write(b, 1);
   end;
 end;
@@ -3979,7 +3983,7 @@ begin
   memstr.Seek(int64(0), soFromBeginning);
   for i := 1 to (Length(H) div 2) do
   begin
-    b := Byte(StrToIntDef('$' + Copy(H, (i - 1) * 2 + 1, 2),0));
+    b := Byte(StrToIntDef('$' + Copy(H, (i - 1) * 2 + 1, 2), 0));
     memstr.Write(b, 1);
   end;
 end;
@@ -4000,18 +4004,18 @@ begin
 {$IF (DEFINED(ANDROID) OR DEFINED(IOS))}
   for i := 0 to (Length(H) div 2) - 1 do
   begin
-    b := System.UInt8(StrToIntDef('$' + Copy(H, ((i) * 2) + 1, 2),0));
+    b := System.UInt8(StrToIntDef('$' + Copy(H, ((i) * 2) + 1, 2), 0));
     bb[i] := b;
   end;
 {$ELSE}
   for i := 1 to (Length(H) div 2) do
   begin
-    b := System.UInt8(StrToIntDef('$' + Copy(H, ((i - 1) * 2) + 1, 2),0));
+    b := System.UInt8(StrToIntDef('$' + Copy(H, ((i - 1) * 2) + 1, 2), 0));
     bb[i - 1] := b;
   end;
 
 {$ENDIF}
-  result := bb;
+  Result := bb;
 end;
 
 function GetSHA256FromHex(H: AnsiString): AnsiString;
@@ -4026,7 +4030,7 @@ begin
   HashSHA := THashSHA2.Create;
   HashSHA.Reset;
   HashSHA.update(bb, (Length(H) div 2));
-  result := HashSHA.HashAsString;
+  Result := HashSHA.HashAsString;
 
 end;
 
@@ -4039,7 +4043,7 @@ begin
   sha2.HashSizeBits := 256;
   sha2.OutputFormat := hexa;
   sha2.Unicode := noUni;
-  result := sha2.Hash(Str);
+  Result := sha2.Hash(Str);
   sha2.Free;
 
 end;
@@ -4050,7 +4054,7 @@ var
 begin
   HashSHA := THashSHA2.Create;
   HashSHA.GetHashString(Str);
-  result := HashSHA.GetHashString(Str, SHA512);
+  Result := HashSHA.GetHashString(Str, SHA512);
 end;
 
 function GetStrHashBobJenkins(Str: AnsiString): AnsiString;
@@ -4059,7 +4063,7 @@ var
 begin
   Hash := THashBobJenkins.Create;
   Hash.GetHashString(Str);
-  result := Hash.GetHashString(Str);
+  Result := Hash.GetHashString(Str);
 end;
 
 function GetStrHashSHA512_256(Str: AnsiString): AnsiString;
@@ -4068,7 +4072,7 @@ var
 begin
   HashSHA := THashSHA2.Create;
   HashSHA.GetHashString(Str);
-  result := HashSHA.GetHashString(Str, SHA512_256);
+  Result := HashSHA.GetHashString(Str, SHA512_256);
 end;
 
 function GetStrHashSHA512_224(Str: AnsiString): AnsiString;
@@ -4077,7 +4081,7 @@ var
 begin
   HashSHA := THashSHA2.Create;
   HashSHA.GetHashString(Str);
-  result := HashSHA.GetHashString(Str, SHA512_224);
+  Result := HashSHA.GetHashString(Str, SHA512_224);
 end;
 
 function TCA(dane: AnsiString): AnsiString;
@@ -4097,7 +4101,7 @@ begin
   for i := 0 to TCAIterations do
     s := GetStrHashSHA256
       (GetStrHashSHA256(GetStrHashSHA256(GetStrHashBobJenkins(s))));
-  result := s;
+  Result := s;
   if allowAnim then
   begin
 
@@ -4108,7 +4112,7 @@ end;
 
 function TBytesToString(bb: Tbytes): WideString;
 begin
-  result := TEncoding.ANSI.GetString(bb);
+  Result := TEncoding.ANSI.GetString(bb);
 end;
 
 function speckStrPadding(data: AnsiString): AnsiString;
@@ -4117,7 +4121,7 @@ var
 begin
 
   lacking := 16 - (Length(data) mod 16);
-  result := data + StringofChar(#0, lacking);
+  Result := data + StringofChar(#0, lacking);
 end;
 
 function speckEncrypt(tcaKey, data: AnsiString): AnsiString;
@@ -4136,7 +4140,7 @@ begin
   speck.IVMode := TSPECKIVMode.userdefined;
   speck.IV := '0123456789abcdef';
   cipher := speck.Encrypt(data);
-  result := cipher;
+  Result := cipher;
   speck.Free;
 
 end;
@@ -4157,7 +4161,7 @@ begin
   speck.PaddingMode := TSPECKPaddingMode.nopadding;
   speck.IVMode := TSPECKIVMode.userdefined;
   speck.IV := '0123456789abcdef';
-  result := trim(speck.Decrypt(data));
+  Result := trim(speck.Decrypt(data));
   speck.Free;
   // result := string(cipher);
 end;
@@ -4181,7 +4185,7 @@ begin
   aes.IVMode := TIVMode.rand;
   cipher := aes.Encrypt(data);
   aes.Free;
-  result := cipher;
+  Result := cipher;
 end;
 
 function randomHexStream(size: integer): AnsiString;
@@ -4190,7 +4194,7 @@ var
 begin
 
   for i := 0 to size - 1 do
-    result := result + IntToHex(random($FF), 2);
+    Result := Result + IntToHex(random($FF), 2);
 
 end;
 
@@ -4209,13 +4213,13 @@ begin
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
   for i := 0 to (Length(tcaKey) div 2) - 1 do
   begin
-    b := System.UInt8(StrToIntDef('$' + Copy(tcaKey, ((i) * 2) + 1, 2),0));
+    b := System.UInt8(StrToIntDef('$' + Copy(tcaKey, ((i) * 2) + 1, 2), 0));
     bb[i] := b;
   end;
 {$ELSE}
   for i := 1 to (Length(tcaKey) div 2) do
   begin
-    b := System.UInt8(StrToIntDef('$' + Copy(tcaKey, ((i - 1) * 2) + 1, 2),0));
+    b := System.UInt8(StrToIntDef('$' + Copy(tcaKey, ((i - 1) * 2) + 1, 2), 0));
     bb[i - 1] := b;
   end;
 {$ENDIF}
@@ -4231,7 +4235,7 @@ begin
   cipher := aes.Decrypt(data);
   aes.Free;
   conv.Free;
-  result := cipher;
+  Result := cipher;
 end;
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
 
@@ -4281,13 +4285,13 @@ var
   v: AnsiString;
 begin
   s := StringReplace(s, '$', '', [rfReplaceAll]);
-  result := '';
+  Result := '';
   repeat
     if Length(s) >= 2 then
     begin
       v := Copy(s, 0, 2);
       delete(s, 1, 2);
-      result := v + result;
+      Result := v + Result;
     end
     else
       break;
@@ -4302,12 +4306,12 @@ begin
     result := GetSHA256FromHex(TCA(IntToHex(x, 32) + GetSHA256FromHex(IntToHex(coin,
     8) + GetSHA256FromHex(IntToHex(coin, 8) + IntToHex(x, 32) + MasterSeed +
     IntToHex(y, 32))) + IntToHex(y, 32))) else }
-  result := GetSHA256FromHex(IntToHex(x, 32) + GetSHA256FromHex(IntToHex(coin,
+  Result := GetSHA256FromHex(IntToHex(x, 32) + GetSHA256FromHex(IntToHex(coin,
     8) + GetSHA256FromHex(IntToHex(coin, 8) + IntToHex(x, 32) + MasterSeed +
     IntToHex(Y, 32))) + IntToHex(Y, 32));
-  BigInteger.TryParse(result, 16, bi);
+  BigInteger.TryParse(Result, 16, bi);
   if bi > secp256k1.getN then
-    result := priv256forHD(coin, x, Y, GetStrHashSHA256(result));
+    Result := priv256forHD(coin, x, Y, GetStrHashSHA256(Result));
 
   wipeAnsiString(MasterSeed);
 end;
@@ -4316,23 +4320,23 @@ function seedToHumanReadable(seed: AnsiString): AnsiString;
 var
   i: integer;
 begin
-  result := '* ::: ';
+  Result := '* ::: ';
   for i := StrStartIteration to Length(seed) do
   begin
-    result := result + seed[i];
+    Result := Result + seed[i];
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     if i mod 1 = 0 then
-      result := result + ' ';
+      Result := Result + ' ';
     if i mod 7 = 0 then
 {$ELSE}
     if i mod 2 = 0 then
-      result := result + ' ';
+      Result := Result + ' ';
     if i mod 8 = 0 then
 {$ENDIF}
-      result := result + ' :::  ';
+      Result := Result + ' :::  ';
 
   end;
-  result := result + '*';
+  Result := Result + '*';
   wipeAnsiString(seed);
 end;
 
@@ -4682,7 +4686,7 @@ begin
     JSONArray := TJsonArray(JsonObject.GetValue('accounts'));
 
     frmhome.LanguageBox.ItemIndex :=
-      StrToIntDef(JsonObject.GetValue<string>('languageIndex'),0);
+      StrToIntDef(JsonObject.GetValue<string>('languageIndex'), 0);
     frmhome.CurrencyConverter.setCurrency
       (JsonObject.GetValue<string>('currency'));
 
@@ -4706,7 +4710,7 @@ begin
         AccountsNames[i].name := name;
         try
           AccountsNames[i].order :=
-            strToIntdef(JsonValue.GetValue<string>('order'), i);
+            StrToIntDef(JsonValue.GetValue<string>('order'), i);
         except
           on E: Exception do
             AccountsNames[i].order := i;
@@ -4727,13 +4731,13 @@ begin
   else
   begin
 
-    frmhome.LanguageBox.ItemIndex := StrToIntDef(ts[0],0);
+    frmhome.LanguageBox.ItemIndex := StrToIntDef(ts[0], 0);
     frmhome.CurrencyConverter.setCurrency(ts[1]);
 
     lastClosedAccount := ts[2];
 
-    SetLength(AccountsNames, StrToIntDef(ts[3],0));
-    for i := 0 to StrToIntDef(ts[3],0) - 1 do
+    SetLength(AccountsNames, StrToIntDef(ts[3], 0));
+    for i := 0 to StrToIntDef(ts[3], 0) - 1 do
     begin
       AccountsNames[i].name := ts[4 + i];
     end;
@@ -4915,20 +4919,20 @@ function getHighestBlockNumber(T: Token): System.uint64;
 var
   i, l: integer;
 begin
-  result := 0;
+  Result := 0;
   l := Length(T.history);
   if l = 0 then
     exit;
 
   for i := 0 to l - 1 do
-    if T.history[i].lastBlock > result then
-      result := T.history[i].lastBlock;
+    if T.history[i].lastBlock > Result then
+      Result := T.history[i].lastBlock;
 
 end;
 
 function getUTXO(wallet: TWalletInfo): TUTXOS;
 begin
-  result := wallet.UTXO;
+  Result := wallet.UTXO;
 end;
 
 function parseUTXO(utxos: AnsiString; Y: integer): TUTXOS;
@@ -4940,14 +4944,14 @@ begin
   ts := TStringList.Create;
   ts.Text := utxos;
   utxoCount := ts.Count div 4;
-  SetLength(result, utxoCount);
+  SetLength(Result, utxoCount);
   for i := 0 to utxoCount - 1 do
   begin
-    result[i].txid := ts.Strings[(i * 4) + 0];
-    result[i].n := StrToIntDef(ts.Strings[(i * 4) + 1],0);
-    result[i].ScriptPubKey := ts.Strings[(i * 4) + 2];
-    result[i].amount := StrToInt64(ts.Strings[(i * 4) + 3]);
-    result[i].Y := Y;
+    Result[i].txid := ts.Strings[(i * 4) + 0];
+    Result[i].n := StrToIntDef(ts.Strings[(i * 4) + 1], 0);
+    Result[i].ScriptPubKey := ts.Strings[(i * 4) + 2];
+    Result[i].amount := StrToInt64(ts.Strings[(i * 4) + 3]);
+    Result[i].Y := Y;
   end;
 
   ts.Free;

@@ -71,6 +71,8 @@ procedure verifyKeypool();
 
 procedure verifyKeypoolNoThread(wi: TWalletInfo);
 
+procedure parseSync(s: string; verifyKeypool: boolean = false);
+
 var
   semaphore: TLightweightSemaphore;
   VerifyKeypoolSemaphore: TLightweightSemaphore;
@@ -407,12 +409,12 @@ begin
     for i := 0 to coinJson.Count - 1 do
     begin
 
-      if SyncBalanceThr <> nil then
-        if SyncBalanceThr.Terminated then
-        begin
-          coinJson.Free;
-          exit;
-        end;
+      {if SyncBalanceThr <> nil then
+              if SyncBalanceThr.Terminated then
+                      begin
+                                coinJson.Free;
+                                          exit;
+                                                  end;}
 
       wd := nil;
       JsonPair := coinJson.Pairs[i];
@@ -477,7 +479,9 @@ var
   batched: string;
 begin
 
-  globalLoadCacheTime := 0;
+  currentAccount.AsyncSynchronize;
+
+ { globalLoadCacheTime := 0;
   if semaphore = nil then
   begin
     semaphore := TLightweightSemaphore.Create(8);
@@ -487,7 +491,7 @@ begin
     mutex := TSemaphore.Create();
   end;
 
-  { TThread.Synchronize(TThread.CurrentThread,
+   TThread.Synchronize(TThread.CurrentThread,
     procedure
     begin
     frmHome.DashBrdProgressBar.Max := Length(CurrentAccount.myCoins) +
@@ -495,7 +499,7 @@ begin
     frmHome.DashBrdProgressBar.value := 0;
     end); }
 
-  for i in [0, 1, 2, 3, 4, 5, 6, 7] do
+  {for i in [0, 1, 2, 3, 4, 5, 6, 7] do
   begin
     if TThread.CurrentThread.CheckTerminated then
       exit();
@@ -565,7 +569,7 @@ begin
           begin
           frmHome.DashBrdProgressBar.value :=
           frmHome.RefreshProgressBar.value + 1;
-          end); }
+          end);
 
       end).Start();
 
@@ -605,7 +609,7 @@ begin
           begin
             frmHome.DashBrdProgressBar.value :=
               frmHome.RefreshProgressBar.value + 1;
-          end);  }
+          end);
 
       end).Start();
     if TThread.CurrentThread.CheckTerminated then
@@ -624,9 +628,9 @@ begin
   { tthread.Synchronize(nil , procedure
     begin
     showmessage( floatToStr( globalLoadCacheTime ) );
-    end); }
+    end);
 
-  CurrentAccount.SaveFiles();
+  CurrentAccount.SaveFiles();   }
   firstSync := false;
 
 end;
@@ -829,11 +833,11 @@ begin
       if Token(cc).lastBlock = 0 then
         Token(cc).lastBlock := getHighestBlockNumber(Token(cc));
 
-      TThread.Synchronize(nil,
+      {TThread.Synchronize(nil,
         procedure
         begin
           frmHome.RefreshProgressBar.value := 30;
-        end);
+        end);     }
 
       parseDataForERC20(data, Token(cc));
     end
@@ -875,11 +879,11 @@ begin
     if Token(cc).lastBlock = 0 then
       Token(cc).lastBlock := getHighestBlockNumber(Token(cc));
 
-    TThread.Synchronize(nil,
+   { TThread.Synchronize(nil,
       procedure
       begin
         frmHome.RefreshProgressBar.value := 30;
-      end);
+      end); }
 
     parseDataForERC20(data, Token(cc));
   end

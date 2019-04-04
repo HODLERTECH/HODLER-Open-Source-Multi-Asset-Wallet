@@ -841,6 +841,7 @@ type
     AddNewCryptoBackButton: TButton;
     Image11: TImage;
     NanoStateTimer: TTimer;
+    Lang1: TLang;
     // Panel27: TPanel;
     // PasswordInfoStaticLabel: TLabel;
 
@@ -1253,13 +1254,14 @@ var
   duringHistorySync: Boolean = false;
   QRWidth: Integer = -1;
   QRHeight: Integer = -1;
-  SyncBalanceThr: SynchronizeBalanceThread;
+  //SyncBalanceThr: SynchronizeBalanceThread;
   // SyncHistoryThr: SynchronizeHistoryThread;
 
   QRFind: AnsiString;
   tempQRFindEncryptedSeed: AnsiString;
   lastClosedAccount: AnsiString;
   CurrentAccount: Account;
+
   CurrentStyle: AnsiString;
   BigQRCodeBackTab: TTabItem;
 
@@ -3319,39 +3321,7 @@ var
 
 begin
 
-  T := ThreadKindergarten.create();
-
-  for i := 0 to 10 do
-    T.CreateAnonymousThread(
-      procedure
-      var
-        j: Integer;
-      begin
-        for j := 0 to 10 do
-        begin
-
-          // if not tthread.CurrentThread.CheckTerminated then
-          sleep(1000);
-        end;
-
-      end).Start;
-
-  for i := 0 to 10 do
-    T.CreateAnonymousThread(
-      procedure
-      var
-        j: Integer;
-      begin
-        for j := 0 to 30 do
-        begin
-
-          // if not tthread.CurrentThread.CheckTerminated then
-          sleep(1000);
-        end;
-
-      end).Start;
-
-  T.free;
+ prepareTranslateFile();
 
 
 end;

@@ -1693,7 +1693,9 @@ var
   aTask: ITask;
 begin
 
-  if (SyncBalanceThr <> nil) then
+  CurrentAccount.AsyncSynchronize();
+
+  {if (SyncBalanceThr <> nil) then
   begin
     if SyncBalanceThr.Finished then
     begin
@@ -1713,7 +1715,7 @@ begin
       SyncBalanceThr := SynchronizeBalanceThread.Create();
 
     end;
-  end;
+  end;   }
 
 end;
 
@@ -2933,19 +2935,19 @@ begin
 
       syncTimer.Enabled := false;
 
-      if (SyncBalanceThr <> nil) and (SyncBalanceThr.Finished = false) then
-      begin
-        try
-          SyncBalanceThr.Terminate();
-        except
-          on E: Exception do
-          begin
+      {if (SyncBalanceThr <> nil) and (SyncBalanceThr.Finished = false) then
+            begin
+                    try
+                              SyncBalanceThr.Terminate();
+                                      except
+                                                on E: Exception do
+                                                          begin
 
-          end;
-        end;
-      end;
+                                                                    end;
+                                                                            end;
+                                                                                  end;
 
-      SyncBalanceThr.WaitFor;
+                                                                                        SyncBalanceThr.WaitFor;}
 
       CurrentAccount.SaveFiles();
 
@@ -2961,16 +2963,18 @@ begin
       AccountRelated.afterInitialize;
 
       syncTimer.Enabled := True;
-      SyncBalanceThr.Terminate();
+      //SyncBalanceThr.Terminate();
 
-      if SyncBalanceThr.Finished then
-      begin
+      {if SyncBalanceThr.Finished then
+            begin
 
-        SyncBalanceThr.DisposeOf;
-        SyncBalanceThr := nil;
-        SyncBalanceThr := SynchronizeBalanceThread.Create();
+                    SyncBalanceThr.DisposeOf;
+                            SyncBalanceThr := nil;
+                                    SyncBalanceThr := SynchronizeBalanceThread.Create();
 
-      end;
+                                          end;}
+      currentAccount.AsyncSynchronize();
+
 
       closeOrganizeView(nil);
     end;
