@@ -214,9 +214,9 @@ type
     btnMTQR: TButton;
     DebugBtn: TButton;
     DebugScreen: TTabItem;
-    Edit1: TEdit;
-    Button2: TButton;
-    Label1: TLabel;
+    DebugEdit: TEdit;
+    DebugButton: TButton;
+    DebugLabel: TLabel;
     AddNewCoinSettings: TTabItem;
     ToolBar2: TToolBar;
     lblACHeader: TLabel;
@@ -225,7 +225,6 @@ type
     NewCoinDescriptionEdit: TEdit;
     lblNewCoinDescription: TLabel;
     btnOKAddNewCoinSettings: TButton;
-    Label4: TLabel;
     NewCoinDescriptionPassPanel: TPanel;
     NewCoinDescriptionPassEdit: TEdit;
     lblNewCoinDescriptionPass: TLabel;
@@ -242,7 +241,6 @@ type
     SaveSeedIsImportantStaticLabel: TLabel;
     BalancePanel: TPanel;
     lblFiat: TLabel;
-    Edit4: TEdit;
     lbBalanceLong: TLabel;
     GestureManager1: TGestureManager;
     ActionList: TActionList;
@@ -299,7 +297,7 @@ type
     lblReceiveCoinShort: TLabel;
     lblReceiveRealCurrency: TLabel;
     LongBalancePanel: TPanel;
-    Button8: TButton;
+    DebugBackButton: TButton;
     sendImage: TImage;
     receiveImage: TImage;
     txHistory: TVertScrollBox;
@@ -314,7 +312,6 @@ type
     RefreshWalletView: TButton;
     Layout5: TLayout;
     lblFeeHeader: TLabel;
-    Panel1: TPanel;
     RefreshWalletViewTimer: TTimer;
     DebugRefreshTime: TLabel;
     btnWVShare: TButton;
@@ -346,8 +343,6 @@ type
     SearchInDashBrdButton: TSpeedButton;
     SearchLayout: TLayout;
     showHideIcons: TImageList;
-    FloatAnimation1: TFloatAnimation;
-    RectAnimation1: TRectAnimation;
     OrganizeList: TVertScrollBox;
     BackToBalanceViewButton: TButton;
     OrganizeButton: TButton;
@@ -366,16 +361,16 @@ type
     TransactionDetailsBackButton: TButton;
     HistoryTransactionVertScrollBox: TVertScrollBox;
     HistoryTransactionSendReceive: TLabel;
-    Label6: TLabel;
-    Label8: TLabel;
+    HistoryTransactionStatusLabel: TLabel;
+    HistoryTransactionDateLabel: TLabel;
     Layout16: TLayout;
-    Label11: TLabel;
+    TransactionIDStaticLabel: TLabel;
     Layout17: TLayout;
     Layout18: TLayout;
     Layout19: TLayout;
     Layout20: TLayout;
     Layout21: TLayout;
-    Label3: TLabel;
+    DetailsStaticLabel: TLabel;
     DebugSaveSeedButton: TButton;
     RestoreOptions: TTabItem;
     Layout13: TLayout;
@@ -422,7 +417,6 @@ type
     Layout28: TLayout;
     DecryptedQRDescriptionLabel: TLabel;
     VertScrollBox1: TVertScrollBox;
-    Button3: TButton;
     SettingsLanguageLabel: TLabel;
     SettingsCurrencyLabel: TLabel;
     ImportCoinomiSeedButton: TButton;
@@ -497,7 +491,6 @@ type
     ToolBar7: TToolBar;
     HSBPassHeaderLabel: TLabel;
     HSBPasswordBackBtn: TButton;
-    Image7: TImage;
     Layout23: TLayout;
     Layout36: TLayout;
     SystemTimer: TTimer;
@@ -517,7 +510,6 @@ type
     CheckUpdateButton: TButton;
     ConfirmSendTabItem: TTabItem;
     SendTransactionButton: TButton;
-    Label15: TLabel;
     ToolBar8: TToolBar;
     ConfirmSendHeaderLabel: TLabel;
     CSBackButton: TButton;
@@ -643,10 +635,10 @@ type
     CTIHeaderBackButton: TButton;
     Panel18: TPanel;
     PrivateKeyEditSV: TEdit;
-    Label7: TLabel;
+    ClaimCoinPrivKeyStaticLabel: TLabel;
     Panel19: TPanel;
     AddressSVEdit: TEdit;
-    Label9: TLabel;
+    DestinationAddressStaticLabel: TLabel;
     ClaimYourBCHSVButton: TButton;
     CompressedPrivKeySVCheckBox: TCheckBox;
     Button1: TButton;
@@ -657,18 +649,18 @@ type
     Panel20: TPanel;
     SelectCoinToClaimStaticLabel: TLabel;
     ToolBar12: TToolBar;
-    Label12: TLabel;
-    Button5: TButton;
+    ClaimWalletListHeaderLabel: TLabel;
+    ClaimWalletListBackButton: TButton;
     ConfirmSendClaimCoinButton: TButton;
     MainScreenQRButton: TButton;
     WalletTransactionListTabItem: TTabItem;
     WalletTransactionVertScrollBox: TVertScrollBox;
     Button6: TButton;
     Panel10: TPanel;
-    Label10: TLabel;
+    QRCodeFindAddressStaticLabel: TLabel;
     ToolBar13: TToolBar;
-    Label13: TLabel;
-    Button7: TButton;
+    QRAddressSelectWalletHeaderLabel: TLabel;
+    QRAddressSelectWalletBackButton: TButton;
     historyTransactionConfirmation: TEdit;
     HistoryTransactionDate: TEdit;
     HistoryTransactionValue: TEdit;
@@ -677,8 +669,8 @@ type
     PrivateKeyManageButton: TButton;
     AddCoinFromPrivKeyTabItem: TTabItem;
     ToolBar14: TToolBar;
-    Label14: TLabel;
-    Button9: TButton;
+    AddCoinFromPrivHeaderLabel: TLabel;
+    AddCoinFromPrivBackButton: TButton;
     Layout31: TLayout;
     StaticLabelPriveteKetInfo: TLabel;
     Layout34: TLayout;
@@ -691,23 +683,23 @@ type
     LoadingKeyDataAniIndicator: TAniIndicator;
     Panel21: TPanel;
     CoinPrivKeyDescriptionEdit: TEdit;
-    Label16: TLabel;
+    CoinPrivKeyDescriptionStaticLabel: TLabel;
     Panel22: TPanel;
     CoinPrivKeyPassEdit: TEdit;
-    Label17: TLabel;
+    CoinPrivKeyPassStaticLabel: TLabel;
     NewCoinPrivKeyOKButton: TButton;
     PrivOptionsTabItem: TTabItem;
     ToolBar15: TToolBar;
-    Label18: TLabel;
-    Button10: TButton;
+    PrivOptionsStaticLabel: TLabel;
+    PrivOptionsBackButton: TButton;
     ImportPrivateKeyInPrivButton: TButton;
     SweepButton: TButton;
     ExportPrivateKeyButton: TButton;
     ExportPrivCoinListTabItem: TTabItem;
     Panel23: TPanel;
-    Label19: TLabel;
+    ExportPrivSelectAddressStaticLabel: TLabel;
     ToolBar16: TToolBar;
-    Label21: TLabel;
+    EPCLTIHeaderLabel: TLabel;
     EPCLTIBackButton: TButton;
     ExportPrivKeyListVertScrollBox: TVertScrollBox;
     WVTabItemLayout: TLayout;
@@ -774,8 +766,8 @@ type
     ReportIssuesBackButton: TButton;
     UserReportMessageMemo: TMemo;
     SendReportIssuesButton: TButton;
-    Label22: TLabel;
-    Label24: TLabel;
+    DescribeStaticLabel: TLabel;
+    supportEmailStaticLabel: TLabel;
     reportIssuesSettingsButton: TButton;
     PrivacyAndSecurityButton: TButton;
     GlobalStetingsStaticLabel: TLabel;
@@ -786,7 +778,7 @@ type
     UserReportSendLogsLabel: TLabel;
     Panel26: TPanel;
     UserReportDeviceInfoLabel: TLabel;
-    Label25: TLabel;
+    SecurityInfoStaticLabel: TLabel;
     PrivateKeyInfoPanel: TPanel;
     PrivateKeyAddressInfoLabel: TLabel;
     PrivateKeyBalanceInfoLabel: TLabel;
@@ -812,13 +804,13 @@ type
     AddWalletButton: TButton;
     AddWalletList: TTabItem;
     ToolBar22: TToolBar;
-    Label26: TLabel;
-    Button12: TButton;
+    AddWalletListHeaderLabel: TLabel;
+    AddWalletLiistButtonBack: TButton;
     VertScrollBox4: TVertScrollBox;
     CoinListLayout: TLayout;
-    Label27: TLabel;
+    CoinheaderLabel: TLabel;
     TokenListLayout: TLayout;
-    Label28: TLabel;
+    TokenHeaderLabel: TLabel;
     NanoUnlocker: TButton;
     UnlockNanoImage: TImage;
     // Layout46: TLayout;
@@ -829,15 +821,13 @@ type
     Layout48: TLayout;
     btnAddManually: TButton;
     FindERC20autoButton: TButton;
-    Label29: TLabel;
-    Label30: TLabel;
     CapsLockWarningPanel: TPanel;
     CapsLockWarningLabel: TLabel;
     AddCurrencyListTabItem: TTabItem;
     AddNewCryptoCurrencyButton: TButton;
     CreateCurrencyFromList: TButton;
     ToolBar20: TToolBar;
-    Label31: TLabel;
+    AddNewCryptoHeaderLabel: TLabel;
     AddNewCryptoBackButton: TButton;
     Image11: TImage;
     NanoStateTimer: TTimer;
@@ -888,7 +878,7 @@ type
     procedure btnSMVNoClick(Sender: TObject);
     procedure btnSMVYesClick(Sender: TObject);
     procedure btnSBackClick(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
+    procedure DebugButtonClick(Sender: TObject);
     procedure DebugBtnClick(Sender: TObject);
     procedure btnACBackClick(Sender: TObject);
     procedure btnOKAddNewCoinSettingsClick(Sender: TObject);
@@ -910,7 +900,7 @@ type
     procedure ReceiveReatToCoin(Sender: TObject);
     procedure changeAddressUniversal(Sender: TObject);
     procedure changeAddressBech32(Sender: TObject);
-    procedure Button8Click(Sender: TObject);
+    procedure DebugBackButtonClick(Sender: TObject);
     procedure btnRestoreWalletClick(Sender: TObject);
     procedure Image1Click(Sender: TObject);
     procedure WVRealCurrencyClick(Sender: TObject);
@@ -1048,7 +1038,7 @@ type
     procedure ConfirmSendClaimCoinButtonClick(Sender: TObject);
     procedure MainScreenQRButtonClick(Sender: TObject);
     procedure PrivateKeyManageButtonClick(Sender: TObject);
-    procedure Button10Click(Sender: TObject);
+    procedure PrivOptionsBackButtonClick(Sender: TObject);
     procedure ImportPrivateKeyInPrivButtonClick(Sender: TObject);
     procedure SweepButtonClick(Sender: TObject);
     procedure ExportPrivateKeyButtonClick(Sender: TObject);
@@ -1062,7 +1052,7 @@ type
     procedure SYWLBackButtonClick(Sender: TObject);
     procedure coinbaseImageClick(Sender: TObject);
     procedure exportemptyaddressesSwitchSwitch(Sender: TObject);
-    procedure Button5Click(Sender: TObject);
+    procedure ClaimWalletListBackButtonClick(Sender: TObject);
     procedure SendReportIssuesButtonClick(Sender: TObject);
     procedure reportIssuesSettingsButtonClick(Sender: TObject);
     procedure PrivacyAndSecurityButtonClick(Sender: TObject);
@@ -1126,6 +1116,7 @@ type
     procedure NewCoinDescriptionPassEditKeyUp(Sender: TObject; var Key: Word;
       var KeyChar: Char; Shift: TShiftState);
     procedure NanoStateTimerTimer(Sender: TObject);
+    procedure HistoryDetailsClick(Sender: TObject);
     // procedure UserReportSendLogsSwitchClick(Sender: TObject);
 
   private
@@ -1662,6 +1653,11 @@ procedure TfrmHome.HideZeroWalletsCheckBoxChange(Sender: TObject);
 begin
   WalletViewRelated.HideEmptyWallets(Sender);
   CurrentAccount.SaveFiles;
+end;
+
+procedure TfrmHome.HistoryDetailsClick(Sender: TObject);
+begin
+
 end;
 
 {$IFDEF ANDROID}
@@ -3229,7 +3225,7 @@ begin
 
 end;
 
-procedure TfrmHome.Button10Click(Sender: TObject);
+procedure TfrmHome.PrivOptionsBackButtonClick(Sender: TObject);
 begin
   switchTab(PageControl, Settings);
 end;
@@ -3294,7 +3290,7 @@ begin
 
 end;
 
-procedure TfrmHome.Button2Click(Sender: TObject);
+procedure TfrmHome.DebugButtonClick(Sender: TObject);
 var
   List: TStringList;
   Stream: TResourceStream;
@@ -3318,45 +3314,10 @@ var
   temp: TThread;
 
 begin
-
-  T := ThreadKindergarten.create();
-
-  for i := 0 to 10 do
-    T.CreateAnonymousThread(
-      procedure
-      var
-        j: Integer;
-      begin
-        for j := 0 to 10 do
-        begin
-
-          // if not tthread.CurrentThread.CheckTerminated then
-          sleep(1000);
-        end;
-
-      end).Start;
-
-  for i := 0 to 10 do
-    T.CreateAnonymousThread(
-      procedure
-      var
-        j: Integer;
-      begin
-        for j := 0 to 30 do
-        begin
-
-          // if not tthread.CurrentThread.CheckTerminated then
-          sleep(1000);
-        end;
-
-      end).Start;
-
-  T.free;
-
-
+  prepareTranslateFile();
 end;
 
-procedure TfrmHome.Button5Click(Sender: TObject);
+procedure TfrmHome.ClaimWalletListBackButtonClick(Sender: TObject);
 begin
   switchTab(PageControl, AddNewCoin);
 end;
@@ -3432,7 +3393,7 @@ begin
   WalletViewRelated.btnChangeDescriptionClick(Sender);
 end;
 
-procedure TfrmHome.Button8Click(Sender: TObject);
+procedure TfrmHome.DebugBackButtonClick(Sender: TObject);
 begin
   switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
 
