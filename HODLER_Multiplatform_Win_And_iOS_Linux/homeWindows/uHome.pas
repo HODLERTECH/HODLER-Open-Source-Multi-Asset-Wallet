@@ -831,6 +831,18 @@ type
     AddNewCryptoBackButton: TButton;
     Image11: TImage;
     NanoStateTimer: TTimer;
+    CapsLockWarningDecryptSeedPanel: TPanel;
+    CapsLockWarningDecryptSeedLabel: TLabel;
+    CapsLockWarningRFFTPanel: TPanel;
+    CapsLockWarningRFFTLabel: TLabel;
+    CapsLockWarningRestoreHSBPanel: TPanel;
+    CapsLockWarningRestoreHSBLabel: TLabel;
+    CapsLockWarningConfirmSendPanel: TPanel;
+    CapsLockWarningConfirmSendLabel: TLabel;
+    CapsLockWarningGenerateYPanel: TPanel;
+    CapsLockWarningGenerateYLabel: TLabel;
+    CapsLockWarningImportPrivPanel: TPanel;
+    CapsLockWarningImportPrivLabel: TLabel;
     // Panel27: TPanel;
     // PasswordInfoStaticLabel: TLabel;
 
@@ -3702,6 +3714,13 @@ begin
   frmHome.Position := TFormPosition.ScreenCenter;
   CapsLockWarningPanel.Visible := LowOrderBitSet(GetKeyState(VK_CAPITAL));
 
+    CapsLockWarningDecryptSeedPanel.Visible := LowOrderBitSet(GetKeyState(VK_CAPITAL));
+    CapsLockWarningRFFTPanel.Visible := LowOrderBitSet(GetKeyState(VK_CAPITAL));
+    CapsLockWarningRestoreHSBPanel.Visible := LowOrderBitSet(GetKeyState(VK_CAPITAL));
+    CapsLockWarningConfirmSendPanel.Visible := LowOrderBitSet(GetKeyState(VK_CAPITAL));
+    CapsLockWarningGenerateYPanel.Visible := LowOrderBitSet(GetKeyState(VK_CAPITAL));
+    CapsLockWarningImportPrivPanel.Visible := LowOrderBitSet(GetKeyState(VK_CAPITAL));
+
   frmhome.Height := min( frmhome.Height , round(Screen.Height * 0.8) );
   frmhome.Width := min( frmhome.Width , round(Screen.Width * 0.8) );
 
@@ -3762,15 +3781,39 @@ procedure TfrmHome.FormKeyUp(Sender: TObject; var Key: Word; var KeyChar: Char;
 Shift: TShiftState);
 var
   FService: IFMXVirtualKeyboardService;
+  capitalIsPresses : boolean;
 begin
 
   if Key = vkCapital then
   begin
 
+    capitalIsPresses :=  GetKeyState(VK_CAPITAL) <> 0;
+
     CapsLockWarningPanel.Position.Y := PanelRetypePassword.Position.Y + 1;
-    CapsLockWarningPanel.Visible := LowOrderBitSet(GetKeyState(VK_CAPITAL));
+    CapsLockWarningPanel.Visible := capitalIsPresses;
+    CapsLockWarningDecryptSeedPanel.Position.Y := panelDecryptSeedPass.Position.Y +1;
+    CapsLockWarningDecryptSeedPanel.Visible := capitalIsPresses;
+    CapsLockWarningRFFTPanel.Position.Y := Panel7.Position.Y +1;
+    CapsLockWarningRFFTPanel.Visible := capitalIsPresses;
+    CapsLockWarningRestoreHSBPanel.Position.Y := Layout36.Position.Y +1;
+    CapsLockWarningRestoreHSBPanel.Visible := capitalIsPresses;
+    CapsLockWarningConfirmSendPanel.Position.Y := ConfirmSendPasswordPanel.Position.Y +1 ;
+    CapsLockWarningConfirmSendPanel.Visible := capitalIsPresses;
+    CapsLockWarningGenerateYPanel.Position.Y := Panel9.Position.Y + 1;
+    CapsLockWarningGenerateYPanel.Visible := capitalIsPresses;
+    CapsLockWarningImportPrivPanel.Position.Y := Panel22.Position.Y +1;
+    CapsLockWarningImportPrivPanel.Visible := capitalIsPresses;
+
 
     CapsLockWarningPanel.Align := TAlignLayout.Top;
+    CapsLockWarningDecryptSeedPanel.Align := TAlignLayout.Top;
+    CapsLockWarningRFFTPanel.Align := TAlignLayout.Top;
+    CapsLockWarningRestoreHSBPanel.Align := TAlignLayout.Top;
+    CapsLockWarningConfirmSendPanel.Align := TAlignLayout.Top;
+    CapsLockWarningGenerateYPanel.Align := TAlignLayout.Top;
+    CapsLockWarningImportPrivPanel.Align := TAlignLayout.Top;
+
+
 
   end;
 

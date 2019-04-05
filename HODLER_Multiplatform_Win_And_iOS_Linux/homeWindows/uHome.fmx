@@ -35,7 +35,7 @@ object frmHome: TfrmHome
     Size.Height = 687.000000000000000000
     Size.PlatformDefault = False
     TabHeight = 49.000000000000000000
-    TabIndex = 18
+    TabIndex = 41
     TabOrder = 8
     TabPosition = None
     OnChange = closeVirtualKeyBoard
@@ -6203,7 +6203,7 @@ object frmHome: TfrmHome
       end
       object btnDecryptSeed: TButton
         Align = Top
-        Position.Y = 96.000000000000000000
+        Position.Y = 120.000000000000000000
         Size.Width = 450.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
@@ -6211,9 +6211,9 @@ object frmHome: TfrmHome
         Text = 'OK'
       end
       object DecryptSeedMessage: TLabel
-        Align = Top
+        Align = Bottom
         StyledSettings = [Family, Size, Style]
-        Position.Y = 144.000000000000000000
+        Position.Y = 651.000000000000000000
         Size.Width = 450.000000000000000000
         Size.Height = 36.000000000000000000
         Size.PlatformDefault = False
@@ -6242,6 +6242,27 @@ object frmHome: TfrmHome
           Size.PlatformDefault = False
           TextSettings.HorzAlign = Center
           Text = 'Decrypting seed, please wait few seconds...'
+          TabOrder = 0
+        end
+      end
+      object CapsLockWarningDecryptSeedPanel: TPanel
+        Align = Top
+        Position.Y = 96.000000000000000000
+        Size.Width = 450.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 13
+        object CapsLockWarningDecryptSeedLabel: TLabel
+          Align = Contents
+          StyledSettings = [Family, Size]
+          Margins.Left = 15.000000000000000000
+          Margins.Right = 15.000000000000000000
+          Size.Width = 420.000000000000000000
+          Size.Height = 24.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = claRed
+          Text = 'Warning: Caps Lock enabled'
           TabOrder = 0
         end
       end
@@ -7116,7 +7137,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -8829,6 +8850,27 @@ object frmHome: TfrmHome
           TabOrder = 0
         end
       end
+      object CapsLockWarningRFFTPanel: TPanel
+        Align = Top
+        Position.Y = 144.000000000000000000
+        Size.Width = 450.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 13
+        object CapsLockWarningRFFTLabel: TLabel
+          Align = Contents
+          StyledSettings = [Family, Size]
+          Margins.Left = 15.000000000000000000
+          Margins.Right = 15.000000000000000000
+          Size.Width = 420.000000000000000000
+          Size.Height = 24.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = claRed
+          Text = 'Warning: Caps Lock enabled'
+          TabOrder = 0
+        end
+      end
     end
     object ImportPrivKeyCoinList: TTabItem
       CustomIcon = <
@@ -9006,6 +9048,27 @@ object frmHome: TfrmHome
           Size.PlatformDefault = False
           Text = 'Password to file (same password for wallet)'
           TabOrder = 1
+        end
+      end
+      object CapsLockWarningRestoreHSBPanel: TPanel
+        Align = Top
+        Position.Y = 288.000000000000000000
+        Size.Width = 450.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 13
+        object CapsLockWarningRestoreHSBLabel: TLabel
+          Align = Contents
+          StyledSettings = [Family, Size]
+          Margins.Left = 15.000000000000000000
+          Margins.Right = 15.000000000000000000
+          Size.Width = 420.000000000000000000
+          Size.Height = 24.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = claRed
+          Text = 'Warning: Caps Lock enabled'
+          TabOrder = 0
         end
       end
     end
@@ -9248,7 +9311,7 @@ object frmHome: TfrmHome
         Margins.Left = 15.000000000000000000
         Margins.Right = 15.000000000000000000
         Position.X = 15.000000000000000000
-        Position.Y = 344.000000000000000000
+        Position.Y = 368.000000000000000000
         Size.Width = 420.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
@@ -9267,6 +9330,27 @@ object frmHome: TfrmHome
         TabOrder = 6
         Text = 'Confirm'
         OnClick = ConfirmSendClaimCoinButtonClick
+      end
+      object CapsLockWarningConfirmSendPanel: TPanel
+        Align = Top
+        Position.Y = 344.000000000000000000
+        Size.Width = 450.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 13
+        object CapsLockWarningConfirmSendLabel: TLabel
+          Align = Contents
+          StyledSettings = [Family, Size]
+          Margins.Left = 15.000000000000000000
+          Margins.Right = 15.000000000000000000
+          Size.Width = 420.000000000000000000
+          Size.Height = 24.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = claRed
+          Text = 'Warning: Caps Lock enabled'
+          TabOrder = 0
+        end
       end
     end
     object TransactionWaitForSend: TTabItem
@@ -9357,7 +9441,7 @@ object frmHome: TfrmHome
       object Label20: TLabel
         Align = Top
         StyledSettings = [Family, Size, Style]
-        Position.Y = 192.000000000000000000
+        Position.Y = 216.000000000000000000
         Size.Width = 450.000000000000000000
         Size.Height = 36.000000000000000000
         Size.PlatformDefault = False
@@ -9443,7 +9527,7 @@ object frmHome: TfrmHome
       end
       object Panel14: TPanel
         Align = Top
-        Position.Y = 96.000000000000000000
+        Position.Y = 120.000000000000000000
         Size.Width = 450.000000000000000000
         Size.Height = 96.000000000000000000
         Size.PlatformDefault = False
@@ -9497,6 +9581,27 @@ object frmHome: TfrmHome
             Value = 10.000000000000000000
             OnChange = TrackBar1Change
           end
+        end
+      end
+      object CapsLockWarningGenerateYPanel: TPanel
+        Align = Top
+        Position.Y = 96.000000000000000000
+        Size.Width = 450.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 13
+        object CapsLockWarningGenerateYLabel: TLabel
+          Align = Contents
+          StyledSettings = [Family, Size]
+          Margins.Left = 15.000000000000000000
+          Margins.Right = 15.000000000000000000
+          Size.Width = 420.000000000000000000
+          Size.Height = 24.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = claRed
+          Text = 'Warning: Caps Lock enabled'
+          TabOrder = 0
         end
       end
     end
@@ -9914,7 +10019,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -10024,7 +10129,7 @@ object frmHome: TfrmHome
         Align = Top
         Margins.Left = 15.000000000000000000
         Position.X = 15.000000000000000000
-        Position.Y = 144.000000000000000000
+        Position.Y = 168.000000000000000000
         Size.Width = 435.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
@@ -10099,7 +10204,7 @@ object frmHome: TfrmHome
       end
       object Layout46: TLayout
         Align = Top
-        Position.Y = 192.000000000000000000
+        Position.Y = 216.000000000000000000
         Size.Width = 450.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
@@ -10122,6 +10227,27 @@ object frmHome: TfrmHome
           TabOrder = 1
           Text = 'QR'
           OnClick = CoinFromPrivKeyQRButtonClick
+        end
+      end
+      object CapsLockWarningImportPrivPanel: TPanel
+        Align = Top
+        Position.Y = 144.000000000000000000
+        Size.Width = 450.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 13
+        object CapsLockWarningImportPrivLabel: TLabel
+          Align = Contents
+          StyledSettings = [Family, Size]
+          Margins.Left = 15.000000000000000000
+          Margins.Right = 15.000000000000000000
+          Size.Width = 420.000000000000000000
+          Size.Height = 24.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = claRed
+          Text = 'Warning: Caps Lock enabled'
+          TabOrder = 0
         end
       end
     end
