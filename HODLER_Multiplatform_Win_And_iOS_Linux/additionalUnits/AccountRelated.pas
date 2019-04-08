@@ -372,11 +372,11 @@ begin
 
   {  SyncBalanceThr := SynchronizeBalanceThread.Create();}
     frmhome.syncTimer.Enabled := true;
-    CurrentAccount.SynchronizeThreadGuardian.CreateAnonymousThread(
-      procedure
-      begin
-        verifyKeypool();
-      end).Start();
+    //CurrentAccount.SynchronizeThreadGuardian.CreateAnonymousThread(
+    // procedure
+    //  begin
+        currentAccount.asyncVerifyKeyPool();
+    //  end).Start();
   except
     on E: Exception do
     begin
@@ -460,9 +460,9 @@ begin
   frmhome.CurrencyConverter.free;
   frmhome.SourceDictionary.Free;
 
-  mutex.Free;
-  semaphore.Free;
-  VerifyKeypoolSemaphore.Free;
+  //mutex.Free;
+  //semaphore.Free;
+  //VerifyKeypoolSemaphore.Free;
 
   clearVertScrollBox(frmhome.TxHistory); // Panel.TagObject can contain THistoryHolder
 
@@ -657,7 +657,7 @@ begin
         DayNightModeSwitch.IsChecked := false;
       {$ENDIF}
       FScanManager := TScanManager.Create(TBarcodeFormat.QR_CODE, nil);
-      duringSync := false;
+
 
       WVsendTO.Caret.Width := 2;
       LanguageBox.ItemIndex := 0;

@@ -800,7 +800,7 @@ begin
       // SCC sync x / all y
       /// for cc in currentAccount.getWalletWithX(CurrentCoin.x, CurrentCoin.coin) do
       // begin
-      SynchronizeCryptoCurrency(cc);
+      SynchronizeCryptoCurrency(currentAccount , cc);
       // end;
 
       TThread.Synchronize(nil,

@@ -3,9 +3,9 @@ unit AccountData;
 interface
 
 uses tokenData, WalletStructureData, cryptoCurrencyData, System.IOUtils,
-  FMX.Graphics, System.types,
+  FMX.Graphics, System.types, FMX.Types,  FMX.Controls, FMX.StdCtrls,
   Sysutils, Classes, FMX.Dialogs, Json, Velthuis.BigIntegers, math,
-  System.Generics.Collections, System.SyncObjs, THreadKindergartenData;
+  System.Generics.Collections, System.SyncObjs, THreadKindergartenData ;
 
 procedure loadCryptoCurrencyJSONData(data: TJSONValue; cc: cryptoCurrency);
 function getCryptoCurrencyJsonData(cc: cryptoCurrency): TJSONObject;
@@ -37,6 +37,7 @@ type
     SmallQRImagePath: AnsiString;
 
     Paths: Array of AnsiString;
+    firstSync : boolean;
 
     SynchronizeThreadGuardian: ThreadKindergarten;
 
@@ -76,7 +77,10 @@ type
 
     procedure lockSynchronize();
     procedure unlockSynchronize();
-
+    function isOurAddress(adr: string; coinid: Integer): boolean;
+    procedure verifyKeypool();
+    procedure asyncVerifyKeyPool();
+    procedure refreshGUI();
 
 
 
@@ -84,7 +88,7 @@ type
 
   var
 
-    semaphore:TLightweightSemaphore;
+    semaphore , VerifyKeypoolSemaphore:TLightweightSemaphore;
     mutex : TSemaphore;
     synchronizeThread: TThread;
     mutexTokenFile, mutexCoinFile, mutexSeedFile, mutexDescriptionFile
@@ -112,7 +116,162 @@ type
 implementation
 
 uses
-  misc, uHome, coinData, nano, languages,SyncThr;
+  misc, uHome, coinData, nano, languages,SyncThr, Bitcoin , walletViewRelated , CurrencyConverter;
+
+procedure Account.refreshGUI();
+begin
+  if self = currentAccount then
+  begin
+  frmhome.refreshGlobalImage.Start;
+  refreshGlobalFiat();
+    TThread.Synchronize(TThread.CurrentThread,
+      procedure
+      begin
+        repaintWalletList;
+      end);
+
+    TThread.Synchronize(TThread.CurrentThread,
+      procedure
+      begin
+        if frmhome.PageControl.ActiveTab = frmhome.walletView then
+        begin
+          try
+            reloadWalletView;
+          except
+            on E: Exception do
+          end;
+
+        end;
+      end);
+
+    TThread.Synchronize(TThread.CurrentThread,
+      procedure
+      begin
+
+        TLabel(frmHome.FindComponent('globalBalance')).text :=
+          floatToStrF(frmhome.currencyConverter.calculate(globalFiat), ffFixed, 9, 2);
+        TLabel(frmHome.FindComponent('globalCurrency')).text := '         ' +
+          frmhome.currencyConverter.symbol;
+
+
+
+        hideEmptyWallets(nil);
+
+      end);
+    frmhome.refreshGlobalImage.Stop;
+  end;
+end;
+
+procedure Account.asyncVerifyKeyPool();
+begin
+
+  SynchronizeThreadGuardian.CreateAnonymousThread(procedure
+  begin
+
+    verifyKeypool();
+
+  end).start();
+
+end;
+
+procedure Account.verifyKeypool();
+var
+  i: Integer;
+  licz: Integer;
+  batched: string;
+
+begin
+
+  for i in [0, 1, 2, 3, 4, 5, 6, 7] do
+  begin
+    if TThread.CurrentThread.CheckTerminated then
+      exit();
+    mutex.Acquire();
+
+    SynchronizeThreadGuardian.CreateAnonymousThread(
+      procedure
+      var
+        id: Integer;
+        wi: TWalletInfo;
+        wd: TObject;
+        url, s: string;
+
+      begin
+
+        id := i;
+        mutex.Release();
+
+        VerifyKeypoolSemaphore.WaitFor();
+        try
+          s := keypoolIsUsed(self,id);
+          url := HODLER_URL + '/batchSync0.3.2.php?keypool=true&coin=' +
+            availablecoin[id].name;
+          if TThread.CurrentThread.CheckTerminated then
+            exit();
+          parseSync(self , postDataOverHTTP(url, s, false, True), True);
+
+        except
+          on E: Exception do
+          begin
+
+          end;
+        end;
+        VerifyKeypoolSemaphore.Release();
+
+      end).Start();
+    mutex.Acquire();
+    mutex.Release();
+
+  end;
+
+  while VerifyKeypoolSemaphore.CurrentCount <> 8 do
+  begin
+    if TThread.CurrentThread.CheckTerminated then
+      exit();
+    sleep(50);
+  end;
+
+  SaveFiles();
+
+end;
+
+function Account.isOurAddress(adr: string; coinid: Integer): boolean;
+var
+  twi: TWalletInfo;
+var
+  segwit, cash, compatible, legacy: AnsiString;
+  pub: AnsiString;
+begin
+
+  result := false;
+
+  adr := lowercase(StringReplace(adr, 'bitcoincash:', '', [rfReplaceAll]));
+
+  for twi in myCoins do
+  begin
+
+    if twi.coin <> coinid then
+      continue;
+
+    if TThread.CurrentThread.CheckTerminated then
+    begin
+      exit();
+    end;
+    pub := twi.pub;
+
+    segwit := lowercase(generatep2wpkh(pub, availablecoin[coinid].hrp));
+    compatible := lowercase(generatep2sh(pub, availablecoin[coinid].p2sh));
+    legacy := generatep2pkh(pub, availablecoin[coinid].p2pk);
+
+    cash := lowercase(bitcoinCashAddressToCashAddress(legacy, false));
+    legacy := lowercase(legacy);
+    cash := StringReplace(cash, 'bitcoincash:', '', [rfReplaceAll]);
+    if ((adr) = segwit) or (adr = compatible) or (adr = legacy) or (adr = cash)
+    then
+      exit(True);
+
+  end;
+end;
 
 procedure  Account.lockSynchronize();
 begin
@@ -148,7 +307,7 @@ begin
     synchronizeThread := tthread.CreateAnonymousThread( self.synchronize );
     synchronizeThread.FreeOnTerminate := false;
     synchronizeThread.start();
-
+    //synchronizeThread.
   end;
 
 
@@ -162,7 +321,10 @@ var
   batched: string;
 begin
 
-
+  {TThread.Synchronize(nil , procedure
+    begin
+        showmessage('start');
+          end);}
 
 
   { TThread.Synchronize(TThread.CurrentThread,
@@ -207,13 +369,13 @@ begin
               //  exit();
 
               if wi.coin in [4, 8] then
-                SynchronizeCryptoCurrency(wi);
+                SynchronizeCryptoCurrency(self ,wi);
             end;
 
           end
           else
           begin
-            s := batchSync(id);
+            s := batchSync(self ,id);
 
             url := HODLER_URL + '/batchSync0.3.2.php?coin=' +
               availablecoin[id].name;
@@ -221,7 +383,7 @@ begin
             temp := postDataOverHTTP(url, s, firstSync, True);
             //if TThread.CurrentThread.CheckTerminated then
             //  exit();
-            parseSync(temp);
+            parseSync(self , temp);
           end;
          // if TThread.CurrentThread.CheckTerminated then
           //  exit();
@@ -272,7 +434,7 @@ begin
         try
           //if TThread.CurrentThread.CheckTerminated then
           //  exit();
-          SynchronizeCryptoCurrency(myTokens[id]);
+          SynchronizeCryptoCurrency(self ,myTokens[id]);
         except
           on E: Exception do
           begin
@@ -305,8 +467,15 @@ begin
     begin
     showmessage( floatToStr( globalLoadCacheTime ) );
     end); }
-
+  firstSync := false;
   SaveFiles();
+
+  refreshGUI();
+  {TThread.Synchronize(nil , procedure
+    begin
+        showmessage('stop');
+          end);}
+
 end;
 
 function Account.TokenExistInETH(TokenID: Integer;
@@ -725,6 +894,8 @@ begin
   inherited Create;
   name := _name;
 
+  firstsync := true;
+
   DirPath := TPath.Combine(HOME_PATH, name);
 
   DescriptionDict := TObjectDictionary<TPair<Integer, Integer>,
@@ -761,7 +932,7 @@ begin
   mutexDescriptionFile := TSemaphore.Create();
 
   semaphore := TLightweightSemaphore.Create(8);
-
+  VerifyKeypoolSemaphore := TLightweightSemaphore.Create(8);
   mutex := TSemaphore.Create();
 
   SynchronizeThreadGuardian := ThreadKindergarten.Create();
@@ -798,6 +969,7 @@ begin
   DescriptionDict.Free();
   clearArrays();
   semaphore.free;
+  VerifyKeypoolSemaphore.free;
   mutex.free;
 
   inherited;

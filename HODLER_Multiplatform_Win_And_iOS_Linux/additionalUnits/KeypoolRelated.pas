@@ -234,7 +234,7 @@ begin
         CurrentAccount.SaveFiles;
 
       end;
-      verifyKeypoolNoThread(TWalletInfo(self.crypto));
+      verifyKeypoolNoThread(currentAccount ,TWalletInfo(self.crypto));
       missing := missingAmount;
       kLog('217: verifyKeypool for Self.Crypto: ' +
         IntToStr(TWalletInfo(self.crypto).coin) + ' Missing: ' +
@@ -256,7 +256,7 @@ begin
         IntToStr(missing));
       if missing = 0 then
         Break;
-      verifyKeypoolNoThread(TWalletInfo(self.crypto));
+      verifyKeypoolNoThread(currentAccount , TWalletInfo(self.crypto));
     end;
 
     cleanupRoutine;

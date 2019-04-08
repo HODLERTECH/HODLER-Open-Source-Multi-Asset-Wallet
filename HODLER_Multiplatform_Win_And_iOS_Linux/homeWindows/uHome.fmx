@@ -35,7 +35,7 @@ object frmHome: TfrmHome
     Size.Height = 687.000000000000000000
     Size.PlatformDefault = False
     TabHeight = 49.000000000000000000
-    TabIndex = 18
+    TabIndex = 5
     TabOrder = 8
     TabPosition = None
     OnChange = closeVirtualKeyBoard
@@ -741,7 +741,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -1596,7 +1596,7 @@ object frmHome: TfrmHome
               Size.Height = 562.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
-              Viewport.Width = 434.000000000000000000
+              Viewport.Width = 450.000000000000000000
               Viewport.Height = 562.000000000000000000
               object ReceiveAmountLayout: TLayout
                 Align = Top
@@ -1881,7 +1881,7 @@ object frmHome: TfrmHome
               Size.Height = 562.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 0
-              Viewport.Width = 434.000000000000000000
+              Viewport.Width = 450.000000000000000000
               Viewport.Height = 562.000000000000000000
               object btnSend: TButton
                 Align = Top
@@ -5870,7 +5870,7 @@ object frmHome: TfrmHome
         Size.Height = 591.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 7
-        Viewport.Width = 434.000000000000000000
+        Viewport.Width = 450.000000000000000000
         Viewport.Height = 591.000000000000000000
         object GlobalSettingsLayout: TLayout
           Align = Top
@@ -7116,7 +7116,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -12018,6 +12018,11 @@ object frmHome: TfrmHome
     Left = 545
     Top = 558
   end
+  object Lang1: TLang
+    Lang = 'pl'
+    Left = 585
+    Top = 502
+  end
   object TokenIcons3: TImageList
     Source = <
       item
@@ -12421,9 +12426,5 @@ object frmHome: TfrmHome
     Destination = <>
     Left = 80
     Top = 449
-  end
-  object Lang1: TLang
-    Left = 585
-    Top = 502
   end
 end
