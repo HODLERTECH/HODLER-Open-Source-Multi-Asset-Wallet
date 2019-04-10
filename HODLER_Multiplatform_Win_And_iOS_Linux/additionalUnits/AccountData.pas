@@ -530,53 +530,8 @@ begin
 end;
 
 procedure Account.GenerateEQRFiles();
-var
-  i: Integer;
-  img, qrimg: TBitmap;
-  tempStr: TStream;
-  FileName: string;
-  Stream: TResourceStream;
-  Y, m, d: Word;
 begin
-
-    if not FileExists( SmallQRImagePath ) then
-    begin
-
-      img := StrToQRBitmap( Self.EncryptedMasterSeed,8 );
-      img.SaveToFile(SmallQRImagePath);
-      img.free;
-	  
-    end;
-
-  if not FileExists(BigQRImagePath) then
-  begin
-
-
-    qrimg := StrToQRBitmap(EncryptedMasterSeed, 16);
-    img := TBitmap.Create();
-    Stream := TResourceStream.Create(HInstance, 'IMG_EQR', RT_RCDATA);
-    try
-      img.LoadFromStream(Stream);
-    finally
-      Stream.Free;
-    end;
-    img.Canvas.BeginScene;
-    img.Canvas.DrawBitmap(qrimg, RectF(0, 0, 797, 797),
-      RectF(294, 514, 797 + 294, 797 + 514), 1);
-    img.Canvas.EndScene;
-
-    img.SaveToFile(BigQRImagePath);
-    img.Free;
-    qrimg.Free;
-
-
-  end;
-
- 
-  userSaveSeed := True;
-  SaveSeedFile();
-  // ? userSavedSeed := true;
-  // refreshWalletDat();
+//
 
 end;
 

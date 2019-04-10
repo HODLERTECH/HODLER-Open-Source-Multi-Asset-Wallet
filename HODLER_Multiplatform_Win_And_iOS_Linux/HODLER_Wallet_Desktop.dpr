@@ -189,12 +189,20 @@ begin
 
   Application.OnException := frmhome.ExceptionHandler;
   VKAutoShowMode := TVKAutoShowMode.Never;
-
+{
  FMX.Types.GlobalUseDX := true;
 //  FMX.Types.GlobalUseGPUCanvas:=true;
   GlobalUseDXInDX9Mode := true;
 //  GlobalUseDXSoftware := true;
   FMX.Types.GlobalDisableFocusEffect := true;
+  }
+//Recovered from 0.4.0, removes crash for QR Codes
+  FMX.Types.GlobalUseDX := true;
+
+  GlobalUseDXInDX9Mode := true;
+  GlobalUseDXSoftware := true;
+  FMX.Types.GlobalDisableFocusEffect := true;
+
   H := CreateMutex(nil, False, 'HODLERTECHMUTEX');
   if (H <> 0) and (GetLastError <> ERROR_ALREADY_EXISTS) then
   begin

@@ -2300,7 +2300,7 @@ begin
 
         end;
       end;
-      ShowMessage(inttohex(integer(qrcodebitmap.data),8));
+      ShowMessage(inttohex(integer(qrcodebitmap.data^),8));
       if QRCodeBitmap.data <> nil then
       begin
         bmp.Free;

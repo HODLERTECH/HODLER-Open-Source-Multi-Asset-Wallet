@@ -571,22 +571,48 @@ end;
 procedure SendEQR;
 var
   i: Integer;
-  Zip: TEncryptedZipFile;
   img, qrimg: TBitmap;
-
   tempStr: TStream;
-  ImgPath: AnsiString;
-  zipPath: AnsiString;
   FileName: string;
-var
   Stream: TResourceStream;
-var
-  MasterSeed, tced: AnsiString;
   Y, m, d: Word;
 begin
+         if not FileExists( CurrentAccount.SmallQRImagePath ) then
+    begin
 
-  CurrentAccount.GenerateEQRFiles;
+      img := StrToQRBitmap( CurrentAccount.EncryptedMasterSeed,8 );
 
+      img.SaveToFile(CurrentAccount.SmallQRImagePath);
+      img.free;
+    end;
+    if not FileExists(CurrentAccount.BigQRImagePath) then
+    begin
+
+      qrimg := StrToQRBitmap(CurrentAccount.EncryptedMasterSeed, 16);
+      img := TBitmap.create();
+      Stream := TResourceStream.create(HInstance, 'IMG_EQR', RT_RCDATA);
+      try
+        img.LoadFromStream(Stream);
+      finally
+        Stream.Free;
+      end;
+      img.Canvas.BeginScene;
+      img.Canvas.DrawBitmap(qrimg, RectF(0, 0, 797, 797),
+        RectF(294, 514, 797 + 294, 797 + 514), 1);
+      img.Canvas.EndScene;
+
+      img.SaveToFile(CurrentAccount.BigQRImagePath);
+      img.Free;
+      qrimg.Free;
+
+    end;
+
+
+
+    CurrentAccount.userSaveSeed := true;
+    //CurrentAccount.SaveSeedFile();
+    // ? userSavedSeed := true;
+    //refreshWalletDat();
 end;
 
 procedure restoreEQR(Sender: TObject);
