@@ -299,7 +299,7 @@ procedure AddAccountToFile(ac: Account);
 Procedure CreateNewAccountAndSave(name, pass, seed: AnsiString;
   userSaveSeed: boolean);
 
-procedure CreatePanel(crypto: cryptoCurrency);
+procedure CreatePanel(crypto: cryptoCurrency ; FromAccount : Account; inBox : TVertScrollBox );
 
 // procedure creatImportPrivKeyCoinList();
 function getETHValidAddress(address: AnsiString): AnsiString;
@@ -330,6 +330,7 @@ function postDataOverHTTP(var aURL: String; postdata: string;
 procedure saveSendCacheToFile();
 procedure loadSendCacheFromFile();
 procedure clearSendCache();
+function LowOrderBitSet( Value: integer ): boolean;
 
 
 
@@ -399,6 +400,11 @@ uses Bitcoin, uHome, base58, Ethereum, coinData, strutils, secp256k1,
 
 var
   bitmapData: TBitmapData;
+
+function LowOrderBitSet( Value: integer ): boolean;
+begin
+  Result := ((Value and 1) > 0);
+end;
 
 procedure clearSendCache();
 var
@@ -845,13 +851,6 @@ begin
     end;
 
   end;
-  { DebugString := '';
-    for i := 0 to length(Arr) - 1 do
-    DebugString := DebugString + intTostr(arr[i]) + ' ';
-    tthread.Synchronize(nil , procedure
-    begin
-    showmessage(debugString);
-    end); }
 
   result := Length(arr);
   for i := 0 to Length(arr) - 1 do
@@ -1171,7 +1170,7 @@ begin
 {$ENDIF}
   currentStyle := name;
   {$IFDEF LINUX}
-   stylo.TrySetStyleFromResource(name);
+   stylo.TrySetStyleFromResource('RT_DARK_LINUX');
   {$ELSE}
   stylo.TrySetStyleFromResource('RT_DARK');
    {$ENDIF}
@@ -1757,7 +1756,7 @@ begin
   // bg.Index
 end;
 
-procedure CreatePanel(crypto: cryptoCurrency);
+procedure CreatePanel(crypto: cryptoCurrency ; FromAccount : Account ; inBox : TVertScrollBox);
 var
   panel: TPanel;
   coinName: TLabel;
@@ -1781,7 +1780,7 @@ begin
     end
     else
     begin
-      tempBalances := CurrentAccount.aggregateBalances(TWalletInfo(crypto));
+      tempBalances := FromAccount.aggregateBalances(TWalletInfo(crypto));
       ccEmpty := (tempBalances.confirmed > 0);
 
     end;
@@ -1796,10 +1795,10 @@ begin
   with frmhome.walletList do
   begin
 
-    panel := TPanel.Create(frmhome.walletList);
+    panel := TPanel.Create( inbox );
     panel.Align := panel.Align.alTop;
     panel.Height := 48;
-    panel.parent := frmhome.walletList;
+    panel.parent := inbox ;
     panel.TagObject := crypto;
     setBlackBackground(panel);
     panel.Position.Y := crypto.orderInWallet;
@@ -1812,13 +1811,13 @@ begin
 {$ELSE}
     panel.OnClick := frmhome.OpenWalletView;
 {$ENDIF}
-    adrLabel := TLabel.Create(frmhome.walletList);
+    adrLabel := TLabel.Create(panel);
     adrLabel.StyledSettings := adrLabel.StyledSettings - [TStyledSetting.size];
     adrLabel.TextSettings.Font.size := dashBoardFontSize;
     adrLabel.parent := panel;
     if crypto is TWalletInfo then
     begin
-      adrLabel.Text := CurrentAccount.getDescription(TWalletInfo(crypto).coin,
+      adrLabel.Text := FromAccount.getDescription(TWalletInfo(crypto).coin,
         TWalletInfo(crypto).x);
     end
     else
@@ -1844,7 +1843,7 @@ begin
     adrLabel.TextSettings.WordWrap := false;
     adrLabel.TagString := 'name';
     //
-    balLabel := TLabel.Create(frmhome.walletList);
+    balLabel := TLabel.Create( panel );
     balLabel.StyledSettings := balLabel.StyledSettings - [TStyledSetting.size];
 
     balLabel.parent := panel;
@@ -1853,9 +1852,9 @@ begin
       if crypto is TWalletInfo then
       begin
         balLabel.Text := BigIntegerBeautifulStr
-          (CurrentAccount.aggregateBalances(TWalletInfo(crypto)).confirmed,
+          (FromAccount.aggregateBalances(TWalletInfo(crypto)).confirmed,
           crypto.decimals) + '    ' +
-          floatToStrF(CurrentAccount.aggregateConfirmedFiats(TWalletInfo(crypto)
+          floatToStrF(fromAccount.aggregateConfirmedFiats(TWalletInfo(crypto)
           ), ffFixed, 15, 2) + ' ' + frmhome.CurrencyConverter.symbol;
       end
       else
@@ -1879,7 +1878,7 @@ begin
     balLabel.Margins.Right := 15;
     balLabel.TagString := 'balance';
     //
-    coinIMG := TImage.Create(frmhome.walletList);
+    coinIMG := TImage.Create(panel);
     coinIMG.parent := panel;
     try
       if crypto is TWalletInfo then
@@ -2180,6 +2179,7 @@ var
   Os: TOSVersion;
 {$ELSE}
   saveDialog: TSaveDialog;
+  thisExt:string;
 {$ENDIF}
 begin
 {$IFDEF ANDROID}
@@ -2209,6 +2209,7 @@ begin
   SharedActivity.startActivity(TJIntent.JavaClass.createChooser(intent,
     StrToJcharSequence('Share with')));
 {$ELSE}
+thisExt:=LowerCase(ExtractFileExt(path));
   saveDialog := TSaveDialog.Create(frmhome);
   saveDialog.Title := 'Save your text or word file';
   saveDialog.FileName := ExtractFileName(path);
@@ -2216,9 +2217,10 @@ begin
   saveDialog.InitialDir :=
 {$IFDEF IOS}tpath.GetSharedDocumentsPath{$ELSE}TPath.GetDocumentsPath{$ENDIF};
 
-  saveDialog.Filter := 'Zip File|*.zip';
-
-  saveDialog.DefaultExt := 'zip';
+  saveDialog.Filter := 'File|*'+thisExt;
+  if thisExt='.png' then
+  saveDialog.FileName:=CurrentAccount.name+'.paperwallet.png';
+  saveDialog.DefaultExt := thisExt;
 
   saveDialog.FilterIndex := 1;
 
@@ -2275,7 +2277,6 @@ begin
     QRCode.data := {$IFDEF ANDROID}'  ' + {$ENDIF}Str;
     bmp := FMX.Graphics.TBitmap.Create();
     bmp.SetSize(QRCode.Rows, QRCode.Columns);
-
     if bmp.Map(TMapAccess.maReadWrite, QRCodeBitmap) then
     begin
 
@@ -2295,21 +2296,19 @@ begin
 
         end;
       end;
-
+      ShowMessage(inttohex(integer(qrcodebitmap.data),8));
       if QRCodeBitmap.data <> nil then
       begin
         bmp.Free;
         bmp := BitmapDataToScaledBitmap(QRCodeBitmap, pixelSize);
         bmp.Unmap(QRCodeBitmap);
-      end;
+        end;
     end;
   finally
     QRCode.Free;
   end;
-
   result := TBitmap.Create();
   result.Assign(bmp);
-
   try
     if bmp <> nil then
       bmp.Free;
@@ -2715,12 +2714,14 @@ begin
       UnixToDateTime(strToIntdef(hist[i].data, 0)));
     panel.datalbl.Visible := TWalletInfo(wallet).coin <> 8;
 
-    if hist[i].typ = 'OUT' then
+    panel.setType( hist[i].typ );
+
+    {if hist[i].typ = 'OUT' then
       panel.image.Bitmap := frmhome.sendImage.Bitmap;
     if hist[i].typ = 'IN' then
       panel.image.Bitmap := frmhome.receiveImage.Bitmap;
     if hist[i].typ = 'INTERNAL' then
-      panel.image.Bitmap := frmhome.internalImage.Bitmap;
+      panel.image.Bitmap := frmhome.internalImage.Bitmap;   }
 
     if (wallet is TWalletInfo) and (TWalletInfo(wallet).coin = 4) and
       (hist[i].CountValues = 0) then
@@ -3774,6 +3775,7 @@ var
   LResponse: IHTTPResponse;
   urlHash: AnsiString;
   ares: iasyncresult;
+  debug : AnsiString;
 begin
   req := THTTPClient.Create();
   aURL := ensureURL(aURL);
@@ -3829,6 +3831,7 @@ begin
 
   end;
   req.Free;
+  debug := result;
 end;
 
 function postDataOverHTTP(var aURL: String; postdata: string;
@@ -3866,7 +3869,7 @@ begin
       aURL := aURL + buildAuth(aURL);
       ts := TStringList.Create;
       ts.Text := StringReplace(postdata, '&', #13#10, [rfReplaceAll]);
-{$IFDEF  DEBUG} ts.SaveToFile('params' + urlHash + '.json'); {$ENDIF}
+//{$IFDEF  DEBUG} ts.SaveToFile('params' + urlHash + '.json'); {$ENDIF}  // shoud be in debugAnalysis
       ares := req.BeginPost(aURL, ts);
       while not(ares.IsCompleted or ares.isCancelled) do
       begin
@@ -3880,7 +3883,7 @@ begin
 
       result := apiStatus(aURL, asyncResponse);
       ts.Text := asyncResponse;
-{$IFDEF  DEBUG} ts.SaveToFile(urlHash + '.json'); {$ENDIF}
+//{$IFDEF  DEBUG} ts.SaveToFile(urlHash + '.json'); {$ENDIF}
       ts.Free;
       try
         saveCache(urlHash, result);
@@ -3910,6 +3913,8 @@ var
   b: Byte;
   memstr: TMemoryStream;
 begin
+if not isHex(h) then exit('');
+
   memstr := TMemoryStream.Create;
   memstr.SetSize(int64(Length(H) div 2));
   memstr.Seek(int64(0), soFromBeginning);

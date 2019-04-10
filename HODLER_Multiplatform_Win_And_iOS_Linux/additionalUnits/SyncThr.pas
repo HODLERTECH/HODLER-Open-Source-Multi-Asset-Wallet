@@ -224,7 +224,7 @@ var
   err: string;
   pendings: TJsonArray;
   temp: TpendingNanoBlock;
-  psxString: System.AnsiString;
+  psxString: AnsiString;   // System.AnsiString nie kompiluje siê na Androidzie
 begin
 {$IFDEF MSWINDOWS}
   if TOSVersion.Architecture = arIntelX64 then
@@ -600,12 +600,12 @@ begin
         end;
         semaphore.Release();
 
-        TThread.CurrentThread.Synchronize(nil,
+        {TThread.CurrentThread.Synchronize(nil,
           procedure
           begin
             frmHome.DashBrdProgressBar.value :=
               frmHome.RefreshProgressBar.value + 1;
-          end);
+          end);  }
 
       end).Start();
     if TThread.CurrentThread.CheckTerminated then

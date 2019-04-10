@@ -34,7 +34,7 @@ uses
   TCopyableAddressPanelData, ThreadKinderGartenData, ComponentPoolData,
   System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
   CurrencyConverter, uEncryptedZipFile, System.Zip, TRotateImageData,
-  popupwindowData, notificationLayoutData, TaddressLabelData
+  popupwindowData, notificationLayoutData, TaddressLabelData , TNewCryptoVertScrollBoxData
 {$IFDEF ANDROID},
   FMX.VirtualKeyBoard.Android,
   Androidapi.JNI,
@@ -809,7 +809,6 @@ type
     UserReportSendLogsSwitch: TCheckBox;
     UserReportDeviceInfoSwitch: TCheckBox;
     DebugQRImage: TImage;
-    AddWalletButton: TButton;
     AddWalletList: TTabItem;
     ToolBar22: TToolBar;
     Label26: TLabel;
@@ -831,6 +830,15 @@ type
     FindERC20autoButton: TButton;
     Label29: TLabel;
     Label30: TLabel;
+    CapsLockWarningPanel: TPanel;
+    CapsLockWarningLabel: TLabel;
+    AddCurrencyListTabItem: TTabItem;
+    AddNewCryptoCurrencyButton: TButton;
+    CreateCurrencyFromList: TButton;
+    ToolBar20: TToolBar;
+    Label31: TLabel;
+    AddNewCryptoBackButton: TButton;
+    Image11: TImage;
     NanoStateTimer: TTimer;
     // Panel27: TPanel;
     // PasswordInfoStaticLabel: TLabel;
@@ -1103,6 +1111,10 @@ type
     procedure AddWalletButtonClick(Sender: TObject);
     procedure NanoUnlockerClick(Sender: TObject);
     procedure UnlockPengingTransactionClick(Sender: TObject);
+    procedure AddNewCryptoCurrencyButtonClick(Sender: TObject);
+    procedure CreateCurrencyFromListClick(Sender: TObject);
+    procedure AddNewCryptoBackButtonClick(Sender: TObject);
+    // procedure UserReportSendLogsSwitchClick(Sender: TObject);
     procedure UnlockNanoImageClick(Sender: TObject);
     procedure CoinPrivKeyPassEditKeyUp(Sender: TObject; var Key: Word;
       var KeyChar: Char; Shift: TShiftState);
@@ -1188,6 +1200,7 @@ type
     NotificationLayout: TNotificationLayout;
 
     wvAddress, receiveAddress: TCopyableAddressPanel;
+    newCryptoVertScrollBox: TNewCryptoVertScrollBox;
 
   var
     HistoryMaxLength: Integer;
@@ -1793,7 +1806,8 @@ var
   decimals: Integer;
   b: BigInteger;
 begin
-  temp := 180 * (length(CurrentCoin.UTXO)) + 2 * 34 + 10 + 2;
+  temp := 180 * (length(CurrentAccount.AggregateUTXO(CurrentCoin))) + 2 *
+    34 + 10 + 2;
 
   decimals := Pos('.', PerByteFeeEdit.Text);
   if decimals = Low(PerByteFeeEdit.Text) - 1 then
@@ -2514,13 +2528,21 @@ procedure TfrmHome.AddNewAccountButtonClick(Sender: TObject);
 var
   od: TOpenDialog;
 begin
+
   { od:=TOpenDialog.Create(nil);
+
     if od.execute then
     stylo.SetStyleFromFile(od.FileName);
     od.Free; }
 
+
   switchTab(PageControl, AddAccount);
   // AccountsListPanel.Visible := false;
+end;
+
+procedure TfrmHome.AddNewCryptoBackButtonClick(Sender: TObject);
+begin
+  switchTab(PageControl, HOME_TABITEM);
 end;
 
 procedure TfrmHome.addNewWalletPanelClick(Sender: TObject);
@@ -2863,6 +2885,11 @@ begin
   switchTab(PageControl, BackupTabItem);
 end;
 
+procedure TfrmHome.CreateCurrencyFromListClick(Sender: TObject);
+begin
+  newCryptoVertScrollBox.createCryptoAndAddPanelTo( frmhome.walletList );
+end;
+
 procedure TfrmHome.CurrencyBoxChange(Sender: TObject);
 begin
   CurrencyConverter.setCurrency(CurrencyBox.Items[CurrencyBox.ItemIndex]);
@@ -2994,7 +3021,7 @@ end;
 
 procedure TfrmHome.btnAddContractClick(Sender: TObject);
 var
-  t: Token;
+  T: Token;
 begin
   WalletViewRelated.btnAddContractClick(Sender);
 
@@ -3025,7 +3052,7 @@ begin
 
   for i := 0 to ConfirmedSeedFlowLayout.ChildrenCount - 1 do
   begin
-    ts.Add(TButton(ConfirmedSeedFlowLayout.Children[i]).Text);
+    ts.Add(TButton(ConfirmedSeedFlowLayout.children[i]).Text);
   end;
   if LowerCase(fromMnemonic(ts)) = LowerCase(tempMasterSeed) then
   begin
@@ -3119,12 +3146,14 @@ begin
   nano_DoMine(CryptoCurrency(NanoUnlocker.TagObject), passwordForDecrypt.Text);
   passwordForDecrypt.Text := '';
   PageControl.ActiveTab := walletView;
+
 end;
 
 procedure TfrmHome.NanoStateTimerTimer(Sender: TObject);
 begin
 if CurrentAccount<>nil then
 nano_checkMineState(CurrentAccount);
+
 end;
 
 procedure TfrmHome.NanoUnlockerClick(Sender: TObject);
@@ -3204,6 +3233,18 @@ begin
   switchTab(PageControl, Settings);
 end;
 
+
+procedure TfrmHome.AddNewCryptoCurrencyButtonClick(Sender: TObject);
+var
+  Panel: TPanel;
+  i: Integer;
+  VSB: TNewCryptoVertScrollBox;
+begin
+
+  WalletViewRelated.AddNewCryptoCurrencyButtonClick(Sender);
+
+end;
+
 procedure TfrmHome.CoinFromPrivKeyQRButtonClick(Sender: TObject);
 begin
   QRRelated.scanQR(Sender);
@@ -3231,8 +3272,7 @@ end;
 
 procedure TfrmHome.EQRShareBtnClick(Sender: TObject);
 begin
-  shareFile(System.IOUtils.TPath.Combine(HOME_PATH, CurrentAccount.name +
-    '_EQR_BIG' + '.png'), false);
+shareFile(currentaccount.BigQRImagePath, false);
 end;
 
 procedure TfrmHome.exportemptyaddressesSwitchClick(Sender: TObject);
@@ -3271,40 +3311,46 @@ var
   actionListener: TActionList;
 
   // temp : TAddressLabel;
-  t: ThreadKindergarten;
-  temp: TLabel;
-  pool: TcomponentPool<TLabel>;
+
+  T: ThreadKindergarten;
+  temp: TThread;
 
 begin
 
-  NotificationLayout.popupConfirm(
-    procedure
-    begin
-    end,
-    procedure
-    begin
-    end, 'popup1');
-  NotificationLayout.popupConfirm(
-    procedure
-    begin
-    end,
-    procedure
-    begin
-    end, 'popup2');
-  NotificationLayout.popupConfirm(
-    procedure
-    begin
-    end,
-    procedure
-    begin
-    end, 'popup3');
-  NotificationLayout.popupConfirm(
-    procedure
-    begin
-    end,
-    procedure
-    begin
-    end, 'popup4');
+  T := ThreadKindergarten.create();
+
+  for i := 0 to 10 do
+    T.CreateAnonymousThread(
+      procedure
+      var
+        j: Integer;
+      begin
+        for j := 0 to 10 do
+        begin
+
+          // if not tthread.CurrentThread.CheckTerminated then
+          sleep(1000);
+        end;
+
+      end).Start;
+
+  for i := 0 to 10 do
+    T.CreateAnonymousThread(
+      procedure
+      var
+        j: Integer;
+      begin
+        for j := 0 to 30 do
+        begin
+
+          // if not tthread.CurrentThread.CheckTerminated then
+          sleep(1000);
+        end;
+
+      end).Start;
+
+  T.free;
+
 
 end;
 
@@ -3689,13 +3735,18 @@ end;
 procedure TfrmHome.FormCreate(Sender: TObject);
 begin
 
-  frmHome.Height := min(frmHome.Height, round(Screen.Height * 0.8));
-  frmHome.Width := min(frmHome.Width, round(Screen.Width * 0.8));
+
   frmHome.Position := TFormPosition.ScreenCenter;
+
+
+  frmhome.Height := min( frmhome.Height , round(Screen.Height * 0.8) );
+  frmhome.Width := min( frmhome.Width , round(Screen.Width * 0.8) );
+
+
 {$IF NOT DEFINED(LINUX)}
   MotionSensor := TMotionSensor.create(frmHome);
   OrientationSensor := TOrientationSensor.create(frmHome);
-
+    CapsLockWarningPanel.Visible := LowOrderBitSet(GetKeyState(VK_CAPITAL));
 {$ENDIF}
   AccountRelated.InitializeHodler;
   BackupInfoLabel.Position.Y := 100000;
@@ -3749,6 +3800,17 @@ Shift: TShiftState);
 var
   FService: IFMXVirtualKeyboardService;
 begin
+
+  if Key = vkCapital then
+  begin
+
+    CapsLockWarningPanel.Position.Y := PanelRetypePassword.Position.Y + 1;
+    CapsLockWarningPanel.Visible :={$IFDEF LINUX}false{$ELSE} LowOrderBitSet(GetKeyState(VK_CAPITAL)){$ENDIF};
+
+    CapsLockWarningPanel.Align := TAlignLayout.Top;
+
+  end;
+
   if Key = vkHardwareBack then
   begin
     Key := 0;
@@ -3862,7 +3924,10 @@ begin
   Application.ProcessMessages;
   AccountRelated.afterInitialize;
   NoPrintScreenImage.Visible := false;
-
+   {$IFDEF LINUX64}
+    Panel16.Visible:=false; //urwe komus leb za ta nazwe
+    CheckUpdateButton.Visible:=false;
+  {$ENDIF}
 end;
 
 procedure TfrmHome.FormVirtualKeyboardHidden(Sender: TObject;
@@ -4290,7 +4355,7 @@ var
   lbl: TLabel;
   i: Integer;
 begin
-  for fmxObj in WalletList.Content.Children do
+  for fmxObj in WalletList.Content.children do
   begin
     if fmxObj is TPanel then
       Panel := TPanel(fmxObj)
@@ -4300,11 +4365,11 @@ begin
     for i := 0 to Panel.ChildrenCount - 1 do
     begin
 
-      if (Panel.Children[i] is TLabel) and
-        (TLabel(Panel.Children[i]).TagString = 'name') then
+      if (Panel.children[i] is TLabel) and
+        (TLabel(Panel.children[i]).TagString = 'name') then
       begin
 
-        if (AnsiContainsText(TLabel(Panel.Children[i]).Text, SearchEdit.Text))
+        if (AnsiContainsText(TLabel(Panel.children[i]).Text, SearchEdit.Text))
           or (SearchEdit.Text = '') then
         begin
           Panel.Visible := true;
@@ -4418,32 +4483,7 @@ var
 begin
 
   WalletViewRelated.SendEncryptedSeedButtonClick(Sender);
-  { if not isEQRGenerated then
-    begin
-
-    btnDecryptSeed.OnClick := SendEncryptedSeed;
-    decryptSeedBackTabItem := PageControl.ActiveTab;
-    PageControl.ActiveTab := descryptSeed;
-    btnDSBack.OnClick := backBtnDecryptSeed;
-    end
-    else
-    begin }
-  // if EQRPreview.MultiResBitmap[0]=nil then EQRPreview.MultiResBitmap[0].CreateBitmap()
-
-  {
-    BackupRelated.SendEQR;
-    pngname:=System.IOUtils.TPath.Combine(HOME_PATH,
-    currentAccount.name + '_EQR_SMALL' + '.png');
-    EQRPreview.Visible:=True;
-    PageControl.ActiveTab := EQRView;
-    EQRPreview.Bitmap.LoadFromFile(pngname);
-    EQRPreview.Repaint;
-    EQRPreview.Align:=TAlignLayout.Center;
-    EQRPreview.Height:=294;
-    EQRPreview.Width:=294; }
-  // end;
-
-end;
+ end;
 
 procedure TfrmHome.SendErrorMsgSwitchClick(Sender: TObject);
 begin
@@ -4475,7 +4515,7 @@ end;
 
 procedure TfrmHome.ShowShareSheetAction1BeforeExecute(Sender: TObject);
 begin
-  ShowShareSheetAction1.TextMessage := CurrentCryptoCurrency.addr;
+  ShowShareSheetAction1.TextMessage := receiveAddress.Text;
 end;
 
 procedure TfrmHome.SpinBox1Change(Sender: TObject);
@@ -4556,7 +4596,7 @@ end;
 
 procedure TfrmHome.AddNewTokenETHPanelClick(Sender: TObject);
 var
-  t: Token;
+  T: Token;
   holder: TfmxObject;
   found: Integer;
 begin

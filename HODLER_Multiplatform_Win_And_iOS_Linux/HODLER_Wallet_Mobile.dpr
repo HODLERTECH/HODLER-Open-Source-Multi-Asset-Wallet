@@ -145,7 +145,8 @@ uses
   uNanoPowAS in 'NanoPoWAndroidService\uNanoPowAS.pas' {DM: TAndroidService},
   HistoryPanelData in 'components\HistoryPanelData.pas',
   SyncThr in 'additionalUnits\SyncThr.pas',
-  ComponentPoolData in 'additionalUnits\additionalClass\ComponentPoolData.pas';
+  ComponentPoolData in 'additionalUnits\additionalClass\ComponentPoolData.pas',
+  TNewCryptoVertScrollBoxData in 'components\TNewCryptoVertScrollBoxData.pas';
 
 {$R *.res}
 

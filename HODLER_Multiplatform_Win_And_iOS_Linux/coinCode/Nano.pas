@@ -345,13 +345,8 @@ begin
                 delta := bi - NanoCoin(acc.mycoins[i]).confirmed;
                 NanoCoin(acc.mycoins[i]).confirmed := bi;
                 NanoCoin(acc.mycoins[i]).unconfirmed := NanoCoin(acc.mycoins[i])
-                  .unconfirmed - abs(delta);
-                refreshGlobalFiat();
-                TThread.Synchronize(TThread.CurrentThread,
-                  procedure
-                  begin
-                    repaintWalletList;
-                  end);
+                  .unconfirmed - BigInteger.abs(delta);                          // abs(...) doesnt work with bigInteger
+
                 ReloadWalletView();
                 ts.Free;
                 DeleteFile(path);

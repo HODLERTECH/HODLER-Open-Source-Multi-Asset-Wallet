@@ -13,7 +13,7 @@ uses
   FMX.Platform, System.Threading, Math, DelphiZXingQRCode,
   FMX.TabControl, FMX.Edit,
   FMX.Clipboard, FMX.VirtualKeyBoard, JSON, popupwindowData,
-  languages, WalletStructureData,  TCopyableAddressPanelData,
+  languages, WalletStructureData,  TCopyableAddressPanelData,TNewCryptoVertScrollBoxData,
 
   FMX.Media, FMX.Objects, uEncryptedZipFile, System.Zip
 {$IFDEF ANDROID},
@@ -90,7 +90,7 @@ procedure AddWalletButtonClick(Sender: TObject);
 procedure AddTokenFromWalletList(Sender: TObject);
 procedure FindERC20autoButtonClick(Sender: TObject);
 procedure AddNewTokenETHPanelClick(sender : Tobject );
-
+procedure AddNewCryptoCurrencyButtonClick(Sender: TObject);
 
 var
   SyncOpenWallet: TThread;
@@ -101,6 +101,32 @@ uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, AccountRelated, TCopyableEditData, BackupRelated, debugAnalysis,
   KeypoolRelated , nano , ED25519_Blake2b;
+
+
+procedure AddNewCryptoCurrencyButtonClick(Sender: TObject);
+var
+  Panel: TPanel;
+  i: Integer;
+  //VSB: TNewCryptoVertScrollBox;
+begin
+with frmhome do
+begin
+  if newCryptoVertScrollBox = nil then
+  begin
+    newCryptoVertScrollBox := TNewCryptoVertScrollBox.create(frmHome , currentAccount);
+    newCryptoVertScrollBox.Parent := AddCurrencyListTabItem;
+    newCryptoVertScrollBox.Visible := true;
+    newCryptoVertScrollBox.Align := TAlignLayout.Client;
+  end;
+
+  newCryptoVertScrollBox.prepareForAccount( currentAccount );
+  newCryptoVertScrollBox.clear;
+
+ 
+
+  switchTab(PageControl, AddCurrencyListTabItem);
+end;
+end;
 
 
 procedure AddNewTokenETHPanelClick(sender : Tobject );
@@ -151,7 +177,7 @@ begin
   end;
 
    CurrentAccount.addToken(T);
-    CreatePanel(T);
+    CreatePanel(T , CurrentAccount , frmhome.walletList);
     holder := TfmxObject.Create(nil);
     holder.TagObject := T;
     frmhome.OpenWalletView(holder, PointF(0, 0));
@@ -259,7 +285,7 @@ begin
     T.idInWallet := Length(CurrentAccount.myTokens) + 10000;
 
     CurrentAccount.addToken(T);
-    CreatePanel(T);
+    CreatePanel(T , CurrentAccount , frmhome.walletList);
     holder := TfmxObject.Create(nil);
     holder.TagObject := T;
     frmhome.OpenWalletView(holder, PointF(0, 0));
@@ -330,6 +356,8 @@ begin
         coinIMG.HitTest := false;
         //coinIMG.OnClick := frmhome.addNewWalletPanelClick;
         coinIMG.tag := i;
+
+
 
       end;
 
@@ -462,7 +490,7 @@ begin
     t.idInWallet := length(CurrentAccount.myTokens) + 10000;
     CurrentAccount.addToken(t);
     CurrentAccount.SaveFiles();
-    CreatePanel(T);
+    CreatePanel(T , CurrentAccount , frmhome.walletList);
     frmhome.btnSyncClick(nil);
     switchTab(frmhome.PageControl, HOME_TABITEM);
   end
@@ -515,7 +543,7 @@ begin
     TThread.Synchronize(nil,
       procedure
       begin
-        CreatePanel(wd);
+        CreatePanel(wd, CurrentAccount , frmhome.walletList);
       end);
 
     // Issue 112 CurrentAccount.userSaveSeed := false;
@@ -533,7 +561,7 @@ begin
       T.idInWallet := Length(CurrentAccount.myTokens) + 10000;
 
       CurrentAccount.addToken(T);
-      CreatePanel(T);
+      CreatePanel(T , CurrentAccount , frmhome.walletList);
 
 
 
@@ -550,7 +578,7 @@ begin
 
       CurrentAccount.addToken(t);
       // CurrentAccount.SaveFiles();
-      CreatePanel(T);
+      CreatePanel(T, CurrentAccount , frmhome.walletList);
 
       //switchTab(PageControl, walletView);
 
@@ -653,7 +681,7 @@ begin
         AccountForSearchToken.addToken(T);
         AccountForSearchToken.SaveFiles();
         if AccountForSearchToken = CurrentAccount then
-          CreatePanel(T);
+          CreatePanel(T, CurrentAccount , frmhome.walletList);
       end
       else
       begin
@@ -708,10 +736,10 @@ procedure SendEncryptedSeedButtonClick(Sender: TObject);
 var
   pngName: string;
 begin
-
+ try
   with frmhome do
   begin
-    BackupRelated.SendEQR;
+    CurrentAccount.GenerateEQRFiles;
     pngName := CurrentAccount.SmallQRImagePath;
     EQRPreview.Visible := True;
     // PageControl.ActiveTab := EQRView;
@@ -723,7 +751,10 @@ begin
 
     switchTab(pageControl, EQRView);
   end;
-
+ except on E:Exception do begin
+   ShowMessage('Failed to create backup, reason: '+E.Message);
+ end;
+ end;
 end;
 
 procedure btnChangeDescriptionClick(Sender: TObject);
@@ -1941,7 +1972,7 @@ begin
         procedure
         begin
           CurrentAccount.AddCoin(wd);
-          CreatePanel(wd);
+          CreatePanel(wd, CurrentAccount , frmhome.walletList);
         end);
       CurrentAccount.SaveFiles();
       MasterSeed := '';
@@ -2019,7 +2050,7 @@ begin
   TThread.Synchronize(nil,
     procedure
     begin
-      CreatePanel(walletInfo);
+      CreatePanel(walletInfo, CurrentAccount , frmhome.walletList);
     end);
 
   // Issue 112 CurrentAccount.userSaveSeed := false;
@@ -2120,6 +2151,9 @@ begin
 
   if frmhome.pageControl.ActiveTab = HOME_TABITEM then
     frmhome.WVTabControl.ActiveTab := frmhome.WVBalance;
+
+  frmhome.BalanceTextLayout.Width := frmhome.topInfoUnconfirmed.Canvas.TextWidth( frmhome.topInfoUnconfirmed.Text ) * 1.25;
+  frmhome.btnWVShare.Width := max( 48 , frmhome.btnWVShare.Canvas.TextWidth( frmhome.btnWVShare.Text ) * 1.1 );
 
   frmhome.AutomaticFeeRadio.IsChecked := True;
   frmhome.TopInfoConfirmedValue.Text := ' Calculating...';
@@ -2646,6 +2680,12 @@ end;
       frmhome.BTCNoTransactionLayout.Visible := false;
     end;
   end;
+                refreshGlobalFiat();
+                TThread.Synchronize(TThread.CurrentThread,
+                  procedure
+                  begin
+                    repaintWalletList;
+                  end);
 end;
 
 procedure TrySendTransaction(Sender: TObject);
@@ -2867,7 +2907,7 @@ begin
   T.idInWallet := Length(CurrentAccount.myTokens) + 10000;
 
   CurrentAccount.addToken(T);
-  CreatePanel(T);
+  CreatePanel(T, CurrentAccount , frmhome.walletList);
   holder := TfmxObject.Create(nil);
   holder.TagObject := T;
   frmhome.OpenWalletView(holder, PointF(0, 0));
@@ -3306,8 +3346,17 @@ sleep(100); TThread.Synchronize(nil,procedure var Panel: TPanel;
       begin
         cryptoCurrency(Panel.TagObject).deleted := True;
       end;
+      Panel.Visible := false;
+      tthread.CreateAnonymousThread(procedure
+      begin
+        sleep(10);
+        tthread.Synchronize(nil , procedure
+        begin
+          Panel.DisposeOf;
+        end);
 
-      Panel.DisposeOf;
+      end).Start;
+
     end;
   except
     on E: Exception do

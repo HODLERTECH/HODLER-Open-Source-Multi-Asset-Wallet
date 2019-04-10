@@ -24,6 +24,7 @@ type
     destructor Destroy; override;
 
     procedure setConfirmed(confirmed: boolean);
+    procedure setType(inOutInternal: AnsiString);
 
   end;
 
@@ -37,6 +38,17 @@ uses
 procedure Register;
 begin
   RegisterComponents('Samples', [THistoryPanel]);
+end;
+
+procedure THistoryPanel.setType(inOutInternal: AnsiString);
+begin
+  image.Bitmap.LoadFromStream( ResourceMenager.getAssets('TRANSACTION_' + inOutInternal ));
+  {if inOutInternal = 'OUT' then
+    panel.image.Bitmap.LoadFromStream( ResourceMenager.getAssets(  ));
+  if inOutInternal = 'IN' then
+    panel.image.Bitmap := frmhome.receiveImage.Bitmap;
+  if inOutInternal = 'INTERNAL' then
+    panel.image.Bitmap := frmhome.internalImage.Bitmap; }
 end;
 
 constructor THistoryPanel.Create(AOwner: TComponent);

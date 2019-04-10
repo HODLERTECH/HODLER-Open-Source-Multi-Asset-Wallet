@@ -5,7 +5,7 @@
         <FrameworkType>FMX</FrameworkType>
         <MainSource>HODLER_Wallet_Mobile.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Android</Platform>
         <TargetedPlatforms>1247</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -176,7 +176,7 @@
         <Android_LauncherIcon72>gfx\Icon72x72.png</Android_LauncherIcon72>
         <Android_LauncherIcon36>gfx\Icon36x36.png</Android_LauncherIcon36>
         <VerInfo_Build>1</VerInfo_Build>
-        <DCC_UnitSearchPath>C:\Users\Publiczny\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>C:\Users\Publiczny\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;C:\Users\Public\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;C:\Program Files (x86)\tmssoftware\TMSCrypto RSXE12\libAndroid;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <AUP_READ_CALENDAR>false</AUP_READ_CALENDAR>
         <AUP_WRITE_CALENDAR>false</AUP_WRITE_CALENDAR>
         <AUP_CALL_PHONE>false</AUP_CALL_PHONE>
@@ -185,8 +185,6 @@
         <AUP_INTERNET>false</AUP_INTERNET>
         <AUP_READ_PHONE_STATE>false</AUP_READ_PHONE_STATE>
         <AUP_ACCESS_COARSE_LOCATION>false</AUP_ACCESS_COARSE_LOCATION>
-        <PF_KeyStore>alpharelease.keystore</PF_KeyStore>
-        <PF_KeyStorePass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D497F76E2718773C8C20A3767CA1473B87E8DA47E658CFDA0A978428620DC94ADB50B791AE0A6B9DF513A071D5A925E3E5D1DD70963E3E416AF443978C965CF9AD622A27D5A463CE8239256F3A09646E99DDE23C01FB355C2E8A73656A1E82B5320530C5FBC34B2FF63AFE3B68F10B9995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_KeyStorePass>
         <AUP_ACCESS_FINE_LOCATION>false</AUP_ACCESS_FINE_LOCATION>
         <AUP_CAMERA>false</AUP_CAMERA>
         <EnabledSysJars>android-support-v4.dex.jar;cloud-messaging.dex.jar;fmx.dex.jar;google-analytics-v2.dex.jar;google-play-billing.dex.jar;google-play-licensing.dex.jar;google-play-services.dex.jar</EnabledSysJars>
@@ -416,9 +414,8 @@
         <AUP_CALL_PHONE>false</AUP_CALL_PHONE>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <AUP_VIBRATE>true</AUP_VIBRATE>
-        <PF_KeyStorePass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D497F76E2718773C8C20A3767CA1473B87E8DA47E658CFDA0A978428620DC94ADB50B791AE0A6B9DF513A073AF345323E461DA60920E3C216B9443178C3659D9AC222A37D004623E82B921BF3F9961DE9EADE57C063B37AC2F9A77456A0E879535053015F9234F9FF7FAFB49124C78A995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_KeyStorePass>
         <BT_BuildType>Debug</BT_BuildType>
-        <DCC_UnitSearchPath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;CryptoLib_output\Android\Release;C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;CryptoLib_output\Android\Release;C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack;C:\HODLER\KastriFree-master\API;C:\HODLER\KastriFree-master\Core;C:\HODLER\KastriFree-master\Include;C:\HODLER\KastriFree-master\Features\Notifications;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <Debugger_DebugSourcePath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_iOSDevice32)'!=''">
@@ -479,18 +476,15 @@
         <AUP_WRITE_CALENDAR>false</AUP_WRITE_CALENDAR>
         <AUP_CALL_PHONE>false</AUP_CALL_PHONE>
         <AUP_VIBRATE>true</AUP_VIBRATE>
-        <PF_KeyStorePass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D497F76E2718773C8C20A3767CA1473B87E0467228D166045F0E5FC2284C946F35DD502FA9EBFAAAF42070A1D1492013E451DA00963E3C216CD446B788E65DE9AC722B37D434642E83F924BF3AE961CE9B357CC9CFA29D027DC3A91F24FFDA40DFA8D2DBF8C2DA48F2392E6B68F10B9995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_KeyStorePass>
-        <PF_AliasKey>hodler.tech</PF_AliasKey>
-        <PF_AliasKeyPass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D49E31B1C3CC1FB5752FAC7C331BAF7365004232280162B458DE5AE22C0C90AF35CD51DFA96BFD6AF3F07501D5992423E071DBB0928E3DE16FF442578D8659D9A84BE9E834000E1779D62FD570A38D4679D57CC9CFA29D027DC3A91F24FFDA40DFA8D2DBF8C2DA48F2392E6B68F10B9995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_AliasKeyPass>
         <AUP_READ_PHONE_STATE>false</AUP_READ_PHONE_STATE>
         <AUP_ACCESS_COARSE_LOCATION>false</AUP_ACCESS_COARSE_LOCATION>
         <AUP_ACCESS_FINE_LOCATION>false</AUP_ACCESS_FINE_LOCATION>
         <AUP_CAMERA>false</AUP_CAMERA>
-        <BT_BuildType>AppStore</BT_BuildType>
+        <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_Keys>package=tech.hodler.core;label=HODLER Multi-Asset Wallet;versionCode=31;versionName=0.4.0;persistent=False;restoreAnyVersion=False;installLocation=preferExternal;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <Debugger_RunParams>-debugport=13376</Debugger_RunParams>
-        <DCC_UnitSearchPath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;CryptoLib_output\Android\Release;C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;CryptoLib_output\Android\Release;C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack;C:\HODLER\KastriFree-master\API;C:\HODLER\KastriFree-master\Core;C:\HODLER\KastriFree-master\Include;C:\HODLER\KastriFree-master\Features\Notifications;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <PostBuildEvent><![CDATA[$(PROJECTDIR)/autocommit.cmd
 $(PostBuildEvent)]]></PostBuildEvent>
         <PostBuildEventCancelOnError>false</PostBuildEventCancelOnError>
@@ -723,6 +717,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         <DCCReference Include="components\HistoryPanelData.pas"/>
         <DCCReference Include="additionalUnits\SyncThr.pas"/>
         <DCCReference Include="additionalUnits\additionalClass\ComponentPoolData.pas"/>
+        <DCCReference Include="components\TNewCryptoVertScrollBoxData.pas"/>
         <RcItem Include="Languages\PT.lang">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
@@ -898,7 +893,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
         </RcItem>
         <RcItem Include="token_icons\imgNotFound.png">
             <ResourceType>RCDATA</ResourceType>
-            <ResourceId>IMG_EQR_SMALL</ResourceId>
+            <ResourceId>IMG_NOT_FOUND</ResourceId>
         </RcItem>
         <RcItem Include="token_icons\latoken.png">
             <ResourceType>RCDATA</ResourceType>
@@ -973,6 +968,38 @@ $(PostBuildEvent)]]></PostBuildEvent>
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>RT_DARK</ResourceId>
         </RcItem>
+        <RcItem Include="token_icons\Check.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>OK_IMAGE</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\error.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>ERROR_IMAGE</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\ETHTokenTree.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>ETH_TREE</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\ETHTokenTreeShort.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>ETH_TREE_SHORT</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\Info.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>INFO_IMAGE</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\warning.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>WARNING_IMAGE</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\downArrow.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>DOWN_ARROW</ResourceId>
+        </RcItem>
+        <RcItem Include="token_icons\upArrow.png">
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>UP_ARROW</ResourceId>
+        </RcItem>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -1031,6 +1058,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
                 <DeployFile LocalName="Languages\PT.lang" Configuration="Release" Class="ProjectFile">
                     <Platform Name="iOSSimulator">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\warning.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1543,6 +1576,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\Check.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\SPA.lang" Configuration="Release" Class="ProjectFile">
                     <Platform Name="iOSSimulator">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
@@ -1603,6 +1642,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\warning.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\FRA.lang" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
@@ -1624,6 +1669,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
                 <DeployFile LocalName="Languages\DUT.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="iOSDevice64">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\Info.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1751,6 +1802,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\ETHTokenTreeShort.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="token_icons\copy-content_white.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
@@ -1820,6 +1877,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
                 <DeployFile LocalName="iOSDevice64\Release\HODLER_Wallet_Mobile.info.plist" Configuration="Release" Class="ProjectiOSInfoPList">
                     <Platform Name="iOSDevice64">
                         <RemoteName>Info.plist</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\ETHTokenTree.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -2201,6 +2264,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\Info.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Android\Release\AndroidManifest.xml" Configuration="Release" Class="ProjectAndroidManifest">
                     <Platform Name="All Platforms">
                         <Overwrite>true</Overwrite>
@@ -2212,6 +2281,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
                 <DeployFile LocalName="Languages\ENGlang.json" Configuration="Release" Class="ProjectFile">
                     <Platform Name="iOSSimulator">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\downArrow.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -2397,6 +2472,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
                     </Platform>
                     <Platform Name="Android">
                         <RemoteName>libHODLER_Core.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\downArrow.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -2753,6 +2834,11 @@ $(PostBuildEvent)]]></PostBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="$(NDKBasePath)\prebuilt\android-arm\gdbserver\gdbserver" Configuration="Release" Class="AndroidGDBServer">
+                    <Platform Name="Android">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\PT.lang" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
@@ -2868,6 +2954,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\upArrow.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_LaunchImage_750x1334.png" Configuration="Release" Class="iPhone_Launch750">
                     <Platform Name="iOSDevice32">
                         <RemoteName>Default-667h@2x.png</RemoteName>
@@ -2916,6 +3008,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="Jet.style" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\error.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -3123,6 +3221,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\ETHTokenTreeShort.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPhone\FM_ApplicationIcon_60x60.png" Configuration="Debug" Class="iPhone_AppIcon60">
                     <Platform Name="iOSDevice64">
                         <Overwrite>true</Overwrite>
@@ -3211,7 +3315,19 @@ $(PostBuildEvent)]]></PostBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\error.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="C:\Program Files (x86)\Embarcadero\Studio\17.0\Redist\styles\Fmx\Dark.style" Configuration="Debug" Class="ProjectFile"/>
+                <DeployFile LocalName="token_icons\Check.png" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImagePortrait_1536x2048.png" Configuration="Debug" Class="iPad_Launch1536x2048">
                     <Platform Name="iOSDevice64">
                         <RemoteName>Default-Portrait@2x~ipad.png</RemoteName>
@@ -3325,6 +3441,11 @@ $(PostBuildEvent)]]></PostBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="$(NDKBasePath)\prebuilt\android-arm\gdbserver\gdbserver" Configuration="Debug" Class="AndroidGDBServer">
+                    <Platform Name="Android">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="iOSDevice32\Debug\HODLER_Wallet_Mobile" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="iOSDevice32">
                         <RemoteName>HODLER_Wallet_Mobile</RemoteName>
@@ -3394,6 +3515,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
                 <DeployFile LocalName="$(BDS)\bin\Artwork\iOS\iPad\FM_LaunchImageLandscape_2048x1536.png" Configuration="Debug" Class="iPad_Launch2048x1536">
                     <Platform Name="iOSDevice64">
                         <RemoteName>Default-Landscape@2x~ipad.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\CharocalExpressive.style" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -3869,6 +3996,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="token_icons\upArrow.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Languages\SPA.lang" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
@@ -4128,6 +4261,12 @@ $(PostBuildEvent)]]></PostBuildEvent>
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\lib\android\release\libProxyAndroidService.so" Configuration="Release" Class="AndroidServiceOutput">
                     <Platform Name="Android">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="token_icons\ETHTokenTree.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Android">
+                        <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

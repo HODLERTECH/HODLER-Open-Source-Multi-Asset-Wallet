@@ -70,6 +70,7 @@
     <PropertyGroup Condition="'$(Cfg_1_Android)'!=''">
         <DCC_MaxStackSize>2048576</DCC_MaxStackSize>
         <VerInfo_Build>1</VerInfo_Build>
+        <DCC_UnitSearchPath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;CryptoLib_output\Android\Release;C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack;C:\HODLER\KastriFree-master\API;C:\HODLER\KastriFree-master\Core;C:\HODLER\KastriFree-master\Include;C:\HODLER\KastriFree-master\Features\Notifications;C:\Users\Publiczny\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;C:\Users\Public\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;C:\Program Files (x86)\tmssoftware\TMSCrypto RSXE12\libAndroid;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -85,7 +86,7 @@
         <Android_LauncherIcon96>..\gfx\Icon96x96.png</Android_LauncherIcon96>
         <Android_LauncherIcon144>..\gfx\Icon144x144.png</Android_LauncherIcon144>
         <IncludeAndroid_Splash>False</IncludeAndroid_Splash>
-        <DCC_UnitSearchPath>C:\HODLER\HODLER_Multiplatform_Win_And_iOS_Linux\NanoPoWAndroidService;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>C:\HODLER\HODLER_Multiplatform_Win_And_iOS_Linux\NanoPoWAndroidService;C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;CryptoLib_output\Android\Release;C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack;C:\HODLER\KastriFree-master\API;C:\HODLER\KastriFree-master\Core;C:\HODLER\KastriFree-master\Include;C:\HODLER\KastriFree-master\Features\Notifications;C:\Users\Publiczny\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;C:\Users\Public\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;C:\Program Files (x86)\tmssoftware\TMSCrypto RSXE12\libAndroid;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -202,7 +203,6 @@
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="Win32">
-                        <RemoteDir>Contents\MacOS</RemoteDir>
                         <Operation>0</Operation>
                     </Platform>
                 </DeployClass>
@@ -336,12 +336,20 @@
                         <Operation>1</Operation>
                         <Extensions>.framework</Extensions>
                     </Platform>
+                    <Platform Name="OSX64">
+                        <Operation>1</Operation>
+                        <Extensions>.framework</Extensions>
+                    </Platform>
                     <Platform Name="Win32">
                         <Operation>0</Operation>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="DependencyModule">
                     <Platform Name="OSX32">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="OSX64">
                         <Operation>1</Operation>
                         <Extensions>.dylib</Extensions>
                     </Platform>
@@ -367,6 +375,10 @@
                         <Operation>1</Operation>
                         <Extensions>.dylib</Extensions>
                     </Platform>
+                    <Platform Name="OSX64">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
                     <Platform Name="Win32">
                         <Operation>0</Operation>
                         <Extensions>.bpl</Extensions>
@@ -386,6 +398,9 @@
                         <Operation>0</Operation>
                     </Platform>
                     <Platform Name="OSX32">
+                        <Operation>0</Operation>
+                    </Platform>
+                    <Platform Name="OSX64">
                         <Operation>0</Operation>
                     </Platform>
                     <Platform Name="Win32">
@@ -506,6 +521,10 @@
                         <RemoteDir>Contents\Resources</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
+                    <Platform Name="OSX64">
+                        <RemoteDir>Contents\Resources</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
                 </DeployClass>
                 <DeployClass Required="true" Name="ProjectOutput">
                     <Platform Name="Android">
@@ -525,6 +544,9 @@
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="OSX32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="OSX64">
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="Win32">

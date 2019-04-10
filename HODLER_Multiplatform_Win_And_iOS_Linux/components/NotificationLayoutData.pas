@@ -3,19 +3,22 @@ unit NotificationLayoutData;
 interface
 
 uses
-  System.SysUtils, System.Classes, FMX.Types, FMX.Controls, FMX.Layouts, System.uiTypes,
-  FMX.Edit, FMX.StdCtrls, FMX.Clipboard, FMX.Platform, FMX.Objects, fmx.graphics,
-  System.Types, StrUtils, FMX.Dialogs , crossplatformHeaders ,System.Generics.Collections  ,FMX.VirtualKeyboard;
+  System.SysUtils, System.Classes, FMX.Types, FMX.Controls, FMX.Layouts,
+  System.uiTypes,
+  FMX.Edit, FMX.StdCtrls, FMX.Clipboard, FMX.Platform, FMX.Objects,
+  FMX.graphics,
+  System.Types, StrUtils, FMX.Dialogs, crossplatformHeaders,
+  System.Generics.Collections, FMX.VirtualKeyboard;
 
 type
-  PasswordDialog = class( TLayout )
-    public
-    //protectWord : AnsiString;
+  PasswordDialog = class(TLayout)
+  public
+    // protectWord : AnsiString;
 
-   _protectLayout : TLayout;
-    _staticInfoLabel : TLabel;
-    _edit : TEdit;
-    //_ProtectWordLabel : TLAbel;
+    _protectLayout: TLayout;
+    _staticInfoLabel: TLabel;
+    _edit: TEdit;
+    // _ProtectWordLabel : TLAbel;
 
     _lblMessage: TLabel;
 
@@ -31,12 +34,13 @@ type
 
     procedure _onYesClick(sender: TObject);
     procedure _onNoClick(sender: TObject);
+ 
     //procedure _OnExit(sender: TObject);
     //procedure checkProtect(Sender : TObject );
     procedure OnKeybaordPress(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
-
-    constructor create( Owner : TComponent ; Yes, No: TProc<AnsiString>; mess: AnsiString;
-      YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
+ 
+    constructor create(Owner: TComponent; Yes, No: TProc<AnsiString>;
+      mess: AnsiString; YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
       icon: integer = 2);
 
     destructor destroy(); Override;
@@ -44,14 +48,14 @@ type
   end;
 
 type
-  ProtectedConfirmDialog = class( Tlayout )
-    public
-    protectWord : AnsiString;
+  ProtectedConfirmDialog = class(TLayout)
+  public
+    protectWord: AnsiString;
 
-    _protectLayout : TLayout;
-    _staticInfoLabel : TLabel;
-    _edit : TEdit;
-    _ProtectWordLabel : TLAbel;
+    _protectLayout: TLayout;
+    _staticInfoLabel: TLabel;
+    _edit: TEdit;
+    _ProtectWordLabel: TLabel;
 
     _lblMessage: TLabel;
 
@@ -67,8 +71,8 @@ type
 
     procedure _onYesClick(sender: TObject);
     procedure _onNoClick(sender: TObject);
-    //procedure _OnExit(sender: TObject);
-    procedure checkProtect(Sender : TObject );
+    // procedure _OnExit(sender: TObject);
+    procedure checkProtect(sender: TObject);
 
     procedure OnKeybaordPress(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
 
@@ -82,7 +86,7 @@ type
   end;
 
 type
-  YesNoDialog = class( Tlayout )
+  YesNoDialog = class(TLayout)
   private
     _lblMessage: TLabel;
 
@@ -100,10 +104,10 @@ type
 
     procedure _onYesClick(sender: TObject);
     procedure _onNoClick(sender: TObject);
-    //procedure _OnExit(sender: TObject);
+    // procedure _OnExit(sender: TObject);
 
   public
-    constructor Create( Owner : TComponent ; Yes, No: TProc; mess: AnsiString;
+    constructor create(Owner: TComponent; Yes, No: TProc; mess: AnsiString;
       YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
       icon: integer = 2);
 
@@ -111,22 +115,24 @@ type
   end;
 
 type
-  TNotificationLayout = class( TLayout )
+  TNotificationLayout = class(TLayout)
 
-  popupStack : TStack<Tlayout>;
-  notificationStack : TStack<Tlayout>;
+    popupStack: TStack<TLayout>;
+    notificationStack: TStack<TLayout>;
 
-  CurrentPOpup : Tlayout;
-  PopupQueue : TQueue<Tlayout>;
+    CurrentPOpup: TLayout;
+    PopupQueue: TQueue<TLayout>;
 
-  backGround : TRectangle;
+    backGround: TRectangle;
 
-  constructor create( Owner : TComponent); override;
-  destructor destroy(); Override;
+    inThinking: Tpanel;
 
-  procedure backGroundClick(Sender : TObject);
+    constructor create(Owner: TComponent); override;
+    destructor destroy(); Override;
 
-  procedure ClosePopup();
+    procedure backGroundClick(sender: TObject);
+
+    procedure ClosePopup();
 
   procedure moveCurrentPopupToTop();
   procedure centerCurrentPopup();
@@ -134,27 +140,103 @@ type
   procedure addPopupToStack( popup :TLayout );
   //procedure layoutClick(Sender : TObject);
 
-  //procedure AddNotification( msg : AnsiString ; time : integer = 15 );
+    // procedure AddNotification( msg : AnsiString ; time : integer = 15 );
 
-  procedure popupProtectedConfirm(Yes: TProc; No: TProc; mess: AnsiString;
-    YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No'; icon: integer = 2);
-
-  procedure popupPasswordConfirm(Yes: TProc<AnsiString>; No: TProc<AnsiString>; mess: AnsiString;
-    YesText: AnsiString = 'OK'; NoText: AnsiString = 'Cancel'; icon: integer = 2);
-
-  procedure popupConfirm(Yes, No: TProc; mess: AnsiString;
+    procedure popupProtectedConfirm(Yes: TProc; No: TProc; mess: AnsiString;
       YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
       icon: integer = 2);
 
-  //procedure popup( msg : AnsiString );
-  //procedure popup(
+    procedure popupPasswordConfirm(Yes: TProc<AnsiString>;
+      No: TProc<AnsiString>; mess: AnsiString; YesText: AnsiString = 'OK';
+      NoText: AnsiString = 'Cancel'; icon: integer = 2);
+
+    procedure popupConfirm(Yes, No: TProc; mess: AnsiString;
+      YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
+      icon: integer = 2);
+
+    procedure RunInThinkingWindow(proc: TProc);
+    procedure ShowThinkingWindow();
+    procedure CloseThinkingWindow();
+
+    procedure TryShowBackground();
+    procedure TryHideBackGround();
+
+    // procedure popup( msg : AnsiString );
+    // procedure popup(
 
   end;
 
 implementation
-uses
-  uhome;
 
+uses
+  uhome , misc;
+
+
+procedure TNotificationLayout.TryShowBackground();
+begin
+
+
+
+
+  backGround.HitTest := true;
+  backGround.Visible := true;
+  backGround.AnimateFloat('opacity', 1, 0.2);
+end;
+
+procedure TNotificationLayout.TryHideBackGround();
+begin
+  if inthinking.isVisible then
+    exit();
+  if CurrentPOpup <> nil then
+    exit();
+
+
+  backGround.AnimateFloat('opacity', 0, 0.2);
+  backGround.HitTest := false;
+end;
+
+procedure TNotificationLayout.RunInThinkingWindow(proc: TProc);
+begin
+
+  tthread.CreateAnonymousThread(
+    procedure
+    begin
+
+      ShowThinkingWindow();
+      tthread.Synchronize( tthread.Current , procedure
+      begin
+        proc();
+      end);
+
+
+      CloseThinkingWindow();
+
+    end).Start;
+
+end;
+
+procedure TNotificationLayout.ShowThinkingWindow();
+begin
+
+  tthread.Synchronize( tthread.current,
+    procedure
+    begin
+      TryShowBackground();
+      inThinking.Visible := true;
+    end);
+
+end;
+
+procedure TNotificationLayout.CloseThinkingWindow();
+begin
+
+  tthread.Synchronize( tthread.current,
+    procedure
+    begin
+      inThinking.Visible := false;
+      TryHideBackGround();
+    end);
+end;
 procedure TNotificationLayout.addPopupToStack( popup :TLayout );
 begin
 
@@ -187,33 +269,42 @@ end;
 procedure TNotificationLayout.moveCurrentPopupToTop();
 begin
   try
-  if currentpopup <> nil then
-    Currentpopup.AnimateFloat( 'position.y' , 0 , 0.2 );
-
+  
+    if CurrentPOpup <> nil then
+      CurrentPOpup.AnimateFloat('position.y', 0, 0.2);
+ 
   except
-  on E:Exception do begin end;
+    on E: Exception do
+    begin
+    end;
 
   end;
 end;
 
 procedure TNotificationLayout.centerCurrentPopup();
 begin
- try
-  if currentpopup <> nil then
-    Currentpopup.AnimateFloat( 'position.y' , ( Self.Height / 2 ) - (currentPopup.Height / 2 )  , 0.2 );
-  Except on E:Exception do begin end; end;
+  try
+    if CurrentPOpup <> nil then
+      CurrentPOpup.AnimateFloat('position.y', (Self.Height / 2) -
+        (CurrentPOpup.Height / 2), 0.2);
+  Except
+    on E: Exception do
+    begin
+    end;
+  end;
 end;
 
 procedure TNotificationLayout.ClosePopup;
 var
   KeyboardService: IFMXVirtualKeyboardService;
 begin
- try
+  try
 {$IFDEF ANDROID}
-  if TPlatformServices.Current.SupportsPlatformService(IFMXVirtualKeyboardService, IInterface(KeyboardService)) then
-   if KeyboardService<>nil then KeyboardService.HideVirtualKeyboard;
+    if TPlatformServices.Current.SupportsPlatformService
+      (IFMXVirtualKeyboardService, IInterface(KeyboardService)) then
+      if KeyboardService <> nil then
+        KeyboardService.HideVirtualKeyboard;
 {$ENDIF}
- 
 
   //Currentpopup.AnimateFloat( 'position.x' ,  self.width + currentpopup.width  , 0.2 );
   CurrentPOpup.Position.X := self.width + currentpopup.width;
@@ -257,211 +348,209 @@ except on E:Exception do begin end; end;
 
 end;
 
-procedure TNotificationLayout.backgroundClick(Sender : TObject);
+procedure TNotificationLayout.backGroundClick(sender: TObject);
 begin
 
   ClosePopup;
 
 end;
 
-procedure TNotificationLayout.popupPasswordConfirm(Yes, No: TProc<String>; mess: AnsiString;
-      YesText: AnsiString = 'OK'; NoText: AnsiString = 'Cancel';
-      icon: integer = 2);
+procedure TNotificationLayout.popupPasswordConfirm(Yes, No: TProc<String>;
+mess: AnsiString; YesText: AnsiString = 'OK'; NoText: AnsiString = 'Cancel';
+icon: integer = 2);
 var
-  popup : Tlayout;
+  popup: TLayout;
 begin
 
-  popup := PasswordDialog.create( self , yes , no , mess , yesText , noText , icon);
-  popup.Parent := self;
+  popup := PasswordDialog.create(Self, Yes, No, mess, YesText, NoText, icon);
+  popup.Parent := Self;
   popup.Align := TAlignLayout.None;
-  popup.Position.Y := ( Self.Height / 2 ) - ( popup.Height / 2 );
-  popup.Position.X := - popup.Width;
+  popup.Position.Y := (Self.Height / 2) - (popup.Height / 2);
+  popup.Position.X := -popup.width;
   popup.Visible := true;
 
   addPopupToStack( popup );
 
   {CurrentPOpup := popup;
 
-  self.BringToFront;
+  Self.BringToFront;
 
-  popup.AnimateFloat( 'position.x' , (Self.Width /2 ) - (popup.width /2 ) , 0.2 );
+  popup.AnimateFloat('position.x', (Self.width / 2) - (popup.width / 2), 0.2);
   backGround.HitTest := true;
+
   background.Visible := true;
   backGround.AnimateFloat( 'opacity' , 1 , 0.2 )  }
-
 
 end;
 
 procedure TNotificationLayout.popupConfirm(Yes, No: TProc; mess: AnsiString;
-      YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
-      icon: integer = 2);
+YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No'; icon: integer = 2);
 var
-  popup : Tlayout;
+  popup: TLayout;
 begin
 
-  popup := YesNoDialog.create( self , yes , no , mess , yesText , noText , icon);
-  popup.Parent := self;
+  popup := YesNoDialog.create(Self, Yes, No, mess, YesText, NoText, icon);
+  popup.Parent := Self;
   popup.Align := TAlignLayout.None;
-  popup.Position.Y := ( Self.Height / 2 ) - ( popup.Height / 2 );
-  popup.Position.X := - popup.Width;
+  popup.Position.Y := (Self.Height / 2) - (popup.Height / 2);
+  popup.Position.X := -popup.width;
   popup.Visible := true;
 
   addPopupToStack( popup );
 
   {CurrentPOpup := popup;
 
-  self.BringToFront;
+  Self.BringToFront;
 
-  popup.AnimateFloat( 'position.x' , (Self.Width /2 ) - (popup.width /2 ) , 0.2 );
+  popup.AnimateFloat('position.x', (Self.width / 2) - (popup.width / 2), 0.2);
   backGround.HitTest := true;
+
   background.Visible := true;
   backGround.AnimateFloat( 'opacity' , 1 , 0.2 )}
 
-
 end;
 
-procedure TNotificationLayout.popupProtectedConfirm(Yes: TProc; No: TProc; mess: AnsiString;
-    YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No'; icon: integer = 2);
+procedure TNotificationLayout.popupProtectedConfirm(Yes: TProc; No: TProc;
+mess: AnsiString; YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
+icon: integer = 2);
 var
-  popup : Tlayout;
+  popup: TLayout;
 begin
 
-  popup := ProtectedConfirmDialog.create( self , yes , no , mess , yesText , noText , icon);
-  popup.Parent := self;
+  popup := ProtectedConfirmDialog.create(Self, Yes, No, mess, YesText,
+    NoText, icon);
+  popup.Parent := Self;
   popup.Align := TAlignLayout.None;
-  popup.Position.Y := ( Self.Height / 2 ) - ( popup.Height / 2 );
-  popup.Position.X := - popup.Width;
+  popup.Position.Y := (Self.Height / 2) - (popup.Height / 2);
+  popup.Position.X := -popup.width;
   popup.Visible := true;
 
   addPopupToStack( popup );
 
   {CurrentPOpup := popup;
 
-  self.BringToFront;
+  Self.BringToFront;
 
-  popup.AnimateFloat( 'position.x' , (Self.Width /2 ) - (popup.width /2 ) , 0.2 );
+  popup.AnimateFloat('position.x', (Self.width / 2) - (popup.width / 2), 0.2);
   backGround.HitTest := true;
   background.Visible := true;
   backGround.AnimateFloat( 'opacity' , 1 , 0.2 ) }
 
 end;
 
-constructor TNotificationLayout.Create(Owner : Tcomponent) ;
+constructor TNotificationLayout.create(Owner: TComponent);
 var
   locGradient: TGradient;
+  aniInd: TAniIndicator;
+  lbl: TLabel;
 begin
-  inherited Create(owner);
+  inherited create(Owner);
   popupStack := TStack<TLayout>.create();
 
-
-
-  Background := TRectangle.Create( Self );
-  Background.Visible := false ;
-  background.Opacity := 0;
-  backGround.Parent := self;
+  backGround := TRectangle.create(Self);
+  backGround.Visible := false;
+  backGround.Opacity := 0;
+  backGround.Parent := Self;
   backGround.Align := TAlignLayout.Contents;
-  background.Fill.Color := TAlphaColorF.Create( 0 , 0 , 0 , 0.5 ).ToAlphaColor;
+  backGround.Fill.Color := TAlphaColorF.create(0, 0, 0, 0.5).ToAlphaColor;
   backGround.OnClick := backGroundClick;
-  //background.Fill.Gradient.Style.gsRadial;
-  {backGround.Fill.Kind := TBrushKind.Gradient;
-  backGround.Fill.Gradient.Style := TGradientStyle.Radial;
 
-  backGround.Fill.Gradient.StartPosition.X := 50;
-  backGround.Fill.Gradient.StartPosition.Y := 50;
-  backGround.Fill.Gradient.StopPosition.X := 100;
-  backGround.Fill.Gradient.StopPosition.Y := 100;
+  inThinking := Tpanel.create(Self);
+  inThinking.Parent := Self;
+  inThinking.Visible := false;
+  inThinking.Height := 350;
+  inThinking.width := 350;
+  inThinking.Align := TAlignLayout.Center;
 
-  backGround.Fill.Gradient.Color := TAlphaColorrec.Black;
-  backGround.Fill.Gradient.Color1 :=  TAlphaColorF.Create( 0 , 0 , 0 , 0 ).ToAlphaColor; }
+  aniInd := TAniIndicator.create(inThinking);
+  aniInd.Parent := inThinking;
+  aniInd.Align := TAlignLayout.Top;
+  aniInd.Height := 250;
+  aniInd.Enabled := true;
 
-  {locGradient := TGradient.Create();
-  locGradient.Color := TAlphaColorrec.Black;
-  locGradient.Color1 := Talphacolorrec.Alpha;
-
-  locGradient. StartPosition .Y  := 0.5;
-  locGradient.StopPosition  .X  := 1;
-  locGradient.StopPosition  .Y  := 0.5;
-
-
-  with Fill do begin
-      Kind      := TBrushKind.Gradient;
-      Gradient  := locGradient;
-    end;  }
+  lbl := TLabel.create(inThinking);
+  lbl.Parent := inThinking;
+  lbl.Text := 'Thinking... Please wait.';
+  lbl.Align := TAlignLayout.client;
+  lbl.TextSettings.HorzAlign := TTextAlign.Center;
 
 end;
+
 destructor TNotificationLayout.destroy;
 begin
   inherited;
   popupStack.Free;
 end;
 
-procedure ProtectedConfirmDialog._onYesClick(Sender : Tobject);
+procedure ProtectedConfirmDialog._onYesClick(sender: TObject);
 begin
   if _edit.Text = protectWord then
   begin
 
-   _onYesPress();
-    TNotificationLayout( Owner ).ClosePopup;
+    _onYesPress();
+    TNotificationLayout(Owner).ClosePopup;
 
   end;
 
 end;
-procedure ProtectedConfirmDialog._onNoClick(Sender : Tobject);
+
+procedure ProtectedConfirmDialog._onNoClick(sender: TObject);
 begin
   _onNoPress();
-  TNotificationLayout( Owner ).ClosePopup;
+  TNotificationLayout(Owner).ClosePopup;
 end;
 
-procedure ProtectedConfirmDialog.checkProtect(Sender : TObject );
+procedure ProtectedConfirmDialog.checkProtect(sender: TObject);
 begin
 
-  if _edit.text = protectWord then
+  if _edit.Text = protectWord then
   begin
-    _onYesClick(Sender);
+    _onYesClick(sender);
   end
   else
   begin
-    //popupWindow.Create('wrong word');
+    // popupWindow.Create('wrong word');
   end;
 
 end;
 
-constructor ProtectedConfirmDialog.create( Owner : TComponent ; Yes, No: TProc; mess: AnsiString;
-      YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
-      icon: integer = 2);
+constructor ProtectedConfirmDialog.create(Owner: TComponent; Yes, No: TProc;
+mess: AnsiString; YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
+icon: integer = 2);
 var
-  panel : TPanel;
+  panel: Tpanel;
 begin
 
-  inherited Create( owner );
+  inherited create(Owner);
 
   _onYesPress := Yes;
   _onNoPress := No;
 
-  //parent := TfmxObject ( owner );
-  self.Height := 350;
-  self.Width := 350 ;//min( 400 , owner.Width );
+  // parent := TfmxObject ( owner );
+  Self.Height := 350;
+  Self.width := 350; // min( 400 , owner.Width );
 
-  self.protectWord := frmhome.wordlist.Lines[Random(2000)] + ' ' + frmhome.wordlist.Lines[Random(2000)]  ;
+  Self.protectWord := frmhome.wordlist.Lines[Random(2000)] + ' ' +
+    frmhome.wordlist.Lines[Random(2000)];
 
-  //Align := TAlignLayout.None;
-  //position.Y := ( TControl( owner ).Height / 2 ) - ( height / 2);
-  //position.X := - Width;
+  // Align := TAlignLayout.None;
+  // position.Y := ( TControl( owner ).Height / 2 ) - ( height / 2);
+  // position.X := - Width;
 
-  //AnimateFloat('position.x' , ( TControl( owner ).Width / 2 ) - ( width / 2 ));
+  // AnimateFloat('position.x' , ( TControl( owner ).Width / 2 ) - ( width / 2 ));
 
-  panel := TPanel.Create(self);
-  panel.Parent := self;
-  panel.Align := TAlignlayout.Contents;
+  panel := Tpanel.create(Self);
+  panel.Parent := Self;
+  panel.Align := TAlignLayout.Contents;
   panel.Visible := true;
 
-  _protectLayout := TLayout.Create(panel);
+  _protectLayout := TLayout.create(panel);
   _protectLayout.Parent := panel;
   _protectLayout.Align := TAlignLayout.Bottom;
   _protectLayout.Height := 48 * 2 + 24;
   _protectLayout.Visible := true;
 
-  _staticInfoLabel := TLabel.Create(_protectLayout);
+  _staticInfoLabel := TLabel.create(_protectLayout);
   _staticInfoLabel.Parent := _protectLayout;
   _staticInfoLabel.Visible := true;
   _staticInfoLabel.Align := TAlignLayout.Top;
@@ -469,78 +558,78 @@ begin
   _staticInfoLabel.Height := 24;
   _staticInfoLabel.TextAlign := TTextAlign.Center;
 
-
-  _ProtectWordLabel := TLabel.Create( _protectLayout );
+  _ProtectWordLabel := TLabel.create(_protectLayout);
   _ProtectWordLabel.Parent := _protectLayout;
   _ProtectWordLabel.Text := protectWord;
   _ProtectWordLabel.Align := TAlignLayout.Bottom;
   _ProtectWordLabel.Height := 48;
-  _ProtectWordLabel.StyledSettings := _ProtectWordLabel.StyledSettings - [TStyledSetting.size] ;
-  {adrLabel.StyledSettings := adrLabel.StyledSettings - [TStyledSetting.size];
-    adrLabel.TextSettings.Font.size := dashBoardFontSize;}
-  _ProtectWordLabel.TextSettings.Font.Size := 24;
+  _ProtectWordLabel.StyledSettings := _ProtectWordLabel.StyledSettings -
+    [TStyledSetting.size];
+  { adrLabel.StyledSettings := adrLabel.StyledSettings - [TStyledSetting.size];
+    adrLabel.TextSettings.Font.size := dashBoardFontSize; }
+  _ProtectWordLabel.TextSettings.Font.size := 24;
   _ProtectWordLabel.TextAlign := TTextAlign.Center;
 
   _ProtectWordLabel.Visible := true;
 
-  _edit := Tedit.Create( _protectLayout );
+  _edit := TEdit.create(_protectLayout);
   _edit.Parent := _protectLayout;
   _edit.Align := TAlignLayout.MostBottom;
   _edit.Visible := true;
   _edit.Height := 48;
   _edit.TextAlign := TTextAlign.Center;
 
-  _ImageLayout := TLayout.Create(panel);
+  _ImageLayout := TLayout.create(panel);
   _ImageLayout.Visible := true;
   _ImageLayout.Align := TAlignLayout.MostTop;
-  _ImageLayout.parent := panel;
+  _ImageLayout.Parent := panel;
   _ImageLayout.Height := 96;
 
-  _Image := TImage.Create(_ImageLayout);
+  _Image := TImage.create(_ImageLayout);
   _Image.Align := TAlignLayout.Center;
-  _Image.Width := 64;
+  _Image.width := 64;
   _Image.Height := 64;
   _Image.Visible := true;
-  _Image.parent := _ImageLayout;
+  _Image.Parent := _ImageLayout;
   case icon of
     0:
-      _Image.Bitmap := frmhome.OKImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('OK_IMAGE') ); // := frmhome.OKImage.Bitmap;
     1:
-      _Image.Bitmap := frmhome.InfoImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('INFO_IMAGE') ); // := frmhome.InfoImage.Bitmap;
     2:
-      _Image.Bitmap := frmhome.warningImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('WARNING_IMAGE') ); // := frmhome.warningImage.Bitmap;
     3:
-      _Image.Bitmap := frmhome.ErrorImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('ERROR_IMAGE') ); // := frmhome.ErrorImage.Bitmap;
   end;
 
-  _lblMessage := TLabel.Create(panel);
-  _lblMessage.Align := TAlignLayout.Client;
+  _lblMessage := TLabel.create(panel);
+  _lblMessage.Align := TAlignLayout.client;
   _lblMessage.Visible := true;
-  _lblMessage.parent := panel;
+  _lblMessage.Parent := panel;
   _lblMessage.Text := mess;
   _lblMessage.TextSettings.HorzAlign := TTextAlign.Center;
   _lblMessage.Margins.Left := 10;
   _lblMessage.Margins.Right := 10;
 
-  _ButtonLayout := TLayout.Create(panel);
+  _ButtonLayout := TLayout.create(panel);
   _ButtonLayout.Visible := true;
   _ButtonLayout.Align := TAlignLayout.MostBottom;
-  _ButtonLayout.parent := panel;
+  _ButtonLayout.Parent := panel;
   _ButtonLayout.Height := 48;
 
-  _YesButton := TButton.Create(_ButtonLayout);
+  _YesButton := TButton.create(_ButtonLayout);
   _YesButton.Align := TAlignLayout.Right;
-  _YesButton.Width := _ButtonLayout.Width / 2;
+  _YesButton.width := _ButtonLayout.width / 2;
   _YesButton.Visible := true;
-  _YesButton.parent := _ButtonLayout;
+  _YesButton.Parent := _ButtonLayout;
   _YesButton.Text := YesText;
   _YesButton.OnClick := checkProtect;
 
-  _NoButton := TButton.Create(_ButtonLayout);
+  _NoButton := TButton.create(_ButtonLayout);
   _NoButton.Align := TAlignLayout.Left;
-  _NoButton.Width := _ButtonLayout.Width / 2;
+  _NoButton.width := _ButtonLayout.width / 2;
   _NoButton.Visible := true;
-  _NoButton.parent := _ButtonLayout;
+  _NoButton.Parent := _ButtonLayout;
   _NoButton.Text := NoText;
   _NoButton.OnClick := _onNoClick;
 
@@ -556,189 +645,188 @@ begin
   begin
     checkProtect(nil);
   end;
+  
 end;
 
-destructor ProtectedConfirmDialog.Destroy;
+destructor ProtectedConfirmDialog.destroy;
 begin
 
   inherited;
 
 end;
 
-////////////////////////////////////
-procedure YesNoDialog._onYesClick(Sender : Tobject);
+/// /////////////////////////////////
+procedure YesNoDialog._onYesClick(sender: TObject);
 begin
 
   _onYesPress();
-  TNotificationLayout( Owner ).ClosePopup;
+  TNotificationLayout(Owner).ClosePopup;
 
 end;
-procedure YesNoDialog._onNoClick(Sender : Tobject);
+
+procedure YesNoDialog._onNoClick(sender: TObject);
 begin
 
   _onNoPress();
-  TNotificationLayout( Owner ).ClosePopup;
+  TNotificationLayout(Owner).ClosePopup;
 
 end;
 
-constructor YesNoDialog.create( Owner : TComponent ; Yes, No: TProc; mess: AnsiString;
-      YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
-      icon: integer = 2);
+constructor YesNoDialog.create(Owner: TComponent; Yes, No: TProc;
+mess: AnsiString; YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
+icon: integer = 2);
 var
-  panel : TPanel;
+  panel: Tpanel;
 begin
 
-  inherited Create( owner );
+  inherited create(Owner);
 
   _onYesPress := Yes;
   _onNoPress := No;
 
-  //parent := TfmxObject ( owner );
-  self.Height := 250;
-  self.Width := 350 ;//min( 400 , owner.Width );
+  // parent := TfmxObject ( owner );
+  Self.Height := 250;
+  Self.width := 350; // min( 400 , owner.Width );
 
-  //Align := TAlignLayout.None;
-  //position.Y := ( TControl( owner ).Height / 2 ) - ( height / 2);
-  //position.X := - Width;
+  // Align := TAlignLayout.None;
+  // position.Y := ( TControl( owner ).Height / 2 ) - ( height / 2);
+  // position.X := - Width;
 
-  //AnimateFloat('position.x' , ( TControl( owner ).Width / 2 ) - ( width / 2 ));
+  // AnimateFloat('position.x' , ( TControl( owner ).Width / 2 ) - ( width / 2 ));
 
-  panel := TPanel.Create(self);
-  panel.Parent := self;
-  panel.Align := TAlignlayout.Contents;
+  panel := Tpanel.create(Self);
+  panel.Parent := Self;
+  panel.Align := TAlignLayout.Contents;
   panel.Visible := true;
 
-    _ImageLayout := TLayout.Create(panel);
+  _ImageLayout := TLayout.create(panel);
   _ImageLayout.Visible := true;
   _ImageLayout.Align := TAlignLayout.MostTop;
-  _ImageLayout.parent := panel;
+  _ImageLayout.Parent := panel;
   _ImageLayout.Height := 96;
 
-  _Image := TImage.Create(_ImageLayout);
+  _Image := TImage.create(_ImageLayout);
   _Image.Align := TAlignLayout.Center;
-  _Image.Width := 64;
+  _Image.width := 64;
   _Image.Height := 64;
   _Image.Visible := true;
-  _Image.parent := _ImageLayout;
+  _Image.Parent := _ImageLayout;
   case icon of
     0:
-      _Image.Bitmap := frmhome.OKImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('OK_IMAGE') ); // := frmhome.OKImage.Bitmap;
     1:
-      _Image.Bitmap := frmhome.InfoImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('INFO_IMAGE') ); // := frmhome.InfoImage.Bitmap;
     2:
-      _Image.Bitmap := frmhome.warningImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('WARNING_IMAGE') ); // := frmhome.warningImage.Bitmap;
     3:
-      _Image.Bitmap := frmhome.ErrorImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('ERROR_IMAGE') ); // := frmhome.ErrorImage.Bitmap;
   end;
 
-  _lblMessage := TLabel.Create(panel);
-  _lblMessage.Align := TAlignLayout.Client;
+  _lblMessage := TLabel.create(panel);
+  _lblMessage.Align := TAlignLayout.client;
   _lblMessage.Visible := true;
-  _lblMessage.parent := panel;
+  _lblMessage.Parent := panel;
   _lblMessage.Text := mess;
   _lblMessage.TextSettings.HorzAlign := TTextAlign.Center;
   _lblMessage.Margins.Left := 10;
   _lblMessage.Margins.Right := 10;
 
-  _ButtonLayout := TLayout.Create(panel);
+  _ButtonLayout := TLayout.create(panel);
   _ButtonLayout.Visible := true;
   _ButtonLayout.Align := TAlignLayout.MostBottom;
-  _ButtonLayout.parent := panel;
+  _ButtonLayout.Parent := panel;
   _ButtonLayout.Height := 48;
 
-  _YesButton := TButton.Create(_ButtonLayout);
+  _YesButton := TButton.create(_ButtonLayout);
   _YesButton.Align := TAlignLayout.Right;
-  _YesButton.Width := _ButtonLayout.Width / 2;
+  _YesButton.width := _ButtonLayout.width / 2;
   _YesButton.Visible := true;
-  _YesButton.parent := _ButtonLayout;
+  _YesButton.Parent := _ButtonLayout;
   _YesButton.Text := YesText;
-  _YesButton.OnClick := _onyesClick;
+  _YesButton.OnClick := _onYesClick;
 
-  _NoButton := TButton.Create(_ButtonLayout);
+  _NoButton := TButton.create(_ButtonLayout);
   _NoButton.Align := TAlignLayout.Left;
-  _NoButton.Width := _ButtonLayout.Width / 2;
+  _NoButton.width := _ButtonLayout.width / 2;
   _NoButton.Visible := true;
-  _NoButton.parent := _ButtonLayout;
+  _NoButton.Parent := _ButtonLayout;
   _NoButton.Text := NoText;
   _NoButton.OnClick := _onNoClick;
 
 end;
 
 
-
-destructor YesNoDialog.Destroy;
+destructor YesNoDialog.destroy;
 begin
 
   inherited;
 
 end;
 
+/// //////////////////////////////////////////////////////////////////////////////
 
-/////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-procedure PasswordDialog._onYesClick(Sender : Tobject);
+procedure PasswordDialog._onYesClick(sender: TObject);
 begin
+  TNotificationLayout(Owner).RunInThinkingWindow(
+    procedure
+    begin
+      _onYesPress(_edit.Text);
+    end);
 
-   _onYesPress( _edit.text );
-    TNotificationLayout( Owner ).ClosePopup;
-
-end;
-procedure PasswordDialog._onNoClick(Sender : Tobject);
-begin
-
-  _onNoPress( _edit.text );
-  TNotificationLayout( Owner ).ClosePopup;
+  TNotificationLayout(Owner).ClosePopup;
 
 end;
 
+procedure PasswordDialog._onNoClick(sender: TObject);
+begin
 
-constructor  PasswordDialog.create( Owner : TComponent ; Yes, No: TProc<AnsiString>; mess: AnsiString;
-      YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
-      icon: integer = 2);
+  _onNoPress(_edit.Text);
+  TNotificationLayout(Owner).ClosePopup;
+
+end;
+
+constructor PasswordDialog.create(Owner: TComponent; Yes, No: TProc<AnsiString>;
+mess: AnsiString; YesText: AnsiString = 'Yes'; NoText: AnsiString = 'No';
+icon: integer = 2);
 var
-  panel : TPanel;
+  panel: Tpanel;
 begin
 
-  inherited Create( owner );
+  inherited create(Owner);
 
   _onYesPress := Yes;
   _onNoPress := No;
 
-  //parent := TfmxObject ( owner );
-  self.Height := 250;
-  self.Width := 350 ;//min( 400 , owner.Width );
+  // parent := TfmxObject ( owner );
+  Self.Height := 250;
+  Self.width := 350; // min( 400 , owner.Width );
 
-  //Align := TAlignLayout.None;
-  //position.Y := ( TControl( owner ).Height / 2 ) - ( height / 2);
-  //position.X := - Width;
+  // Align := TAlignLayout.None;
+  // position.Y := ( TControl( owner ).Height / 2 ) - ( height / 2);
+  // position.X := - Width;
 
-  //AnimateFloat('position.x' , ( TControl( owner ).Width / 2 ) - ( width / 2 ));
+  // AnimateFloat('position.x' , ( TControl( owner ).Width / 2 ) - ( width / 2 ));
 
-  panel := TPanel.Create(self);
-  panel.Parent := self;
-  panel.Align := TAlignlayout.Contents;
+  panel := Tpanel.create(Self);
+  panel.Parent := Self;
+  panel.Align := TAlignLayout.Contents;
   panel.Visible := true;
 
-  _protectLayout := TLayout.Create(panel);
+  _protectLayout := TLayout.create(panel);
   _protectLayout.Parent := panel;
   _protectLayout.Align := TAlignLayout.Bottom;
-  _protectLayout.Height := 48 ;
+  _protectLayout.Height := 48;
   _protectLayout.Visible := true;
 
- { _staticInfoLabel := TLabel.Create(_protectLayout);
-  _staticInfoLabel.Parent := _protectLayout;
-  _staticInfoLabel.Visible := true;
-  _staticInfoLabel.Align := TAlignLayout.Top;
-  _staticInfoLabel.Text := 'Rewrite text to confirm';
-  _staticInfoLabel.Height := 24;
-  _staticInfoLabel.TextAlign := TTextAlign.Center; }
+  { _staticInfoLabel := TLabel.Create(_protectLayout);
+    _staticInfoLabel.Parent := _protectLayout;
+    _staticInfoLabel.Visible := true;
+    _staticInfoLabel.Align := TAlignLayout.Top;
+    _staticInfoLabel.Text := 'Rewrite text to confirm';
+    _staticInfoLabel.Height := 24;
+    _staticInfoLabel.TextAlign := TTextAlign.Center; }
 
-
-  _edit := Tedit.Create( _protectLayout );
+  _edit := TEdit.create(_protectLayout);
   _edit.Parent := _protectLayout;
   _edit.Align := TAlignLayout.MostBottom;
   _edit.Visible := true;
@@ -746,60 +834,59 @@ begin
   _edit.TextAlign := TTextAlign.Center;
   _edit.Password := true;
 
-  _ImageLayout := TLayout.Create(panel);
+  _ImageLayout := TLayout.create(panel);
   _ImageLayout.Visible := true;
   _ImageLayout.Align := TAlignLayout.MostTop;
-  _ImageLayout.parent := panel;
+  _ImageLayout.Parent := panel;
   _ImageLayout.Height := 96;
 
-  _Image := TImage.Create(_ImageLayout);
+  _Image := TImage.create(_ImageLayout);
   _Image.Align := TAlignLayout.Center;
-  _Image.Width := 64;
+  _Image.width := 64;
   _Image.Height := 64;
   _Image.Visible := true;
-  _Image.parent := _ImageLayout;
+  _Image.Parent := _ImageLayout;
   case icon of
     0:
-      _Image.Bitmap := frmhome.OKImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('OK_IMAGE') ); // := frmhome.OKImage.Bitmap;
     1:
-      _Image.Bitmap := frmhome.InfoImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('INFO_IMAGE') ); // := frmhome.InfoImage.Bitmap;
     2:
-      _Image.Bitmap := frmhome.warningImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('WARNING_IMAGE') ); // := frmhome.warningImage.Bitmap;
     3:
-      _Image.Bitmap := frmhome.ErrorImage.Bitmap;
+      _Image.Bitmap.LoadFromStream( resourceMenager.getAssets('ERROR_IMAGE') ); // := frmhome.ErrorImage.Bitmap;
   end;
 
-  _lblMessage := TLabel.Create(panel);
-  _lblMessage.Align := TAlignLayout.Client;
+  _lblMessage := TLabel.create(panel);
+  _lblMessage.Align := TAlignLayout.client;
   _lblMessage.Visible := true;
-  _lblMessage.parent := panel;
+  _lblMessage.Parent := panel;
   _lblMessage.Text := mess;
   _lblMessage.TextSettings.HorzAlign := TTextAlign.Center;
   _lblMessage.Margins.Left := 10;
   _lblMessage.Margins.Right := 10;
 
-  _ButtonLayout := TLayout.Create(panel);
+  _ButtonLayout := TLayout.create(panel);
   _ButtonLayout.Visible := true;
   _ButtonLayout.Align := TAlignLayout.MostBottom;
-  _ButtonLayout.parent := panel;
+  _ButtonLayout.Parent := panel;
   _ButtonLayout.Height := 48;
 
-  _YesButton := TButton.Create(_ButtonLayout);
+  _YesButton := TButton.create(_ButtonLayout);
   _YesButton.Align := TAlignLayout.Right;
-  _YesButton.Width := _ButtonLayout.Width / 2;
+  _YesButton.width := _ButtonLayout.width / 2;
   _YesButton.Visible := true;
-  _YesButton.parent := _ButtonLayout;
+  _YesButton.Parent := _ButtonLayout;
   _YesButton.Text := YesText;
   _YesButton.OnClick := _onYesClick;
 
-  _NoButton := TButton.Create(_ButtonLayout);
+  _NoButton := TButton.create(_ButtonLayout);
   _NoButton.Align := TAlignLayout.Left;
-  _NoButton.Width := _ButtonLayout.Width / 2;
+  _NoButton.width := _ButtonLayout.width / 2;
   _NoButton.Visible := true;
-  _NoButton.parent := _ButtonLayout;
+  _NoButton.Parent := _ButtonLayout;
   _NoButton.Text := NoText;
   _NoButton.OnClick := _onNoClick;
-
 
   _edit.OnKeyUp := OnkeyBaordPress;
 
@@ -812,22 +899,15 @@ begin
   begin
     _onyesClick(nil);
   end;
+
 end;
 
-destructor PasswordDialog.Destroy;
+destructor PasswordDialog.destroy;
 begin
 
   inherited;
 
 end;
-
-
-
-
-
-
-
-
 
 end.
 

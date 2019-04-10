@@ -152,6 +152,8 @@ uses
   TCopyableAddressLabelData in 'components\TCopyableAddressLabelData.pas',
   TCopyableAddressPanelData in 'components\TCopyableAddressPanelData.pas',
   ThreadKindergartenData in 'additionalUnits\ThreadKindergartenData.pas',
+  TAddNewCryptoPanelData in 'components\TAddNewCryptoPanelData.pas',
+  TNewCryptoVertScrollBoxData in 'components\TNewCryptoVertScrollBoxData.pas',
   ComponentPoolData in 'additionalUnits\additionalClass\ComponentPoolData.pas',
   HistoryPanelData in 'components\HistoryPanelData.pas',
   CoinPanelData in 'components\CoinPanelData.pas';

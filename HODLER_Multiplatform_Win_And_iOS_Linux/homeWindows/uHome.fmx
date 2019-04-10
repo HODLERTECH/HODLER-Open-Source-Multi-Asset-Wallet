@@ -1,12 +1,11 @@
 object frmHome: TfrmHome
-  Left = 315
-  Top = 52
+  Left = 300
+  Top = 30
   BorderIcons = [biSystemMenu, biMinimize]
-  BorderStyle = Single
   Caption = 'HODLER Core Loading,..'
   ClientHeight = 687
   ClientWidth = 1132
-  Position = DesktopCenter
+  Position = Designed
   Quality = HighQuality
   StyleBook = StyleBook1
   FormFactor.Width = 1440
@@ -23,8 +22,8 @@ object frmHome: TfrmHome
   OnFocusChanged = FormFocusChanged
   OnVirtualKeyboardShown = FormVirtualKeyboardShown
   OnVirtualKeyboardHidden = FormVirtualKeyboardHidden
-  Left = 315
-  Top = 52
+  Left = 300
+  Top = 30
   DesignerMasterStyle = 0
   object PageControl: TTabControl
     Touch.GestureManager = GestureManager1
@@ -40,6 +39,8 @@ object frmHome: TfrmHome
     TabPosition = None
     OnChange = closeVirtualKeyBoard
     Sizes = (
+      450s
+      687s
       450s
       687s
       450s
@@ -391,7 +392,7 @@ object frmHome: TfrmHome
       object passwordMessage: TLabel
         Align = Top
         StyledSettings = [Family, Size, Style]
-        Position.Y = 489.000000000000000000
+        Position.Y = 513.000000000000000000
         Size.Width = 450.000000000000000000
         Size.Height = 36.000000000000000000
         Size.PlatformDefault = False
@@ -490,7 +491,7 @@ object frmHome: TfrmHome
       end
       object btnCreateWallet: TButton
         Align = Top
-        Position.Y = 441.000000000000000000
+        Position.Y = 465.000000000000000000
         Size.Width = 450.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
@@ -553,7 +554,7 @@ object frmHome: TfrmHome
       end
       object Panel27: TPanel
         Align = Top
-        Position.Y = 393.000000000000000000
+        Position.Y = 417.000000000000000000
         Size.Width = 450.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
@@ -568,6 +569,27 @@ object frmHome: TfrmHome
           Text = 
             'The password must have at least 8 characters (including one uppe' +
             'rcase letter, one lowercase letter, and one number)'
+          TabOrder = 0
+        end
+      end
+      object CapsLockWarningPanel: TPanel
+        Align = Top
+        Position.Y = 393.000000000000000000
+        Size.Width = 450.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 13
+        object CapsLockWarningLabel: TLabel
+          Align = Contents
+          StyledSettings = [Family, Size]
+          Margins.Left = 15.000000000000000000
+          Margins.Right = 15.000000000000000000
+          Size.Width = 420.000000000000000000
+          Size.Height = 24.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.StyleExt = {00070000000000000004000000}
+          TextSettings.FontColor = claRed
+          Text = 'Warning: Caps Lock enabled'
           TabOrder = 0
         end
       end
@@ -630,8 +652,8 @@ object frmHome: TfrmHome
         Size.Height = 544.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 2
-        Viewport.Width = 446.000000000000000000
-        Viewport.Height = 540.000000000000000000
+        Viewport.Width = 450.000000000000000000
+        Viewport.Height = 544.000000000000000000
       end
       object btnSeedGeneratedProceed: TButton
         Align = Bottom
@@ -702,6 +724,16 @@ object frmHome: TfrmHome
           Size.Height = 639.000000000000000000
           Size.PlatformDefault = False
         end
+      end
+      object Image11: TImage
+        MultiResBitmap = <
+          item
+          end>
+        Position.X = 8.000000000000000000
+        Position.Y = 56.000000000000000000
+        Size.Width = 153.000000000000000000
+        Size.Height = 81.000000000000000000
+        Size.PlatformDefault = False
       end
     end
     object walletView: TTabItem
@@ -1722,7 +1754,7 @@ object frmHome: TfrmHome
                 TabOrder = 3
                 object Layout32: TLayout
                   Align = Bottom
-                  Position.Y = 297.000000000000000000
+                  Position.Y = 249.000000000000000000
                   Size.Width = 434.000000000000000000
                   Size.Height = 41.000000000000000000
                   Size.PlatformDefault = False
@@ -1739,11 +1771,37 @@ object frmHome: TfrmHome
                   MultiResBitmap = <
                     item
                     end>
-                  Align = Top
-                  Position.Y = 41.000000000000000000
+                  Align = Client
                   Size.Width = 434.000000000000000000
-                  Size.Height = 256.000000000000000000
+                  Size.Height = 208.000000000000000000
                   Size.PlatformDefault = False
+                end
+                object Yaddresses: TLayout
+                  Align = Bottom
+                  Position.Y = 290.000000000000000000
+                  Size.Width = 434.000000000000000000
+                  Size.Height = 48.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 2
+                  object changeYbutton: TButton
+                    Align = Right
+                    Position.X = 266.000000000000000000
+                    Size.Width = 168.000000000000000000
+                    Size.Height = 48.000000000000000000
+                    Size.PlatformDefault = False
+                    TabOrder = 0
+                    Text = 'Previous addresses'
+                    OnClick = changeYbuttonClick
+                  end
+                  object FindUnusedAddressButton: TButton
+                    Align = Left
+                    Size.Width = 185.000000000000000000
+                    Size.Height = 48.000000000000000000
+                    Size.PlatformDefault = False
+                    TabOrder = 1
+                    Text = 'New Address'
+                    OnClick = FindUnusedAddressButtonClick
+                  end
                 end
               end
               object BCHAddressesLayout: TLayout
@@ -1771,33 +1829,6 @@ object frmHome: TfrmHome
                   TabOrder = 1
                   Text = 'Cash Address'
                   OnClick = BCHCashAddrButtonClick
-                end
-              end
-              object Yaddresses: TLayout
-                Align = Bottom
-                Position.Y = 514.000000000000000000
-                Size.Width = 434.000000000000000000
-                Size.Height = 48.000000000000000000
-                Size.PlatformDefault = False
-                TabOrder = 6
-                object changeYbutton: TButton
-                  Align = Right
-                  Position.X = 266.000000000000000000
-                  Size.Width = 168.000000000000000000
-                  Size.Height = 48.000000000000000000
-                  Size.PlatformDefault = False
-                  TabOrder = 0
-                  Text = 'Previous addresses'
-                  OnClick = changeYbuttonClick
-                end
-                object FindUnusedAddressButton: TButton
-                  Align = Left
-                  Size.Width = 185.000000000000000000
-                  Size.Height = 48.000000000000000000
-                  Size.PlatformDefault = False
-                  TabOrder = 1
-                  Text = 'New Address'
-                  OnClick = FindUnusedAddressButtonClick
                 end
               end
               object RavencoinAddrTypeLayout: TLayout
@@ -4678,8 +4709,8 @@ object frmHome: TfrmHome
           Size.Height = 145.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 5
-          Viewport.Width = 77.000000000000000000
-          Viewport.Height = 141.000000000000000000
+          Viewport.Width = 97.000000000000000000
+          Viewport.Height = 145.000000000000000000
         end
         object WarningImage: TImage
           MultiResBitmap = <
@@ -5834,11 +5865,11 @@ object frmHome: TfrmHome
       object VertScrollBox3: TVertScrollBox
         Align = Client
         Size.Width = 450.000000000000000000
-        Size.Height = 639.000000000000000000
+        Size.Height = 591.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 7
         Viewport.Width = 434.000000000000000000
-        Viewport.Height = 639.000000000000000000
+        Viewport.Height = 591.000000000000000000
         object GlobalSettingsLayout: TLayout
           Align = Top
           Position.Y = 144.000000000000000000
@@ -6091,6 +6122,16 @@ object frmHome: TfrmHome
           TabOrder = 5
         end
       end
+      object DeleteAccountButton: TButton
+        Align = Top
+        Position.Y = 48.000000000000000000
+        Size.Width = 450.000000000000000000
+        Size.Height = 48.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 8
+        Text = 'Delete this account'
+        OnClick = DeleteAccountButtonClick
+      end
     end
     object descryptSeed: TTabItem
       CustomIcon = <
@@ -6335,8 +6376,8 @@ object frmHome: TfrmHome
         Size.Height = 543.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 5
-        Viewport.Width = 446.000000000000000000
-        Viewport.Height = 539.000000000000000000
+        Viewport.Width = 450.000000000000000000
+        Viewport.Height = 543.000000000000000000
       end
     end
     object AddNewCoin: TTabItem
@@ -6533,8 +6574,8 @@ object frmHome: TfrmHome
         StyleLookup = 'memostyle'
         TabOrder = 6
         Visible = False
-        Viewport.Width = 380.000000000000000000
-        Viewport.Height = 84.000000000000000000
+        Viewport.Width = 384.000000000000000000
+        Viewport.Height = 88.000000000000000000
       end
       object lblRetypeSeed: TLabel
         Align = Top
@@ -10464,8 +10505,8 @@ object frmHome: TfrmHome
           Size.PlatformDefault = False
           StyleLookup = 'EQRInstrctionStyle1'
           TabOrder = 1
-          Viewport.Width = 446.000000000000000000
-          Viewport.Height = 69.000000000000000000
+          Viewport.Width = 450.000000000000000000
+          Viewport.Height = 73.000000000000000000
         end
         object lblEQRDescription: TLabel
           Align = Bottom
@@ -10618,8 +10659,8 @@ object frmHome: TfrmHome
         Size.Height = 224.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 1
-        Viewport.Width = 446.000000000000000000
-        Viewport.Height = 220.000000000000000000
+        Viewport.Width = 450.000000000000000000
+        Viewport.Height = 224.000000000000000000
       end
       object SendReportIssuesButton: TButton
         Align = Bottom
@@ -10860,6 +10901,57 @@ object frmHome: TfrmHome
             Text = 'Find ERC20 tokens automatically'
             OnClick = FindERC20autoButtonClick
           end
+        end
+      end
+    end
+    object AddCurrencyListTabItem: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 8.000000000000000000
+      Size.Height = 8.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'AddCurrencyListTabItem'
+      ExplicitSize.cx = 8.000000000000000000
+      ExplicitSize.cy = 8.000000000000000000
+      object CreateCurrencyFromList: TButton
+        Align = Bottom
+        Position.Y = 639.000000000000000000
+        Size.Width = 450.000000000000000000
+        Size.Height = 48.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Text = 'Add Selected'
+        OnClick = CreateCurrencyFromListClick
+      end
+      object ToolBar20: TToolBar
+        Size.Width = 450.000000000000000000
+        Size.Height = 48.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object Label31: TLabel
+          Align = Contents
+          Size.Width = 450.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'calendarlabelstyle'
+          TextSettings.HorzAlign = Center
+          Text = 'New Wallet'
+          ParentShowHint = False
+          ShowHint = False
+        end
+        object AddNewCryptoBackButton: TButton
+          Align = Left
+          Size.Width = 64.000000000000000000
+          Size.Height = 48.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'buttonstyle'
+          TabOrder = 1
+          Text = 'Back'
+          OnClick = AddNewCryptoBackButtonClick
         end
       end
     end
@@ -11471,17 +11563,17 @@ object frmHome: TfrmHome
     object AccountsListPanel: TPanel
       Align = Client
       Size.Width = 161.000000000000000000
-      Size.Height = 495.000000000000000000
+      Size.Height = 493.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 2
       object AccountsListVertScrollBox: TVertScrollBox
         Align = Client
         Size.Width = 161.000000000000000000
-        Size.Height = 495.000000000000000000
+        Size.Height = 493.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
         Viewport.Width = 161.000000000000000000
-        Viewport.Height = 495.000000000000000000
+        Viewport.Height = 493.000000000000000000
       end
     end
     object AddNewAccountButton: TButton
@@ -11496,14 +11588,14 @@ object frmHome: TfrmHome
     end
     object Layout37: TLayout
       Align = Bottom
-      Position.Y = 591.000000000000000000
+      Position.Y = 589.000000000000000000
       Size.Width = 161.000000000000000000
-      Size.Height = 96.000000000000000000
+      Size.Height = 98.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 4
       object btnOptions: TButton
         Align = MostBottom
-        Position.Y = 48.000000000000000000
+        Position.Y = 50.000000000000000000
         Size.Width = 161.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
@@ -11561,14 +11653,15 @@ object frmHome: TfrmHome
         Visible = False
         OnClick = claimButtonClick
       end
-      object AddWalletButton: TButton
-        Align = Top
+      object AddNewCryptoCurrencyButton: TButton
+        Align = Bottom
+        Position.Y = 2.000000000000000000
         Size.Width = 161.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 7
-        Text = 'Add Coin/Token'
-        OnClick = AddWalletButtonClick
+        Text = 'Add Cryptocurrency'
+        OnClick = AddNewCryptoCurrencyButtonClick
       end
     end
   end
@@ -11581,11 +11674,11 @@ object frmHome: TfrmHome
     object WalletList: TVertScrollBox
       Align = Client
       Size.Width = 515.000000000000000000
-      Size.Height = 409.000000000000000000
+      Size.Height = 457.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 0
       Viewport.Width = 515.000000000000000000
-      Viewport.Height = 409.000000000000000000
+      Viewport.Height = 457.000000000000000000
     end
     object Layout1: TLayout
       Align = Top
@@ -11690,6 +11783,7 @@ object frmHome: TfrmHome
           end
           object HideZeroWalletsCheckBox: TCheckBox
             Align = Bottom
+            IsChecked = True
             Margins.Left = 15.000000000000000000
             Position.X = 15.000000000000000000
             Position.Y = 48.000000000000000000
@@ -11719,18 +11813,9 @@ object frmHome: TfrmHome
       Align = Top
       Position.Y = 134.000000000000000000
       Size.Width = 515.000000000000000000
-      Size.Height = 96.000000000000000000
+      Size.Height = 48.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 3
-      object DeleteAccountButton: TButton
-        Align = Top
-        Size.Width = 515.000000000000000000
-        Size.Height = 48.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 0
-        Text = 'Delete this account'
-        OnClick = DeleteAccountButtonClick
-      end
       object OrganizeDragInfoLabel: TLabel
         Align = Client
         Margins.Left = 15.000000000000000000
@@ -11738,7 +11823,7 @@ object frmHome: TfrmHome
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
         Text = 'Hold and drag wallet to change order.'
-        TabOrder = 1
+        TabOrder = 0
       end
       object PopupBox1: TPopupBox
         Align = Right
@@ -11749,11 +11834,10 @@ object frmHome: TfrmHome
           'Sort asstes')
         ItemIndex = 3
         Position.X = 335.000000000000000000
-        Position.Y = 48.000000000000000000
         Size.Width = 180.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 2
+        TabOrder = 1
         OnChange = PopupBox1Change
         OnClick = PopupBox1Click
       end
@@ -11917,6 +12001,11 @@ object frmHome: TfrmHome
     OnTimer = KeypoolSanitizerTimer
     Left = 561
     Top = 422
+  end
+  object NanoStateTimer: TTimer
+    OnTimer = NanoStateTimerTimer
+    Left = 545
+    Top = 558
   end
   object TokenIcons3: TImageList
     Source = <
@@ -12321,10 +12410,5 @@ object frmHome: TfrmHome
     Destination = <>
     Left = 80
     Top = 449
-  end
-  object NanoStateTimer: TTimer
-    OnTimer = NanoStateTimerTimer
-    Left = 545
-    Top = 558
   end
 end
