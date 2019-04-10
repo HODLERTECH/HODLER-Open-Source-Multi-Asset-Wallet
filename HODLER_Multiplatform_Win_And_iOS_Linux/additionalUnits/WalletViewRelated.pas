@@ -739,7 +739,7 @@ begin
  try
   with frmhome do
   begin
-    CurrentAccount.GenerateEQRFiles;
+    BackupRelated.SendEQR;
     pngName := CurrentAccount.SmallQRImagePath;
     EQRPreview.Visible := True;
     // PageControl.ActiveTab := EQRView;
