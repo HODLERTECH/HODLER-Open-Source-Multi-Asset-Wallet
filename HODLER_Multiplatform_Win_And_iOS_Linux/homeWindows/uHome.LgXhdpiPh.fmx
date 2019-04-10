@@ -739,6 +739,12 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
                 inherited QRCodeImage: TImage
                   Size.Width = 129.000000000000000000
                 end
+                inherited Yaddresses: TLayout
+                  Size.Width = 129.000000000000000000
+                  inherited changeYbutton: TButton
+                    Position.X = -39.000000000000000000
+                  end
+                end
               end
               inherited BCHAddressesLayout: TLayout
                 Size.Width = 129.000000000000000000
@@ -747,13 +753,6 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
                 end
                 inherited BCHCashAddrButton: TButton
                   Size.Width = 0.000000000000000000
-                end
-              end
-              inherited Yaddresses: TLayout
-                Position.Y = 522.000000000000000000
-                Size.Width = 129.000000000000000000
-                inherited changeYbutton: TButton
-                  Position.X = -39.000000000000000000
                 end
               end
               inherited RavencoinAddrTypeLayout: TLayout
@@ -1510,14 +1509,13 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Size.Width = 129.000000000000000000
         inherited passwordForDecrypt: TEdit
           Position.X = -71.000000000000000000
-          Position.Y = 8.000000000000000000
-          Size.Height = 32.000000000000000000
         end
       end
       inherited btnDecryptSeed: TButton
         Size.Width = 129.000000000000000000
       end
       inherited DecryptSeedMessage: TLabel
+        Position.Y = 659.000000000000000000
         Size.Width = 129.000000000000000000
       end
       inherited CapsLockWarningDecryptSeedPanel: TPanel
@@ -2224,16 +2222,12 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Size.Width = 129.000000000000000000
         inherited RestoreNameEdit: TEdit
           Position.X = -71.000000000000000000
-          Position.Y = 8.000000000000000000
-          Size.Height = 32.000000000000000000
         end
       end
       inherited Panel7: TPanel
         Size.Width = 129.000000000000000000
         inherited RestorePasswordEdit: TEdit
           Position.X = -71.000000000000000000
-          Position.Y = 8.000000000000000000
-          Size.Height = 32.000000000000000000
         end
       end
       inherited ToolBar6: TToolBar
@@ -2329,8 +2323,6 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Size.Width = 129.000000000000000000
         inherited ConfirmSendPasswordEdit: TEdit
           Position.X = -137.000000000000000000
-          Position.Y = 8.000000000000000000
-          Size.Height = 32.000000000000000000
         end
       end
       inherited Panel12: TPanel
@@ -2439,8 +2431,6 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         Size.Width = 129.000000000000000000
         inherited GenerateYAddressPasswordEdit: TEdit
           Position.X = -71.000000000000000000
-          Position.Y = 8.000000000000000000
-          Size.Height = 32.000000000000000000
         end
       end
       inherited Panel14: TPanel
@@ -2450,8 +2440,6 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
         end
         inherited SpinBox1: TSpinBox
           Position.X = 9.000000000000000000
-          Position.Y = 56.000000000000000000
-          Size.Height = 32.000000000000000000
           OnChange = nil
         end
         inherited Layout57: TLayout
@@ -2532,7 +2520,6 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
           Size.Width = 129.000000000000000000
           inherited PrivateKeyEditSV: TEdit
             Size.Width = 81.000000000000000000
-            Size.Height = 32.000000000000000000
           end
           inherited SweepQRButton: TButton
             Position.X = 81.000000000000000000
@@ -3231,15 +3218,15 @@ inherited frmHome_LgXhdpiPh: TfrmHome_LgXhdpiPh
   inherited Panel8: TPanel
     Size.Height = 695.000000000000000000
     inherited AccountsListPanel: TPanel
-      Size.Height = 455.000000000000000000
+      Size.Height = 501.000000000000000000
       inherited AccountsListVertScrollBox: TVertScrollBox
-        Size.Height = 455.000000000000000000
+        Size.Height = 501.000000000000000000
         Viewport.Width = 161.000000000000000000
-        Viewport.Height = 455.000000000000000000
+        Viewport.Height = 501.000000000000000000
       end
     end
     inherited Layout37: TLayout
-      Position.Y = 551.000000000000000000
+      Position.Y = 597.000000000000000000
     end
   end
   inherited DashBrdPanel: TPanel

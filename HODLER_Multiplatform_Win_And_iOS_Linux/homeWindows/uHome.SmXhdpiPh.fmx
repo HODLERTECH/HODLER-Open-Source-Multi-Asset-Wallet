@@ -1282,10 +1282,13 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         Size.Width = 200.000000000000000000
       end
       inherited DecryptSeedMessage: TLabel
+        Position.Y = 164.000000000000000000
         Size.Width = 200.000000000000000000
       end
       inherited CapsLockWarningDecryptSeedPanel: TPanel
+        Size.Width = 200.000000000000000000
         inherited CapsLockWarningDecryptSeedLabel: TLabel
+          Size.Width = 170.000000000000000000
           TextSettings.Font.StyleExt = {00070000000000000004000000}
         end
       end
@@ -1950,7 +1953,9 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         end
       end
       inherited CapsLockWarningRFFTPanel: TPanel
+        Size.Width = 200.000000000000000000
         inherited CapsLockWarningRFFTLabel: TLabel
+          Size.Width = 170.000000000000000000
           TextSettings.Font.StyleExt = {00070000000000000004000000}
         end
       end
@@ -2010,7 +2015,9 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         end
       end
       inherited CapsLockWarningRestoreHSBPanel: TPanel
+        Size.Width = 200.000000000000000000
         inherited CapsLockWarningRestoreHSBLabel: TLabel
+          Size.Width = 170.000000000000000000
           TextSettings.Font.StyleExt = {00070000000000000004000000}
         end
       end
@@ -2091,7 +2098,9 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         Size.Width = 200.000000000000000000
       end
       inherited CapsLockWarningConfirmSendPanel: TPanel
+        Size.Width = 200.000000000000000000
         inherited CapsLockWarningConfirmSendLabel: TLabel
+          Size.Width = 170.000000000000000000
           TextSettings.Font.StyleExt = {00070000000000000004000000}
         end
       end
@@ -2154,7 +2163,9 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         end
       end
       inherited CapsLockWarningGenerateYPanel: TPanel
+        Size.Width = 200.000000000000000000
         inherited CapsLockWarningGenerateYLabel: TLabel
+          Size.Width = 170.000000000000000000
           TextSettings.Font.StyleExt = {00070000000000000004000000}
         end
       end
@@ -2326,7 +2337,9 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
         end
       end
       inherited CapsLockWarningImportPrivPanel: TPanel
+        Size.Width = 200.000000000000000000
         inherited CapsLockWarningImportPrivLabel: TLabel
+          Size.Width = 170.000000000000000000
           TextSettings.Font.StyleExt = {00070000000000000004000000}
         end
       end
@@ -2867,15 +2880,15 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
   inherited Panel8: TPanel
     Size.Height = 375.000000000000000000
     inherited AccountsListPanel: TPanel
-      Size.Height = 135.000000000000000000
+      Size.Height = 181.000000000000000000
       inherited AccountsListVertScrollBox: TVertScrollBox
-        Size.Height = 135.000000000000000000
+        Size.Height = 181.000000000000000000
         Viewport.Width = 161.000000000000000000
-        Viewport.Height = 135.000000000000000000
+        Viewport.Height = 181.000000000000000000
       end
     end
     inherited Layout37: TLayout
-      Position.Y = 231.000000000000000000
+      Position.Y = 277.000000000000000000
     end
   end
   inherited DashBrdPanel: TPanel

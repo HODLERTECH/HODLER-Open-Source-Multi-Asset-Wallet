@@ -9,8 +9,8 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
   inherited ScrollBox: TVertScrollBox
     Size.Width = 250.000000000000000000
     Size.Height = 375.000000000000000000
-    Viewport.Width = 245.000000000000000000
-    Viewport.Height = 370.000000000000000000
+    Viewport.Width = 250.000000000000000000
+    Viewport.Height = 375.000000000000000000
     inherited PageControl: TTabControl
       Size.Width = 245.000000000000000000
       Size.Height = 370.000000000000000000
@@ -2901,8 +2901,6 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
           Size.Width = 245.000000000000000000
           inherited ConfirmSendPasswordEdit: TEdit
             Position.X = 45.000000000000000000
-            Position.Y = 8.000000000000000000
-            Size.Height = 32.000000000000000000
           end
         end
         inherited Panel12: TPanel

@@ -2,7 +2,6 @@ object frmHome: TfrmHome
   Left = 300
   Top = 30
   BorderIcons = [biSystemMenu, biMinimize]
-  BorderStyle = Single
   Caption = 'HODLER Core Loading,..'
   ClientHeight = 687
   ClientWidth = 1132
@@ -1755,7 +1754,7 @@ object frmHome: TfrmHome
                 TabOrder = 3
                 object Layout32: TLayout
                   Align = Bottom
-                  Position.Y = 297.000000000000000000
+                  Position.Y = 249.000000000000000000
                   Size.Width = 434.000000000000000000
                   Size.Height = 41.000000000000000000
                   Size.PlatformDefault = False
@@ -1772,11 +1771,37 @@ object frmHome: TfrmHome
                   MultiResBitmap = <
                     item
                     end>
-                  Align = Top
-                  Position.Y = 41.000000000000000000
+                  Align = Client
                   Size.Width = 434.000000000000000000
-                  Size.Height = 256.000000000000000000
+                  Size.Height = 208.000000000000000000
                   Size.PlatformDefault = False
+                end
+                object Yaddresses: TLayout
+                  Align = Bottom
+                  Position.Y = 290.000000000000000000
+                  Size.Width = 434.000000000000000000
+                  Size.Height = 48.000000000000000000
+                  Size.PlatformDefault = False
+                  TabOrder = 2
+                  object changeYbutton: TButton
+                    Align = Right
+                    Position.X = 266.000000000000000000
+                    Size.Width = 168.000000000000000000
+                    Size.Height = 48.000000000000000000
+                    Size.PlatformDefault = False
+                    TabOrder = 0
+                    Text = 'Previous addresses'
+                    OnClick = changeYbuttonClick
+                  end
+                  object FindUnusedAddressButton: TButton
+                    Align = Left
+                    Size.Width = 185.000000000000000000
+                    Size.Height = 48.000000000000000000
+                    Size.PlatformDefault = False
+                    TabOrder = 1
+                    Text = 'New Address'
+                    OnClick = FindUnusedAddressButtonClick
+                  end
                 end
               end
               object BCHAddressesLayout: TLayout
@@ -1804,33 +1829,6 @@ object frmHome: TfrmHome
                   TabOrder = 1
                   Text = 'Cash Address'
                   OnClick = BCHCashAddrButtonClick
-                end
-              end
-              object Yaddresses: TLayout
-                Align = Bottom
-                Position.Y = 514.000000000000000000
-                Size.Width = 434.000000000000000000
-                Size.Height = 48.000000000000000000
-                Size.PlatformDefault = False
-                TabOrder = 6
-                object changeYbutton: TButton
-                  Align = Right
-                  Position.X = 266.000000000000000000
-                  Size.Width = 168.000000000000000000
-                  Size.Height = 48.000000000000000000
-                  Size.PlatformDefault = False
-                  TabOrder = 0
-                  Text = 'Previous addresses'
-                  OnClick = changeYbuttonClick
-                end
-                object FindUnusedAddressButton: TButton
-                  Align = Left
-                  Size.Width = 185.000000000000000000
-                  Size.Height = 48.000000000000000000
-                  Size.PlatformDefault = False
-                  TabOrder = 1
-                  Text = 'New Address'
-                  OnClick = FindUnusedAddressButtonClick
                 end
               end
               object RavencoinAddrTypeLayout: TLayout
@@ -11591,17 +11589,17 @@ object frmHome: TfrmHome
     object AccountsListPanel: TPanel
       Align = Client
       Size.Width = 161.000000000000000000
-      Size.Height = 447.000000000000000000
+      Size.Height = 493.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 2
       object AccountsListVertScrollBox: TVertScrollBox
         Align = Client
         Size.Width = 161.000000000000000000
-        Size.Height = 447.000000000000000000
+        Size.Height = 493.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
         Viewport.Width = 161.000000000000000000
-        Viewport.Height = 447.000000000000000000
+        Viewport.Height = 493.000000000000000000
       end
     end
     object AddNewAccountButton: TButton
@@ -11616,14 +11614,14 @@ object frmHome: TfrmHome
     end
     object Layout37: TLayout
       Align = Bottom
-      Position.Y = 543.000000000000000000
+      Position.Y = 589.000000000000000000
       Size.Width = 161.000000000000000000
-      Size.Height = 144.000000000000000000
+      Size.Height = 98.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 4
       object btnOptions: TButton
         Align = MostBottom
-        Position.Y = 96.000000000000000000
+        Position.Y = 50.000000000000000000
         Size.Width = 161.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
@@ -11681,23 +11679,14 @@ object frmHome: TfrmHome
         Visible = False
         OnClick = claimButtonClick
       end
-      object AddWalletButton: TButton
-        Align = Top
+      object AddNewCryptoCurrencyButton: TButton
+        Align = Bottom
+        Position.Y = 2.000000000000000000
         Size.Width = 161.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 7
-        Text = 'Add Coin/Token'
-        OnClick = AddWalletButtonClick
-      end
-      object AddNewCryptoCurrencyButton: TButton
-        Align = Top
-        Position.Y = 48.000000000000000000
-        Size.Width = 161.000000000000000000
-        Size.Height = 48.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 8
-        Text = 'Add Cryotocurrency'
+        Text = 'Add Cryptocurrency'
         OnClick = AddNewCryptoCurrencyButtonClick
       end
     end

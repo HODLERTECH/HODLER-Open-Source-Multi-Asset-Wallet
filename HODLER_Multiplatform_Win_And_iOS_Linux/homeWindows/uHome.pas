@@ -801,7 +801,6 @@ type
     UserReportSendLogsSwitch: TCheckBox;
     UserReportDeviceInfoSwitch: TCheckBox;
     DebugQRImage: TImage;
-    AddWalletButton: TButton;
     AddWalletList: TTabItem;
     ToolBar22: TToolBar;
     AddWalletListHeaderLabel: TLabel;
@@ -821,6 +820,8 @@ type
     Layout48: TLayout;
     btnAddManually: TButton;
     FindERC20autoButton: TButton;
+    //Label29: TLabel;
+    //Label30: TLabel;
     CapsLockWarningPanel: TPanel;
     CapsLockWarningLabel: TLabel;
     AddCurrencyListTabItem: TTabItem;
@@ -828,6 +829,7 @@ type
     CreateCurrencyFromList: TButton;
     ToolBar20: TToolBar;
     AddNewCryptoHeaderLabel: TLabel;
+    //Label31: TLabel;
     AddNewCryptoBackButton: TButton;
     Image11: TImage;
     NanoStateTimer: TTimer;
@@ -3281,8 +3283,7 @@ end;
 
 procedure TfrmHome.EQRShareBtnClick(Sender: TObject);
 begin
-  shareFile(System.IOUtils.TPath.Combine(HOME_PATH, CurrentAccount.name +
-    '_EQR_BIG' + '.png'), false);
+shareFile(currentaccount.BigQRImagePath, false);
 end;
 
 procedure TfrmHome.exportemptyaddressesSwitchClick(Sender: TObject);
@@ -3319,8 +3320,6 @@ var
   bigInt: BigInteger;
 
   actionListener: TActionList;
-
-  // temp : TAddressLabel;
 
   T: ThreadKindergarten;
   temp: TThread;
@@ -3712,6 +3711,7 @@ begin
 
 
   frmHome.Position := TFormPosition.ScreenCenter;
+
   CapsLockWarningPanel.Visible := LowOrderBitSet(GetKeyState(VK_CAPITAL));
 
     CapsLockWarningDecryptSeedPanel.Visible := LowOrderBitSet(GetKeyState(VK_CAPITAL));
@@ -3721,6 +3721,7 @@ begin
     CapsLockWarningGenerateYPanel.Visible := LowOrderBitSet(GetKeyState(VK_CAPITAL));
     CapsLockWarningImportPrivPanel.Visible := LowOrderBitSet(GetKeyState(VK_CAPITAL));
 
+
   frmhome.Height := min( frmhome.Height , round(Screen.Height * 0.8) );
   frmhome.Width := min( frmhome.Width , round(Screen.Width * 0.8) );
 
@@ -3728,7 +3729,7 @@ begin
 {$IF NOT DEFINED(LINUX)}
   MotionSensor := TMotionSensor.create(frmHome);
   OrientationSensor := TOrientationSensor.create(frmHome);
-
+    CapsLockWarningPanel.Visible := LowOrderBitSet(GetKeyState(VK_CAPITAL));
 {$ENDIF}
   AccountRelated.InitializeHodler;
   BackupInfoLabel.Position.Y := 100000;
@@ -3787,7 +3788,7 @@ begin
   if Key = vkCapital then
   begin
 
-    capitalIsPresses :=  GetKeyState(VK_CAPITAL) <> 0;
+    capitalIsPresses :=  {$IFDEF LINUX}false{$ELSE} LowOrderBitSet(GetKeyState(VK_CAPITAL)){$ENDIF};
 
     CapsLockWarningPanel.Position.Y := PanelRetypePassword.Position.Y + 1;
     CapsLockWarningPanel.Visible := capitalIsPresses;
@@ -3805,7 +3806,7 @@ begin
     CapsLockWarningImportPrivPanel.Visible := capitalIsPresses;
 
 
-    CapsLockWarningPanel.Align := TAlignLayout.Top;
+    (*CapsLockWarningPanel.Align := TAlignLayout.Top;
     CapsLockWarningDecryptSeedPanel.Align := TAlignLayout.Top;
     CapsLockWarningRFFTPanel.Align := TAlignLayout.Top;
     CapsLockWarningRestoreHSBPanel.Align := TAlignLayout.Top;
@@ -3814,6 +3815,10 @@ begin
     CapsLockWarningImportPrivPanel.Align := TAlignLayout.Top;
 
 
+    CapsLockWarningPanel.Position.Y := PanelRetypePassword.Position.Y + 1;
+    CapsLockWarningPanel.Visible :={$IFDEF LINUX}false{$ELSE} LowOrderBitSet(GetKeyState(VK_CAPITAL)){$ENDIF};
+
+    CapsLockWarningPanel.Align := TAlignLayout.Top; *)
 
   end;
 
@@ -3930,7 +3935,10 @@ begin
   Application.ProcessMessages;
   AccountRelated.afterInitialize;
   NoPrintScreenImage.Visible := false;
-
+   {$IFDEF LINUX64}
+    Panel16.Visible:=false; //urwe komus leb za ta nazwe
+    CheckUpdateButton.Visible:=false;
+  {$ENDIF}
 end;
 
 procedure TfrmHome.FormVirtualKeyboardHidden(Sender: TObject;
@@ -4486,32 +4494,7 @@ var
 begin
 
   WalletViewRelated.SendEncryptedSeedButtonClick(Sender);
-  { if not isEQRGenerated then
-    begin
-
-    btnDecryptSeed.OnClick := SendEncryptedSeed;
-    decryptSeedBackTabItem := PageControl.ActiveTab;
-    PageControl.ActiveTab := descryptSeed;
-    btnDSBack.OnClick := backBtnDecryptSeed;
-    end
-    else
-    begin }
-  // if EQRPreview.MultiResBitmap[0]=nil then EQRPreview.MultiResBitmap[0].CreateBitmap()
-
-  {
-    BackupRelated.SendEQR;
-    pngname:=System.IOUtils.TPath.Combine(HOME_PATH,
-    currentAccount.name + '_EQR_SMALL' + '.png');
-    EQRPreview.Visible:=True;
-    PageControl.ActiveTab := EQRView;
-    EQRPreview.Bitmap.LoadFromFile(pngname);
-    EQRPreview.Repaint;
-    EQRPreview.Align:=TAlignLayout.Center;
-    EQRPreview.Height:=294;
-    EQRPreview.Width:=294; }
-  // end;
-
-end;
+ end;
 
 procedure TfrmHome.SendErrorMsgSwitchClick(Sender: TObject);
 begin
@@ -4543,7 +4526,7 @@ end;
 
 procedure TfrmHome.ShowShareSheetAction1BeforeExecute(Sender: TObject);
 begin
-  ShowShareSheetAction1.TextMessage := CurrentCryptoCurrency.addr;
+  ShowShareSheetAction1.TextMessage := receiveAddress.Text;
 end;
 
 procedure TfrmHome.SpinBox1Change(Sender: TObject);

@@ -43,7 +43,7 @@ type
     constructor Create(_name: AnsiString);
     destructor Destroy(); override;
 
-    procedure GenerateSeedEncryptredQR();
+    procedure GenerateEQRFiles();
 
     procedure LoadFiles();
     procedure SaveFiles();
@@ -148,27 +148,27 @@ begin
 
 end;
 
-procedure Account.GenerateSeedEncryptredQR();
+procedure Account.GenerateEQRFiles();
 var
   i: Integer;
-
   img, qrimg: TBitmap;
-
   tempStr: TStream;
-
-
   FileName: string;
-var
   Stream: TResourceStream;
-var
-  MasterSeed, tced: AnsiString;
   Y, m, d: Word;
 begin
+         if not FileExists( SmallQRImagePath ) then
+    begin
 
+      img := StrToQRBitmap( Self.EncryptedMasterSeed,8 );
+
+      img.SaveToFile(SmallQRImagePath);
+      img.free;
+    end;
     if not FileExists(BigQRImagePath) then
     begin
 
-      qrimg := StrToQRBitmap(EncryptedMasterSeed, 16);
+      qrimg := StrToQRBitmap(Self.EncryptedMasterSeed, 16);
       img := TBitmap.create();
       Stream := TResourceStream.create(HInstance, 'IMG_EQR', RT_RCDATA);
       try
@@ -188,13 +188,7 @@ begin
     end;
 
 
-    if not FileExists( SmallQRImagePath ) then
-    begin
-      img := StrToQRBitmap( EncryptedMasterSeed );
 
-      img.SaveToFile(SmallQRImagePath);
-      img.free;
-    end;
     userSaveSeed := true;
     SaveSeedFile();
     // ? userSavedSeed := true;
@@ -268,14 +262,10 @@ end;
 procedure Account.LoadDescriptionFile();
 var
   obj : TJsonObject;
-
- 
   it : TJSONPairEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
       // PairEnumerator works on 10.2
       // TEnumerator works on 10.3
- //it : TJSONObject.TEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
- 
-
+  //it : TJSONObject.TEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
   ts , temp : TstringList;
 begin
 
@@ -719,15 +709,17 @@ begin
 
   clearArrays();
 
+
   LoadSeedFile();
 
   LoadCoinFile();
   LoadTokenFile();
   LoadDescriptionFile();
 
-  {$IF (DEFINED(MSWINDOWS) OR DEFINED(LINUX))}
-  BigQRImagePath := TPath.Combine( DirPath , name + '_' + EncryptedMasterSeed + '_' + '_ENC_SEED_QR_BIG' + '.png')  ;
-  SmallQRImagePath:=TPath.Combine( DirPath , name + '_' + EncryptedMasterSeed + '_' + '_ENC_SEED_QR_SMALL' + '.png');
+
+   {$IF (DEFINED(MSWINDOWS) OR DEFINED(LINUX))}
+  BigQRImagePath := TPath.Combine( DirPath , hash160FromHex(EncryptedMasterSeed) + '_' + '_BIG' + '.png')  ;
+  SmallQRImagePath:=TPath.Combine( DirPath , hash160FromHex(EncryptedMasterSeed) + '_' + '_SMALL' + '.png');
 {$ELSE}
 
   if not DirectoryExists(  Tpath.combine( System.IOUtils.TPath.GetDownloadsPath() , 'hodler.tech' ) ) then
@@ -737,9 +729,6 @@ begin
   BigQRImagePath := TPath.Combine( Tpath.combine( System.IOUtils.TPath.GetDownloadsPath() , 'hodler.tech' ) , name + '_' + EncryptedMasterSeed + '_' + '_ENC_QR_BIG' + '.png')  ;
   SmallQRImagePath:=TPath.Combine( Tpath.combine( System.IOUtils.TPath.GetDownloadsPath() , 'hodler.tech' ) , name + '_' + EncryptedMasterSeed + '_' + '_ENC_QR_SMALL' + '.png');
 {$ENDIF}
-
-  //TMonitor.exit(flock);
-  //flock.Free;
 end;
 
 procedure Account.LoadCoinFile();

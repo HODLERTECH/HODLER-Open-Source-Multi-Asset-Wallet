@@ -120,8 +120,6 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         409s
         711s)
       inherited dashbrd: TTabItem
-        Size.Width = 11.000000000000000000
-        Size.Height = 11.000000000000000000
         ExplicitSize.cx = 8.000000000000000000
         ExplicitSize.cy = 8.000000000000000000
         inherited Footer: TToolBar
@@ -3208,8 +3206,6 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Size.Width = 409.000000000000000000
           inherited ConfirmSendPasswordEdit: TEdit
             Position.X = 209.000000000000000000
-            Position.Y = 9.000000000000000000
-            Size.Height = 30.000000000000000000
           end
         end
         inherited Panel12: TPanel

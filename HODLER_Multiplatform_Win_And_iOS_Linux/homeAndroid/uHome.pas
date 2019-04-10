@@ -814,6 +814,7 @@ type
     AddCurrencyListTabItem: TTabItem;
     ToolBar23: TToolBar;
     AddNewCryptoHeaderLabel: TLabel;
+    //Label31: TLabel;
     CreateCurrencyFromList: TButton;
     AddNewCryptoCurrencyButton: TButton;
     AddNewCryptoBackButton: TButton;
@@ -3478,8 +3479,8 @@ end;
 
 procedure TfrmHome.FormShow(Sender: TObject);
 begin
-//FServiceConnection:=TLocalServiceConnection.Create;
-  //FServiceConnection.StartService('NanoPowAS');
+FServiceConnection:=TLocalServiceConnection.Create;
+  FServiceConnection.StartService('NanoPowAS');
   //FServiceConnection.BindService('NanoPoWAS');
   try
     AccountRelated.afterInitialize;
@@ -3990,29 +3991,6 @@ var
   pngName: string;
 begin
   WalletViewRelated.SendEncryptedSeedButtonClick(Sender);
-
-  { if not isEQRGenerated then
-    begin
-
-    btnDecryptSeed.OnClick := SendEncryptedSeed;
-    decryptSeedBackTabItem := PageControl.ActiveTab;
-    PageControl.ActiveTab := descryptSeed;
-    btnDSBack.OnClick := backBtnDecryptSeed;
-    end
-    else
-    begin }
-  // if EQRPreview.MultiResBitmap[0]=nil then EQRPreview.MultiResBitmap[0].CreateBitmap()
-  // pngName := System.IOUtils.TPath.Combine( {$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
-  // (){$ENDIF},
-  // CurrentAccount.name + '_EQR_SMALL' + '.png');
-  { EQRPreview.Visible := true;
-    PageControl.ActiveTab := EQRView;
-    EQRPreview.Bitmap.LoadFromFile(pngName);
-    EQRPreview.Repaint;
-    EQRPreview.Align := TAlignLayout.Center;
-    EQRPreview.Height := 294;
-    EQRPreview.Width := 294;
-    end; }
 
 end;
 

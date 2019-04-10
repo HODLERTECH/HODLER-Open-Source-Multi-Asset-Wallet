@@ -1170,7 +1170,7 @@ begin
 {$ENDIF}
   currentStyle := name;
   {$IFDEF LINUX}
-   stylo.TrySetStyleFromResource(name);
+   stylo.TrySetStyleFromResource('RT_DARK_LINUX');
   {$ELSE}
   stylo.TrySetStyleFromResource('RT_DARK');
    {$ENDIF}
@@ -2179,6 +2179,7 @@ var
   Os: TOSVersion;
 {$ELSE}
   saveDialog: TSaveDialog;
+  thisExt:string;
 {$ENDIF}
 begin
 {$IFDEF ANDROID}
@@ -2208,6 +2209,7 @@ begin
   SharedActivity.startActivity(TJIntent.JavaClass.createChooser(intent,
     StrToJcharSequence('Share with')));
 {$ELSE}
+thisExt:=LowerCase(ExtractFileExt(path));
   saveDialog := TSaveDialog.Create(frmhome);
   saveDialog.Title := 'Save your text or word file';
   saveDialog.FileName := ExtractFileName(path);
@@ -2215,9 +2217,10 @@ begin
   saveDialog.InitialDir :=
 {$IFDEF IOS}tpath.GetSharedDocumentsPath{$ELSE}TPath.GetDocumentsPath{$ENDIF};
 
-  saveDialog.Filter := 'Zip File|*.zip';
-
-  saveDialog.DefaultExt := 'zip';
+  saveDialog.Filter := 'File|*'+thisExt;
+  if thisExt='.png' then
+  saveDialog.FileName:=CurrentAccount.name+'.paperwallet.png';
+  saveDialog.DefaultExt := thisExt;
 
   saveDialog.FilterIndex := 1;
 
@@ -2274,7 +2277,6 @@ begin
     QRCode.data := {$IFDEF ANDROID}'  ' + {$ENDIF}Str;
     bmp := FMX.Graphics.TBitmap.Create();
     bmp.SetSize(QRCode.Rows, QRCode.Columns);
-
     if bmp.Map(TMapAccess.maReadWrite, QRCodeBitmap) then
     begin
 
@@ -2294,21 +2296,19 @@ begin
 
         end;
       end;
-
+      ShowMessage(inttohex(integer(qrcodebitmap.data),8));
       if QRCodeBitmap.data <> nil then
       begin
         bmp.Free;
         bmp := BitmapDataToScaledBitmap(QRCodeBitmap, pixelSize);
         bmp.Unmap(QRCodeBitmap);
-      end;
+        end;
     end;
   finally
     QRCode.Free;
   end;
-
   result := TBitmap.Create();
   result.Assign(bmp);
-
   try
     if bmp <> nil then
       bmp.Free;
@@ -3869,7 +3869,7 @@ begin
       aURL := aURL + buildAuth(aURL);
       ts := TStringList.Create;
       ts.Text := StringReplace(postdata, '&', #13#10, [rfReplaceAll]);
-// {$IFDEF  DEBUG} ts.SaveToFile('params' + urlHash + '.json'); {$ENDIF}  // shoud be in debugAnalysis
+//{$IFDEF  DEBUG} ts.SaveToFile('params' + urlHash + '.json'); {$ENDIF}  // shoud be in debugAnalysis
       ares := req.BeginPost(aURL, ts);
       while not(ares.IsCompleted or ares.isCancelled) do
       begin
@@ -3913,6 +3913,8 @@ var
   b: Byte;
   memstr: TMemoryStream;
 begin
+if not isHex(h) then exit('');
+
   memstr := TMemoryStream.Create;
   memstr.SetSize(int64(Length(H) div 2));
   memstr.Seek(int64(0), soFromBeginning);

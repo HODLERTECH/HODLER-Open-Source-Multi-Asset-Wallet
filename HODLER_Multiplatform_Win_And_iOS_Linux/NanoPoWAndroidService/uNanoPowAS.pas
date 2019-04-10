@@ -4,11 +4,15 @@ unit uNanoPowAS;
 interface
 
 uses
-  System.SysUtils, System.IOUtils, StrUtils,
+  DW.Androidapi.JNI.Support,Androidapi.JNIBridge,
+  Androidapi.JNI.JavaTypes,
+  System.Android.Service, Androidapi.JNI.Util, Androidapi.JNI.App,
+  Androidapi.JNI.Widget, Androidapi.JNI.Media,
+  Androidapi.JNI.Support,
+  Androidapi.JNI.GraphicsContentViewText,
+  Androidapi.JNI.Os,System.Android.Notification,System.SysUtils, System.IOUtils, StrUtils,
   System.Classes, System.JSON,
-  System.Android.Service,
-  AndroidApi.JNI.GraphicsContentViewText,
-  AndroidApi.JNI.Os, System.Notification, System.Generics.Collections,
+System.Generics.Collections, Androidapi.Helpers,
   System.Variants, System.net.httpclient,
   Math;
 
@@ -158,7 +162,7 @@ implementation
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
 uses
-  AndroidApi.JNI.App, System.DateUtils;
+  System.DateUtils;
 {$R *.dfm}
 function findPrecalculated(Hash: string): string;
 var
@@ -788,7 +792,43 @@ function TDM.AndroidServiceStartCommand(const Sender: TObject;
 var
   err, ex: string;
   LibHandle: THandle;
+var
+  LBuilder: DW.Androidapi.JNI.Support.JNotificationCompat_Builder;
+  channel: JNotificationChannel;
+  manager: JNotificationManager;
+  group: JNotificationChannelGroup;
 begin
+  group := TJNotificationChannelGroup.Create;
+  group := TJNotificationChannelGroup.JavaClass.init(StringToJString('hodler'),
+    StrToJCharSequence('hodler'));
+
+  manager := TJNotificationManager.Wrap
+    ((TAndroidHelper.context.getSystemService
+    (TJContext.JavaClass.NOTIFICATION_SERVICE) as ILocalObject).GetObjectID);
+  manager.createNotificationChannelGroup(group);
+  channel := TJNotificationChannel.Create;
+  channel := TJNotificationChannel.JavaClass.init(StringToJString('hodler'),
+    StrToJCharSequence('hodler'), 0);
+
+  channel.setGroup(StringToJString('hodler'));
+  channel.setName(StrToJCharSequence('hodler'));
+  channel.enableLights(True);
+  channel.enableVibration(True);
+  channel.setLightColor(TJColor.JavaClass.GREEN);
+  channel.setLockscreenVisibility(TJNotification.JavaClass.VISIBILITY_PRIVATE);
+
+  manager.createNotificationChannel(channel);
+//  EnableWakeLock(True);
+  LBuilder := DW.Androidapi.JNI.Support.TJNotificationCompat_Builder.JavaClass.
+    init(TAndroidHelper.context);
+  LBuilder.setAutoCancel(True);
+  LBuilder.setGroupSummary(True);
+  LBuilder.setChannelId(channel.getId);
+  LBuilder.setContentTitle(StrToJCharSequence('HODLER - Nano PoW Worker'));
+  LBuilder.setContentText(StrToJCharSequence('Doing work for mine the blocks'));
+  LBuilder.setSmallIcon(TAndroidHelper.context.getApplicationInfo.icon);
+  LBuilder.setTicker(StrToJCharSequence('HODLER - Nano PoW Worker'));
+  DM.JavaService.StartForeground(1995, LBuilder.build);
   result := TJService.JavaClass.START_STICKY;
   err := 'la';
   try

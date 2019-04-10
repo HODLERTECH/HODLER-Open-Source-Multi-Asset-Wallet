@@ -789,6 +789,12 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
                 inherited QRCodeImage: TImage
                   Size.Width = 93.000000000000000000
                 end
+                inherited Yaddresses: TLayout
+                  Size.Width = 93.000000000000000000
+                  inherited changeYbutton: TButton
+                    Position.X = -75.000000000000000000
+                  end
+                end
               end
               inherited BCHAddressesLayout: TLayout
                 Size.Width = 93.000000000000000000
@@ -797,13 +803,6 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
                 end
                 inherited BCHCashAddrButton: TButton
                   Size.Width = 0.000000000000000000
-                end
-              end
-              inherited Yaddresses: TLayout
-                Position.Y = 543.000000000000000000
-                Size.Width = 93.000000000000000000
-                inherited changeYbutton: TButton
-                  Position.X = -75.000000000000000000
                 end
               end
               inherited RavencoinAddrTypeLayout: TLayout
@@ -1587,8 +1586,6 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited passwordForDecrypt: TEdit
           Position.X = -107.000000000000000000
-          Position.Y = 9.000000000000000000
-          Size.Height = 30.000000000000000000
         end
       end
       inherited btnDecryptSeed: TButton
@@ -2471,8 +2468,6 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited RestoreNameEdit: TEdit
           Position.X = -107.000000000000000000
-          Position.Y = 9.000000000000000000
-          Size.Height = 30.000000000000000000
         end
       end
       inherited Panel7: TPanel
@@ -2480,8 +2475,6 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited RestorePasswordEdit: TEdit
           Position.X = -107.000000000000000000
-          Position.Y = 9.000000000000000000
-          Size.Height = 30.000000000000000000
         end
       end
       inherited ToolBar6: TToolBar
@@ -2609,8 +2602,6 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited ConfirmSendPasswordEdit: TEdit
           Position.X = -173.000000000000000000
-          Position.Y = 9.000000000000000000
-          Size.Height = 30.000000000000000000
         end
       end
       inherited Panel12: TPanel
@@ -2733,8 +2724,6 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         Size.Width = 93.000000000000000000
         inherited GenerateYAddressPasswordEdit: TEdit
           Position.X = -107.000000000000000000
-          Position.Y = 9.000000000000000000
-          Size.Height = 30.000000000000000000
         end
       end
       inherited Panel14: TPanel
@@ -2745,8 +2734,6 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         end
         inherited SpinBox1: TSpinBox
           Position.X = -27.000000000000000000
-          Position.Y = 57.000000000000000000
-          Size.Height = 30.000000000000000000
           OnChange = nil
         end
         inherited Layout57: TLayout
@@ -2851,7 +2838,6 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
           Size.Width = 93.000000000000000000
           inherited PrivateKeyEditSV: TEdit
             Size.Width = 45.000000000000000000
-            Size.Height = 30.000000000000000000
           end
           inherited SweepQRButton: TButton
             Position.X = 45.000000000000000000
@@ -3643,15 +3629,15 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
   inherited Panel8: TPanel
     Size.Height = 716.000000000000000000
     inherited AccountsListPanel: TPanel
-      Size.Height = 476.000000000000000000
+      Size.Height = 522.000000000000000000
       inherited AccountsListVertScrollBox: TVertScrollBox
-        Size.Height = 476.000000000000000000
+        Size.Height = 522.000000000000000000
         Viewport.Width = 161.000000000000000000
-        Viewport.Height = 476.000000000000000000
+        Viewport.Height = 522.000000000000000000
       end
     end
     inherited Layout37: TLayout
-      Position.Y = 572.000000000000000000
+      Position.Y = 618.000000000000000000
     end
   end
   inherited DashBrdPanel: TPanel

@@ -1387,8 +1387,8 @@ object frmHome: TfrmHome
           Size.Height = 408.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 2
-          Viewport.Width = 364.000000000000000000
-          Viewport.Height = 404.000000000000000000
+          Viewport.Width = 368.000000000000000000
+          Viewport.Height = 408.000000000000000000
         end
         object btnSeedGeneratedProceed: TButton
           Align = Bottom
@@ -6940,8 +6940,8 @@ object frmHome: TfrmHome
             Size.Height = 145.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 5
-            Viewport.Width = 77.000000000000000000
-            Viewport.Height = 141.000000000000000000
+            Viewport.Width = 97.000000000000000000
+            Viewport.Height = 145.000000000000000000
           end
           object WarningImage: TImage
             MultiResBitmap = <
@@ -11206,8 +11206,8 @@ object frmHome: TfrmHome
           Size.Height = 407.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 5
-          Viewport.Width = 364.000000000000000000
-          Viewport.Height = 403.000000000000000000
+          Viewport.Width = 368.000000000000000000
+          Viewport.Height = 407.000000000000000000
         end
       end
       object AddNewCoin: TTabItem
@@ -11404,8 +11404,8 @@ object frmHome: TfrmHome
           StyleLookup = 'memostyle'
           TabOrder = 6
           Visible = False
-          Viewport.Width = 380.000000000000000000
-          Viewport.Height = 84.000000000000000000
+          Viewport.Width = 384.000000000000000000
+          Viewport.Height = 88.000000000000000000
         end
         object lblRetypeSeed: TLabel
           Align = Top
@@ -11615,8 +11615,8 @@ object frmHome: TfrmHome
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 1
-              Viewport.Width = 364.000000000000000000
-              Viewport.Height = 44.000000000000000000
+              Viewport.Width = 368.000000000000000000
+              Viewport.Height = 48.000000000000000000
             end
             object lblWIFKey: TMemo
               Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
@@ -11630,8 +11630,8 @@ object frmHome: TfrmHome
               Size.Height = 48.000000000000000000
               Size.PlatformDefault = False
               TabOrder = 2
-              Viewport.Width = 364.000000000000000000
-              Viewport.Height = 44.000000000000000000
+              Viewport.Width = 368.000000000000000000
+              Viewport.Height = 48.000000000000000000
             end
             object WIFFormatLabel: TLabel
               Align = MostTop
@@ -16618,8 +16618,8 @@ object frmHome: TfrmHome
             Size.Height = 83.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 1
-            Viewport.Width = 364.000000000000000000
-            Viewport.Height = 79.000000000000000000
+            Viewport.Width = 368.000000000000000000
+            Viewport.Height = 83.000000000000000000
           end
           object lblEQRDescription: TLabel
             Align = Bottom
@@ -16949,8 +16949,8 @@ object frmHome: TfrmHome
           Size.Height = 230.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
-          Viewport.Width = 364.000000000000000000
-          Viewport.Height = 226.000000000000000000
+          Viewport.Width = 368.000000000000000000
+          Viewport.Height = 230.000000000000000000
         end
         object DescribeStaticLabel: TLabel
           Align = Top

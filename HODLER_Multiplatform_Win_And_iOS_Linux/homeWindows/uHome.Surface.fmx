@@ -708,6 +708,12 @@ inherited frmHome_Surface: TfrmHome_Surface
                 inherited QRCodeImage: TImage
                   Size.Width = 759.000000000000000000
                 end
+                inherited Yaddresses: TLayout
+                  Size.Width = 759.000000000000000000
+                  inherited changeYbutton: TButton
+                    Position.X = 591.000000000000000000
+                  end
+                end
               end
               inherited BCHAddressesLayout: TLayout
                 Size.Width = 759.000000000000000000
@@ -716,13 +722,6 @@ inherited frmHome_Surface: TfrmHome_Surface
                 end
                 inherited BCHCashAddrButton: TButton
                   Size.Width = 567.000000000000000000
-                end
-              end
-              inherited Yaddresses: TLayout
-                Position.Y = 1747.000000000000000000
-                Size.Width = 759.000000000000000000
-                inherited changeYbutton: TButton
-                  Position.X = 591.000000000000000000
                 end
               end
               inherited RavencoinAddrTypeLayout: TLayout
@@ -1469,6 +1468,7 @@ inherited frmHome_Surface: TfrmHome_Surface
         Size.Width = 759.000000000000000000
       end
       inherited DecryptSeedMessage: TLabel
+        Position.Y = 1884.000000000000000000
         Size.Width = 759.000000000000000000
       end
       inherited CapsLockWarningDecryptSeedPanel: TPanel
@@ -3116,15 +3116,15 @@ inherited frmHome_Surface: TfrmHome_Surface
   inherited Panel8: TPanel
     Size.Height = 1920.000000000000000000
     inherited AccountsListPanel: TPanel
-      Size.Height = 1680.000000000000000000
+      Size.Height = 1726.000000000000000000
       inherited AccountsListVertScrollBox: TVertScrollBox
-        Size.Height = 1680.000000000000000000
+        Size.Height = 1726.000000000000000000
         Viewport.Width = 161.000000000000000000
-        Viewport.Height = 1680.000000000000000000
+        Viewport.Height = 1726.000000000000000000
       end
     end
     inherited Layout37: TLayout
-      Position.Y = 1776.000000000000000000
+      Position.Y = 1822.000000000000000000
     end
   end
   inherited DashBrdPanel: TPanel

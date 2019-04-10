@@ -585,59 +585,8 @@ var
   Y, m, d: Word;
 begin
 
-  CurrentAccount.GenerateSeedEncryptredQR;
- (*
-  with frmhome do
-  begin
-    FileName := CurrentAccount.name + '_EQR_BIG';
-    ImgPath := System.IOUtils.TPath.Combine(
-{$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
-      (){$ENDIF}, FileName + '.png');
-    if not FileExists(ImgPath) then
-    begin
+  CurrentAccount.GenerateEQRFiles;
 
-      { tced := TCA(passwordForDecrypt.Text);
-        MasterSeed := SpeckDecrypt(tced, currentAccount.EncryptedMasterSeed);
-        if not isHex(MasterSeed) then
-        begin
-        popupWindow.create(dictionary('FailedToDecrypt'));
-        passwordForDecrypt.Text := '';
-        exit;
-        end; }
-
-      qrimg := StrToQRBitmap(CurrentAccount.EncryptedMasterSeed, 16);
-      img := TBitmap.create();
-      Stream := TResourceStream.create(HInstance, 'IMG_EQR', RT_RCDATA);
-      try
-        img.LoadFromStream(Stream);
-      finally
-        Stream.Free;
-      end;
-      img.Canvas.BeginScene;
-      img.Canvas.DrawBitmap(qrimg, RectF(0, 0, 797, 797),
-        RectF(294, 514, 797 + 294, 797 + 514), 1);
-      img.Canvas.EndScene;
-
-      img.SaveToFile(ImgPath);
-    end;
-    img.Free;
-    qrimg.Free;
-    FileName := CurrentAccount.name + '_EQR_SMALL';
-    ImgPath := System.IOUtils.TPath.Combine(
-{$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
-      (){$ENDIF}, FileName + '.png');
-    if not FileExists(ImgPath) then
-    begin
-      img := StrToQRBitmap(CurrentAccount.EncryptedMasterSeed);
-
-      img.SaveToFile(ImgPath);
-    end;
-
-    userSavedSeed := true;
-    refreshWalletDat();
-    // switchTab(pageControl, BackupTabItem);
-    // frmhome.SendEncryptedSeedButtonClick(nil);
-  end;  *)
 end;
 
 procedure restoreEQR(Sender: TObject);

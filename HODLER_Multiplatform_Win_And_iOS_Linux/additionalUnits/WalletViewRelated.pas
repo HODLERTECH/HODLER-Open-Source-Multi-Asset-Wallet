@@ -736,10 +736,10 @@ procedure SendEncryptedSeedButtonClick(Sender: TObject);
 var
   pngName: string;
 begin
-
+ try
   with frmhome do
   begin
-    BackupRelated.SendEQR;
+    CurrentAccount.GenerateEQRFiles;
     pngName := CurrentAccount.SmallQRImagePath;
     EQRPreview.Visible := True;
     // PageControl.ActiveTab := EQRView;
@@ -751,7 +751,10 @@ begin
 
     switchTab(pageControl, EQRView);
   end;
-
+ except on E:Exception do begin
+   ShowMessage('Failed to create backup, reason: '+E.Message);
+ end;
+ end;
 end;
 
 procedure btnChangeDescriptionClick(Sender: TObject);
@@ -2677,6 +2680,12 @@ end;
       frmhome.BTCNoTransactionLayout.Visible := false;
     end;
   end;
+                refreshGlobalFiat();
+                TThread.Synchronize(TThread.CurrentThread,
+                  procedure
+                  begin
+                    repaintWalletList;
+                  end);
 end;
 
 procedure TrySendTransaction(Sender: TObject);
