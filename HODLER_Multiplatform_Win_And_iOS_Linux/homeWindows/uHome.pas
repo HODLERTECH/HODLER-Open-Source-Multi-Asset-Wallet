@@ -833,6 +833,7 @@ type
     AddNewCryptoBackButton: TButton;
     Image11: TImage;
     NanoStateTimer: TTimer;
+
     CapsLockWarningDecryptSeedPanel: TPanel;
     CapsLockWarningDecryptSeedLabel: TLabel;
     CapsLockWarningRFFTPanel: TPanel;
@@ -845,6 +846,9 @@ type
     CapsLockWarningGenerateYLabel: TLabel;
     CapsLockWarningImportPrivPanel: TPanel;
     CapsLockWarningImportPrivLabel: TLabel;
+
+    Lang1: TLang;
+
     // Panel27: TPanel;
     // PasswordInfoStaticLabel: TLabel;
 
@@ -1254,17 +1258,18 @@ var
   flagWVPrecision: Boolean = true;
   CurrentCryptoCurrency: CryptoCurrency;
   CurrentCoin: TwalletInfo;
-  duringSync: Boolean = false;
+
   duringHistorySync: Boolean = false;
   QRWidth: Integer = -1;
   QRHeight: Integer = -1;
-  SyncBalanceThr: SynchronizeBalanceThread;
+  //SyncBalanceThr: SynchronizeBalanceThread;
   // SyncHistoryThr: SynchronizeHistoryThread;
 
   QRFind: AnsiString;
   tempQRFindEncryptedSeed: AnsiString;
   lastClosedAccount: AnsiString;
   CurrentAccount: Account;
+
   CurrentStyle: AnsiString;
   BigQRCodeBackTab: TTabItem;
 
@@ -3325,7 +3330,9 @@ var
   temp: TThread;
 
 begin
+ 
   prepareTranslateFile();
+
 end;
 
 procedure TfrmHome.ClaimWalletListBackButtonClick(Sender: TObject);

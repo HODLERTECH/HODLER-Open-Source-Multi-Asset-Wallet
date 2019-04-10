@@ -237,7 +237,7 @@ var
       begin
         if CurrentCoin.description <> '__dashbrd__' then
         begin
-          SyncThr.SynchronizeCryptoCurrency(CurrentCoin);
+          SyncThr.SynchronizeCryptoCurrency(CurrentAccount ,CurrentCoin);
           reloadWalletView;
         end;
       end).Start();

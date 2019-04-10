@@ -179,8 +179,8 @@ if  map.ToArray[i].Value<>nil then
   Addmutex.free;
   removeMutex.free();
 
-  semaphore.free;
-  semaphore := nil;
+  //semaphore.free;
+  //semaphore := nil;
 
   inherited;
 

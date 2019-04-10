@@ -1171,7 +1171,7 @@ var
   flagWVPrecision: Boolean = true;
   CurrentCryptoCurrency: CryptoCurrency;
   CurrentCoin: TwalletInfo;
-  duringSync: Boolean = false;
+
   duringHistorySync: Boolean = false;
   QRWidth: Integer = -1;
   QRHeight: Integer = -1;

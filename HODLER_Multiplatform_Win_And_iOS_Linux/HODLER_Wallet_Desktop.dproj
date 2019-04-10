@@ -630,6 +630,7 @@
         <DCCReference Include="additionalUnits\additionalClass\ComponentPoolData.pas"/>
         <DCCReference Include="components\HistoryPanelData.pas"/>
         <DCCReference Include="components\CoinPanelData.pas"/>
+        <DCCReference Include="coinCode\Spendable.pas"/>
         <RcItem Include="Jet.style">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
