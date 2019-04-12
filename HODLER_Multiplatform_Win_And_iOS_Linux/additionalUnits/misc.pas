@@ -105,7 +105,7 @@ uses AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA, IdSSLOpenSSL, languages,
   ClpISecureRandom,
   ClpCryptoApiRandomGenerator,
   ClpICryptoApiRandomGenerator, PopupWindowData, TaddressLabelData,
-  AssetsMenagerData, ComponentPoolData
+  AssetsMenagerData, ComponentPoolData, ThreadKindergartenData
 
 {$IFDEF ANDROID},
 
@@ -392,6 +392,8 @@ var
   globalLoadCacheTime: Double = 0;
   globalVerifyKeypoolTime: Double = 0;
   HistoryPanelPool: TComponentPool<ThistoryPanel>;
+
+  globalAnonymousThreadGuardian : ThreadKindergarten;
 
 implementation
 

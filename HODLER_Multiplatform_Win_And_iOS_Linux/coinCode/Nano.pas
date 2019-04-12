@@ -135,7 +135,7 @@ type
 
     constructor Create(); overload;
 
-    destructor destroy();
+    destructor destroy(); override;
     // ConfirmThread : TAutoReceive;
 
     // procedure runAutoConfirm();
@@ -441,12 +441,12 @@ end;
 destructor NanoCoin.destroy;
 begin
 
-  inherited;
+
   wipeString(UnlockPriv);
 
   PendingBlocks.Free;
   mutexMining.Free;
-
+  inherited;
 end;
 
 function NanoCoin.inChain(Hash: String): Boolean;
@@ -1927,10 +1927,11 @@ var
   t: TStringList;
 begin
   SetLength(pows, 0);
-  HOME_PATH := IncludeTrailingPathDelimiter
-    ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetHomePath +
-    '/.hodlertech/'{$ELSE}System.IOUtils.TPath.Combine
-    (System.SysUtils.GetEnvironmentVariable('APPDATA'), 'hodlertech'){$ENDIF});
+  if HOME_PATH = '' then
+    HOME_PATH := IncludeTrailingPathDelimiter
+      ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetHomePath +
+      '/.hodlertech/'{$ELSE}System.IOUtils.TPath.Combine
+      (System.SysUtils.GetEnvironmentVariable('APPDATA'), 'hodlertech'){$ENDIF});
   ts := TStringList.Create;
   try
     if fileexists(TPath.Combine(HOME_PATH, 'nanopows.dat')) then

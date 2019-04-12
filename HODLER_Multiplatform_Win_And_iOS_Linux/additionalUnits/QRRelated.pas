@@ -58,7 +58,7 @@ var
   QRCode: TDelphiZXingQRCode;
   QRCodeBitmap: TBitmapData;
   Row: Integer;
-  bmp: FMX.Graphics.TBitmap;
+  bmp , temp : FMX.Graphics.TBitmap;
   Column: Integer;
   j: Integer;
   currentRow: Int64;
@@ -124,7 +124,9 @@ begin
       QRCodeBitmap.Data := PP;
       if QRCodeBitmap.Data <> nil then
       begin
-        bmp.Assign(BitmapDataToScaledBitmap(QRCodeBitmap, 6));
+        temp := BitmapDataToScaledBitmap(QRCodeBitmap, 6);
+        bmp.Assign(temp);
+        temp.Free;
         // bmp := ;
         // bmp.Unmap(QRCodeBitmap);
       end;

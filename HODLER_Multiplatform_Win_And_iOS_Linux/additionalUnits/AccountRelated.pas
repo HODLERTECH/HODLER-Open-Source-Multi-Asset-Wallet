@@ -58,7 +58,7 @@ uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, WalletStructureData, TcopyableEditData, TCopyableLabelData,
   walletViewRelated, TImageTextButtonData, debugAnalysis, keyPoolRelated,
-  AssetsMenagerData ;
+  AssetsMenagerData, ThreadKindergartenData ;
 
 procedure afterInitialize;
 var
@@ -189,9 +189,18 @@ begin
       frmHome.Caption := 'HODLER Open Source Multi-Asset Wallet v' +
         CURRENT_VERSION;
         {$IFNDEF LINUX}
-      Tthread.CreateAnonymousThread(
+      globalAnonymousThreadGuardian.CreateAnonymousThread(
         procedure
+        var
+          i : Integer;
         begin
+        for I := 0 to 120 do
+        begin
+          sleep(500);
+          if TThread.Current.CheckTerminated then
+            exit();
+
+        end;
           sleep(60 * 1000);
           CheckUpdateButtonClick(nil);
         end).Start;
@@ -200,7 +209,7 @@ begin
       if currentAccount <> nil then
       begin
 
-        Tthread.CreateAnonymousThread(
+        globalAnonymousThreadGuardian.CreateAnonymousThread(
           procedure
           var
             i: integer;
@@ -470,6 +479,8 @@ begin
 
   frmhome.FScanManager.free;
 
+  globalAnonymousThreadGuardian.Free;
+
   frmhome.refreshLocalImage.Stop();
   frmhome.refreshGlobalImage.Stop();
 end;
@@ -501,7 +512,7 @@ begin
   timeLog.StartLog('InitializeHodler');
 
   LoadedAccounts := TObjectDictionary<String,Account>.create([doOwnsValues]);
-
+  globalAnonymousThreadGuardian := ThreadKindergarten.Create();
   Randomize;
 
   Application.OnException := frmhome.ExceptionHandler;

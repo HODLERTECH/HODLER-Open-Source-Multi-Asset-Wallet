@@ -907,9 +907,20 @@ begin
                             SyncBalanceThr := nil;
 
                                 end).Start();}
+  if (synchronizeThread <> nil) and (synchronizeThread.finished) then
+  begin
 
-  synchronizeThread.Terminate;
-  synchronizeThread.WaitFor;
+    synchronizeThread.Free;
+    synchronizeThread := nil;
+
+  end
+  else
+  begin
+    synchronizeThread.Terminate;
+    synchronizeThread.WaitFor;
+  end;
+
+  
 
   SynchronizeThreadGuardian.DisposeOf;
   SynchronizeThreadGuardian := nil;
