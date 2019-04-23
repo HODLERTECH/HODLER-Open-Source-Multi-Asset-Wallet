@@ -396,7 +396,7 @@ begin
   PlacementTarget := frmhome.pageControl;
   Height := 100;
   Width := 300;
-
+  PlacementTarget := frmhome.pageControl;
 
 
 

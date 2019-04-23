@@ -46,7 +46,6 @@ type
     constructor Create(_name: AnsiString);
     destructor Destroy(); override;
 
-
     procedure GenerateEQRFiles();
 
     procedure LoadFiles();
@@ -118,9 +117,6 @@ implementation
 
 uses
   misc, uHome, coinData, nano, languages,SyncThr, Bitcoin , walletViewRelated , CurrencyConverter;
-
-
-
 
 procedure Account.refreshGUI();
 begin
@@ -384,7 +380,7 @@ begin
             url := HODLER_URL + '/batchSync0.3.2.php?coin=' +
               availablecoin[id].name;
 
-            temp := postDataOverHTTP(url, s, firstSync, True);
+            temp := postDataOverHTTP(url, s, Self.firstSync, True);
             //if TThread.CurrentThread.CheckTerminated then
             //  exit();
             parseSync(self , temp);
@@ -471,7 +467,7 @@ begin
     begin
     showmessage( floatToStr( globalLoadCacheTime ) );
     end); }
-  firstSync := false;
+  Self.firstSync := false;
   SaveFiles();
 
   refreshGUI();
@@ -850,7 +846,7 @@ begin
   inherited Create;
   name := _name;
 
-  firstsync := true;
+  self.firstsync := true;
 
   DirPath := TPath.Combine(HOME_PATH, name);
 
@@ -912,20 +908,16 @@ begin
 
                                 end).Start();}
 
-  if (synchronizeThread <> nil) and (synchronizeThread.finished) then
+if (synchronizeThread <> nil) and (synchronizeThread.finished) then
   begin
-
     synchronizeThread.Free;
     synchronizeThread := nil;
-
   end
   else if synchronizeThread <> nil then
   begin
     synchronizeThread.Terminate;
     synchronizeThread.WaitFor;
   end;
-
-
 
   SynchronizeThreadGuardian.DisposeOf;
   SynchronizeThreadGuardian := nil;

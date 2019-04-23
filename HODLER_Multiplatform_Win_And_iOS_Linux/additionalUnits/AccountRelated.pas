@@ -188,7 +188,8 @@ begin
 {$IF DEFINED(MSWINDOWS) or DEFINED(LINUX)}
       frmHome.Caption := 'HODLER Open Source Multi-Asset Wallet v' +
         CURRENT_VERSION;
-        {$IFNDEF LINUX}
+{$ENDIF}
+        {$IFDEF MSWINDOWS}
       Tthread.CreateAnonymousThread(
         procedure
         begin
@@ -196,7 +197,6 @@ begin
           CheckUpdateButtonClick(nil);
         end).Start;
         {$ENDIF}
-{$ENDIF}
       if currentAccount <> nil then
       begin
 

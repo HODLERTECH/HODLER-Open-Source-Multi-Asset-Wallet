@@ -363,7 +363,6 @@ var
   lastChose: integer;
   lastView: TTabItem;
   isTokenDataInUse: boolean = false;
-  firstSync: boolean = true;
   i: integer;
   lastHistCC: integer;
   HOME_PATH: AnsiString;
@@ -2300,7 +2299,7 @@ begin
 
         end;
       end;
-      ShowMessage(inttohex(integer(qrcodebitmap.data^),8));
+
       if QRCodeBitmap.data <> nil then
       begin
         bmp.Free;
@@ -3782,17 +3781,21 @@ var
   urlHash: AnsiString;
   ares: iasyncresult;
   debug: AnsiString;
+  fs:boolean;
 begin
+if currentaccount<>nil  then
+fs:=currentaccount.firstSync else
+fs:=false;
   req := THTTPClient.Create();
   aURL := ensureURL(aURL);
   urlHash := GetStrHashSHA256(aURL);
-  if (firstSync and useCache) then
+  if (fs and useCache) then
 
   begin
     Result := loadCache(urlHash);
   end;
   try
-    if ((Result = 'NOCACHE') or (not firstSync) or (not useCache)) then
+    if ((Result = 'NOCACHE') or (not fs) or (not useCache)) then
     begin
 
       if not noTimeout then
@@ -3857,12 +3860,12 @@ begin
   asyncResponse := waitForRequestEnd;
   aURL := ensureURL(aURL);
   urlHash := GetStrHashSHA256(aURL);
-  if (firstSync and useCache) then
+  if (currentaccount.firstSync and useCache) then
   begin
     Result := loadCache(urlHash);
   end;
   try
-    if ((Result = 'NOCACHE') or (not firstSync) or (not useCache)) then
+    if ((Result = 'NOCACHE') or (not currentaccount.firstSync) or (not useCache)) then
     begin
 
       req := THTTPClient.Create();

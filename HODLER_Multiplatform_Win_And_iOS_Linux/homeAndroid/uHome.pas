@@ -27,7 +27,7 @@ uses
   FMX.Clipboard, bech32, cryptoCurrencyData, FMX.VirtualKeyBoard, JSON,
   languages, WIF, AccountData, WalletStructureData,
   System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
-  popupWindowData,  TCopyableAddressPanelData ,TNewCryptoVertScrollBoxData,
+  popupWindowData, TCopyableAddressPanelData, TNewCryptoVertScrollBoxData,
 
   FMX.Media, FMX.Objects, CurrencyConverter, uEncryptedZipFile, System.Zip,
   TRotateImageData
@@ -44,7 +44,7 @@ uses
   Androidapi.JNI.WebKit,
   Androidapi.JNI.Os,
   Androidapi.NativeActivity,
-  Androidapi.JNIBridge,System.Android.Service, SystemApp
+  Androidapi.JNIBridge, System.Android.Service, SystemApp
 {$ELSE}
 {$ENDIF},
   misc, FMX.Menus,
@@ -814,7 +814,7 @@ type
     AddCurrencyListTabItem: TTabItem;
     ToolBar23: TToolBar;
     AddNewCryptoHeaderLabel: TLabel;
-    //Label31: TLabel;
+    // Label31: TLabel;
     CreateCurrencyFromList: TButton;
     AddNewCryptoCurrencyButton: TButton;
     AddNewCryptoBackButton: TButton;
@@ -1131,7 +1131,7 @@ type
     refreshLocalImage: TRotateImage;
     refreshGlobalImage: TRotateImage;
     NotificationLayout: TNotificationLayout;
-    receiveAddress , wvAddress : TCopyableAddressPanel;
+    receiveAddress, wvAddress: TCopyableAddressPanel;
     newCryptoVertScrollBox: TNewCryptoVertScrollBox;
 
   var
@@ -1223,14 +1223,12 @@ begin
 
   WalletViewRelated.AddWalletButtonClick(Sender);
 
-  
-
 end;
 
 procedure TfrmHome.AddTokenFromWalletList(Sender: TObject);
 begin
 
-   walletviewRelated.AddTokenFromWalletList(Sender);
+  WalletViewRelated.AddTokenFromWalletList(Sender);
 
 end;
 
@@ -1240,7 +1238,7 @@ var
   holder: TfmxObject;
 begin
 
-  walletViewRelated.AddNewTokenETHPanelClick(sender);
+  WalletViewRelated.AddNewTokenETHPanelClick(Sender);
 
 end;
 
@@ -1273,14 +1271,14 @@ end;
 procedure TfrmHome.EQRShareBtnClick(Sender: TObject);
 begin
   shareFile(System.IOUtils.TPath.Combine(
-    {$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
+{$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
     (){$ENDIF}, CurrentAccount.name + '_EQR_BIG' + '.png'), false);
 end;
 
 procedure TfrmHome.EQRShareBtnTap(Sender: TObject; const Point: TPointF);
 begin
   shareFile(System.IOUtils.TPath.Combine(
-    {$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
+{$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
     (){$ENDIF}, CurrentAccount.name + '_EQR_BIG' + '.png'), false);
 end;
 
@@ -1844,16 +1842,16 @@ begin
   // if currentthread <> mainThread then Error
 
   backTabItem := frmHome.PageControl.ActiveTab;
-  //if not frmHome.shown then
- // begin
-    TabControl.ActiveTab := TabItem;
- // end
- // else
-  //begin
-  //  frmHome.tabAnim.Tab := TabItem;
- //   frmHome.AccountsListPanel.Visible := false;
- //   frmHome.tabAnim.ExecuteTarget(TabControl);
-  //end;
+  // if not frmHome.shown then
+  // begin
+  TabControl.ActiveTab := TabItem;
+  // end
+  // else
+  // begin
+  // frmHome.tabAnim.Tab := TabItem;
+  // frmHome.AccountsListPanel.Visible := false;
+  // frmHome.tabAnim.ExecuteTarget(TabControl);
+  // end;
   frmHome.passwordForDecrypt.Text := '';
   frmHome.DecryptSeedMessage.Text := '';
 end;
@@ -2020,7 +2018,7 @@ end;
 
 procedure TfrmHome.BackBtnSGCClick(Sender: TObject);
 begin
-  switchtab( pagecontrol , SelectGenerateCoinViewBackTabItem );
+  switchTab(PageControl, SelectGenerateCoinViewBackTabItem);
 end;
 
 procedure TfrmHome.BackToBalanceViewButtonClick(Sender: TObject);
@@ -2242,7 +2240,7 @@ end;
 procedure TfrmHome.AddNewCryptoCurrencyButtonClick(Sender: TObject);
 begin
 
-    WalletViewRelated.AddNewCryptoCurrencyButtonClick(Sender);
+  WalletViewRelated.AddNewCryptoCurrencyButtonClick(Sender);
 
 end;
 
@@ -2313,18 +2311,19 @@ var
   Nano: NanoCoin;
 begin
 
- 
-    if currentCryptocurrency is NanoCoin then
-    begin
-     if NanoCoin(currentCryptocurrency).isUnlocked then exit;
-   //  frmhome.UnlockNanoImage.Hint:='When unlocked, receive blocks will be autopocketed';
-     NotificationLayout.popupPasswordConfirm(procedure (pass : AnsiString)
-     var
-        tced , MasterSeed : AnsiString;
-     begin
+  if CurrentCryptoCurrency is NanoCoin then
+  begin
+    if NanoCoin(CurrentCryptoCurrency).isUnlocked then
+      exit;
+    // frmhome.UnlockNanoImage.Hint:='When unlocked, receive blocks will be autopocketed';
+    NotificationLayout.popupPasswordConfirm(
+      procedure(pass: AnsiString)
+      var
+        tced, MasterSeed: AnsiString;
+      begin
 
-        tced := TCA( pass );
- 
+        tced := TCA(pass);
+
         MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
         passwordForDecrypt.Text := '';
         if not isHex(MasterSeed) then
@@ -2523,7 +2522,7 @@ end;
 
 procedure TfrmHome.CreateCurrencyFromListClick(Sender: TObject);
 begin
-  newCryptoVertScrollBox.createCryptoAndAddPanelTo( frmhome.walletList );
+  newCryptoVertScrollBox.createCryptoAndAddPanelTo(frmHome.WalletList);
 end;
 
 procedure TfrmHome.CurrencyBoxChange(Sender: TObject);
@@ -2748,9 +2747,9 @@ end;
 
 procedure TfrmHome.SwitchSegwitp2wpkhButtonClick(Sender: TObject);
 begin
-  receiveAddress.setText( Bitcoin.generatep2wpkh
-    (TwalletInfo(CurrentCryptoCurrency).pub,
-    availableCoin[TwalletInfo(CurrentCryptoCurrency).coin].hrp) , 3 );
+  receiveAddress.setText
+    (Bitcoin.generatep2wpkh(TwalletInfo(CurrentCryptoCurrency).pub,
+    availableCoin[TwalletInfo(CurrentCryptoCurrency).coin].hrp), 3);
 
   receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar,
     receiveAddress.Text, ' ');
@@ -2760,8 +2759,6 @@ procedure TfrmHome.LoadAccountPanelClick(Sender: TObject);
 begin
   if OrganizeList.Visible = true then
     closeOrganizeView(nil);
-  firstSync := true;
-
   LoadCurrentAccount(TfmxObject(Sender).TagString);
   AccountsListPanel.Visible := false;
 end;
@@ -2835,9 +2832,8 @@ end;
 
 procedure TfrmHome.ChangeAccountButtonClick(Sender: TObject);
 begin
- {$IFDEF ANDROID}
-
- {$ENDIF}
+{$IFDEF ANDROID}
+{$ENDIF}
   AccountRelated.changeAccount(Sender);
 end;
 
@@ -2896,12 +2892,10 @@ var
   hex: AnsiString;
   ans: AnsiString;
   bigInt: BigInteger;
-  tced , MAsterSeed : AnsiString;
-
 begin
-    tced := TCA('12345');
-    MasterSeed := SpeckDecrypt(tced, '93645E050E5A423A67D29D9432EA25C5C9D0C94AB452089193FAB17700BC84F1EF49EFB873FF94A20986608D9B66EE72E7422AF4659DCB02096499ABB531F22A');
-    showmessage( MAsterSeed );
+
+  showmessage(getDetailedData());
+
 end;
 
 procedure TfrmHome.Button3Click(Sender: TObject);
@@ -3269,7 +3263,7 @@ end;
 
 procedure TfrmHome.FormFocusChanged(Sender: TObject);
 begin
- // SetCopyButtonPosition;
+  // SetCopyButtonPosition;
 end;
 
 procedure TfrmHome.FormGesture(Sender: TObject;
@@ -3481,13 +3475,13 @@ end;
 
 procedure TfrmHome.FormShow(Sender: TObject);
 begin
-//FServiceConnection:=TLocalServiceConnection.Create;
-  //FServiceConnection.StartService('NanoPowAS');
-  //FServiceConnection.BindService('NanoPoWAS');
+  FServiceConnection := TLocalServiceConnection.Create;
+  FServiceConnection.StartService('NanoPowAS');
+  // FServiceConnection.BindService('NanoPoWAS');
   try
     AccountRelated.afterInitialize;
-    //  FServiceConnection := TLocalServiceConnection.Create;
-//  ;
+    FServiceConnection := TLocalServiceConnection.Create;
+    // ;
   except
     on E: Exception do
       showmessage(E.Message);
@@ -3502,25 +3496,29 @@ var
   X: Integer;
 begin
   try
-  NotificationLayout.centerCurrentPopup;
+    NotificationLayout.centerCurrentPopup;
 
-  if PageControl.ActiveTab = EQRView then
-    exit;
-  X := (round(frmHome.Height * 0.5));
-  PageControl.Height := frmHome.Height;
-  ScrollBox.Height := frmHome.Height;
-  frmHome.ScrollBox.Align := TAlignLayout.Client;
-  frmHome.PageControl.Align := TAlignLayout.Client;
-  KeyBoardLayout.Visible := false;
-  KeyBoardLayout.Height := 0;
-  frmHome.PageControl.Repaint;
-  frmHome.ScrollBox.Align := TAlignLayout.Client;
-  ScrollBox.RealignContent;
-  frmHome.realign;
-  ScrollBox.ShowScrollBars := false;
-  ScrollBox.ViewportPosition := PointF(0, 0);   Except on E:Exception do begin
+    if PageControl.ActiveTab = EQRView then
+      exit;
+    X := (round(frmHome.Height * 0.5));
+    PageControl.Height := frmHome.Height;
+    ScrollBox.Height := frmHome.Height;
+    frmHome.ScrollBox.Align := TAlignLayout.Client;
+    frmHome.PageControl.Align := TAlignLayout.Client;
+    KeyBoardLayout.Visible := false;
+    KeyBoardLayout.Height := 0;
+    frmHome.PageControl.Repaint;
+    frmHome.ScrollBox.Align := TAlignLayout.Client;
+    ScrollBox.RealignContent;
+    frmHome.realign;
+    ScrollBox.ShowScrollBars := false;
+    ScrollBox.ViewportPosition := PointF(0, 0);
+  Except
+    on E: Exception do
+    begin
 
-  end;end;
+    end;
+  end;
 end;
 
 procedure TfrmHome.FormVirtualKeyboardShown(Sender: TObject;
@@ -3532,74 +3530,78 @@ var
   sameY: Integer;
 begin
   try
-  NotificationLayout.moveCurrentPopupToTop;
+    NotificationLayout.moveCurrentPopupToTop;
 
-  if PageControl.ActiveTab = EQRView then
-    exit;
-  Y := 0;
-  if focused is TEdit then
-  begin
-    if (TEdit(focused).name = 'wvAddress') or
-      (TEdit(focused).name = 'receiveAddress') then
-    begin
-
+    if PageControl.ActiveTab = EQRView then
       exit;
-    end;
-    if (PageControl.ActiveTab = walletView) and (TEdit(focused).ReadOnly = false)
-    then
+    Y := 0;
+    if focused is TEdit then
     begin
-      Y := round((focused as TEdit).LocalToAbsolute(PointF((focused as TEdit)
-        .Position.X, (focused as TEdit).Position.Y)).Y -
-        (frmHome.Height div 3));
-      // if Y<(frmHome.Height div 3) then Y:=0;
+      if (TEdit(focused).name = 'wvAddress') or
+        (TEdit(focused).name = 'receiveAddress') then
+      begin
 
+        exit;
+      end;
+      if (PageControl.ActiveTab = walletView) and
+        (TEdit(focused).ReadOnly = false) then
+      begin
+        Y := round((focused as TEdit).LocalToAbsolute(PointF((focused as TEdit)
+          .Position.X, (focused as TEdit).Position.Y)).Y -
+          (frmHome.Height div 3));
+        // if Y<(frmHome.Height div 3) then Y:=0;
+
+      end;
+    end;
+    X := (round(frmHome.Height * 1));
+    KeyBoardLayout.Height := frmHome.Height + X;
+    frmHome.ScrollBox.Align := TAlignLayout.None;
+    PageControl.Align := ScrollBox.Align;
+    KeyBoardLayout.parent := frmHome;
+    KeyBoardLayout.Align := TAlignLayout.Bottom;
+    frmHome.ScrollBox.Content.Height := frmHome.Height + X;
+    PageControl.Height := frmHome.Height + X;
+    KeyBoardLayout.Visible := true;
+    frmHome.realign;
+    frmHome.PageControl.Repaint;
+    KeyBoardLayout.Repaint;
+    ScrollBox.RealignContent;
+    ScrollBox.ShowScrollBars := true;
+    ScrollBox.RecalcAbsoluteNow;
+    ScrollBox.AutoHide := false;
+    ScrollBox.StyleName := 'xxxxxxxxxx';
+    for X := 0 to ScrollBox.ComponentCount - 1 do
+    begin
+      TControl(ScrollBox.Components[X]).Touch.InteractiveGestures :=
+        [TInteractiveGesture.Pan];
+      if TControl(ScrollBox.Components[X]).ComponentCount > 0 then
+        for Y := 0 to ScrollBox.ComponentCount - 1 do
+        begin
+          TControl(ScrollBox.Components[X].Components[Y])
+            .Touch.InteractiveGestures := [TInteractiveGesture.Pan];
+        end;
+    end;
+    sameY := round(ScrollBox.ViewportPosition.Y);
+    if Y <> 0 then
+    begin
+      repeat
+        if Y > ScrollBox.ViewportPosition.Y then
+          ScrollBox.ViewportPosition :=
+            PointF(0, ScrollBox.ViewportPosition.Y + 10);
+        if Y < ScrollBox.ViewportPosition.Y then
+          ScrollBox.ViewportPosition :=
+            PointF(0, ScrollBox.ViewportPosition.Y - 10);
+        application.ProcessMessages;
+        if sameY = round(ScrollBox.ViewportPosition.Y) then
+          break;
+
+      until abs(Y - round(ScrollBox.ViewportPosition.Y)) < 15;
+    end;
+  Except
+    on E: Exception do
+    begin
     end;
   end;
-  X := (round(frmHome.Height * 1));
-  KeyBoardLayout.Height := frmHome.Height + X;
-  frmHome.ScrollBox.Align := TAlignLayout.None;
-  PageControl.Align := ScrollBox.Align;
-  KeyBoardLayout.parent := frmHome;
-  KeyBoardLayout.Align := TAlignLayout.Bottom;
-  frmHome.ScrollBox.Content.Height := frmHome.Height + X;
-  PageControl.Height := frmHome.Height + X;
-  KeyBoardLayout.Visible := true;
-  frmHome.realign;
-  frmHome.PageControl.Repaint;
-  KeyBoardLayout.Repaint;
-  ScrollBox.RealignContent;
-  ScrollBox.ShowScrollBars := true;
-  ScrollBox.RecalcAbsoluteNow;
-  ScrollBox.AutoHide := false;
-  ScrollBox.StyleName := 'xxxxxxxxxx';
-  for X := 0 to ScrollBox.ComponentCount - 1 do
-  begin
-    TControl(ScrollBox.Components[X]).Touch.InteractiveGestures :=
-      [TInteractiveGesture.Pan];
-    if TControl(ScrollBox.Components[X]).ComponentCount > 0 then
-      for Y := 0 to ScrollBox.ComponentCount - 1 do
-      begin
-        TControl(ScrollBox.Components[X].Components[Y])
-          .Touch.InteractiveGestures := [TInteractiveGesture.Pan];
-      end;
-  end;
-  sameY := round(ScrollBox.ViewportPosition.Y);
-  if Y <> 0 then
-  begin
-    repeat
-      if Y > ScrollBox.ViewportPosition.Y then
-        ScrollBox.ViewportPosition :=
-          PointF(0, ScrollBox.ViewportPosition.Y + 10);
-      if Y < ScrollBox.ViewportPosition.Y then
-        ScrollBox.ViewportPosition :=
-          PointF(0, ScrollBox.ViewportPosition.Y - 10);
-      application.ProcessMessages;
-      if sameY = round(ScrollBox.ViewportPosition.Y) then
-        break;
-
-    until abs(Y - round(ScrollBox.ViewportPosition.Y)) < 15;
-  end;
-  Except on E:Exception do begin end; end;
 
 end;
 

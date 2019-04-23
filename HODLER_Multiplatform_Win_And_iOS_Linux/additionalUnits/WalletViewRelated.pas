@@ -1695,9 +1695,8 @@ var
 
   aTask: ITask;
 begin
-
-  if currentAccount <> nil then
-    CurrentAccount.AsyncSynchronize();
+  if currentaccount<> nil then  
+  CurrentAccount.AsyncSynchronize();
 
   {if (SyncBalanceThr <> nil) then
   begin

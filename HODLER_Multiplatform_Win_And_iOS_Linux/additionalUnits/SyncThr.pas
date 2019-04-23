@@ -229,7 +229,7 @@ var
   err: string;
   pendings: TJsonArray;
   temp: TpendingNanoBlock;
-  psxString: AnsiString;   // System.AnsiString nie kompiluje siê na Androidzie
+  psxString: {$IFDEF LINUX64}System.{$ENDIF}AnsiString;   // System.AnsiString nie kompiluje siê na Androidzie
 begin
 {$IFDEF MSWINDOWS}
   if TOSVersion.Architecture = arIntelX64 then
@@ -240,7 +240,7 @@ begin
       PWideChar(ExtractFileDir(ParamStr(0))), 6);
 {$ENDIF}
 {$IFDEF LINUX64}
-  psxString := '"' + ExtractFileDir(ParamStr(0)) + '/nanopow64"';
+  psxString := '"' + ExtractFileDir(ParamStr(0)) + '/nanopow64" ';
   _system(@psxString[1]);
 {$ENDIF}
   try
@@ -346,7 +346,7 @@ begin
             else
             begin
 
-              if not firstSync then
+              if not currentaccount.firstSync then
                 NanoCoin(cc).tryAddPendingBlock(temp);
             end;
           except
@@ -481,160 +481,11 @@ var
   licz: Integer;
   batched: string;
 begin
-
+ try
   currentAccount.AsyncSynchronize;
+ except on E:Exception do begin end; end;
 
- { globalLoadCacheTime := 0;
-  if semaphore = nil then
-  begin
-    semaphore := TLightweightSemaphore.Create(8);
-  end;
-  if mutex = nil then
-  begin
-    mutex := TSemaphore.Create();
-  end;
-
-   TThread.Synchronize(TThread.CurrentThread,
-    procedure
-    begin
-    frmHome.DashBrdProgressBar.Max := Length(CurrentAccount.myCoins) +
-    Length(CurrentAccount.myTokens);
-    frmHome.DashBrdProgressBar.value := 0;
-    end); }
-
-  {for i in [0, 1, 2, 3, 4, 5, 6, 7] do
-  begin
-    if TThread.CurrentThread.CheckTerminated then
-      exit();
-    mutex.Acquire();
-
-    CurrentAccount.SynchronizeThreadGuardian.CreateAnonymousThread(
-      procedure
-      var
-        id: Integer;
-        wi: TWalletInfo;
-        wd: TObject;
-        url, s: string;
-        temp: String;
-
-      begin
-
-        id := i;
-        mutex.Release();
-
-        semaphore.WaitFor();
-        try
-          if id in [4, 8] then
-          begin
-
-            for wi in CurrentAccount.myCoins do
-            begin
-
-              if TThread.CurrentThread.CheckTerminated then
-                exit();
-
-              if wi.coin in [4, 8] then
-                SynchronizeCryptoCurrency(wi);
-            end;
-
-          end
-          else
-          begin
-            s := batchSync(id);
-
-            url := HODLER_URL + '/batchSync0.3.2.php?coin=' +
-              availablecoin[id].name;
-
-            temp := postDataOverHTTP(url, s, firstSync, True);
-            if TThread.CurrentThread.CheckTerminated then
-              exit();
-            parseSync(temp);
-          end;
-          if TThread.CurrentThread.CheckTerminated then
-            exit();
-
-          TThread.CurrentThread.Synchronize(nil,
-            procedure
-            begin
-
-              updateBalanceLabels(id);
-            end);
-        except
-          on E: Exception do
-          begin
-
-          end;
-        end;
-        semaphore.Release();
-
-        { TThread.CurrentThread.Synchronize(nil,
-          procedure
-          begin
-          frmHome.DashBrdProgressBar.value :=
-          frmHome.RefreshProgressBar.value + 1;
-          end);
-
-      end).Start();
-
-    mutex.Acquire();
-    mutex.Release();
-
-  end;
-  for i := 0 to Length(CurrentAccount.myTokens) - 1 do
-  begin
-    if TThread.CurrentThread.CheckTerminated then
-      exit();
-    mutex.Acquire();
-
-    CurrentAccount.SynchronizeThreadGuardian.CreateAnonymousThread(
-      procedure
-      var
-        id: Integer;
-      begin
-
-        id := i;
-        mutex.Release();
-
-        semaphore.WaitFor();
-        try
-          if TThread.CurrentThread.CheckTerminated then
-            exit();
-          SynchronizeCryptoCurrency(CurrentAccount.myTokens[id]);
-        except
-          on E: Exception do
-          begin
-          end;
-        end;
-        semaphore.Release();
-
-        {TThread.CurrentThread.Synchronize(nil,
-          procedure
-          begin
-            frmHome.DashBrdProgressBar.value :=
-              frmHome.RefreshProgressBar.value + 1;
-          end);
-
-      end).Start();
-    if TThread.CurrentThread.CheckTerminated then
-      exit();
-    mutex.Acquire();
-    mutex.Release();
-
-  end;
-
-  while (semaphore <> nil) and (semaphore.CurrentCount <> 8) do
-  begin
-    if TThread.CurrentThread.CheckTerminated then
-      exit();
-    sleep(50);
-  end;
-  { tthread.Synchronize(nil , procedure
-    begin
-    showmessage( floatToStr( globalLoadCacheTime ) );
-    end);
-
-  CurrentAccount.SaveFiles();   }
-  firstSync := false;
+  currentaccount.firstSync := false;
 
 end;
 

@@ -617,13 +617,14 @@ end;
 
 procedure restoreEQR(Sender: TObject);
 var
-  MasterSeed, tced: AnsiString;
+  MasterSeed, tced,s: AnsiString;
   ac: Account;
   i: Integer;
 begin
   with frmhome do
   begin
-    tced := TCA(RestorePasswordEdit.Text);
+  s:=RestorePasswordEdit.Text;
+  tced := TCA(s);
     MasterSeed := SpeckDecrypt(tced, tempQRFindEncryptedSeed);
     if not isHex(MasterSeed) then
     begin
@@ -659,7 +660,7 @@ begin
 
     tced := '';
     MasterSeed := '';
-
+    s:='';
   end;
 end;
 
