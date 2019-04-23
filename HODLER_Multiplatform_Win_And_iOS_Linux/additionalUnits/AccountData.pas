@@ -380,7 +380,7 @@ begin
             url := HODLER_URL + '/batchSync0.3.2.php?coin=' +
               availablecoin[id].name;
 
-            temp := postDataOverHTTP(url, s, firstSync, True);
+            temp := postDataOverHTTP(url, s, Self.firstSync, True);
             //if TThread.CurrentThread.CheckTerminated then
             //  exit();
             parseSync(self , temp);
@@ -467,7 +467,7 @@ begin
     begin
     showmessage( floatToStr( globalLoadCacheTime ) );
     end); }
-  firstSync := false;
+  Self.firstSync := false;
   SaveFiles();
 
   refreshGUI();
@@ -605,10 +605,10 @@ end;
 procedure Account.LoadDescriptionFile();
 var
   obj : TJsonObject;
-  it : TJSONPairEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
+  //it : TJSONPairEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
       // PairEnumerator works on 10.2
       // TEnumerator works on 10.3
-  //it : TJSONObject.TEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
+  it : TJSONObject.TEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
   ts , temp : TstringList;
 begin
 
@@ -846,7 +846,7 @@ begin
   inherited Create;
   name := _name;
 
-  firstsync := true;
+  self.firstsync := true;
 
   DirPath := TPath.Combine(HOME_PATH, name);
 
@@ -907,20 +907,17 @@ begin
                             SyncBalanceThr := nil;
 
                                 end).Start();}
-  if (synchronizeThread <> nil) and (synchronizeThread.finished) then
-  begin
 
+if (synchronizeThread <> nil) and (synchronizeThread.finished) then
+  begin
     synchronizeThread.Free;
     synchronizeThread := nil;
-
   end
-  else
+  else if synchronizeThread <> nil then
   begin
     synchronizeThread.Terminate;
     synchronizeThread.WaitFor;
   end;
-
-  
 
   SynchronizeThreadGuardian.DisposeOf;
   SynchronizeThreadGuardian := nil;

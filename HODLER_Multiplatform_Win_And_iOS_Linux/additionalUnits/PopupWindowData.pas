@@ -395,7 +395,7 @@ begin
   parent := frmhome.pagecontrol;
   Height := 100;
   Width := 300;
-
+  PlacementTarget := frmhome.pageControl;
 
   Visible := true;
   //PlacementRectangle := TBounds.Create(RectF(0, 0, 0, 0));

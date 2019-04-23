@@ -13,7 +13,7 @@ uses
 
 const
   maxKeypoolFillThreads = 19;
-  requiredKeyPool: Integer = 10;
+  requiredKeyPool: Integer = 100;
   changeDelimiter = 1073741823;
 
 type
@@ -57,25 +57,25 @@ var
   flock: TObject;
   ts: TStringList;
 begin
-(*{$IFDEF  DEBUG}
-  flock := TObject.Create;
-  TMonitor.Enter(flock);
-  ts := TStringList.Create;
-  try
+  (* {$IFDEF  DEBUG}
+    flock := TObject.Create;
+    TMonitor.Enter(flock);
+    ts := TStringList.Create;
+    try
     if FileExists('klog.txt') then
-      ts.LoadFromFile('klog.txt');
+    ts.LoadFromFile('klog.txt');
     ts.Add(s);
     ts.SaveToFile('klog.txt');
-  except
+    except
     on E: Exception do
     begin
 
     end;
-  end;
-  ts.Free;
-  TMonitor.Exit(flock);
-  flock.Free;
-{$ENDIF}  *)
+    end;
+    ts.Free;
+    TMonitor.Exit(flock);
+    flock.Free;
+    {$ENDIF} *)
 end;
 
 procedure TFillKeypoolThread.setCC(cc: cryptoCurrency);
@@ -170,7 +170,7 @@ var
     debugString: AnsiString;
   begin
     i := 0;
-    result := 5;
+    result := 100;
     SetLength(arr, CurrentAccount.countWalletBy(TWalletInfo(self.crypto).coin));
     for wd in CurrentAccount.myCoins do
     begin
@@ -227,14 +227,14 @@ begin
         newOne := coinData.createCoin(TWalletInfo(self.crypto).coin,
           TWalletInfo(self.crypto).x, newY, GhostMasterSeed,
           self.crypto.description);
-        newOne.inPool := True; // Pooled
+        newOne.inPool := false; // Pooled
         if self.Terminated then
           Exit();
         CurrentAccount.AddCoin(newOne);
         CurrentAccount.SaveFiles;
 
       end;
-      verifyKeypoolNoThread(currentAccount ,TWalletInfo(self.crypto));
+      verifyKeypoolNoThread(CurrentAccount, TWalletInfo(self.crypto));
       missing := missingAmount;
       kLog('217: verifyKeypool for Self.Crypto: ' +
         IntToStr(TWalletInfo(self.crypto).coin) + ' Missing: ' +
@@ -256,7 +256,7 @@ begin
         IntToStr(missing));
       if missing = 0 then
         Break;
-      verifyKeypoolNoThread(currentAccount , TWalletInfo(self.crypto));
+      verifyKeypoolNoThread(CurrentAccount, TWalletInfo(self.crypto));
     end;
 
     cleanupRoutine;
@@ -305,8 +305,9 @@ begin
   GhostMasterSeed := ms;
   for wd in CurrentAccount.myCoins do
   begin
-  if wd.coin in [4,8] then Continue;
-  
+    if wd.coin in [4, 8] then
+      continue;
+
     kLog(Format('checking coin %d wd X: %d Y: %d', [wd.coin, wd.x, wd.Y]));
     if (wd.Y = 0) and (wd.deleted = false) and (not wd.inPool) then
       keypoolCoin(wd);

@@ -135,7 +135,7 @@ type
 
     constructor Create(); overload;
 
-    destructor destroy(); override;
+    destructor destroy();
     // ConfirmThread : TAutoReceive;
 
     // procedure runAutoConfirm();
@@ -345,15 +345,16 @@ begin
                 delta := bi - NanoCoin(acc.mycoins[i]).confirmed;
                 NanoCoin(acc.mycoins[i]).confirmed := bi;
                 NanoCoin(acc.mycoins[i]).unconfirmed := NanoCoin(acc.mycoins[i])
-                  .unconfirmed - BigInteger.abs(delta);                          // abs(...) doesnt work with bigInteger
-{
-                refreshGlobalFiat();
-                TThread.Synchronize(TThread.CurrentThread,
+                  .unconfirmed - BigInteger.abs(delta);
+                // abs(...) doesnt work with bigInteger
+                {
+                  refreshGlobalFiat();
+                  TThread.Synchronize(TThread.CurrentThread,
                   procedure
                   begin
-                    repaintWalletList;
+                  repaintWalletList;
                   end);
-}
+                }
                 ReloadWalletView();
                 ts.Free;
                 DeleteFile(path);
@@ -402,7 +403,7 @@ procedure NanoCoin.loadChain;
 begin
   if CurrentAccount <> nil then
   begin
-
+      SetLength(Self.pendingChain, 0);
     Self.chaindir := TPath.Combine(CurrentAccount.DirPath, 'Pendings');
     if directoryexists(Self.chaindir) then
       Self.pendingChain := nano_loadChain(chaindir, Self.addr)
@@ -414,7 +415,7 @@ begin
 end;
 
 constructor NanoCoin.Create(id: integer; _x: integer; _y: integer;
-_addr: String; _description: String; crTime: integer = -1);
+  _addr: String; _description: String; crTime: integer = -1);
 begin
 
   inherited Create(id, _x, _y, _addr, _description, crTime);
@@ -441,12 +442,12 @@ end;
 destructor NanoCoin.destroy;
 begin
 
-
+  inherited;
   wipeString(UnlockPriv);
 
   PendingBlocks.Free;
   mutexMining.Free;
-  inherited;
+
 end;
 
 function NanoCoin.inChain(Hash: String): Boolean;
@@ -596,7 +597,7 @@ var
   i: integer;
 begin
 
-  UnlockPriv := nano_getPriv(x, y, MasterSeed);
+  UnlockPriv := nano_getPriv(self, MasterSeed);
   SetLength(sessionKey, Length(UnlockPriv));
   for i := low(UnlockPriv) to High(UnlockPriv) do
   begin
@@ -1880,6 +1881,9 @@ begin
     ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetHomePath +
     '/.hodlertech/'{$ELSE}System.IOUtils.TPath.Combine
     (System.SysUtils.GetEnvironmentVariable('APPDATA'), 'hodlertech'){$ENDIF});
+{$IFDEF ANDROID}
+  path := TPath.GetDocumentsPath + '/nanopows.dat';
+{$ENDIF}
   ts := TStringList.Create;
   try
     for i := 0 to Length(pows) - 1 do
@@ -1927,11 +1931,13 @@ var
   t: TStringList;
 begin
   SetLength(pows, 0);
-  if HOME_PATH = '' then
-    HOME_PATH := IncludeTrailingPathDelimiter
-      ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetHomePath +
-      '/.hodlertech/'{$ELSE}System.IOUtils.TPath.Combine
-      (System.SysUtils.GetEnvironmentVariable('APPDATA'), 'hodlertech'){$ENDIF});
+  HOME_PATH := IncludeTrailingPathDelimiter
+    ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetHomePath +
+    '/.hodlertech/'{$ELSE}System.IOUtils.TPath.Combine
+    (System.SysUtils.GetEnvironmentVariable('APPDATA'), 'hodlertech'){$ENDIF});
+{$IFDEF ANDROID}
+  HOME_PATH := TPath.GetDocumentsPath + '/nanopows.dat';
+{$ENDIF}
   ts := TStringList.Create;
   try
     if fileexists(TPath.Combine(HOME_PATH, 'nanopows.dat')) then
