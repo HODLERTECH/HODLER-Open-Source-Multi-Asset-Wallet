@@ -46,6 +46,7 @@ type
     constructor Create(_name: AnsiString);
     destructor Destroy(); override;
 
+
     procedure GenerateEQRFiles();
 
     procedure LoadFiles();
@@ -117,6 +118,9 @@ implementation
 
 uses
   misc, uHome, coinData, nano, languages,SyncThr, Bitcoin , walletViewRelated , CurrencyConverter;
+
+
+
 
 procedure Account.refreshGUI();
 begin
@@ -605,10 +609,10 @@ end;
 procedure Account.LoadDescriptionFile();
 var
   obj : TJsonObject;
-  it : TJSONPairEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
+  //it : TJSONPairEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
       // PairEnumerator works on 10.2
       // TEnumerator works on 10.3
-  //it : TJSONObject.TEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
+  it : TJSONObject.TEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
   ts , temp : TstringList;
 begin
 
@@ -908,8 +912,20 @@ begin
 
                                 end).Start();}
 
-  synchronizeThread.Terminate;
-  synchronizeThread.WaitFor;
+  if (synchronizeThread <> nil) and (synchronizeThread.finished) then
+  begin
+
+    synchronizeThread.Free;
+    synchronizeThread := nil;
+
+  end
+  else if synchronizeThread <> nil then
+  begin
+    synchronizeThread.Terminate;
+    synchronizeThread.WaitFor;
+  end;
+
+
 
   SynchronizeThreadGuardian.DisposeOf;
   SynchronizeThreadGuardian := nil;

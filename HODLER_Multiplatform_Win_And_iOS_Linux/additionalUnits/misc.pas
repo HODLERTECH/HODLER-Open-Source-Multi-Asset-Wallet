@@ -4155,6 +4155,8 @@ function speckDecrypt(tcaKey, data: AnsiString): AnsiString;
 var
   speck: TSPECKEncryption;
   cipher: string;
+
+  temp : AnsiString;
 begin
   speck := TSPECKEncryption.Create;
   speck.AType := stOFB;
@@ -4167,7 +4169,8 @@ begin
   speck.PaddingMode := TSPECKPaddingMode.nopadding;
   speck.IVMode := TSPECKIVMode.userdefined;
   speck.IV := '0123456789abcdef';
-  Result := trim(speck.Decrypt(data));
+  temp := speck.Decrypt(data);
+  Result := trim(temp);
   speck.Free;
   // result := string(cipher);
 end;

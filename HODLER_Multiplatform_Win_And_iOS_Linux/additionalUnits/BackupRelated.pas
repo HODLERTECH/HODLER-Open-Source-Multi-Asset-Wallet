@@ -627,7 +627,12 @@ begin
     MasterSeed := SpeckDecrypt(tced, tempQRFindEncryptedSeed);
     if not isHex(MasterSeed) then
     begin
-      popupWindow.create(dictionary('FailedToDecrypt'));
+
+      tthread.Synchronize(nil , procedure
+      begin
+        popupWindow.create(dictionary('FailedToDecrypt'));
+      end);
+
       exit;
     end;
 

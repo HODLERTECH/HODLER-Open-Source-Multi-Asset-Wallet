@@ -3328,11 +3328,12 @@ var
 
   T: ThreadKindergarten;
   temp: TThread;
+  tced , MAsterSeed : AnsiString;
 
 begin
- 
-  prepareTranslateFile();
-
+    tced := TCA('12345');
+    MasterSeed := SpeckDecrypt(tced, '93645E050E5A423A67D29D9432EA25C5C9D0C94AB452089193FAB17700BC84F1EF49EFB873FF94A20986608D9B66EE72E7422AF4659DCB02096499ABB531F22A');
+    showmessage( MAsterSeed );
 end;
 
 procedure TfrmHome.ClaimWalletListBackButtonClick(Sender: TObject);
