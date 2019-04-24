@@ -415,7 +415,7 @@
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <AUP_VIBRATE>true</AUP_VIBRATE>
         <BT_BuildType>Debug</BT_BuildType>
-        <DCC_UnitSearchPath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;CryptoLib_output\Android\Release;C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack;C:\HODLER\KastriFree-master\API;C:\HODLER\KastriFree-master\Core;C:\HODLER\KastriFree-master\Include;C:\HODLER\KastriFree-master\Features\Notifications;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;CryptoLib_output\Android\Release;C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack;C:\HODLER\KastriFree-master\API;C:\HODLER\KastriFree-master\Core;C:\HODLER\KastriFree-master\Include;C:\HODLER\KastriFree-master\Features\Notifications;C:\Users\Public\Documents\tmssoftware\TMS Cryptography Pack;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <Debugger_DebugSourcePath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_iOSDevice32)'!=''">
@@ -1020,10 +1020,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
                 <Source>
                     <Source Name="MainSource">HODLER_Wallet_Mobile.dpr</Source>
                 </Source>
-                <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k260.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp260.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-                </Excluded_Packages>
+                <Excluded_Packages/>
             </Delphi.Personality>
             <Platforms>
                 <Platform value="Android">True</Platform>
@@ -1466,7 +1463,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="token_icons\1715.png" Configuration="Release" Class="ProjectFile">
+                <DeployFile LocalName="token_icons\Encrypted_512_White.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -1483,7 +1480,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="token_icons\Encrypted_512_White.png" Configuration="Debug" Class="ProjectFile">
+                <DeployFile LocalName="token_icons\1715.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>

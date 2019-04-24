@@ -1703,20 +1703,21 @@ begin
       ac := CreateNewAccount(name, pass, seed);
       ac.userSaveSeed := userSaveSeed;
 
-      Tthread.Synchronize(nil,
+      Tthread.Synchronize(Tthread.currentThread,
         procedure
         begin
-          frmhome.HideZeroWalletsCheckBox.IsChecked := false;
+
         end);
       AddAccountToFile(ac);
 
       ac.Free;
 
-      Tthread.Synchronize(nil,
+      Tthread.Synchronize(Tthread.CurrentThread,
         procedure
         begin
 
           AccountRelated.LoadCurrentAccount(name);
+          frmhome.HideZeroWalletsCheckBox.IsChecked := false;
           AccountRelated.afterInitialize;
         end);
       startFullfillingKeypool(seed);

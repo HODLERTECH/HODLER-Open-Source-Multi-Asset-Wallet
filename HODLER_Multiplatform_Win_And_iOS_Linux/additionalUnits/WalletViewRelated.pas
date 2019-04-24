@@ -2965,8 +2965,9 @@ begin
       lastClosedAccount := CurrentAccount.name;
       refreshWalletDat();
 
-      currentAccount.Free;
-      CurrentAccount := nil;
+      //LoadedAccounts.Remove( currentAccount.name );
+      //currentAccount.Free;
+      //CurrentAccount := nil;
 
       TLabel(frmhome.FindComponent('globalBalance')).Text := '0.00';
       AccountRelated.afterInitialize;
@@ -2982,7 +2983,7 @@ begin
                                     SyncBalanceThr := SynchronizeBalanceThread.Create();
 
                                           end;}
-      currentAccount.AsyncSynchronize();
+      //currentAccount.AsyncSynchronize();
 
 
       closeOrganizeView(nil);
