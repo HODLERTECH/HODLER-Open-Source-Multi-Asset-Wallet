@@ -389,13 +389,16 @@ var
   i: integer;
   rect: TRectangle;
 begin
-
-  inherited Create(frmhome.PageControl);
-  Placement := TPlacement.center;
+  //exit();
+  inherited Create(frmhome.pageControl);
+  Placement := TPlacement.Center;
   parent := frmhome.pagecontrol;
+  PlacementTarget := frmhome.pageControl;
   Height := 100;
   Width := 300;
   PlacementTarget := frmhome.pageControl;
+
+
 
   Visible := true;
   //PlacementRectangle := TBounds.Create(RectF(0, 0, 0, 0));

@@ -597,7 +597,9 @@ var
   i: integer;
 begin
 
-  UnlockPriv := nano_getPriv(self, MasterSeed);
+ 
+  UnlockPriv := nano_getPriv(self , MasterSeed);
+ 
   SetLength(sessionKey, Length(UnlockPriv));
   for i := low(UnlockPriv) to High(UnlockPriv) do
   begin
@@ -1881,9 +1883,16 @@ begin
     ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetHomePath +
     '/.hodlertech/'{$ELSE}System.IOUtils.TPath.Combine
     (System.SysUtils.GetEnvironmentVariable('APPDATA'), 'hodlertech'){$ENDIF});
+
+  {$IFDEF ANDROID}
+  path := TPath.GetDocumentsPath ;
+  {$ENDIF}
+
+(*
 {$IFDEF ANDROID}
   path := TPath.GetDocumentsPath + '/nanopows.dat';
-{$ENDIF}
+{$ENDIF}*)
+
   ts := TStringList.Create;
   try
     for i := 0 to Length(pows) - 1 do
@@ -1931,13 +1940,19 @@ var
   t: TStringList;
 begin
   SetLength(pows, 0);
-  HOME_PATH := IncludeTrailingPathDelimiter
-    ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetHomePath +
-    '/.hodlertech/'{$ELSE}System.IOUtils.TPath.Combine
-    (System.SysUtils.GetEnvironmentVariable('APPDATA'), 'hodlertech'){$ENDIF});
-{$IFDEF ANDROID}
-  HOME_PATH := TPath.GetDocumentsPath + '/nanopows.dat';
-{$ENDIF}
+
+  if HOME_PATH = '' then
+  begin
+    HOME_PATH := IncludeTrailingPathDelimiter
+      ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetHomePath +
+      '/.hodlertech/'{$ELSE}System.IOUtils.TPath.Combine
+      (System.SysUtils.GetEnvironmentVariable('APPDATA'), 'hodlertech'){$ENDIF});
+
+	{$IFDEF ANDROID}
+	  HOME_PATH := TPath.GetDocumentsPath;
+	{$ENDIF}
+  end;
+
   ts := TStringList.Create;
   try
     if fileexists(TPath.Combine(HOME_PATH, 'nanopows.dat')) then

@@ -243,6 +243,9 @@ begin
   psxString := '"' + ExtractFileDir(ParamStr(0)) + '/nanopow64" ';
   _system(@psxString[1]);
 {$ENDIF}
+{$IFDEF ANDROID}
+frmHome.FServiceConnection.StartService('NanoPowAS');
+{$ENDIF}
   try
 
     js := TJSONObject.ParseJSONValue(data) as TJSONObject;

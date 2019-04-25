@@ -178,7 +178,9 @@ begin
       begin
 
         if not window.Contains( Point(j , i) ) then
-          maskBitmapData.SetPixel( j , i , TAlphaColorF.Create( 0 , 0 , 0 , 0.6 ).ToAlphaColor );
+          maskBitmapData.SetPixel( j , i , TAlphaColorF.Create( 0 , 0 , 0 , 0.6 ).ToAlphaColor )
+        else
+          maskBitmapData.SetPixel( j , i , TAlphaColorF.Create( 0 , 0 , 0 , 0 ).ToAlphaColor )
 
       end;
     end;

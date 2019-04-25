@@ -3476,12 +3476,9 @@ end;
 procedure TfrmHome.FormShow(Sender: TObject);
 begin
   FServiceConnection := TLocalServiceConnection.Create;
-  FServiceConnection.StartService('NanoPowAS');
-  // FServiceConnection.BindService('NanoPoWAS');
   try
     AccountRelated.afterInitialize;
-    FServiceConnection := TLocalServiceConnection.Create;
-    // ;
+
   except
     on E: Exception do
       showmessage(E.Message);

@@ -13,7 +13,7 @@ uses
 
 const
   maxKeypoolFillThreads = 19;
-  requiredKeyPool: Integer = 100;
+  requiredKeyPool: Integer = 10;
   changeDelimiter = 1073741823;
 
 type
@@ -170,7 +170,7 @@ var
     debugString: AnsiString;
   begin
     i := 0;
-    result := 100;
+    result := 5;
     SetLength(arr, CurrentAccount.countWalletBy(TWalletInfo(self.crypto).coin));
     for wd in CurrentAccount.myCoins do
     begin
@@ -227,7 +227,7 @@ begin
         newOne := coinData.createCoin(TWalletInfo(self.crypto).coin,
           TWalletInfo(self.crypto).x, newY, GhostMasterSeed,
           self.crypto.description);
-        newOne.inPool := false; // Pooled
+        newOne.inPool := true; // Pooled
         if self.Terminated then
           Exit();
         CurrentAccount.AddCoin(newOne);

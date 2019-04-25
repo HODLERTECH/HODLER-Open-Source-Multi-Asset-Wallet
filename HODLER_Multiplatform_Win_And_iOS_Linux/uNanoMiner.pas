@@ -169,8 +169,8 @@ begin
         Sleep(100);
       end;
       inc(i);
-    until i = 2;
-    halt(0);
+    {$IFNDEF MSWINDOWS}until i = 2;halt(0);{$ELSE}until true=false;{$ENDIF}
+
   except
     on E: Exception do
     begin

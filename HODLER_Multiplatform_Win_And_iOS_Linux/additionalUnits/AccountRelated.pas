@@ -167,7 +167,7 @@ begin
 
         ChangeAccountButton.Text := lastClosedAccount;
 
-        if (currentAccount = nil) or (CurrentAccount.name <> lastClosedAccount) then
+       // if (currentAccount = nil) or (CurrentAccount.name <> lastClosedAccount) then
           LoadCurrentAccount(lastClosedAccount);
 
       except
@@ -351,13 +351,14 @@ begin
 
         end;
 
-      if not exist then
+      if (not exist) and (not cc.deleted)  then
         CreatePanel(cc , CurrentAccount , frmhome.walletList);
 
     end;
 
     for i := 0 to length(currentAccount.myTokens) - 1 do
     begin
+    if currentAccount.myTokens[i].deleted = false then
       CreatePanel(currentAccount.myTokens[i] , CurrentAccount , frmhome.walletList);
     end;
 

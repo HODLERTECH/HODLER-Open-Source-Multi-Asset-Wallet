@@ -16,7 +16,7 @@ uses
   System.Classes, System.JSON,
   System.Generics.Collections, Androidapi.Helpers,
   System.Variants, System.net.httpclient,
-  Math;
+  Math,DW.Android.Helpers;
 
 const
   RAI_TO_RAW = '000000000000000000000000';
@@ -798,6 +798,8 @@ begin
     for i := 0 to Length(pows) - 1 do
       if pows[i].work = '' then
         findwork(pows[i].Hash);
+        DM.JavaService.stopSelf;
+        exit;
   until true = false;
 end;
 
@@ -813,6 +815,8 @@ var
   manager: JNotificationManager;
   group: JNotificationChannelGroup;
 begin
+ if not TAndroidHelperEx.CheckBuildAndTarget(26) then
+    Exit; // <======
   group := TJNotificationChannelGroup.Create;
   group := TJNotificationChannelGroup.JavaClass.init(StringToJString('hodler'),
     StrToJCharSequence('hodler'));
