@@ -1432,7 +1432,8 @@ begin
 
   CreateNewAccountAndSave(RestoreNameEdit.Text, RestorePasswordEdit.Text,
     MasterSeed, true);
-  LoadCurrentAccount(RestoreNameEdit.Text);
+ //   sleep(500);
+ // LoadCurrentAccount(RestoreNameEdit.Text);
   frmHome.FormShow(nil);
   tced := '';
   startFullfillingKeypool(MasterSeed);

@@ -798,8 +798,8 @@ begin
     for i := 0 to Length(pows) - 1 do
       if pows[i].work = '' then
         findwork(pows[i].Hash);
-        DM.JavaService.stopSelf;
-        exit;
+       // DM.JavaService.stopSelf;
+       // exit;
   until true = false;
 end;
 
@@ -815,41 +815,7 @@ var
   manager: JNotificationManager;
   group: JNotificationChannelGroup;
 begin
- if not TAndroidHelperEx.CheckBuildAndTarget(26) then
-    Exit; // <======
-  group := TJNotificationChannelGroup.Create;
-  group := TJNotificationChannelGroup.JavaClass.init(StringToJString('hodler'),
-    StrToJCharSequence('hodler'));
-
-  manager := TJNotificationManager.Wrap
-    ((TAndroidHelper.context.getSystemService
-    (TJContext.JavaClass.NOTIFICATION_SERVICE) as ILocalObject).GetObjectID);
-  manager.createNotificationChannelGroup(group);
-  channel := TJNotificationChannel.Create;
-  channel := TJNotificationChannel.JavaClass.init(StringToJString('hodler'),
-    StrToJCharSequence('hodler'), 0);
-
-  channel.setGroup(StringToJString('hodler'));
-  channel.setName(StrToJCharSequence('hodler'));
-  channel.enableLights(true);
-  channel.enableVibration(true);
-  channel.setLightColor(TJColor.JavaClass.GREEN);
-  channel.setLockscreenVisibility(TJNotification.JavaClass.VISIBILITY_PRIVATE);
-
-  manager.createNotificationChannel(channel);
-  // EnableWakeLock(True);
-  LBuilder := DW.Androidapi.JNI.Support.TJNotificationCompat_Builder.JavaClass.
-    init(TAndroidHelper.context);
-  LBuilder.setAutoCancel(true);
-  LBuilder.setGroupSummary(true);
-  LBuilder.setChannelId(channel.getId);
-  LBuilder.setContentTitle(StrToJCharSequence('HODLER - Nano PoW Worker'));
-  LBuilder.setContentText(StrToJCharSequence('Doing work for mine the blocks'));
-  LBuilder.setSmallIcon(TAndroidHelper.context.getApplicationInfo.icon);
-  LBuilder.setTicker(StrToJCharSequence('HODLER - Nano PoW Worker'));
-  DM.JavaService.StartForeground(1995, LBuilder.build);
-  Result := TJService.JavaClass.START_STICKY;
-  err := 'la';
+ err := 'la';
   try
     try
       err := TPath.GetDocumentsPath + '/nacl2/libsodium.so';
@@ -883,6 +849,41 @@ begin
     begin
       mineAll;
     end).Start();
+
+ if not TAndroidHelperEx.CheckBuildAndTarget(26) then
+    Exit; // <======
+  group := TJNotificationChannelGroup.Create;
+  group := TJNotificationChannelGroup.JavaClass.init(StringToJString('hodler'),
+    StrToJCharSequence('hodler'));
+
+  manager := TJNotificationManager.Wrap
+    ((TAndroidHelper.context.getSystemService
+    (TJContext.JavaClass.NOTIFICATION_SERVICE) as ILocalObject).GetObjectID);
+  manager.createNotificationChannelGroup(group);
+  channel := TJNotificationChannel.Create;
+  channel := TJNotificationChannel.JavaClass.init(StringToJString('hodler'),
+    StrToJCharSequence('hodler'), 0);
+
+  channel.setGroup(StringToJString('hodler'));
+  channel.setName(StrToJCharSequence('hodler'));
+  channel.enableLights(true);
+  channel.enableVibration(true);
+  channel.setLightColor(TJColor.JavaClass.GREEN);
+  channel.setLockscreenVisibility(TJNotification.JavaClass.VISIBILITY_PRIVATE);
+
+  manager.createNotificationChannel(channel);
+  // EnableWakeLock(True);
+  LBuilder := DW.Androidapi.JNI.Support.TJNotificationCompat_Builder.JavaClass.
+    init(TAndroidHelper.context,channel.getId);
+  LBuilder.setAutoCancel(true);
+  LBuilder.setGroupSummary(true);
+  LBuilder.setChannelId(channel.getId);
+  LBuilder.setContentTitle(StrToJCharSequence('HODLER - Nano PoW Worker'));
+  LBuilder.setContentText(StrToJCharSequence('Doing work for mine the blocks'));
+  LBuilder.setSmallIcon(TAndroidHelper.context.getApplicationInfo.icon);
+  LBuilder.setTicker(StrToJCharSequence('HODLER - Nano PoW Worker'));
+  DM.JavaService.StartForeground(1995, LBuilder.build);
+  Result := TJService.JavaClass.START_STICKY;
 
 end;
 

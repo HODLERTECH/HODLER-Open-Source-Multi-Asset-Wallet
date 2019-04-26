@@ -122,7 +122,7 @@ procedure Account.refreshGUI();
 begin
   if self = currentAccount then
   begin
-  frmhome.refreshGlobalImage.Start;
+  //frmhome.refreshGlobalImage.Start;
   refreshGlobalFiat();
     TThread.Synchronize(TThread.CurrentThread,
       procedure
@@ -158,7 +158,7 @@ begin
         hideEmptyWallets(nil);
 
       end);
-    frmhome.refreshGlobalImage.Stop;
+    //frmhome.refreshGlobalImage.Stop;
   end;
 end;
 
@@ -321,21 +321,10 @@ var
   batched: string;
 begin
 
-  {TThread.Synchronize(nil , procedure
-    begin
-        showmessage('start');
-          end);}
-
-
-  { TThread.Synchronize(TThread.CurrentThread,
-    procedure
-    begin
-    frmHome.DashBrdProgressBar.Max := Length(CurrentAccount.myCoins) +
-    Length(CurrentAccount.myTokens);
-    frmHome.DashBrdProgressBar.value := 0;
-    end); }
-
-
+ if self = currentAccount then
+  begin
+    frmhome.refreshGlobalImage.Start;
+  end;
 
   for i in [0, 1, 2, 3, 4, 5, 6, 7] do
   begin
@@ -471,10 +460,10 @@ begin
   SaveFiles();
 
   refreshGUI();
-  {TThread.Synchronize(nil , procedure
-    begin
-        showmessage('stop');
-          end);}
+if self = currentAccount then
+  begin
+    frmhome.refreshGlobalImage.Stop;
+  end;
 
 end;
 
