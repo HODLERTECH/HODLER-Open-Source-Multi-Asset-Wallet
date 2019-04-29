@@ -517,18 +517,16 @@ type
     ConfirmSendPasswordPanel: TPanel;
     ConfirmSendPasswordEdit: TEdit;
     ConfirmSendPasswordLabel: TLabel;
-    SendFromLabel: TLabel;
     SendValueLabel: TLabel;
     SendFeeLabel: TLabel;
-    SendToLabel: TLabel;
     SendFromStaticLabel: TLabel;
     SendToStaticLabel: TLabel;
     SendValueStaticLabel: TLabel;
     SendFeeStaticLabel: TLabel;
-    Layout38: TLayout;
+    SendFromLayout: TLayout;
     Layout41: TLayout;
     Layout44: TLayout;
-    Layout47: TLayout;
+    ConfirmSendToLayout: TLayout;
     SendDetailsLabel: TLabel;
     Layout50: TLayout;
     IsPrivKeySwitch: TSwitch;
@@ -1212,6 +1210,7 @@ type
 
     wvAddress, receiveAddress: TCopyableAddressPanel;
     newCryptoVertScrollBox: TNewCryptoVertScrollBox;
+    SendFromLabel ,SendToLabel : TAddresslabel;
 
   var
     HistoryMaxLength: Integer;
@@ -1432,8 +1431,8 @@ begin
 
   CreateNewAccountAndSave(RestoreNameEdit.Text, RestorePasswordEdit.Text,
     MasterSeed, true);
- //   sleep(500);
- // LoadCurrentAccount(RestoreNameEdit.Text);
+
+  //LoadCurrentAccount(RestoreNameEdit.Text);
   frmHome.FormShow(nil);
   tced := '';
   startFullfillingKeypool(MasterSeed);

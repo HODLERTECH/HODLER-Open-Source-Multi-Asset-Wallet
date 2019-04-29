@@ -37,7 +37,7 @@ uses
   ZXing.ScanManager, FMX.EditBox, FMX.SpinBox, FMX.Gestures, FMX.Effects,
   FMX.Filter.Effects, System.Actions, FMX.ActnList, System.Math.Vectors,
   FMX.Controls3D, FMX.Layers3D, FMX.StdActns, FMX.MediaLibrary.Actions,
-  FMX.ComboEdit, NotificationLayoutData;
+  FMX.ComboEdit, NotificationLayoutData, TAddressLabelData;
 
 procedure deleteYAddress(Sender: Tobject);
 procedure generateNewYAddress(Sender: Tobject);
@@ -804,6 +804,20 @@ begin
       NotificationLayout.Align := TAlignLayout.Contents;
       NotificationLayout.Visible := true;
 
+      SendFromLabel := TAddressLabel.create( SendFromLayout );
+      SendFromLabel.parent := SendFromLayout;
+      SendFromLabel.Visible := true;
+      SendFromLabel.Align := TAlignLayout.Client;
+      SendFromLabel.Margins.Right := 15;
+
+      SendFromLabel.TextSettings.HorzAlign := TTextAlign.Trailing;
+
+      SendToLabel := TAddressLabel.create( ConfirmSendToLayout );
+      SendToLabel.parent := ConfirmSendToLayout;
+      SendToLabel.Visible := true;
+      SendToLabel.Align := TAlignLayout.Client;
+      SendToLabel.Margins.Right := 15;
+      SendToLabel.TextSettings.HorzAlign := TTextAlign.Trailing;
 
 
     end;
@@ -1119,7 +1133,7 @@ procedure changeY(Sender: Tobject);
 var
   Panel: TPanel;
   bilanceLbl: TLabel;
-  addrLbl: TCopyableAddressLabel;
+  addrLbl: TCopyableLabel;
   deleteBtn: TLabel;
   generateNewAddresses: TButton;
   copyBtn: TButton;
@@ -1160,7 +1174,7 @@ begin
               Panel.OnClick := OpenWalletViewFromYWalletList;
               Panel.Position.y := i * Panel.Height;
               Panel.Margins.Bottom := 1;
-              addrLbl := TCopyableAddresslabel.Create(Panel);
+              addrLbl := TCopyablelabel.Create(Panel);
               addrLbl.image.Align := TAlignLayout.Right;
               addrLbl.Align := TAlignLayout.MostTop;
               addrLbl.Parent := Panel;

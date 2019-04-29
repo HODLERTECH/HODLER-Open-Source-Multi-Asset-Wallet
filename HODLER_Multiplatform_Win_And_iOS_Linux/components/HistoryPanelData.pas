@@ -18,7 +18,7 @@ type
   public
     image: TImage;
     lbl: TLabel;
-    addrLbl: TAddressLabel;
+    addrLbl: TLabel;
     datalbl: TLabel;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -55,7 +55,7 @@ constructor THistoryPanel.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
 
-  addrLbl := TAddressLabel.Create(self);
+  addrLbl := TLabel.Create(self);
   addrLbl.parent := self;
   addrLbl.Align := TAlignLayout.Top;
   addrLbl.Visible := true;

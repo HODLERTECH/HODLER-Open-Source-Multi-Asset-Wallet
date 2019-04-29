@@ -27,7 +27,7 @@ uses
   FMX.Clipboard, bech32, cryptoCurrencyData, FMX.VirtualKeyBoard, JSON,
   languages, WIF, AccountData, WalletStructureData,
   System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
-  popupWindowData, TCopyableAddressPanelData, TNewCryptoVertScrollBoxData,
+  popupWindowData, TCopyableAddressPanelData, TNewCryptoVertScrollBoxData, TaddressLabelData,
 
   FMX.Media, FMX.Objects, CurrencyConverter, uEncryptedZipFile, System.Zip,
   TRotateImageData
@@ -509,10 +509,8 @@ type
     ConfirmSendPasswordEdit: TEdit;
     ConfirmSendPasswordLabel: TLabel;
     Panel12: TPanel;
-    Layout38: TLayout;
+    SendFromLayout: TLayout;
     Layout39: TLayout;
-    Layout40: TLayout;
-    SendFromLabel: TLabel;
     SendFromStaticLabel: TLabel;
     Layout41: TLayout;
     Layout42: TLayout;
@@ -524,10 +522,8 @@ type
     Layout46: TLayout;
     SendValueLabel: TLabel;
     SendValueStaticLabel: TLabel;
-    Layout47: TLayout;
+    ConfirmSendToLayout: TLayout;
     Layout48: TLayout;
-    Layout49: TLayout;
-    SendToLabel: TLabel;
     SendToStaticLabel: TLabel;
     SendDetailsLabel: TLabel;
     Layout53: TLayout;
@@ -1133,6 +1129,8 @@ type
     NotificationLayout: TNotificationLayout;
     receiveAddress, wvAddress: TCopyableAddressPanel;
     newCryptoVertScrollBox: TNewCryptoVertScrollBox;
+
+    SendFromLabel ,SendToLabel : TAddresslabel;
 
   var
     cpTimeout: int64;

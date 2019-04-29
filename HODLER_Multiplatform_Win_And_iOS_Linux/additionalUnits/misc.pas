@@ -2698,10 +2698,10 @@ begin
     panel.Width := frmhome.TxHistory.Width;
 
     // panel.addrLbl.TextSettings.HorzAlign := TTextAlign.Leading;
-    if wallet is TWalletInfo then
+    {if wallet is TWalletInfo then
     begin
       if TWalletInfo(wallet).coin = 8 then
-        panel.addrLbl.SetText(hist[i].addresses[0], 4)
+        panel.SetText(hist[i].addresses[0], 4)
       else if TWalletInfo(wallet).coin = 4 then
         panel.addrLbl.SetText(hist[i].addresses[0], 2)
       else if TWalletInfo(wallet).coin = 3 then
@@ -2709,7 +2709,7 @@ begin
       else
         panel.addrLbl.Text := hist[i].addresses[0];
     end
-    else
+    else  }
       panel.addrLbl.Text := hist[i].addresses[0];
 
     panel.datalbl.Text := FormatDateTime('dd mmm yyyy hh:mm',

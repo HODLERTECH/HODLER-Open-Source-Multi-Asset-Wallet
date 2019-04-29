@@ -16,7 +16,7 @@ uses
   System.Classes, System.JSON,
   System.Generics.Collections, Androidapi.Helpers,
   System.Variants, System.net.httpclient,
-  Math,DW.Android.Helpers;
+  Math, DW.Android.Helpers, Androidapi.JNI,Androidapi.log;
 
 const
   RAI_TO_RAW = '000000000000000000000000';
@@ -169,7 +169,12 @@ implementation
 uses
   System.DateUtils;
 {$R *.dfm}
-
+procedure logd(msg: String);
+var
+  M: TMarshaller;
+begin
+  LOGI(M.AsUtf8(msg).ToPointer);
+end;
 function findPrecalculated(Hash: string): string;
 var
   pow: precalculatedPow;
@@ -322,6 +327,7 @@ var
   j, i: Integer;
   work: string;
 begin
+logd('NANOPOWAS: findwork '+Hash);
   loadPows;
   work := findPrecalculated(Hash);
   if (work <> '') and (work <> 'MINING') then
@@ -351,6 +357,7 @@ begin
               Result := '';
               for j := 7 downto 0 do
                 Result := Result + inttohex(workbytes[j], 2);
+                logd('NANOPOWAS: work found '+result);
               setPrecalculated(Hash, Result);
               savePows;
               Exit;
@@ -798,8 +805,8 @@ begin
     for i := 0 to Length(pows) - 1 do
       if pows[i].work = '' then
         findwork(pows[i].Hash);
-       // DM.JavaService.stopSelf;
-       // exit;
+    // DM.JavaService.stopSelf;
+    // exit;
   until true = false;
 end;
 
@@ -814,8 +821,13 @@ var
   channel: JNotificationChannel;
   manager: JNotificationManager;
   group: JNotificationChannelGroup;
+var
+  PEnv: PJNIEnv;
+  ActivityClass: JNIClass;
+  NativeMethod: JNINativeMethod;
 begin
- err := 'la';
+ logd('NANOPOWAS: AndroidServiceStartCommand 827');
+  err := 'la';
   try
     try
       err := TPath.GetDocumentsPath + '/nacl2/libsodium.so';
@@ -844,47 +856,82 @@ begin
   finally
 
   end;
+   logd('NANOPOWAS: AndroidServiceStartCommand 857');
   TThread.CreateAnonymousThread(
     procedure
     begin
       mineAll;
     end).Start();
-
- if not TAndroidHelperEx.CheckBuildAndTarget(26) then
+  logd('NANOPOWAS: AndroidServiceStartCommand 863');
+  if not TAndroidHelperEx.CheckBuildAndTarget(26) then
     Exit; // <======
-  group := TJNotificationChannelGroup.Create;
-  group := TJNotificationChannelGroup.JavaClass.init(StringToJString('hodler'),
-    StrToJCharSequence('hodler'));
+  try
+   // PEnv := TJNIResolver.GetJNIEnv;
 
-  manager := TJNotificationManager.Wrap
-    ((TAndroidHelper.context.getSystemService
-    (TJContext.JavaClass.NOTIFICATION_SERVICE) as ILocalObject).GetObjectID);
-  manager.createNotificationChannelGroup(group);
-  channel := TJNotificationChannel.Create;
-  channel := TJNotificationChannel.JavaClass.init(StringToJString('hodler'),
-    StrToJCharSequence('hodler'), 0);
+   // PEnv^.FindClass(PEnv, 'android/app/NotificationChannelGroup');
+  //  if Penv^.ExceptionCheck(Penv) = JNIBoolean(0) then
+    begin
+      try
 
-  channel.setGroup(StringToJString('hodler'));
-  channel.setName(StrToJCharSequence('hodler'));
-  channel.enableLights(true);
-  channel.enableVibration(true);
-  channel.setLightColor(TJColor.JavaClass.GREEN);
-  channel.setLockscreenVisibility(TJNotification.JavaClass.VISIBILITY_PRIVATE);
+        //group := TJNotificationChannelGroup.Create;
+        group := TJNotificationChannelGroup.JavaClass.init
+          (StringToJString('hodler'), StrToJCharSequence('hodler'));
+      except
+        on E: Exception do
+        begin
+        end;
+      end;
+      manager := TJNotificationManager.Wrap
+        ((TAndroidHelper.context.getSystemService
+        (TJContext.JavaClass.NOTIFICATION_SERVICE) as ILocalObject)
+        .GetObjectID);
+      try
+        manager.createNotificationChannelGroup(group);
+      except
+        on E: Exception do
+        begin
+        end;
+      end;
+      //channel := TJNotificationChannel.Create;
+      channel := TJNotificationChannel.JavaClass.init(StringToJString('hodler'),
+        StrToJCharSequence('hodler'), 0);
+      try
+        channel.setGroup(StringToJString('hodler'));
+      except
+        on E: Exception do
+        begin
+        end;
+      end;
+       logd('NANOPOWAS: AndroidServiceStartCommand 902');
+      channel.setName(StrToJCharSequence('hodler'));
+      channel.enableLights(true);
+      channel.enableVibration(true);
+      channel.setLightColor(TJColor.JavaClass.GREEN);
+      channel.setLockscreenVisibility
+        (TJNotification.JavaClass.VISIBILITY_PRIVATE);
 
-  manager.createNotificationChannel(channel);
-  // EnableWakeLock(True);
-  LBuilder := DW.Androidapi.JNI.Support.TJNotificationCompat_Builder.JavaClass.
-    init(TAndroidHelper.context,channel.getId);
-  LBuilder.setAutoCancel(true);
-  LBuilder.setGroupSummary(true);
-  LBuilder.setChannelId(channel.getId);
-  LBuilder.setContentTitle(StrToJCharSequence('HODLER - Nano PoW Worker'));
-  LBuilder.setContentText(StrToJCharSequence('Doing work for mine the blocks'));
-  LBuilder.setSmallIcon(TAndroidHelper.context.getApplicationInfo.icon);
-  LBuilder.setTicker(StrToJCharSequence('HODLER - Nano PoW Worker'));
-  DM.JavaService.StartForeground(1995, LBuilder.build);
+      manager.createNotificationChannel(channel);
+      // EnableWakeLock(True);
+      LBuilder := DW.Androidapi.JNI.Support.TJNotificationCompat_Builder.
+        JavaClass.init(TAndroidHelper.context, channel.getId);
+      LBuilder.setAutoCancel(true);
+      LBuilder.setGroupSummary(true);
+      LBuilder.setChannelId(channel.getId);
+      LBuilder.setContentTitle(StrToJCharSequence('HODLER - Nano PoW Worker'));
+      LBuilder.setContentText
+        (StrToJCharSequence('Doing work for mine the blocks'));
+      LBuilder.setSmallIcon(TAndroidHelper.context.getApplicationInfo.icon);
+      LBuilder.setTicker(StrToJCharSequence('HODLER - Nano PoW Worker'));
+      DM.JavaService.StartForeground(1995, LBuilder.build);
+    end;
+  except
+    on E: Exception do
+    begin
+    logd('NANOPOWAS: '+E.Message);
+    end;
+  end;
   Result := TJService.JavaClass.START_STICKY;
-
+ logd('NANOPOWAS: done');
 end;
 
 end.

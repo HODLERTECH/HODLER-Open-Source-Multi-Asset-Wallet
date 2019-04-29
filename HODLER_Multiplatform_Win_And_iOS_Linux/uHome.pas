@@ -132,7 +132,6 @@ type
     btnAddNewWallet: TButton;
     wvAddress: TEdit;
     btnOCR: TButton;
-    FOcr1: TFOcr;
     ReadOCR: TTabItem;
     imgCameraOCR: TImage;
     OCRHeader: TToolBar;

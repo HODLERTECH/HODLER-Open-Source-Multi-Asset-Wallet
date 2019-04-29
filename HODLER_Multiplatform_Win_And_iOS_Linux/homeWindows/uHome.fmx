@@ -34,7 +34,7 @@ object frmHome: TfrmHome
     Size.Height = 687.000000000000000000
     Size.PlatformDefault = False
     TabHeight = 49.000000000000000000
-    TabIndex = 8
+    TabIndex = 33
     TabOrder = 8
     TabPosition = None
     OnChange = closeVirtualKeyBoard
@@ -1059,7 +1059,7 @@ object frmHome: TfrmHome
           Size.Height = 611.000000000000000000
           Size.PlatformDefault = False
           TabHeight = 49.000000000000000000
-          TabIndex = 2
+          TabIndex = 1
           TabOrder = 0
           TabPosition = PlatformDefault
           OnChange = closeVirtualKeyBoard
@@ -1580,7 +1580,7 @@ object frmHome: TfrmHome
             CustomIcon = <
               item
               end>
-            IsSelected = False
+            IsSelected = True
             Size.Width = 60.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
@@ -1863,7 +1863,7 @@ object frmHome: TfrmHome
             CustomIcon = <
               item
               end>
-            IsSelected = True
+            IsSelected = False
             Size.Width = 47.000000000000000000
             Size.Height = 49.000000000000000000
             Size.PlatformDefault = False
@@ -6137,7 +6137,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -9074,7 +9074,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -9156,24 +9156,13 @@ object frmHome: TfrmHome
         Size.Height = 248.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 4
-        object Layout38: TLayout
+        object SendFromLayout: TLayout
           Align = MostTop
           Position.Y = 48.000000000000000000
           Size.Width = 450.000000000000000000
           Size.Height = 40.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
-          object SendFromLabel: TLabel
-            Align = Client
-            Margins.Left = 15.000000000000000000
-            Margins.Right = 15.000000000000000000
-            Size.Width = 420.000000000000000000
-            Size.Height = 40.000000000000000000
-            Size.PlatformDefault = False
-            TextSettings.HorzAlign = Trailing
-            Text = 'SendFromLabel'
-            TabOrder = 0
-          end
           object SendFromStaticLabel: TLabel
             Align = Client
             Margins.Left = 15.000000000000000000
@@ -9182,7 +9171,7 @@ object frmHome: TfrmHome
             Size.Height = 40.000000000000000000
             Size.PlatformDefault = False
             Text = 'From:'
-            TabOrder = 1
+            TabOrder = 0
           end
         end
         object Layout41: TLayout
@@ -9243,24 +9232,13 @@ object frmHome: TfrmHome
             TabOrder = 1
           end
         end
-        object Layout47: TLayout
+        object ConfirmSendToLayout: TLayout
           Align = Top
           Position.Y = 88.000000000000000000
           Size.Width = 450.000000000000000000
           Size.Height = 40.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 4
-          object SendToLabel: TLabel
-            Align = Client
-            Margins.Left = 15.000000000000000000
-            Margins.Right = 15.000000000000000000
-            Size.Width = 420.000000000000000000
-            Size.Height = 40.000000000000000000
-            Size.PlatformDefault = False
-            TextSettings.HorzAlign = Trailing
-            Text = 'SendToLabel'
-            TabOrder = 0
-          end
           object SendToStaticLabel: TLabel
             Align = Client
             Margins.Left = 15.000000000000000000
@@ -9269,7 +9247,7 @@ object frmHome: TfrmHome
             Size.Height = 40.000000000000000000
             Size.PlatformDefault = False
             Text = 'To:'
-            TabOrder = 1
+            TabOrder = 0
           end
         end
         object SendDetailsLabel: TLabel

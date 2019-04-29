@@ -3,9 +3,9 @@ unit AccountData;
 interface
 
 uses tokenData, WalletStructureData, cryptoCurrencyData, System.IOUtils,
-  FMX.Graphics, System.types, FMX.Types,  FMX.Controls, FMX.StdCtrls,
+  FMX.Graphics, System.types, FMX.types, FMX.Controls, FMX.StdCtrls,
   Sysutils, Classes, FMX.Dialogs, Json, Velthuis.BigIntegers, math,
-  System.Generics.Collections, System.SyncObjs, THreadKindergartenData ;
+  System.Generics.Collections, System.SyncObjs, THreadKindergartenData;
 
 procedure loadCryptoCurrencyJSONData(data: TJSONValue; cc: cryptoCurrency);
 function getCryptoCurrencyJsonData(cc: cryptoCurrency): TJSONObject;
@@ -37,7 +37,7 @@ type
     SmallQRImagePath: AnsiString;
 
     Paths: Array of AnsiString;
-    firstSync : boolean;
+    firstSync: boolean;
 
     SynchronizeThreadGuardian: ThreadKindergarten;
 
@@ -82,14 +82,12 @@ type
     procedure asyncVerifyKeyPool();
     procedure refreshGUI();
 
-
-
   private
 
   var
 
-    semaphore , VerifyKeypoolSemaphore:TLightweightSemaphore;
-    mutex : TSemaphore;
+    semaphore, VerifyKeypoolSemaphore: TLightweightSemaphore;
+    mutex: TSemaphore;
     synchronizeThread: TThread;
     mutexTokenFile, mutexCoinFile, mutexSeedFile, mutexDescriptionFile
       : TSemaphore;
@@ -116,14 +114,17 @@ type
 implementation
 
 uses
-  misc, uHome, coinData, nano, languages,SyncThr, Bitcoin , walletViewRelated , CurrencyConverter;
+  misc, uHome, coinData, nano, languages, SyncThr, Bitcoin, walletViewRelated,
+  CurrencyConverter;
 
 procedure Account.refreshGUI();
 begin
   if self = currentAccount then
   begin
+
   //frmhome.refreshGlobalImage.Start;
   refreshGlobalFiat();
+
     TThread.Synchronize(TThread.CurrentThread,
       procedure
       begin
@@ -148,12 +149,11 @@ begin
       procedure
       begin
 
-        TLabel(frmHome.FindComponent('globalBalance')).text :=
-          floatToStrF(frmhome.currencyConverter.calculate(globalFiat), ffFixed, 9, 2);
-        TLabel(frmHome.FindComponent('globalCurrency')).text := '         ' +
-          frmhome.currencyConverter.symbol;
-
-
+        TLabel(frmhome.FindComponent('globalBalance')).text :=
+          floatToStrF(frmhome.CurrencyConverter.calculate(globalFiat),
+          ffFixed, 9, 2);
+        TLabel(frmhome.FindComponent('globalCurrency')).text := '         ' +
+          frmhome.CurrencyConverter.symbol;
 
         hideEmptyWallets(nil);
 
@@ -165,12 +165,13 @@ end;
 procedure Account.asyncVerifyKeyPool();
 begin
 
-  SynchronizeThreadGuardian.CreateAnonymousThread(procedure
-  begin
+  SynchronizeThreadGuardian.CreateAnonymousThread(
+    procedure
+    begin
 
-    verifyKeypool();
+      verifyKeypool();
 
-  end).start();
+    end).Start();
 
 end;
 
@@ -203,12 +204,12 @@ begin
 
         VerifyKeypoolSemaphore.WaitFor();
         try
-          s := keypoolIsUsed(self,id);
+          s := keypoolIsUsed(self, id);
           url := HODLER_URL + '/batchSync0.3.2.php?keypool=true&coin=' +
             availablecoin[id].name;
           if TThread.CurrentThread.CheckTerminated then
             exit();
-          parseSync(self , postDataOverHTTP(url, s, false, True), True);
+          parseSync(self, postDataOverHTTP(url, s, false, True), True);
 
         except
           on E: Exception do
@@ -273,12 +274,12 @@ begin
   end;
 end;
 
-procedure  Account.lockSynchronize();
+procedure Account.lockSynchronize();
 begin
 
 end;
 
-procedure  Account.unlockSynchronize();
+procedure Account.unlockSynchronize();
 begin
 
 end;
@@ -304,13 +305,11 @@ begin
   if synchronizeThread = nil then
   begin
 
-    synchronizeThread := tthread.CreateAnonymousThread( self.synchronize );
+    synchronizeThread := TThread.CreateAnonymousThread(self.Synchronize);
     synchronizeThread.FreeOnTerminate := false;
-    synchronizeThread.start();
-    //synchronizeThread.
+    synchronizeThread.Start();
+    // synchronizeThread.
   end;
-
-
 
 end;
 
@@ -321,15 +320,17 @@ var
   batched: string;
 begin
 
+
  if self = currentAccount then
   begin
     frmhome.refreshGlobalImage.Start;
   end;
 
+ 
   for i in [0, 1, 2, 3, 4, 5, 6, 7] do
   begin
-    //if TThread.CurrentThread.CheckTerminated then
-    //  exit();
+    // if TThread.CurrentThread.CheckTerminated then
+    // exit();
     mutex.Acquire();
 
     SynchronizeThreadGuardian.CreateAnonymousThread(
@@ -354,35 +355,35 @@ begin
             for wi in myCoins do
             begin
 
-              //if TThread.CurrentThread.CheckTerminated then
-              //  exit();
+              // if TThread.CurrentThread.CheckTerminated then
+              // exit();
 
               if wi.coin in [4, 8] then
-                SynchronizeCryptoCurrency(self ,wi);
+                SynchronizeCryptoCurrency(self, wi);
             end;
 
           end
           else
           begin
-            s := batchSync(self ,id);
+            s := batchSync(self, id);
 
             url := HODLER_URL + '/batchSync0.3.2.php?coin=' +
               availablecoin[id].name;
 
-            temp := postDataOverHTTP(url, s, Self.firstSync, True);
-            //if TThread.CurrentThread.CheckTerminated then
-            //  exit();
-            parseSync(self , temp);
+            temp := postDataOverHTTP(url, s, self.firstSync, True);
+            // if TThread.CurrentThread.CheckTerminated then
+            // exit();
+            parseSync(self, temp);
           end;
-         // if TThread.CurrentThread.CheckTerminated then
-          //  exit();
+          // if TThread.CurrentThread.CheckTerminated then
+          // exit();
 
-         { TThread.CurrentThread.Synchronize(nil,
+          { TThread.CurrentThread.Synchronize(nil,
             procedure
             begin
 
-              updateBalanceLabels(id);
-            end);  }
+            updateBalanceLabels(id);
+            end); }
         except
           on E: Exception do
           begin
@@ -406,8 +407,8 @@ begin
   end;
   for i := 0 to Length(myTokens) - 1 do
   begin
-    //if TThread.CurrentThread.CheckTerminated then
-    //  exit();
+    // if TThread.CurrentThread.CheckTerminated then
+    // exit();
     mutex.Acquire();
 
     SynchronizeThreadGuardian.CreateAnonymousThread(
@@ -421,9 +422,9 @@ begin
 
         semaphore.WaitFor();
         try
-          //if TThread.CurrentThread.CheckTerminated then
-          //  exit();
-          SynchronizeCryptoCurrency(self ,myTokens[id]);
+          // if TThread.CurrentThread.CheckTerminated then
+          // exit();
+          SynchronizeCryptoCurrency(self, myTokens[id]);
         except
           on E: Exception do
           begin
@@ -439,7 +440,7 @@ begin
           end); }
 
       end).Start();
-    //if TThread.CurrentThread.CheckTerminated then
+    // if TThread.CurrentThread.CheckTerminated then
     // exit();
     mutex.Acquire();
     mutex.Release();
@@ -448,22 +449,24 @@ begin
 
   while (semaphore <> nil) and (semaphore.CurrentCount <> 8) do
   begin
-    //if TThread.CurrentThread.CheckTerminated then
-    //  exit();
+    // if TThread.CurrentThread.CheckTerminated then
+    // exit();
     sleep(50);
   end;
   { tthread.Synchronize(nil , procedure
     begin
     showmessage( floatToStr( globalLoadCacheTime ) );
     end); }
-  Self.firstSync := false;
+  self.firstSync := false;
   SaveFiles();
 
   refreshGUI();
+
 if self = currentAccount then
   begin
     frmhome.refreshGlobalImage.Stop;
   end;
+
 
 end;
 
@@ -520,7 +523,7 @@ end;
 
 procedure Account.GenerateEQRFiles();
 begin
-//
+  //
 
 end;
 
@@ -582,7 +585,7 @@ begin
 
   ts := TstringList.Create();
 
-  ts.Text := obj.ToString;
+  ts.text := obj.ToString;
   ts.SaveToFile(DescriptionFilePath);
 
   ts.Free();
@@ -593,12 +596,13 @@ end;
 
 procedure Account.LoadDescriptionFile();
 var
-  obj : TJsonObject;
-  //it : TJSONPairEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
-      // PairEnumerator works on 10.2
-      // TEnumerator works on 10.3
-  it : TJSONObject.TEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
-  ts , temp : TstringList;
+  obj: TJSONObject;
+  // it : TJSONPairEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
+  // PairEnumerator works on 10.2
+  // TEnumerator works on 10.3
+  it: TJSONObject.TEnumerator;
+  // TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
+  ts, temp: TstringList;
 begin
 
   mutexDescriptionFile.Acquire;
@@ -611,14 +615,14 @@ begin
 
   ts := TstringList.Create();
   ts.loadFromFile(DescriptionFilePath);
-  if ts.Text = '' then
+  if ts.text = '' then
   begin
     ts.Free();
     mutexDescriptionFile.Release;
     exit();
   end;
 
-  obj := TJSONObject(TJSONObject.ParseJSONValue(ts.Text));
+  obj := TJSONObject(TJSONObject.ParseJSONValue(ts.text));
 
   it := obj.GetEnumerator;
 
@@ -835,7 +839,7 @@ begin
   inherited Create;
   name := _name;
 
-  self.firstsync := true;
+  self.firstSync := True;
 
   DirPath := TPath.Combine(HOME_PATH, name);
 
@@ -883,21 +887,21 @@ end;
 destructor Account.Destroy();
 begin
 
-  {if SyncBalanceThr <> nil then
+  { if SyncBalanceThr <> nil then
 
-      SyncBalanceThr.Terminate;
+    SyncBalanceThr.Terminate;
 
-        TThread.CreateAnonymousThread(
-            procedure
-                begin
+    TThread.CreateAnonymousThread(
+    procedure
+    begin
 
-                      SyncBalanceThr.DisposeOf;
+    SyncBalanceThr.DisposeOf;
 
-                            SyncBalanceThr := nil;
+    SyncBalanceThr := nil;
 
-                                end).Start();}
+    end).Start(); }
 
-if (synchronizeThread <> nil) and (synchronizeThread.finished) then
+  if (synchronizeThread <> nil) and (synchronizeThread.finished) then
   begin
     synchronizeThread.Free;
     synchronizeThread := nil;
@@ -917,9 +921,9 @@ if (synchronizeThread <> nil) and (synchronizeThread.finished) then
   mutexDescriptionFile.Free;
   DescriptionDict.Free();
   clearArrays();
-  semaphore.free;
-  VerifyKeypoolSemaphore.free;
-  mutex.free;
+  semaphore.Free;
+  VerifyKeypoolSemaphore.Free;
+  mutex.Free;
 
   inherited;
 end;
@@ -938,7 +942,7 @@ begin
     ts.Add(EncryptedMasterSeed);
     ts.Add(booltoStr(userSaveSeed));
     ts.Add(booltoStr(privTCA));
-    ts.Add(booltoStr(frmHome.HideZeroWalletsCheckBox.isChecked));
+    ts.Add(booltoStr(frmhome.HideZeroWalletsCheckBox.isChecked));
     ts.SaveToFile(SeedFilePath);
   except
     on E: Exception do
@@ -1066,16 +1070,17 @@ begin
 
   clearArrays();
 
-
   LoadSeedFile();
 
   LoadCoinFile();
   LoadTokenFile();
   LoadDescriptionFile();
 
-   {$IF (DEFINED(MSWINDOWS) OR DEFINED(LINUX))}
-  BigQRImagePath := TPath.Combine( DirPath , hash160FromHex(EncryptedMasterSeed) + '_' + '_BIG' + '.png')  ;
-  SmallQRImagePath:=TPath.Combine( DirPath , hash160FromHex(EncryptedMasterSeed) + '_' + '_SMALL' + '.png');
+{$IF (DEFINED(MSWINDOWS) OR DEFINED(LINUX))}
+  BigQRImagePath := TPath.Combine(DirPath, hash160FromHex(EncryptedMasterSeed) +
+    '_' + '_BIG' + '.png');
+  SmallQRImagePath := TPath.Combine(DirPath, hash160FromHex(EncryptedMasterSeed)
+    + '_' + '_SMALL' + '.png');
 {$ELSE}
   if not DirectoryExists(TPath.Combine(System.IOUtils.TPath.GetDownloadsPath(),
     'hodler.tech')) then
@@ -1089,7 +1094,6 @@ begin
     (TPath.Combine(System.IOUtils.TPath.GetDownloadsPath(), 'hodler.tech'),
     name + '_' + EncryptedMasterSeed + '_' + '_ENC_QR_SMALL' + '.png');
 {$ENDIF}
-
 end;
 
 procedure Account.LoadCoinFile();
@@ -1173,9 +1177,9 @@ begin
 
   ts.loadFromFile(CoinFilePath);
 
-  if ts.Text[low(ts.Text)] = '[' then
+  if ts.text[low(ts.text)] = '[' then
   begin
-    s := ts.Text;
+    s := ts.text;
     JsonArray := TJsonArray(TJSONObject.ParseJSONValue(s));
 
     for coinJson in JsonArray do
@@ -1258,10 +1262,10 @@ begin
 
     ts.loadFromFile(TokenFilePath);
 
-    if ts.Text[low(ts.Text)] = '[' then
+    if ts.text[low(ts.text)] = '[' then
     begin
 
-      JsonArray := TJsonArray(TJSONObject.ParseJSONValue(ts.Text));
+      JsonArray := TJsonArray(TJSONObject.ParseJSONValue(ts.text));
 
       for tokenJson in JsonArray do
       begin
@@ -1376,7 +1380,7 @@ begin
 
     end;
 
-    ts.Text := TokenArray.ToString;
+    ts.text := TokenArray.ToString;
     ts.SaveToFile(TokenFilePath);
     TokenArray.Free;
   except
@@ -1435,7 +1439,7 @@ begin
 
     ts := TstringList.Create();
     try
-      ts.Text := JsonArray.ToString;
+      ts.text := JsonArray.ToString;
       ts.SaveToFile(CoinFilePath);
     except
       on E: Exception do
