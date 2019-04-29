@@ -2,7 +2,7 @@
 
 HODLER Wallet available for Mobile & Desktop: a cryptocurrency wallet designed to combine high level of security with great user-friendliness
 Support for a large number of coins and tokens. Our wallet is working of these platforms:
-Windows 7 SP1 & and up, Android 4.4 and up, iOS 9 and up, Linux (64bit only)
+Windows 7 SP1 & and up, Android 5.1 and up, iOS 9 and up, Linux (64bit only)
 
 ## Resources & community
 
@@ -32,15 +32,17 @@ HODLER Wallet is written in Delphi, which give opportunity to compile from one c
 
 Requirements:
 
-Delphi 10.2.3 Starter (For Win32 build only)
+Delphi 10.3.1 Starter (For Win32 build only)
 
-Delphi 10.2.3 Community Edition at least (For Win32, Android and iOS build)
+Delphi 10.3.1 Community Edition at least (For Win32, Android and iOS build)
 
 You can get Delphi here: https://www.embarcadero.com/
 
 FMXLinux for build Linux binary, get it here: https://www.fmxlinux.com/
 
 TMS Cryptography Pack, at least 3.3.1 https://www.tmssoftware.com/site/tmscrypto.asp
+
+KastriFree https://github.com/DelphiWorlds/KastriFree
 
 Please notice, we are using commerial solutions, but you can get above software for free or in trial. This is enough to make private builds.
 To get access to our coin API, please mail as, contact (a) hodler.tech, we will provide you public and private key which will allow to connect to our infrastructure
