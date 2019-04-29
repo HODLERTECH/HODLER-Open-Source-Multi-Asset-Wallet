@@ -1539,7 +1539,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
                 <DeployFile LocalName="gfx\splash960x720.png" Configuration="Debug" Class="Android_SplashImage960"/>
                 <DeployFile LocalName="NanoPoWAndroidService\libsodium.a" Configuration="Release" Class="File">
                     <Platform Name="Android">
-                        <RemoteDir>library\lib\armeabi-v7a\</RemoteDir>
+                        <RemoteDir>.\assets\internal\nacl2\</RemoteDir>
                         <RemoteName>libsodium.a</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>

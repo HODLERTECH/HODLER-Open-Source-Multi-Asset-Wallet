@@ -79,7 +79,7 @@ function keypoolIsUsed(ac : account ; var coinid: Integer; X: Integer = -1): str
   //semaphore: TLightweightSemaphore;
   //VerifyKeypoolSemaphore: TLightweightSemaphore;
   //mutex: TSemaphore;
-
+var serviceStarted:boolean=false;
 implementation
 
 uses
@@ -244,7 +244,10 @@ begin
   _system(@psxString[1]);
 {$ENDIF}
 {$IFDEF ANDROID}
+if not servicestarted then begin
 frmHome.FServiceConnection.StartService('NanoPowAS');
+servicestarted:=true;
+end;
 {$ENDIF}
   try
 

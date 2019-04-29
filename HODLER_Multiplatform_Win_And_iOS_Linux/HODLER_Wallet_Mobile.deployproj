@@ -2432,8 +2432,8 @@
             <Overwrite>True</Overwrite>
         </DeployFile>
         <DeployFile Include="NanoPoWAndroidService\libsodium.a" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Mobile\library\lib\armeabi-v7a\</RemoteDir>
-            <RemoteName>libsodium.a</RemoteName>
+            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\nacl2\</RemoteDir>
+            <RemoteName>libsodium.so</RemoteName>
             <DeployClass>File</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>

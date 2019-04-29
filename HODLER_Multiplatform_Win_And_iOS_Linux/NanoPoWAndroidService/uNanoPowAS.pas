@@ -363,6 +363,7 @@ logd('NANOPOWAS: findwork '+Hash);
               Exit;
             end;
     end;
+    logd('NANOPOWAS: Working '+DateTimeToStr(now));
   until true = false;
 end;
 
@@ -835,11 +836,13 @@ begin
         ex := 'isthere'
       else
         ex := 'uuuuu';
+        logd('NANOPOWAS: '+ex+' '+err);
       LibHandle := LoadLibrary(PwideChar(err));
       if LibHandle <> 0 then
       begin
         blake2b_init := getprocaddress(LibHandle,
           PwideChar('crypto_generichash_blake2b_init'));
+          logd('NANOPOWAS:   '+inttohex(integer(getprocaddress(LibHandle,PwideChar('crypto_generichash_blake2b_init'))),8));
         blake2b_update := getprocaddress(LibHandle,
           'crypto_generichash_blake2b_update');
         blake2b_final := getprocaddress(LibHandle,
