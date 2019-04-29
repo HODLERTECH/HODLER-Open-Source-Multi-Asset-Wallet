@@ -1823,6 +1823,7 @@ begin
       sorted: Boolean;
       DEBUGstring: AnsiString;
       holder: TfmxObject;
+      privWifText : AnsiString;
     begin
 
       i := 0;
@@ -1841,8 +1842,12 @@ begin
 
         exit;
       end;
+
+      privWifText := removeSpace(frmhome.WIFEdit.Text);
+
+
       startFullfillingKeypool(MasterSeed);
-      if isHex(frmhome.WIFEdit.Text) then
+      if isHex(privWifText) then
       begin
 
         TThread.Synchronize(nil,
@@ -1859,7 +1864,7 @@ begin
             frmhome.NewCoinPrivKeyOKButton.Enabled := true;
           end);
 
-        if (length(frmhome.WIFEdit.Text) = 64) then
+        if (length(privWifText) = 64) then
         begin
 
           // Tthread.Synchronize(nil , procedure
@@ -1867,7 +1872,7 @@ begin
           if not(frmhome.HexPrivKeyCompressedRadioButton.IsChecked or
             frmhome.HexPrivKeyNotCompressedRadioButton.IsChecked) then
             exit;
-          out := frmhome.WIFEdit.Text;
+          out := privWifText;
           if frmhome.HexPrivKeyCompressedRadioButton.IsChecked then
             isCompressed := true
           else if frmhome.HexPrivKeyNotCompressedRadioButton.IsChecked then
@@ -1888,8 +1893,8 @@ begin
       end
       else
       begin
-        if frmhome.WIFEdit.Text <>
-          privKeyToWif(wifToPrivKey(frmhome.WIFEdit.Text)) then
+        if privWifText <>
+          privKeyToWif(wifToPrivKey(privWifText)) then
         begin
 
           TThread.Synchronize(nil,
@@ -1900,7 +1905,7 @@ begin
 
           exit;
         end;
-        WData := wifToPrivKey(frmhome.WIFEdit.Text);
+        WData := wifToPrivKey(privWifText);
         isCompressed := WData.isCompressed;
         out := WData.PrivKey;
       end;
@@ -1919,11 +1924,11 @@ begin
       else if newcoinID = 8 then
       begin
 
-        pub := nano_privToPub(frmhome.WIFEdit.Text);
+        pub := nano_privToPub(privWifText);
         wd := NanoCoin.create(8, -1, -1, nano_accountFromHexKey(pub), '');
         wd.pub := pub;
         wd.EncryptedPrivKey := speckEncrypt((TCA(MasterSeed)),
-          frmhome.WIFEdit.Text);
+          privWifText);
 
       end
       else
@@ -2489,7 +2494,7 @@ begin
     if CurrentCoin = nil then
       exit;
 
-    if (CurrentCoin.coin = 8) and (CurrentCryptoCurrency.unconfirmed <> 0) and
+    if (CurrentCoin.coin = 8) and (CurrentCryptoCurrency.unconfirmed > 0) and
       (not NanoCoin(CurrentCryptoCurrency).isUnlocked) then
     begin
 
@@ -3333,14 +3338,16 @@ var
   ts: TStringList;
   wd: TWalletInfo;
   request: AnsiString;
+  PrivWifText : AnsiString;
 begin
   with frmhome do
   begin
 
     try
-      if isHex(WIFEdit.Text) then
+      PrivWifText := removeSpace(WIFEdit.Text);
+      if isHex(PrivWifText) then
       begin
-        if (length(WIFEdit.Text) <> 64) then
+        if (length(PrivWifText) <> 64) then
 
         begin
           popupWindow.create('Key too short');
@@ -3402,8 +3409,8 @@ begin
               request: AnsiString;
               begin }
 
-            comkey := secp256k1_get_public(WIFEdit.Text, false);
-            notkey := secp256k1_get_public(WIFEdit.Text, true);
+            comkey := secp256k1_get_public(PrivWifText, false);
+            notkey := secp256k1_get_public(PrivWifText, true);
 
             wd := coinData.createCoin(newcoinID, -1, -1,
               Bitcoin_PublicAddrToWallet(comkey, availableCoin[newcoinID].p2pk),
@@ -3550,7 +3557,7 @@ begin
 
         end
       end
-      else if WIFEdit.Text <> privKeyToWif(wifToPrivKey(WIFEdit.Text)) then
+      else if PrivWifText <> privKeyToWif(wifToPrivKey( PrivWifText )) then
       begin
         popupWindow.create('Wrong WIF');
         exit;
