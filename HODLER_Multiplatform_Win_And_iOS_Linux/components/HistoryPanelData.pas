@@ -59,9 +59,12 @@ begin
   addrLbl.parent := self;
   addrLbl.Align := TAlignLayout.Top;
   addrLbl.Visible := true;
-  addrLbl.Height := 18;
+  addrLbl.Height := 36;
 
   addrLbl.TextSettings.HorzAlign := TTextAlign.Leading;
+  addrLbl.TextSettings.VertAlign := TTextAlign.Leading;
+  addrLbl.WordWrap := true;
+  addrlbl.Trimming := TTextTrimming.None;
 
   datalbl := TLabel.Create(self);
   datalbl.Visible := true;
