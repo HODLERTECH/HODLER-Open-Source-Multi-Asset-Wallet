@@ -3296,7 +3296,8 @@ end;
 function removeSpace(Str: AnsiString): AnsiString;
 begin
   Result := Str;
-  Result := StringReplace(Result, #13#10, '', [rfReplaceAll]);
+  Result := StringReplace(Result, #10, '', [rfReplaceAll]);
+  Result := StringReplace(Result, #13, '', [rfReplaceAll]);
   Result := StringReplace(Result, ' ', '', [rfReplaceAll]);
 end;
 
