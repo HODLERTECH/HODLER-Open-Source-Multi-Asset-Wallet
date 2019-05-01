@@ -2494,6 +2494,8 @@ begin
     if CurrentCoin = nil then
       exit;
 
+
+
     if (CurrentCoin.coin = 8) and (CurrentCryptoCurrency.unconfirmed > 0) and
       (not NanoCoin(CurrentCryptoCurrency).isUnlocked) then
     begin
@@ -2612,7 +2614,7 @@ begin
           ' ' + CurrencyConverter.symbol;
 
         TopInfoUnconfirmedValue.Text := ' ' + BigIntegerBeautifulStr
-          (CurrentCryptoCurrency.unconfirmed, CurrentCryptoCurrency.decimals) +
+          (CurrentCryptoCurrency.unconfirmed, CurrentCryptoCurrency.decimals , true) +
           ' ' + CurrentCryptoCurrency.shortcut;
         TopInfoUnconfirmedFiatLabel.Text :=
           floatToStrF(CurrentCryptoCurrency.getUNConfirmedFiat, ffFixed, 15, 2)

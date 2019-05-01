@@ -269,7 +269,7 @@ procedure showMsg(backView: TTabItem; message: AnsiString;
 function BigIntegerToFloatStr(const num: BigInteger; decimals: integer;
   precision: integer = -1): AnsiString;
 function StrFloatToBigInteger(Str: AnsiString; decimals: integer): BigInteger;
-function BigIntegerBeautifulStr(num: BigInteger; decimals: integer): AnsiString;
+function BigIntegerBeautifulStr(num: BigInteger; decimals: integer ; allowToNegative : boolean = false): AnsiString;
 function getConfirmedAsString(wi: TWalletInfo): AnsiString;
 function fromMnemonic(input: AnsiString): integer; overload;
 function fromMnemonic(input: TStringList): AnsiString; overload;
@@ -2924,7 +2924,7 @@ begin
 
 end;
 
-function BigIntegerBeautifulStr(num: BigInteger; decimals: integer): AnsiString;
+function BigIntegerBeautifulStr(num: BigInteger; decimals: integer ; allowToNegative : boolean = false): AnsiString;
 var
   c: array [-4 .. 5] of Char;
   Str: AnsiString;
@@ -2937,7 +2937,10 @@ begin
 
   if num < 0 then
   begin
-    Result := '0.00';
+    if allowToNegative then
+      result := '-' + BigIntegerBeautifulStr(num * -1 , decimals , false )
+    else
+      Result := '0.00';
     exit;
   end;
 
@@ -4818,10 +4821,10 @@ begin
                   TLabel(fmxObj).Text := BigIntegerBeautifulStr(cc.confirmed,
                     cc.decimals) + '    ' + floatToStrF(cc.getConfirmedFiat(),
                     ffFixed, 15, 2) + ' ' + frmhome.CurrencyConverter.symbol;
-                  if cc.unconfirmed > 0 then
+                  if cc.unconfirmed <> 0 then
                     TLabel(fmxObj).Text := TLabel(fmxObj).Text + #13#10 +
                       ' Unpocketed ' + BigIntegerBeautifulStr(cc.unconfirmed,
-                      cc.decimals) + '    ' +
+                      cc.decimals , true) + '    ' +
                       floatToStrF(cc.getunConfirmedFiat(), ffFixed, 15, 2) + ' '
                       + frmhome.CurrencyConverter.symbol
                 end;
