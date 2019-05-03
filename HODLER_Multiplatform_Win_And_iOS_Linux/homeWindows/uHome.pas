@@ -1435,7 +1435,7 @@ begin
   //LoadCurrentAccount(RestoreNameEdit.Text);
   frmHome.FormShow(nil);
   tced := '';
-  startFullfillingKeypool(MasterSeed);
+  //startFullfillingKeypool(MasterSeed); // instruction exist in CreateNewAccountAndSave
   MasterSeed := '';
   RestorePasswordEdit.Text := '';
 end;

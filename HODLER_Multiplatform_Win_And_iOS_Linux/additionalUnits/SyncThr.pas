@@ -177,7 +177,8 @@ procedure syncNano(var cc: cryptoCurrency; data: AnsiString);
   procedure calcNanoBalances(var nn: NanoCoin);
   var
     nblock: TNanoBlock;   i:integer;
-    prevAmount: BigInteger;
+    prevAmount,prevUAmount,delta: BigInteger;
+
   begin
     if Length(nn.pendingChain) = 0 then
       exit;
@@ -185,34 +186,42 @@ procedure syncNano(var cc: cryptoCurrency; data: AnsiString);
     nblock := nn.firstBlock;
     if not (nblock.balance='') then
     if BigInteger.Parse(nblock.balance) < prevAmount then
+    begin
+    delta:=(prevAmount - BigInteger.Parse(nblock.balance));
       nn.confirmed := prevAmount -
-        (prevAmount - BigInteger.Parse(nblock.balance));
+        delta;
+      nn.unconfirmed:= nn.unconfirmed - delta;
+    end;
 
     repeat
-    if BigInteger.Parse(nblock.balance) < prevAmount then begin
-      SetLength(nn.history, Length(nn.history) + 1);
-      i:=length(nn.history)-1;
-      SetLength(nn.history[i].values, 2);
-      SetLength(nn.history[i].addresses, 2);
-      nn.history[i].values[0] :=
-        (prevAmount - BigInteger.Parse(nblock.balance));
-      nn.history[i].values[1] := 0;
-      nn.history[i].TransactionID := nblock.Hash;
-      nn.history[i].addresses[0] := (nblock.account);
-      nn.history[i].addresses[1] := (nblock.source);
-      nn.history[i].data := IntToStr(Length(nn.history) + 1);
-      nn.history[i].typ := 'OUT';
-      nn.history[i].CountValues := nn.history[i].values[0];
-      nn.history[i].confirmation := 0;
-    end;
+
+      if BigInteger.Parse(nblock.balance) < prevAmount then begin
+        SetLength(nn.history, Length(nn.history) + 1);
+        i:=length(nn.history)-1;
+        SetLength(nn.history[i].values, 2);
+        SetLength(nn.history[i].addresses, 2);
+        nn.history[i].values[0] :=
+          (prevAmount - BigInteger.Parse(nblock.balance));
+        nn.history[i].values[1] := 0;
+        nn.history[i].TransactionID := nblock.Hash;
+        nn.history[i].addresses[0] := (nblock.account);
+        nn.history[i].addresses[1] := (nblock.source);
+        nn.history[i].data := IntToStr(Length(nn.history) + 1);
+        nn.history[i].typ := 'OUT';
+        nn.history[i].CountValues := nn.history[i].values[0];
+        nn.history[i].confirmation := 0;
+
+      end;
       prevAmount := BigInteger.Parse(nblock.balance);
 
       nblock := nn.BlockByPrev(nblock.hash);
       if not (nblock.balance='') then
       if BigInteger.Parse(nblock.balance) < prevAmount then
       begin
-        nn.confirmed := prevAmount -
-          (prevAmount - BigInteger.Parse(nblock.balance));
+    delta:=(prevAmount - BigInteger.Parse(nblock.balance));
+      nn.confirmed := prevAmount -
+        delta;
+      nn.unconfirmed:= nn.unconfirmed - delta;
       end;
 
     until nblock.account = '';
@@ -298,6 +307,7 @@ end;
             cc.history[i].addresses[0] := nano_accountFromHexKey(block.account);
             cc.history[i].addresses[1] := nano_accountFromHexKey(block.source);
             cc.history[i].data := IntToStr(history.Count - 1 - i);
+
             if block.blocktype = 'send' then
               cc.history[i].typ := 'OUT'
             else
@@ -334,6 +344,7 @@ end;
               SetLength(cc.history[i].values, 2);
               SetLength(cc.history[i].addresses, 2);
               cc.history[i].values[0] := BigInteger.abs(block.blockAmount);
+
               cc.history[i].values[1] := 0;
               // length(hitory.Values) must be the same as length(history.addresses)
               cc.history[i].TransactionID := block.Hash;
@@ -343,9 +354,13 @@ end;
                 nano_accountFromHexKey(block.source);
               cc.history[i].data := IntToStr(history.Count - 1 - i);
               if block.blocktype = 'send' then
-                cc.history[i].typ := 'OUT'
+              begin
+                cc.history[i].typ := 'OUT';
+              end
               else
+              begin
                 cc.history[i].typ := 'IN';
+              end;
               cc.history[i].CountValues := cc.history[i].values[0];
               cc.history[i].confirmation := 0;
             end

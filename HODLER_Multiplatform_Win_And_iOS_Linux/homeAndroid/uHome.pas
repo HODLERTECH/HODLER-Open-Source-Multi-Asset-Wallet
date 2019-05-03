@@ -1360,7 +1360,7 @@ begin
 
   CreateNewAccountAndSave(RestoreNameEdit.Text, RestorePasswordEdit.Text,
     MasterSeed, true);
-  startFullfillingKeypool(MasterSeed);
+  //startFullfillingKeypool(MasterSeed); // instruction exist in CreateNewAccountAndSave
   // frmHome.FormShow(nil);
   tced := '';
   MasterSeed := '';
@@ -1759,6 +1759,7 @@ end;
 
 procedure TfrmHome.lblSendAllFundsClick(Sender: TObject);
 begin
+  SendAllFundsSwitch.setFocus;
   SendAllFundsSwitch.IsChecked := not SendAllFundsSwitch.IsChecked;
 end;
 

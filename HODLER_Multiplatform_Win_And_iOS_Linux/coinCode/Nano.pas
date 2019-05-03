@@ -659,6 +659,8 @@ begin
   if Length(Self.pendingChain) > 0 then
     Exit(curBlock.Hash);
 
+{
+ Do piek³a
   if Self.lastBlock <> '' then
   begin
     Result := Self.lastBlock;
@@ -676,7 +678,7 @@ begin
 
     end;
 
-  end;
+  end;      }
 
 end;
 

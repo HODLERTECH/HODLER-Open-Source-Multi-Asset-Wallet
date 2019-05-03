@@ -269,7 +269,7 @@ procedure showMsg(backView: TTabItem; message: AnsiString;
 function BigIntegerToFloatStr(const num: BigInteger; decimals: integer;
   precision: integer = -1): AnsiString;
 function StrFloatToBigInteger(Str: AnsiString; decimals: integer): BigInteger;
-function BigIntegerBeautifulStr(num: BigInteger; decimals: integer): AnsiString;
+function BigIntegerBeautifulStr(num: BigInteger; decimals: integer ; allowToNegative : boolean = false): AnsiString;
 function getConfirmedAsString(wi: TWalletInfo): AnsiString;
 function fromMnemonic(input: AnsiString): integer; overload;
 function fromMnemonic(input: TStringList): AnsiString; overload;
@@ -1767,6 +1767,8 @@ var
   ccEmpty: boolean;
   tempBalances: TBalances;
 
+  priceLayout : TLayout;
+
 begin
 
   if crypto is TWalletInfo then
@@ -1833,12 +1835,13 @@ begin
     adrLabel.AutoSize := false;
     adrLabel.Visible := true;
     adrLabel.TextSettings.WordWrap := false;
-    adrLabel.Width :=
-{$IF (DEFINED(MSWINDOWS) OR DEFINED(LINUX))}250{$ELSE}150{$ENDIF};
+    //adrLabel.Width := min(
+//{$IF (DEFINED(MSWINDOWS) OR DEFINED(LINUX))}250{$ELSE}150{$ENDIF} , adrLabel.Canvas.TextWidth( adrLabel.Text));
     adrLabel.Height := 48;
-    adrLabel.Position.x := 52;
-    adrLabel.Position.Y := 0;
-    adrLabel.AutoSize := false;
+    adrlabel.Align := TAlignLayout.Left;
+    //adrLabel.Position.x := 52;
+    //adrLabel.Position.Y := 0;
+    adrLabel.AutoSize := true;
     adrLabel.Visible := true;
     adrLabel.TextSettings.WordWrap := false;
     adrLabel.TagString := 'name';
@@ -1873,7 +1876,7 @@ begin
     balLabel.Visible := true;
     balLabel.Width := 200;
     balLabel.Height := 48;
-    balLabel.Align := TAlignLayout.FitRight;
+    balLabel.Align := TAlignLayout.client;
     balLabel.TextSettings.Font.size := dashBoardFontSize;
     balLabel.Margins.Right := 15;
     balLabel.TagString := 'balance';
@@ -1899,10 +1902,19 @@ begin
       coinIMG.Height := 32.0;
       coinIMG.Width := 50;
     end;
-    coinIMG.Position.x := 4;
-    coinIMG.Position.Y := 8;
+    coinIMG.Align := TAlignLayout.Mostleft;
+    coinIMG.Margins.Right := 4;
+    coinImg.Margins.Top := 8;
+    coinIMG.Margins.Bottom := 8;
+    //coinIMG.Position.x := 4;
+    //coinIMG.Position.Y := 8;
     //
-    price := TLabel.Create(panel);
+    priceLayout := TLayout.Create(panel);
+    pricelayout.parent := panel;
+    priceLayout.Align := TAlignLayout.Contents;
+
+
+    price := TLabel.Create( panel );
     price.parent := panel;
     price.Visible := true;
     if crypto.rate >= 0 then
@@ -1910,14 +1922,16 @@ begin
         (crypto.rate), ffFixed, 18, 2)
     else
       price.Text := 'Syncing with network...';
-    price.Align := TAlignLayout.Bottom;
+    //price.Align := TAlignLayout.Horizontal;
     price.Height := 16;
+    price.Position.Y := panel.Height - price.Height;
+    price.Position.X := coinIMG.Width + 4;
     price.TextSettings.HorzAlign := TTextAlign.Leading;
-    price.Margins.Left := coinIMG.Width + 2;
+    //price.Margins.Left :=
     price.TagString := 'price';
     price.StyledSettings := balLabel.StyledSettings - [TStyledSetting.size];
     price.TextSettings.Font.size := 9;
-    price.Margins.Bottom := 2;
+    //price.Margins.Bottom := 2;
     panel.Visible :=
       (ccEmpty or (not frmhome.HideZeroWalletsCheckBox.IsChecked));
     // panel.AnimateFloat('Opacity', 1, 2);
@@ -2910,7 +2924,7 @@ begin
 
 end;
 
-function BigIntegerBeautifulStr(num: BigInteger; decimals: integer): AnsiString;
+function BigIntegerBeautifulStr(num: BigInteger; decimals: integer ; allowToNegative : boolean = false): AnsiString;
 var
   c: array [-4 .. 5] of Char;
   Str: AnsiString;
@@ -2923,7 +2937,10 @@ begin
 
   if num < 0 then
   begin
-    Result := '0.00';
+    if allowToNegative then
+      result := '-' + BigIntegerBeautifulStr(num * -1 , decimals , false )
+    else
+      Result := '0.00';
     exit;
   end;
 
@@ -3282,7 +3299,8 @@ end;
 function removeSpace(Str: AnsiString): AnsiString;
 begin
   Result := Str;
-  Result := StringReplace(Result, #13#10, '', [rfReplaceAll]);
+  Result := StringReplace(Result, #10, '', [rfReplaceAll]);
+  Result := StringReplace(Result, #13, '', [rfReplaceAll]);
   Result := StringReplace(Result, ' ', '', [rfReplaceAll]);
 end;
 
@@ -4803,10 +4821,10 @@ begin
                   TLabel(fmxObj).Text := BigIntegerBeautifulStr(cc.confirmed,
                     cc.decimals) + '    ' + floatToStrF(cc.getConfirmedFiat(),
                     ffFixed, 15, 2) + ' ' + frmhome.CurrencyConverter.symbol;
-                  if cc.unconfirmed > 0 then
+                  if cc.unconfirmed <> 0 then
                     TLabel(fmxObj).Text := TLabel(fmxObj).Text + #13#10 +
                       ' Unpocketed ' + BigIntegerBeautifulStr(cc.unconfirmed,
-                      cc.decimals) + '    ' +
+                      cc.decimals , true) + '    ' +
                       floatToStrF(cc.getunConfirmedFiat(), ffFixed, 15, 2) + ' '
                       + frmhome.CurrencyConverter.symbol
                 end;
