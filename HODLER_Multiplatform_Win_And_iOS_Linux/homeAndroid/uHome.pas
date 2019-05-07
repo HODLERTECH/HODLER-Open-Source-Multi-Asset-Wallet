@@ -814,6 +814,19 @@ type
     CreateCurrencyFromList: TButton;
     AddNewCryptoCurrencyButton: TButton;
     AddNewCryptoBackButton: TButton;
+    SysAppsTab: TTabItem;
+    sysappsheader: TToolBar;
+    sysappshdrlbl: TLabel;
+    sysappsback: TButton;
+    tutanotapanel: TPanel;
+    tutanotaIcon: TImage;
+    tutanota_hdr: TLabel;
+    tutanota_descr: TLabel;
+    freeotppanel: TPanel;
+    freeotpicon: TImage;
+    Label6: TLabel;
+    Label8: TLabel;
+    btnSysApps: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1058,6 +1071,9 @@ type
     procedure AddNewCryptoCurrencyButtonClick(Sender: TObject);
     procedure CreateCurrencyFromListClick(Sender: TObject);
     procedure AddNewCryptoBackButtonClick(Sender: TObject);
+    procedure tutanotaIconClick(Sender: TObject);
+    procedure freeotpiconClick(Sender: TObject);
+    procedure btnSysAppsClick(Sender: TObject);
     // procedure DayNightModeSwitchClick(Sender: TObject);
 
   private
@@ -1150,7 +1166,7 @@ procedure requestForPermission(permName: AnsiString);
 procedure switchTab(TabControl: TTabControl; TabItem: TTabItem);
 
 const
-  SYSTEM_APP: Boolean = {$IFDEF ANDROID}false{$ELSE}false{$ENDIF};
+  SYSTEM_APP: Boolean = {$IFDEF ANDROID}true{$ELSE}false{$ENDIF};
   // Load OS.xml as manifest and place app in /system/priv-app
 
 var
@@ -1249,6 +1265,11 @@ procedure TfrmHome.FoundTokenPanelOnClick(Sender: TObject);
 begin
   TCheckBox(TfmxObject(Sender).TagObject).IsChecked :=
     not TCheckBox(TfmxObject(Sender).TagObject).IsChecked;
+end;
+
+procedure TfrmHome.freeotpiconClick(Sender: TObject);
+begin
+    executeAndroid('am start -n org.fedorahosted.freeotp/.MainActivity');
 end;
 
 procedure TfrmHome.ExceptionHandler(Sender: TObject; E: Exception);
@@ -2305,6 +2326,11 @@ begin
   WalletViewRelated.TrySendTransaction(Sender);
 end;
 
+procedure TfrmHome.tutanotaIconClick(Sender: TObject);
+begin
+    executeAndroid('am start -n de.tutao.tutanota/.MainActivity');
+end;
+
 procedure TfrmHome.UnlockNanoImageClick(Sender: TObject);
 var
   Nano: NanoCoin;
@@ -2364,7 +2390,7 @@ end;
 procedure TfrmHome.updateBtnClick(Sender: TObject);
 begin
 {$IFDEF ANDROID}
-  executeAndroid('am start -a org.lineageos.updater');
+  executeAndroid('am start -n org.lineageos.updater/.UpdatesActivity');
 {$ENDIF}
 end;
 
@@ -3069,7 +3095,12 @@ begin
   WalletViewRelated.Synchro;
 end;
 
-// Show available ETH wallet during adding new Token
+procedure TfrmHome.btnSysAppsClick(Sender: TObject);
+begin
+ PageControl.ActiveTab:=SysAppsTab;
+end;
+
+/// Show available ETH wallet during adding new Token
 procedure TfrmHome.btnAddNewTokenClick(Sender: TObject);
 begin
   WalletViewRelated.ShowETHWallets();

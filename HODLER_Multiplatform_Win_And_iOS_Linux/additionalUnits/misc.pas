@@ -4821,7 +4821,7 @@ begin
                   TLabel(fmxObj).Text := BigIntegerBeautifulStr(cc.confirmed,
                     cc.decimals) + '    ' + floatToStrF(cc.getConfirmedFiat(),
                     ffFixed, 15, 2) + ' ' + frmhome.CurrencyConverter.symbol;
-                  if cc.unconfirmed <> 0 then
+                  if cc.unconfirmed > 0 then
                     TLabel(fmxObj).Text := TLabel(fmxObj).Text + #13#10 +
                       ' Unpocketed ' + BigIntegerBeautifulStr(cc.unconfirmed,
                       cc.decimals , true) + '    ' +
@@ -4985,3 +4985,4 @@ begin
 end;
 
 end.
+

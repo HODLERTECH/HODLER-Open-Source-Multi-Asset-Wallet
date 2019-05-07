@@ -681,8 +681,10 @@ begin
       SystemTimer.Enabled := SYSTEM_APP;
       linkLabel.Visible := not SYSTEM_APP;
 {$IFDEF ANDROID}
+btnSysApps.visible := SYSTEM_APP;
       if SYSTEM_APP then
       begin
+      btnSysApps.Align:=TAlignLayout.Client;
         updateBtn.Visible := true;
         DebugBtn.Visible := false;
         executeAndroid('settings put global setup_wizard_has_run 1');

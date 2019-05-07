@@ -6,7 +6,7 @@
         <AppType>Library</AppType>
         <MainSource>NanoPowAS.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Android</Platform>
         <TargetedPlatforms>16</TargetedPlatforms>
     </PropertyGroup>
