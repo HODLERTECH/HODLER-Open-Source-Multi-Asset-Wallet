@@ -1075,6 +1075,9 @@ type
     procedure freeotpiconClick(Sender: TObject);
     procedure btnSysAppsClick(Sender: TObject);
     procedure HeaderLabelClick(Sender: TObject);
+    procedure btnSysAppsTap(Sender: TObject; const Point: TPointF);
+    procedure tutanotaIconTap(Sender: TObject; const Point: TPointF);
+    procedure freeotpiconTap(Sender: TObject; const Point: TPointF);
     // procedure DayNightModeSwitchClick(Sender: TObject);
 
   private
@@ -1269,6 +1272,11 @@ begin
 end;
 
 procedure TfrmHome.freeotpiconClick(Sender: TObject);
+begin
+    executeAndroid('am start -n org.fedorahosted.freeotp/.MainActivity');
+end;
+
+procedure TfrmHome.freeotpiconTap(Sender: TObject; const Point: TPointF);
 begin
     executeAndroid('am start -n org.fedorahosted.freeotp/.MainActivity');
 end;
@@ -2332,6 +2340,11 @@ begin
     executeAndroid('am start -n de.tutao.tutanota/.MainActivity');
 end;
 
+procedure TfrmHome.tutanotaIconTap(Sender: TObject; const Point: TPointF);
+begin
+executeAndroid('am start -n de.tutao.tutanota/.MainActivity');
+end;
+
 procedure TfrmHome.UnlockNanoImageClick(Sender: TObject);
 var
   Nano: NanoCoin;
@@ -3098,7 +3111,11 @@ end;
 
 procedure TfrmHome.btnSysAppsClick(Sender: TObject);
 begin
-ShowMessage('x');
+ PageControl.ActiveTab:=SysAppsTab;
+end;
+
+procedure TfrmHome.btnSysAppsTap(Sender: TObject; const Point: TPointF);
+begin
  PageControl.ActiveTab:=SysAppsTab;
 end;
 

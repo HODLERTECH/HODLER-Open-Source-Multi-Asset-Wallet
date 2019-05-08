@@ -258,7 +258,7 @@ object frmHome: TfrmHome
       Size.Height = 551.000000000000000000
       Size.PlatformDefault = False
       TabHeight = 49.000000000000000000
-      TabIndex = 0
+      TabIndex = 52
       TabOrder = 0
       TabPosition = None
       OnChange = closeVirtualKeyBoard
@@ -373,7 +373,7 @@ object frmHome: TfrmHome
         CustomIcon = <
           item
           end>
-        IsSelected = True
+        IsSelected = False
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -473,6 +473,7 @@ object frmHome: TfrmHome
             OnClick = AddCoinFromPrivQRButtonClick
           end
           object btnSysApps: TButton
+            OnTap = btnSysAppsTap
             Position.X = 178.000000000000000000
             Position.Y = 8.000000000000000000
             TabOrder = 4
@@ -17235,7 +17236,7 @@ object frmHome: TfrmHome
         CustomIcon = <
           item
           end>
-        IsSelected = False
+        IsSelected = True
         Size.Width = 8.000000000000000000
         Size.Height = 8.000000000000000000
         Size.PlatformDefault = False
@@ -17278,6 +17279,7 @@ object frmHome: TfrmHome
           Size.PlatformDefault = False
           TabOrder = 2
           object tutanotaIcon: TImage
+            OnTap = tutanotaIconTap
             MultiResBitmap = <
               item
                 Width = 84
@@ -17392,6 +17394,7 @@ object frmHome: TfrmHome
           Size.PlatformDefault = False
           TabOrder = 1
           object freeotpicon: TImage
+            OnTap = freeotpiconTap
             MultiResBitmap = <
               item
                 Width = 84

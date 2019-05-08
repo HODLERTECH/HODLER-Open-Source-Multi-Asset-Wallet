@@ -1303,8 +1303,8 @@ var
   fpath: string;
 begin
 
-  fpath := HOME_PATH + 'NanoBlocks/' + Hash + '.json';
-  TDirectory.CreateDirectory(HOME_PATH + 'NanoBlocks');
+  fpath := HOME_PATH + '/NanoBlocks/' + Hash + '.json';
+  TDirectory.CreateDirectory(HOME_PATH + '/NanoBlocks');
 
   ts := TStringList.Create;
   try
