@@ -1165,7 +1165,7 @@ inherited frmHome_Windows: TfrmHome_Windows
         inherited SettingsVertScrollBox: TVertScrollBox
           Size.Width = 624.000000000000000000
           Size.Height = 416.000000000000000000
-          Viewport.Width = 608.000000000000000000
+          Viewport.Width = 624.000000000000000000
           Viewport.Height = 416.000000000000000000
           inherited LocalSettingsLayout: TLayout
             Size.Width = 608.000000000000000000

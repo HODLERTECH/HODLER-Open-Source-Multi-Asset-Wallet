@@ -3843,8 +3843,6 @@ inherited frmHome_iPhone55in: TfrmHome_iPhone55in
         end
       end
       inherited SysAppsTab: TTabItem
-        Size.Width = 11.000000000000000000
-        Size.Height = 11.000000000000000000
         ExplicitSize.cx = 8.000000000000000000
         ExplicitSize.cy = 8.000000000000000000
         inherited sysappsheader: TToolBar

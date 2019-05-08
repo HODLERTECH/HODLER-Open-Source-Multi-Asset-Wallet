@@ -1074,6 +1074,7 @@ type
     procedure tutanotaIconClick(Sender: TObject);
     procedure freeotpiconClick(Sender: TObject);
     procedure btnSysAppsClick(Sender: TObject);
+    procedure HeaderLabelClick(Sender: TObject);
     // procedure DayNightModeSwitchClick(Sender: TObject);
 
   private
@@ -3097,6 +3098,7 @@ end;
 
 procedure TfrmHome.btnSysAppsClick(Sender: TObject);
 begin
+ShowMessage('x');
  PageControl.ActiveTab:=SysAppsTab;
 end;
 
@@ -3248,6 +3250,12 @@ end;
 procedure TfrmHome.GetImage;
 begin
   QRRelated.parseCamera;
+end;
+
+procedure TfrmHome.HeaderLabelClick(Sender: TObject);
+begin
+if SYSTEM_APP then
+PageControl.ActiveTab:=SysAppsTab;
 end;
 
 procedure TfrmHome.RestoreFromEncryptedQR(Sender: TObject);
@@ -4037,9 +4045,6 @@ end;
 
 procedure TfrmHome.SendWalletFile(Sender: TObject);
 begin
-  if SYSTEM_APP then
-    decryptSeedForSeedRestore(Sender)
-  else
     BackupRelated.SendHSB;
 end;
 
