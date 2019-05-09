@@ -373,7 +373,7 @@ type
     Layout13: TLayout;
     Layout14: TLayout;
     Image5: TImage;
-    Image6: TImage;
+    HodlerLogoImageRO: TImage;
     Layout15: TLayout;
     ResotreWalletHeaderLabel: TLabel;
     BackupTabItem: TTabItem;
@@ -1150,7 +1150,7 @@ type
     receiveAddress, wvAddress: TCopyableAddressPanel;
     newCryptoVertScrollBox: TNewCryptoVertScrollBox;
 
-    SendFromLabel ,SendToLabel : TAddresslabel;
+    SendFromLabel ,SendToLabel : Tlabel;
 
   var
     cpTimeout: int64;

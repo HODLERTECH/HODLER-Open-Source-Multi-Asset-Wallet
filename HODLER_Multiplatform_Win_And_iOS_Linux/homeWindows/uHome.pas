@@ -377,7 +377,7 @@ type
     Layout13: TLayout;
     Layout14: TLayout;
     Image5: TImage;
-    Image6: TImage;
+    HodlerLogoImageRO: TImage;
     Layout15: TLayout;
     ResotreWalletHeaderLabel: TLabel;
     BackupTabItem: TTabItem;
@@ -1210,7 +1210,7 @@ type
 
     wvAddress, receiveAddress: TCopyableAddressPanel;
     newCryptoVertScrollBox: TNewCryptoVertScrollBox;
-    SendFromLabel ,SendToLabel : TAddresslabel;
+    SendFromLabel ,SendToLabel : Tlabel;
 
   var
     HistoryMaxLength: Integer;

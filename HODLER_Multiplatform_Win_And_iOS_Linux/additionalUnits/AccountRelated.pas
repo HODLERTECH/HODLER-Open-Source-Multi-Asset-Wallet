@@ -806,7 +806,8 @@ btnSysApps.visible := SYSTEM_APP;
       NotificationLayout.Align := TAlignLayout.Contents;
       NotificationLayout.Visible := true;
 
-      SendFromLabel := TAddressLabel.create( SendFromLayout );
+      //SendFromLabel := TAddressLabel.create( SendFromLayout );
+      SendFromLabel := TLabel.Create(SendFromLayout);
       SendFromLabel.parent := SendFromLayout;
       SendFromLabel.Visible := true;
       SendFromLabel.Align := TAlignLayout.Client;
@@ -814,13 +815,17 @@ btnSysApps.visible := SYSTEM_APP;
 
       SendFromLabel.TextSettings.HorzAlign := TTextAlign.Trailing;
 
-      SendToLabel := TAddressLabel.create( ConfirmSendToLayout );
+      //SendToLabel := TAddressLabel.create( ConfirmSendToLayout );
+      sendToLabel := Tlabel.Create(ConfirmSendToLayout);
       SendToLabel.parent := ConfirmSendToLayout;
       SendToLabel.Visible := true;
       SendToLabel.Align := TAlignLayout.Client;
       SendToLabel.Margins.Right := 15;
       SendToLabel.TextSettings.HorzAlign := TTextAlign.Trailing;
 
+      HodlerLogoImageCP.Bitmap.LoadFromStream( ResourceMenager.getAssets('LOGO_IMG') );
+      HodlerLogoImageWTI.Bitmap.LoadFromStream( ResourceMenager.getAssets('LOGO_IMG') );
+      HodlerLogoImageRO.Bitmap.LoadFromStream( ResourceMenager.getAssets('LOGO_IMG') );
 
     end;
 

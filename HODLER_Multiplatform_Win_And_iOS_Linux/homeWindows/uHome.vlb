@@ -898,9 +898,6 @@ Coordinates=2033,232,131,51
 [RFFHeader]
 Coordinates=469,1136,69,33
 
-[Image6]
-Coordinates=580,924,49,51
-
 [SendEncryptedSeedButton]
 Coordinates=2465,155,147,51
 
@@ -1152,4 +1149,7 @@ Coordinates=278,654,52,51
 
 [DetailsStaticLabel]
 Coordinates=734,828,46,51
+
+[HodlerLogoImageRO]
+Coordinates=580,924,49,51
 
