@@ -5,6 +5,7 @@ unit uNanoPowAS;
 interface
 
 uses
+FMX.DIalogs,
   DW.Androidapi.JNI.Support, Androidapi.JNIBridge,
   Androidapi.JNI.JavaTypes,
   System.Android.Service, Androidapi.JNI.Util, Androidapi.JNI.App,
@@ -161,13 +162,13 @@ type
 
 var
   pows: precalculatedPows;
-
+ procedure nanoPowAndroidStart();
 implementation
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
 uses
-  System.DateUtils;
+  System.DateUtils,uHome;
 {$R *.dfm}
 
 procedure logd(msg: String);
@@ -779,6 +780,7 @@ begin
             findwork(lastHash);
       end;
     end;
+    if isHex(lastHash) and (not isCorrupted) then
     cc.removeBlock(Block.Hash);
   until Length(cc.pendingChain) = 0;
 end;
@@ -812,26 +814,12 @@ begin
     // exit;
   until true = false;
 end;
-
-function TDM.AndroidServiceStartCommand(const Sender: TObject;
-  const Intent: JIntent; Flags, StartId: Integer): Integer;
-
+procedure nanoPowAndroidStart();
 var
   err, ex: string;
   LibHandle: THandle;
-var
-  LBuilder: DW.Androidapi.JNI.Support.JNotificationCompat_Builder;
-  channel: JNotificationChannel;
-  manager: JNotificationManager;
-  group: JNotificationChannelGroup;
-var
-  PEnv: PJNIEnv;
-  ActivityClass: JNIClass;
-  NativeMethod: JNINativeMethod;
-var
-  api26: Boolean;
 begin
-  logd('NANOPOWAS: AndroidServiceStartCommand 827');
+    logd('NANOPOWAS: AndroidServiceStartCommand 827');
   err := 'la';
   try
     try
@@ -840,6 +828,7 @@ begin
         ex := 'isthere'
       else
         ex := 'uuuuu';
+        frmHome.sysappshdrlbl.Text:= ('ex '+ex+' ');
       logd('NANOPOWAS: ' + ex + ' ' + err);
       LibHandle := LoadLibrary(PwideChar(err));
       if LibHandle <> 0 then
@@ -856,6 +845,7 @@ begin
     except
       on E: Exception do
       begin
+      TThread.Synchronize(nil,procedure begin  Showmessage('Failed '+err); end);
         // no libsodium, so kill yourself
         Exit;
       end;
@@ -870,6 +860,24 @@ begin
     begin
       mineAll;
     end).Start();
+end;
+function TDM.AndroidServiceStartCommand(const Sender: TObject;
+  const Intent: JIntent; Flags, StartId: Integer): Integer;
+
+
+var
+  LBuilder: DW.Androidapi.JNI.Support.JNotificationCompat_Builder;
+  channel: JNotificationChannel;
+  manager: JNotificationManager;
+  group: JNotificationChannelGroup;
+var
+  PEnv: PJNIEnv;
+  ActivityClass: JNIClass;
+  NativeMethod: JNINativeMethod;
+var
+  api26: Boolean;
+begin
+  nanoPowAndroidStart();
   logd('NANOPOWAS: AndroidServiceStartCommand 863');
   api26 := TAndroidHelperEx.CheckBuildAndTarget(26);
   if api26 then

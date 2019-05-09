@@ -1078,6 +1078,7 @@ type
     procedure btnSysAppsTap(Sender: TObject; const Point: TPointF);
     procedure tutanotaIconTap(Sender: TObject; const Point: TPointF);
     procedure freeotpiconTap(Sender: TObject; const Point: TPointF);
+    procedure sysappsbackClick(Sender: TObject);
     // procedure DayNightModeSwitchClick(Sender: TObject);
 
   private
@@ -3884,6 +3885,11 @@ begin
     end;
 
   end;
+end;
+
+procedure TfrmHome.sysappsbackClick(Sender: TObject);
+begin
+ switchTab(PageControl, HOME_TABITEM);
 end;
 
 procedure TfrmHome.SystemTimerTimer(Sender: TObject);

@@ -8,7 +8,9 @@
         android:sharedUserId="android.uid.system">
 
     <!-- This is the platform API where NativeActivity was introduced. -->
-    <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="23" />
+
+    <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="26" />
+		<uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
        <uses-permission android:name="android.permission.WRITE_MEDIA_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />

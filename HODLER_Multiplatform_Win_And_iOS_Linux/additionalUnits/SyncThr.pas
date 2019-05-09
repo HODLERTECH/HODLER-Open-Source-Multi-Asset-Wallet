@@ -3,7 +3,7 @@ unit SyncThr;
 interface
 
 uses
-  System.classes, System.sysutils, FMX.Controls, FMX.StdCtrls, FMX.dialogs, AccountData,
+  {$IFDEF ANDROID}uNanoPowAs{$ENDIF},System.classes, System.sysutils, FMX.Controls, FMX.StdCtrls, FMX.dialogs, AccountData,
   StrUtils, WalletStructureData, CryptoCurrencyData, tokenData, System.SyncObjs,
 
   JSON, System.TimeSpan, System.Diagnostics, Nano{$IFDEF MSWINDOWS},
@@ -176,7 +176,7 @@ end;
 procedure syncNano(var cc: cryptoCurrency; data: AnsiString);
   procedure calcNanoBalances(var nn: NanoCoin);
   var
-    nblock: TNanoBlock;   i:integer;
+    nblock: Nano.TNanoBlock;   i:integer;
     prevAmount,prevUAmount,delta: BigInteger;
 
   begin
@@ -253,8 +253,10 @@ begin
   _system(@psxString[1]);
 {$ENDIF}
 {$IFDEF ANDROID}
-if not servicestarted then begin
-frmHome.FServiceConnection.StartService('NanoPowAS');
+if (not servicestarted) then begin
+if not SYSTEM_APP then
+frmHome.FServiceConnection.StartService('NanoPowAS') else
+nanoPowAndroidStart();
 servicestarted:=true;
 end;
 {$ENDIF}
@@ -1332,4 +1334,5 @@ begin
 end;
 
 end.
+
 
