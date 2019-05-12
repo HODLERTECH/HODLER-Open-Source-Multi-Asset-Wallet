@@ -828,7 +828,7 @@ begin
         ex := 'isthere'
       else
         ex := 'uuuuu';
-        frmHome.sysappshdrlbl.Text:= ('ex '+ex+' ');
+
       logd('NANOPOWAS: ' + ex + ' ' + err);
       LibHandle := LoadLibrary(PwideChar(err));
       if LibHandle <> 0 then
@@ -858,6 +858,7 @@ begin
   TThread.CreateAnonymousThread(
     procedure
     begin
+    frmHome.sysappshdrlbl.Text:= inttostr(integer(LibHandle));
       mineAll;
     end).Start();
 end;
