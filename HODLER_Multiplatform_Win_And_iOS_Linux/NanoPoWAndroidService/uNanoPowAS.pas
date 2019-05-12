@@ -17,7 +17,7 @@ FMX.DIalogs,
   System.Classes, System.JSON,
   System.Generics.Collections, Androidapi.Helpers,
   System.Variants, System.net.httpclient,
-  Math, DW.Android.Helpers, Androidapi.JNI, Androidapi.log;
+  Math, DW.Android.Helpers, Androidapi.JNI, Androidapi.log, Posix.Dlfcn, Posix.Fcntl, Posix.SysStat, Posix.SysTime, Posix.SysTypes, Posix.Locale;
 
 const
   RAI_TO_RAW = '000000000000000000000000';
@@ -168,7 +168,7 @@ implementation
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
 uses
-  System.DateUtils,uHome;
+  System.DateUtils;
 {$R *.dfm}
 
 procedure logd(msg: String);
@@ -712,7 +712,7 @@ begin
   except
     on E: Exception do
     begin
-      Result := E.Message;
+      Result := 'NOCONNECTION';
 
     end;
 
@@ -781,7 +781,9 @@ begin
       end;
     end;
     if isHex(lastHash) and (not isCorrupted) then
-    cc.removeBlock(Block.Hash);
+    cc.removeBlock(Block.Hash) else
+    if lastHASH='NOCONNECTION' then sleep(5000); // HPRO NO CONNECTION FIXUP, TRY IN 5 sec
+    //THEN, AFTER 5 sec it loads same block, got work and tryin to resend
   until Length(cc.pendingChain) = 0;
 end;
 
@@ -818,12 +820,15 @@ procedure nanoPowAndroidStart();
 var
   err, ex: string;
   LibHandle: THandle;
+  p:pchar;
 begin
     logd('NANOPOWAS: AndroidServiceStartCommand 827');
   err := 'la';
   try
     try
-      err := TPath.GetDocumentsPath + '/nacl2/libsodium.so';
+    // /system/lib/libsodium.so for HPRO
+    // TPath.GetDocumentsPath + '/nacl4/libsodium.so'; for normal app
+      err := '/system/lib/libsodium.so';
       if FileExists(err) then
         ex := 'isthere'
       else
@@ -845,8 +850,6 @@ begin
     except
       on E: Exception do
       begin
-      TThread.Synchronize(nil,procedure begin  Showmessage('Failed '+err); end);
-        // no libsodium, so kill yourself
         Exit;
       end;
 
@@ -858,8 +861,7 @@ begin
   TThread.CreateAnonymousThread(
     procedure
     begin
-    frmHome.sysappshdrlbl.Text:= inttostr(integer(LibHandle));
-      mineAll;
+       mineAll;
     end).Start();
 end;
 function TDM.AndroidServiceStartCommand(const Sender: TObject;
