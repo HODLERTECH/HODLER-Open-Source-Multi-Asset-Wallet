@@ -162,13 +162,14 @@ type
 
 var
   pows: precalculatedPows;
+  var hashCount:uint64;
  procedure nanoPowAndroidStart();
 implementation
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
 uses
-  System.DateUtils;
+  System.DateUtils,uHome;
 {$R *.dfm}
 
 procedure logd(msg: String);
@@ -330,6 +331,7 @@ var
   j, i: Integer;
   work: string;
 begin
+hashCount:=0;
   logd('NANOPOWAS: findwork ' + Hash);
   loadPows;
   work := findPrecalculated(Hash);
@@ -339,6 +341,7 @@ begin
   SetLength(res, 8);
   workbytes := hexatotbytes('0000000000000000' + Hash);
   repeat
+
     workbytes[0] := random(255);
     workbytes[1] := random(255);
     workbytes[2] := random(255);
@@ -348,6 +351,7 @@ begin
     workbytes[6] := random(255);
     for i := 0 to 255 do
     begin
+    inc(hashCount);
       workbytes[7] := i;
       blake2b_init(state, nil, 0, 8);
       blake2b_update(state, workbytes, Length(workbytes));
@@ -751,6 +755,19 @@ var
   isCorrupted: Boolean;
 begin
   isCorrupted := false;
+  TThread.CreateAnonymousThread(procedure
+  var   speed: single;
+  begin
+  repeat
+  speed := ((hashCounter) div s) / 1000;
+  hashCounter:=0;
+    TThread.Synchronize(nil,procedure begin
+    frmHome.NanoUnlocker.Text:='Mining '+FloatToStrF(speed, ffGeneral, 8, 2)
+    + ' kHash/s';
+     end);
+  sleep(1000);
+  until (True=false);
+  end).Start;
   repeat
     Block := cc.firstBlock;
 

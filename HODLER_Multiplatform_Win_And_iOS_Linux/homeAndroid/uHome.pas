@@ -1151,7 +1151,7 @@ type
     receiveAddress, wvAddress: TCopyableAddressPanel;
     newCryptoVertScrollBox: TNewCryptoVertScrollBox;
 
-    SendFromLabel ,SendToLabel : TAddresslabel;
+    SendFromLabel ,SendToLabel : Tlabel;
 
   var
     cpTimeout: int64;

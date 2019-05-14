@@ -19,7 +19,7 @@ type
     { Protected declarations }
   public
     { Public declarations }
-    addrlbl : TAddressLabel;
+    addrlbl : TLabel;
     button: TButton;
     image: Timage;
     // destructor Destroy; override;
@@ -47,13 +47,13 @@ end;
 procedure TCopyableAddressPanel.setText( val : AnsiString ; prefixLength : Integer );
 begin
 
-  addrlbl.SetText( val , prefixLength );
+  addrlbl.Text:=val;
 
 end;
 procedure TCopyableAddressPanel.setText( val : AnsiString );
 begin
 
-  addrlbl.SetText( val );
+  addrlbl.Text := ( val );
 
 end;
 function TCopyableAddressPanel.getText() : AnsiString;
@@ -86,7 +86,7 @@ begin
   inherited;
 
 
-      addrLbl := TAddressLabel.Create(self);
+      addrLbl := Tlabel.Create(self);
       addrLbl.parent := self;
       addrlbl.Align := TAlignLayout.client;
       addrLbl.Visible := true;

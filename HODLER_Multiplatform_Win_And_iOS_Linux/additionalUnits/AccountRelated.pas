@@ -806,7 +806,7 @@ btnSysApps.visible := SYSTEM_APP;
       NotificationLayout.Align := TAlignLayout.Contents;
       NotificationLayout.Visible := true;
 
-      SendFromLabel := TAddressLabel.create( SendFromLayout );
+      SendFromLabel := TLabel.create( SendFromLayout );
       SendFromLabel.parent := SendFromLayout;
       SendFromLabel.Visible := true;
       SendFromLabel.Align := TAlignLayout.Client;
@@ -814,7 +814,7 @@ btnSysApps.visible := SYSTEM_APP;
 
       SendFromLabel.TextSettings.HorzAlign := TTextAlign.Trailing;
 
-      SendToLabel := TAddressLabel.create( ConfirmSendToLayout );
+      SendToLabel := Tlabel.create( ConfirmSendToLayout );
       SendToLabel.parent := ConfirmSendToLayout;
       SendToLabel.Visible := true;
       SendToLabel.Align := TAlignLayout.Client;

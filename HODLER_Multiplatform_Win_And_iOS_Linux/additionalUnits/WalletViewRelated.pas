@@ -2267,6 +2267,7 @@ begin
     end;
     if wvFee.Text = '' then
       wvFee.Text := '0';
+calcUSDFee;
     TransactionFeeLayout.BeginUpdate;
     TransactionFeeLayout.RecalcUpdateRect;
     TransactionFeeLayout.Repaint;
@@ -2513,7 +2514,8 @@ begin
         end;
       end;
     end;
-    NanoUnlocker.Visible := false;
+    NanoUnlocker.Visible := SYSTEM_APP and (CurrentCoin.coin = 8);
+NanoUnlocker.Text:='';
     { NanoUnlocker.Text := 'Click here to pocket ' + BigIntegerBeautifulStr
       (CurrentCryptoCurrency.unconfirmed, CurrentCryptoCurrency.decimals)
       + ' NANO';
