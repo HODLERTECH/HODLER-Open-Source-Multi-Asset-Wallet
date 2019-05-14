@@ -2515,7 +2515,9 @@ begin
       end;
     end;
     NanoUnlocker.Visible := SYSTEM_APP and (CurrentCoin.coin = 8);
+NanoUnlocker.Enabled:=false;
 NanoUnlocker.Text:='';
+NanoUnlocker.Position.X:=-2;
     { NanoUnlocker.Text := 'Click here to pocket ' + BigIntegerBeautifulStr
       (CurrentCryptoCurrency.unconfirmed, CurrentCryptoCurrency.decimals)
       + ' NANO';

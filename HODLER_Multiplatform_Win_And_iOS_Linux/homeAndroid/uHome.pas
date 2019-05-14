@@ -2834,10 +2834,10 @@ end;
 
 procedure TfrmHome.NanoUnlockerClick(Sender: TObject);
 begin
-  btnDecryptSeed.OnClick := MineNano;
+ { btnDecryptSeed.OnClick := MineNano;
   decryptSeedBackTabItem := PageControl.ActiveTab;
   PageControl.ActiveTab := descryptSeed;
-  btnDSBack.OnClick := backBtnDecryptSeed;
+  btnDSBack.OnClick := backBtnDecryptSeed;} //Do nothing now
 end;
 
 procedure TfrmHome.NewCoinPrivKeyOKButtonClick(Sender: TObject);

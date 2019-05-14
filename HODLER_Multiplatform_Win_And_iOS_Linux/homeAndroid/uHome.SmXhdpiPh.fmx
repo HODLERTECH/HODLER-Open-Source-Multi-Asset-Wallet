@@ -492,7 +492,7 @@ inherited frmHome_SmXhdpiPh: TfrmHome_SmXhdpiPh
             inherited txHistory: TVertScrollBox
               Size.Width = 245.000000000000000000
               Size.Height = 197.000000000000000000
-              Viewport.Width = 245.000000000000000000
+              Viewport.Width = 240.000000000000000000
               Viewport.Height = 197.000000000000000000
               inherited BTCNoTransactionLayout: TLayout
                 Size.Width = 240.000000000000000000

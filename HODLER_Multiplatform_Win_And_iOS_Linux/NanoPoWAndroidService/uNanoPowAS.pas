@@ -1,11 +1,11 @@
 unit uNanoPowAS;
-
+
 // unit of Nano currency Proof of Work Android Service
 // Copyleft 2019 - Daniel Mazur
 interface
 
 uses
-FMX.DIalogs,
+  FMX.DIalogs,
   DW.Androidapi.JNI.Support, Androidapi.JNIBridge,
   Androidapi.JNI.JavaTypes,
   System.Android.Service, Androidapi.JNI.Util, Androidapi.JNI.App,
@@ -17,7 +17,8 @@ FMX.DIalogs,
   System.Classes, System.JSON,
   System.Generics.Collections, Androidapi.Helpers,
   System.Variants, System.net.httpclient,
-  Math, DW.Android.Helpers, Androidapi.JNI, Androidapi.log, Posix.Dlfcn, Posix.Fcntl, Posix.SysStat, Posix.SysTime, Posix.SysTypes, Posix.Locale;
+  Math, DW.Android.Helpers, Androidapi.JNI, Androidapi.log, Posix.Dlfcn,
+  Posix.Fcntl, Posix.SysStat, Posix.SysTime, Posix.SysTypes, Posix.Locale;
 
 const
   RAI_TO_RAW = '000000000000000000000000';
@@ -162,14 +163,18 @@ type
 
 var
   pows: precalculatedPows;
-  var hashCount:uint64;
- procedure nanoPowAndroidStart();
+
+var
+  xhashCounter: UINT64;
+  LibHandle: THandle;
+procedure nanoPowAndroidStart();
+
 implementation
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
 uses
-  System.DateUtils,uHome;
+  System.DateUtils, uHome,SystemApp; //uHome,SystemApp for SystemApp only
 {$R *.dfm}
 
 procedure logd(msg: String);
@@ -331,8 +336,7 @@ var
   j, i: Integer;
   work: string;
 begin
-hashCount:=0;
-  logd('NANOPOWAS: findwork ' + Hash);
+  xhashCounter := 1;
   loadPows;
   work := findPrecalculated(Hash);
   if (work <> '') and (work <> 'MINING') then
@@ -349,9 +353,10 @@ hashCount:=0;
     workbytes[4] := random(255);
     workbytes[5] := random(255);
     workbytes[6] := random(255);
+
     for i := 0 to 255 do
     begin
-    inc(hashCount);
+
       workbytes[7] := i;
       blake2b_init(state, nil, 0, 8);
       blake2b_update(state, workbytes, Length(workbytes));
@@ -364,13 +369,12 @@ hashCount:=0;
               Result := '';
               for j := 7 downto 0 do
                 Result := Result + inttohex(workbytes[j], 2);
-              logd('NANOPOWAS: work found ' + Result);
               setPrecalculated(Hash, Result);
               savePows;
               Exit;
             end;
     end;
-    logd('NANOPOWAS: Working ' + DateTimeToStr(now));
+        inc(xhashCounter,255);
   until true = false;
 end;
 
@@ -698,6 +702,7 @@ end;
 function nano_getWork(var Block: TNanoBlock): string;
 begin
   Block.work := findwork(nano_getPrevious(Block));
+  xhashCounter:=99999;
   Block.worked := true;
 
 end;
@@ -755,20 +760,7 @@ var
   isCorrupted: Boolean;
 begin
   isCorrupted := false;
-  TThread.CreateAnonymousThread(procedure
-  var   speed: single;
-  begin
-  repeat
-  speed := ((hashCounter) div s) / 1000;
-  hashCounter:=0;
-    TThread.Synchronize(nil,procedure begin
-    frmHome.NanoUnlocker.Text:='Mining '+FloatToStrF(speed, ffGeneral, 8, 2)
-    + ' kHash/s';
-     end);
-  sleep(1000);
-  until (True=false);
-  end).Start;
-  repeat
+    repeat
     Block := cc.firstBlock;
 
     if Block.account <> '' then
@@ -779,28 +771,40 @@ begin
         nano_getWork(Block);
 
         s := nano_pushBlock(nano_builtToJSON(Block));
-
+        if not isScreenOn then OfflineMode(1);
+        
         lastHash := StringReplace(s, 'https://www.nanode.co/block/', '',
           [rfReplaceAll]);
-
-        if IsHex(lastHash) = false then
+        if (lastHash <> 'NOCONNECTION') then
         begin
-          if LeftStr(lastHash, Length('Transaction failed')) = 'Transaction failed'
-          then
+
+          if (IsHex(lastHash) = false) then
           begin
-            isCorrupted := true;
+            if LeftStr(lastHash, Length('Transaction failed')) = 'Transaction failed'
+            then
+            begin
+
+              isCorrupted := true;
+            end;
+            lastHash := '';
+
           end;
-          lastHash := '';
+          if cc.BlockByPrev(lastHash).account = '' then
+            if (lastHash <> '') then begin
+                  findwork(lastHash);
+            end;
         end;
-        if cc.BlockByPrev(lastHash).account = '' then
-          if lastHash <> '' then
-            findwork(lastHash);
       end;
     end;
-    if isHex(lastHash) and (not isCorrupted) then
-    cc.removeBlock(Block.Hash) else
-    if lastHASH='NOCONNECTION' then sleep(5000); // HPRO NO CONNECTION FIXUP, TRY IN 5 sec
-    //THEN, AFTER 5 sec it loads same block, got work and tryin to resend
+    if lastHash <> 'NOCONNECTION' then
+      cc.removeBlock(Block.Hash)
+    else begin
+    OfflineMode(0);
+      sleep(9000);
+      //xHashCOunter:=66666666;
+        lastHash:='';
+      end; // HPRO NO CONNECTION FIXUP, TRY IN 5 sec
+    // THEN, AFTER 5 sec it loads same block, got work and tryin to resend
   until Length(cc.pendingChain) = 0;
 end;
 
@@ -810,7 +814,7 @@ var
   path: string;
   i: Integer;
 begin
-
+  try
   repeat
     for path in TDirectory.GetDirectories
       (IncludeTrailingPathDelimiter(System.IOUtils.TPath.GetDocumentsPath)) do
@@ -823,7 +827,7 @@ begin
         nano_mineBuilt64(cc);
         cc.Free;
       end;
-      Sleep(100);
+      sleep(100);
     end;
     loadPows;
     for i := 0 to Length(pows) - 1 do
@@ -832,19 +836,21 @@ begin
     // DM.JavaService.stopSelf;
     // exit;
   until true = false;
+except on E:Exception do begin mineAll; end; end;
 end;
+
 procedure nanoPowAndroidStart();
 var
   err, ex: string;
-  LibHandle: THandle;
-  p:pchar;
+
+  p: pchar;
 begin
-    logd('NANOPOWAS: AndroidServiceStartCommand 827');
+  logd('NANOPOWAS: AndroidServiceStartCommand 827');
   err := 'la';
   try
     try
-    // /system/lib/libsodium.so for HPRO
-    // TPath.GetDocumentsPath + '/nacl4/libsodium.so'; for normal app
+      // /system/lib/libsodium.so for HPRO
+      // TPath.GetDocumentsPath + '/nacl4/libsodium.so'; for normal app
       err := '/system/lib/libsodium.so';
       if FileExists(err) then
         ex := 'isthere'
@@ -878,12 +884,31 @@ begin
   TThread.CreateAnonymousThread(
     procedure
     begin
-       mineAll;
+      mineAll;
     end).Start();
+TThread.CreateAnonymousThread(
+    procedure
+    var
+      speed: single;
+    begin
+      repeat
+        speed := (xhashCounter) / 1000;
+        xhashCounter := 0;
+        TThread.Synchronize(nil,
+          procedure
+          begin
+      if speed>1 then
+            frmHome.NanoUnlocker.Text := 'Mining '+ FloatToStrF(speed,
+              ffGeneral, 8, 2) + ' kHash/s ' else
+            frmHome.NanoUnlocker.Text := 'Proofs of work found';
+          end);
+        sleep(1000);
+      until (true = false);
+    end).Start;
 end;
-function TDM.AndroidServiceStartCommand(const Sender: TObject;
-  const Intent: JIntent; Flags, StartId: Integer): Integer;
 
+function TDM.AndroidServiceStartCommand(const Sender: TObject;
+const Intent: JIntent; Flags, StartId: Integer): Integer;
 
 var
   LBuilder: DW.Androidapi.JNI.Support.JNotificationCompat_Builder;
@@ -923,7 +948,8 @@ begin
       JavaClass.init(TAndroidHelper.context, channel.getId)
   end
   else
-   LBuilder := DW.Androidapi.JNI.Support.TJNotificationCompat_Builder.JavaClass.init(TAndroidHelper.context);
+    LBuilder := DW.Androidapi.JNI.Support.TJNotificationCompat_Builder.
+      JavaClass.init(TAndroidHelper.context);
   LBuilder.setAutoCancel(true);
   LBuilder.setGroupSummary(true);
   if api26 then
@@ -939,3 +965,4 @@ begin
 end;
 
 end.
+
