@@ -7,6 +7,10 @@ uses System.IOUtils, sysutils, StrUtils, Velthuis.BigIntegers, System.Classes,
   base58, JSon,
   FMX.Dialogs, cryptoCurrencydata;
 
+
+
+function getURLToTokenExplorer( hash: AnsiString): AnsiString;
+
 type
   tokenInfo = record
     id: integer;
@@ -27,7 +31,7 @@ type
     id: integer;
     // _name: AnsiString;
     // _shortcut: AnsiString;
-    _contractAddress: AnsiString;
+    _contractAddress: string;
     // decimals : Integer;
     _WalletID: integer;
     // addr : AnsiString;
@@ -48,14 +52,15 @@ type
     function toJson(): TJSONObject;
     function send(address: AnsiString): boolean; virtual;
     function toString(): AnsiString; virtual;
-    function getIcon(): TBitmap; override;
-    function getIconResource(): TStream;
+    function getIconResource(): TStream; override;
+    //function getIconResource(): TStream;
+
 
     // property name: AnsiString read _name;
     // property id : Integer read _id;
-    property image: TBitmap read getIcon;
+    //property image: TBitmap read getIcon;
     // property shortcut: AnsiString read _shortcut;
-    property ContractAddress: AnsiString read _contractAddress;
+    property ContractAddress: string read _contractAddress;
     // property decimals : Integer read _decimals;
     property walletID: integer read _WalletID;
     // property WalletAddress : AnsiString read _WalletAddress;
@@ -176,18 +181,27 @@ type
 
   end;
 
-function getTokenIcon(id: integer): TBitmap;
 
 implementation
 
 uses misc, uHome;
+
+function getURLToTokenExplorer( hash: AnsiString): AnsiString;
+var
+  URL: AnsiString;
+begin         // ethereum
+
+  URL := 'https://etherscan.io/tx/';
+
+  result := URL + hash;
+end;
 
 function Token.getIconResource(): TStream;
 var
   temp : TBitmap;
   tempStr : TMemoryStream;
 begin
-
+ try
   if (id >= 10000) and ( id-10000 <= length(availableToken) ) then
     result := ResourceMenager.getAssets(availableToken[id - 10000].ResourceName)
   else
@@ -201,44 +215,44 @@ begin
     result := ResourceMenager.getAssets( ContractAddress );
 
   end;
-
+ except on E:Exception do begin end; end;
 end;
 
 constructor Token.fromJson(data: TJsonValue);
 var
-  temp: AnsiString;
+  temp: string;
 begin
 
-  data.TryGetValue<AnsiString>('name', name);
-  data.TryGetValue<AnsiString>('shortCut', shortcut);
-  data.TryGetValue<AnsiString>('contractAddress', _contractAddress);
-  data.TryGetValue<AnsiString>('ETHAddress', addr);
-  data.TryGetValue<AnsiString>('description', description);
+  data.TryGetValue<string>('name', name);
+  data.TryGetValue<string>('shortCut', shortcut);
+  data.TryGetValue<string>('contractAddress', _contractAddress);
+  data.TryGetValue<string>('ETHAddress', addr);
+  data.TryGetValue<string>('description', description);
 
-  if data.TryGetValue<AnsiString>('innerID', temp) then
+  if data.TryGetValue<string>('innerID', temp) then
   begin
-    id := strToInt(temp);
+    id := strToIntDef(temp,0);
   end;
-  if data.TryGetValue<AnsiString>('decimals', temp) then
+  if data.TryGetValue<string>('decimals', temp) then
   begin
-    decimals := strToInt(temp);
+    decimals := strToIntDef(temp,0);
   end;
-  if data.TryGetValue<AnsiString>('walletID', temp) then
+  if data.TryGetValue<string>('walletID', temp) then
   begin
-    _WalletID := strToInt(temp);
+    _WalletID := strToIntDef(temp,0);
   end;
 
-  if data.TryGetValue<AnsiString>('lastBlock', temp) then
+  if data.TryGetValue<string>('lastBlock', temp) then
   begin
-    lastBlock := strToInt(temp);
+    lastBlock := strToIntDef(temp,0);
   end;
-  if data.TryGetValue<AnsiString>('timeStamp', temp) then
+  if data.TryGetValue<string>('timeStamp', temp) then
   begin
-    creationTime := strToInt(temp);
+    creationTime := strToIntDef(temp,0);
   end;
-  if data.TryGetValue<AnsiString>('panelYPosition', temp) then
+  if data.TryGetValue<string>('panelYPosition', temp) then
   begin
-    orderInWallet := strToInt(temp);
+    orderInWallet := strToIntDef(temp,0);
   end;
 
 end;
@@ -267,7 +281,7 @@ begin
 end;
 
 // return token icon  or generate syntetic when icon doesn't exist
-function Token.getIcon(): TBitmap;
+{function Token.getIcon(): TBitmap;
 begin
   // sry
   if (id >= 10000) and (id < 10000 + length(availableToken)) then
@@ -277,14 +291,8 @@ begin
   else
     result := generateIcon(ContractAddress);
 
-end;
+end;   }
 
-function getTokenIcon(id: integer): TBitmap;
-begin
-
-  result := frmhome.TokenIcons.Source[id - 10000].MultiResBitmap[0].Bitmap;
-
-end;
 
 // return string      you can build a token from it
 function Token.toString: AnsiString;
@@ -351,19 +359,19 @@ begin
       exit;
     end;
 
-    id := strToInt(list[0]);
+    id := strToIntDef(list[0],0);
     name := list[1];
     shortcut := list[2];
     _contractAddress := list[3];
-    decimals := strToInt(list[4]);
-    _WalletID := strToInt(list[5]);
+    decimals := strToIntdef(list[4],0);
+    _WalletID := strToIntDef(list[5],0);
     addr := list[6];
     lastBlock := strtointdef(trim(list[7]), 0);
     BigInteger.TryParse(list[8], 10, bi);
     confirmed := bi;
-    creationTime := strToInt(list[9]);
+    creationTime := strToIntDef(list[9],0);
     description := list[10];
-    orderInWallet := strToInt(list[11]);
+    orderInWallet := strToIntDef(list[11],0);
   except
     on E: Exception do
 

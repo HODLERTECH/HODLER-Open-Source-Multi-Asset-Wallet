@@ -67,7 +67,9 @@ type
     constructor Create(id: integer; _x: integer; _y: integer; _addr: AnsiString;
       _description: AnsiString; crTime: integer = -1);
 
-    function getIcon(): TBitmap; override;
+    //function getIcon(): TBitmap; override;
+
+
 
 
 
@@ -98,9 +100,9 @@ begin
   creationTime := crTime;
 end;
 
-function TWalletInfo.getIcon(): TBitmap;
+{function TWalletInfo.getIcon(): TBitmap;
 begin
   result := getCoinIcon(coin);
-end;
+end;  }
 
 end.

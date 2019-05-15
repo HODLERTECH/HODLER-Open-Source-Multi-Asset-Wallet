@@ -45,7 +45,7 @@ function CreateChecksum(hrp: String; values: TIntegerArray): TIntegerArray;
 
 function Concat(x, y: TIntegerArray): TIntegerArray;
 
-function Change(var data: array of System.uint32;
+function ChangeBits(var data: array of System.uint32;
   frombits, tobits: System.uint32; pad: boolean = true): TIntegerArray;
 
 function CreateChecksum8(hrp: String; values: TIntegerArray): TIntegerArray;
@@ -53,7 +53,7 @@ function CreateChecksum8(hrp: String; values: TIntegerArray): TIntegerArray;
 function decodeBCH(str: String): Bech32Data;
 
 function rawEncode(values: TIntegerArray): String;
-
+function hexatotintegerarray(H: AnsiString): TIntegerArray;
 function isValidBCHCashAddress(address: String): boolean;
 function isCashAddress(address: String): boolean;
 
@@ -192,7 +192,7 @@ var
 
 implementation
 
-function Change(var data: array of System.uint32;
+function ChangeBits(var data: array of System.uint32;
   frombits, tobits: System.uint32; pad: boolean = true): TIntegerArray;
 var
   acc: Integer;
@@ -588,13 +588,13 @@ begin
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
   for i := 0 to (Length(H) div 2) - 1 do
   begin
-    b := System.Uint8(strtoInt('$' + Copy(H, ((i) * 2) + 1, 2)));
+    b := System.Uint8(strtoIntDef('$' + Copy(H, ((i) * 2) + 1, 2),0));
     bb[i] := b;
   end;
 {$ELSE}
   for i := 1 to (Length(H) div 2) do
   begin
-    b := System.Uint8(strtoInt('$' + Copy(H, ((i - 1) * 2) + 1, 2)));
+    b := System.Uint8(strtoIntDef('$' + Copy(H, ((i - 1) * 2) + 1, 2),0));
     bb[i - 1] := b;
   end;
 
@@ -613,7 +613,7 @@ begin
   if (witver = 0) and (Length(witprog) <> 40) and (Length(witprog) <> 64) then
     exit;
   data := hexatotintegerarray(witprog);
-  data := Change(data, 8, 5, true);
+  data := ChangeBits(data, 8, 5, true);
   Result := encode(hrp, Concat([witver], data));
 
 end;
@@ -631,7 +631,7 @@ begin
   witver := decoded.values[0];
   intarr := Copy(decoded.values, 1, Length(decoded.values) - 1);
 
-  intarr := Change(intarr, 5, 8);
+  intarr := ChangeBits(intarr, 5, 8);
 
   hex := '';
   for i := 0 to Length(intarr) - 5 do

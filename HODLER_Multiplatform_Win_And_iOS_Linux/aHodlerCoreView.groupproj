@@ -12,6 +12,12 @@
         <Projects Include="CryptoLib.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="NanoMiner64.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="NanoPoWAndroidService\NanoPowAS.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -47,14 +53,32 @@
     <Target Name="CryptoLib:Make">
         <MSBuild Projects="CryptoLib.dproj" Targets="Make"/>
     </Target>
+    <Target Name="NanoMiner64">
+        <MSBuild Projects="NanoMiner64.dproj"/>
+    </Target>
+    <Target Name="NanoMiner64:Clean">
+        <MSBuild Projects="NanoMiner64.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NanoMiner64:Make">
+        <MSBuild Projects="NanoMiner64.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="NanoPowAS">
+        <MSBuild Projects="NanoPoWAndroidService\NanoPowAS.dproj"/>
+    </Target>
+    <Target Name="NanoPowAS:Clean">
+        <MSBuild Projects="NanoPoWAndroidService\NanoPowAS.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="NanoPowAS:Make">
+        <MSBuild Projects="NanoPoWAndroidService\NanoPowAS.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="HODLER_Wallet_Desktop;HODLER_Wallet_Mobile;CryptoLib"/>
+        <CallTarget Targets="HODLER_Wallet_Desktop;HODLER_Wallet_Mobile;CryptoLib;NanoMiner64;NanoPowAS"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="HODLER_Wallet_Desktop:Clean;HODLER_Wallet_Mobile:Clean;CryptoLib:Clean"/>
+        <CallTarget Targets="HODLER_Wallet_Desktop:Clean;HODLER_Wallet_Mobile:Clean;CryptoLib:Clean;NanoMiner64:Clean;NanoPowAS:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="HODLER_Wallet_Desktop:Make;HODLER_Wallet_Mobile:Make;CryptoLib:Make"/>
+        <CallTarget Targets="HODLER_Wallet_Desktop:Make;HODLER_Wallet_Mobile:Make;CryptoLib:Make;NanoMiner64:Make;NanoPowAS:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

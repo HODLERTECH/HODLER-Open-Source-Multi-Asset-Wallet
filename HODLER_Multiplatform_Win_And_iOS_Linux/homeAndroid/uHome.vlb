@@ -1,5 +1,5 @@
 ﻿[]
-Coordinates=1725,463,123,51
+Coordinates=412,942,53,51
 
 [WVReceive]
 Coordinates=404,270,69,33
@@ -85,9 +85,6 @@ Coordinates=1074,1,81,33
 
 [globalCurrency]
 Coordinates=656,386,89,51
-
-[wvAddress]
-Coordinates=716,558,69,51
 
 [btnDecryptSeed]
 Coordinates=493,155,93,51
@@ -300,9 +297,6 @@ Coordinates=2350,364,146,33
 [SeedWordsFlowLayout]
 Coordinates=2350,419,128,33
 
-[Button2]
-Coordinates=0,115,53,51
-
 [btnExportPrivKey]
 Coordinates=656,78,101,51
 
@@ -363,9 +357,6 @@ Coordinates=597,155,152,51
 [Layout15]
 Coordinates=1936,617,59,33
 
-[btnAddManually]
-Coordinates=826,375,94,51
-
 [lblReceiveAmount]
 Coordinates=926,944,104,51
 
@@ -386,9 +377,6 @@ Coordinates=1936,1021,64,33
 
 [SwitchFromFeeLayout]
 Coordinates=2288,694,124,33
-
-[RectAnimation1]
-Coordinates=1616,750,92,33
 
 [Layout14]
 Coordinates=1867,1040,59,33
@@ -435,17 +423,11 @@ Coordinates=460,232,77,51
 [SeedCreation]
 Coordinates=1399,1040,80,33
 
-[btnAddContract]
-Coordinates=1134,944,92,51
-
 [TopInfoUnconfirmedValue]
 Coordinates=1725,617,143,51
 
 [ToolBar2]
 Coordinates=1330,1040,58,33
-
-[FloatAnimation1]
-Coordinates=1616,867,95,33
 
 [Layout10]
 Coordinates=1261,1040,59,33
@@ -462,9 +444,6 @@ Coordinates=2240,287,92,33
 [btnImageList]
 Coordinates=1014,1040,78,33
 
-[Edit1]
-Coordinates=341,578,40,51
-
 [passwordMessage]
 Coordinates=1258,155,105,51
 
@@ -476,9 +455,6 @@ Coordinates=2559,342,101,33
 
 [btnEKSBack]
 Coordinates=453,732,76,51
-
-[Button8]
-Coordinates=647,558,53,51
 
 [btnCreateWallet]
 Coordinates=1149,636,92,51
@@ -542,9 +518,6 @@ Coordinates=826,452,88,51
 
 [ImportLadgerNanoSSeedButton]
 Coordinates=1936,155,171,51
-
-[Edit4]
-Coordinates=13,211,40,51
 
 [btnConfirm]
 Coordinates=1016,636,69,51
@@ -638,9 +611,6 @@ Coordinates=2177,1002,82,33
 
 [AutomaticFeeRadio]
 Coordinates=2525,782,111,33
-
-[TokenIcons]
-Coordinates=2177,1057,71,33
 
 [QRChangeTimer]
 Coordinates=2559,837,95,33
@@ -782,9 +752,6 @@ Coordinates=1500,463,109,51
 [lblMessageText]
 Coordinates=1391,790,91,51
 
-[Panel1]
-Coordinates=1577,924,47,33
-
 [RestoreFromFileConfirmButton]
 Coordinates=1258,386,168,51
 
@@ -875,9 +842,6 @@ Coordinates=1022,1136,53,33
 [DirectoryImage]
 Coordinates=1258,617,89,51
 
-[Label1]
-Coordinates=826,78,46,51
-
 [OrganizeList]
 Coordinates=933,1136,76,33
 
@@ -889,9 +853,6 @@ Coordinates=0,1004,47,33
 
 [Panel4]
 Coordinates=874,1136,47,33
-
-[Label4]
-Coordinates=197,366,46,51
 
 [ReceiveVertScrollBox]
 Coordinates=2276,963,121,33
@@ -923,9 +884,6 @@ Coordinates=2903,1,107,33
 [Image5]
 Coordinates=586,828,49,51
 
-[ImageList2]
-Coordinates=657,1136,68,33
-
 [AddNewCoin]
 Coordinates=558,1136,78,33
 
@@ -943,12 +901,6 @@ Coordinates=2033,232,131,51
 
 [RFFHeader]
 Coordinates=469,1136,69,33
-
-[Image6]
-Coordinates=580,924,49,51
-
-[Button3]
-Coordinates=412,942,53,51
 
 [SendEncryptedSeedButton]
 Coordinates=2465,155,147,51
@@ -1055,9 +1007,6 @@ Coordinates=597,1,131,51
 [Layout7]
 Coordinates=2350,1018,53,33
 
-[receiveAddress]
-Coordinates=1391,867,91,51
-
 [Layout5]
 Coordinates=2350,1191,53,33
 
@@ -1156,12 +1105,6 @@ Coordinates=401,270,49,51
 [SaveSeedIsImportantStaticLabel]
 Coordinates=1016,713,46,51
 
-[HistoryDateStaticLabel]
-Coordinates=206,732,46,51
-
-[HistoryStatusStaticLabel]
-Coordinates=15,520,46,51
-
 [TransactionIDStaticLabel]
 Coordinates=278,654,52,51
 
@@ -1171,9 +1114,6 @@ Coordinates=734,828,46,51
 [TransactionDetailsHeaderLabel]
 Coordinates=122,828,46,51
 
-[coinIconsList]
-Coordinates=64,1136,68,33
-
 [HSBbackupLayout]
 Coordinates=1644,1136,59,33
 
@@ -1182,4 +1122,31 @@ Coordinates=1338,1136,59,33
 
 [RefreshLayout]
 Coordinates=2177,133,53,33
+
+[wvAddressold]
+Coordinates=716,558,69,51
+
+[receiveAddressold]
+Coordinates=1391,867,91,51
+
+[DebugEdit]
+Coordinates=341,578,40,51
+
+[DebugLabel]
+Coordinates=826,78,46,51
+
+[DebugBackButton]
+Coordinates=647,558,53,51
+
+[DebugButton]
+Coordinates=0,115,53,51
+
+[HistoryTransactionStatusLabel]
+Coordinates=15,520,46,51
+
+[HistoryTransactionDateLabel]
+Coordinates=206,732,46,51
+
+[HodlerLogoImageRO]
+Coordinates=580,924,49,51
 

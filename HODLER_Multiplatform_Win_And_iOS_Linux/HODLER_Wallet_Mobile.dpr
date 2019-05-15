@@ -102,7 +102,6 @@ uses
   FMX.Ani in 'FMX.Ani.pas',
   DW.ThreadedTimer in 'DW.ThreadedTimer.pas',
   cryptoCurrencyData in 'coinCode\cryptoCurrencyData.pas',
-  SyncThr in 'additionalUnits\SyncThr.pas',
   languages in 'Languages\languages.pas',
   CurrencyConverter in 'additionalUnits\CurrencyConverter.pas',
   WIF in 'additionalUnits\WIF.pas',
@@ -133,7 +132,21 @@ uses
   TRotateImageData in 'components\TRotateImageData.pas',
   debugAnalysis in 'additionalUnits\debugAnalysis.pas',
   KeypoolRelated in 'additionalUnits\KeypoolRelated.pas',
-  AssetsMenagerData in 'additionalUnits\AssetsMenagerData.pas';
+  AssetsMenagerData in 'additionalUnits\AssetsMenagerData.pas',
+  CrossPlatformHeaders in 'CrossPlatformHeaders.pas',
+  PopupWindowData in 'additionalUnits\PopupWindowData.pas',
+  NotificationLayoutData in 'components\NotificationLayoutData.pas',
+  ED25519_Blake2b in 'coinCode\ED25519_Blake2b.pas',
+  Nano in 'coinCode\Nano.pas',
+  TAddressLabelData in 'components\TAddressLabelData.pas',
+  TCopyableAddressLabelData in 'components\TCopyableAddressLabelData.pas',
+  TCopyableAddressPanelData in 'components\TCopyableAddressPanelData.pas',
+  ThreadKindergartenData in 'additionalUnits\ThreadKindergartenData.pas',
+  uNanoPowAS in 'NanoPoWAndroidService\uNanoPowAS.pas' {DM: TAndroidService},
+  HistoryPanelData in 'components\HistoryPanelData.pas',
+  SyncThr in 'additionalUnits\SyncThr.pas',
+  ComponentPoolData in 'additionalUnits\additionalClass\ComponentPoolData.pas',
+  TNewCryptoVertScrollBoxData in 'components\TNewCryptoVertScrollBoxData.pas';
 
 {$R *.res}
 
@@ -163,9 +176,10 @@ begin
     try
       Application.Initialize;
 
-      Application.FormFactor.Orientations := [TFormOrientation.Portrait];
+      AApplication.CreateForm(TDM, DM);
+      pplication.FormFactor.Orientations := [TFormOrientation.Portrait];
       AApplication.CreateForm(TfrmHome, frmHome);
-  pplication.Run;
+      pplication.Run;
     finally
       ReleaseMutex(H);
     end;

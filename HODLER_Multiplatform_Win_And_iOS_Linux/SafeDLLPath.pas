@@ -85,17 +85,8 @@ var
 begin
   SaveErrorMode := SetErrorMode(SEM_NOOPENFILEERRORBOX);
   try
-    asm
-      FNSTCW SaveFPUControlWord
-    end;
-    try
-      Result := LoadLibrary(PChar(Filename));
-    finally
-      asm
-        FNCLEX
-        FLDCW SaveFPUControlWord
-      end;
-    end;
+   Result := LoadLibrary(PChar(Filename));
+
   finally
     SetErrorMode(SaveErrorMode);
   end;
@@ -185,5 +176,5 @@ SetProcessDEPPolicyFunc := GetProcAddress(KernelModule,
 if Assigned(SetProcessDEPPolicyFunc) then
   SetProcessDEPPolicyFunc(PROCESS_DEP_ENABLE);
 {$ENDIF}
-
 end.
+

@@ -12,9 +12,9 @@ uses
   FMX.Layouts, FMX.ExtCtrls, Velthuis.BigIntegers, FMX.ScrollBox, FMX.Memo,
   FMX.Platform, System.Threading, Math, DelphiZXingQRCode,
   FMX.TabControl, FMX.Edit,
-  FMX.Clipboard, FMX.VirtualKeyBoard, JSON,
-  languages,
-
+  FMX.Clipboard, FMX.VirtualKeyBoard, JSON , popupwindowData,
+  languages,  TCopyableAddressLabelData ,  TCopyableAddressPanelData, CrossPlatformHeaders ,
+  ComponentPoolData , HistoryPanelData,
   FMX.Media, FMX.Objects, uEncryptedZipFile, System.Zip, TRotateImageData
 {$IFDEF ANDROID},
   FMX.VirtualKeyBoard.Android,
@@ -37,7 +37,7 @@ uses
   ZXing.ScanManager, FMX.EditBox, FMX.SpinBox, FMX.Gestures, FMX.Effects,
   FMX.Filter.Effects, System.Actions, FMX.ActnList, System.Math.Vectors,
   FMX.Controls3D, FMX.Layers3D, FMX.StdActns, FMX.MediaLibrary.Actions,
-  FMX.ComboEdit;
+  FMX.ComboEdit, NotificationLayoutData, TAddressLabelData;
 
 procedure deleteYAddress(Sender: Tobject);
 procedure generateNewYAddress(Sender: Tobject);
@@ -58,7 +58,7 @@ uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, WalletStructureData, TcopyableEditData, TCopyableLabelData,
   walletViewRelated, TImageTextButtonData, debugAnalysis, keyPoolRelated,
-  AssetsMenagerData;
+  AssetsMenagerData ;
 
 procedure afterInitialize;
 var
@@ -94,6 +94,7 @@ var
     rec.Align := TAlignLayout.Contents;
     rec.Opacity := 0.1;
     AEditControl.Repaint;
+
   end;
 
   procedure fixEditBG;
@@ -113,7 +114,8 @@ begin
   begin
     KeypoolSanitizer.Interval := 30000;
     gathener.Enabled := true;
-
+    NanoUnlocker.Visible:=False;
+  //  NanoUnlocker.TagString:='LOADMORE';
     if not isWalletDatExists then
     begin
       createWalletDat();
@@ -165,7 +167,9 @@ begin
 
         ChangeAccountButton.Text := lastClosedAccount;
 
-        LoadCurrentAccount(lastClosedAccount);
+       // if (currentAccount = nil) or (CurrentAccount.name <> lastClosedAccount) then
+          LoadCurrentAccount(lastClosedAccount);
+
       except
         on E: Exception do
         begin
@@ -184,13 +188,15 @@ begin
 {$IF DEFINED(MSWINDOWS) or DEFINED(LINUX)}
       frmHome.Caption := 'HODLER Open Source Multi-Asset Wallet v' +
         CURRENT_VERSION;
+{$ENDIF}
+        {$IFDEF MSWINDOWS}
       Tthread.CreateAnonymousThread(
         procedure
         begin
           sleep(60 * 1000);
           CheckUpdateButtonClick(nil);
         end).Start;
-{$ENDIF}
+        {$ENDIF}
       if currentAccount <> nil then
       begin
 
@@ -199,9 +205,9 @@ begin
           var
             i: integer;
           begin
-            Tthread.Synchronize(nil,
-              procedure
-              begin
+            //Tthread.Synchronize(nil,
+            //  procedure
+            //  begin
 
                 LATEST_VERSION :=
                   trim(getDataOverHttp
@@ -210,13 +216,13 @@ begin
                   + {$IFDEF MSWINDOWS}'&os=win' {$ELSE}'&os=android'
 {$ENDIF}, false));
 
-              end);
+            //  end);
 
-            for i := 0 to length(currentAccount.myCoins) - 1 do
+            {for i := 0 to length(currentAccount.myCoins) - 1 do
             begin
               if currentAccount.myCoins[i].coin = 4 then
                 SearchTokens(currentAccount.myCoins[i].addr);
-            end;
+            end; }
 
           end).Start;
 
@@ -269,8 +275,8 @@ begin
     end;
 {$ENDIF}
     clearVertScrollBox(frmHome.WalletList);
-
-    if (SyncBalanceThr <> nil) and (not SyncBalanceThr.Finished) then
+    frmhome.syncTimer.Enabled := false;
+    (*if (SyncBalanceThr <> nil) and (not SyncBalanceThr.Finished) then
     begin
       SyncBalanceThr.Suspend;
       SyncBalanceThr.Terminate;
@@ -288,16 +294,35 @@ begin
         end).Start();
       SyncBalanceThr := nil;
 
-    end;
+    end; *)
+
 
     frmHome.ChangeAccountButton.Text := name;
-
+    {try
     if currentAccount <> nil then
-      currentAccount.free;
-
+      currentAccount.disposeof;
+    except on E:Exception do begin
+     currentaccount:=nil;
+    end;
+    end;    }
     lastClosedAccount := name;
-    currentAccount := Account.Create(name);
-    currentAccount.LoadFiles;
+
+    if LoadedAccounts.ContainsKey(name) then
+    begin
+      LoadedAccounts.TryGetValue( name , currentAccount );
+    end
+    else
+    begin
+      currentAccount := Account.Create(name);
+      currentAccount.LoadFiles;
+      LoadedAccounts.Add( name , CurrentAccount );
+    end;
+
+    CurrentAccount.AsyncSynchronize();
+
+
+
+
     frmHome.HideZeroWalletsCheckBox.IsChecked := currentAccount.hideEmpties;
 
     for cc in currentAccount.myCoins do
@@ -326,14 +351,15 @@ begin
 
         end;
 
-      if not exist then
-        CreatePanel(cc);
+      if (not exist) and (not cc.deleted)  then
+        CreatePanel(cc , CurrentAccount , frmhome.walletList);
 
     end;
 
     for i := 0 to length(currentAccount.myTokens) - 1 do
     begin
-      CreatePanel(currentAccount.myTokens[i]);
+    if currentAccount.myTokens[i].deleted = false then
+      CreatePanel(currentAccount.myTokens[i] , CurrentAccount , frmhome.walletList);
     end;
 
     refreshOrderInDashBrd();
@@ -345,12 +371,13 @@ begin
     refreshGlobalFiat();
     refreshCurrencyValue;
 
-    SyncBalanceThr := SynchronizeBalanceThread.Create();
-    Tthread.CreateAnonymousThread(
-      procedure
-      begin
-        verifyKeypool();
-      end).Start();
+  {  SyncBalanceThr := SynchronizeBalanceThread.Create();}
+    frmhome.syncTimer.Enabled := true;
+    //CurrentAccount.SynchronizeThreadGuardian.CreateAnonymousThread(
+    // procedure
+    //  begin
+        currentAccount.asyncVerifyKeyPool();
+    //  end).Start();
   except
     on E: Exception do
     begin
@@ -358,13 +385,13 @@ begin
 
       // showmessage(E.Message);
       frmHome.AccountsListPanel.Enabled := true;
-      raise E;
+//      raise E;
     end;
   end;
   if (currentAccount.userSaveSeed = false) then
   begin
 
-    AskForBackup(1500);
+    AskForBackup(3500);
 
     saveSeedInfoShowed := true;
   end;
@@ -427,7 +454,25 @@ end;
 
 procedure CloseHodler();
 begin
+
   ResourceMenager.free;
+  //currentAccount.Free;  // loadedAccount.free  remove all accounts
+  LoadedAccounts.Free;
+  frmhome.CurrencyConverter.free;
+  frmhome.SourceDictionary.Free;
+
+  //mutex.Free;
+  //semaphore.Free;
+  //VerifyKeypoolSemaphore.Free;
+
+  clearVertScrollBox(frmhome.TxHistory); // Panel.TagObject can contain THistoryHolder
+
+  HistoryPanelPool.Free;
+
+  frmhome.FScanManager.free;
+
+  frmhome.refreshLocalImage.Stop();
+  frmhome.refreshGlobalImage.Stop();
 end;
 
 procedure InitializeHodler;
@@ -444,11 +489,27 @@ var
   JSONArray: TJsonArray;
   JsonValue: TJsonvalue;
   btn: TImageTextButton;
+   TimeLog : TimeLogger;
+   ass : AssetsMenager;
+
+   debug : TDictionary<integer , integer>;
+   debIt : TDictionary<integer , integer>.TPairEnumerator;
+
+   //LoadedAccount : TObjectDictionary<AnsiString,Account>;
 begin
 
+  TimeLog := TimeLogger.Create();
+  timeLog.StartLog('InitializeHodler');
+
+  LoadedAccounts := TObjectDictionary<String,Account>.create([doOwnsValues]);
+
+  Randomize;
 
   Application.OnException := frmhome.ExceptionHandler;
+
   ResourceMenager := AssetsMenager.Create();
+
+
 
   // frmHome.Quality := TCanvasQuality.HighPerformance;
 
@@ -506,21 +567,32 @@ begin
 
     with frmHome do
     begin
+
+
+
 {$IFDEF IOS}
       StyloSwitch.Visible := false;
 {$ENDIF}
+
+
+
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
       HOME_PATH := System.IOUtils.TPath.GetDocumentsPath;
       HOME_TABITEM := TTabItem(frmHome.FindComponent('dashbrd'));
-      debugAnalysis.LOG_FILE_PATH := HOME_PATH;
+      debugAnalysis.LOG_FILE_PATH := System.ioutils.Tpath.combine( HOME_PATH , 'logs' );
 {$ELSE}
       HOME_PATH := IncludeTrailingPathDelimiter
-        ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetDocumentsPath{$ELSE}System.
+        ({$IF DEFINED(LINUX)}System.IOUtils.TPath.GetHomePath+'/.hodlertech'{$ELSE}System.
         IOUtils.TPath.combine(System.SysUtils.GetEnvironmentVariable('APPDATA'),
         'hodlertech'){$ENDIF});
       HOME_TABITEM := walletView;
-      debugAnalysis.LOG_FILE_PATH := HOME_PATH;
+      debugAnalysis.LOG_FILE_PATH := System.ioutils.Tpath.combine( HOME_PATH , 'logs' );
 {$ENDIF}
+  if not DirectoryExists(HOME_PATH) then
+    CreateDir(HOME_PATH);
+
+
+
 {$IF DEFINED(ANDROID)}
       SYSTEM_NAME := 'android';
 {$ELSE IF DEFINED(MSWINDOWS)}
@@ -562,7 +634,7 @@ begin
       loadDictionary(loadLanguageFile('ENG'));
       refreshComponentText();
 
-      Randomize;
+     // Randomize;      // moved to first line
 
       saveSeedInfoShowed := false;
       FormatSettings.DecimalSeparator := '.';
@@ -575,14 +647,18 @@ begin
       FFrameTake := 0;
       stylo := TStyleManager.Create;
       //LoadStyle(style);
+      {$IFDEF LINUX}
+          style:='RT_DARK';
+          LoadStyle('RT_DARK');
+      {$ELSE}
       LoadStyle('RT_DARK');
       if style = 'RT_DARK' then
         DayNightModeSwitch.IsChecked := true
       else
         DayNightModeSwitch.IsChecked := false;
-
+      {$ENDIF}
       FScanManager := TScanManager.Create(TBarcodeFormat.QR_CODE, nil);
-      duringSync := false;
+
 
       WVsendTO.Caret.Width := 2;
       LanguageBox.ItemIndex := 0;
@@ -605,8 +681,10 @@ begin
       SystemTimer.Enabled := SYSTEM_APP;
       linkLabel.Visible := not SYSTEM_APP;
 {$IFDEF ANDROID}
+btnSysApps.visible := SYSTEM_APP;
       if SYSTEM_APP then
       begin
+      btnSysApps.Align:=TAlignLayout.Client;
         updateBtn.Visible := true;
         DebugBtn.Visible := false;
         executeAndroid('settings put global setup_wizard_has_run 1');
@@ -632,9 +710,26 @@ begin
 {$ELSE}
       DebugBtn.Visible := false;
 {$ENDIF}
+
+
+      wvAddress := TCopyableAddressPanel.Create(wvBalance);
+      wvAddress.parent := WVBalance;
+      wvAddress.Visible := true;
+      wvAddress.Align := TAlignLayout.MostTop;
+      wvAddress.Height := 32;
+      wvAddress.addrlbl.TextSettings.HorzAlign := TTextAlign.Center;
+
+      receiveAddress := TCopyableAddressPanel.Create(WVReceive);
+      receiveAddress.parent := WVReceive;
+      receiveAddress.Visible := true;
+      receiveAddress.Align := TAlignLayout.MostTop;
+      receiveAddress.Height := 32;
+      receiveAddress.addrlbl.TextSettings.HorzAlign := TTextAlign.Center;
+
+
       // wvAddress := TCopyableEdit.CreateFrom(wvAddress);
-      wvAddress.TagString := 'copyable';
-      receiveAddress.TagString := 'copyable';
+      //wvAddress.TagString := 'copyable';
+      //receiveAddress.TagString := 'copyable';
       lblPrivateKey.TagString := 'copyable';
       lblWIFKey.TagString := 'copyable';
 
@@ -642,6 +737,9 @@ begin
       // HistoryTransactionDate.TagString := 'copyable';
       // HistoryTransactionValue.TagString := 'copyable';
       // historyTransactionConfirmation.TagString := 'copyable';
+
+      UnlockNanoImage.Bitmap.LoadFromStream( resourceMenager.getAssets('CLOSED') );
+
       CreateCopyImageButtonOnTEdits();
       /// ///// Restore form HSB
       btn := TImageTextButton.Create(HSBbackupLayout);
@@ -685,7 +783,7 @@ begin
       refreshLocalImage := TRotateImage.Create(RefreshLayout);
       refreshLocalImage.Parent := RefreshLayout;
       refreshLocalImage.Visible := true;
-      refreshLocalImage.Align := TAlignLayout.Right;
+      refreshLocalImage.Align := TAlignLayout.MostRight;
       refreshLocalImage.Width := 32;
       refreshLocalImage.OnClick := RefreshCurrentWallet;
       refreshLocalImage.Margins.Right := 15;
@@ -702,13 +800,46 @@ begin
       refreshGlobalImage.Margins.Top := 8;
       refreshGlobalImage.Margins.Bottom := 8;
 
+
+      NotificationLayout := TnotificationLayout.create( frmhome );
+      NotificationLayout.Parent := frmhome;
+      NotificationLayout.Align := TAlignLayout.Contents;
+      NotificationLayout.Visible := true;
+
+      //SendFromLabel := TAddressLabel.create( SendFromLayout );
+      SendFromLabel := TLabel.Create(SendFromLayout);
+      SendFromLabel.parent := SendFromLayout;
+      SendFromLabel.Visible := true;
+      SendFromLabel.Align := TAlignLayout.Client;
+      SendFromLabel.Margins.Right := 15;
+
+      SendFromLabel.TextSettings.HorzAlign := TTextAlign.Trailing;
+
+      //SendToLabel := TAddressLabel.create( ConfirmSendToLayout );
+      sendToLabel := Tlabel.Create(ConfirmSendToLayout);
+      SendToLabel.parent := ConfirmSendToLayout;
+      SendToLabel.Visible := true;
+      SendToLabel.Align := TAlignLayout.Client;
+      SendToLabel.Margins.Right := 15;
+      SendToLabel.TextSettings.HorzAlign := TTextAlign.Trailing;
+
+      HodlerLogoImageCP.Bitmap.LoadFromStream( ResourceMenager.getAssets('LOGO_IMG') );
+      HodlerLogoImageWTI.Bitmap.LoadFromStream( ResourceMenager.getAssets('LOGO_IMG') );
+      HodlerLogoImageRO.Bitmap.LoadFromStream( ResourceMenager.getAssets('LOGO_IMG') );
+
     end;
+
+    HistoryPanelPool := TComponentPool<THistoryPanel>.create();
 
   except
     on E: Exception do
-      showmessage(E.Message);
+      //showmessage(E.Message);
 
   end;
+
+  //showmessage( floatToStr(TimeLog.GetInterval('InitializeHodler')) );
+
+   TimeLog.Free;
 
 end;
 
@@ -797,7 +928,7 @@ begin
   with frmHome do
   begin
 
-    popupWindowYesNo.Create(
+    NotificationLayout.popupConfirm(
       procedure
       begin
 
@@ -878,7 +1009,7 @@ end;
 
 procedure deleteYAddress(Sender: Tobject);
 begin
-  popupWindowYesNo.Create(
+  frmhome.NotificationLayout.popupConfirm(
     procedure
     begin
 
@@ -1050,7 +1181,7 @@ begin
               Panel.OnClick := OpenWalletViewFromYWalletList;
               Panel.Position.y := i * Panel.Height;
               Panel.Margins.Bottom := 1;
-              addrLbl := TCopyableLabel.Create(Panel);
+              addrLbl := TCopyablelabel.Create(Panel);
               addrLbl.image.Align := TAlignLayout.Right;
               addrLbl.Align := TAlignLayout.MostTop;
               addrLbl.Parent := Panel;
@@ -1146,7 +1277,7 @@ begin
   begin
     if Sender is TButton then
     begin
-      popupWindowYesNo.Create(
+      frmhome.NotificationLayout.popupConfirm(
         procedure
         begin
 

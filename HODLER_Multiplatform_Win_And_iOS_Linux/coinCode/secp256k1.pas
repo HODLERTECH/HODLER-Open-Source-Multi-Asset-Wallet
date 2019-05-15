@@ -210,6 +210,8 @@ begin
     result := '04' + BIToHEX(q.XCoordinate) + BIToHEX(q.YCoordinate);
   wipeAnsiString(ss);
   wipeAnsiString(privkey);
+
+
 end;
 
 function GetDetermisticRandomForSign(e, d: AnsiString): BigInteger;
@@ -287,7 +289,7 @@ begin
   end
   else
   begin
-    b := System.UInt8(strtoint('$' + copy(sr, 0, 2)));
+    b := System.UInt8(strtointdef('$' + copy(sr, 0, 2),0));
     if b >= System.UInt8($80) then
       sr := '00' + sr;
     result := ss;

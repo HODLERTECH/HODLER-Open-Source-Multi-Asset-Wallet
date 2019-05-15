@@ -32,7 +32,7 @@ implementation
 
 uses
   uHome, transactions, tokenData, bech32, misc, SyncThr, WalletViewRelated,
-  KeypoolRelated;
+  KeypoolRelated,Nano , debugAnalysis ;
 
 function Bitcoin_createHD(coinid, x, y: integer; MasterSeed: AnsiString)
   : TWalletInfo;
@@ -82,7 +82,7 @@ end;
 
 function generatep2sh(pub, netbyte: AnsiString): AnsiString;
 var
-  s, r: AnsiString;
+  s, r ,t: AnsiString;
 begin
   s := GetSHA256FromHex(pub);
   s := hash160FromHex(s);
@@ -91,13 +91,15 @@ begin
   s := hash160FromHex(s);
   s := netbyte + s;
   r := GetSHA256FromHex(s);
-  r := GetSHA256FromHex(r);
+  t := GetSHA256FromHex(r);
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
-  s := s + copy(r, 0, 8);
+  s := s + copy(t, 0, 8);
 {$ELSE}
-  s := s + copy(r, 1, 8);
+  s := s + copy(t, 1, 8);
 {$ENDIF}
-  result := Encode58(s);
+  result := Encode58(s) ;
+
+
 end;
 
 function generatep2wpkh(pub: AnsiString; hrp: AnsiString = 'bc'): AnsiString;
@@ -228,48 +230,78 @@ function sendCoinsTO(from: TWalletInfo; sendto: AnsiString;
 var
   TX: AnsiString;
   TXBuilder: TXBuilder_ETH;
+  procedure cleanupSend;
+  begin
+     TThread.CreateAnonymousThread(
+      procedure
+      begin
+        if CurrentCoin.description <> '__dashbrd__' then
+        begin
+          SyncThr.SynchronizeCryptoCurrency(CurrentAccount ,CurrentCoin);
+          reloadWalletView;
+        end;
+      end).Start();
+  end;
 begin
 
   startFullfillingKeypool(MasterSeed);
-  if CurrentCoin.coin <> 4 then
-  begin
-    if ((CurrentCoin.coin in [0, 1, 5, 6])) and
-      canSegwit(currentaccount.aggregateUTXO(from)) then
-    begin
-      TX := createSegwitTransaction(from, sendto, Amount, Fee,
-        currentaccount.aggregateUTXO(from), MasterSeed);
-    end
-    else
-    begin
-      TX := createTransaction(from, sendto, Amount, Fee,
-        currentaccount.aggregateUTXO(from), MasterSeed);
-    end;
+  if CurrentCoin.coin=8 then begin
+  TThread.CreateAnonymousThread(procedure begin
+  nano_send(from,sendto,Amount,MasterSeed); wipeAnsiString(masterseed);end).Start;
+  Sleep(3000);
+  if NanoCoin(from).lastBlock<>'' then
+    TX:='Transaction sent '+#13#10+NanoCoin(from).lastBlock else
+    TX:='Transaction failed, please try again';
+
+    cleanupSend;
+    Exit(tx);
+
+
   end
   else
   begin
-    TXBuilder := TXBuilder_ETH.Create;
-    TXBuilder.sender := CurrentCoin;
-    TXBuilder.nonce := TXBuilder.sender.nonce;
-    TXBuilder.gasPrice := Fee;
-    TXBuilder.value := Amount;
-    TXBuilder.gasLimit := 21000;
-    TXBuilder.receiver := StringReplace(sendto, '0x', '', [rfReplaceAll]);
-    TXBuilder.data := '';
-    if frmHome.isTokenTransfer then
+
+
+    if CurrentCoin.coin <> 4 then
     begin
+      if ((CurrentCoin.coin in [0, 1, 5, 6])) and
+        canSegwit(currentaccount.aggregateUTXO(from)) then
+      begin
+        TX := createSegwitTransaction(from, sendto, Amount, Fee,
+          currentaccount.aggregateUTXO(from), MasterSeed);
+      end
+      else
+      begin
+        TX := createTransaction(from, sendto, Amount, Fee,
+          currentaccount.aggregateUTXO(from), MasterSeed);
+      end;
+    end
+    else
+    begin
+      TXBuilder := TXBuilder_ETH.Create;
+      TXBuilder.sender := CurrentCoin;
+      TXBuilder.nonce := TXBuilder.sender.nonce;
+      TXBuilder.gasPrice := Fee;
+      TXBuilder.value := Amount;
+      TXBuilder.gasLimit := 21000;
+      TXBuilder.receiver := StringReplace(sendto, '0x', '', [rfReplaceAll]);
+      TXBuilder.data := '';
+      if frmHome.isTokenTransfer then
+      begin
 
-      TXBuilder.value := BigInteger.Zero;
-      TXBuilder.receiver := StringReplace(Token(CurrentCryptoCurrency)
-        .ContractAddress, '0x', '', [rfReplaceAll]);
-      TXBuilder.gasLimit := 66666;
-      TXBuilder.data := 'a9059cbb000000000000000000000000' +
-        StringReplace(sendto, '0x', '', [rfReplaceAll]) +
-        BIntTo256Hex(Amount, 64);
+        TXBuilder.value := BigInteger.Zero;
+        TXBuilder.receiver := StringReplace(Token(CurrentCryptoCurrency)
+          .ContractAddress, '0x', '', [rfReplaceAll]);
+        TXBuilder.gasLimit := 66666;
+        TXBuilder.data := 'a9059cbb000000000000000000000000' +
+          StringReplace(sendto, '0x', '', [rfReplaceAll]) +
+          BIntTo256Hex(Amount, 64);
+      end;
+
+      TXBuilder.createPreImage;
+      TXBuilder.sign(MasterSeed);
+      TX := TXBuilder.Image;
     end;
-
-    TXBuilder.createPreImage;
-    TXBuilder.sign(MasterSeed);
-    TX := TXBuilder.Image;
   end;
   result := TX;
   if TX <> '' then
@@ -281,15 +313,7 @@ begin
     result := getDataOverHTTP(HODLER_URL + 'sendTX.php?coin=' + coin + '&tx=' +
       TX + '&os=' + SYSTEM_NAME + '&appver=' + StringReplace(CURRENT_VERSION,
       '.', 'x', [rfReplaceAll]), false, true);
-    TThread.CreateAnonymousThread(
-      procedure
-      begin
-        if CurrentCoin.description <> '__dashbrd__' then
-        begin
-          SyncThr.SynchronizeCryptoCurrency(CurrentCoin);
-          reloadWalletView;
-        end;
-      end).Start();
+   cleanupSend;
   end;
 end;
 

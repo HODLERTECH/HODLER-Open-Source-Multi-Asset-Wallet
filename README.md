@@ -2,7 +2,29 @@
 
 HODLER Wallet available for Mobile & Desktop: a cryptocurrency wallet designed to combine high level of security with great user-friendliness
 Support for a large number of coins and tokens. Our wallet is working of these platforms:
-Windows 7 SP1 & and up, Android 4.4 and up, iOS 9 and up, Linux (64bit only)
+Windows 7 SP1 & and up, Android 5.1 and up, iOS 9 and up, Linux (64bit only)
+
+## Resources & community
+
+Binaries and source code: https://github.com/HODLERTECH/HODLER-Open-Source-Multi-Asset-Wallet/releases/
+
+Report a bug, idea or feature: https://github.com/HODLERTECH/HODLER-Open-Source-Multi-Asset-Wallet/issues
+
+Homepage: https://hodler.tech
+
+Blog: https://steemit.com/@hodler.tech
+
+Bitcointalk: https://bitcointalk.org/index.php?topic=5032817.0
+
+Youtube: https://www.youtube.com/channel/UCjbq9kkoexo07NH3aB-LZ-w
+
+Twitter: https://twitter.com/HODLER_TECH
+
+Telegram: https://telegram.me/HODLER_TECH_IN
+
+Email contact: contact@hodler.tech
+
+Software house: https://fl4re.pl
 
 ## Resources & community
 
@@ -32,15 +54,17 @@ HODLER Wallet is written in Delphi, which give opportunity to compile from one c
 
 Requirements:
 
-Delphi 10.2.3 Starter (For Win32 build only)
+Delphi 10.3.1 Starter (For Win32 build only)
 
-Delphi 10.2.3 Community Edition at least (For Win32, Android and iOS build)
+Delphi 10.3.1 Community Edition at least (For Win32, Android and iOS build)
 
 You can get Delphi here: https://www.embarcadero.com/
 
 FMXLinux for build Linux binary, get it here: https://www.fmxlinux.com/
 
 TMS Cryptography Pack, at least 3.3.1 https://www.tmssoftware.com/site/tmscrypto.asp
+
+KastriFree https://github.com/DelphiWorlds/KastriFree
 
 Please notice, we are using commerial solutions, but you can get above software for free or in trial. This is enough to make private builds.
 To get access to our coin API, please mail as, contact (a) hodler.tech, we will provide you public and private key which will allow to connect to our infrastructure

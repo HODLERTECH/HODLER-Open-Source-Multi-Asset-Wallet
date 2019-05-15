@@ -3,7 +3,9 @@ unit AccountData;
 interface
 
 uses tokenData, WalletStructureData, cryptoCurrencyData, System.IOUtils,
-  Sysutils, Classes, FMX.Dialogs, Json, Velthuis.BigIntegers, math ,System.Generics.Collections;
+  FMX.Graphics, System.types, FMX.types, FMX.Controls, FMX.StdCtrls,
+  Sysutils, Classes, FMX.Dialogs, Json, Velthuis.BigIntegers, math,
+  System.Generics.Collections, System.SyncObjs, THreadKindergartenData;
 
 procedure loadCryptoCurrencyJSONData(data: TJSONValue; cc: cryptoCurrency);
 function getCryptoCurrencyJsonData(cc: cryptoCurrency): TJSONObject;
@@ -29,13 +31,22 @@ type
     CoinFilePath: AnsiString;
     TokenFilePath: AnsiString;
     SeedFilePath: AnsiString;
-    DescriptionFilePath : AnsiString;
-    Paths: Array of AnsiString;
+    DescriptionFilePath: AnsiString;
 
-    DescriptionDict: TObjectDictionary< TPair<Integer , Integer> , AnsiString >;
+    BigQRImagePath: AnsiString;
+    SmallQRImagePath: AnsiString;
+
+    Paths: Array of AnsiString;
+    firstSync: boolean;
+
+    SynchronizeThreadGuardian: ThreadKindergarten;
+
+    DescriptionDict: TObjectDictionary<TPair<Integer, Integer>, AnsiString>;
 
     constructor Create(_name: AnsiString);
     destructor Destroy(); override;
+
+    procedure GenerateEQRFiles();
 
     procedure LoadFiles();
     procedure SaveFiles();
@@ -52,15 +63,42 @@ type
     function aggregateUnconfirmedFiats(wi: TWalletInfo): double;
     function getSpendable(wi: TWalletInfo): BigInteger;
 
-    function getDescription( id , X : Integer ): AnsiString;
-    procedure changeDescription( id , X : Integer ; newDesc : AnsiString ); procedure SaveDescriptionFile();
-    procedure LoadDescriptionFile();
+    function getDescription(id, X: Integer): AnsiString;
+    procedure changeDescription(id, X: Integer; newDesc: AnsiString);
+
+    function getDecryptedMasterSeed(Password: String): AnsiString;
+
+    function TokenExistInETH(TokenID: Integer; ETHAddress: AnsiString): boolean;
+
+    procedure wipeAccount();
+
+    procedure AsyncSynchronize();
+    function keepSync(): boolean;
+
+    procedure lockSynchronize();
+    procedure unlockSynchronize();
+    function isOurAddress(adr: string; coinid: Integer): boolean;
+    procedure verifyKeypool();
+    procedure asyncVerifyKeyPool();
+    procedure refreshGUI();
+
   private
+
+  var
+
+    semaphore, VerifyKeypoolSemaphore: TLightweightSemaphore;
+    mutex: TSemaphore;
+    synchronizeThread: TThread;
+    mutexTokenFile, mutexCoinFile, mutexSeedFile, mutexDescriptionFile
+      : TSemaphore;
+
+    procedure Synchronize();
     procedure SaveTokenFile();
     procedure SaveCoinFile();
     procedure SaveSeedFile();
 
-
+    procedure SaveDescriptionFile();
+    procedure LoadDescriptionFile();
 
     procedure LoadCoinFile();
     procedure LoadTokenFile();
@@ -70,104 +108,541 @@ type
     procedure AddCoinWithoutSave(wd: TWalletInfo);
     procedure AddTokenWithoutSave(T: Token);
 
+    procedure changeDescriptionwithoutSave(id, X: Integer; newDesc: AnsiString);
   end;
 
 implementation
 
 uses
-  misc, uHome , coinData;
+  misc, uHome, coinData, nano, languages, SyncThr, Bitcoin, walletViewRelated,
+  CurrencyConverter;
 
-function Account.getDescription( id , X : Integer ): AnsiString;
+procedure Account.refreshGUI();
+begin
+  if self = currentAccount then
+  begin
+
+  //frmhome.refreshGlobalImage.Start;
+  refreshGlobalFiat();
+
+    TThread.Synchronize(TThread.CurrentThread,
+      procedure
+      begin
+        repaintWalletList;
+      end);
+
+    TThread.Synchronize(TThread.CurrentThread,
+      procedure
+      begin
+        if frmhome.PageControl.ActiveTab = frmhome.walletView then
+        begin
+          try
+            reloadWalletView;
+          except
+            on E: Exception do
+          end;
+
+        end;
+      end);
+
+    TThread.Synchronize(TThread.CurrentThread,
+      procedure
+      begin
+
+        TLabel(frmhome.FindComponent('globalBalance')).text :=
+          floatToStrF(frmhome.CurrencyConverter.calculate(globalFiat),
+          ffFixed, 9, 2);
+        TLabel(frmhome.FindComponent('globalCurrency')).text := '         ' +
+          frmhome.CurrencyConverter.symbol;
+
+        hideEmptyWallets(nil);
+
+      end);
+    //frmhome.refreshGlobalImage.Stop;
+  end;
+end;
+
+procedure Account.asyncVerifyKeyPool();
+begin
+
+  SynchronizeThreadGuardian.CreateAnonymousThread(
+    procedure
+    begin
+
+      verifyKeypool();
+
+    end).Start();
+
+end;
+
+procedure Account.verifyKeypool();
 var
-  middleNum : AnsiString;
+  i: Integer;
+  licz: Integer;
+  batched: string;
 
 begin
-  if (not DescriptionDict.tryGetValue( TPair<Integer , Integer>.Create(id , X) , result)) or (result = '') then
+
+  for i in [0, 1, 2, 3, 4, 5, 6, 7] do
+  begin
+    if TThread.CurrentThread.CheckTerminated then
+      exit();
+    mutex.Acquire();
+
+    SynchronizeThreadGuardian.CreateAnonymousThread(
+      procedure
+      var
+        id: Integer;
+        wi: TWalletInfo;
+        wd: TObject;
+        url, s: string;
+
+      begin
+
+        id := i;
+        mutex.Release();
+
+        VerifyKeypoolSemaphore.WaitFor();
+        try
+          s := keypoolIsUsed(self, id);
+          url := HODLER_URL + '/batchSync0.3.2.php?keypool=true&coin=' +
+            availablecoin[id].name;
+          if TThread.CurrentThread.CheckTerminated then
+            exit();
+          parseSync(self, postDataOverHTTP(url, s, false, True), True);
+
+        except
+          on E: Exception do
+          begin
+
+          end;
+        end;
+        VerifyKeypoolSemaphore.Release();
+
+      end).Start();
+    mutex.Acquire();
+    mutex.Release();
+
+  end;
+
+  while VerifyKeypoolSemaphore.CurrentCount <> 8 do
+  begin
+    if TThread.CurrentThread.CheckTerminated then
+      exit();
+    sleep(50);
+  end;
+
+  SaveFiles();
+
+end;
+
+function Account.isOurAddress(adr: string; coinid: Integer): boolean;
+var
+  twi: TWalletInfo;
+var
+  segwit, cash, compatible, legacy: AnsiString;
+  pub: AnsiString;
+begin
+
+  result := false;
+
+  adr := lowercase(StringReplace(adr, 'bitcoincash:', '', [rfReplaceAll]));
+
+  for twi in myCoins do
+  begin
+
+    if twi.coin <> coinid then
+      continue;
+
+    if TThread.CurrentThread.CheckTerminated then
+    begin
+      exit();
+    end;
+    pub := twi.pub;
+
+    segwit := lowercase(generatep2wpkh(pub, availablecoin[coinid].hrp));
+    compatible := lowercase(generatep2sh(pub, availablecoin[coinid].p2sh));
+    legacy := generatep2pkh(pub, availablecoin[coinid].p2pk);
+
+    cash := lowercase(bitcoinCashAddressToCashAddress(legacy, false));
+    legacy := lowercase(legacy);
+    cash := StringReplace(cash, 'bitcoincash:', '', [rfReplaceAll]);
+    if ((adr) = segwit) or (adr = compatible) or (adr = legacy) or (adr = cash)
+    then
+      exit(True);
+
+  end;
+end;
+
+procedure Account.lockSynchronize();
+begin
+
+end;
+
+procedure Account.unlockSynchronize();
+begin
+
+end;
+
+function Account.keepSync(): boolean;
+begin
+
+  result := (synchronizeThread = nil) or (not synchronizeThread.finished);
+
+end;
+
+procedure Account.AsyncSynchronize();
+begin
+
+  if (synchronizeThread <> nil) and (synchronizeThread.finished) then
+  begin
+
+    synchronizeThread.Free;
+    synchronizeThread := nil;
+
+  end;
+
+  if synchronizeThread = nil then
+  begin
+
+    synchronizeThread := TThread.CreateAnonymousThread(self.Synchronize);
+    synchronizeThread.FreeOnTerminate := false;
+    synchronizeThread.Start();
+    // synchronizeThread.
+  end;
+
+end;
+
+procedure Account.Synchronize();
+var
+  i: Integer;
+  licz: Integer;
+  batched: string;
+begin
+
+
+ if self = currentAccount then
+  begin
+    frmhome.refreshGlobalImage.Start;
+  end;
+
+ 
+  for i in [0, 1, 2, 3, 4, 5, 6, 7] do
+  begin
+    // if TThread.CurrentThread.CheckTerminated then
+    // exit();
+    mutex.Acquire();
+
+    SynchronizeThreadGuardian.CreateAnonymousThread(
+      procedure
+      var
+        id: Integer;
+        wi: TWalletInfo;
+        wd: TObject;
+        url, s: string;
+        temp: String;
+
+      begin
+
+        id := i;
+        mutex.Release();
+
+        semaphore.WaitFor();
+        try
+          if id in [4, 8] then
+          begin
+
+            for wi in myCoins do
+            begin
+
+              // if TThread.CurrentThread.CheckTerminated then
+              // exit();
+
+              if wi.coin in [4, 8] then
+                SynchronizeCryptoCurrency(self, wi);
+            end;
+
+          end
+          else
+          begin
+            s := batchSync(self, id);
+
+            url := HODLER_URL + '/batchSync0.3.2.php?coin=' +
+              availablecoin[id].name;
+
+            temp := postDataOverHTTP(url, s, self.firstSync, True);
+            // if TThread.CurrentThread.CheckTerminated then
+            // exit();
+            parseSync(self, temp);
+          end;
+          // if TThread.CurrentThread.CheckTerminated then
+          // exit();
+
+          { TThread.CurrentThread.Synchronize(nil,
+            procedure
+            begin
+
+            updateBalanceLabels(id);
+            end); }
+        except
+          on E: Exception do
+          begin
+
+          end;
+        end;
+        semaphore.Release();
+
+        { TThread.CurrentThread.Synchronize(nil,
+          procedure
+          begin
+          frmHome.DashBrdProgressBar.value :=
+          frmHome.RefreshProgressBar.value + 1;
+          end); }
+
+      end).Start();
+
+    mutex.Acquire();
+    mutex.Release();
+
+  end;
+  for i := 0 to Length(myTokens) - 1 do
+  begin
+    // if TThread.CurrentThread.CheckTerminated then
+    // exit();
+    mutex.Acquire();
+
+    SynchronizeThreadGuardian.CreateAnonymousThread(
+      procedure
+      var
+        id: Integer;
+      begin
+
+        id := i;
+        mutex.Release();
+
+        semaphore.WaitFor();
+        try
+          // if TThread.CurrentThread.CheckTerminated then
+          // exit();
+          SynchronizeCryptoCurrency(self, myTokens[id]);
+        except
+          on E: Exception do
+          begin
+          end;
+        end;
+        semaphore.Release();
+
+        { TThread.CurrentThread.Synchronize(nil,
+          procedure
+          begin
+          frmHome.DashBrdProgressBar.value :=
+          frmHome.RefreshProgressBar.value + 1;
+          end); }
+
+      end).Start();
+    // if TThread.CurrentThread.CheckTerminated then
+    // exit();
+    mutex.Acquire();
+    mutex.Release();
+
+  end;
+
+  while (semaphore <> nil) and (semaphore.CurrentCount <> 8) do
+  begin
+    // if TThread.CurrentThread.CheckTerminated then
+    // exit();
+    sleep(50);
+  end;
+  { tthread.Synchronize(nil , procedure
+    begin
+    showmessage( floatToStr( globalLoadCacheTime ) );
+    end); }
+  self.firstSync := false;
+  SaveFiles();
+
+  refreshGUI();
+
+if self = currentAccount then
+  begin
+    frmhome.refreshGlobalImage.Stop;
+  end;
+
+
+end;
+
+function Account.TokenExistInETH(TokenID: Integer;
+ETHAddress: AnsiString): boolean;
+var
+  i: Integer;
+begin
+  result := false;
+  for i := 0 to Length(myTokens) - 1 do
+  begin
+
+    if myTokens[i].addr = ETHAddress then
+    begin
+
+      if myTokens[i].id = TokenID then
+        exit(True);
+
+    end;
+
+  end;
+
+end;
+
+function Account.getDecryptedMasterSeed(Password: String): AnsiString;
+var
+  MasterSeed, tced: AnsiString;
+begin
+
+  tced := TCA(Password);
+  MasterSeed := SpeckDecrypt(tced, EncryptedMasterSeed);
+  if not isHex(MasterSeed) then
+  begin
+
+    raise Exception.Create(dictionary('FailedToDecrypt'));
+
+    { TThread.Synchronize(nil,
+      procedure
+      begin
+      popupWindow.Create(dictionary('FailedToDecrypt'));
+      end);
+
+      exit; }
+  end;
+
+  exit(MasterSeed);
+
+end;
+
+procedure Account.wipeAccount();
+begin
+
+end;
+
+procedure Account.GenerateEQRFiles();
+begin
+  //
+
+end;
+
+function Account.getDescription(id, X: Integer): AnsiString;
+var
+  middleNum: AnsiString;
+begin
+  if (not DescriptionDict.tryGetValue(TPair<Integer, Integer>.Create(id, X),
+    result)) or (result = '') then
   begin
     if (X = 0) or (X = -1) then
       middleNum := ''
     else
-      middleNum := '';//' ' + intToStr(x+1);
-    result := availableCoin[id].displayname + middleNum  + ' (' + availableCoin[id].shortcut + ')' ;
+      middleNum := ''; // ' ' + intToStr(x+1);
+    result := availablecoin[id].displayname + middleNum + ' (' + availablecoin
+      [id].shortcut + ')';
   end;
 end;
 
-procedure Account.changeDescription( id , X : Integer ; newDesc : AnsiString );
+procedure Account.changeDescription(id, X: Integer; newDesc: AnsiString);
 begin
-  DescriptionDict.AddOrSetValue( Tpair<Integer , Integer >.create( id , X) , newDesc );
+  DescriptionDict.AddOrSetValue(TPair<Integer, Integer>.Create(id, X), newDesc);
   SaveDescriptionFile();
+end;
+
+procedure Account.changeDescriptionwithoutSave(id, X: Integer;
+newDesc: AnsiString);
+begin
+  DescriptionDict.AddOrSetValue(TPair<Integer, Integer>.Create(id, X), newDesc);
+
 end;
 
 procedure Account.SaveDescriptionFile();
 var
-  obj : TJsonObject;
-  it : TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
-  pair : TJSONString;
-  str : TJSONString;
-  ts : TstringList;
+  obj: TJSONObject;
+  it: TObjectDictionary<TPair<Integer, Integer>, AnsiString>.TPairEnumerator;
+  pair: TJSONString;
+  str: TJSONString;
+  ts: TstringList;
 begin
-  obj := TJsonObject.Create();
+
+  mutexDescriptionFile.Acquire;
+  obj := TJSONObject.Create();
 
   it := DescriptionDict.GetEnumerator;
 
-  while( it.MoveNext ) do
+  while (it.MoveNext) do
   begin
-    //it.Current.Key ;
-    pair := TJSONString.Create( intToStr(it.Current.Key.Key)+ '_' + intToStr(it.Current.Key.Value) );
-    str := TJsonString.Create( it.Current.Value );
+    // it.Current.Key ;
+    pair := TJSONString.Create(intToStr(it.Current.Key.Key) + '_' +
+      intToStr(it.Current.Key.Value));
+    str := TJSONString.Create(it.Current.Value);
 
-    obj.AddPair( TJsonPair.Create( pair , str ) );
+    obj.AddPair(TJsonPair.Create(pair, str));
+
   end;
 
-  ts := TStringList.Create();
+  it.Free;
 
-  ts.Text := obj.ToString;
-  ts.SaveToFile( DescriptionFilePath );
+  ts := TstringList.Create();
+
+  ts.text := obj.ToString;
+  ts.SaveToFile(DescriptionFilePath);
 
   ts.Free();
   obj.Free;
-end;
 
+  mutexDescriptionFile.Release;
+end;
 
 procedure Account.LoadDescriptionFile();
 var
-  obj : TJsonObject;
-  it : TJSONPairEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
-  pair : TJSONString;
-  str : TJSONString;
-  ts , temp : TstringList;
+  obj: TJSONObject;
+  // it : TJSONPairEnumerator; //TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
+  // PairEnumerator works on 10.2
+  // TEnumerator works on 10.3
+  it: TJSONObject.TEnumerator;
+  // TObjectDictionary< TPair<Integer , Integer > , AnsiString>.TPairEnumerator;
+  ts, temp: TstringList;
 begin
 
-  if not FileExists( DescriptionFilePath ) then
-    exit();
+  mutexDescriptionFile.Acquire;
 
-  ts := TStringList.Create();
-  ts.loadFromFile( DescriptionFilePath );
-  if ts.Text = '' then
+  if not FileExists(DescriptionFilePath) then
   begin
-    ts.free();
+    mutexDescriptionFile.Release;
     exit();
   end;
 
-  obj := TJsonObject(TJSONObject.ParseJSONValue( ts.Text ));
+  ts := TstringList.Create();
+  ts.loadFromFile(DescriptionFilePath);
+  if ts.text = '' then
+  begin
+    ts.Free();
+    mutexDescriptionFile.Release;
+    exit();
+  end;
+
+  obj := TJSONObject(TJSONObject.ParseJSONValue(ts.text));
 
   it := obj.GetEnumerator;
 
-  while( it.MoveNext ) do
+  while (it.MoveNext) do
   begin
 
-    temp := SplitString(it.Current.JsonString.Value , '_' );
+    temp := SplitString(it.Current.JsonString.Value, '_');
 
-    changeDescription( strToInt(temp[0]) , strToInt(temp[1]) ,  it.Current.JsonValue.Value );
+    changeDescriptionwithoutSave(strToIntdef(temp[0], 0),
+      strToIntdef(temp[1], 0), it.Current.JsonValue.Value);
 
     temp.Free();
   end;
 
+  it.Free;
   ts.Free();
 
   obj.Free();
+  mutexDescriptionFile.Release;
 end;
-
 
 function Account.aggregateConfirmedFiats(wi: TWalletInfo): double;
 var
@@ -361,11 +836,15 @@ end;
 
 constructor Account.Create(_name: AnsiString);
 begin
+  inherited Create;
   name := _name;
+
+  self.firstSync := True;
 
   DirPath := TPath.Combine(HOME_PATH, name);
 
-  DescriptionDict := TObjectDictionary<TPair<Integer , Integer> , AnsiString>.create();
+  DescriptionDict := TObjectDictionary<TPair<Integer, Integer>,
+    AnsiString>.Create();
 
   if not DirectoryExists(DirPath) then
     CreateDir(DirPath);
@@ -379,7 +858,9 @@ begin
   // SeedFilePath := TPath.Combine(HOME_PATH, name);
   SeedFilePath := TPath.Combine(DirPath, 'hodler.masterseed.dat');
 
-  DescriptionFilePath := Tpath.Combine(DirPath, 'hodler.description.dat');
+  DescriptionFilePath := TPath.Combine(DirPath, 'hodler.description.dat');
+
+  // System.IOUtils.TPath.GetDownloadsPath()
 
   SetLength(Paths, 4);
   Paths[0] := CoinFilePath;
@@ -390,39 +871,78 @@ begin
   SetLength(myCoins, 0);
   SetLength(myTokens, 0);
 
+  mutexTokenFile := TSemaphore.Create();
+  mutexCoinFile := TSemaphore.Create();
+  mutexSeedFile := TSemaphore.Create();
+  mutexDescriptionFile := TSemaphore.Create();
+
+  semaphore := TLightweightSemaphore.Create(8);
+  VerifyKeypoolSemaphore := TLightweightSemaphore.Create(8);
+  mutex := TSemaphore.Create();
+
+  SynchronizeThreadGuardian := ThreadKindergarten.Create();
+
 end;
 
 destructor Account.Destroy();
 begin
 
-  clearArrays();
+  { if SyncBalanceThr <> nil then
+
+    SyncBalanceThr.Terminate;
+
+    TThread.CreateAnonymousThread(
+    procedure
+    begin
+
+    SyncBalanceThr.DisposeOf;
+
+    SyncBalanceThr := nil;
+
+    end).Start(); }
+
+  if (synchronizeThread <> nil) and (synchronizeThread.finished) then
+  begin
+    synchronizeThread.Free;
+    synchronizeThread := nil;
+  end
+  else if synchronizeThread <> nil then
+  begin
+    synchronizeThread.Terminate;
+    synchronizeThread.WaitFor;
+  end;
+
+  SynchronizeThreadGuardian.DisposeOf;
+  SynchronizeThreadGuardian := nil;
+
+  mutexTokenFile.Free;
+  mutexCoinFile.Free;
+  mutexSeedFile.Free;
+  mutexDescriptionFile.Free;
   DescriptionDict.Free();
+  clearArrays();
+  semaphore.Free;
+  VerifyKeypoolSemaphore.Free;
+  mutex.Free;
 
-  if SyncBalanceThr <> nil then
-
-  SyncBalanceThr.Terminate;
-  TThread.CreateAnonymousThread(procedure begin
-      SyncBalanceThr.DisposeOf;
-      end).Start();
-      SyncBalanceThr := nil;
-
-
+  inherited;
 end;
 
 procedure Account.SaveSeedFile();
 var
-  ts: TStringLIst;
+  ts: TstringList;
   flock: TObject;
 begin
-  flock := TObject.Create;
-  TMonitor.Enter(flock);
-  ts := TStringLIst.Create();
+  mutexSeedFile.Acquire;
+  { flock := TObject.Create;
+    TMonitor.Enter(flock); }
+  ts := TstringList.Create();
   try
-    ts.Add(inttoStr(TCAIterations));
+    ts.Add(intToStr(TCAIterations));
     ts.Add(EncryptedMasterSeed);
     ts.Add(booltoStr(userSaveSeed));
     ts.Add(booltoStr(privTCA));
-    ts.Add(booltoStr(frmHome.HideZeroWalletsCheckBox.isChecked));
+    ts.Add(booltoStr(frmhome.HideZeroWalletsCheckBox.isChecked));
     ts.SaveToFile(SeedFilePath);
   except
     on E: Exception do
@@ -431,42 +951,54 @@ begin
 
   end;
   ts.Free;
-  TMonitor.exit(flock);
-  flock.Free;
+  { TMonitor.exit(flock);
+    flock.Free; }
+  mutexSeedFile.Release;
 end;
 
 procedure Account.LoadSeedFile();
 var
-  ts: TStringLIst;
-  flock:TObject;
+  ts: TstringList;
+  flock: TObject;
 begin
-flock:=TObject.Create;
- TMonitor.Enter(flock);
-  ts := TStringLIst.Create();
- try
-  ts.LoadFromFile(SeedFilePath);
+  { flock:=TObject.Create;
+    TMonitor.Enter(flock); }
 
-  TCAIterations := strtoInt(ts.Strings[0]);
-  EncryptedMasterSeed := ts.Strings[1];
-  userSaveSeed := strToBool(ts.Strings[2]);
-  if ts.Count > 4 then
-  begin
-    privTCA := strToBoolDef(ts.Strings[3], false);
-    hideEmpties := strToBoolDef(ts.Strings[4], false)
-  end
-  else
-  begin
-    privTCA := false;
-    hideEmpties := false;
-  end;  except on E:Exception do begin end; end;
+  mutexSeedFile.Acquire;
+
+  ts := TstringList.Create();
+  try
+
+    ts.loadFromFile(SeedFilePath);
+
+    TCAIterations := strToIntdef(ts.Strings[0], 0);
+    EncryptedMasterSeed := ts.Strings[1];
+    userSaveSeed := strToBool(ts.Strings[2]);
+    if ts.Count > 4 then
+    begin
+      privTCA := strToBoolDef(ts.Strings[3], false);
+      hideEmpties := strToBoolDef(ts.Strings[4], false)
+    end
+    else
+    begin
+      privTCA := false;
+      hideEmpties := false;
+    end;
+  except
+    on E: Exception do
+    begin
+    end;
+  end;
   ts.Free;
-  TMonitor.exit(flock);
-  flock.Free;
+
+  mutexSeedFile.Release;
+  { TMonitor.exit(flock);
+    flock.Free; }
 end;
 
 function Account.countWalletBy(id: Integer): Integer;
 var
-  ts: TStringLIst;
+  ts: TstringList;
   i, j: Integer;
   wd: TWalletInfo;
 begin
@@ -503,7 +1035,7 @@ procedure Account.AddCoin(wd: TWalletInfo);
 begin
   SetLength(myCoins, Length(myCoins) + 1);
   myCoins[Length(myCoins) - 1] := wd;
-  changeDescription( wd.coin , wd.x , wd.description);
+  changeDescription(wd.coin, wd.X, wd.description);
   SaveCoinFile();
 end;
 
@@ -528,13 +1060,13 @@ end;
 
 procedure Account.LoadFiles();
 var
-  ts: TStringLIst;
+  ts: TstringList;
   i: Integer;
   T: Token;
   flock: TObject;
 begin
-  flock := TObject.Create;
-  TMonitor.Enter(flock);
+  // flock := TObject.Create;
+  // TMonitor.Enter(flock);
 
   clearArrays();
 
@@ -544,13 +1076,29 @@ begin
   LoadTokenFile();
   LoadDescriptionFile();
 
-  TMonitor.exit(flock);
-  flock.Free;
+{$IF (DEFINED(MSWINDOWS) OR DEFINED(LINUX))}
+  BigQRImagePath := TPath.Combine(DirPath, hash160FromHex(EncryptedMasterSeed) +
+    '_' + '_BIG' + '.png');
+  SmallQRImagePath := TPath.Combine(DirPath, hash160FromHex(EncryptedMasterSeed)
+    + '_' + '_SMALL' + '.png');
+{$ELSE}
+  if not DirectoryExists(TPath.Combine(System.IOUtils.TPath.GetDownloadsPath(),
+    'hodler.tech')) then
+    ForceDirectories(TPath.Combine(System.IOUtils.TPath.GetDownloadsPath(),
+      'hodler.tech'));
+
+  BigQRImagePath := TPath.Combine
+    (TPath.Combine(System.IOUtils.TPath.GetDownloadsPath(), 'hodler.tech'),
+    name + '_' + EncryptedMasterSeed + '_' + '_ENC_QR_BIG' + '.png');
+  SmallQRImagePath := TPath.Combine
+    (TPath.Combine(System.IOUtils.TPath.GetDownloadsPath(), 'hodler.tech'),
+    name + '_' + EncryptedMasterSeed + '_' + '_ENC_QR_SMALL' + '.png');
+{$ENDIF}
 end;
 
 procedure Account.LoadCoinFile();
 var
-  ts: TStringLIst;
+  ts: TstringList;
   i: Integer;
   JsonArray: TJsonArray;
   coinJson: TJSONValue;
@@ -559,9 +1107,10 @@ var
   inPool: AnsiString;
   s: string;
   wd: TWalletInfo;
-  procedure setupCoin(dataJson: TJSONObject);
+  procedure setupCoin(coinName: AnsiString; dataJson: TJSONObject);
   var
     wd: TWalletInfo;
+    nn: NanoCoin;
     innerID, X, Y, address, description, creationTime, panelYPosition,
       publicKey, EncryptedPrivateKey, isCompressed: AnsiString;
   begin
@@ -579,11 +1128,19 @@ var
     isCompressed := dataJson.GetValue<string>('isCompressed');
     // confirmed := dataJson.GetValue<string>('confirmed');
 
-    wd := TWalletInfo.Create(strtoInt(innerID), strtoInt(X), strtoInt(Y),
-      address, description, strtoInt(creationTime));
+    if coinName = 'Nano' then
+    begin
+      nn := NanoCoin.Create(strToIntdef(innerID, 0), strToIntdef(X, 0),
+        strToIntdef(Y, 0), string(address), string(description),
+        strToIntdef(creationTime, 0));
+      wd := TWalletInfo(nn);
+    end
+    else
+      wd := TWalletInfo.Create(strToIntdef(innerID, 0), strToIntdef(X, 0),
+        strToIntdef(Y, 0), address, description, strToIntdef(creationTime, 0));
     wd.inPool := strToBoolDef(inPool, false);
     wd.pub := publicKey;
-    wd.orderInWallet := strtoInt(panelYPosition);
+    wd.orderInWallet := strToIntdef(panelYPosition, 0);
     wd.EncryptedPrivKey := EncryptedPrivateKey;
     wd.isCompressed := strToBool(isCompressed);
 
@@ -591,7 +1148,7 @@ var
 
     // coinJson.TryGetValue<TJsonObject>('CryptoCurrencyData', ccData);
 
-    if coinJson.TryGetValue<TJSONObject>('CryptoCurrencyData', ccData) then
+    if coinJson.tryGetValue<TJSONObject>('CryptoCurrencyData', ccData) then
       loadCryptoCurrencyJSONData(ccData, wd);
 
     AddCoinWithoutSave(wd);
@@ -600,25 +1157,34 @@ var
 
 var
   flock: TObject;
+  coinName: AnsiString;
 begin
-  flock := TObject.Create;
-  TMonitor.Enter(flock);
 
-  if not fileExists(CoinFilePath) then
+  mutexCoinFile.Acquire;
+
+  { flock := TObject.Create;
+    TMonitor.Enter(flock); }
+
+  if not FileExists(CoinFilePath) then
+  begin
+
+    mutexCoinFile.Release;
     exit;
 
-  ts := TStringLIst.Create();
+  end;
 
-  ts.LoadFromFile(CoinFilePath);
+  ts := TstringList.Create();
 
-  if ts.Text[low(ts.Text)] = '[' then
+  ts.loadFromFile(CoinFilePath);
+
+  if ts.text[low(ts.text)] = '[' then
   begin
-    s := ts.Text;
+    s := ts.text;
     JsonArray := TJsonArray(TJSONObject.ParseJSONValue(s));
 
     for coinJson in JsonArray do
     begin
-
+      coinName := coinJson.GetValue<String>('name');
       dataJson := coinJson.GetValue<TJSONObject>('data');
       inPool := '0';
       try
@@ -629,9 +1195,11 @@ begin
         end;
         // Do nothing - preKeypool .dat
       end;
-      setupCoin(dataJson);
+      setupCoin(coinName, dataJson);
 
     end;
+
+    JsonArray.Free;
 
   end
   else
@@ -639,11 +1207,11 @@ begin
     i := 0;
     while i < ts.Count - 1 do
     begin
-      wd := TWalletInfo.Create(strtoInt(ts.Strings[i]),
-        strtoInt(ts.Strings[i + 1]), strtoInt(ts.Strings[i + 2]),
-        ts.Strings[i + 3], ts.Strings[i + 4], strtoInt(ts[i + 5]));
+      wd := TWalletInfo.Create(strToIntdef(ts.Strings[i], 0),
+        strToIntdef(ts.Strings[i + 1], 0), strToIntdef(ts.Strings[i + 2], 0),
+        ts.Strings[i + 3], ts.Strings[i + 4], strToIntdef(ts[i + 5], 0));
 
-      wd.orderInWallet := strtoInt(ts[i + 6]);
+      wd.orderInWallet := strToIntdef(ts[i + 6], 0);
       wd.pub := ts[i + 7];
       wd.EncryptedPrivKey := ts[i + 8];
       wd.isCompressed := strToBool(ts[i + 9]);
@@ -667,13 +1235,16 @@ begin
   // ts.LoadFromFile(CoinFilePath);
 
   ts.Free;
-  TMonitor.exit(flock);
-  flock.Free;
+
+  mutexCoinFile.Release;
+  {
+    TMonitor.exit(flock);
+    flock.Free; }
 end;
 
 procedure Account.LoadTokenFile();
 var
-  ts: TStringLIst;
+  ts: TstringList;
   i: Integer;
   T: Token;
   JsonArray: TJsonArray;
@@ -681,28 +1252,29 @@ var
   tempJson: TJSONValue;
   flock: TObject;
 begin
-  flock := TObject.Create;
-  TMonitor.Enter(flock);
-  if fileExists(TokenFilePath) then
+  { flock := TObject.Create;
+    TMonitor.Enter(flock); }
+  mutexTokenFile.Acquire;
+  if FileExists(TokenFilePath) then
   begin
 
-    ts := TStringLIst.Create();
+    ts := TstringList.Create();
 
-    ts.LoadFromFile(TokenFilePath);
+    ts.loadFromFile(TokenFilePath);
 
-    if ts.Text[low(ts.Text)] = '[' then
+    if ts.text[low(ts.text)] = '[' then
     begin
 
-      JsonArray := TJsonArray(TJSONObject.ParseJSONValue(ts.Text));
+      JsonArray := TJsonArray(TJSONObject.ParseJSONValue(ts.text));
 
       for tokenJson in JsonArray do
       begin
 
-        tokenJson.TryGetValue<TJSONValue>('TokenData', tempJson);
+        tokenJson.tryGetValue<TJSONValue>('TokenData', tempJson);
 
         T := Token.fromJson(tempJson);
 
-        if tokenJson.TryGetValue<TJSONValue>('CryptoCurrencyData', tempJson)
+        if tokenJson.tryGetValue<TJSONValue>('CryptoCurrencyData', tempJson)
         then
         begin
 
@@ -712,7 +1284,7 @@ begin
 
         if (T.id < 10000) or (Token.availableToken[T.id - 10000].address <> '')
         then // if token.address = ''   token is no longer exist
-          AddToken(T);
+          AddTokenWithoutSave(T);
 
         {
           tokenJson.AddPair('name' , myTokens[i].name );
@@ -721,6 +1293,7 @@ begin
 
       end;
 
+      JsonArray.Free;
     end
     else
     begin
@@ -738,7 +1311,7 @@ begin
         // histSize := strtoInt(ts[i]);
         inc(i);
 
-        AddToken(T);
+        AddTokenWithoutSave(T);
         // add new token to array myTokens
 
       end;
@@ -748,19 +1321,21 @@ begin
     ts.Free;
 
   end;
-  TMonitor.exit(flock);
-  flock.Free;
+
+  mutexTokenFile.Release;
+  { TMonitor.exit(flock);
+    flock.Free; }
 end;
 
 procedure Account.SaveFiles();
 var
-  ts: TStringLIst;
+  ts: TstringList;
   i: Integer;
   fileData: AnsiString;
   flock: TObject;
 begin
-  flock := TObject.Create;
-  TMonitor.Enter(flock);
+  // flock := TObject.Create;
+  // TMonitor.Enter(flock);
 
   SaveSeedFile();
 
@@ -768,22 +1343,23 @@ begin
   SaveTokenFile();
   SaveDescriptionFile();
 
-  TMonitor.exit(flock);
-  flock.Free;
+  // TMonitor.exit(flock);
+  // flock.Free;
 end;
 
 procedure Account.SaveTokenFile();
 var
-  ts: TStringLIst;
+  ts: TstringList;
   i: Integer;
   fileData: AnsiString;
   TokenArray: TJsonArray;
   tokenJson: TJSONObject;
   flock: TObject;
 begin
-  flock := TObject.Create;
-  TMonitor.Enter(flock);
-  ts := TStringLIst.Create();
+
+  mutexTokenFile.Acquire;
+
+  ts := TstringList.Create();
   try
     TokenArray := TJsonArray.Create();
 
@@ -804,72 +1380,86 @@ begin
 
     end;
 
-    ts.Text := TokenArray.ToString;
+    ts.text := TokenArray.ToString;
     ts.SaveToFile(TokenFilePath);
+    TokenArray.Free;
   except
     on E: Exception do
     begin
     end;
   end;
+
   ts.Free;
-  TMonitor.exit(flock);
-  flock.Free;
+  mutexTokenFile.Release;
+
 end;
 
 procedure Account.SaveCoinFile();
 var
   i: Integer;
-  ts: TStringLIst;
+  ts: TstringList;
   data: TWalletInfo;
   JsonArray: TJsonArray;
   coinJson: TJSONObject;
   dataJson: TJSONObject;
   flock: TObject;
 begin
-  flock := TObject.Create;
-  TMonitor.Enter(flock);
-  JsonArray := TJsonArray.Create();
-
-  for data in myCoins do
-  begin
-    if data.deleted then
-      continue;
-
-    dataJson := TJSONObject.Create();
-    dataJson.AddPair('innerID', inttoStr(data.coin));
-    dataJson.AddPair('X', inttoStr(data.X));
-    dataJson.AddPair('Y', inttoStr(data.Y));
-    dataJson.AddPair('address', data.addr);
-    dataJson.AddPair('description', data.description);
-    dataJson.AddPair('creationTime', inttoStr(data.creationTime));
-    dataJson.AddPair('panelYPosition', inttoStr(data.orderInWallet));
-    dataJson.AddPair('publicKey', data.pub);
-    dataJson.AddPair('EncryptedPrivateKey', data.EncryptedPrivKey);
-    dataJson.AddPair('isCompressed', booltoStr(data.isCompressed));
-    dataJson.AddPair('inPool', booltoStr(data.inPool));
-    coinJson := TJSONObject.Create();
-    coinJson.AddPair('name', data.name);
-    coinJson.AddPair('data', dataJson);
-    coinJson.AddPair('CryptoCurrencyData', getCryptoCurrencyJsonData(data));
-
-    JsonArray.AddElement(coinJson);
-
-  end;
-
-  ts := TStringLIst.Create();
+  { flock := TObject.Create;
+    TMonitor.Enter(flock); }
+  mutexCoinFile.Acquire();
   try
-    ts.Text := JsonArray.ToString;
-    ts.SaveToFile(CoinFilePath);
+
+    JsonArray := TJsonArray.Create();
+
+    for data in myCoins do
+    begin
+      if data.deleted then
+        continue;
+
+      dataJson := TJSONObject.Create();
+      dataJson.AddPair('innerID', intToStr(data.coin));
+      dataJson.AddPair('X', intToStr(data.X));
+      dataJson.AddPair('Y', intToStr(data.Y));
+      dataJson.AddPair('address', data.addr);
+      dataJson.AddPair('description', data.description);
+      dataJson.AddPair('creationTime', intToStr(data.creationTime));
+      dataJson.AddPair('panelYPosition', intToStr(data.orderInWallet));
+      dataJson.AddPair('publicKey', data.pub);
+      dataJson.AddPair('EncryptedPrivateKey', data.EncryptedPrivKey);
+      dataJson.AddPair('isCompressed', booltoStr(data.isCompressed));
+      dataJson.AddPair('inPool', booltoStr(data.inPool));
+      coinJson := TJSONObject.Create();
+      coinJson.AddPair('name', data.name);
+      coinJson.AddPair('data', dataJson);
+      coinJson.AddPair('CryptoCurrencyData', getCryptoCurrencyJsonData(data));
+
+      JsonArray.AddElement(coinJson);
+
+    end;
+
+    ts := TstringList.Create();
+    try
+      ts.text := JsonArray.ToString;
+      ts.SaveToFile(CoinFilePath);
+    except
+      on E: Exception do
+      begin
+        //
+      end;
+    end;
+    ts.Free;
+    JsonArray.Free;
+
   except
     on E: Exception do
     begin
-      //
+
     end;
   end;
-  ts.Free;
-  JsonArray.Free;
-  TMonitor.exit(flock);
-  flock.Free;
+  mutexCoinFile.Release;
+
+  { TMonitor.exit(flock);
+    flock.Free; }
 end;
 
 procedure loadCryptoCurrencyJSONData(data: TJSONValue; cc: cryptoCurrency);
@@ -880,35 +1470,35 @@ var
 
   HistArrayIt: TJSONValue;
 
-  confirmed, unconfirmed, rate: AnsiString;
+  confirmed, unconfirmed, rate: string;
   i: Integer;
 begin
 
-  if data.TryGetValue<AnsiString>('confirmed', confirmed) then
+  if data.tryGetValue<string>('confirmed', confirmed) then
   begin
     BigInteger.TryParse(confirmed, 10, cc.confirmed);
   end;
-  if data.TryGetValue<AnsiString>('unconfirmed', unconfirmed) then
+  if data.tryGetValue<string>('unconfirmed', unconfirmed) then
   begin
     BigInteger.TryParse(unconfirmed, 10, cc.unconfirmed);
   end;
-  if data.TryGetValue<AnsiString>('USDPrice', rate) then
+  if data.tryGetValue<string>('USDPrice', rate) then
   begin
     cc.rate := StrToFloatDef(rate, 0);
   end;
-  if data.TryGetValue<TJsonArray>('history', JsonHistArray) then
-  begin
+  { if data.TryGetValue<TJsonArray>('history', JsonHistArray) then
+    begin
 
     SetLength(cc.history, JsonHistArray.Count);
     i := 0;
     for HistArrayIt in JsonHistArray do
     begin
-      cc.history[i].fromJsonValue(HistArrayIt);
+    cc.history[i].fromJsonValue(HistArrayIt);
 
-      inc(i);
+    inc(i);
     end;
 
-  end;
+    end; }
 
 end;
 

@@ -3,11 +3,17 @@ program HODLER_Wallet_Desktop;
 {$R *.dres}
 
 uses
+  {$IF DEFINED(DEBUG) AND DEFINED(MSWINDOWS)}
+  fastMM4,
+  {$ENDIF }
   SafeDLLPath in 'SafeDLLPath.pas',
   System.StartUpCopy,
   FMX.Forms,
   FMX.Styles,
   FontService,
+  System.Classes,
+  SysUtils,
+  IOUtils,
   uHome in 'homeWindows\uHome.pas' {frmHome},
   misc in 'additionalUnits\misc.pas',
   base58 in 'additionalUnits\base58.pas',
@@ -97,7 +103,6 @@ uses
   coinData in 'coinCode\coinData.pas',
   tokenData in 'coinCode\tokenData.pas',
   bech32 in 'additionalUnits\bech32.pas',
-  FMX.Ani in 'FMX.Ani.pas',
   DW.ThreadedTimer in 'DW.ThreadedTimer.pas',
   cryptoCurrencyData in 'coinCode\cryptoCurrencyData.pas',
   SyncThr in 'additionalUnits\SyncThr.pas',
@@ -135,28 +140,75 @@ uses
   debugAnalysis in 'additionalUnits\debugAnalysis.pas',
   KeypoolRelated in 'additionalUnits\KeypoolRelated.pas',
   AssetsMenagerData in 'additionalUnits\AssetsMenagerData.pas',
-  Nano in 'coinCode\Nano.pas';
+  PopupWindowData in 'additionalUnits\PopupWindowData.pas',
+  CrossPlatformHeaders in 'CrossPlatformHeaders.pas',
+  NotificationLayoutData in 'components\NotificationLayoutData.pas',
+  ED25519_Blake2b in 'coinCode\ED25519_Blake2b.pas',
+  Nano in 'coinCode\Nano.pas',
+  {$IF DEFINED(LINUX)}
+  Posix.Signal,
+  {$ENDIF }
+  TAddressLabelData in 'components\TAddressLabelData.pas',
+  TCopyableAddressLabelData in 'components\TCopyableAddressLabelData.pas',
+  TCopyableAddressPanelData in 'components\TCopyableAddressPanelData.pas',
+  ThreadKindergartenData in 'additionalUnits\ThreadKindergartenData.pas',
+  TAddNewCryptoPanelData in 'components\TAddNewCryptoPanelData.pas',
+  TNewCryptoVertScrollBoxData in 'components\TNewCryptoVertScrollBoxData.pas',
+  ComponentPoolData in 'additionalUnits\additionalClass\ComponentPoolData.pas',
+  HistoryPanelData in 'components\HistoryPanelData.pas',
+  CoinPanelData in 'components\CoinPanelData.pas',
+  Spendable in 'coinCode\Spendable.pas';
 
 {$R *.res}
 
 var
   H: THandle;
-
+{$IF DEFINED(LINUX)}    err:string;
+var lockFile:TFilestream;
+lAction: sigaction_t;
+function linuxCanLock:boolean;
 begin
+result:=false;
+try
+ lockFile := TFilestream.Create( TPath.GetDocumentsPath+'/.hlock', fmCreate or fmOpenRead or fmShareExclusive );
+except on E:Exception do begin exit(false); end; end;
+result:=true;
+end;
+procedure SignalHandler(SigNum: Integer); cdecl;
+var i:integer;
+err:string;
+begin
+i:=signum;
+err:=inttostr(i);
+
+end;
+{$ENDIF}
+begin
+
+{$IF NOT DEFINED(LINUX)}
+
   Application.OnException := frmhome.ExceptionHandler;
   VKAutoShowMode := TVKAutoShowMode.Never;
-
+{
+ FMX.Types.GlobalUseDX := true;
+//  FMX.Types.GlobalUseGPUCanvas:=true;
+  GlobalUseDXInDX9Mode := true;
+//  GlobalUseDXSoftware := true;
+  FMX.Types.GlobalDisableFocusEffect := true;
+  }
+//Recovered from 0.4.0, removes crash for QR Codes
   FMX.Types.GlobalUseDX := true;
 
   GlobalUseDXInDX9Mode := true;
   GlobalUseDXSoftware := true;
   FMX.Types.GlobalDisableFocusEffect := true;
-{$IF NOT DEFINED(LINUX)}
+
   H := CreateMutex(nil, False, 'HODLERTECHMUTEX');
   if (H <> 0) and (GetLastError <> ERROR_ALREADY_EXISTS) then
   begin
     try
       Application.Initialize;
+
       Application.FormFactor.Orientations := [TFormOrientation.Portrait];
       Application.CreateForm(TfrmHome, frmhome);
       Application.Run;
@@ -167,11 +219,26 @@ begin
   CloseHandle(H);
 {$ENDIF}
 {$IF DEFINED(LINUX)}
+try
+if not linuxCanLock then halt(2);
+
+lAction._u.sa_handler:=SignalHandler;
+sigaction(4,@lAction,nil);
+sigaction(5,@lAction,nil);
+sigaction(6,@lAction,nil);
+//sigaction(11,@lAction,nil);
+sigaction(13,@lAction,nil);
+
   Application.Initialize;
 
   Application.FormFactor.Orientations := [TFormOrientation.Portrait];
   Application.CreateForm(TfrmHome, frmhome);
   Application.Run;
+  except on E:Exception do begin
+  err:=E.Message;
+  end; end;
+
 {$ENDIF}
 
 end.
+

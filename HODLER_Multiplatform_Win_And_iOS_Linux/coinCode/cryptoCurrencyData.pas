@@ -10,16 +10,16 @@ uses System.IOUtils, sysutils, StrUtils, Velthuis.BigIntegers, System.Classes,
 
 type
   transactionHistory = record
-    typ: AnsiString;
-    TransactionID: AnsiString;
-    data: AnsiString;
-    addresses: Array of AnsiString;
+    typ: string;
+    TransactionID: string;
+    data: string;
+    addresses: Array of string;
     values: Array of BigInteger;
     CountValues: BigInteger;
     lastBlock: System.uint64;
     confirmation: System.uint64;
-    function toString(): AnsiString;
-    procedure FromString(str: AnsiString);
+    function toString(): string;
+    procedure FromString(str: string);
     function toJsonValue(): TJsonValue;
     procedure fromJsonValue(JsonValue: TJsonValue);
 
@@ -33,23 +33,25 @@ type
 type
   cryptoCurrency = class
 
+    name, ShortCut: string;
     creationTime: integer;
     history: TxHistory;
     confirmed: BigInteger;
     unconfirmed: BigInteger;
     decimals: integer;
-    addr: AnsiString;
+    addr: string;
     rate: Double;
-    description: AnsiString;
+    description: string;
     orderInWallet: integer;
     deleted: boolean;
-    EncryptedPrivKey: AnsiString;
-    name, ShortCut: AnsiString;
+    EncryptedPrivKey: string;
 
+    lastBlock:string;
+    lastPendingBlock:string;
     constructor Create();
     destructor Destroy(); override;
 
-    function getIcon(): TBitmap; virtual;
+    function getIconResource(): TStream; virtual;
 
     function getFiat: Double;
     function getUnconfirmedFiat(): Double;
@@ -74,7 +76,7 @@ begin
   result := CompareStr(a.TransactionID, b.TransactionID);
 end;
 
-function cryptoCurrency.getIcon(): TBitmap;
+function cryptoCurrency.getIconResource(): TStream;
 begin
   raise Exception.Create('getIcon not implemented');
 end;
@@ -161,24 +163,24 @@ end;
 procedure transactionHistory.fromJsonValue(JsonValue: TJsonValue);
 var
   i: integer;
-  conf, lastB, temp, countVal: AnsiString;
+  conf, lastB, temp, countVal: string;
   addrlist: TjsonArray;
   JsonIt: TJsonValue;
 
 begin
 
-  JsonValue.TryGetValue<AnsiString>('type', typ);
-  JsonValue.TryGetValue<AnsiString>('transactionID', TransactionID);
-  JsonValue.TryGetValue<AnsiString>('timeStamp', data);
-  if JsonValue.TryGetValue<AnsiString>('confirmation', conf) then
+  JsonValue.TryGetValue<string>('type', typ);
+  JsonValue.TryGetValue<string>('transactionID', TransactionID);
+  JsonValue.TryGetValue<string>('timeStamp', data);
+  if JsonValue.TryGetValue<string>('confirmation', conf) then
   begin
     confirmation := strToIntDef(conf, 0);
   end;
-  if JsonValue.TryGetValue<AnsiString>('countValues', countVal) then
+  if JsonValue.TryGetValue<string>('countValues', countVal) then
   begin
     BigInteger.TryParse(countVal, 10, CountValues);
   end;
-  if JsonValue.TryGetValue<AnsiString>('lastBlock', lastB) then
+  if JsonValue.TryGetValue<string>('lastBlock', lastB) then
   begin
     lastBlock := strToIntDef(lastB, 0);
   end;
@@ -192,9 +194,9 @@ begin
     for JsonIt in addrlist do
     begin
 
-      JsonIt.TryGetValue<AnsiString>('address', addresses[i]);
+      JsonIt.TryGetValue<string>('address', addresses[i]);
 
-      if JsonIt.TryGetValue<AnsiString>('value', temp) then
+      if JsonIt.TryGetValue<string>('value', temp) then
       begin
 
         BigInteger.TryParse(temp, 10, values[i]);
@@ -208,7 +210,7 @@ begin
 
 end;
 
-function transactionHistory.toString(): AnsiString;
+function transactionHistory.toString(): string;
 var
   list: TstringList;
   i: integer;
@@ -234,7 +236,7 @@ begin
   list.Free;
 end;
 
-procedure transactionHistory.FromString(str: AnsiString);
+procedure transactionHistory.FromString(str: string);
 var
   size: integer;
   i: integer;
@@ -262,7 +264,7 @@ begin
   end;
   BigInteger.TryParse(list.Strings[4 + 2 * size], temp);
   CountValues := temp;
-  lastBlock := strToInt(list.Strings[5 + 2 * size]);
+  lastBlock := strToIntDef(list.Strings[5 + 2 * size],0);
 
   list.Free;
 

@@ -49,12 +49,13 @@ var
   n, c: integer;
   output: AnsiString;
   sb: System.UInt8;
-  S: TBytes;
+  S: array of System.UInt8;
 begin
   SetLength(S, (Length(V) div 2));
+
   for i := 0 to (Length(V) div 2) - 1 do
   begin
-    sb := System.UInt8(StrToInt('$' + Copy(V, ((i) * 2) + 1, 2)));
+    sb := System.UInt8(StrToIntDef('$' + Copy(V, ((i) * 2) + 1, 2),0));
     S[i] := sb;
   end;
   n := 34;
@@ -83,6 +84,7 @@ begin
 
   end;
   result := output;
+
 end;
 {$ELSE}
 
@@ -97,13 +99,14 @@ var
   sb: System.UInt8;
   S: TBytes;
 begin
-  SetLength(S, (Length(V) div 2));
+  SetLength(S, (Length(V) div 2) + 1);
   for i := 1 to (Length(V) div 2) do
   begin
-    sb := System.UInt8(StrToInt('$' + Copy(V, ((i - 1) * 2) + 1, 2)));
+    sb := System.UInt8(StrToIntDef('$' + Copy(V, ((i - 1) * 2) + 1, 2),0));
     S[i] := sb;
   end;
   n := 34;
+
   SetLength(output, 34);
   while n > 0 do
   begin
@@ -128,6 +131,11 @@ begin
 
   end;
   result := output;
+  SetLength(output,0);
+  SetLength(S,0);
+  SetLength(V,0);
+  Delete(output , low(output) , length(output) );
+
 end;
 {$ENDIF}
 

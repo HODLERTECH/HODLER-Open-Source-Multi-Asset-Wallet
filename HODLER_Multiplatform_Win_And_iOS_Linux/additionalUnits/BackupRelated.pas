@@ -12,8 +12,8 @@ uses
   FMX.Layouts, FMX.ExtCtrls, Velthuis.BigIntegers, FMX.ScrollBox, FMX.Memo,
   FMX.Platform, System.Threading, Math, DelphiZXingQRCode,
   FMX.TabControl, FMX.Edit,
-  FMX.Clipboard, FMX.VirtualKeyBoard, JSON,
-  languages, WalletStructureData,
+  FMX.Clipboard, FMX.VirtualKeyBoard, JSON, Nano,
+  languages, WalletStructureData, popupwindowData,
 
   FMX.Media, FMX.Objects, uEncryptedZipFile, System.Zip
 {$IFDEF ANDROID},
@@ -145,7 +145,8 @@ begin
 
                 image := TImage.create(panel);
                 image.parent := panel;
-                image.bitmap := CurrentAccount.myCoins[i].getIcon();
+                image.bitmap.LoadFromStream(getcoinIconResource
+                  (CurrentAccount.myCoins[i].coin));
                 image.align := TAlignLayout.left;
                 image.width := 32 + 2 * 15;
                 image.visible := true;
@@ -218,7 +219,8 @@ begin
 
       image := TImage.create(panel);
       image.parent := panel;
-      image.bitmap := CurrentAccount.myCoins[i].getIcon();
+      image.bitmap.LoadFromStream
+        (getcoinIconResource(CurrentAccount.myCoins[i].coin));
       image.align := TAlignLayout.left;
       image.width := 32 + 2 * 15;
       image.visible := true;
@@ -559,46 +561,32 @@ end;
 function isEQRGenerated: Boolean;
 begin
   result := FileExists(System.IOUtils.TPath.Combine(
-{$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
+{$IF DEFINED(MSWINDOWS) OR DEFINED(LINUX)}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
     (){$ENDIF}, CurrentAccount.name + '_EQR_BIG' + '.png')) and
     FileExists(System.IOUtils.TPath.Combine(
-{$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
+{$IF DEFINED(MSWINDOWS) OR DEFINED(LINUX)}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
     (){$ENDIF}, CurrentAccount.name + '_EQR_SMALL' + '.png'));
 end;
 
 procedure SendEQR;
 var
   i: Integer;
-  Zip: TEncryptedZipFile;
   img, qrimg: TBitmap;
-
   tempStr: TStream;
-  ImgPath: AnsiString;
-  zipPath: AnsiString;
   FileName: string;
-var
   Stream: TResourceStream;
-var
-  MasterSeed, tced: AnsiString;
   Y, m, d: Word;
 begin
-  with frmhome do
-  begin
-    FileName := CurrentAccount.name + '_EQR_BIG';
-    ImgPath := System.IOUtils.TPath.Combine(
-{$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
-      (){$ENDIF}, FileName + '.png');
-    if not FileExists(ImgPath) then
+         if not FileExists( CurrentAccount.SmallQRImagePath ) then
     begin
 
-      { tced := TCA(passwordForDecrypt.Text);
-        MasterSeed := SpeckDecrypt(tced, currentAccount.EncryptedMasterSeed);
-        if not isHex(MasterSeed) then
-        begin
-        popupWindow.create(dictionary('FailedToDecrypt'));
-        passwordForDecrypt.Text := '';
-        exit;
-        end; }
+      img := StrToQRBitmap( CurrentAccount.EncryptedMasterSeed,8 );
+
+      img.SaveToFile(CurrentAccount.SmallQRImagePath);
+      img.free;
+    end;
+    if not FileExists(CurrentAccount.BigQRImagePath) then
+    begin
 
       qrimg := StrToQRBitmap(CurrentAccount.EncryptedMasterSeed, 16);
       img := TBitmap.create();
@@ -613,41 +601,39 @@ begin
         RectF(294, 514, 797 + 294, 797 + 514), 1);
       img.Canvas.EndScene;
 
-      img.SaveToFile(ImgPath);
-    end;
-    img.Free;
-    qrimg.Free;
-    FileName := CurrentAccount.name + '_EQR_SMALL';
-    ImgPath := System.IOUtils.TPath.Combine(
-{$IFDEF MSWINDOWS}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
-      (){$ENDIF}, FileName + '.png');
-    if not FileExists(ImgPath) then
-    begin
-      img := StrToQRBitmap(CurrentAccount.EncryptedMasterSeed);
+      img.SaveToFile(CurrentAccount.BigQRImagePath);
+      img.Free;
+      qrimg.Free;
 
-      img.SaveToFile(ImgPath);
     end;
 
-    userSavedSeed := true;
-    refreshWalletDat();
-    // switchTab(pageControl, BackupTabItem);
-    // frmhome.SendEncryptedSeedButtonClick(nil);
-  end;
+
+
+    CurrentAccount.userSaveSeed := true;
+    //CurrentAccount.SaveSeedFile();
+    // ? userSavedSeed := true;
+    //refreshWalletDat();
 end;
 
 procedure restoreEQR(Sender: TObject);
 var
-  MasterSeed, tced: AnsiString;
+  MasterSeed, tced,s: AnsiString;
   ac: Account;
   i: Integer;
 begin
   with frmhome do
   begin
-    tced := TCA(RestorePasswordEdit.Text);
+  s:=RestorePasswordEdit.Text;
+  tced := TCA(s);
     MasterSeed := SpeckDecrypt(tced, tempQRFindEncryptedSeed);
     if not isHex(MasterSeed) then
     begin
-      popupWindow.create(dictionary('FailedToDecrypt'));
+
+      tthread.Synchronize(nil , procedure
+      begin
+        popupWindow.create(dictionary('FailedToDecrypt'));
+      end);
+
       exit;
     end;
 
@@ -674,7 +660,7 @@ begin
 
     tced := '';
     MasterSeed := '';
-
+    s:='';
   end;
 end;
 
@@ -860,7 +846,7 @@ begin
       wd.isCompressed := false;
     end;
     CurrentAccount.AddCoin(wd);
-    CreatePanel(wd);
+    CreatePanel(wd , CurrentAccount , frmhome.walletList);
 
     MasterSeed := '';
 
@@ -921,8 +907,8 @@ begin
 
       seedFromWords := '';
       inputWordsList.Free;
-      LoadCurrentAccount(AccountNameEdit.Text);
-      AccountRelated.afterInitialize;
+      //LoadCurrentAccount(AccountNameEdit.Text);
+      //AccountRelated.afterInitialize;
       {
         Dodaæ obs³ugê b³êdów
       }
@@ -938,7 +924,7 @@ var
 var
   bitmap: TBitmap;
   tempStr: AnsiString;
-{$IFDEF MSWINDOWS}lblPrivateKey: TMemo; {$ENDIF}
+{$IF DEFINED(MSWINDOWS) OR DEFINED(LINUX)}lblPrivateKey: TMemo; {$ENDIF}
 begin
   if wd = nil then
   begin
@@ -987,9 +973,15 @@ begin
       end;
       startFullfillingKeypool(MasterSeed);
       lblPrivateKey.Text := priv256forhd(wd.coin, wd.X, wd.Y, MasterSeed);
-      lblWIFKey.Text := PrivKeyToWIF(lblPrivateKey.Text, wd.coin <> 4,
-        AvailableCoin[TWalletInfo(wd).coin].wifByte);
+      if wd.coin <> 4 then
+        lblWIFKey.Text := PrivKeyToWIF(lblPrivateKey.Text, wd.coin <> 4,
+          AvailableCoin[TWalletInfo(wd).coin].wifByte);
+      if wd.coin = 8 then
+      begin
 
+        lblPrivateKey.Text := nano_getPriv(NanoCoin(wd), MasterSeed);
+        lblWIFKey.Text := '';
+      end;
       wipeAnsiString(MasterSeed);
 
     end;
@@ -998,9 +990,12 @@ begin
     PrivateKeyAddressInfoLabel.Text := wd.addr;
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     lblPrivateKey.Text := cutEveryNChar(length(lblPrivateKey.Text) div 2,
-      lblPrivateKey.Text);
-    lblWIFKey.Text := cutEveryNChar(length(lblWIFKey.Text) div 2,
-      lblWIFKey.Text);
+      lblPrivateKey.Text , #13#10);
+    if wd.coin <> 8 then
+      lblWIFKey.Text := cutEveryNChar(length(lblWIFKey.Text) div 2,
+        lblWIFKey.Text , #13#10)
+    else
+      lblWIFKey.Text := '';
 {$ENDIF}
     bitmap := StrToQRBitmap(removeSpace(lblPrivateKey.Text));
     PrivKeyQRImage.bitmap.Assign(bitmap);
