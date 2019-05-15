@@ -177,7 +177,8 @@ begin         // ethereum
     3:
       URL := 'https://blockchair.com/bitcoin-cash/transaction/';
     4:
-      URL := 'https://blockchair.com/ethereum/transaction/';
+      //URL := 'https://blockchair.com/ethereum/transaction/';
+      URL := 'https://etherscan.io/tx/';
     5:
       URL := 'https://ravencoin.network/tx/';
     6:

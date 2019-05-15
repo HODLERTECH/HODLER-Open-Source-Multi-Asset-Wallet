@@ -772,12 +772,12 @@ begin
       cc: cryptoCurrency;
     begin
       frmhome.refreshLocalImage.Start();
-      cc := currentAccount.getWalletWithX(CurrentCoin.x, CurrentCoin.coin)[0];
+      //cc := currentAccount.getWalletWithX(CurrentCoin.x, CurrentCoin.coin)[0];
       // SCC sync x / all y
-      /// for cc in currentAccount.getWalletWithX(CurrentCoin.x, CurrentCoin.coin) do
-      // begin
-      SynchronizeCryptoCurrency(currentAccount, cc);
-      // end;
+      for cc in currentAccount.getWalletWithX(CurrentCoin.x, CurrentCoin.coin) do
+      begin
+        SynchronizeCryptoCurrency(currentAccount, cc);
+      end;
 
       TThread.Synchronize(nil,
         procedure
@@ -1041,6 +1041,7 @@ begin
         // while (ans = '') and (tries < 5) do
         // begin
         ans := sendCoinsTO(from, sendto, Amount, Fee, MasterSeed, coin);
+
         // inc(tries);
         // end;
         TThread.Synchronize(nil,
@@ -1064,6 +1065,28 @@ begin
                   begin
                   SynchronizeCryptoCurrency(CurrentCryptoCurrency);
                   end).Start; }
+
+                {if from.coin = 4 then
+                begin
+
+                  if isTokenTransfer then
+                  begin
+                    from.confirmed := from.confirmed - (  fee*66000 );
+                  end
+                  else
+                  begin
+                    EthereumCoin(from).synchronizeDelay := 7;
+                    from.confirmed := from.confirmed - ( Amount + fee*21000 );
+                  end;
+
+
+                  reloadWalletView;
+
+                end;  }
+
+
+
+
                 TransactionWaitForSendLinkLabel.Text :=
                   'Click here to see details in Explorer';
                 TransactionWaitForSendDetailsLabel.Text := 'Transaction sent';
@@ -2267,6 +2290,7 @@ begin
     end;
     if wvFee.Text = '' then
       wvFee.Text := '0';
+    calcUSDFee;
     TransactionFeeLayout.BeginUpdate;
     TransactionFeeLayout.RecalcUpdateRect;
     TransactionFeeLayout.Repaint;
@@ -2464,6 +2488,13 @@ var
   localCurrentCryptoCurrency: cryptoCurrency;
 begin
 
+
+  {if CurrentCryptoCurrency is EthereumCoin then
+    begin
+        if EthereumCoin(CurrentCryptoCurrency).synchronizeDelay > 0 then
+              exit();
+
+                end;}
   // localCurrentCryptoCurrency := cryptoCurrency.Create( currentCryptoCurrency );
   // localCurrentCryptoCurrency.assign( CurrentCryptoCurrency );
 

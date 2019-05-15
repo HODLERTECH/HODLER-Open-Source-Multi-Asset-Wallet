@@ -269,9 +269,6 @@ Coordinates=1258,309,108,51
 [ANWHeader]
 Coordinates=1636,924,73,33
 
-[Image4]
-Coordinates=140,654,49,51
-
 [TokenNameField]
 Coordinates=438,482,96,51
 
@@ -1033,9 +1030,6 @@ Coordinates=1040,828,76,51
 [DebugScreen]
 Coordinates=2465,1018,80,33
 
-[Image1]
-Coordinates=1243,924,49,51
-
 [Memo1]
 Coordinates=68,732,49,51
 
@@ -1152,4 +1146,10 @@ Coordinates=734,828,46,51
 
 [HodlerLogoImageRO]
 Coordinates=580,924,49,51
+
+[HodlerLogoImageWTI]
+Coordinates=1243,924,49,51
+
+[HodlerLogoImageCP]
+Coordinates=140,654,49,51
 

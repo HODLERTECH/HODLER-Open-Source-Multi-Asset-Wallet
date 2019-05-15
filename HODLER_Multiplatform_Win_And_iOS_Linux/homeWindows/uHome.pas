@@ -320,7 +320,7 @@ type
     KeyBoardLayout: TLayout;
     btnImageList: TImageList;
     WelcomeTabItem: TTabItem;
-    Image1: TImage;
+    HodlerLogoImageWTI: TImage;
     Layout6: TLayout;
     btnRestoreWallet: TButton;
     lblWelcome: TLabel;
@@ -331,7 +331,7 @@ type
     Layout9: TLayout;
     Layout10: TLayout;
     Image3: TImage;
-    Image4: TImage;
+    HodlerLogoImageCP: TImage;
     Layout11: TLayout;
     lblThanks: TLabel;
     lblSetPassword: TLabel;
