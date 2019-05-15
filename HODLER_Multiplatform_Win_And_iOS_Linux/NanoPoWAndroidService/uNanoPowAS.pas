@@ -898,9 +898,9 @@ TThread.CreateAnonymousThread(
           procedure
           begin
       if speed>1 then
-            frmHome.NanoUnlocker.Text := 'Mining '+ FloatToStrF(speed,
+            frmHome.NanoUnlocker.Text := 'Proof of Work '+ FloatToStrF(speed,
               ffGeneral, 8, 2) + ' kHash/s ' else
-            frmHome.NanoUnlocker.Text := 'Proofs of work found';
+            frmHome.NanoUnlocker.Text := 'Ready for instant transactions';
           end);
         sleep(1000);
       until (true = false);

@@ -296,6 +296,7 @@ begin
   Result.destination := JSON.GetValue<string>('link');
   Result.work := JSON.GetValue<string>('work');
   Result.signature := JSON.GetValue<string>('signature');
+  JSON.Free;
 end;
 
 function nano_builtToJSON(Block: TNanoBlock): string;
