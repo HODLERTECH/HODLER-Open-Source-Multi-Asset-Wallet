@@ -3,7 +3,7 @@ unit CurrencyConverter;
 interface
 
 uses
-  system.Generics.Collections;
+  system.Generics.Collections,SysUtils;
 {$IF DEFINED(ANDROID) OR DEFINED(IOS) OR DEFINED(LINUX)}
 
 const
@@ -46,7 +46,7 @@ begin
     ratio := availableCurrency[_symbol];
     symbol := _symbol;
 
-  except
+  except   on E : Exception do
     begin
       ratio := 1.0;
       symbol := 'USD';
@@ -69,12 +69,42 @@ end;
 constructor TCurrencyConverter.Create();
 begin
   availableCurrency := TObjectDictionary<AnsiString, double>.Create();
-  availableCurrency.Add('PLN', 3.73);
-  availableCurrency.Add('EUR', 0.86);
-  availableCurrency.Add('USD', 1.0);
-  availableCurrency.Add('GBP', 0.77);
-  availableCurrency.Add('CAD', 1.32);
-  availableCurrency.Add('INR', 69.07);
+  if availableCurrency.Count=0 then begin
+  availableCurrency.TryAdd('EUR', 0.89);
+  availableCurrency.TryAdd('USD', 1.0);
+  availableCurrency.TryAdd('GBP', 0.78);
+  availableCurrency.TryAdd('CAD', 1.35);
+  availableCurrency.TryAdd('PLN', 3.85);
+  availableCurrency.TryAdd('INR', 69.07);
+  availableCurrency.TryAdd('JPY', 109.31);
+  availableCurrency.TryAdd('BGN', 1.75);
+  availableCurrency.TryAdd('CZK', 23.03);
+  availableCurrency.TryAdd('DKK', 6.68);
+  availableCurrency.TryAdd('HUF', 290.75);
+  availableCurrency.TryAdd('RON', 4.26);
+  availableCurrency.TryAdd('SEK', 9.63);
+  availableCurrency.TryAdd('CHF', 1.01);
+  availableCurrency.TryAdd('ISK', 122.87);
+  availableCurrency.TryAdd('NOK', 8.76);
+  availableCurrency.TryAdd('HRK', 6.63);
+  availableCurrency.TryAdd('RUB', 64.81);
+  availableCurrency.TryAdd('TRY', 6.06);
+  availableCurrency.TryAdd('AUD', 1.45);
+  availableCurrency.TryAdd('BRL', 3.99);
+  availableCurrency.TryAdd('CNY', 6.88);
+  availableCurrency.TryAdd('HKD', 7.85);
+  availableCurrency.TryAdd('IDR', 14460.00);
+  availableCurrency.TryAdd('ILS', 3.57);
+  availableCurrency.TryAdd('INR', 70.36);
+  availableCurrency.TryAdd('KRW', 1190.48);
+  availableCurrency.TryAdd('MXN', 19.20);
+  availableCurrency.TryAdd('MYR', 4.18);
+  availableCurrency.TryAdd('NZD', 1.53);
+  availableCurrency.TryAdd('PHP', 52.39);
+  availableCurrency.TryAdd('SGD', 1.37);
+  availableCurrency.TryAdd('THB', 31.59);
+  availableCurrency.TryAdd('ZAR', 14.27);
+  end;
   ratio := 1.0;
   symbol := 'USD';
 

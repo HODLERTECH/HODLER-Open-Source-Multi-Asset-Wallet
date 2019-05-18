@@ -318,6 +318,7 @@ var
   i: Integer;
   licz: Integer;
   batched: string;
+  dataTemp:AnsiString;
 begin
 
 
@@ -325,8 +326,10 @@ begin
   begin
     frmhome.refreshGlobalImage.Start;
   end;
-
- 
+    dataTemp := getDataOverHTTP(HODLER_URL + 'fiat.php');
+    synchronizeCurrencyValue(dataTemp);
+    dataTemp := getDataOverHTTP(HODLER_URL + 'fees.php');
+    synchronizeDefaultFees(dataTemp);
   for i in [0, 1, 2, 3, 4, 5, 6, 7] do
   begin
     // if TThread.CurrentThread.CheckTerminated then

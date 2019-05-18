@@ -454,17 +454,14 @@ end;
 
 procedure CloseHodler();
 begin
-
+  if ResourceMenager<>nil then
   ResourceMenager.free;
-  //currentAccount.Free;  // loadedAccount.free  remove all accounts
+  if LoadedAccounts<>nil then
   LoadedAccounts.Free;
+  if frmhome.CurrencyConverter<>nil then
   frmhome.CurrencyConverter.free;
+  if frmhome.SourceDictionary<>nil then
   frmhome.SourceDictionary.Free;
-
-  //mutex.Free;
-  //semaphore.Free;
-  //VerifyKeypoolSemaphore.Free;
-
   clearVertScrollBox(frmhome.TxHistory); // Panel.TagObject can contain THistoryHolder
 
   HistoryPanelPool.Free;
@@ -500,7 +497,7 @@ begin
 
   TimeLog := TimeLogger.Create();
   timeLog.StartLog('InitializeHodler');
-
+   synchronizeDefaultFees('');
   LoadedAccounts := TObjectDictionary<String,Account>.create([doOwnsValues]);
 
   Randomize;

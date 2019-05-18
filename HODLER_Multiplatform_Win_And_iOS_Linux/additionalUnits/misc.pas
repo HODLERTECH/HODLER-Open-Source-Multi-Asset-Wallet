@@ -105,7 +105,7 @@ uses AESObj, SPECKObj, FMX.Objects, IdHash, IdHashSHA, IdSSLOpenSSL, languages,
   ClpISecureRandom,
   ClpCryptoApiRandomGenerator,
   ClpICryptoApiRandomGenerator, PopupWindowData, TaddressLabelData,
-  AssetsMenagerData, ComponentPoolData
+  AssetsMenagerData, ComponentPoolData,CurrencyConverter
 
 {$IFDEF ANDROID},
 
@@ -204,7 +204,7 @@ type
   TJFileProvider = class(TJavaGenericImport<JFileProviderClass, JFileProvider>)
   end;
 {$ENDIF}
-
+procedure synchronizeDefaultFees(data:AnsiString);
 function ISecureRandomBuffer: AnsiString;
 function speckStrPadding(data: AnsiString): AnsiString;
 procedure setBlackBackground(Owner: TComponent);
@@ -391,7 +391,7 @@ var
   globalLoadCacheTime: Double = 0;
   globalVerifyKeypoolTime: Double = 0;
   HistoryPanelPool: TComponentPool<ThistoryPanel>;
-
+  defaultFees:array [0..8] of BigInteger;
 implementation
 
 uses Bitcoin, uHome, base58, Ethereum, coinData, strutils, secp256k1,
@@ -1469,7 +1469,31 @@ begin
   end;
   req.Free;
 end;
+procedure synchronizeDefaultFees(data:AnsiString);
+var   JsonArr: TJsonObject;
+JsonValue: TJsonValue;
+s:string;
+begin
+if data='' then data:='{"0":10000,"1":10000,"2":6462,"4":18636751398}'; //hardcoded
 
+  JsonValue := TJsonObject.ParseJSONValue(data);
+try
+  if JsonValue is TJsonObject then begin
+  s:=JsonValue.GetValue<string>('0');
+  defaultFees[0]:=BigInteger.Parse(s);
+  s:=JsonValue.GetValue<string>('1');
+  defaultFees[1]:=BigInteger.Parse(s);
+  s:=JsonValue.GetValue<string>('2');
+  defaultFees[2]:=BigInteger.Parse(s);
+  s:=JsonValue.GetValue<string>('4');
+  defaultFees[4]:=BigInteger.Parse(s);
+
+  end;
+  except on E:Exception do begin
+  end;
+  end;
+  JsonValue.Free;
+end;
 function searchTokens(InAddress: AnsiString; ac: Account = nil): integer;
 var
   data: AnsiString;
@@ -4714,6 +4738,8 @@ begin
 
     frmhome.LanguageBox.ItemIndex :=
       StrToIntDef(JsonObject.GetValue<string>('languageIndex'), 0);
+      if frmhome.CurrencyConverter=nil then frmhome.CurrencyConverter:=TCurrencyConverter.Create();
+
     frmhome.CurrencyConverter.setCurrency
       (JsonObject.GetValue<string>('currency'));
 

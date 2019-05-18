@@ -756,15 +756,15 @@ begin
   with frmHome do
   begin
 
-    dataTemp := getDataOverHTTP(HODLER_URL + 'fiat.php');
+
     if TThread.CurrentThread.CheckTerminated then
       exit();
 
     TThread.Synchronize(nil,
       procedure
       begin
+         frmHome.Caption:='xxx';
 
-        synchronizeCurrencyValue(dataTemp);
 
         //RefreshWalletView.Enabled := false;
         //RefreshProgressBar.Visible := True;

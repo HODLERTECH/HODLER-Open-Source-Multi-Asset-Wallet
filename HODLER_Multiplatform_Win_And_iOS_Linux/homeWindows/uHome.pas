@@ -52,7 +52,7 @@ uses
   Androidapi.JNIBridge, SystemApp
 {$ENDIF},
 {$IFDEF MSWINDOWS}
-  URLMon,
+  URLMon, FMX.Platform.Win,
 {$ENDIF}
   misc, {FMX.Menus,}
   ZXing.BarcodeFormat,
@@ -1210,7 +1210,7 @@ type
 
     wvAddress, receiveAddress: TCopyableAddressPanel;
     newCryptoVertScrollBox: TNewCryptoVertScrollBox;
-    SendFromLabel ,SendToLabel : Tlabel;
+    SendFromLabel, SendToLabel: TLabel;
 
   var
     HistoryMaxLength: Integer;
@@ -1432,10 +1432,10 @@ begin
   CreateNewAccountAndSave(RestoreNameEdit.Text, RestorePasswordEdit.Text,
     MasterSeed, true);
 
-  //LoadCurrentAccount(RestoreNameEdit.Text);
+  // LoadCurrentAccount(RestoreNameEdit.Text);
   frmHome.FormShow(nil);
   tced := '';
-  //startFullfillingKeypool(MasterSeed); // instruction exist in CreateNewAccountAndSave
+  // startFullfillingKeypool(MasterSeed); // instruction exist in CreateNewAccountAndSave
   MasterSeed := '';
   RestorePasswordEdit.Text := '';
 end;
@@ -3150,7 +3150,7 @@ procedure TfrmHome.LoadAccountPanelClick(Sender: TObject);
 begin
   if OrganizeList.Visible = true then
     closeOrganizeView(nil);
-  //firstSync := true;
+  // firstSync := true;
 
   LoadCurrentAccount(TfmxObject(Sender).TagString);
 end;
@@ -3698,8 +3698,18 @@ begin
 end;
 
 procedure TfrmHome.FormClose(Sender: TObject; var Action: TCloseAction);
+{$IFNDEF LINUX} var
+ AppHandle: HWND;   {$ENDIF}
 begin
+{$IFNDEF LINUX}
+  AppHandle := ApplicationHWND; // GetParent(HWND(AMainForm.Handle));
+  ShowWindow(AppHandle, SW_HIDE);
+  SetWindowLong(AppHandle, GWL_EXSTYLE, GetWindowLong(AppHandle, GWL_EXSTYLE) or
+    WS_EX_TOOLWINDOW);
+  frmHome.Visible := false;
   AccountRelated.CloseHodler();
+    {$ENDIF}
+  // TerminateProcess(GetCurrentProcess,0);
 end;
 
 procedure TfrmHome.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -3721,20 +3731,20 @@ begin
   frmHome.Position := TFormPosition.ScreenCenter;
 
   CapsLockWarningPanel.Visible := {$IFDEF LINUX} false
-  {$ELSE} LowOrderBitSet(GetKeyState(VK_CAPITAL)){$ENDIF};
+{$ELSE} LowOrderBitSet(GetKeyState(VK_CAPITAL)){$ENDIF};
 
   CapsLockWarningDecryptSeedPanel.Visible := {$IFDEF LINUX} false
-  {$ELSE} LowOrderBitSet(GetKeyState(VK_CAPITAL)){$ENDIF};
+{$ELSE} LowOrderBitSet(GetKeyState(VK_CAPITAL)){$ENDIF};
   CapsLockWarningRFFTPanel.Visible := {$IFDEF LINUX} false
-  {$ELSE} LowOrderBitSet(GetKeyState(VK_CAPITAL)){$ENDIF};
+{$ELSE} LowOrderBitSet(GetKeyState(VK_CAPITAL)){$ENDIF};
   CapsLockWarningRestoreHSBPanel.Visible := {$IFDEF LINUX} false
-  {$ELSE} LowOrderBitSet(GetKeyState(VK_CAPITAL)){$ENDIF};
+{$ELSE} LowOrderBitSet(GetKeyState(VK_CAPITAL)){$ENDIF};
   CapsLockWarningConfirmSendPanel.Visible := {$IFDEF LINUX} false
-  {$ELSE}LowOrderBitSet(GetKeyState(VK_CAPITAL)){$ENDIF};
+{$ELSE}LowOrderBitSet(GetKeyState(VK_CAPITAL)){$ENDIF};
   CapsLockWarningGenerateYPanel.Visible := {$IFDEF LINUX} false
-  {$ELSE}LowOrderBitSet(GetKeyState(VK_CAPITAL)){$ENDIF};
+{$ELSE}LowOrderBitSet(GetKeyState(VK_CAPITAL)){$ENDIF};
   CapsLockWarningImportPrivPanel.Visible := {$IFDEF LINUX} false
-  {$ELSE}LowOrderBitSet(GetKeyState(VK_CAPITAL)){$ENDIF};
+{$ELSE}LowOrderBitSet(GetKeyState(VK_CAPITAL)){$ENDIF};
 
   frmHome.Height := min(frmHome.Height, round(Screen.Height * 0.8));
   frmHome.Width := min(frmHome.Width, round(Screen.Width * 0.8));
@@ -3802,7 +3812,7 @@ begin
   begin
 
     capitalIsPresses :=
-    {$IFDEF LINUX}false{$ELSE} LowOrderBitSet(GetKeyState(VK_CAPITAL)){$ENDIF};
+{$IFDEF LINUX}false{$ELSE} LowOrderBitSet(GetKeyState(VK_CAPITAL)){$ENDIF};
 
     CapsLockWarningPanel.Position.Y := PanelRetypePassword.Position.Y + 1;
     CapsLockWarningPanel.Visible := capitalIsPresses;

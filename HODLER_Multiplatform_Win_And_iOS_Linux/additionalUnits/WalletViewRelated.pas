@@ -1276,6 +1276,15 @@ var
 begin
   with frmhome do
   begin
+
+if StrFloatToBigInteger(CurrentCoin.efee[round(FeeSpin.Value) - 1],CurrentCoin.decimals)=0 then
+begin
+
+if CurrentCoin.coin =4 then
+wvFee.Text:=defaultFees[CurrentCoin.coin].ToString
+else
+wvFee.Text:=BigIntegertoFloatStr(defaultFees[CurrentCoin.coin], CurrentCoin.decimals);
+end;
     if isTokenTransfer then
     begin
       lblFeeHeader.Text := languages.dictionary('GasPriceWEI') + ': ';
@@ -1324,6 +1333,14 @@ var
 begin
   with frmhome do
   begin
+
+if StrFloatToBigInteger(CurrentCoin.efee[round(FeeSpin.Value) - 1],CurrentCoin.decimals)=0 then
+begin
+if CurrentCoin.coin =4 then
+CurrentCoin.efee[round(FeeSpin.Value) - 1]:=defaultFees[CurrentCoin.coin].ToString
+else
+CurrentCoin.efee[round(FeeSpin.Value) - 1]:=BigIntegertoFloatStr(defaultFees[CurrentCoin.coin], CurrentCoin.decimals);
+end;
     if not isEthereum then
     begin
       a := ((180 * length(currentAccount.aggregateUTXO(CurrentCoin)) +
