@@ -162,6 +162,9 @@ type
 var
   pows: precalculatedPows;
 
+var
+  LBuilder: DW.Androidapi.JNI.Support.JNotificationCompat_Builder;
+
 implementation
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
@@ -743,12 +746,13 @@ begin
     end;
 end;
 
-procedure nano_mineBuilt64(cc: NanoCoin);
+function nano_mineBuilt64(cc: NanoCoin):boolean;
 var
   Block: TNanoBlock;
   lastHash, s: string;
   isCorrupted: Boolean;
 begin
+result:=false;
   isCorrupted := false;
   repeat
     Block := cc.firstBlock;
@@ -758,8 +762,13 @@ begin
 
       if not isCorrupted then
       begin
-        nano_getWork(Block);
+        DM.JavaService.stopForeground(true);
+        LBuilder.setContentText(StrToJCharSequence('Working on nano blocks, ' +
+          inttostr(Length(cc.pendingChain)) + ' left'));
+        DM.JavaService.StartForeground(1995, LBuilder.build);
 
+        nano_getWork(Block);
+        result:=true;
         s := nano_pushBlock(nano_builtToJSON(Block));
 
         lastHash := StringReplace(s, 'https://www.nanode.co/block/', '',
@@ -776,7 +785,14 @@ begin
         end;
         if cc.BlockByPrev(lastHash).account = '' then
           if lastHash <> '' then
+          begin
+            DM.JavaService.stopForeground(true);
+            LBuilder.setContentText
+              (StrToJCharSequence('Working on next block hash'));
+            DM.JavaService.StartForeground(1995, LBuilder.build);
             findwork(lastHash);
+            result:=true;
+          end;
       end;
     end;
     cc.removeBlock(Block.Hash);
@@ -788,8 +804,9 @@ var
   cc: NanoCoin;
   path: string;
   i: Integer;
+  workdone:boolean;
 begin
-
+  workdone:=false;
   repeat
     for path in TDirectory.GetDirectories
       (IncludeTrailingPathDelimiter(System.IOUtils.TPath.GetDocumentsPath)) do
@@ -799,17 +816,29 @@ begin
         cc := NanoCoin.Create();
         cc.chaindir := TPath.Combine(path, 'Pendings');
         cc.pendingChain := nano_loadChain(TPath.Combine(path, 'Pendings'));
-        nano_mineBuilt64(cc);
+       workdone:=nano_mineBuilt64(cc);
         cc.Free;
       end;
       Sleep(100);
+
     end;
     loadPows;
     for i := 0 to Length(pows) - 1 do
       if pows[i].work = '' then
+      begin
+        DM.JavaService.stopForeground(true);
+        LBuilder.setContentText
+          (StrToJCharSequence('Working on next block hash'));
+        DM.JavaService.StartForeground(1995, LBuilder.build);
         findwork(pows[i].Hash);
-    // DM.JavaService.stopSelf;
-    // exit;
+        workdone:=true;
+      end;
+  if workdone then
+  begin
+          DM.JavaService.stopForeground(true);
+      LBuilder.setContentText(StrToJCharSequence('Ready to work nano blocks'));
+      DM.JavaService.StartForeground(1995, LBuilder.build);
+  end;
   until true = false;
 end;
 
@@ -819,8 +848,7 @@ function TDM.AndroidServiceStartCommand(const Sender: TObject;
 var
   err, ex: string;
   LibHandle: THandle;
-var
-  LBuilder: DW.Androidapi.JNI.Support.JNotificationCompat_Builder;
+
   channel: JNotificationChannel;
   manager: JNotificationManager;
   group: JNotificationChannelGroup;
@@ -895,13 +923,14 @@ begin
       JavaClass.init(TAndroidHelper.context, channel.getId)
   end
   else
-   LBuilder := DW.Androidapi.JNI.Support.TJNotificationCompat_Builder.JavaClass.init(TAndroidHelper.context);
+    LBuilder := DW.Androidapi.JNI.Support.TJNotificationCompat_Builder.
+      JavaClass.init(TAndroidHelper.context);
   LBuilder.setAutoCancel(true);
   LBuilder.setGroupSummary(true);
   if api26 then
     LBuilder.setChannelId(channel.getId);
   LBuilder.setContentTitle(StrToJCharSequence('HODLER - Nano PoW Worker'));
-  LBuilder.setContentText(StrToJCharSequence('Doing work for mine the blocks'));
+  LBuilder.setContentText(StrToJCharSequence('Ready to work nano blocks'));
   LBuilder.setSmallIcon(TAndroidHelper.context.getApplicationInfo.icon);
   LBuilder.setTicker(StrToJCharSequence('HODLER - Nano PoW Worker'));
   DM.JavaService.StartForeground(1995, LBuilder.build);

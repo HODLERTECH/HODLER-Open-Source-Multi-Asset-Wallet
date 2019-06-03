@@ -157,11 +157,25 @@ begin
   result := q;
 end;
 
+function hex64pad(data: TArray<System.Byte>; Padding: integer = 64): AnsiString;
+var
+  i: integer;
+Begin
+  for i := 0 to length(data) - 1 do
+    result := result + inttohex(data[i], 2);
+  while length(result) < Padding do
+  begin
+    result := '0' + result;
+  end;
+  // Keep padding!
+  result := Copy((result), 0, Padding);
+End;
+
 function secp256k1_get_public(privkey: AnsiString; forEth: boolean = false)
   : AnsiString;
 var
   q: TBIPoint;
-  ss: AnsiString;
+  ss, sx, sy: AnsiString;
   sign: AnsiString;
 var
   domain: IECDomainParameters;
@@ -192,25 +206,21 @@ begin
 
   RegeneratedPublicKey := TECKeyPairGenerator.GetCorrespondingPublicKey
     (RegeneratedPrivateKey);
-  ax := BigInteger.Parse('+0x00' + RegeneratedPublicKey.q.Normalize.
-    AffineXCoord.ToBigInteger.ToString(16));
-  ay := BigInteger.Parse('+0x00' + RegeneratedPublicKey.q.Normalize.
-    AffineYCoord.ToBigInteger.ToString(16));
-  /// / Hyperspeed
-  // q := point_mul(getG, ss);
-  q.YCoordinate := make256bit(ay);
-  q.XCoordinate := make256bit(ax);
-  if q.YCoordinate.isEven then
+  sx := hex64pad(RegeneratedPublicKey.q.Normalize.AffineXCoord.ToBigInteger.
+    ToByteArrayUnsigned);
+  sy := hex64pad(RegeneratedPublicKey.q.Normalize.AffineYCoord.ToBigInteger.
+    ToByteArrayUnsigned);
+  if RegeneratedPublicKey.q.Normalize.AffineYCoord.ToBigInteger.&And
+    (TBigInteger.One).Equals(TBigInteger.Zero) then
     sign := '02'
   else
     sign := '03';
   if not forEth then
-    result := sign + BIToHEX(q.XCoordinate)
+    result := sign + sx
   else
-    result := '04' + BIToHEX(q.XCoordinate) + BIToHEX(q.YCoordinate);
+    result := '04' + sx + sy;
   wipeAnsiString(ss);
   wipeAnsiString(privkey);
-
 
 end;
 
@@ -276,7 +286,7 @@ begin
   recid := 37 + (recid);
   sr := BIToHEX(r);
   ss := BIToHEX(s);
-  if Length(sr + ss) mod 2 <> 0 then
+  if length(sr + ss) mod 2 <> 0 then
   begin
     result := secp256k1_signDER(e, d);
     exit;
@@ -289,14 +299,14 @@ begin
   end
   else
   begin
-    b := System.UInt8(strtointdef('$' + copy(sr, 0, 2),0));
+    b := System.UInt8(strtointdef('$' + Copy(sr, 0, 2), 0));
     if b >= System.UInt8($80) then
       sr := '00' + sr;
     result := ss;
-    result := '02' + IntToTx(Length(ss) div 2, 2) + result;
+    result := '02' + IntToTx(length(ss) div 2, 2) + result;
     result := sr + result;
-    result := '02' + IntToTx(Length(sr) div 2, 2) + result;
-    result := '30' + IntToTx(Length(result) div 2, 2) + result;
+    result := '02' + IntToTx(length(sr) div 2, 2) + result;
+    result := '30' + IntToTx(length(result) div 2, 2) + result;
   end;
 end;
 

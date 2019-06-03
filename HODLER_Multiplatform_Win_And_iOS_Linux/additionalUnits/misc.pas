@@ -347,7 +347,7 @@ const
   API_PRIV = {$I 'private_key.key' };
 
 resourcestring
-  CURRENT_VERSION = '0.4.1';
+  CURRENT_VERSION = '0.4.2';
 
 var
   AccountsNames: array of AccountItem;
@@ -1474,7 +1474,7 @@ var   JsonArr: TJsonObject;
 JsonValue: TJsonValue;
 s:string;
 begin
-if data='' then data:='{"0":10000,"1":10000,"2":6462,"4":18636751398}'; //hardcoded
+if data='' then data:='{"0":10000,"1":10000,"2":3592,"3":3592,"4":20000000000,"6":3592,"7":3592,"5":3592}'; //hardcoded
 
   JsonValue := TJsonObject.ParseJSONValue(data);
 try
@@ -1487,7 +1487,14 @@ try
   defaultFees[2]:=BigInteger.Parse(s);
   s:=JsonValue.GetValue<string>('4');
   defaultFees[4]:=BigInteger.Parse(s);
-
+  s:=JsonValue.GetValue<string>('3');
+  defaultFees[3]:=BigInteger.Parse(s);
+  s:=JsonValue.GetValue<string>('5');
+  defaultFees[5]:=BigInteger.Parse(s);
+  s:=JsonValue.GetValue<string>('6');
+  defaultFees[6]:=BigInteger.Parse(s);
+  s:=JsonValue.GetValue<string>('7');
+  defaultFees[7]:=BigInteger.Parse(s);
   end;
   except on E:Exception do begin
   end;
