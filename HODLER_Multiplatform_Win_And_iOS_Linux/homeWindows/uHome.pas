@@ -35,7 +35,8 @@ uses
   System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
   CurrencyConverter, uEncryptedZipFile, System.Zip, TRotateImageData,
   popupwindowData, notificationLayoutData, TaddressLabelData,
-  TNewCryptoVertScrollBoxData
+  TNewCryptoVertScrollBoxData , uCEFFMXWindowParent, uCEFFMXChromium,
+  uCEFInterfaces, uCEFConstants, uCEFTypes
 {$IFDEF ANDROID},
   FMX.VirtualKeyBoard.Android,
   Androidapi.JNI,
@@ -847,6 +848,9 @@ type
     CapsLockWarningImportPrivLabel: TLabel;
 
     Lang1: TLang;
+    TabItem1: TTabItem;
+    FMXChromium1: TFMXChromium;
+    Button2: TButton;
 
     // Panel27: TPanel;
     // PasswordInfoStaticLabel: TLabel;
@@ -1134,6 +1138,7 @@ type
       var KeyChar: Char; Shift: TShiftState);
     procedure NanoStateTimerTimer(Sender: TObject);
     procedure HistoryDetailsClick(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
     // procedure UserReportSendLogsSwitchClick(Sender: TObject);
 
   private
@@ -1202,8 +1207,14 @@ type
     procedure AddNewTokenETHPanelClick(Sender: TObject);
     procedure UnlockPendingNano(Sender: TObject);
 
+  public    // ChromiumBrowser
+    procedure DoBrowserCreated;
+    procedure DoDestroyParent;
+    procedure NotifyMoveOrResizeStarted;
+
     // procedure PrivateKeyPasswordCheck
   var
+    FMXWindowParent : TFMXWindowParent;
     refreshLocalImage: TRotateImage;
     refreshGlobalImage: TRotateImage;
     NotificationLayout: TNotificationLayout;
@@ -1286,7 +1297,7 @@ implementation
 
 uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
   TokenData, AccountRelated, QRRelated, FileManagerRelated, WalletViewRelated,
-  BackupRelated, debugAnalysis, KeypoolRelated, Nano
+  BackupRelated, debugAnalysis, KeypoolRelated, Nano ,uFMXApplicationService
 {$IFDEF ANDRIOD}
 {$ENDIF}
 {$IFDEF MSWINDOWS}
@@ -1307,6 +1318,24 @@ begin
 end;
 
 {$ENDIF}
+
+
+procedure TfrmHome.NotifyMoveOrResizeStarted;
+begin
+  if (FMXChromium1 <> nil) then FMXChromium1.NotifyMoveOrResizeStarted;
+end;
+
+procedure TfrmHome.DoBrowserCreated;
+begin
+  // Now the browser is fully initialized
+  Caption            := 'Simple FMX Browser';
+  //AddressPnl.Enabled := True;
+end;
+
+procedure TfrmHome.DoDestroyParent;
+begin
+  if (FMXWindowParent <> nil) then FreeAndNil(FMXWindowParent);
+end;
 
 procedure TfrmHome.UnlockNanoImageClick(Sender: TObject);
 begin
@@ -2991,6 +3020,45 @@ begin
   switchTab(WVTabControl, WVSettings);
 end;
 
+procedure TfrmHome.Button2Click(Sender: TObject);
+var
+  TempHandle : HWND;
+  TempRect   : System.Types.TRect;
+  TempClientRect : TRectF;
+begin
+  if (FMXWindowParent = nil) then
+    begin
+      FMXWindowParent := TFMXWindowParent.CreateNew(nil);
+      FMXWindowParent.Reparent(Handle);
+
+
+      if (FMXWindowParent <> nil) then
+      begin
+        FMXWindowParent.SetBounds(0, round(Height), ClientWidth - 1, ClientHeight -  1);
+      end;
+      FMXWindowParent.Show;
+    end;
+
+
+  if not(FMXChromium1.Initialized) then
+    begin
+
+
+      //repeat
+        TempHandle      := FmxHandleToHWND(FMXWindowParent.Handle);
+        TempClientRect  := FMXWindowParent.ClientRect;
+        TempRect.Left   := round(TempClientRect.Left);
+        TempRect.Top    := round(TempClientRect.Top);
+        TempRect.Right  := round(TempClientRect.Right);
+        TempRect.Bottom := round(TempClientRect.Bottom);
+
+        FMXChromium1.DefaultUrl := 'http://89.70.32.60:57320/test';
+     // until (not(FMXChromium1.CreateBrowser(TempHandle, TempRect)));
+
+    end;
+
+end;
+
 procedure TfrmHome.btnDecryptedQRClick(Sender: TObject);
 var
   alphaStr: AnsiString;
@@ -3750,6 +3818,7 @@ begin
   frmHome.Width := min(frmHome.Width, round(Screen.Width * 0.8));
 
 {$IF NOT DEFINED(LINUX)}
+  TFMXApplicationService.AddPlatformService;
   MotionSensor := TMotionSensor.create(frmHome);
   OrientationSensor := TOrientationSensor.create(frmHome);
   CapsLockWarningPanel.Visible := LowOrderBitSet(GetKeyState(VK_CAPITAL));
