@@ -33,7 +33,7 @@ object frmHome: TfrmHome
     Size.Height = 687.000000000000000000
     Size.PlatformDefault = False
     TabHeight = 49.000000000000000000
-    TabIndex = 50
+    TabIndex = 7
     TabOrder = 8
     TabPosition = None
     OnChange = closeVirtualKeyBoard
@@ -5762,7 +5762,7 @@ object frmHome: TfrmHome
       CustomIcon = <
         item
         end>
-      IsSelected = False
+      IsSelected = True
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
@@ -5866,11 +5866,11 @@ object frmHome: TfrmHome
       object VertScrollBox3: TVertScrollBox
         Align = Client
         Size.Width = 450.000000000000000000
-        Size.Height = 591.000000000000000000
+        Size.Height = 543.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 7
         Viewport.Width = 434.000000000000000000
-        Viewport.Height = 591.000000000000000000
+        Viewport.Height = 543.000000000000000000
         object GlobalSettingsLayout: TLayout
           Align = Top
           Position.Y = 144.000000000000000000
@@ -6125,13 +6125,23 @@ object frmHome: TfrmHome
       end
       object DeleteAccountButton: TButton
         Align = Top
-        Position.Y = 48.000000000000000000
+        Position.Y = 96.000000000000000000
         Size.Width = 450.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 8
         Text = 'Delete this account'
         OnClick = DeleteAccountButtonClick
+      end
+      object Button2: TButton
+        Align = Top
+        Position.Y = 48.000000000000000000
+        Size.Width = 450.000000000000000000
+        Size.Height = 48.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 9
+        Text = 'Map'
+        OnClick = Button2Click
       end
     end
     object descryptSeed: TTabItem
@@ -10967,17 +10977,42 @@ object frmHome: TfrmHome
         end
       end
     end
-    object TabItem1: TTabItem
+    object MapTabItem: TTabItem
       CustomIcon = <
         item
         end>
-      IsSelected = True
+      IsSelected = False
       Size.Width = 8.000000000000000000
       Size.Height = 8.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = ''
       TabOrder = 0
-      Text = 'TabItem1'
+      Text = 'MapTabItem'
+      ExplicitSize.cx = 8.000000000000000000
+      ExplicitSize.cy = 8.000000000000000000
+      object Panel1: TPanel
+        Align = Client
+        Size.Width = 450.000000000000000000
+        Size.Height = 687.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        object Layout38: TLayout
+          Align = Top
+          Size.Width = 450.000000000000000000
+          Size.Height = 49.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object Button3: TButton
+            Align = Left
+            Size.Width = 81.000000000000000000
+            Size.Height = 49.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            Text = 'Button3'
+            OnClick = Button3Click
+          end
+        end
+      end
     end
   end
   object gathener: TTimer
@@ -11818,16 +11853,6 @@ object frmHome: TfrmHome
             Text = 'Hide empty wallets'
             OnChange = HideZeroWalletsCheckBoxChange
           end
-          object Button2: TButton
-            Position.X = 32.000000000000000000
-            Position.Y = -24.000000000000000000
-            Size.Width = 105.000000000000000000
-            Size.Height = 49.000000000000000000
-            Size.PlatformDefault = False
-            TabOrder = 2
-            Text = 'Button2'
-            OnClick = Button2Click
-          end
         end
       end
     end
@@ -12045,6 +12070,13 @@ object frmHome: TfrmHome
     Lang = 'pl'
     Left = 585
     Top = 502
+  end
+  object Timer1: TTimer
+    Enabled = False
+    Interval = 300
+    OnTimer = Timer1Timer
+    Left = 810
+    Top = 224
   end
   object TokenIcons3: TImageList
     Source = <
@@ -12451,6 +12483,10 @@ object frmHome: TfrmHome
     Top = 449
   end
   object FMXChromium1: TFMXChromium
+    OnBeforePopup = FMXChromium1BeforePopup
+    OnAfterCreated = FMXChromium1AfterCreated
+    OnBeforeClose = FMXChromium1BeforeClose
+    OnClose = FMXChromium1Close
     Left = 794
     Top = 104
   end

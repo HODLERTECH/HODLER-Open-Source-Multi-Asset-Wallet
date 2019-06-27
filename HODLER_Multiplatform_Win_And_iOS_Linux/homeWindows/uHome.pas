@@ -16,7 +16,7 @@ interface
 
 uses
 {$IFDEF MSWINDOWS}
-  Windows,
+  winapi.Windows, winapi.Messages,
 {$ENDIF}SysUtils, System.Types, System.UITypes, System.Classes, strUtils,
   SyncThr, System.Generics.Collections, System.character,
   System.DateUtils, System.Messaging,
@@ -59,7 +59,8 @@ uses
   ZXing.BarcodeFormat,
   ZXing.ReadResult,
   ZXing.ScanManager,
-{$IF NOT DEFINED(LINUX)} System.Sensors, System.Sensors.Components, {$ENDIF} FMX.ComboEdit{$IFDEF LINUX}, Posix.Stdlib{$ENDIF};
+{$IF NOT DEFINED(LINUX)} System.Sensors, System.Sensors.Components, {$ENDIF} FMX.ComboEdit,
+  uCEFFMXBufferPanel{$IFDEF LINUX}, Posix.Stdlib{$ENDIF};
 
 type
 
@@ -848,9 +849,13 @@ type
     CapsLockWarningImportPrivLabel: TLabel;
 
     Lang1: TLang;
-    TabItem1: TTabItem;
+    MapTabItem: TTabItem;
     FMXChromium1: TFMXChromium;
     Button2: TButton;
+    Timer1: TTimer;
+    Panel1: TPanel;
+    Button3: TButton;
+    Layout38: TLayout;
 
     // Panel27: TPanel;
     // PasswordInfoStaticLabel: TLabel;
@@ -1139,6 +1144,21 @@ type
     procedure NanoStateTimerTimer(Sender: TObject);
     procedure HistoryDetailsClick(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+    procedure FMXChromium1BeforePopup(Sender: TObject;
+      const browser: ICefBrowser; const frame: ICefFrame; const targetUrl,
+      targetFrameName: ustring; targetDisposition: TCefWindowOpenDisposition;
+      userGesture: Boolean; const popupFeatures: TCefPopupFeatures;
+      var windowInfo: TCefWindowInfo; var client: ICefClient;
+      var settings: TCefBrowserSettings; var noJavascriptAccess,
+      Result: Boolean);
+    procedure FMXChromium1AfterCreated(Sender: TObject;
+      const browser: ICefBrowser);
+    procedure FMXChromium1BeforeClose(Sender: TObject;
+      const browser: ICefBrowser);
+    procedure FMXChromium1Close(Sender: TObject; const browser: ICefBrowser;
+      var aAction: TCefCloseBrowserAction);
     // procedure UserReportSendLogsSwitchClick(Sender: TObject);
 
   private
@@ -1211,10 +1231,14 @@ type
     procedure DoBrowserCreated;
     procedure DoDestroyParent;
     procedure NotifyMoveOrResizeStarted;
+    function  PostCustomMessage(aMessage : cardinal; wParam : cardinal = 0; lParam : integer = 0) : boolean;
 
+  protected
+   FMXWindowParent : TFMXWindowParent;
     // procedure PrivateKeyPasswordCheck
+    public
   var
-    FMXWindowParent : TFMXWindowParent;
+
     refreshLocalImage: TRotateImage;
     refreshGlobalImage: TRotateImage;
     NotificationLayout: TNotificationLayout;
@@ -1328,7 +1352,7 @@ end;
 procedure TfrmHome.DoBrowserCreated;
 begin
   // Now the browser is fully initialized
-  Caption            := 'Simple FMX Browser';
+  //Caption            := 'Simple FMX Browser';
   //AddressPnl.Enabled := True;
 end;
 
@@ -2598,6 +2622,25 @@ begin
   WalletViewRelated.addNewWalletPanelClick(Sender);
 end;
 
+procedure TfrmHome.Timer1Timer(Sender: TObject);
+var
+  TempHandle : HWND;
+  TempRect   : System.Types.TRect;
+  TempClientRect : TRectF;
+begin
+    Timer1.Enabled  := False;
+  TempHandle      := FmxHandleToHWND(FMXWindowParent.Handle);
+  TempClientRect  := FMXWindowParent.ClientRect;
+  TempRect.Left   := round(TempClientRect.Left);
+  TempRect.Top    := round(TempClientRect.Top);
+  TempRect.Right  := round(TempClientRect.Right);
+  TempRect.Bottom := round(TempClientRect.Bottom);
+
+  if not(FMXChromium1.CreateBrowser(TempHandle, TempRect)) and not(FMXChromium1.Initialized) then
+    Timer1.Enabled := True;
+
+end;
+
 procedure TfrmHome.TokenNameFieldKeyUp(Sender: TObject; var Key: Word;
 var KeyChar: Char; Shift: TShiftState);
 begin // SymbolField
@@ -3020,42 +3063,124 @@ begin
   switchTab(WVTabControl, WVSettings);
 end;
 
+function Tfrmhome.PostCustomMessage(aMessage, wParam : cardinal; lParam : integer) : boolean;
+{$IFDEF MSWINDOWS}
+var
+  TempHWND : HWND;
+{$ENDIF}
+begin
+  {$IFDEF MSWINDOWS}
+  TempHWND := FmxHandleToHWND(Handle);
+  Result   := (TempHWND <> 0) and WinApi.Windows.PostMessage(TempHWND, aMessage, wParam, lParam);
+  {$ELSE}
+  Result   := False;
+  {$ENDIF}
+end;
+
+
+
+procedure TfrmHome.FMXChromium1AfterCreated(Sender: TObject;
+  const browser: ICefBrowser);
+begin
+   PostCustomMessage(CEF_AFTERCREATED);
+
+end;
+
+procedure TfrmHome.FMXChromium1BeforeClose(Sender: TObject;
+  const browser: ICefBrowser);
+begin
+  //FCanClose := True;
+  PostCustomMessage(WM_CLOSE);
+end;
+
+procedure TfrmHome.FMXChromium1BeforePopup(Sender: TObject;
+  const browser: ICefBrowser; const frame: ICefFrame; const targetUrl,
+  targetFrameName: ustring; targetDisposition: TCefWindowOpenDisposition;
+  userGesture: Boolean; const popupFeatures: TCefPopupFeatures;
+  var windowInfo: TCefWindowInfo; var client: ICefClient;
+  var settings: TCefBrowserSettings; var noJavascriptAccess, Result: Boolean);
+begin
+
+  Result := (targetDisposition in [WOD_NEW_FOREGROUND_TAB, WOD_NEW_BACKGROUND_TAB, WOD_NEW_POPUP, WOD_NEW_WINDOW]);
+end;
+
+procedure TfrmHome.FMXChromium1Close(Sender: TObject;
+  const browser: ICefBrowser; var aAction: TCefCloseBrowserAction);
+begin
+  PostCustomMessage(CEF_DESTROY);
+  aAction := cbaDelay;
+end;
+
 procedure TfrmHome.Button2Click(Sender: TObject);
 var
   TempHandle : HWND;
   TempRect   : System.Types.TRect;
   TempClientRect : TRectF;
 begin
+  //PostCustomMessage(CEF_AFTERCREATED);
+
+  //FcanClose := false;
+
   if (FMXWindowParent = nil) then
     begin
       FMXWindowParent := TFMXWindowParent.CreateNew(nil);
-      FMXWindowParent.Reparent(Handle);
+
+      //fmxwindowparent.re
+      //fmxWindowParent.BorderIcons := [];
+      //fmxwindowparent.
+      //fMXWindowParent.Parent := self;
+      FMXWindowParent.Reparent(self.Handle);
+      //FMXWindowParent.Reparent(self.Handle);
 
 
-      if (FMXWindowParent <> nil) then
-      begin
-        FMXWindowParent.SetBounds(0, round(Height), ClientWidth - 1, ClientHeight -  1);
-      end;
+      //FMXWindowParent.parent := Panel1;
+      //fmxWindowparent
+
+      FMXWindowParent.SetBounds( 5 , 5 , frmhome.Bounds.Width-10 , frmhome.Bounds.Height-50 );
+      //fmxWindowParent.BorderStyle := TFmxFormBorderStyle.none;
       FMXWindowParent.Show;
-    end;
 
 
-  if not(FMXChromium1.Initialized) then
+      if not(FMXChromium1.Initialized) then
+      begin
+
+
+        //repeat
+          TempHandle      := FmxHandleToHWND(FMXWindowParent.Handle);
+          TempClientRect  := FMXWindowParent.ClientRect;
+          TempRect.Left   := round(TempClientRect.Left);
+          TempRect.Top    := round(TempClientRect.Top);
+          TempRect.Right  := round(TempClientRect.Right);
+          TempRect.Bottom := round(TempClientRect.Bottom);
+
+          FMXChromium1.DefaultUrl := 'http://89.70.32.60:57320/test';
+        if not(FMXChromium1.CreateBrowser( temphandle , temprect )) then
+          Timer1.Enabled := True;
+                     FMXChromium1.LoadURL('http://89.70.32.60:57320/test');
+      end;
+
+
+    end
+    else
     begin
-
-
-      //repeat
-        TempHandle      := FmxHandleToHWND(FMXWindowParent.Handle);
-        TempClientRect  := FMXWindowParent.ClientRect;
-        TempRect.Left   := round(TempClientRect.Left);
-        TempRect.Top    := round(TempClientRect.Top);
-        TempRect.Right  := round(TempClientRect.Right);
-        TempRect.Bottom := round(TempClientRect.Bottom);
-
-        FMXChromium1.DefaultUrl := 'http://89.70.32.60:57320/test';
-     // until (not(FMXChromium1.CreateBrowser(TempHandle, TempRect)));
-
+      FMXWindowParent.Visible := not FMXWindowParent.Visible;
     end;
+
+
+  
+    //FMXChromium1.WasHidden(False);
+    //FMXChromium1.SendFocusEvent(True);
+
+
+    //switchtab(pageControl , MapTabItem );
+
+end;
+
+procedure TfrmHome.Button3Click(Sender: TObject);
+begin
+
+      FMXWindowParent.Visible := not FMXWindowParent.Visible;
+      //FMXWindowParent.
 
 end;
 
@@ -3822,6 +3947,7 @@ begin
   MotionSensor := TMotionSensor.create(frmHome);
   OrientationSensor := TOrientationSensor.create(frmHome);
   CapsLockWarningPanel.Visible := LowOrderBitSet(GetKeyState(VK_CAPITAL));
+  FMXWindowParent := nil;
 {$ENDIF}
   AccountRelated.InitializeHodler;
   BackupInfoLabel.Position.Y := 100000;
@@ -4018,7 +4144,20 @@ procedure TfrmHome.FormShow(Sender: TObject);
 
 var
   q1: System.uint64;
+
+  var
+  TempHandle : HWND;
+  TempRect   : System.Types.TRect;
+  TempClientRect : TRectF;
 begin
+    //PostCustomMessage(CEF_AFTERCREATED);
+
+
+
+
+
+
+
   LabelEditApplyStyleLookup(HistoryTransactionValue);
   LabelEditApplyStyleLookup(HistoryTransactionDate);
   LabelEditApplyStyleLookup(historyTransactionConfirmation);

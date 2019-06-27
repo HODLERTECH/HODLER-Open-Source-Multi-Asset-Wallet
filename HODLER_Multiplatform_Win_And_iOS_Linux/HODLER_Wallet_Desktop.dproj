@@ -492,7 +492,6 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="SafeDLLPath.pas"/>
         <DCCReference Include="homeWindows\uHome.pas">
             <Form>frmHome</Form>
         </DCCReference>
@@ -631,7 +630,10 @@
         <DCCReference Include="additionalUnits\additionalClass\ComponentPoolData.pas"/>
         <DCCReference Include="components\HistoryPanelData.pas"/>
         <DCCReference Include="components\CoinPanelData.pas"/>
-        <DCCReference Include="coinCode\Spendable.pas"/>
+        <DCCReference Include="coinCode\Spendable.pas">
+            <Form>$R *.res</Form>
+        </DCCReference>
+        <DCCReference Include="uFMXApplicationService.pas"/>
         <RcItem Include="Jet.style">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
@@ -995,18 +997,18 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="coin_icons\DGB.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Linux64">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="gfx\Icon72x72.png" Configuration="Release" Class="Android_LauncherIcon72">
                     <Platform Name="All Platforms">
                         <Overwrite>true</Overwrite>
                     </Platform>
                     <Platform Name="Android">
                         <RemoteName>ic_launcher.png</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="coin_icons\DGB.png" Configuration="Release" Class="ProjectFile">
-                    <Platform Name="Linux64">
-                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -1225,6 +1227,12 @@
                 <DeployFile LocalName="token_icons\2502.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Linux64">
                         <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Android\Release\styles-v21.xml" Configuration="Release" Class="AndroidSplashStylesV21">
+                    <Platform Name="Android">
+                        <RemoteName>styles.xml</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

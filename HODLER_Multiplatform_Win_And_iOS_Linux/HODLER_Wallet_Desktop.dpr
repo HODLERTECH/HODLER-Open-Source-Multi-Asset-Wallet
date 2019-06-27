@@ -6,7 +6,7 @@ uses
   {$IF DEFINED(DEBUG) AND DEFINED(MSWINDOWS)}
   fastMM4,
   {$ENDIF }
-  SafeDLLPath in 'SafeDLLPath.pas',
+  //SafeDLLPath in 'SafeDLLPath.pas',
   System.StartUpCopy,
   FMX.Forms,
   FMX.Styles,
@@ -112,7 +112,8 @@ uses
   AccountData in 'additionalUnits\AccountData.pas',
   WalletStructureData in 'WalletStructureData.pas',
   {$IF NOT DEFINED(LINUX)}
-  Windows,
+  WinApi.Windows,
+  //Windows,
   {$ENDIF }
   FMX.Types,
   WalletViewRelated in 'additionalUnits\WalletViewRelated.pas',
@@ -157,7 +158,10 @@ uses
   ComponentPoolData in 'additionalUnits\additionalClass\ComponentPoolData.pas',
   HistoryPanelData in 'components\HistoryPanelData.pas',
   CoinPanelData in 'components\CoinPanelData.pas',
-  Spendable in 'coinCode\Spendable.pas';
+  Spendable in 'coinCode\Spendable.pas' {$R *.res},
+   uCEFApplication,
+  uFMXApplicationService in 'uFMXApplicationService.pas'
+;
 
 {$R *.res}
 
@@ -187,37 +191,54 @@ begin
 
 {$IF NOT DEFINED(LINUX)}
 
-  Application.OnException := frmhome.ExceptionHandler;
-  VKAutoShowMode := TVKAutoShowMode.Never;
-{
- FMX.Types.GlobalUseDX := true;
-//  FMX.Types.GlobalUseGPUCanvas:=true;
-  GlobalUseDXInDX9Mode := true;
-//  GlobalUseDXSoftware := true;
-  FMX.Types.GlobalDisableFocusEffect := true;
-  }
-//Recovered from 0.4.0, removes crash for QR Codes
-  FMX.Types.GlobalUseDX := true;
+  GlobalCEFApp := TCefApplication.Create;
 
-  GlobalUseDXInDX9Mode := true;
-  GlobalUseDXSoftware := true;
-  FMX.Types.GlobalDisableFocusEffect := true;
+  //GlobalCEFApp.LogFile := 'C:\Users\viking\Desktop\Praca\kosz\log.txt';
+  //globalCEFApp.LogSeverity  := 1;
 
-  H := CreateMutex(nil, False, 'HODLERTECHMUTEX');
-  if (H <> 0) and (GetLastError <> ERROR_ALREADY_EXISTS) then
+  if GlobalCEFApp.StartMainProcess then
   begin
-    try
-      Application.Initialize;
+    Application.OnException := frmhome.ExceptionHandler;
+    VKAutoShowMode := TVKAutoShowMode.Never;
+    {
+    FMX.Types.GlobalUseDX := true;
+    //  FMX.Types.GlobalUseGPUCanvas:=true;
+    GlobalUseDXInDX9Mode := true;
+    //  GlobalUseDXSoftware := true;
+    FMX.Types.GlobalDisableFocusEffect := true;
+    }
+    //Recovered from 0.4.0, removes crash for QR Codes
+    FMX.Types.GlobalUseDX := true;
 
-      Application.FormFactor.Orientations := [TFormOrientation.Portrait];
-      Application.CreateForm(TfrmHome, frmhome);
-      Application.Run;
-    finally
-      ReleaseMutex(H);
+    GlobalUseDXInDX9Mode := true;
+    GlobalUseDXSoftware := true;
+    FMX.Types.GlobalDisableFocusEffect := true;
+
+    H := CreateMutex(nil, False, 'HODLERTECHMUTEX');
+    if (H <> 0) and (GetLastError <> ERROR_ALREADY_EXISTS) then
+    begin
+      try
+
+
+
+          Application.Initialize;
+
+          Application.FormFactor.Orientations := [TFormOrientation.Portrait];
+          Application.CreateForm(TfrmHome, frmhome);
+          Application.Run;
+
+
+
+
+      finally
+        ReleaseMutex(H);
+      end;
     end;
+    CloseHandle(H);
   end;
-  CloseHandle(H);
 {$ENDIF}
+
+
 {$IF DEFINED(LINUX)}
 try
 if not linuxCanLock then halt(2);
