@@ -573,9 +573,11 @@ begin
 
         if ancp.checkBox.IsChecked then
         begin
-
+          if ancp.Tag<>8 then
           WalletInfo := coinData.createCoin(ancp.Tag,
-            getFirstUnusedXforCoin(ancp.Tag), 0, MasterSeed, ancp.Edit.Text);
+            getFirstUnusedXforCoin(ancp.Tag), 0, MasterSeed, ancp.Edit.Text) else
+         WalletInfo := coinData.createCoin(ancp.Tag,
+            getFirstUnusedXforCoin(ancp.Tag), 1, MasterSeed, ancp.Edit.Text);
 
           ac.AddCoin(WalletInfo);
           // TThread.Synchronize(nil,

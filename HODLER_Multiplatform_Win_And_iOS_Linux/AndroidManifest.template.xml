@@ -4,13 +4,16 @@
         package="%package%"
         android:versionCode="%versionCode%"
         android:versionName="%versionName%"
+		android:launchMode="singleTask"
         android:installLocation="%installLocation%">
 
     <!-- This is the platform API where NativeActivity was introduced. -->
     <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="26" />
     <uses-permission-sdk-23 android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.CAMERA" android:maxSdkVersion="22" />
-	
+	 
+    <uses-permission-sdk-23 android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" android:maxSdkVersion="22" />	
     <uses-permission-sdk-23 android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="22" />
 	

@@ -239,6 +239,11 @@ var
         begin
           SyncThr.SynchronizeCryptoCurrency(CurrentAccount ,CurrentCoin);
           reloadWalletView;
+          {$IFDEF ANDROID}
+          if CurrentCoin.coin=8 then
+           if not SYSTEM_APP then frmHome.WVTabControl.ActiveTab:=frmHome.WVPow;
+
+          {$ENDIF}
         end;
       end).Start();
   end;

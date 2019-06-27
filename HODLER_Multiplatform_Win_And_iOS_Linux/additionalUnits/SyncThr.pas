@@ -4,7 +4,7 @@ interface
 
 uses
   System.classes, System.sysutils, FMX.Controls, FMX.StdCtrls, FMX.dialogs, AccountData,
-  StrUtils, WalletStructureData, CryptoCurrencyData, tokenData, System.SyncObjs,
+  StrUtils, WalletStructureData, CryptoCurrencyData, tokenData, System.SyncObjs, {$IFDEF ANDROID}uNanoPowAs,{$ENDIF}
 
   JSON, System.TimeSpan, System.Diagnostics, Nano{$IFDEF MSWINDOWS},
   Winapi.ShellAPI, Winapi.Windows{$ENDIF}{$IFDEF LINUX}, Posix.Stdlib{$ENDIF};
@@ -240,6 +240,7 @@ var
   temp: TpendingNanoBlock;
   psxString: {$IFDEF LINUX64}System.{$ENDIF}AnsiString;   // System.AnsiString nie kompiluje siê na Androidzie
 begin
+data:=StringReplace(data,'xrb_','nano_',[rfReplaceAll]);
 {$IFDEF MSWINDOWS}
   if TOSVersion.Architecture = arIntelX64 then
     ShellExecute(0, 'open', 'NanoPoW64.exe', '',
@@ -254,7 +255,9 @@ begin
 {$ENDIF}
 {$IFDEF ANDROID}
 if not servicestarted then begin
-frmHome.FServiceConnection.StartService('NanoPowAS');
+if not SYSTEM_APP then
+frmHome.FServiceConnection.StartService('NanoPowAS'); else
+nanoPowAdroidStart();
 servicestarted:=true;
 end;
 {$ENDIF}
@@ -304,14 +307,21 @@ end;
             cc.history[i].values[1] := 0;
             // length(hitory.Values) must be the same as length(history.addresses)
             cc.history[i].TransactionID := block.Hash;
-            cc.history[i].addresses[0] := nano_accountFromHexKey(block.account);
-            cc.history[i].addresses[1] := nano_accountFromHexKey(block.source);
+            if block.blocktype = 'send' then begin
+              cc.history[i].typ := 'OUT';
+            cc.history[i].addresses[0] := nano_accountFromHexKey(block.destination);
+            cc.history[i].addresses[1] := nano_accountFromHexKey(block.account);
+            end
+            else
+            begin
+              cc.history[i].typ := 'IN';
+              cc.history[i].addresses[0] := nano_accountFromHexKey(block.account);
+            cc.history[i].addresses[1] := {nano_accountFromHexKey}(block.source);
+            end ;
+
             cc.history[i].data := IntToStr(history.Count - 1 - i);
 
-            if block.blocktype = 'send' then
-              cc.history[i].typ := 'OUT'
-            else
-              cc.history[i].typ := 'IN';
+
             cc.history[i].CountValues := cc.history[i].values[0];
             cc.history[i].confirmation := 1;
           end
@@ -332,7 +342,7 @@ end;
         begin
           try
             temp.block := nano_buildFromJSON(pendings.Items[(i * 2)
-              ].GetValue<TJSONObject>('data').GetValue('contents').value, '');
+              ].GetValue<TJSONObject>('data').GetValue('contents').value, '',false,true);
             temp.Hash := pendings.Items[(i * 2) + 1].GetValue<string>('hash');
 
             if NanoCoin(cc).BlockByLink(temp.Hash).account <> '' then
@@ -424,6 +434,7 @@ begin
   try
 
     coinJson := TJSONObject.ParseJSONValue(s) as TJSONObject;
+    if coinJson<>nil then begin
     if coinJson.Count = 0 then
     begin
       coinJson.Free;
@@ -488,7 +499,7 @@ begin
     end;
 
     coinJson.Free;
-
+   end;
   except
     on E: Exception do
       err := (E.message);

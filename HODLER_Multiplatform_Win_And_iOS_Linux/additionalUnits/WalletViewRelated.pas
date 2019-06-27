@@ -772,9 +772,10 @@ begin
       cc: cryptoCurrency;
     begin
       frmhome.refreshLocalImage.Start();
-      //cc := currentAccount.getWalletWithX(CurrentCoin.x, CurrentCoin.coin)[0];
+      // cc := currentAccount.getWalletWithX(CurrentCoin.x, CurrentCoin.coin)[0];
       // SCC sync x / all y
-      for cc in currentAccount.getWalletWithX(CurrentCoin.x, CurrentCoin.coin) do
+      for cc in currentAccount.getWalletWithX(CurrentCoin.x,
+        CurrentCoin.coin) do
       begin
         SynchronizeCryptoCurrency(currentAccount, cc);
       end;
@@ -945,6 +946,22 @@ begin
     end;
 
   end;
+  if newCoinListNextTAbItem = frmhome.AddCoinFromPrivKeyTabItem then
+    if newcoinID <> 8 then
+    begin
+      frmHome.StaticLabelPriveteKetInfo.Text:='If you put Private Key as hex you must indicate whether it is compressed or not';
+      frmhome.HexPrivKeyCompressedRadioButton.Text := 'Compressed';
+      frmhome.HexPrivKeyNotCompressedRadioButton.Text := 'Not Compressed';
+
+    end
+    else
+    begin
+      frmhome.Layout31.Visible := true;
+           frmHome.StaticLabelPriveteKetInfo.Text:='If you are recovering Nano from previous HODLER version please select "Legacy Hodler Seed"';
+      frmhome.HexPrivKeyCompressedRadioButton.Text := 'Nano Seed';
+      frmhome.HexPrivKeyCompressedRadioButton.IsChecked:=true;
+      frmhome.HexPrivKeyNotCompressedRadioButton.Text := 'Legacy Hodler Seed';
+    end;
 
   switchTab(frmhome.PageControl,
     newCoinListNextTAbItem { frmhome.AddNewCoinSettings } );
@@ -1066,26 +1083,23 @@ begin
                   SynchronizeCryptoCurrency(CurrentCryptoCurrency);
                   end).Start; }
 
-                {if from.coin = 4 then
-                begin
+                { if from.coin = 4 then
+                  begin
 
                   if isTokenTransfer then
                   begin
-                    from.confirmed := from.confirmed - (  fee*66000 );
+                  from.confirmed := from.confirmed - (  fee*66000 );
                   end
                   else
                   begin
-                    EthereumCoin(from).synchronizeDelay := 7;
-                    from.confirmed := from.confirmed - ( Amount + fee*21000 );
+                  EthereumCoin(from).synchronizeDelay := 7;
+                  from.confirmed := from.confirmed - ( Amount + fee*21000 );
                   end;
 
 
                   reloadWalletView;
 
-                end;  }
-
-
-
+                  end; }
 
                 TransactionWaitForSendLinkLabel.Text :=
                   'Click here to see details in Explorer';
@@ -1277,14 +1291,16 @@ begin
   with frmhome do
   begin
 
-if StrFloatToBigInteger(CurrentCoin.efee[round(FeeSpin.Value) - 1],CurrentCoin.decimals)=0 then
-begin
+    if StrFloatToBigInteger(CurrentCoin.efee[round(FeeSpin.Value) - 1],
+      CurrentCoin.decimals) = 0 then
+    begin
 
-if CurrentCoin.coin =4 then
-wvFee.Text:=defaultFees[CurrentCoin.coin].ToString
-else
-wvFee.Text:=BigIntegertoFloatStr(defaultFees[CurrentCoin.coin], CurrentCoin.decimals);
-end;
+      if CurrentCoin.coin = 4 then
+        wvFee.Text := defaultFees[CurrentCoin.coin].ToString
+      else
+        wvFee.Text := BigIntegertoFloatStr(defaultFees[CurrentCoin.coin],
+          CurrentCoin.decimals);
+    end;
     if isTokenTransfer then
     begin
       lblFeeHeader.Text := languages.dictionary('GasPriceWEI') + ': ';
@@ -1334,13 +1350,17 @@ begin
   with frmhome do
   begin
 
-if StrFloatToBigInteger(CurrentCoin.efee[round(FeeSpin.Value) - 1],CurrentCoin.decimals)=0 then
-begin
-if CurrentCoin.coin =4 then
-CurrentCoin.efee[round(FeeSpin.Value) - 1]:=defaultFees[CurrentCoin.coin].ToString
-else
-CurrentCoin.efee[round(FeeSpin.Value) - 1]:=BigIntegertoFloatStr(defaultFees[CurrentCoin.coin], CurrentCoin.decimals);
-end;
+    if StrFloatToBigInteger(CurrentCoin.efee[round(FeeSpin.Value) - 1],
+      CurrentCoin.decimals) = 0 then
+    begin
+      if CurrentCoin.coin = 4 then
+        CurrentCoin.efee[round(FeeSpin.Value) - 1] :=
+          defaultFees[CurrentCoin.coin].ToString
+      else
+        CurrentCoin.efee[round(FeeSpin.Value) - 1] :=
+          BigIntegertoFloatStr(defaultFees[CurrentCoin.coin],
+          CurrentCoin.decimals);
+    end;
     if not isEthereum then
     begin
       a := ((180 * length(currentAccount.aggregateUTXO(CurrentCoin)) +
@@ -1863,7 +1883,7 @@ begin
       sorted: Boolean;
       DEBUGstring: AnsiString;
       holder: TfmxObject;
-      privWifText : AnsiString;
+      privWifText: AnsiString;
     begin
 
       i := 0;
@@ -1885,7 +1905,6 @@ begin
 
       privWifText := removeSpace(frmhome.WIFEdit.Text);
 
-
       startFullfillingKeypool(MasterSeed);
       if isHex(privWifText) then
       begin
@@ -1895,9 +1914,19 @@ begin
           begin
             frmhome.NewCoinPrivKeyOKButton.Enabled := false;
           end);
+        if newcoinID <> 8 then
+        begin
 
-        frmhome.APICheckCompressed(Sender);
-
+          frmhome.HexPrivKeyCompressedRadioButton.Text := 'Compressed';
+          frmhome.HexPrivKeyNotCompressedRadioButton.Text := 'Not Compressed';
+          frmhome.APICheckCompressed(Sender);
+        end
+        else
+        begin
+          frmhome.HexPrivKeyCompressedRadioButton.Text := 'Nano Seed';
+          frmhome.HexPrivKeyNotCompressedRadioButton.Text :=
+            'Legacy Hodler Seed';
+        end;
         TThread.Synchronize(nil,
           procedure
           begin
@@ -1933,8 +1962,7 @@ begin
       end
       else
       begin
-        if privWifText <>
-          privKeyToWif(wifToPrivKey(privWifText)) then
+        if privWifText <> privKeyToWif(wifToPrivKey(privWifText)) then
         begin
 
           TThread.Synchronize(nil,
@@ -1963,13 +1991,22 @@ begin
       end
       else if newcoinID = 8 then
       begin
+        if frmhome.HexPrivKeyNotCompressedRadioButton.IsChecked then
+        begin
 
-        pub := nano_privToPub(privWifText);
-        wd := NanoCoin.create(8, -1, -1, nano_accountFromHexKey(pub), '');
-        wd.pub := pub;
-        wd.EncryptedPrivKey := speckEncrypt((TCA(MasterSeed)),
-          privWifText);
+          pub := nano_privToPub(privWifText);
+          wd := NanoCoin.create(8, -1, -1, nano_accountFromHexKey(pub), '');
+          wd.pub := pub;
+          wd.EncryptedPrivKey := speckEncrypt((TCA(MasterSeed)), privWifText);
+        end else
+        begin
 
+          pub := nano_privToPub(nano_getPrivFromSeed(privWifText, 0));
+          wd := NanoCoin.create(8, -1, -1, nano_accountFromHexKey(pub), '');
+          wd.pub := pub;
+          wd.EncryptedPrivKey := speckEncrypt((TCA(MasterSeed)),
+            nano_getPrivFromSeed(privWifText, 0));
+        end;
       end
       else
       begin
@@ -2062,9 +2099,12 @@ begin
 
   if frmhome.OwnXCheckBox.IsChecked then
     newID := strtointdef(frmhome.OwnXEdit.Text, 0);
-
-  walletInfo := coinData.createCoin(newcoinID, newID, 0, MasterSeed,
-    frmhome.NewCoinDescriptionEdit.Text);
+  if newcoinID <> 8 then
+    walletInfo := coinData.createCoin(newcoinID, newID, 0, MasterSeed,
+      frmhome.NewCoinDescriptionEdit.Text)
+  else
+    walletInfo := coinData.createCoin(newcoinID, newID, 1, MasterSeed,
+      frmhome.NewCoinDescriptionEdit.Text);
 
   currentAccount.AddCoin(walletInfo);
   TThread.Synchronize(nil,
@@ -2442,7 +2482,12 @@ begin
     UnlockNanoImage.Visible := TWalletInfo(CurrentCryptoCurrency).coin = 8;
     if TWalletInfo(CurrentCryptoCurrency).coin = 8 then
     begin
-
+{$IFDEF ANDROID}WVPow.Visible := true;
+      lblStep1.Text := '';
+      lblStep2.Text := '';
+      step1Hash.Text := '';
+      step2Hash.Text := '';
+{$ENDIF}
       SendSettingsFlowLayout.Parent := SendVertScrollBox;
       SendSettingsFlowLayout.Position.Y := SendAmountLayout.Position.Y + 1;
       FeeFromAmountLayout.Visible := false;
@@ -2470,7 +2515,7 @@ begin
     end
     else
     begin
-
+{$IFDEF ANDROID}WVPow.Visible := false; {$ENDIF}
       SendSettingsFlowLayout.Parent := TransactionFeeLayout;
       SendSettingsFlowLayout.Position.Y := -1;
       FeeFromAmountLayout.Visible := true;
@@ -2505,13 +2550,12 @@ var
   localCurrentCryptoCurrency: cryptoCurrency;
 begin
 
-
-  {if CurrentCryptoCurrency is EthereumCoin then
+  { if CurrentCryptoCurrency is EthereumCoin then
     begin
-        if EthereumCoin(CurrentCryptoCurrency).synchronizeDelay > 0 then
-              exit();
+    if EthereumCoin(CurrentCryptoCurrency).synchronizeDelay > 0 then
+    exit();
 
-                end;}
+    end; }
   // localCurrentCryptoCurrency := cryptoCurrency.Create( currentCryptoCurrency );
   // localCurrentCryptoCurrency.assign( CurrentCryptoCurrency );
 
@@ -2542,8 +2586,6 @@ begin
     if CurrentCoin = nil then
       exit;
 
-
-
     if (CurrentCoin.coin = 8) and (CurrentCryptoCurrency.unconfirmed > 0) and
       (not NanoCoin(CurrentCryptoCurrency).isUnlocked) then
     begin
@@ -2551,10 +2593,10 @@ begin
       try
         if NotificationLayout.CurrentPopup = nil then
 {$IFDEF MSWINDOWS}UnlockNanoImage.OnClick(NanoCoin(CurrentCoin))
-          {$ELSE}UnlockNanoImageClick(NanoCoin(CurrentCoin)){$ENDIF}
+{$ELSE}UnlockNanoImageClick(NanoCoin(CurrentCoin)){$ENDIF}
         else if NotificationLayout.CurrentPopup.Visible = false then
 {$IFDEF MSWINDOWS}UnlockNanoImage.OnClick(NanoCoin(CurrentCoin))
-          {$ELSE}UnlockNanoImageClick(NanoCoin(CurrentCoin)){$ENDIF}
+{$ELSE}UnlockNanoImageClick(NanoCoin(CurrentCoin)){$ENDIF}
       except
         on E: Exception do
         begin
@@ -2662,8 +2704,8 @@ begin
           ' ' + CurrencyConverter.symbol;
 
         TopInfoUnconfirmedValue.Text := ' ' + BigIntegerBeautifulStr
-          (CurrentCryptoCurrency.unconfirmed, CurrentCryptoCurrency.decimals , true) +
-          ' ' + CurrentCryptoCurrency.shortcut;
+          (CurrentCryptoCurrency.unconfirmed, CurrentCryptoCurrency.decimals,
+          true) + ' ' + CurrentCryptoCurrency.shortcut;
         TopInfoUnconfirmedFiatLabel.Text :=
           floatToStrF(CurrentCryptoCurrency.getUNConfirmedFiat, ffFixed, 15, 2)
           + ' ' + CurrencyConverter.symbol;
@@ -2982,7 +3024,7 @@ begin
       TLabel(frmhome.FindComponent('globalBalance')).Text := '0.00';
       AccountRelated.afterInitialize;
       syncTimer.Enabled := true;
-       closeOrganizeView(nil);
+      closeOrganizeView(nil);
     end;
   Except
     on E: Exception do
@@ -3202,7 +3244,8 @@ begin
       exit;
 
     th := THistoryHolder(TfmxObject(Sender).TagObject).history;
-
+    HistoryTransactionDateLabel.Visible := CurrentCoin.coin <> 8;
+    HistoryTransactionDate.Visible := CurrentCoin.coin <> 8;
     HistoryTransactionValue.Text := BigIntegertoFloatStr(th.CountValues,
       CurrentCryptoCurrency.decimals);
     if th.confirmation > 0 then
@@ -3243,7 +3286,7 @@ begin
     begin
       Panel := TPanel.create(HistoryTransactionVertScrollBox);
       Panel.Align := TAlignLayout.Top;
-      Panel.Height := 42;
+      Panel.Height := 64;
       Panel.Visible := true;
       Panel.Tag := i;
       Panel.TagString := th.addresses[i];
@@ -3276,7 +3319,7 @@ begin
       valuelbl.Align := TAlignLayout.Top;
       valuelbl.Visible := true;
       valuelbl.Parent := Panel;
-      valuelbl.Position.Y := 26;
+      valuelbl.Position.Y := 48;
       valuelbl.Text := BigIntegertoFloatStr(th.values[i],
         CurrentCryptoCurrency.decimals);
       valuelbl.TextSettings.HorzAlign := TTextAlign.Trailing;
@@ -3286,7 +3329,7 @@ begin
       addrlbl := TCopyableAddressPanel.create(Panel);
       // addrlbl.ReadOnly := True;
       // addrlbl.StyleLookup := 'transparentedit';
-      addrlbl.Height := 21;
+      addrlbl.Height := 43;
       addrlbl.Align := TAlignLayout.Top;
       addrlbl.Visible := true;
       addrlbl.Parent := Panel;
@@ -3377,7 +3420,7 @@ begin
           end;
         end);
     end).Start;
-      sleep(100);
+  sleep(100);
 end;
 
 procedure importCheck;
@@ -3388,16 +3431,16 @@ var
   ts: TStringList;
   wd: TWalletInfo;
   request: AnsiString;
-  PrivWifText : AnsiString;
+  privWifText: AnsiString;
 begin
   with frmhome do
   begin
 
     try
-      PrivWifText := removeSpace(WIFEdit.Text);
-      if isHex(PrivWifText) then
+      privWifText := removeSpace(WIFEdit.Text);
+      if isHex(privWifText) then
       begin
-        if (length(PrivWifText) <> 64) then
+        if (length(privWifText) <> 64) then
 
         begin
           popupWindow.create('Key too short');
@@ -3459,8 +3502,8 @@ begin
               request: AnsiString;
               begin }
 
-            comkey := secp256k1_get_public(PrivWifText, false);
-            notkey := secp256k1_get_public(PrivWifText, true);
+            comkey := secp256k1_get_public(privWifText, false);
+            notkey := secp256k1_get_public(privWifText, true);
 
             wd := coinData.createCoin(newcoinID, -1, -1,
               Bitcoin_PublicAddrToWallet(comkey, availableCoin[newcoinID].p2pk),
@@ -3607,7 +3650,7 @@ begin
 
         end
       end
-      else if PrivWifText <> privKeyToWif(wifToPrivKey( PrivWifText )) then
+      else if privWifText <> privKeyToWif(wifToPrivKey(privWifText)) then
       begin
         popupWindow.create('Wrong WIF');
         exit;

@@ -250,6 +250,7 @@ var
   str: AnsiString;
   x: Integer;
   info: TAddressInfo;
+  a1,a2:string;
 begin
   result := false;
   if availableCoin[id].flag = 0 then
@@ -305,7 +306,12 @@ begin
     // showmessage(inttostr(length(address)));
     result := ((isHex(rightStr(address, 40))) and (length(address) = 42));
   end else if availableCoin[id].flag =2   then begin
-  result:=address=(nano_accountFromHexKey(nano_keyFromAccount(address)));
+  a1:=StringReplace(address,'xrb_','',[rfReplaceAll]);
+  a1:=StringReplace(a1,'nano_','',[rfReplaceAll]);
+  a2:=nano_accountFromHexKey(nano_keyFromAccount(address));
+  a2:=StringReplace(a2,'xrb_','',[rfReplaceAll]);
+  a2:=StringReplace(a2,'nano_','',[rfReplaceAll]);
+  result:=(a1=a2);
 
   end;
 

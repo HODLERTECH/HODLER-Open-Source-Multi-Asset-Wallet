@@ -561,11 +561,11 @@ end;
 function isEQRGenerated: Boolean;
 begin
   result := FileExists(System.IOUtils.TPath.Combine(
-{$IF DEFINED(MSWINDOWS) OR DEFINED(LINUX)}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
-    (){$ENDIF}, CurrentAccount.name + '_EQR_BIG' + '.png')) and
+{$IF DEFINED(MSWINDOWS) OR DEFINED(LINUX)}HOME_PATH{$ELSE}System.IOUtils.TPath.
+    GetDownloadsPath(){$ENDIF}, CurrentAccount.name + '_EQR_BIG' + '.png')) and
     FileExists(System.IOUtils.TPath.Combine(
-{$IF DEFINED(MSWINDOWS) OR DEFINED(LINUX)}HOME_PATH{$ELSE}System.IOUtils.TPath.GetDownloadsPath
-    (){$ENDIF}, CurrentAccount.name + '_EQR_SMALL' + '.png'));
+{$IF DEFINED(MSWINDOWS) OR DEFINED(LINUX)}HOME_PATH{$ELSE}System.IOUtils.TPath.
+    GetDownloadsPath(){$ENDIF}, CurrentAccount.name + '_EQR_SMALL' + '.png'));
 end;
 
 procedure SendEQR;
@@ -577,62 +577,61 @@ var
   Stream: TResourceStream;
   Y, m, d: Word;
 begin
-         if not FileExists( CurrentAccount.SmallQRImagePath ) then
-    begin
+  if not FileExists(CurrentAccount.SmallQRImagePath) then
+  begin
 
-      img := StrToQRBitmap( CurrentAccount.EncryptedMasterSeed,8 );
+    img := StrToQRBitmap(CurrentAccount.EncryptedMasterSeed, 8);
 
-      img.SaveToFile(CurrentAccount.SmallQRImagePath);
-      img.free;
+    img.SaveToFile(CurrentAccount.SmallQRImagePath);
+    img.Free;
+  end;
+  if not FileExists(CurrentAccount.BigQRImagePath) then
+  begin
+
+    qrimg := StrToQRBitmap(CurrentAccount.EncryptedMasterSeed, 16);
+    img := TBitmap.create();
+    Stream := TResourceStream.create(HInstance, 'IMG_EQR', RT_RCDATA);
+    try
+      img.LoadFromStream(Stream);
+    finally
+      Stream.Free;
     end;
-    if not FileExists(CurrentAccount.BigQRImagePath) then
-    begin
+    img.Canvas.BeginScene;
+    img.Canvas.DrawBitmap(qrimg, RectF(0, 0, 797, 797),
+      RectF(294, 514, 797 + 294, 797 + 514), 1);
+    img.Canvas.EndScene;
 
-      qrimg := StrToQRBitmap(CurrentAccount.EncryptedMasterSeed, 16);
-      img := TBitmap.create();
-      Stream := TResourceStream.create(HInstance, 'IMG_EQR', RT_RCDATA);
-      try
-        img.LoadFromStream(Stream);
-      finally
-        Stream.Free;
-      end;
-      img.Canvas.BeginScene;
-      img.Canvas.DrawBitmap(qrimg, RectF(0, 0, 797, 797),
-        RectF(294, 514, 797 + 294, 797 + 514), 1);
-      img.Canvas.EndScene;
+    img.SaveToFile(CurrentAccount.BigQRImagePath);
+    img.Free;
+    qrimg.Free;
 
-      img.SaveToFile(CurrentAccount.BigQRImagePath);
-      img.Free;
-      qrimg.Free;
+  end;
 
-    end;
-
-
-
-    CurrentAccount.userSaveSeed := true;
-    //CurrentAccount.SaveSeedFile();
-    // ? userSavedSeed := true;
-    //refreshWalletDat();
+  CurrentAccount.userSaveSeed := true;
+  // CurrentAccount.SaveSeedFile();
+  // ? userSavedSeed := true;
+  // refreshWalletDat();
 end;
 
 procedure restoreEQR(Sender: TObject);
 var
-  MasterSeed, tced,s: AnsiString;
+  MasterSeed, tced, s: AnsiString;
   ac: Account;
   i: Integer;
 begin
   with frmhome do
   begin
-  s:=RestorePasswordEdit.Text;
-  tced := TCA(s);
+    s := RestorePasswordEdit.Text;
+    tced := TCA(s);
     MasterSeed := SpeckDecrypt(tced, tempQRFindEncryptedSeed);
     if not isHex(MasterSeed) then
     begin
 
-      tthread.Synchronize(nil , procedure
-      begin
-        popupWindow.create(dictionary('FailedToDecrypt'));
-      end);
+      tthread.Synchronize(nil,
+        procedure
+        begin
+          popupWindow.create(dictionary('FailedToDecrypt'));
+        end);
 
       exit;
     end;
@@ -660,7 +659,7 @@ begin
 
     tced := '';
     MasterSeed := '';
-    s:='';
+    s := '';
   end;
 end;
 
@@ -808,6 +807,7 @@ begin
     startFullfillingKeypool(MasterSeed);
     /// ///////////////////////////////////////////
 
+
     if isHex(WIFEdit.Text) and (length(WIFEdit.Text) = 64) then
     begin
       out := WIFEdit.Text;
@@ -846,7 +846,7 @@ begin
       wd.isCompressed := false;
     end;
     CurrentAccount.AddCoin(wd);
-    CreatePanel(wd , CurrentAccount , frmhome.walletList);
+    CreatePanel(wd, CurrentAccount, frmhome.walletList);
 
     MasterSeed := '';
 
@@ -907,8 +907,8 @@ begin
 
       seedFromWords := '';
       inputWordsList.Free;
-      //LoadCurrentAccount(AccountNameEdit.Text);
-      //AccountRelated.afterInitialize;
+      // LoadCurrentAccount(AccountNameEdit.Text);
+      // AccountRelated.afterInitialize;
       {
         Dodaæ obs³ugê b³êdów
       }
@@ -939,7 +939,7 @@ begin
   result := true;
   with frmhome do
   begin
-
+    WIFFormatLabel.Text := 'WIF Format';
     tced := TCA(passwordForDecrypt.Text);
     passwordForDecrypt.Text := '';
     MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
@@ -956,8 +956,10 @@ begin
       startFullfillingKeypool(MasterSeed);
       // {$IFDEF MSWINDOWS}lblPrivateKey:=PrivateKeyMemo;{$ENDIF}
       lblPrivateKey.Text := tempStr;
+
       lblWIFKey.Text := PrivKeyToWIF(tempStr, wd.isCompressed,
         AvailableCoin[TWalletInfo(wd).coin].wifByte);
+
       tempStr := '';
       wipeAnsiString(MasterSeed);
 
@@ -980,7 +982,16 @@ begin
       begin
 
         lblPrivateKey.Text := nano_getPriv(NanoCoin(wd), MasterSeed);
-        lblWIFKey.Text := '';
+        if (wd.Y = 1) then
+        begin
+          WIFFormatLabel.Text := 'NANO Seed';
+          lblWIFKey.Text := nano_getSeed(wd.X, wd.Y, MasterSeed);
+        end
+        else
+        begin
+          WIFFormatLabel.Text := 'WIF Format';
+          lblWIFKey.Text := '';
+        end;
       end;
       wipeAnsiString(MasterSeed);
 
@@ -990,11 +1001,12 @@ begin
     PrivateKeyAddressInfoLabel.Text := wd.addr;
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
     lblPrivateKey.Text := cutEveryNChar(length(lblPrivateKey.Text) div 2,
-      lblPrivateKey.Text , #13#10);
+      lblPrivateKey.Text, #13#10);
     if wd.coin <> 8 then
       lblWIFKey.Text := cutEveryNChar(length(lblWIFKey.Text) div 2,
-        lblWIFKey.Text , #13#10)
+        lblWIFKey.Text, #13#10)
     else
+if (wd.Y = 0) then
       lblWIFKey.Text := '';
 {$ENDIF}
     bitmap := StrToQRBitmap(removeSpace(lblPrivateKey.Text));

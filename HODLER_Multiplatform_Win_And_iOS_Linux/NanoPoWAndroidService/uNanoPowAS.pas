@@ -1,5 +1,5 @@
 unit uNanoPowAS;
-
+
 // unit of Nano currency Proof of Work Android Service
 // Copyleft 2019 - Daniel Mazur
 interface
@@ -158,13 +158,19 @@ type
 
 type
   precalculatedPows = array of precalculatedPow;
-
+procedure nanoPowAndroidStart();
 var
   pows: precalculatedPows;
+  notepad: string;
 
 var
   LBuilder: DW.Androidapi.JNI.Support.JNotificationCompat_Builder;
 
+var
+  miningOwner: string;
+  miningStep: Integer;
+  LibHandle: THandle;
+  displayNotifications:boolean;
 implementation
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
@@ -176,8 +182,21 @@ uses
 procedure logd(msg: String);
 var
   M: TMarshaller;
+var
+  ts: tstringlist;
 begin
-  LOGI(M.AsUtf8(msg).ToPointer);
+  notepad := notepad + #13#10 + DateTimeToStr(Now) + ' ' + msg;
+  ts := tstringlist.Create();
+  try
+    ts.Text := notepad;
+    ts.SaveToFile(TPath.GetDocumentsPath + '/miner.log');
+  except
+    on E: Exception do
+    begin
+    end;
+  end;
+  ts.Free;
+  // LOGI(M.AsUtf8(msg).ToPointer);
 end;
 
 function findPrecalculated(Hash: string): string;
@@ -227,10 +246,10 @@ end;
 
 procedure savePows;
 var
-  ts: TStringList;
+  ts: tstringlist;
   i: Integer;
 begin
-  ts := TStringList.Create;
+  ts := tstringlist.Create;
   try
     for i := 0 to Length(pows) - 1 do
     begin
@@ -245,13 +264,13 @@ begin
   end;
 end;
 
-function SplitString(Str: string; separator: char = ' '): TStringList;
+function SplitString(Str: string; separator: char = ' '): tstringlist;
 var
-  ts: TStringList;
+  ts: tstringlist;
   i: Integer;
 begin
   Str := StringReplace(Str, separator, #13#10, [rfReplaceAll]);
-  ts := TStringList.Create;
+  ts := tstringlist.Create;
   ts.Text := Str;
   Result := ts;
 
@@ -259,12 +278,12 @@ end;
 
 procedure loadPows;
 var
-  ts: TStringList;
+  ts: tstringlist;
   i: Integer;
-  t: TStringList;
+  t: tstringlist;
 begin
   SetLength(pows, 0);
-  ts := TStringList.Create;
+  ts := tstringlist.Create;
   try
     if FileExists((TPath.GetDocumentsPath + '/nanopows.dat')) then
     begin
@@ -324,6 +343,27 @@ begin
   Result := bb;
 end;
 
+procedure saveMiningState(speed: int64);
+var
+  ts: tstringlist;
+begin
+  logd('saveMiningState ' + inttostr(speed) + ' kHash');
+  ts := tstringlist.Create;
+  try
+    ts.Add(miningOwner);
+    ts.Add(inttostr(miningStep));
+    ts.Add(inttostr(speed));
+    ts.SaveToFile(System.IOUtils.TPath.GetDocumentsPath + '/andMining');
+  except
+    on E: Exception do
+    begin
+      logd('Exception in saveMiningState: ' + E.Message);
+    end;
+  end;
+  ts.Free;
+
+end;
+
 function findwork(Hash: string): string;
 var
   state: crypto_generichash_blake2b_state;
@@ -331,8 +371,10 @@ var
   res: array of System.UINT8;
   j, i: Integer;
   work: string;
+  hashCounter: int64;
+  startTime, gone, hashSpeed: int64;
 begin
-  logd('NANOPOWAS: findwork ' + Hash);
+  logd('findwork ' + Hash);
   loadPows;
   work := findPrecalculated(Hash);
   if (work <> '') and (work <> 'MINING') then
@@ -340,6 +382,8 @@ begin
   randomize;
   SetLength(res, 8);
   workbytes := hexatotbytes('0000000000000000' + Hash);
+  hashCounter := 1;
+  startTime := Round((Now() - 25569) * 86400);
   repeat
     workbytes[0] := random(255);
     workbytes[1] := random(255);
@@ -362,13 +406,27 @@ begin
               Result := '';
               for j := 7 downto 0 do
                 Result := Result + inttohex(workbytes[j], 2);
-              logd('NANOPOWAS: work found ' + Result);
+              logd('work found ' + Result);
               setPrecalculated(Hash, Result);
               savePows;
               Exit;
             end;
     end;
-    logd('NANOPOWAS: Working ' + DateTimeToStr(now));
+    if hashCounter mod 32641 = 0 then
+    begin
+      gone := (Round((Now() - 25569) * 86400)) - startTime;
+      if gone > 0 then
+      begin
+        // gone := 1;
+
+        hashSpeed := ceil(hashCounter / (gone));
+        saveMiningState(hashSpeed);
+        hashCounter := 1;
+        startTime := Round((Now() - 25569) * 86400);
+      end;
+    end;
+
+    inc(hashCounter, 256);
   until true = false;
 end;
 
@@ -406,11 +464,11 @@ end;
 function nano_loadChain(dir: string; limitTo: string = ''): TNanoBlockChain;
 var
   path: string;
-  ts: TStringList;
+  ts: tstringlist;
   Block: TNanoBlock;
 begin
   SetLength(Result, 0);
-  ts := TStringList.Create;
+  ts := tstringlist.Create;
   try
     for path in TDirectory.GetFiles(dir) do
     begin
@@ -724,8 +782,10 @@ end;
 
 function nano_pushBlock(b: string): string;
 begin
+  logd('nano_pushBlock presend');
   Result := getDataOverHTTP('https://hodlernode.net/nano.php?b=' + b,
     false, true);
+  logd('nano_pushBlock postsend: ' + Result);
 end;
 
 function IsHex(s: string): Boolean;
@@ -746,29 +806,118 @@ begin
     end;
 end;
 
-function nano_mineBuilt64(cc: NanoCoin):boolean;
+function reverseHexOrder(s: string): string;
+var
+  v: string;
+begin
+  s := StringReplace(s, '$', '', [rfReplaceAll]);
+  Result := '';
+  repeat
+    if Length(s) >= 2 then
+    begin
+      v := Copy(s, 0, 2);
+      delete(s, 1, 2);
+      Result := v + Result;
+    end
+    else
+      break;
+  until 1 = 0;
+end;
+
+function hexatotintegerarray(h: string): TIntegerArray;
+var
+  i: Integer;
+  b: System.UINT8;
+  bb: TIntegerArray;
+begin
+  SetLength(bb, (Length(h) div 2));
+{$IF DEFINED(ANDROID) OR DEFINED(IOS)}
+  for i := 0 to (Length(h) div 2) - 1 do
+  begin
+    b := System.UINT8(strtoIntDef('$' + Copy(h, ((i) * 2) + 1, 2), 0));
+    bb[i] := b;
+  end;
+{$ELSE}
+  for i := 1 to (Length(h) div 2) do
+  begin
+    b := System.UINT8(strtoIntDef('$' + Copy(h, ((i - 1) * 2) + 1, 2), 0));
+    bb[i - 1] := b;
+  end;
+
+{$ENDIF}
+  Result := bb;
+end;
+
+function nano_addressChecksum(M: String): String;
+var
+  state: crypto_generichash_blake2b_state;
+  res: array of System.UINT8;
+  i: Integer;
+begin
+  Result := '';
+  blake2b_init(state, nil, 0, 5);
+  blake2b_update(state, hexatotbytes(M), Length(M));
+  blake2b_final(state, res, 5);
+  for i := Length(res) to 0 do
+    Result := inttohex(res[i], 2) + Result;
+end;
+
+function nano_encodeBase32(values: TIntegerArray): string;
+var
+  i: Integer;
+begin
+  Result := '';
+  for i := 0 to Length(values) - 1 do
+  begin
+    Result := Result + nano_charset[values[i] + low(nano_charset)];
+  end;
+end;
+
+function nano_accountFromHexKey(adr: String): String;
+var
+  data, chk: TIntegerArray;
+begin
+  Result := 'FAILED';
+  chk := hexatotintegerarray(nano_addressChecksum(adr));
+  adr := '303030' + adr;
+  data := hexatotintegerarray(adr);
+  // Copy(adr,4{$IFDEF MSWINDOWS}+1{$ENDIF},100)
+
+  data := ChangeBits(data, 8, 5, true);
+  chk := ChangeBits(chk, 8, 5, true);
+  delete(data, 0, 4);
+  Result := 'nano_' + nano_encodeBase32(data) + nano_encodeBase32(chk);
+end;
+
+function nano_mineBuilt64(cc: NanoCoin): Boolean;
 var
   Block: TNanoBlock;
   lastHash, s: string;
   isCorrupted: Boolean;
 begin
-result:=false;
+  Result := false;
   isCorrupted := false;
   repeat
     Block := cc.firstBlock;
 
     if Block.account <> '' then
     begin
-
+      if Pos('nano_', Block.account) = 0 then
+        miningOwner := nano_accountFromHexKey(Block.account)
+      else
+        miningOwner := Block.account;
       if not isCorrupted then
       begin
+        logd('Title change nano_mineBuilt64 (909) ' + miningOwner);
         DM.JavaService.stopForeground(true);
+        LBuilder.setContentTitle(StrToJCharSequence((miningOwner)));
         LBuilder.setContentText(StrToJCharSequence('Working on nano blocks, ' +
           inttostr(Length(cc.pendingChain)) + ' left'));
         DM.JavaService.StartForeground(1995, LBuilder.build);
-
+        logd('Post 909');
+        miningStep := 1;
         nano_getWork(Block);
-        result:=true;
+        Result := true;
         s := nano_pushBlock(nano_builtToJSON(Block));
 
         lastHash := StringReplace(s, 'https://www.nanode.co/block/', '',
@@ -790,8 +939,9 @@ result:=false;
             LBuilder.setContentText
               (StrToJCharSequence('Working on next block hash'));
             DM.JavaService.StartForeground(1995, LBuilder.build);
+            miningStep := 2;
             findwork(lastHash);
-            result:=true;
+            Result := true;
           end;
       end;
     end;
@@ -804,9 +954,9 @@ var
   cc: NanoCoin;
   path: string;
   i: Integer;
-  workdone:boolean;
+  workdone: Boolean;
 begin
-  workdone:=false;
+  workdone := false;
   repeat
     for path in TDirectory.GetDirectories
       (IncludeTrailingPathDelimiter(System.IOUtils.TPath.GetDocumentsPath)) do
@@ -816,7 +966,7 @@ begin
         cc := NanoCoin.Create();
         cc.chaindir := TPath.Combine(path, 'Pendings');
         cc.pendingChain := nano_loadChain(TPath.Combine(path, 'Pendings'));
-       workdone:=nano_mineBuilt64(cc);
+        workdone := nano_mineBuilt64(cc);
         cc.Free;
       end;
       Sleep(100);
@@ -826,55 +976,77 @@ begin
     for i := 0 to Length(pows) - 1 do
       if pows[i].work = '' then
       begin
+        logd('Title change mineAll (977)');
         DM.JavaService.stopForeground(true);
+        LBuilder.setContentTitle
+          (StrToJCharSequence('HODLER - Nano PoW Worker'));
         LBuilder.setContentText
           (StrToJCharSequence('Working on next block hash'));
         DM.JavaService.StartForeground(1995, LBuilder.build);
+        logd('Post 977');
+        miningOwner := pows[i].Hash;
+        miningStep := 3;
         findwork(pows[i].Hash);
-        workdone:=true;
+        workdone := true;
       end;
-  if workdone then
-  begin
-          DM.JavaService.stopForeground(true);
+    if workdone then
+    begin
+      miningStep := 4;
+      saveMiningState(0);
+      workdone := false;
+      logd('Title change (995)');
+      DM.JavaService.stopForeground(true);
       LBuilder.setContentText(StrToJCharSequence('Ready to work nano blocks'));
       DM.JavaService.StartForeground(1995, LBuilder.build);
-  end;
+      logd('Post 995');
+    end;
+
+    // cpu cooldown
+    Sleep(500);
   until true = false;
 end;
-
-function TDM.AndroidServiceStartCommand(const Sender: TObject;
-  const Intent: JIntent; Flags, StartId: Integer): Integer;
-
+procedure nanoPowAndroidStart();
+var
+  ts: tstringlist;
 var
   err, ex: string;
-  LibHandle: THandle;
 
-  channel: JNotificationChannel;
-  manager: JNotificationManager;
-  group: JNotificationChannelGroup;
-var
-  PEnv: PJNIEnv;
-  ActivityClass: JNIClass;
-  NativeMethod: JNINativeMethod;
-var
-  api26: Boolean;
+  p: pchar;
 begin
-  logd('NANOPOWAS: AndroidServiceStartCommand 827');
+displayNotifications:=false;
+  ts := tstringlist.Create();
+  try
+    if FileExists(TPath.GetDocumentsPath + '/miner.log') then
+    begin
+      ts.LoadFromFile(TPath.GetDocumentsPath + '/miner.log');
+      if ts.Count < 1000 then
+        notepad := ts.Text + #13#10;
+    end;
+  except
+    on E: Exception do
+    begin
+    end;
+  end;
+  ts.Free;
+  logd('AndroidServiceStartCommand 827');
   err := 'la';
   try
     try
-      err := TPath.GetDocumentsPath + '/nacl2/libsodium.so';
+      // /system/lib/libsodium.so for HPRO
+      // TPath.GetDocumentsPath + '/nacl2/libsodium.so'; for normal app
+     // err := '/system/lib/libsodium.so';
+     err:= TPath.GetDocumentsPath + '/nacl2/libsodium.so';
       if FileExists(err) then
         ex := 'isthere'
       else
         ex := 'uuuuu';
-      logd('NANOPOWAS: ' + ex + ' ' + err);
+      logd(' ' + ex + ' ' + err);
       LibHandle := LoadLibrary(PwideChar(err));
       if LibHandle <> 0 then
       begin
         blake2b_init := getprocaddress(LibHandle,
           PwideChar('crypto_generichash_blake2b_init'));
-        logd('NANOPOWAS:   ' + inttohex(Integer(getprocaddress(LibHandle,
+        logd(' ' + inttohex(Integer(getprocaddress(LibHandle,
           PwideChar('crypto_generichash_blake2b_init'))), 8));
         blake2b_update := getprocaddress(LibHandle,
           'crypto_generichash_blake2b_update');
@@ -892,13 +1064,34 @@ begin
   finally
 
   end;
-  logd('NANOPOWAS: AndroidServiceStartCommand 857');
+  logd(' AndroidServiceStartCommand 857');
   TThread.CreateAnonymousThread(
     procedure
     begin
       mineAll;
     end).Start();
-  logd('NANOPOWAS: AndroidServiceStartCommand 863');
+end;
+function TDM.AndroidServiceStartCommand(const Sender: TObject;
+  const Intent: JIntent; Flags, StartId: Integer): Integer;
+
+var
+  err, ex: string;
+
+
+  channel: JNotificationChannel;
+  manager: JNotificationManager;
+  group: JNotificationChannelGroup;
+  VIntent: JIntent;
+  resultPendingIntent: JPendingIntent;
+var
+  PEnv: PJNIEnv;
+  ActivityClass: JNIClass;
+  NativeMethod: JNINativeMethod;
+var
+  api26: Boolean;
+begin
+nanoPowAndroidStart();
+  logd(' AndroidServiceStartCommand 863');
   api26 := TAndroidHelperEx.CheckBuildAndTarget(26);
   if api26 then
   begin
@@ -933,10 +1126,18 @@ begin
   LBuilder.setContentText(StrToJCharSequence('Ready to work nano blocks'));
   LBuilder.setSmallIcon(TAndroidHelper.context.getApplicationInfo.icon);
   LBuilder.setTicker(StrToJCharSequence('HODLER - Nano PoW Worker'));
+
+  VIntent := TAndroidHelper.context.getPackageManager()
+    .getLaunchIntentForPackage(TAndroidHelper.context.getPackageName());
+  resultPendingIntent := TJPendingIntent.JavaClass.getActivity
+    (TAndroidHelper.context, 0, VIntent,
+    TJPendingIntent.JavaClass.FLAG_UPDATE_CURRENT);
+  LBuilder.setContentIntent(resultPendingIntent);
   DM.JavaService.StartForeground(1995, LBuilder.build);
 
   Result := TJService.JavaClass.START_STICKY;
-  logd('NANOPOWAS: done');
+  logd(' done');
 end;
 
 end.
+

@@ -27,7 +27,8 @@ uses
   FMX.Clipboard, bech32, cryptoCurrencyData, FMX.VirtualKeyBoard, JSON,
   languages, WIF, AccountData, WalletStructureData,
   System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
-  popupWindowData, TCopyableAddressPanelData, TNewCryptoVertScrollBoxData, TaddressLabelData,
+  popupWindowData, TCopyableAddressPanelData, TNewCryptoVertScrollBoxData,
+  TaddressLabelData, System.UIConsts, HTTPApp,
 
   FMX.Media, FMX.Objects, CurrencyConverter, uEncryptedZipFile, System.Zip,
   TRotateImageData
@@ -827,6 +828,24 @@ type
     Label6: TLabel;
     Label8: TLabel;
     btnSysApps: TButton;
+    WVPow: TTabItem;
+    lPowInfo: TLayout;
+    lbPowInfo: TLabel;
+    lstep1: TLayout;
+    step1hash: TLabel;
+    lblStep1: TLabel;
+    step1info: TLabel;
+    lstep2: TLayout;
+    step2hash: TLabel;
+    lblStep2: TLabel;
+    step2info: TLabel;
+    lblBlockInfoPow: TLabel;
+    scBlockList: TScrollBox;
+    andNanoState: TTimer;
+    lsendData: TLayout;
+    nanoReport: TButton;
+    Label1: TLabel;
+    pendingBlockList: TMemo;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1078,6 +1097,8 @@ type
     procedure btnSysAppsTap(Sender: TObject; const Point: TPointF);
     procedure tutanotaIconTap(Sender: TObject; const Point: TPointF);
     procedure freeotpiconTap(Sender: TObject; const Point: TPointF);
+    procedure andNanoStateTimer(Sender: TObject);
+    procedure nanoReportClick(Sender: TObject);
     // procedure DayNightModeSwitchClick(Sender: TObject);
 
   private
@@ -1150,7 +1171,7 @@ type
     receiveAddress, wvAddress: TCopyableAddressPanel;
     newCryptoVertScrollBox: TNewCryptoVertScrollBox;
 
-    SendFromLabel ,SendToLabel : Tlabel;
+    SendFromLabel, SendToLabel: TLabel;
 
   var
     cpTimeout: int64;
@@ -1243,6 +1264,135 @@ begin
 
 end;
 
+procedure TfrmHome.andNanoStateTimer(Sender: TObject);
+var
+  ts: TStringList;
+  miningOwner: string;
+  miningStep: string;
+  speed: string;
+  realSpeed, i: Integer;
+  isMine: Boolean;
+begin
+  if WVPow.visible = false then
+    exit;
+  if CurrentCryptoCurrency = nil then
+    exit;
+  if CurrentCoin = nil then
+    exit;
+  realSpeed := 0;
+  lblStep1.StyledSettings := lblStep1.StyledSettings - [TStyledSetting.style] -
+    [TStyledSetting.FontColor];
+  lblStep2.StyledSettings := lblStep2.StyledSettings - [TStyledSetting.style] -
+    [TStyledSetting.FontColor];
+  ts := TStringList.Create;
+  try
+    if FileExists(HOME_PATH + '/andMining') then
+    begin
+      ts.LoadFromFile(HOME_PATH + '/andMining');
+      if ts.Count <> 3 then
+        exit;
+
+      miningOwner := ts.Strings[0];
+      miningStep := ts.Strings[1];
+      speed := ts.Strings[2];
+      realSpeed := StrToIntDef(speed, 0) div 1000;
+      pendingBlockList.Text := '';
+      if Length(NanoCoin(CurrentCoin).pendingChain) > 0 then
+        for i := 0 to Length(NanoCoin(CurrentCoin).pendingChain) - 1 do
+          pendingBlockList.Text := pendingBlockList.Text + #13#10 +
+            NanoCoin(CurrentCoin).pendingChain[i].Hash;
+
+      // Miner is in idle state, all work done
+      isMine := (lowercase(nano_keyFromAccount(CurrentCoin.addr))
+        = lowercase(miningOwner)) or
+        (lowercase(CurrentCoin.addr) = lowercase(miningOwner)) or
+        NanoCoin(CurrentCoin).inChain(miningOwner) or NanoCoin(CurrentCoin)
+        .inHistory(miningOwner);
+      if (miningStep = '4') or ((Length(NanoCoin(CurrentCoin).pendingChain) = 0)
+        and (not isMine)) then
+      begin
+        lblStep1.Text := 'FINISHED';
+        lblStep1.FontColor := TAlphaColorRec.Lime;
+        step1hash.Text := '';
+        lblStep2.Text := 'FINISHED';
+        step2hash.Text := '';
+        lblStep2.FontColor := TAlphaColorRec.Lime;
+        exit;
+      end;
+      if CurrentCoin <> nil then
+        if isMine then
+        begin
+          if miningStep = '1' then
+          begin
+            lblStep1.Text := 'WORKING';
+            lblStep1.FontColor := TAlphaColorRec.Orange;
+            step1hash.Text := inttostr(realSpeed) + ' kHash/s';
+            lblStep2.Text := 'PENDING';
+            lblStep2.FontColor := TAlphaColorRec.Red;
+            step2hash.Text := 'Waiting...';
+          end;
+          if miningStep = '2' then
+          begin
+            lblStep1.Text := 'FINISHED';
+            lblStep1.FontColor := TAlphaColorRec.Lime;
+            step1hash.Text := '';
+            lblStep2.Text := 'WORKING';
+            lblStep2.FontColor := TAlphaColorRec.Orange;
+            step2hash.Text := inttostr(realSpeed) + ' kHash/s';
+          end;
+          if (miningStep = '3') and
+            (NanoCoin(CurrentCoin).inHistory(miningOwner) or
+            (lowercase(nano_keyFromAccount(CurrentCoin.addr))
+            = lowercase(miningOwner))) then
+          begin
+            lblStep1.Text := 'FINISHED';
+            lblStep1.FontColor := TAlphaColorRec.Lime;
+            step1hash.Text := '';
+            lblStep2.Text := 'WORKING';
+            lblStep2.FontColor := TAlphaColorRec.Orange;
+            step2hash.Text := inttostr(realSpeed) + ' kHash/s';
+          end;
+          if (miningStep = '3') and (NanoCoin(CurrentCoin).inChain(miningOwner))
+          then
+          begin
+            lblStep1.Text := 'WORKING';
+            lblStep1.FontColor := TAlphaColorRec.Orange;
+            step1hash.Text := inttostr(realSpeed) + ' kHash/s';
+            lblStep2.Text := 'PENDING';
+            lblStep2.FontColor := TAlphaColorRec.Red;
+            step2hash.Text := 'Waiting...';
+          end;
+        end
+        else
+        begin
+          lblStep1.Text := 'PENDING';
+          lblStep1.FontColor := TAlphaColorRec.Red;
+          step1hash.Text := 'Waiting...';
+          lblStep2.Text := 'PENDING';
+          lblStep2.FontColor := TAlphaColorRec.Red;
+          step2hash.Text := 'Waiting...';
+
+        end;
+
+    end
+    else
+    begin
+      lblStep1.Text := 'PENDING';
+      lblStep1.FontColor := TAlphaColorRec.Red;
+      step1hash.Text := 'Waiting...';
+      lblStep2.Text := 'PENDING';
+      lblStep2.FontColor := TAlphaColorRec.Red;
+      step2hash.Text := 'Waiting...';
+
+    end;
+  except
+    on E: Exception do
+    begin
+    end;
+  end;
+  ts.Free;
+end;
+
 procedure TfrmHome.AddTokenFromWalletList(Sender: TObject);
 begin
 
@@ -1273,12 +1423,12 @@ end;
 
 procedure TfrmHome.freeotpiconClick(Sender: TObject);
 begin
-    executeAndroid('am start -n org.fedorahosted.freeotp/.MainActivity');
+  executeAndroid('am start -n org.fedorahosted.freeotp/.MainActivity');
 end;
 
 procedure TfrmHome.freeotpiconTap(Sender: TObject; const Point: TPointF);
 begin
-    executeAndroid('am start -n org.fedorahosted.freeotp/.MainActivity');
+  executeAndroid('am start -n org.fedorahosted.freeotp/.MainActivity');
 end;
 
 procedure TfrmHome.ExceptionHandler(Sender: TObject; E: Exception);
@@ -1390,7 +1540,7 @@ begin
 
   CreateNewAccountAndSave(RestoreNameEdit.Text, RestorePasswordEdit.Text,
     MasterSeed, true);
-  //startFullfillingKeypool(MasterSeed); // instruction exist in CreateNewAccountAndSave
+  // startFullfillingKeypool(MasterSeed); // instruction exist in CreateNewAccountAndSave
   // frmHome.FormShow(nil);
   tced := '';
   MasterSeed := '';
@@ -1507,14 +1657,14 @@ end;
 procedure TfrmHome.closeOrganizeView(Sender: TObject);
 begin
 
-  DeleteAccountLayout.Visible := false;
-  Layout1.Visible := true;
-  SearchInDashBrdButton.Visible := true;
-  NewCryptoLayout.Visible := true;
-  WalletList.Visible := true;
-  OrganizeList.Visible := false;
-  BackToBalanceViewLayout.Visible := false;
-  btnSync.Visible := true;
+  DeleteAccountLayout.visible := false;
+  Layout1.visible := true;
+  SearchInDashBrdButton.visible := true;
+  NewCryptoLayout.visible := true;
+  WalletList.visible := true;
+  OrganizeList.visible := false;
+  BackToBalanceViewLayout.visible := false;
+  btnSync.visible := true;
 end;
 
 procedure TfrmHome.DeleteAccountButtonClick(Sender: TObject);
@@ -1618,7 +1768,7 @@ begin
   strArray := TJavaObjectArray<JString>.Create(1);
   strArray.Items[0] := TAndroidHelper.StringToJString(permName);
   SharedActivity.requestPermissions(strArray, 1337);
-  strArray.free;
+  strArray.Free;
 
 end; {$ELSE}
 
@@ -1743,11 +1893,11 @@ begin
   if decimals = Low(PerByteFeeEdit.Text) - 1 then
   begin
     decimals := 0;
-    b := strToIntdef(PerByteFeeEdit.Text, 0);
+    b := StrToIntDef(PerByteFeeEdit.Text, 0);
   end
   else
   begin
-    decimals := length(PerByteFeeEdit.Text) - decimals;
+    decimals := Length(PerByteFeeEdit.Text) - decimals;
     b := StrFloatToBigInteger(PerByteFeeEdit.Text, decimals);
   end;
 
@@ -1964,13 +2114,13 @@ var
   i: Integer;
 begin
   failure := false;
-  if length(RestoreFromFileAccountNameEdit.Text) < 3 then
+  if Length(RestoreFromFileAccountNameEdit.Text) < 3 then
   begin
     popupWindow.Create(dictionary('AccountNameTooShort'));
     exit;
   end;
 
-  for i := 0 to length(AccountsNames) - 1 do
+  for i := 0 to Length(AccountsNames) - 1 do
   begin
 
     if AccountsNames[i].name = RestoreFromFileAccountNameEdit.Text then
@@ -2065,9 +2215,9 @@ procedure TfrmHome.BCHCashAddrButtonClick(Sender: TObject);
 begin
   receiveAddress.Text := bitcoinCashAddressToCashAddress
     (TwalletInfo(CurrentCryptoCurrency).addr);
-  if LeftStr(receiveAddress.Text, length('bitcoincash:')) = 'bitcoincash:' then
+  if LeftStr(receiveAddress.Text, Length('bitcoincash:')) = 'bitcoincash:' then
     receiveAddress.Text := RightStr(receiveAddress.Text,
-      length(receiveAddress.Text) - length('bitcoincash:'));
+      Length(receiveAddress.Text) - Length('bitcoincash:'));
   receiveAddress.Text := cutEveryNChar(cutAddressEveryNChar,
     receiveAddress.Text, ' ');
 end;
@@ -2099,9 +2249,9 @@ begin
 
   hex := base58.Decode58(CurrentCryptoCurrency.addr);
   temp := hexatoTbytes(hex);
-  SetLength(intArr, length(temp));
+  SetLength(intArr, Length(temp));
 
-  for i := 0 to length(temp) - 1 do
+  for i := 0 to Length(temp) - 1 do
   begin
     intArr[i] := Integer(temp[i]);
   end;
@@ -2247,18 +2397,18 @@ end;
 
 procedure TfrmHome.AccountsListPanelExit(Sender: TObject);
 begin
-  AccountsListPanel.Visible := false;
+  AccountsListPanel.visible := false;
 end;
 
 procedure TfrmHome.AccountsListPanelMouseLeave(Sender: TObject);
 begin
-  AccountsListPanel.Visible := false;
+  AccountsListPanel.visible := false;
 end;
 
 procedure TfrmHome.AddNewAccountButtonClick(Sender: TObject);
 begin
   switchTab(PageControl, AddAccount);
-  AccountsListPanel.Visible := false;
+  AccountsListPanel.visible := false;
 end;
 
 procedure TfrmHome.AddNewCryptoBackButtonClick(Sender: TObject);
@@ -2337,12 +2487,12 @@ end;
 
 procedure TfrmHome.tutanotaIconClick(Sender: TObject);
 begin
-    executeAndroid('am start -n de.tutao.tutanota/.MainActivity');
+  executeAndroid('am start -n de.tutao.tutanota/.MainActivity');
 end;
 
 procedure TfrmHome.tutanotaIconTap(Sender: TObject; const Point: TPointF);
 begin
-executeAndroid('am start -n de.tutao.tutanota/.MainActivity');
+  executeAndroid('am start -n de.tutao.tutanota/.MainActivity');
 end;
 
 procedure TfrmHome.UnlockNanoImageClick(Sender: TObject);
@@ -2728,7 +2878,7 @@ begin
   begin
     ts.Add(TButton(ConfirmedSeedFlowLayout.Children[i]).Text);
   end;
-  if LowerCase(fromMnemonic(ts)) = LowerCase(tempMasterSeed) then
+  if lowercase(fromMnemonic(ts)) = lowercase(tempMasterSeed) then
   begin
     tempMasterSeed := '';
     userSavedSeed := true;
@@ -2740,7 +2890,7 @@ begin
     popupWindow.Create(dictionary('SeedsArentSame'));
   end;
 
-  ts.free;
+  ts.Free;
 
 end;
 
@@ -2752,14 +2902,14 @@ end;
 procedure TfrmHome.RestoreOtherOpiotnsButtonClick(Sender: TObject);
 begin
 
-  if restoreOptionsLayout.Visible = false then
+  if restoreOptionsLayout.visible = false then
   begin
-    restoreOptionsLayout.Visible := true;
+    restoreOptionsLayout.visible := true;
     OtherOptionsImage.Bitmap := arrowList.Source[1].MultiResBitmap[0].Bitmap;
   end
   else
   begin
-    restoreOptionsLayout.Visible := false;
+    restoreOptionsLayout.visible := false;
     OtherOptionsImage.Bitmap := arrowList.Source[0].MultiResBitmap[0].Bitmap;
   end;
 
@@ -2796,10 +2946,10 @@ end;
 
 procedure TfrmHome.LoadAccountPanelClick(Sender: TObject);
 begin
-  if OrganizeList.Visible = true then
+  if OrganizeList.visible = true then
     closeOrganizeView(nil);
   LoadCurrentAccount(TfmxObject(Sender).TagString);
-  AccountsListPanel.Visible := false;
+  AccountsListPanel.visible := false;
 end;
 
 procedure TfrmHome.LoadMoreClick(Sender: TObject);
@@ -2829,6 +2979,36 @@ begin
   nano_DoMine(CryptoCurrency(NanoUnlocker.TagObject), passwordForDecrypt.Text);
   passwordForDecrypt.Text := '';
   PageControl.ActiveTab := walletView;
+end;
+
+procedure TfrmHome.nanoReportClick(Sender: TObject);
+var
+  ts: TStringList;
+  msg,url: string;
+begin
+url:='https://hodlernode.net/nano.php';
+  msg := 'Something went wrong, an exception occured';
+  ts := TStringList.Create;
+  try
+    if FileExists(System.IOUTils.TPath.GetDocumentsPath + '/miner.log') then
+    begin
+      ts.LoadFromFile(System.IOUtils.TPath.GetDocumentsPath + '/miner.log');
+      postDataOverHTTP(url, 'report=' + HTTPEncode(ts.Text),
+        false, false);
+      msg := 'Report sent, thank you';
+    end
+    else
+    begin
+      msg := 'There is nothing to send, log is empty';
+    end;
+  except
+    on E: Exception do
+    begin
+    end;
+  end;
+
+  ts.Free;
+  popupWindow.Create(msg);
 end;
 
 procedure TfrmHome.NanoUnlockerClick(Sender: TObject);
@@ -2883,7 +3063,7 @@ end;
 
 procedure TfrmHome.CSBackButtonClick(Sender: TObject);
 begin
-  if not ConfirmSendClaimCoinButton.Visible then
+  if not ConfirmSendClaimCoinButton.visible then
     switchTab(PageControl, walletView)
   else
     switchTab(PageControl, HOME_TABITEM)
@@ -2978,10 +3158,10 @@ end;
 procedure TfrmHome.ShowHideAdvancedButtonClick(Sender: TObject);
 begin
 
-  TransactionFeeLayout.Visible := not TransactionFeeLayout.Visible;
+  TransactionFeeLayout.visible := not TransactionFeeLayout.visible;
   TransactionFeeLayout.Position.Y := ShowAdvancedLayout.Position.Y + 1;
 
-  if TransactionFeeLayout.Visible then
+  if TransactionFeeLayout.visible then
   begin
     arrowImg.Bitmap := arrowList.Source[1].MultiResBitmap[0].Bitmap;
     ShowHideAdvancedButton.Text := dictionary('HideAdvanced');
@@ -3021,7 +3201,7 @@ end;
 
 procedure TfrmHome.btnRestoreWalletClick(Sender: TObject);
 begin
-  privTCAPanel2.Visible := false;
+  privTCAPanel2.visible := false;
   notPrivTCA2.IsChecked := false;
   switchTab(PageControl, RestoreOptions);
 end;
@@ -3111,12 +3291,12 @@ end;
 
 procedure TfrmHome.btnSysAppsClick(Sender: TObject);
 begin
- PageControl.ActiveTab:=SysAppsTab;
+  PageControl.ActiveTab := SysAppsTab;
 end;
 
 procedure TfrmHome.btnSysAppsTap(Sender: TObject; const Point: TPointF);
 begin
- PageControl.ActiveTab:=SysAppsTab;
+  PageControl.ActiveTab := SysAppsTab;
 end;
 
 /// Show available ETH wallet during adding new Token
@@ -3130,7 +3310,7 @@ begin
   createAddWalletView();
 
   HexPrivKeyDefaultRadioButton.IsChecked := true;
-  Layout31.Visible := false;
+  Layout31.visible := false;
   WIFEdit.Text := '';
   // PrivateKeySettingsLayout.Visible := false;
   NewCoinDescriptionEdit.Text := '';
@@ -3149,7 +3329,8 @@ procedure TfrmHome.btnBackClick(Sender: TObject);
 begin
   CurrentCryptoCurrency := nil;
   CurrentCoin := nil;
-  switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
+  PageControl.ActiveTab := TTabItem(frmHome.FindComponent('dashbrd'));
+  // switchTab(PageControl, TTabItem(frmHome.FindComponent('dashbrd')));
 end;
 
 procedure TfrmHome.btnQRBackClick(Sender: TObject);
@@ -3271,8 +3452,8 @@ end;
 
 procedure TfrmHome.HeaderLabelClick(Sender: TObject);
 begin
-if SYSTEM_APP then
-PageControl.ActiveTab:=SysAppsTab;
+  if SYSTEM_APP then
+    PageControl.ActiveTab := SysAppsTab;
 end;
 
 procedure TfrmHome.RestoreFromEncryptedQR(Sender: TObject);
@@ -3305,10 +3486,10 @@ end;
 
 procedure TfrmHome.FormCreate(Sender: TObject);
 begin
-
+  WVPow.visible := false;
   try
     AccountRelated.InitializeHodler;
-    AccountsListPanel.Visible := false;
+    AccountsListPanel.visible := false;
   except
     on E: Exception do
       showmessage(E.Message);
@@ -3375,7 +3556,7 @@ begin
     TPlatformServices.Current.SupportsPlatformService
       (IFMXVirtualKeyboardService, IInterface(FService));
 
-    if (FService <> nil) and (TVirtualKeyboardState.Visible
+    if (FService <> nil) and (TVirtualKeyboardState.visible
       in FService.VirtualKeyBoardState) then
     begin
       Key := 0;
@@ -3471,18 +3652,18 @@ begin
         switchTab(PageControl, Settings);
       end
       else if (PageControl.ActiveTab = TTabItem(frmHome.FindComponent('dashbrd')
-        )) and (AccountsListPanel.Visible) then
+        )) and (AccountsListPanel.visible) then
       begin
-        AccountsListPanel.Visible := false;
+        AccountsListPanel.visible := false;
         exit;
       end
       else if ((PageControl.ActiveTab = TTabItem(frmHome.FindComponent
-        ('dashbrd'))) and OrganizeList.Visible) then
+        ('dashbrd'))) and OrganizeList.visible) then
       begin
         closeOrganizeView(nil);
       end
       else if ((PageControl.ActiveTab = TTabItem(frmHome.FindComponent
-        ('dashbrd'))) and (not AccountsListPanel.Visible)) or
+        ('dashbrd'))) and (not AccountsListPanel.visible)) or
         (CurrentAccount = nil) then
       begin
 
@@ -3557,7 +3738,7 @@ begin
     ScrollBox.Height := frmHome.Height;
     frmHome.ScrollBox.Align := TAlignLayout.Client;
     frmHome.PageControl.Align := TAlignLayout.Client;
-    KeyBoardLayout.Visible := false;
+    KeyBoardLayout.visible := false;
     KeyBoardLayout.Height := 0;
     frmHome.PageControl.Repaint;
     frmHome.ScrollBox.Align := TAlignLayout.Client;
@@ -3613,7 +3794,7 @@ begin
     KeyBoardLayout.Align := TAlignLayout.Bottom;
     frmHome.ScrollBox.Content.Height := frmHome.Height + X;
     PageControl.Height := frmHome.Height + X;
-    KeyBoardLayout.Visible := true;
+    KeyBoardLayout.visible := true;
     frmHome.realign;
     frmHome.PageControl.Repaint;
     KeyBoardLayout.Repaint;
@@ -3680,7 +3861,7 @@ begin
   if MotionSensor.Sensor <> nil then
     with MotionSensor.Sensor do
     begin
-      trngBuffer := trngBuffer + floattoStr(Speed);
+      trngBuffer := trngBuffer + floattoStr(speed);
       trngBuffer := trngBuffer + floattoStr(AccelerationX);
       trngBuffer := trngBuffer + floattoStr(AccelerationY);
       trngBuffer := trngBuffer + floattoStr(AccelerationZ);
@@ -3793,7 +3974,7 @@ end;
 procedure TfrmHome.ImportPrivateKeyButtonClick(Sender: TObject);
 begin
   HexPrivKeyDefaultRadioButton.IsChecked := true;
-  Layout31.Visible := false;
+  Layout31.visible := false;
   WIFEdit.Text := '';
 
   switchTab(PageControl, ImportPrivKeyCoinList);
@@ -3868,8 +4049,8 @@ end;
 
 procedure TfrmHome.SwitchVWPrecision(Sender: TObject);
 begin
-  BalancePanel.Visible := not flagWVPrecision;
-  LongBalancePanel.Visible := flagWVPrecision;
+  BalancePanel.visible := not flagWVPrecision;
+  LongBalancePanel.visible := flagWVPrecision;
   flagWVPrecision := not flagWVPrecision;
 end;
 
@@ -3973,7 +4154,7 @@ end;
 procedure TfrmHome.SearchEditChange(Sender: TObject);
 begin
   if SearchEdit.Text = '' then
-    SearchEdit.Visible := false;
+    SearchEdit.visible := false;
 end;
 
 procedure TfrmHome.SearchEditChangeTracking(Sender: TObject);
@@ -4000,12 +4181,12 @@ begin
         if (AnsiContainsText(TLabel(panel.Children[i]).Text, SearchEdit.Text))
           or (SearchEdit.Text = '') then
         begin
-          panel.Visible := true;
+          panel.visible := true;
           break;
         end
         else
         begin
-          panel.Visible := false;
+          panel.visible := false;
           break;
         end;
 
@@ -4019,8 +4200,8 @@ end;
 
 procedure TfrmHome.SearchEditExit(Sender: TObject);
 begin
-  SearchEdit.Visible := false;
-  TLabel(frmHome.FindComponent('HeaderLabel')).Visible := true;
+  SearchEdit.visible := false;
+  TLabel(frmHome.FindComponent('HeaderLabel')).visible := true;
   SearchEdit.Text := '';
 end;
 
@@ -4062,7 +4243,7 @@ end;
 
 procedure TfrmHome.SendWalletFile(Sender: TObject);
 begin
-    BackupRelated.SendHSB;
+  BackupRelated.SendHSB;
 end;
 
 procedure TfrmHome.SendWalletFileButtonClick(Sender: TObject);
@@ -4112,8 +4293,8 @@ end;
 
 procedure TfrmHome.SearchInDashBrdButtonClick(Sender: TObject);
 begin
-  TLabel(frmHome.FindComponent('HeaderLabel')).Visible := false;
-  SearchEdit.Visible := true;
+  TLabel(frmHome.FindComponent('HeaderLabel')).visible := false;
+  SearchEdit.visible := true;
   SetFocused(SearchEdit);
 end;
 
@@ -4151,7 +4332,7 @@ begin
     IInterface(FService));
 
   if (FService = nil) or
-    ((FService <> nil) and (not(TVirtualKeyboardState.Visible
+    ((FService <> nil) and (not(TVirtualKeyboardState.visible
     in FService.VirtualKeyBoardState))) then
     ScrollBox.ViewportPosition := PointF(0, 0);
 {$ENDIF}
