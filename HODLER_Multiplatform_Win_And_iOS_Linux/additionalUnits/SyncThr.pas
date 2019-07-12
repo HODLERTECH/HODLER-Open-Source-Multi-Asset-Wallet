@@ -3,9 +3,10 @@ unit SyncThr;
 interface
 
 uses
-  System.classes, System.sysutils, FMX.Controls, FMX.StdCtrls, FMX.dialogs, AccountData,
-  StrUtils, WalletStructureData, CryptoCurrencyData, tokenData, System.SyncObjs, {$IFDEF ANDROID}uNanoPowAs,{$ENDIF}
-
+  System.classes, System.sysutils, FMX.Controls, FMX.StdCtrls, FMX.dialogs,
+  AccountData,
+  StrUtils, WalletStructureData, CryptoCurrencyData, tokenData, System.SyncObjs,
+{$IFDEF ANDROID}uNanoPowAs, {$ENDIF}
   JSON, System.TimeSpan, System.Diagnostics, Nano{$IFDEF MSWINDOWS},
   Winapi.ShellAPI, Winapi.Windows{$ENDIF}{$IFDEF LINUX}, Posix.Stdlib{$ENDIF};
 
@@ -55,7 +56,7 @@ procedure parseTokenHistory(text: AnsiString; T: Token);
 
 function segwitParameters(wi: TWalletInfo): AnsiString;
 
-procedure SynchronizeCryptoCurrency(ac : Account ; cc: cryptoCurrency);
+procedure SynchronizeCryptoCurrency(ac: Account; cc: cryptoCurrency);
 
 procedure parseBalances(s: AnsiString; var wd: TWalletInfo);
 
@@ -65,21 +66,24 @@ procedure SynchronizeAll();
 
 procedure parseDataForERC20(s: string; var wd: Token);
 
-function batchSync(ac : Account ;var coinid: Integer; X: Integer = -1): string;
+function batchSync(ac: Account; var coinid: Integer; X: Integer = -1): string;
 
-//procedure verifyKeypool();
+// procedure verifyKeypool();
 
-procedure verifyKeypoolNoThread(ac : account ; wi: TWalletInfo);
+procedure verifyKeypoolNoThread(ac: Account; wi: TWalletInfo);
 
-procedure parseSync(ac : Account ; s: string; verifyKeypool: boolean = false);
+procedure parseSync(ac: Account; s: string; verifyKeypool: boolean = false);
 
-function keypoolIsUsed(ac : account ; var coinid: Integer; X: Integer = -1): string;
+function keypoolIsUsed(ac: Account; var coinid: Integer;
+  X: Integer = -1): string;
 
-//var
-  //semaphore: TLightweightSemaphore;
-  //VerifyKeypoolSemaphore: TLightweightSemaphore;
-  //mutex: TSemaphore;
-var serviceStarted:boolean=false;
+// var
+// semaphore: TLightweightSemaphore;
+// VerifyKeypoolSemaphore: TLightweightSemaphore;
+// mutex: TSemaphore;
+var
+  serviceStarted: boolean = false;
+
 implementation
 
 uses
@@ -111,7 +115,7 @@ begin
     [rfReplaceAll]);
 end;
 
-function batchSync(ac : Account ; var coinid: Integer; X: Integer = -1): string;
+function batchSync(ac: Account; var coinid: Integer; X: Integer = -1): string;
 var
   wi: TWalletInfo;
   i: Integer;
@@ -124,8 +128,8 @@ begin
     if (wi.coin = coinid) then
     begin
       wi.uniq := abs((coinid * 1000) + StrToInt64Def('$5' +
-        Copy(GetStrHashSHA256(ac.name + IntToStr(coinid) +
-        IntToStr(wi.X) + IntToStr(wi.y)), 0, 6), 0) + i); // moreUniq
+        Copy(GetStrHashSHA256(ac.name + IntToStr(coinid) + IntToStr(wi.X) +
+        IntToStr(wi.y)), 0, 6), 0) + i); // moreUniq
       if (wi.inPool = false) or (wi.y >= changeDelimiter) then
       begin
 
@@ -142,7 +146,8 @@ begin
   end;
 end;
 
-function keypoolIsUsed(ac : account ; var coinid: Integer; X: Integer = -1): string;
+function keypoolIsUsed(ac: Account; var coinid: Integer;
+  X: Integer = -1): string;
 var
   wi: TWalletInfo;
   i: Integer;
@@ -158,8 +163,8 @@ begin
     then
     begin
       wi.uniq := abs((coinid * 1000) + StrToInt64Def('$' +
-        Copy(GetStrHashSHA256(ac.name + IntToStr(coinid) +
-        IntToStr(wi.X) + IntToStr(wi.y)), 0, 7), 0) + i); // moreUniq
+        Copy(GetStrHashSHA256(ac.name + IntToStr(coinid) + IntToStr(wi.X) +
+        IntToStr(wi.y)), 0, 7), 0) + i); // moreUniq
 
       if (X <> -1) then
       begin
@@ -176,35 +181,36 @@ end;
 procedure syncNano(var cc: cryptoCurrency; data: AnsiString);
   procedure calcNanoBalances(var nn: NanoCoin);
   var
-    nblock: TNanoBlock;   i:integer;
-    prevAmount,prevUAmount,delta: BigInteger;
+    nblock: TNanoBlock;
+    i: Integer;
+    prevAmount, prevUAmount, delta: BigInteger;
 
   begin
     if Length(nn.pendingChain) = 0 then
       exit;
     prevAmount := nn.confirmed;
     nblock := nn.firstBlock;
-    if not (nblock.balance='') then
-    if BigInteger.Parse(nblock.balance) < prevAmount then
-    begin
-    delta:=(prevAmount - BigInteger.Parse(nblock.balance));
-      nn.confirmed := prevAmount -
-        delta;
-      nn.unconfirmed:= nn.unconfirmed - delta;
-    end;
+    if not(nblock.balance = '') then
+      if BigInteger.Parse(nblock.balance) < prevAmount then
+      begin
+        delta := (prevAmount - BigInteger.Parse(nblock.balance));
+        nn.confirmed := prevAmount - delta;
+        nn.unconfirmed := nn.unconfirmed - delta;
+      end;
 
     repeat
 
-      if BigInteger.Parse(nblock.balance) < prevAmount then begin
+      if BigInteger.Parse(nblock.balance) < prevAmount then
+      begin
         SetLength(nn.history, Length(nn.history) + 1);
-        i:=length(nn.history)-1;
+        i := Length(nn.history) - 1;
         SetLength(nn.history[i].values, 2);
         SetLength(nn.history[i].addresses, 2);
         nn.history[i].values[0] :=
           (prevAmount - BigInteger.Parse(nblock.balance));
         nn.history[i].values[1] := 0;
         nn.history[i].TransactionID := nblock.Hash;
-        nn.history[i].addresses[0] := (nblock.account);
+        nn.history[i].addresses[0] := (nblock.Account);
         nn.history[i].addresses[1] := (nblock.source);
         nn.history[i].data := IntToStr(Length(nn.history) + 1);
         nn.history[i].typ := 'OUT';
@@ -214,17 +220,16 @@ procedure syncNano(var cc: cryptoCurrency; data: AnsiString);
       end;
       prevAmount := BigInteger.Parse(nblock.balance);
 
-      nblock := nn.BlockByPrev(nblock.hash);
-      if not (nblock.balance='') then
-      if BigInteger.Parse(nblock.balance) < prevAmount then
-      begin
-    delta:=(prevAmount - BigInteger.Parse(nblock.balance));
-      nn.confirmed := prevAmount -
-        delta;
-      nn.unconfirmed:= nn.unconfirmed - delta;
-      end;
+      nblock := nn.BlockByPrev(nblock.Hash);
+      if not(nblock.balance = '') then
+        if BigInteger.Parse(nblock.balance) < prevAmount then
+        begin
+          delta := (prevAmount - BigInteger.Parse(nblock.balance));
+          nn.confirmed := prevAmount - delta;
+          nn.unconfirmed := nn.unconfirmed - delta;
+        end;
 
-    until nblock.account = '';
+    until nblock.Account = '';
   end;
 
 var
@@ -238,9 +243,10 @@ var
   err: string;
   pendings: TJsonArray;
   temp: TpendingNanoBlock;
-  psxString: {$IFDEF LINUX64}System.{$ENDIF}AnsiString;   // System.AnsiString nie kompiluje siê na Androidzie
+  psxString: {$IFDEF LINUX64}System.{$ENDIF}AnsiString;
+  // System.AnsiString nie kompiluje siê na Androidzie
 begin
-data:=StringReplace(data,'xrb_','nano_',[rfReplaceAll]);
+  data := StringReplace(data, 'xrb_', 'nano_', [rfReplaceAll]);
 {$IFDEF MSWINDOWS}
   if TOSVersion.Architecture = arIntelX64 then
     ShellExecute(0, 'open', 'NanoPoW64.exe', '',
@@ -254,12 +260,17 @@ data:=StringReplace(data,'xrb_','nano_',[rfReplaceAll]);
   _system(@psxString[1]);
 {$ENDIF}
 {$IFDEF ANDROID}
-if not servicestarted then begin
-if not SYSTEM_APP then
-frmHome.FServiceConnection.StartService('NanoPowAS'); else
-nanoPowAdroidStart();
-servicestarted:=true;
-end;
+  if not serviceStarted then
+  begin
+    if not SYSTEM_APP then
+      frmHome.FServiceConnection.StartService('NanoPowAS')
+    else
+    begin
+      nanoPowAdroidStart();
+    end;
+
+    serviceStarted := True;
+  end;
 {$ENDIF}
   try
 
@@ -307,20 +318,24 @@ end;
             cc.history[i].values[1] := 0;
             // length(hitory.Values) must be the same as length(history.addresses)
             cc.history[i].TransactionID := block.Hash;
-            if block.blocktype = 'send' then begin
+            if block.blocktype = 'send' then
+            begin
               cc.history[i].typ := 'OUT';
-            cc.history[i].addresses[0] := nano_accountFromHexKey(block.destination);
-            cc.history[i].addresses[1] := nano_accountFromHexKey(block.account);
+              cc.history[i].addresses[0] :=
+                nano_accountFromHexKey(block.destination);
+              cc.history[i].addresses[1] :=
+                nano_accountFromHexKey(block.Account);
             end
             else
             begin
               cc.history[i].typ := 'IN';
-              cc.history[i].addresses[0] := nano_accountFromHexKey(block.account);
-            cc.history[i].addresses[1] := {nano_accountFromHexKey}(block.source);
-            end ;
+              cc.history[i].addresses[0] :=
+                nano_accountFromHexKey(block.Account);
+              cc.history[i].addresses[1] := { nano_accountFromHexKey }
+                (block.source);
+            end;
 
             cc.history[i].data := IntToStr(history.Count - 1 - i);
-
 
             cc.history[i].CountValues := cc.history[i].values[0];
             cc.history[i].confirmation := 1;
@@ -331,7 +346,7 @@ end;
     except
       on E: Exception do
       begin
-       err:=E.message;
+        err := E.message;
       end;
     end;
     calcNanoBalances(NanoCoin(cc));
@@ -342,10 +357,11 @@ end;
         begin
           try
             temp.block := nano_buildFromJSON(pendings.Items[(i * 2)
-              ].GetValue<TJSONObject>('data').GetValue('contents').value, '',false,true);
+              ].GetValue<TJSONObject>('data').GetValue('contents').value, '',
+              false, True);
             temp.Hash := pendings.Items[(i * 2) + 1].GetValue<string>('hash');
 
-            if NanoCoin(cc).BlockByLink(temp.Hash).account <> '' then
+            if NanoCoin(cc).BlockByLink(temp.Hash).Account <> '' then
             begin
 
               SetLength(cc.history, Length(cc.history) + 1);
@@ -359,7 +375,7 @@ end;
               // length(hitory.Values) must be the same as length(history.addresses)
               cc.history[i].TransactionID := block.Hash;
               cc.history[i].addresses[0] :=
-                nano_accountFromHexKey(block.account);
+                nano_accountFromHexKey(block.Account);
               cc.history[i].addresses[1] :=
                 nano_accountFromHexKey(block.source);
               cc.history[i].data := IntToStr(history.Count - 1 - i);
@@ -397,9 +413,9 @@ end;
   js.Free;
 end;
 
-procedure parseSync(ac : Account ; s: string; verifyKeypool: boolean = false);
+procedure parseSync(ac: Account; s: string; verifyKeypool: boolean = false);
 
-  function findWDByAddr(ac : Account ; addr: Integer): TWalletInfo;
+  function findWDByAddr(ac: Account; addr: Integer): TWalletInfo;
   var
     wd: TWalletInfo;
   begin
@@ -434,72 +450,76 @@ begin
   try
 
     coinJson := TJSONObject.ParseJSONValue(s) as TJSONObject;
-    if coinJson<>nil then begin
-    if coinJson.Count = 0 then
+    if coinJson <> nil then
     begin
-      coinJson.Free;
-      exit;
-    end;
+      if coinJson.Count = 0 then
+      begin
+        coinJson.Free;
+        exit;
+      end;
 
-    for i := 0 to coinJson.Count - 1 do
-    begin
-
-      {if SyncBalanceThr <> nil then
-              if SyncBalanceThr.Terminated then
-                      begin
-                                coinJson.Free;
-                                          exit;
-                                                  end;}
-
-      wd := nil;
-      JsonPair := coinJson.Pairs[i];
-      wd := findWDByAddr(ac , JsonPair.JsonValue.GetValue<Int64>('wid'));
-
-      if wd = nil then
-        continue;
-
-      if not verifyKeypool then
+      for i := 0 to coinJson.Count - 1 do
       begin
 
-        parseBalances(JsonPair.JsonValue.GetValue<string>('balance'), wd);
-        try
-          parseCoinHistory(JsonPair.JsonValue.GetValue<string>('history'), wd);
-        except
-          on E: Exception do
+        { if SyncBalanceThr <> nil then
+          if SyncBalanceThr.Terminated then
           begin
+          coinJson.Free;
+          exit;
+          end; }
+
+        wd := nil;
+        JsonPair := coinJson.Pairs[i];
+        wd := findWDByAddr(ac, JsonPair.JsonValue.GetValue<Int64>('wid'));
+
+        if wd = nil then
+          continue;
+
+        if not verifyKeypool then
+        begin
+
+          parseBalances(JsonPair.JsonValue.GetValue<string>('balance'), wd);
+          try
+            parseCoinHistory(JsonPair.JsonValue.GetValue<string>
+              ('history'), wd);
+          except
+            on E: Exception do
+            begin
+            end;
+
           end;
 
-        end;
+          wd.UTXO := parseUTXO(JsonPair.JsonValue.GetValue<string>
+            ('utxo'), wd.y);
 
-        wd.UTXO := parseUTXO(JsonPair.JsonValue.GetValue<string>('utxo'), wd.y);
+          if (wd.inPool = True) { or (wd.Y >= changeDelimiter) } then
+            wd.inPool :=
+              trim(JsonPair.JsonValue.GetValue<string>('history')) = '';
 
-        if (wd.inPool = True) { or (wd.Y >= changeDelimiter) } then
-          wd.inPool :=
-            trim(JsonPair.JsonValue.GetValue<string>('history')) = '';
+        end
+        else
+        begin
 
-      end
-      else
-      begin
+          if (wd.inPool = True) { or (wd.Y >= changeDelimiter) } then
+            wd.inPool :=
+              trim(JsonPair.JsonValue.GetValue<string>('history')) = '';
 
-        if (wd.inPool = True) { or (wd.Y >= changeDelimiter) } then
-          wd.inPool :=
-            trim(JsonPair.JsonValue.GetValue<string>('history')) = '';
+          try
+            parseCoinHistory(JsonPair.JsonValue.GetValue<string>
+              ('history'), wd);
+          except
+            on E: Exception do
+            begin
+            end;
 
-        try
-          parseCoinHistory(JsonPair.JsonValue.GetValue<string>('history'), wd);
-        except
-          on E: Exception do
-          begin
           end;
 
         end;
 
       end;
 
+      coinJson.Free;
     end;
-
-    coinJson.Free;
-   end;
   except
     on E: Exception do
       err := (E.message);
@@ -513,21 +533,25 @@ var
   licz: Integer;
   batched: string;
 begin
- try
-  currentAccount.AsyncSynchronize;
- except on E:Exception do begin end; end;
+  try
+    currentaccount.AsyncSynchronize;
+  except
+    on E: Exception do
+    begin
+    end;
+  end;
 
   currentaccount.firstSync := false;
 
 end;
 
-procedure verifyKeypoolNoThread(ac : Account ; wi: TWalletInfo);
+procedure verifyKeypoolNoThread(ac: Account; wi: TWalletInfo);
 var
   wd: TObject;
   url, s: string;
 begin
   try
-    s := keypoolIsUsed(ac , wi.coin);
+    s := keypoolIsUsed(ac, wi.coin);
     klog('386: s=' + s);
     url := HODLER_URL + '/batchSync0.3.2.php?keypool=true&coin=' + availablecoin
       [wi.coin].name;
@@ -535,7 +559,7 @@ begin
       exit();
     s := postDataOverHTTP(url, s, false, True);
     klog('392: s=' + s);
-    parseSync(ac , s, True);
+    parseSync(ac, s, True);
 
   except
     on E: Exception do
@@ -546,9 +570,7 @@ begin
 
 end;
 
-
-
-procedure SynchronizeCryptoCurrency(ac : Account ; cc: cryptoCurrency);
+procedure SynchronizeCryptoCurrency(ac: Account; cc: cryptoCurrency);
 var
   data, url, s: string;
 begin
@@ -562,11 +584,11 @@ begin
         begin
           url := HODLER_URL + '/batchSync0.3.2.php?coin=' + availablecoin
             [TWalletInfo(cc).coin].name;
-          s := postDataOverHTTP(url, batchSync(ac , TWalletInfo(cc).coin,
+          s := postDataOverHTTP(url, batchSync(ac, TWalletInfo(cc).coin,
             TWalletInfo(cc).X), false, True);
           if TThread.CurrentThread.CheckTerminated then
             exit();
-          parseSync(ac , s);
+          parseSync(ac, s);
         end;
       4:
         begin
@@ -642,11 +664,11 @@ begin
       if Token(cc).lastBlock = 0 then
         Token(cc).lastBlock := getHighestBlockNumber(Token(cc));
 
-      {TThread.Synchronize(nil,
+      { TThread.Synchronize(nil,
         procedure
         begin
-          frmHome.RefreshProgressBar.value := 30;
-        end);     }
+        frmHome.RefreshProgressBar.value := 30;
+        end); }
 
       parseDataForERC20(data, Token(cc));
     end
@@ -688,10 +710,10 @@ begin
     if Token(cc).lastBlock = 0 then
       Token(cc).lastBlock := getHighestBlockNumber(Token(cc));
 
-   { TThread.Synchronize(nil,
+    { TThread.Synchronize(nil,
       procedure
       begin
-        frmHome.RefreshProgressBar.value := 30;
+      frmHome.RefreshProgressBar.value := 30;
       end); }
 
     parseDataForERC20(data, Token(cc));
@@ -767,31 +789,30 @@ begin
   with frmHome do
   begin
 
-
     if TThread.CurrentThread.CheckTerminated then
       exit();
 
     TThread.Synchronize(nil,
       procedure
       begin
-         frmHome.Caption:='xxx';
+        frmHome.Caption := 'xxx';
 
 
-        //RefreshWalletView.Enabled := false;
-        //RefreshProgressBar.Visible := True;
-        //btnSync.Enabled := false;
-        //DashBrdProgressBar.Visible := True;
+        // RefreshWalletView.Enabled := false;
+        // RefreshProgressBar.Visible := True;
+        // btnSync.Enabled := false;
+        // DashBrdProgressBar.Visible := True;
 
-        //btnSync.Repaint();
+        // btnSync.Repaint();
 
       end);
 
-    //refreshGlobalImage.Start;
+    // refreshGlobalImage.Start;
 
-    CurrentAccount.AsyncSynchronize();
+    currentaccount.AsyncSynchronize();
 
     try
-      //SynchronizeAll();
+      // SynchronizeAll();
     except
       on E: Exception do
       begin
@@ -839,16 +860,15 @@ begin
         TLabel(frmHome.FindComponent('globalCurrency')).text := '         ' +
           currencyConverter.symbol;
 
-        {RefreshWalletView.Enabled := True;
-        RefreshProgressBar.Visible := false;
-        btnSync.Enabled := True;
-        DashBrdProgressBar.Visible := false;}
+        { RefreshWalletView.Enabled := True;
+          RefreshProgressBar.Visible := false;
+          btnSync.Enabled := True;
+          DashBrdProgressBar.Visible := false; }
 
-        //btnSync.Repaint();
+        // btnSync.Repaint();
 
-        //DebugRefreshTime.text := 'last refresh: ' +
-        //  Formatdatetime('dd mmm yyyy hh:mm:ss', now);
-
+        // DebugRefreshTime.text := 'last refresh: ' +
+        // Formatdatetime('dd mmm yyyy hh:mm:ss', now);
 
         // txHistory.Enabled := true;
         // txHistory.EndUpdate;
@@ -1138,13 +1158,13 @@ begin
   ts.Free;
 end;
 
-{function isOurAddress(adr: string; coinid: Integer): boolean;
-var
+{ function isOurAddress(adr: string; coinid: Integer): boolean;
+  var
   twi: TWalletInfo;
-var
+  var
   segwit, cash, compatible, legacy: AnsiString;
   pub: AnsiString;
-begin
+  begin
 
   result := false;
 
@@ -1153,28 +1173,28 @@ begin
   for twi in CurrentAccount.myCoins do
   begin
 
-    if twi.coin <> coinid then
-      continue;
+  if twi.coin <> coinid then
+  continue;
 
-    if TThread.CurrentThread.CheckTerminated then
-    begin
-      exit();
-    end;
-    pub := twi.pub;
+  if TThread.CurrentThread.CheckTerminated then
+  begin
+  exit();
+  end;
+  pub := twi.pub;
 
-    segwit := lowercase(generatep2wpkh(pub, availablecoin[coinid].hrp));
-    compatible := lowercase(generatep2sh(pub, availablecoin[coinid].p2sh));
-    legacy := generatep2pkh(pub, availablecoin[coinid].p2pk);
+  segwit := lowercase(generatep2wpkh(pub, availablecoin[coinid].hrp));
+  compatible := lowercase(generatep2sh(pub, availablecoin[coinid].p2sh));
+  legacy := generatep2pkh(pub, availablecoin[coinid].p2pk);
 
-    cash := lowercase(bitcoinCashAddressToCashAddress(legacy, false));
-    legacy := lowercase(legacy);
-    cash := StringReplace(cash, 'bitcoincash:', '', [rfReplaceAll]);
-    if ((adr) = segwit) or (adr = compatible) or (adr = legacy) or (adr = cash)
-    then
-      exit(True);
+  cash := lowercase(bitcoinCashAddressToCashAddress(legacy, false));
+  legacy := lowercase(legacy);
+  cash := StringReplace(cash, 'bitcoincash:', '', [rfReplaceAll]);
+  if ((adr) = segwit) or (adr = compatible) or (adr = legacy) or (adr = cash)
+  then
+  exit(True);
 
   end;
-end;  }
+  end; }
 
 function checkTxType(tx: TxHistoryResult; coinid: Integer): Integer;
 var
@@ -1188,11 +1208,11 @@ begin
 
   for i := 0 to strToIntdef(tx.inputsCount, 0) - 1 do
 
-    if currentAccount.isOurAddress(tx.inputAddresses[i], coinid) then
+    if currentaccount.isOurAddress(tx.inputAddresses[i], coinid) then
       Inc(ourInputs);
 
   for i := 0 to strToIntdef(tx.outputsCount, 0) - 1 do
-    if currentAccount.isOurAddress(tx.outputs[i].address, coinid) then
+    if currentaccount.isOurAddress(tx.outputs[i].address, coinid) then
       Inc(ourOutputs);
 
   if (ourInputs >= 1) and (ourOutputs = 0) then
@@ -1306,8 +1326,8 @@ begin
       if (transHist.typ = 'OUT') then
       begin
 
-        if (CurrentAccount.isOurAddress(parsedTx[i].outputs[j].address, wallet.coin) = True)
-        then
+        if (currentaccount.isOurAddress(parsedTx[i].outputs[j].address,
+          wallet.coin) = True) then
           transHist.values[j] := StrFloatToBigInteger('0.000000',
             availablecoin[wallet.coin].decimals)
         else
@@ -1321,8 +1341,8 @@ begin
       if (transHist.typ = 'IN') or (transHist.typ = 'INTERNAL') then
       begin
 
-        if not(CurrentAccount.isOurAddress(parsedTx[i].outputs[j].address, wallet.coin) = True)
-        then
+        if not(currentaccount.isOurAddress(parsedTx[i].outputs[j].address,
+          wallet.coin) = True) then
           transHist.values[j] := StrFloatToBigInteger('0.000000',
             availablecoin[wallet.coin].decimals)
         else
@@ -1343,4 +1363,3 @@ begin
 end;
 
 end.
-

@@ -853,7 +853,7 @@ type
     FMXChromium1: TFMXChromium;
     Button2: TButton;
     Timer1: TTimer;
-    Panel1: TPanel;
+    MapPanel: TPanel;
     Button3: TButton;
     Layout38: TLayout;
 
@@ -1159,6 +1159,8 @@ type
       const browser: ICefBrowser);
     procedure FMXChromium1Close(Sender: TObject; const browser: ICefBrowser;
       var aAction: TCefCloseBrowserAction);
+    procedure FormPaint(Sender: TObject; Canvas: TCanvas; const ARect: TRectF);
+    procedure MapPanelResize(Sender: TObject);
     // procedure UserReportSendLogsSwitchClick(Sender: TObject);
 
   private
@@ -1166,6 +1168,10 @@ type
 
     procedure GetImage();
     procedure MineNano(Sender: TObject);
+
+  protected
+    procedure WMMove(var Msg: TWMMove); message WM_MOVE;
+
   public
     { Public declarations }
 
@@ -1179,6 +1185,9 @@ type
 {$IFDEF ANDROID}
     procedure RegisterDelphiNativeMethods();
 {$ENDIF}
+
+
+
     procedure OpenWalletView(Sender: TObject; const Point: TPointF); overload;
     procedure OpenWalletView(Sender: TObject); overload;
 
@@ -1232,6 +1241,7 @@ type
     procedure DoDestroyParent;
     procedure NotifyMoveOrResizeStarted;
     function  PostCustomMessage(aMessage : cardinal; wParam : cardinal = 0; lParam : integer = 0) : boolean;
+    procedure ResizeMap;
 
   protected
    FMXWindowParent : TFMXWindowParent;
@@ -1261,10 +1271,15 @@ type
     curWU: Integer;
     CurrencyConverter: tCurrencyConverter;
 
+    OldPosition : TPoint;
+
   end;
 
 procedure requestForPermission(permName: AnsiString);
 procedure switchTab(TabControl: TTabControl; TabItem: TTabItem);
+
+
+
 // procedure LoadCurrentAccount(name: AnsiString);
 // procedure reloadWalletView;
 
@@ -1317,7 +1332,11 @@ resourcestring
 var
   LATEST_VERSION: AnsiString;
 
+var
+  HookHandle: Cardinal;
+
 implementation
+
 
 uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
   TokenData, AccountRelated, QRRelated, FileManagerRelated, WalletViewRelated,
@@ -1335,6 +1354,8 @@ uses ECCObj, Bitcoin, Ethereum, secp256k1, uSeedCreation, coindata, base58,
 {$R *.Surface.fmx MSWINDOWS}
 {$IFNDEF MSWINDOWS}
 
+
+
 function ShellExecute(a: Integer; b, c: String; d, E: PWideChar;
   f: Integer): Integer;
 begin
@@ -1343,6 +1364,36 @@ end;
 
 {$ENDIF}
 
+function mouseHook(nCode: Integer; wParam: wParam; lParam: lParam): LRESULT; stdcall;
+var
+  temp : Tpoint;
+begin
+  //frmhome.HeaderLabel.Text := IntToStr(ncode);
+
+
+  with frmhome do
+  begin
+
+    temp := ClientToScreen( TPointF.Zero ).Round;
+    if (OldPosition.X <> temp.X) or (OldPosition.y <> temp.y) then
+    begin
+      ResizeMap();
+      //showmessage('dupa');
+
+    end;
+
+    OldPosition := temp;
+
+  end;
+
+  Result := CallNextHookEx(HookHandle, nCode, wParam, lParam);
+end;
+
+procedure Tfrmhome.WMMove(var Msg: TWMMove);
+begin
+  inherited;
+  HeaderLabel.Text := IntToStr(Msg.XPos);
+end;
 
 procedure TfrmHome.NotifyMoveOrResizeStarted;
 begin
@@ -1533,6 +1584,11 @@ end;
 procedure TfrmHome.MainScreenQRButtonClick(Sender: TObject);
 begin
   QRRelated.scanQR(Sender);
+end;
+
+procedure TfrmHome.MapPanelResize(Sender: TObject);
+begin
+  resizeMap();
 end;
 
 procedure TfrmHome.OpenWalletViewFromYWalletList(Sender: TObject);
@@ -3111,41 +3167,47 @@ begin
   aAction := cbaDelay;
 end;
 
+procedure Tfrmhome.ResizeMap;
+var
+  temp : TPointF;
+begin
+
+  if (FMXWindowParent <> nil) then
+  begin
+    temp := frmhome.ClientToScreen( Point(0,0) );
+    FMXWindowParent.SetBounds( round( mapPanel.AbsoluteRect.Left ) , round( 0 ) ,
+      round(  mapPanel.AbsoluteRect.Right - mapPanel.AbsoluteRect.Left  )  , round(  mapPanel.AbsoluteRect.Bottom ) );
+
+
+  end;
+
+end;
+
 procedure TfrmHome.Button2Click(Sender: TObject);
 var
   TempHandle : HWND;
   TempRect   : System.Types.TRect;
   TempClientRect : TRectF;
 begin
-  //PostCustomMessage(CEF_AFTERCREATED);
-
-  //FcanClose := false;
 
   if (FMXWindowParent = nil) then
     begin
       FMXWindowParent := TFMXWindowParent.CreateNew(nil);
+      FMXWindowParent.SetDesign(true);
 
-      //fmxwindowparent.re
-      //fmxWindowParent.BorderIcons := [];
-      //fmxwindowparent.
-      //fMXWindowParent.Parent := self;
-      FMXWindowParent.Reparent(self.Handle);
-      //FMXWindowParent.Reparent(self.Handle);
+      //FMXWindowParent.BorderStyle := TFmxFormBorderStyle.None;
+      FMXWindowParent.Parent := MapPanel;
+      FMXWindowParent.Reparent(Handle);
 
+      //fmxwindowParent.FormStyle := TFormStyle.StayOnTop;
+      //fmxwindowParent.StyleName := '';
 
-      //FMXWindowParent.parent := Panel1;
-      //fmxWindowparent
-
-      FMXWindowParent.SetBounds( 5 , 5 , frmhome.Bounds.Width-10 , frmhome.Bounds.Height-50 );
-      //fmxWindowParent.BorderStyle := TFmxFormBorderStyle.none;
+      ResizeMap();
       FMXWindowParent.Show;
-
 
       if not(FMXChromium1.Initialized) then
       begin
 
-
-        //repeat
           TempHandle      := FmxHandleToHWND(FMXWindowParent.Handle);
           TempClientRect  := FMXWindowParent.ClientRect;
           TempRect.Left   := round(TempClientRect.Left);
@@ -3154,11 +3216,11 @@ begin
           TempRect.Bottom := round(TempClientRect.Bottom);
 
           FMXChromium1.DefaultUrl := 'http://89.70.32.60:57320/test';
-        if not(FMXChromium1.CreateBrowser( temphandle , temprect )) then
-          Timer1.Enabled := True;
-                     FMXChromium1.LoadURL('http://89.70.32.60:57320/test');
-      end;
 
+          if not(FMXChromium1.CreateBrowser( temphandle , temprect )) then
+          Timer1.Enabled := True;
+          FMXChromium1.LoadURL('http://89.70.32.60:57320/test');
+      end;
 
     end
     else
@@ -3166,13 +3228,7 @@ begin
       FMXWindowParent.Visible := not FMXWindowParent.Visible;
     end;
 
-
-  
-    //FMXChromium1.WasHidden(False);
-    //FMXChromium1.SendFocusEvent(True);
-
-
-    //switchtab(pageControl , MapTabItem );
+    switchTab( pageControl , MapTabItem );
 
 end;
 
@@ -3951,6 +4007,12 @@ begin
 {$ENDIF}
   AccountRelated.InitializeHodler;
   BackupInfoLabel.Position.Y := 100000;
+
+  //if HookHandle = 0 then
+  //begin
+    //HookHandle := SetWindowsHookEx( WH_MOUSE_LL , @mouseHook , hInstance , 0 );
+  //end;
+
 end;
 
 procedure TfrmHome.FormFocusChanged(Sender: TObject);
@@ -4113,12 +4175,57 @@ end;
 
 procedure TfrmHome.FormMouseMove(Sender: TObject; Shift: TShiftState;
 X, Y: Single);
+var
+  temp : TPoint;
 begin
   if gathener.Enabled then
 
     trngBuffer := trngBuffer + floattoStr(X * random($FFFF) * trngBufferCounter)
       + floattoStr(Y * random($FFFF)) + IntToStr(random($FFFFFFFF)) +
       ISecureRandomBuffer;
+
+
+
+  temp := ClientToScreen( TPointF.Zero ).Round;
+
+  //if OldPosition <> nil then
+  //begin
+
+    if (OldPosition.X <> temp.X) or (OldPosition.y <> temp.y) then
+    begin
+      ResizeMap();
+      //showmessage('dupa');
+
+    end;
+
+
+  //end;
+  OldPosition := temp;
+
+
+end;
+
+procedure TfrmHome.FormPaint(Sender: TObject; Canvas: TCanvas;
+  const ARect: TRectF);
+var
+  temp : TPoint;
+begin
+
+  (*temp := ClientToScreen( TPointF.Zero ).Round;
+
+  //if OldPosition <> nil then
+  //begin
+
+    if (OldPosition.X <> temp.X) or (OldPosition.y <> temp.y) then
+    begin
+      ResizeMap();
+      showmessage('dupa');
+
+    end;
+
+
+  //end;
+  OldPosition := temp;  *)
 end;
 
 procedure TfrmHome.FormResize(Sender: TObject);
@@ -4130,6 +4237,8 @@ begin
     if frmHome.ClientHeight <> 567 then
     frmHome.ClientHeight := 567;
     {$ENDIF} *)
+    ResizeMap();
+
 end;
 
 procedure TfrmHome.FormShow(Sender: TObject);

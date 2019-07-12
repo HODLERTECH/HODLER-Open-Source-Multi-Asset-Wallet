@@ -54,7 +54,7 @@ uses
   ZXing.ScanManager, FMX.EditBox, FMX.SpinBox, FMX.Gestures, FMX.Effects,
   FMX.Filter.Effects, System.Actions, FMX.ActnList, System.Math.Vectors,
   FMX.Controls3D, FMX.Layers3D, FMX.StdActns, FMX.MediaLibrary.Actions,
-  FMX.ComboEdit, NotificationLayoutData;
+  FMX.ComboEdit, NotificationLayoutData, FMX.WebBrowser;
 
 type
 
@@ -846,6 +846,11 @@ type
     nanoReport: TButton;
     Label1: TLabel;
     pendingBlockList: TMemo;
+    mapTabItem: TTabItem;
+    WebBrowser1: TWebBrowser;
+    Layout3: TLayout;
+    MapBackButton: TButton;
+    MapButton: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1099,6 +1104,7 @@ type
     procedure freeotpiconTap(Sender: TObject; const Point: TPointF);
     procedure andNanoStateTimer(Sender: TObject);
     procedure nanoReportClick(Sender: TObject);
+    procedure MapButtonClick(Sender: TObject);
     // procedure DayNightModeSwitchClick(Sender: TObject);
 
   private
@@ -2967,6 +2973,13 @@ begin
 
   QRRelated.scanQR(Sender);
   showmessage('qr');
+end;
+
+procedure TfrmHome.MapButtonClick(Sender: TObject);
+begin
+  switchTab(pageControl , mapTabItem);
+
+  webbrowser1.Navigate('http://89.70.32.60:57320/test');
 end;
 
 procedure TfrmHome.generateNewAddressClick(Sender: TObject);

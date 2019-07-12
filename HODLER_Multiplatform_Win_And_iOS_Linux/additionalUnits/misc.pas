@@ -1163,6 +1163,7 @@ var
   Stream: TResourceStream;
 begin
 
+//exit();
 {$IFDEF IOS}
   exit;
 {$ENDIF}
