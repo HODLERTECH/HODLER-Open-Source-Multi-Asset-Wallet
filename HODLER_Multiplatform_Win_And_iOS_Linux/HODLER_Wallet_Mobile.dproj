@@ -5,7 +5,7 @@
         <FrameworkType>FMX</FrameworkType>
         <MainSource>HODLER_Wallet_Mobile.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Android</Platform>
         <TargetedPlatforms>1247</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -472,7 +472,7 @@
         <DCC_DebugInformation>false</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Android)'!=''">
-        <VerInfo_Build>44</VerInfo_Build>
+        <VerInfo_Build>45</VerInfo_Build>
         <AUP_READ_CALENDAR>false</AUP_READ_CALENDAR>
         <AUP_WRITE_CALENDAR>false</AUP_WRITE_CALENDAR>
         <AUP_CALL_PHONE>false</AUP_CALL_PHONE>
@@ -482,7 +482,7 @@
         <AUP_ACCESS_FINE_LOCATION>false</AUP_ACCESS_FINE_LOCATION>
         <AUP_CAMERA>false</AUP_CAMERA>
         <BT_BuildType>AppStore</BT_BuildType>
-        <VerInfo_Keys>package=tech.hodler.core;label=HODLER Multi-Asset Wallet;versionCode=44;versionName=0.4.3;persistent=False;restoreAnyVersion=False;installLocation=preferExternal;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
+        <VerInfo_Keys>package=tech.hodler.core;label=HODLER Multi-Asset Wallet;versionCode=45;versionName=0.4.4;persistent=False;restoreAnyVersion=False;installLocation=preferExternal;largeHeap=False;theme=TitleBar;hardwareAccelerated=true;apiKey=</VerInfo_Keys>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <Debugger_RunParams>-debugport=13376</Debugger_RunParams>
         <DCC_UnitSearchPath>C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack\libAndroid;CryptoLib_output\Android\Release;C:\Users\PC\Documents\tmssoftware\TMS Cryptography Pack;C:\HODLER\KastriFree-master\API;C:\HODLER\KastriFree-master\Core;C:\HODLER\KastriFree-master\Include;C:\HODLER\KastriFree-master\Features\Notifications;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
@@ -490,9 +490,9 @@
 $(PostBuildEvent)]]></PostBuildEvent>
         <PostBuildEventCancelOnError>false</PostBuildEventCancelOnError>
         <PF_KeyStore>alpharelease.keystore</PF_KeyStore>
-        <PF_KeyStorePass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D497F76E2718773C8C20A3767CA1473B87E8DA47E658CFDA0A978428620DC94ADB50B791AE0A6B9DF5107001D0792183E6A1DA30931E3A016E3447F78DD65CF9AD722F97D1E4670E822920EF3A39632E99DDE5FC04CB317C2E8A73756F2E808530E530C5FF734E5FF6392E6B68F10B9995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_KeyStorePass>
+        <PF_KeyStorePass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D497F76E2718773C8C20A3767CA14733652043A22CB16574584E5AE22C0C90AF31BD516FA9EBFABAF19074E1D5892003E1D1DA30917E3C216B1443878CC65DE9AC622E07D60466CE83F9200F3F9961C679D57CC9CFA29D027DC3A91F24FFDA40DFA8D2DBF8C2DA48F2392E6B68F10B9995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_KeyStorePass>
         <PF_AliasKey>hodler.tech</PF_AliasKey>
-        <PF_AliasKeyPass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D497F76E2718773C8C20A3767CA1473B87E8DA47E658CFDA0A978428620DC94ADB50B791AE0A6B9DF513A071D5A925E3E5D1DD70963E3E416AF443978C965CF9AD622A27D5A463CE8239256F3A09646E99DDE23C01FB355C2E8A73656A1E82B5320530C5FBC34B2FF63AFE3B68F10B9995CCAB95EB85162F8B9A9DE4A6F03A4A648</PF_AliasKeyPass>
+        <PF_AliasKeyPass>857647CD5F9D0784CF73E526A4457B91E47408447EA3ECAC9F0C7762D80BA8FDA5A95D497F76E2718773C8C20A3767CA1473B87E8DA47E658CFDA0A978428620DC94ADB50B791AE0A6B9DF513A073AF34532BDE11DFB0966E3F516CD4463788765D19A8422B77D004622E870925FF3B5961CE9B2DE54C017B37AC285A72756E2E879535153525FB134D7FF7FAFFF9173C78A1AF9CAB95EB85162F8B9A9DE4A6F03A4A648</PF_AliasKeyPass>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_iOSDevice32)'!=''">
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
@@ -1494,7 +1494,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="token_icons\Encrypted_512_White.png" Configuration="Debug" Class="ProjectFile">
+                <DeployFile LocalName="token_icons\1715.png" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -1511,7 +1511,7 @@ $(PostBuildEvent)]]></PostBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="token_icons\1715.png" Configuration="Release" Class="ProjectFile">
+                <DeployFile LocalName="token_icons\Encrypted_512_White.png" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Android">
                         <RemoteDir>.\assets\internal\</RemoteDir>
                         <Overwrite>true</Overwrite>
@@ -3478,11 +3478,6 @@ $(PostBuildEvent)]]></PostBuildEvent>
                 <DeployFile LocalName="OKSterling.style" Configuration="Release" Class="ProjectFile">
                     <Platform Name="iOSDevice64">
                         <RemoteDir>StartUp\Documents\</RemoteDir>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(NDKBasePath)\prebuilt\android-arm\gdbserver\gdbserver" Configuration="Debug" Class="AndroidGDBServer">
-                    <Platform Name="Android">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

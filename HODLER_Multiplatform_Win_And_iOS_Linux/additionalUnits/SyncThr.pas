@@ -256,8 +256,8 @@ data:=StringReplace(data,'xrb_','nano_',[rfReplaceAll]);
 {$IFDEF ANDROID}
 if not servicestarted then begin
 if not SYSTEM_APP then
-frmHome.FServiceConnection.StartService('NanoPowAS'); else
-nanoPowAdroidStart();
+frmHome.FServiceConnection.StartService('NanoPowAS');// else
+//nanoPowAdroidStart();
 servicestarted:=true;
 end;
 {$ENDIF}

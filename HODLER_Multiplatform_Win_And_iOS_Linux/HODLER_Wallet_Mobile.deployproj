@@ -2422,18 +2422,18 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="token_icons\Encrypted_512_White.png" Condition="'$(Config)'=='Debug'">
+        <DeployFile Include="token_icons\1715.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
-            <RemoteName>Encrypted_512_White.png</RemoteName>
+            <RemoteName>1715.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="token_icons\1715.png" Condition="'$(Config)'=='Release'">
+        <DeployFile Include="token_icons\Encrypted_512_White.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
-            <RemoteName>1715.png</RemoteName>
+            <RemoteName>Encrypted_512_White.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>

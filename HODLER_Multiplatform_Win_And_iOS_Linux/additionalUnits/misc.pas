@@ -349,7 +349,7 @@ const
   API_PRIV = {$I 'private_key.key' };
 
 resourcestring
-  CURRENT_VERSION = '0.4.3';
+  CURRENT_VERSION = '0.4.4';
 
 var
   AccountsNames: array of AccountItem;
