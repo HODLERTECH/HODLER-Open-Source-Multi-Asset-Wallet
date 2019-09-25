@@ -74,7 +74,7 @@ begin
 
       while not temp.Started do
       begin
-        Application.ProcessMessages;
+       // Application.ProcessMessages;
         sleep(10);
 
       end;
@@ -82,6 +82,7 @@ begin
       temp.Terminate;
     except
       on E: Exception do
+      writeln('TK '+E.message);
     end;
 
   end;
@@ -141,6 +142,7 @@ begin
       except
       on E: Exception do
       begin
+           writeln('TK '+E.message);
        map.Remove(map.ToArray[i].Key);
       end;
 
@@ -157,10 +159,11 @@ begin
   while map.Count <> 0 do
   begin
     try
-      Application.ProcessMessages;
+    //  Application.ProcessMessages;
     except
       on E: Exception do
       begin
+           writeln('TK '+E.message);
       end;
 
     end;
@@ -188,8 +191,13 @@ end;
 
 procedure ThreadKindergarten.TCareThread.Execute;
 begin
-
+ try
   FProc();
+except on E:Exception do begin
+       writeln('TK Fproc '+E.message);
+end;
+
+ end;
   owner.removeThread(index);
 
 end;

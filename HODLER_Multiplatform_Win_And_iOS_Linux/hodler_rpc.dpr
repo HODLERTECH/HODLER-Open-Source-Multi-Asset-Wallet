@@ -1,19 +1,17 @@
-program HODLER_Wallet_Desktop;
+program hodler_rpc;
 
-{$R *.dres}
+{$APPTYPE CONSOLE}
+
+{$R *.res}
 
 uses
-  {$IF DEFINED(DEBUG) AND DEFINED(MSWINDOWS)}
-  fastMM4,
-  {$ENDIF }
-  SafeDLLPath in 'SafeDLLPath.pas',
-  System.StartUpCopy,
   FMX.Forms,
   FMX.Styles,
   FontService,
   System.Classes,
   SysUtils,
   IOUtils,
+  idHTTPServer,
   uHome in 'homeWindows\uHome.pas' {frmHome},
   misc in 'additionalUnits\misc.pas',
   base58 in 'additionalUnits\base58.pas',
@@ -158,88 +156,96 @@ uses
   HistoryPanelData in 'components\HistoryPanelData.pas',
   CoinPanelData in 'components\CoinPanelData.pas',
   Spendable in 'coinCode\Spendable.pas',
+  IdContext,
+  idCustomHTTPServer,
+  IdTCPConnection,
+  IdTCPClient,
+  IdHTTP,
+  IdBaseComponent,
+  IdComponent,
+  IdCustomTCPServer,
+  IdMultipartFormData,
+  IdHeaderList,
+  IdMessageCoder,
+  IdMessageCoderMIME,
+  IdMessage,
+  IdGlobalProtocols,
+  IdStream,
+  IdGlobal,
   JSONRPCApi in 'API\JSONRPCApi.pas';
 
-{$R *.res}
+type methodHolder = class(TObject)
+  public
+  procedure getRef(AContext: TIdContext;
+ARequestInfo: TIdHTTPRequestInfo;
+AResponseInfo:
+TIdHTTPResponseInfo);
+end;
+function parseJSONRPC(data:string):string;
+begin
+  writeln('data='+data);
+  result:=commandHandler(data);
+end;
 
+procedure methodHolder.getRef(AContext: TIdContext; ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
 var
-  H: THandle;
-{$IF DEFINED(LINUX)}    err:string;
-var lockFile:TFilestream;
-lAction: sigaction_t;
-function linuxCanLock:boolean;
+   AForm : TStringList;
+   Stream : TStream;
+   S : string;
+
 begin
-result:=false;
-try
- lockFile := TFilestream.Create( TPath.GetDocumentsPath+'/.hlock', fmCreate or fmOpenRead or fmShareExclusive );
-except on E:Exception do begin exit(false); end; end;
-result:=true;
+   if ARequestInfo.Command = 'POST' then
+      begin
+        AResponseInfo.ContentText := parseJSONRPC(ARequestInfo.UnparsedParams);
+      end
+   else
+      begin
+         try
+            AResponseInfo.ContentText := '{"id": 0, "jsonrpc":"2.0", "error": "unknown method", "result": null}';
+         finally
+
+         end;
+      end
 end;
-procedure SignalHandler(SigNum: Integer); cdecl;
-var i:integer;
-err:string;
-begin
-i:=signum;
-err:=inttostr(i);
+var rpcServer:TidHTTPServer;
 
+
+
+procedure startServer();
+var
+mH:methodHolder;
+begin
+mH:=methodHolder.Create;
+rpcServer:=TIdHTTPServer.Create(nil);
+rpcServer.DefaultPort:=8181;
+rpcServer.Active:=true;
+
+rpcServer.OnCommandGet:=mH.getRef;
 end;
-{$ENDIF}
+
+
 begin
-
-{$IF NOT DEFINED(LINUX)}
-
-  Application.OnException := frmhome.ExceptionHandler;
-  VKAutoShowMode := TVKAutoShowMode.Never;
-{
- FMX.Types.GlobalUseDX := true;
-//  FMX.Types.GlobalUseGPUCanvas:=true;
-  GlobalUseDXInDX9Mode := true;
-//  GlobalUseDXSoftware := true;
-  FMX.Types.GlobalDisableFocusEffect := true;
-  }
-//Recovered from 0.4.0, removes crash for QR Codes
-  FMX.Types.GlobalUseDX := true;
-
-  GlobalUseDXInDX9Mode := true;
-  GlobalUseDXSoftware := true;
-  FMX.Types.GlobalDisableFocusEffect := true;
-
-  H := CreateMutex(nil, False, 'HODLERTECHMUTEX');
-  if (H <> 0) and (GetLastError <> ERROR_ALREADY_EXISTS) then
-  begin
-    try
+{$DEFINE LINUX}
+  try
+  writeln('Initialize Hodler');
+TThread.CreateAnonymousThread(procedure begin
       Application.Initialize;
 
       Application.FormFactor.Orientations := [TFormOrientation.Portrait];
       Application.CreateForm(TfrmHome, frmhome);
+      writeln('xxxx');
       Application.Run;
-    finally
-      ReleaseMutex(H);
-    end;
+      end).Start;
+      sleep(2000);
+   writeln('Home path: '+HOME_PATH);
+   writeln('Form state: '+BoolToStr(frmHome.shown));
+   writeln('Starting JSONRPC API');
+   startServer();
+   repeat
+   sleep(100);
+   until (true=false);
+  except
+    on E: Exception do
+      Writeln(E.ClassName, ': ', E.Message);
   end;
-  CloseHandle(H);
-{$ENDIF}
-{$IF DEFINED(LINUX)}
-try
-if not linuxCanLock then halt(2);
-
-lAction._u.sa_handler:=SignalHandler;
-sigaction(4,@lAction,nil);
-sigaction(5,@lAction,nil);
-sigaction(6,@lAction,nil);
-//sigaction(11,@lAction,nil);
-sigaction(13,@lAction,nil);
-
-  Application.Initialize;
-
-  Application.FormFactor.Orientations := [TFormOrientation.Portrait];
-  Application.CreateForm(TfrmHome, frmhome);
-  Application.Run;
-  except on E:Exception do begin
-  err:=E.Message;
-  end; end;
-
-{$ENDIF}
-
 end.
-

@@ -170,7 +170,7 @@ var
     debugString: AnsiString;
   begin
     i := 0;
-    result := 5;
+    result := 50;
     SetLength(arr, CurrentAccount.countWalletBy(TWalletInfo(self.crypto).coin));
     for wd in CurrentAccount.myCoins do
     begin

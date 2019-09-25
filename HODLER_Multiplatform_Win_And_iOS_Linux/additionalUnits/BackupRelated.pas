@@ -1000,14 +1000,18 @@ begin
       wd.decimals);
     PrivateKeyAddressInfoLabel.Text := wd.addr;
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
- if length(lblPrivateKey.Text) <> 0 then   lblPrivateKey.Text := cutEveryNChar(length(lblPrivateKey.Text) div 2,
+try
+    lblPrivateKey.Text := cutEveryNChar(length(lblPrivateKey.Text) div 2,
       lblPrivateKey.Text, #13#10);
     if wd.coin <> 8 then
-   if length(lblWIFKey.Text)<>0 then   lblWIFKey.Text := cutEveryNChar(length(lblWIFKey.Text) div 2,
+      lblWIFKey.Text := cutEveryNChar(length(lblWIFKey.Text) div 2,
         lblWIFKey.Text, #13#10)
     else
 if (wd.Y = 0) then
       lblWIFKey.Text := '';
+except on E:Exception do begin
+  //
+end;
 {$ENDIF}
     bitmap := StrToQRBitmap(removeSpace(lblPrivateKey.Text));
     PrivKeyQRImage.bitmap.Assign(bitmap);

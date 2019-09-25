@@ -18,6 +18,9 @@
         <Projects Include="NanoPoWAndroidService\NanoPowAS.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="hodler_rpc.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -71,14 +74,23 @@
     <Target Name="NanoPowAS:Make">
         <MSBuild Projects="NanoPoWAndroidService\NanoPowAS.dproj" Targets="Make"/>
     </Target>
+    <Target Name="hodler_rpc">
+        <MSBuild Projects="hodler_rpc.dproj"/>
+    </Target>
+    <Target Name="hodler_rpc:Clean">
+        <MSBuild Projects="hodler_rpc.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="hodler_rpc:Make">
+        <MSBuild Projects="hodler_rpc.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="HODLER_Wallet_Desktop;HODLER_Wallet_Mobile;CryptoLib;NanoMiner64;NanoPowAS"/>
+        <CallTarget Targets="HODLER_Wallet_Desktop;HODLER_Wallet_Mobile;CryptoLib;NanoMiner64;NanoPowAS;hodler_rpc"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="HODLER_Wallet_Desktop:Clean;HODLER_Wallet_Mobile:Clean;CryptoLib:Clean;NanoMiner64:Clean;NanoPowAS:Clean"/>
+        <CallTarget Targets="HODLER_Wallet_Desktop:Clean;HODLER_Wallet_Mobile:Clean;CryptoLib:Clean;NanoMiner64:Clean;NanoPowAS:Clean;hodler_rpc:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="HODLER_Wallet_Desktop:Make;HODLER_Wallet_Mobile:Make;CryptoLib:Make;NanoMiner64:Make;NanoPowAS:Make"/>
+        <CallTarget Targets="HODLER_Wallet_Desktop:Make;HODLER_Wallet_Mobile:Make;CryptoLib:Make;NanoMiner64:Make;NanoPowAS:Make;hodler_rpc:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

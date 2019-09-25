@@ -241,7 +241,7 @@ var
           reloadWalletView;
           {$IFDEF ANDROID}
           if CurrentCoin.coin=8 then
-           if not SYSTEM_APP then frmHome.WVTabControl.ActiveTab:=frmHome.WVPow;
+           {if not SYSTEM_APP then }frmHome.WVTabControl.ActiveTab:=frmHome.WVPow;
 
           {$ENDIF}
         end;

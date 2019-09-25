@@ -2211,11 +2211,11 @@ begin
 
   if frmhome.PageControl.ActiveTab = HOME_TABITEM then
     frmhome.WVTabControl.ActiveTab := frmhome.WVBalance;
-
-  frmhome.BalanceTextLayout.Width := frmhome.topInfoUnconfirmed.Canvas.TextWidth
-    (frmhome.topInfoUnconfirmed.Text) * 1.25;
-  frmhome.btnWVShare.Width :=
-    Max(48, frmhome.btnWVShare.Canvas.TextWidth(frmhome.btnWVShare.Text) * 1.1);
+ //  RPC!
+ // frmhome.BalanceTextLayout.Width := frmhome.topInfoUnconfirmed.Canvas.TextWidth
+ //   (frmhome.topInfoUnconfirmed.Text) * 1.25;
+ // frmhome.btnWVShare.Width :=
+ //   Max(48, frmhome.btnWVShare.Canvas.TextWidth(frmhome.btnWVShare.Text) * 1.1);
 
   frmhome.AutomaticFeeRadio.IsChecked := true;
   frmhome.TopInfoConfirmedValue.Text := ' Calculating...';
@@ -2820,7 +2820,7 @@ begin
       Amount := StrFloatToBigInteger(wvAmount.Text,
         CurrentCryptoCurrency.decimals);
 
-    if { (not isEthereum) and } (not isTokenTransfer) then
+    if (not isTokenTransfer) then
     begin
       if Amount + tempFee > (currentAccount.aggregateBalances(CurrentCoin)
         .confirmed) then

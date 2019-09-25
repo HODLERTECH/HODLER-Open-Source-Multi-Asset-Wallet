@@ -121,9 +121,9 @@ procedure Account.refreshGUI();
 begin
   if self = currentAccount then
   begin
-
-  //frmhome.refreshGlobalImage.Start;
-  refreshGlobalFiat();
+exit;
+    // frmhome.refreshGlobalImage.Start;
+    refreshGlobalFiat();
 
     TThread.Synchronize(TThread.CurrentThread,
       procedure
@@ -158,7 +158,7 @@ begin
         hideEmptyWallets(nil);
 
       end);
-    //frmhome.refreshGlobalImage.Stop;
+    // frmhome.refreshGlobalImage.Stop;
   end;
 end;
 
@@ -318,159 +318,115 @@ var
   i: Integer;
   licz: Integer;
   batched: string;
-  dataTemp:AnsiString;
+  dataTemp: AnsiString;
 begin
 
-
- if self = currentAccount then
-  begin
-    frmhome.refreshGlobalImage.Start;
-  end;
+  try
+    if self = currentAccount then
+    begin
+    end;
     dataTemp := getDataOverHTTP(HODLER_URL + 'fiat.php');
     synchronizeCurrencyValue(dataTemp);
     dataTemp := getDataOverHTTP(HODLER_URL + 'fees.php');
     synchronizeDefaultFees(dataTemp);
-  for i in [0, 1, 2, 3, 4, 5, 6, 7] do
-  begin
-    // if TThread.CurrentThread.CheckTerminated then
-    // exit();
-    mutex.Acquire();
-
-    SynchronizeThreadGuardian.CreateAnonymousThread(
-      procedure
-      var
-        id: Integer;
-        wi: TWalletInfo;
-        wd: TObject;
-        url, s: string;
-        temp: String;
-
-      begin
-
-        id := i;
-        mutex.Release();
-
-        semaphore.WaitFor();
-        try
-          if id in [4, 8] then
-          begin
-
-            for wi in myCoins do
-            begin
-
-              // if TThread.CurrentThread.CheckTerminated then
-              // exit();
-
-              if wi.coin in [4, 8] then
-                SynchronizeCryptoCurrency(self, wi);
-            end;
-
-          end
-          else
-          begin
-            s := batchSync(self, id);
-
-            url := HODLER_URL + '/batchSync0.3.2.php?coin=' +
-              availablecoin[id].name;
-
-            temp := postDataOverHTTP(url, s, self.firstSync, True);
-            // if TThread.CurrentThread.CheckTerminated then
-            // exit();
-            parseSync(self, temp);
-          end;
-          // if TThread.CurrentThread.CheckTerminated then
-          // exit();
-
-          { TThread.CurrentThread.Synchronize(nil,
-            procedure
-            begin
-
-            updateBalanceLabels(id);
-            end); }
-        except
-          on E: Exception do
-          begin
-
-          end;
-        end;
-        semaphore.Release();
-
-        { TThread.CurrentThread.Synchronize(nil,
-          procedure
-          begin
-          frmHome.DashBrdProgressBar.value :=
-          frmHome.RefreshProgressBar.value + 1;
-          end); }
-
-      end).Start();
-
-    mutex.Acquire();
-    mutex.Release();
-
-  end;
-  for i := 0 to Length(myTokens) - 1 do
-  begin
-    // if TThread.CurrentThread.CheckTerminated then
-    // exit();
-    mutex.Acquire();
-
-    SynchronizeThreadGuardian.CreateAnonymousThread(
-      procedure
-      var
-        id: Integer;
-      begin
-
-        id := i;
-        mutex.Release();
-
-        semaphore.WaitFor();
-        try
-          // if TThread.CurrentThread.CheckTerminated then
-          // exit();
-          SynchronizeCryptoCurrency(self, myTokens[id]);
-        except
-          on E: Exception do
-          begin
-          end;
-        end;
-        semaphore.Release();
-
-        { TThread.CurrentThread.Synchronize(nil,
-          procedure
-          begin
-          frmHome.DashBrdProgressBar.value :=
-          frmHome.RefreshProgressBar.value + 1;
-          end); }
-
-      end).Start();
-    // if TThread.CurrentThread.CheckTerminated then
-    // exit();
-    mutex.Acquire();
-    mutex.Release();
-
-  end;
-
-  while (semaphore <> nil) and (semaphore.CurrentCount <> 8) do
-  begin
-    // if TThread.CurrentThread.CheckTerminated then
-    // exit();
-    sleep(50);
-  end;
-  { tthread.Synchronize(nil , procedure
+    for i in [0, 1, 2, 3, 4, 5, 6, 7] do
     begin
-    showmessage( floatToStr( globalLoadCacheTime ) );
-    end); }
-  self.firstSync := false;
-  SaveFiles();
+      mutex.Acquire();
 
-  refreshGUI();
+      SynchronizeThreadGuardian.CreateAnonymousThread(
+        procedure
+        var
+          id: Integer;
+          wi: TWalletInfo;
+          wd: TObject;
+          url, s: string;
+          temp: String;
 
-if self = currentAccount then
-  begin
-    frmhome.refreshGlobalImage.Stop;
+        begin
+
+          id := i;
+          mutex.Release();
+
+          semaphore.WaitFor();
+          try
+            if id in [4, 8] then
+            begin
+
+              for wi in myCoins do
+              begin
+                if wi.coin in [4, 8] then
+                  SynchronizeCryptoCurrency(self, wi);
+              end;
+
+            end
+            else
+            begin
+              s := batchSync(self, id);
+
+              url := HODLER_URL + '/batchSync0.3.2.php?coin=' +
+                availablecoin[id].name;
+
+              temp := postDataOverHTTP(url, s, self.firstSync, True);
+              parseSync(self, temp);
+            end;
+            semaphore.Release();
+          except
+            on E: Exception do
+            begin
+              semaphore.Release();
+              writeln(E.Message);
+            end;
+          end;
+
+        end).Start();
+
+      mutex.Acquire();
+      mutex.Release();
+
+    end;
+    for i := 0 to Length(myTokens) - 1 do
+    begin
+      mutex.Acquire();
+
+      SynchronizeThreadGuardian.CreateAnonymousThread(
+        procedure
+        var
+          id: Integer;
+        begin
+
+          id := i;
+          mutex.Release();
+
+          semaphore.WaitFor();
+          try
+            SynchronizeCryptoCurrency(self, myTokens[id]);
+            semaphore.Release();
+          except
+            on E: Exception do
+            begin
+              semaphore.Release();
+              writeln(E.Message);
+            end;
+          end;
+
+        end).Start();
+      mutex.Acquire();
+      mutex.Release();
+
+    end;
+
+    while (semaphore <> nil) and (semaphore.CurrentCount <> 8) do
+    begin
+      sleep(50);
+    end;
+    self.firstSync := false;
+    SaveFiles();
+  except
+    on E: Exception do
+    begin
+      writeln('Sync thread fail ' + E.Message);
+    end;
   end;
-
-
 end;
 
 function Account.TokenExistInETH(TokenID: Integer;
@@ -690,7 +646,15 @@ begin
     result := result + max(0, TWalletInfo(twi).getfiat);
 
 end;
-
+function notInUTXO(arr:TUTXOS;txid:string;n:integer):boolean;
+var utxo:tbitcoinoutput;
+begin
+result:=true;
+for utxo in arr do
+  if utxo.txid = txid then
+  if utxo.n=n then
+   exit(false);
+end;
 function Account.aggregateUTXO(wi: TWalletInfo): TUTXOS;
 var
   twi: cryptoCurrency;
@@ -704,8 +668,11 @@ begin
 
     for i := 0 to Length(TWalletInfo(wi).utxo) - 1 do
     begin
+    if notInUTXO(result, TWalletInfo(wi).utxo[i].txid,TWalletInfo(wi).utxo[i].n) then
+     begin
       SetLength(result, Length(result) + 1);
       result[high(result)] := TWalletInfo(wi).utxo[i];
+     end;
     end;
     exit();
 
@@ -990,6 +957,7 @@ begin
   except
     on E: Exception do
     begin
+      currentAccount := nil;
     end;
   end;
   ts.Free;
@@ -1074,6 +1042,8 @@ begin
   clearArrays();
 
   LoadSeedFile();
+  if currentAccount = nil then
+    exit;
 
   LoadCoinFile();
   LoadTokenFile();
@@ -1141,6 +1111,8 @@ var
     else
       wd := TWalletInfo.Create(strToIntdef(innerID, 0), strToIntdef(X, 0),
         strToIntdef(Y, 0), address, description, strToIntdef(creationTime, 0));
+        if getSibling(wd,strToIntdef(Y, 0))<> nil then exit;
+
     wd.inPool := strToBoolDef(inPool, false);
     wd.pub := publicKey;
     wd.orderInWallet := strToIntdef(panelYPosition, 0);

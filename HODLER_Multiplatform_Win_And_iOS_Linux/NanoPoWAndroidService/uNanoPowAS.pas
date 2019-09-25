@@ -176,7 +176,7 @@ implementation
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
 uses
-  System.DateUtils;
+  System.DateUtils,SystemApp;
 {$R *.dfm}
 
 procedure logd(msg: String);
@@ -909,11 +909,14 @@ begin
       if not isCorrupted then
       begin
         logd('Title change nano_mineBuilt64 (909) ' + miningOwner);
+              if displayNotifications then
+       begin
         DM.JavaService.stopForeground(true);
         LBuilder.setContentTitle(StrToJCharSequence((miningOwner)));
         LBuilder.setContentText(StrToJCharSequence('Working on nano blocks, ' +
           inttostr(Length(cc.pendingChain)) + ' left'));
         DM.JavaService.StartForeground(1995, LBuilder.build);
+       end;
         logd('Post 909');
         miningStep := 1;
         nano_getWork(Block);
@@ -922,7 +925,8 @@ begin
 
         lastHash := StringReplace(s, 'https://www.nanode.co/block/', '',
           [rfReplaceAll]);
-
+              if (lastHash <> 'NOCONNECTION') then
+        begin
         if IsHex(lastHash) = false then
         begin
           if LeftStr(lastHash, Length('Transaction failed')) = 'Transaction failed'
@@ -935,17 +939,29 @@ begin
         if cc.BlockByPrev(lastHash).account = '' then
           if lastHash <> '' then
           begin
+                if displayNotifications then
+       begin
             DM.JavaService.stopForeground(true);
             LBuilder.setContentText
               (StrToJCharSequence('Working on next block hash'));
             DM.JavaService.StartForeground(1995, LBuilder.build);
+       end;
             miningStep := 2;
             findwork(lastHash);
             Result := true;
           end;
       end;
+      end;
     end;
-    cc.removeBlock(Block.Hash);
+    if lastHash <> 'NOCONNECTION' then
+      cc.removeBlock(Block.Hash)
+    else begin
+    OfflineMode(0);
+      sleep(9000);
+      //xHashCOunter:=66666666;
+        lastHash:='';
+      end; // HPRO NO CONNECTION FIXUP, TRY IN 5 sec
+    // THEN, AFTER 5 sec it loads same block, got work and tryin to resend
   until Length(cc.pendingChain) = 0;
 end;
 
@@ -977,12 +993,15 @@ begin
       if pows[i].work = '' then
       begin
         logd('Title change mineAll (977)');
+              if displayNotifications then
+       begin
         DM.JavaService.stopForeground(true);
         LBuilder.setContentTitle
           (StrToJCharSequence('HODLER - Nano PoW Worker'));
         LBuilder.setContentText
           (StrToJCharSequence('Working on next block hash'));
         DM.JavaService.StartForeground(1995, LBuilder.build);
+       end;
         logd('Post 977');
         miningOwner := pows[i].Hash;
         miningStep := 3;
@@ -995,9 +1014,12 @@ begin
       saveMiningState(0);
       workdone := false;
       logd('Title change (995)');
+      if displayNotifications then
+       begin
       DM.JavaService.stopForeground(true);
       LBuilder.setContentText(StrToJCharSequence('Ready to work nano blocks'));
       DM.JavaService.StartForeground(1995, LBuilder.build);
+       end;
       logd('Post 995');
     end;
 
@@ -1034,8 +1056,8 @@ displayNotifications:=false;
     try
       // /system/lib/libsodium.so for HPRO
       // TPath.GetDocumentsPath + '/nacl2/libsodium.so'; for normal app
-     // err := '/system/lib/libsodium.so';
-     err:= TPath.GetDocumentsPath + '/nacl2/libsodium.so';
+      err := '/system/lib/libsodium.so';
+    // err:= TPath.GetDocumentsPath + '/nacl2/libsodium.so';
       if FileExists(err) then
         ex := 'isthere'
       else
@@ -1091,6 +1113,7 @@ var
   api26: Boolean;
 begin
 nanoPowAndroidStart();
+displayNotifications:=true;
   logd(' AndroidServiceStartCommand 863');
   api26 := TAndroidHelperEx.CheckBuildAndTarget(26);
   if api26 then

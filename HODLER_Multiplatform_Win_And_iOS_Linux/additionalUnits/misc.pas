@@ -342,14 +342,14 @@ function checkNanoLegacy(wd: TWalletInfo): boolean;
 
 const
   HODLER_URL: string = 'https://hodler1.nq.pl/';
-  HODLER_URL2: string = 'https://hodlerstream.net/';
-  HODLER_ETH: string = 'https://hodler2.nq.pl/';
-  HODLER_ETH2: string = 'https://hodlernode.net/';
+  HODLER_URL2: string = 'https://hodler1.nq.pl/';
+  HODLER_ETH: string = 'https://hodlernode.net/h2/';
+  HODLER_ETH2: string = 'https://hodlernode.net/h2/';
   API_PUB = {$I 'public_key.key' };
   API_PRIV = {$I 'private_key.key' };
 
 resourcestring
-  CURRENT_VERSION = '0.4.4';
+  CURRENT_VERSION = '0.5';
 
 var
   AccountsNames: array of AccountItem;
@@ -1162,7 +1162,7 @@ var
 var
   Stream: TResourceStream;
 begin
-
+  exit;
 {$IFDEF IOS}
   exit;
 {$ENDIF}
@@ -1746,17 +1746,14 @@ begin
       ac.userSaveSeed := userSaveSeed;
 
       AddAccountToFile(ac);
-
+      ac.SaveFiles;
       ac.Free;
 
-      Tthread.Synchronize(Tthread.currentThread,
-        procedure
-        begin
 
           AccountRelated.LoadCurrentAccount(name);
           frmhome.HideZeroWalletsCheckBox.IsChecked := false;
           AccountRelated.afterInitialize;
-        end);
+
       startFullfillingKeypool(seed);
       wipeAnsiString(seed);
     end);
@@ -3710,11 +3707,11 @@ begin
   list := TStringList.Create();
   try
     list.NameValueSeparator := '#';
-    Tthread.Synchronize(nil,
-      procedure
-      begin
+//    Tthread.Synchronize(nil,
+ //     procedure
+ //     begin
         list.LoadFromFile(CurrentAccount.DirPath + '/cache.dat');
-      end);
+   //   end);
 
     i := list.IndexOfName(Hash);
     if i >= 0 then
@@ -3748,13 +3745,9 @@ begin
     ts := TStringList.Create;
     try
       try
-        Tthread.Synchronize(nil,
-          procedure
-          begin
+
             if FileExists(CurrentAccount.DirPath + '/cache.dat') then
               ts.LoadFromFile(CurrentAccount.DirPath + '/cache.dat');
-          end);
-
         ts.NameValueSeparator := '#';
         conv := TConvert.Create(base64);
         data := conv.StringToFormat(data);
@@ -3763,12 +3756,10 @@ begin
         else
           ts.Add(Hash + '#' + data);
         conv.Free;
-        Tthread.Synchronize(nil,
-          procedure
-          begin
+
             ts.SaveToFile(CurrentAccount.DirPath + '/cache.dat');
 
-          end);
+
 
       except
         on E: Exception do
@@ -3823,7 +3814,7 @@ begin
   end;
   if AnsiContainsStr(aURL, 'bitcoinsv') then
   begin
-    aURL := StringReplace(aURL, 'hodler1.nq.pl', 'hodlerstream.net',
+    aURL := StringReplace(aURL, 'hodler1.nq.pl', 'hodlernode.net',
       [rfReplaceAll]);
   end;
   Result := aURL;
@@ -3912,6 +3903,7 @@ var
   asyncResponse: string;
   ares: iasyncresult;
 begin
+writeln(aUrl);
 if Tthread.currentThread.ExternalThread=false then
   if Tthread.currentThread.CheckTerminated then
     exit();
@@ -3922,16 +3914,17 @@ if Tthread.currentThread.ExternalThread=false then
   begin
     Result := loadCache(urlHash);
   end;
+      req := THTTPClient.Create();
   try
     if ((Result = 'NOCACHE') or (not CurrentAccount.firstSync) or (not useCache))
     then
     begin
 
-      req := THTTPClient.Create();
+
       if not noTimeout then
       begin
 
-        req.ConnectionTimeout := 3000;
+        req.ConnectionTimeout := 5000;
         req.ResponseTimeout := 60000;
       end;
       aURL := aURL + buildAuth(aURL);
@@ -4554,12 +4547,6 @@ begin
   if ac = nil then
     raise Exception.Create('GenerateCoinsData() nullptr Exception');
 
-  Tthread.Synchronize(nil,
-    procedure
-    begin
-      frmhome.pageControl.ActiveTab := frmhome.WaitWalletGenerate;
-    end);
-
   try
 
     for i := 0 to (frmhome.GenerateCoinVertScrollBox.Content.
@@ -4582,13 +4569,6 @@ begin
 
     end;
 
-    Tthread.Synchronize(nil,
-      procedure
-      begin
-        frmhome.WaitForGenerationProgressBar.Value := 0;
-        frmhome.WaitForGenerationProgressBar.Max := countwallet;
-        frmhome.WaitForGenerationLabel.Text := '';
-      end);
 
     for i := 0 to (frmhome.GenerateCoinVertScrollBox.Content.
       ChildrenCount - 1) do
@@ -4615,27 +4595,12 @@ begin
           wd.orderInWallet := Position;
           Inc(Position, 48);
           ac.AddCoin(wd);
-          Tthread.Synchronize(nil,
-            procedure
-            begin
-              frmhome.WaitForGenerationLabel.Text := 'Generating ETH Wallet';
-              frmhome.WaitForGenerationProgressBar.Value :=
-                frmhome.WaitForGenerationProgressBar.Value + 1;
-            end);
-
-          EthAddress := wd.addr;
+                  EthAddress := wd.addr;
 
           continue;
         end;
         if panel.tag = 8 then
         begin
-          Tthread.Synchronize(nil,
-            procedure
-            begin
-              frmhome.WaitForGenerationLabel.Text := 'Generating NANO Wallet';
-              frmhome.WaitForGenerationProgressBar.Value :=
-                frmhome.WaitForGenerationProgressBar.Value + 1;
-            end);
           // old seed checker
           for j := 0 to 2 do
           begin
@@ -4663,15 +4628,7 @@ begin
           wd.orderInWallet := Position;
           Inc(Position, 48);
           ac.AddCoin(wd);
-          Tthread.Synchronize(nil,
-            procedure
-            begin
-              frmhome.WaitForGenerationLabel.Text := 'Generating ' +
-                availableCoin[panel.tag].shortcut + ' Wallet';
-              frmhome.WaitForGenerationProgressBar.Value :=
-                frmhome.WaitForGenerationProgressBar.Value + 1;
-            end);
-        end;
+          end;
 
       end;
 
@@ -4685,14 +4642,6 @@ begin
         wd.orderInWallet := Position;
         Inc(Position, 48);
         ac.AddCoin(wd);
-        Tthread.Synchronize(nil,
-          procedure
-          begin
-            frmhome.WaitForGenerationLabel.Text := 'Generating ETH Wallet';
-            frmhome.WaitForGenerationProgressBar.Value :=
-              frmhome.WaitForGenerationProgressBar.Value + 1;
-          end);
-
         EthAddress := wd.addr;
       end;
       for i := 0 to frmhome.GenerateCoinVertScrollBox.Content.

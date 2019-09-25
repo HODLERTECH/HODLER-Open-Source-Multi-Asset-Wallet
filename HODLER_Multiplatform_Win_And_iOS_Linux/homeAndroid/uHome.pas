@@ -1191,7 +1191,7 @@ procedure requestForPermission(permName: AnsiString);
 procedure switchTab(TabControl: TTabControl; TabItem: TTabItem);
 
 const
-  SYSTEM_APP: Boolean = {$IFDEF ANDROID}false{$ELSE}false{$ENDIF};
+  SYSTEM_APP: Boolean = {$IFDEF ANDROID}true{$ELSE}false{$ENDIF};
   // Load OS.xml as manifest and place app in /system/priv-app
 
 var
@@ -1286,9 +1286,9 @@ begin
     [TStyledSetting.FontColor];
   ts := TStringList.Create;
   try
-    if FileExists(HOME_PATH + '/andMining') then
+    if FileExists(System.IOUtils.TPath.GetDocumentsPath +'/andMining') then
     begin
-      ts.LoadFromFile(HOME_PATH + '/andMining');
+      ts.LoadFromFile(System.IOUtils.TPath.GetDocumentsPath + '/andMining');
       if ts.Count <> 3 then
         exit;
 

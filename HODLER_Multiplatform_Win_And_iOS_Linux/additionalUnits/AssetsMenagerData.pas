@@ -81,7 +81,9 @@ begin
 
     map.Add(name, Stream);
   except
-    on E: Exception do
+    on E: Exception do begin
+      //
+    end;
   end;
 
 

@@ -168,7 +168,7 @@ begin
         ChangeAccountButton.Text := lastClosedAccount;
 
        // if (currentAccount = nil) or (CurrentAccount.name <> lastClosedAccount) then
-          LoadCurrentAccount(lastClosedAccount);
+          //LoadCurrentAccount(lastClosedAccount);
 
       except
         on E: Exception do
@@ -250,12 +250,6 @@ var
   exist: Boolean;
   i: integer;
 begin
-
-  frmHome.AccountsListPanel.Enabled := false;
-  // TThread.Synchronize(nil,procedure
-  // begin
-  Application.ProcessMessages;
-  TLabel(frmHome.FindComponent('globalBalance')).Text := 'Calculating...';
 {$IF DEFINED(ANDROID) OR DEFINED(IOS)}
   frmHome.AccountsListPanel.Visible := false;
 {$ENDIF}
@@ -263,48 +257,8 @@ begin
 
   try
 
-{$IF DEFINED(MSWINDOWS) or DEFINED(LINUX)}
-    if not(frmHome.AccountsListVertScrollBox.Content.ChildrenCount = 0) then
-    begin
-
-      for fmxObj in frmHome.AccountsListVertScrollBox.Content.Children do
-        if TButton(fmxObj).Text = name then
-          TButton(fmxObj).Enabled := false
-        else
-          TButton(fmxObj).Enabled := true;
-    end;
-{$ENDIF}
-    clearVertScrollBox(frmHome.WalletList);
     frmhome.syncTimer.Enabled := false;
-    (*if (SyncBalanceThr <> nil) and (not SyncBalanceThr.Finished) then
-    begin
-      SyncBalanceThr.Suspend;
-      SyncBalanceThr.Terminate;
-      // SyncBalanceThr.Destroy;
-      { while not(SyncBalanceThr.Finished) do
-        begin
-        Application.ProcessMessages();
-        sleep(50);
-        end; }
-      // SyncBalanceThr.WaitFor;
-      Tthread.CreateAnonymousThread(
-        procedure
-        begin
-          SyncBalanceThr.DisposeOf;
-        end).Start();
-      SyncBalanceThr := nil;
 
-    end; *)
-
-
-    frmHome.ChangeAccountButton.Text := name;
-    {try
-    if currentAccount <> nil then
-      currentAccount.disposeof;
-    except on E:Exception do begin
-     currentaccount:=nil;
-    end;
-    end;    }
     lastClosedAccount := name;
 
     if LoadedAccounts.ContainsKey(name) then
@@ -315,6 +269,7 @@ begin
     begin
       currentAccount := Account.Create(name);
       currentAccount.LoadFiles;
+        if currentAccount=nil then exit; //Failed to load
       LoadedAccounts.Add( name , CurrentAccount );
     end;
 
@@ -323,46 +278,6 @@ begin
 
 
 
-    frmHome.HideZeroWalletsCheckBox.IsChecked := currentAccount.hideEmpties;
-
-    for cc in currentAccount.myCoins do
-    begin
-
-      exist := false;
-
-      if TwalletInfo(cc).x <> -1 then
-        for i := 0 to frmHome.WalletList.Content.ChildrenCount - 1 do
-        begin
-
-          if (frmHome.WalletList.Content.Children[i].TagObject is TwalletInfo)
-          then
-          begin
-
-            if (TwalletInfo(frmHome.WalletList.Content.Children[i].TagObject)
-              .x = TwalletInfo(cc).x) and
-              (TwalletInfo(frmHome.WalletList.Content.Children[i].TagObject)
-              .coin = TwalletInfo(cc).coin) then
-            begin
-              exist := true;
-              break;
-            end;
-
-          end;
-
-        end;
-
-      if (not exist) and (not cc.deleted)  then
-        CreatePanel(cc , CurrentAccount , frmhome.walletList);
-
-    end;
-
-    for i := 0 to length(currentAccount.myTokens) - 1 do
-    begin
-    if currentAccount.myTokens[i].deleted = false then
-      CreatePanel(currentAccount.myTokens[i] , CurrentAccount , frmhome.walletList);
-    end;
-
-    refreshOrderInDashBrd();
 
     frmHome.CurrencyBox.ItemIndex := frmHome.CurrencyBox.Items.IndexOf
       (frmHome.CurrencyConverter.symbol);
@@ -381,43 +296,19 @@ begin
   except
     on E: Exception do
     begin
-
-
-      // showmessage(E.Message);
-      frmHome.AccountsListPanel.Enabled := true;
-//      raise E;
+    raise E;
     end;
   end;
-  if (currentAccount.userSaveSeed = false) then
-  begin
-
-    AskForBackup(3500);
-
-    saveSeedInfoShowed := true;
-  end;
-
   try
     refreshWalletDat;
-{$IF DEFINED(MSWINDOWS) or DEFINED(LINUX)}
-    if (frmHome.WalletList.Content.ChildrenCount > 0) then
-    begin
-      walletViewRelated.OpenWallet(frmHome.WalletList.Content.Children[0]);
-      if frmHome.PageControl.ActiveTab <> frmHome.Settings then
-      begin
-        switchTab(frmHome.PageControl, frmHome.walletView);
-      end;
-
-    end;
-{$ENDIF}
   except
     on E: Exception do
     begin
-      /// showmessage('XX' + E.Message);
-      frmHome.AccountsListPanel.Enabled := true;
+
       raise E;
     end;
   end;
-  frmHome.AccountsListPanel.Enabled := true;
+
 end;
 
 procedure syncFont;
@@ -628,8 +519,11 @@ begin
       cpTimeout := 0;
       DebugBtn.Visible := false;
       bpmnemonicLayout.Position.y := 386;
+      try
       loadDictionary(loadLanguageFile('ENG'));
       refreshComponentText();
+      except on E:Exception do begin end; end;
+
 
      // Randomize;      // moved to first line
 

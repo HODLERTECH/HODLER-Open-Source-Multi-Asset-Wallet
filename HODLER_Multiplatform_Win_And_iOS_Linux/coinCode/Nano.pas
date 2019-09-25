@@ -1572,7 +1572,7 @@ var
 begin
   Blake2b := THashFactory.TCrypto.CreateBlake2B_256();
   Blake2b.Initialize();
-  Blake2b.TransformBytes(hexatotbytes(Seed + inttohex(i, 8)), 0);
+  Blake2b.TransformBytes(hexatotbytes(Seed + inttohex(index, 8)), 0);
   // key 0 is default in NANO world
   wipeAnsiString(Seed);
   Result := Blake2b.TransformFinal.ToString;

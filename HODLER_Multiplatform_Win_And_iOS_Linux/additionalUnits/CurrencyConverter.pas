@@ -63,7 +63,14 @@ end;
 procedure TCurrencyConverter.updateCurrencyRatio(symbol: AnsiString;
   ratio: double);
 begin
-  availableCurrency.AddOrSetValue(symbol, ratio);
+try
+  availableCurrency.TryAdd(symbol, ratio);
+except
+on E:Exception do begin
+  writeln(E.Message);
+
+end;
+end;
 end;
 
 constructor TCurrencyConverter.Create();

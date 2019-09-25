@@ -256,8 +256,8 @@ data:=StringReplace(data,'xrb_','nano_',[rfReplaceAll]);
 {$IFDEF ANDROID}
 if not servicestarted then begin
 if not SYSTEM_APP then
-frmHome.FServiceConnection.StartService('NanoPowAS');// else
-//nanoPowAdroidStart();
+frmHome.FServiceConnection.StartService('NanoPowAS') else
+nanoPowAndroidStart();
 servicestarted:=true;
 end;
 {$ENDIF}
@@ -418,6 +418,7 @@ var
   err: string;
   wd: TWalletInfo;
 begin
+s:=trim(s);
   if LeftStr(s, 7) = ('Invalid') then
     exit;
 
@@ -430,9 +431,11 @@ begin
     Delete(s, High(s), 1);
   end;
 
-{$IFDEF  ANDROID} s := StringReplace(s, '\\', '\', [rfReplaceAll]); {$ENDIF}
+{$IF  DEFINED(ANDROID) }
+ s := StringReplace(s, '\\', '\', [rfReplaceAll]);
+  {$ENDIF}
   try
-
+   writeln(s);
     coinJson := TJSONObject.ParseJSONValue(s) as TJSONObject;
     if coinJson<>nil then begin
     if coinJson.Count = 0 then
@@ -443,14 +446,6 @@ begin
 
     for i := 0 to coinJson.Count - 1 do
     begin
-
-      {if SyncBalanceThr <> nil then
-              if SyncBalanceThr.Terminated then
-                      begin
-                                coinJson.Free;
-                                          exit;
-                                                  end;}
-
       wd := nil;
       JsonPair := coinJson.Pairs[i];
       wd := findWDByAddr(ac , JsonPair.JsonValue.GetValue<Int64>('wid'));
@@ -467,6 +462,7 @@ begin
         except
           on E: Exception do
           begin
+           writeln('parseSync '+E.Message);
           end;
 
         end;
@@ -490,6 +486,7 @@ begin
         except
           on E: Exception do
           begin
+          writeln('parseSync '+E.Message);
           end;
 
         end;
@@ -498,11 +495,12 @@ begin
 
     end;
 
-    coinJson.Free;
+    if coinJson<>nil then coinJson.Free;
    end;
+
   except
     on E: Exception do
-      err := (E.message);
+      writeln('parseSync '+E.Message);
   end;
 
 end;
