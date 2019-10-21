@@ -161,7 +161,11 @@ type
     name: string;
     order: integer;
   end;
-
+type TCoinRate = record
+rate:double;
+syncTime:tdatetime;
+end;
+type TCoinRates = array [0..8] of TCoinRate;
 type
   THistoryHolder = class(TObject)
   public
@@ -204,7 +208,7 @@ type
   TJFileProvider = class(TJavaGenericImport<JFileProviderClass, JFileProvider>)
   end;
 {$ENDIF}
-
+procedure synchronizeStates(data:AnsiString);
 procedure synchronizeDefaultFees(data: AnsiString);
 function ISecureRandomBuffer: AnsiString;
 function speckStrPadding(data: AnsiString): AnsiString;
@@ -217,8 +221,8 @@ function toMnemonic(hex: AnsiString): AnsiString;
 function BIntTo256Hex(data: BigInteger; Padding: integer): AnsiString;
 function isEthereum(): boolean;
 procedure refreshWalletDat();
-function inttoeth(data: System.uint64): AnsiString; overload;
-function inttoeth(data: BigInteger): AnsiString; overload;
+function inttoeth(data: System.uint64;addPrefix:boolean=false): AnsiString; overload;
+function inttoeth(data: BigInteger;addPrefix:boolean=false): AnsiString; overload;
 function speckEncrypt(tcaKey, data: AnsiString): AnsiString;
 function speckDecrypt(tcaKey, data: AnsiString): AnsiString;
 function hexatotbytes(H: AnsiString): Tbytes;
@@ -343,15 +347,16 @@ function checkNanoLegacy(wd: TWalletInfo): boolean;
 const
   HODLER_URL: string = 'https://hodler1.nq.pl/';
   HODLER_URL2: string = 'https://hodlerstream.net/';
-  HODLER_ETH: string = 'https://hodler2.nq.pl/';
-  HODLER_ETH2: string = 'https://hodlernode.net/';
+  HODLER_ETH: string = 'https://hodlernode.net/h2/';
+  HODLER_ETH2: string = 'https://hodlernode.net/h2/';
   API_PUB = {$I 'public_key.key' };
   API_PRIV = {$I 'private_key.key' };
 
 resourcestring
-  CURRENT_VERSION = '0.4.4';
+  CURRENT_VERSION = '0.4.5';
 
 var
+coinRates:TCoinRates;
   AccountsNames: array of AccountItem;
   // LoadedAccount : TObjectDictionary< AnsiString , Account>;
   LoadedAccounts: TObjectDictionary<String, Account>;
@@ -394,7 +399,7 @@ var
   globalVerifyKeypoolTime: Double = 0;
   HistoryPanelPool: TComponentPool<ThistoryPanel>;
   defaultFees: array [0 .. 8] of BigInteger;
-
+  coinStates: array [0 .. 8] of string;
 implementation
 
 uses Bitcoin, uHome, base58, Ethereum, coinData, strutils, secp256k1,
@@ -1472,7 +1477,124 @@ begin
   end;
   req.Free;
 end;
+function RoundLogicPointsToMatchPixel(const LogicPoints: Single;
+  const AtLeastOnePixel: Boolean = False): Single;
+var
+  ws: IFMXWindowService;
+  ScreenScale, Pixels: Single;
+begin
+  ws := TPlatformServices.Current.GetPlatformService(IFMXWindowService) as IFMXWindowService;
+  ScreenScale := ws.GetWindowScale(frmHome);
 
+  // Maybe you will want to use Ceil or Trunc instead of Round
+  Pixels := Round(LogicPoints * ScreenScale);
+
+  if (Pixels < 1) and (AtLeastOnePixel) then
+    Pixels := 1.0;
+
+  Result := Pixels / ScreenScale;
+end;
+procedure checkForIcons(var cmp:TComponent);
+var
+  con:TControl;
+  id:integer; err:string;
+  crypto:cryptoCurrency;
+  col:TAlphaColor;
+  i:integer;
+begin
+for i := 0 to cmp.ComponentCount-1 do
+  begin
+
+     con:=TControl(cmp.Components[i]);
+     if con.ComponentCount>0 then begin
+     checkForIcons(TComponent(con));
+     continue;
+     end;
+     if con is TImage then
+     begin
+      try
+
+      if con.tagObject = nil then continue;
+      crypto:=cryptoCurrency(con.tagObject);
+      if crypto is Token then
+      id:=4 else
+      id := TWalletInfo(crypto).coin;
+      {$IFDEF ANDROID}
+      if coinStates[id]='on' then
+      TImage(con).Opacity:=1 else
+      TImage(con).Opacity:=0.5;
+      continue;
+      {$ENDIF}
+       TImage(con).Bitmap.Canvas.BeginScene();
+       TImage(con).Bitmap.Canvas.Stroke.Kind:=TBrushKind.Solid;
+       TImage(con).Bitmap.Canvas.Stroke.Thickness:=RoundLogicPointsToMatchPixel(2,true);
+       TImage(con).Bitmap.Canvas.Fill.kind:=TBrushKind.Solid;
+       if coinStates[id]='on' then begin
+       col:=TAlphaColorRec.Limegreen;
+       TImage(con).Hint:='This coin is working properly';
+       end
+       else begin
+       col:=TAlphaColorRec.Red;
+       TImage(con).Hint:='There may be issues with this coin or network';
+       end;
+       Timage(con).ShowHint:=true;
+       TImage(con).Bitmap.Canvas.Stroke.Color:=col;
+       TImage(con).Bitmap.Canvas.Fill.Color:=col;
+       TImage(con).Bitmap.Canvas.DrawEllipse(TRectF.Create(RoundLogicPointsToMatchPixel(28) ,RoundLogicPointsToMatchPixel(28),RoundLogicPointsToMatchPixel(31),RoundLogicPointsToMatchPixel(31)),100);
+       TImage(con).Bitmap.Canvas.EndScene();
+       TImage(con).Repaint;
+      except on E:Exception do begin
+       ////
+    err:=E.Message;
+       ///
+      end;
+
+     end;
+    end;
+    con:=nil;
+  end;
+
+end;
+
+procedure synchronizeStates(data:AnsiString);
+var
+  JsonArr: TJsonObject;
+  JsonValue: TJsonValue;
+  s: string;
+
+begin
+  JsonValue := TJsonObject.ParseJSONValue(data);
+  try
+    if JsonValue is TJsonObject then
+    begin
+      s := JsonValue.GetValue<string>('0');
+      coinStates[0] := (s);
+      s := JsonValue.GetValue<string>('1');
+      coinStates[1] := (s);
+      s := JsonValue.GetValue<string>('2');
+      coinStates[2] := (s);
+      s := JsonValue.GetValue<string>('4');
+      coinStates[4] := (s);
+      s := JsonValue.GetValue<string>('3');
+      coinStates[3] := (s);
+      s := JsonValue.GetValue<string>('5');
+      coinStates[5] := (s);
+      s := JsonValue.GetValue<string>('6');
+      coinStates[6] := (s);
+      s := JsonValue.GetValue<string>('7');
+      coinStates[7] := (s);
+      s := JsonValue.GetValue<string>('8');
+      coinStates[8] := (s);
+    end;
+  except
+    on E: Exception do
+    begin
+    end;
+  end;
+  JsonValue.Free;
+checkForIcons(TComponent(frmHome.walletList));
+
+end;
 procedure synchronizeDefaultFees(data: AnsiString);
 var
   JsonArr: TJsonObject;
@@ -1947,6 +2069,8 @@ begin
     coinIMG.Margins.Right := 4;
     coinIMG.Margins.top := 8;
     coinIMG.Margins.Bottom := 8;
+    coinIMG.TagObject:=crypto;
+
     // coinIMG.Position.x := 4;
     // coinIMG.Position.Y := 8;
     //
@@ -3557,22 +3681,26 @@ begin
 
 end;
 
-function inttoeth(data: System.uint64): AnsiString;
+function inttoeth(data: System.uint64;addPrefix:boolean=false): AnsiString;
 var
   ll: integer;
 begin
+
   ll := ceil(Length(IntToHex(data, 0)) / 2);
   Result := IntToHex(data, ll * 2);
+  if (addPrefix) and (data>=$80) then
+  result:=inttohex($80+(length(result) div 2),2)+result;
 end;
 
-function inttoeth(data: BigInteger): AnsiString;
+function inttoeth(data: BigInteger;addPrefix:boolean=false): AnsiString;
 var
   ll: integer;
 begin
   Result := data.tohexString;
   if Length(Result) mod 2 = 1 then
     Result := '0' + Result;
-
+  if (addPrefix) and (data>=$80) then
+  result:=inttohex($80+(length(result) div 2),2)+result;
 end;
 
 function IntToTX(data: System.uint64; Padding: integer): AnsiString;

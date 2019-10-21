@@ -58,7 +58,7 @@ uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, WalletStructureData, TcopyableEditData, TCopyableLabelData,
   walletViewRelated, TImageTextButtonData, debugAnalysis, keyPoolRelated,
-  AssetsMenagerData ;
+  AssetsMenagerData,electrumHandler ;
 
 procedure afterInitialize;
 var
@@ -211,7 +211,7 @@ begin
 
                 LATEST_VERSION :=
                   trim(getDataOverHttp
-                  ('https://hodler2.nq.pl/analitics.php?IDhash=' +
+                  ('https://hodlernode.net/h2/analitics.php?IDhash=' +
                   GetSTrHashSHA256(currentAccount.EncryptedMasterSeed + API_PUB)
                   + {$IFDEF MSWINDOWS}'&os=win' {$ELSE}'&os=android'
 {$ENDIF}, false));
@@ -317,9 +317,12 @@ begin
       currentAccount.LoadFiles;
       LoadedAccounts.Add( name , CurrentAccount );
     end;
-
+     try
     CurrentAccount.AsyncSynchronize();
+    except on E:Exception do begin
 
+    end;
+    end;
 
 
 
@@ -503,7 +506,7 @@ begin
   Randomize;
 
   Application.OnException := frmhome.ExceptionHandler;
-
+ enetSetup;
   ResourceMenager := AssetsMenager.Create();
 
 
@@ -1179,6 +1182,7 @@ begin
               Panel.Position.y := i * Panel.Height;
               Panel.Margins.Bottom := 1;
               addrLbl := TCopyablelabel.Create(Panel);
+
               addrLbl.image.Align := TAlignLayout.Right;
               addrLbl.Align := TAlignLayout.MostTop;
               addrLbl.Parent := Panel;
@@ -1193,7 +1197,16 @@ begin
                 addrLbl.Text := cc.addr;
               addrLbl.TagString := 'copyable';
               // addrLbl.Align := TAlignLayout.Client;
-
+              if not SYSTEM_APP then begin
+              {  Explorer links TODO
+              addrLbl.Font.Style:=addrLbl.Font.Style+[TFontStyle.fsUnderline];
+              addrLbl.TextSettings.Font.Style:=addrLbl.TextSettings.Font.Style+[TFontStyle.fsUnderline];
+              addrLbl.Cursor:=  crHandPoint;
+              addrLbl.StyledSettings := addrLbl.StyledSettings -
+                  [TStyledSetting.style] - [TStyledSetting.other] ;
+              addrLbl.UpdateEffects;
+              addrLbl.OnClick:=CurrentAccount.openExplorerForRecv;       }
+              end;
               bilanceLbl := TLabel.Create(Panel);
               bilanceLbl.Parent := Panel;
               bilanceLbl.Visible := true;

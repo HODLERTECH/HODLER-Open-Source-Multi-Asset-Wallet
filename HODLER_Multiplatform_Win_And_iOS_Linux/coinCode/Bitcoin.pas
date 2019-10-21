@@ -1,10 +1,10 @@
 unit Bitcoin;
-
+
 interface
 
 uses
   SysUtils, secp256k1, HashObj, base58, coinData, Velthuis.BigIntegers,
-  WalletStructureData, System.classes;
+  WalletStructureData, System.classes, electrumHandler;
 
 function reedemFromPub(pub: AnsiString): AnsiString;
 
@@ -32,7 +32,7 @@ implementation
 
 uses
   uHome, transactions, tokenData, bech32, misc, SyncThr, WalletViewRelated,
-  KeypoolRelated,Nano , debugAnalysis ;
+  KeypoolRelated, Nano, debugAnalysis;
 
 function Bitcoin_createHD(coinid, x, y: integer; MasterSeed: AnsiString)
   : TWalletInfo;
@@ -82,7 +82,7 @@ end;
 
 function generatep2sh(pub, netbyte: AnsiString): AnsiString;
 var
-  s, r ,t: AnsiString;
+  s, r, t: AnsiString;
 begin
   s := GetSHA256FromHex(pub);
   s := hash160FromHex(s);
@@ -97,8 +97,7 @@ begin
 {$ELSE}
   s := s + copy(t, 1, 8);
 {$ENDIF}
-  result := Encode58(s) ;
-
+  result := Encode58(s);
 
 end;
 
@@ -230,55 +229,62 @@ function sendCoinsTO(from: TWalletInfo; sendto: AnsiString;
 var
   TX: AnsiString;
   TXBuilder: TXBuilder_ETH;
+  aURL: string;
   procedure cleanupSend;
   begin
-     TThread.CreateAnonymousThread(
+    TThread.CreateAnonymousThread(
       procedure
       begin
         if CurrentCoin.description <> '__dashbrd__' then
         begin
-          SyncThr.SynchronizeCryptoCurrency(CurrentAccount ,CurrentCoin);
+          SyncThr.SynchronizeCryptoCurrency(CurrentAccount, CurrentCoin);
           reloadWalletView;
-          {$IFDEF ANDROID}
-          if CurrentCoin.coin=8 then
-           if not SYSTEM_APP then frmHome.WVTabControl.ActiveTab:=frmHome.WVPow;
+{$IFDEF ANDROID}
+          if CurrentCoin.coin = 8 then
+            if not SYSTEM_APP then
+              frmHome.WVTabControl.ActiveTab := frmHome.WVPow;
 
-          {$ENDIF}
+{$ENDIF}
         end;
       end).Start();
   end;
+
 begin
 
   startFullfillingKeypool(MasterSeed);
-  if CurrentCoin.coin=8 then begin
-  TThread.CreateAnonymousThread(procedure begin
-  nano_send(from,sendto,Amount,MasterSeed); wipeAnsiString(masterseed);end).Start;
-  Sleep(3000);
-  if NanoCoin(from).lastBlock<>'' then
-    TX:='Transaction sent '+#13#10+NanoCoin(from).lastBlock else
-    TX:='Transaction failed, please try again';
+  if CurrentCoin.coin = 8 then
+  begin
+    TThread.CreateAnonymousThread(
+      procedure
+      begin
+        nano_send(from, sendto, Amount, MasterSeed);
+        wipeAnsiString(MasterSeed);
+      end).Start;
+    Sleep(3000);
+    if NanoCoin(from).lastBlock <> '' then
+      TX := 'Transaction sent ' + #13#10 + NanoCoin(from).lastBlock
+    else
+      TX := 'Transaction failed, please try again';
 
     cleanupSend;
-    Exit(tx);
-
+    exit(TX);
 
   end
   else
   begin
 
-
     if CurrentCoin.coin <> 4 then
     begin
       if ((CurrentCoin.coin in [0, 1, 5, 6])) and
-        canSegwit(currentaccount.aggregateUTXO(from)) then
+        canSegwit(CurrentAccount.aggregateUTXO(from)) then
       begin
         TX := createSegwitTransaction(from, sendto, Amount, Fee,
-          currentaccount.aggregateUTXO(from), MasterSeed);
+          CurrentAccount.aggregateUTXO(from), MasterSeed);
       end
       else
       begin
         TX := createTransaction(from, sendto, Amount, Fee,
-          currentaccount.aggregateUTXO(from), MasterSeed);
+          CurrentAccount.aggregateUTXO(from), MasterSeed);
       end;
     end
     else
@@ -314,12 +320,30 @@ begin
     if frmHome.InstantSendSwitch.isChecked then
       coin := coin + '&mode=instant';
 
+    if coin <> 'ethereum' then
+    begin
+      if CurrentCoin.coin in [0,1,2,3,7] then
+      begin
+        result := sendTXHandler
+          (electrumRPC(CurrentCoin.coin, 'blockchain.transaction.broadcast', [TX]))
+      end
+      else
+      begin
+        result := getDataOverHTTP(HODLER_URL + 'sendTX.php?coin=' + coin +
+          '&tx=' + TX + '&os=' + SYSTEM_NAME + '&appver=' +
+          StringReplace(CURRENT_VERSION, '.', 'x', [rfReplaceAll]),
+          false, true);
+      end
+    end
+    else
+    begin
+      result := getDataOverHTTP(HODLER_ETH + '?cmd=sendTX&data=' + TX,
+        false, true)
 
-    result := getDataOverHTTP(HODLER_URL + 'sendTX.php?coin=' + coin + '&tx=' +
-      TX + '&os=' + SYSTEM_NAME + '&appver=' + StringReplace(CURRENT_VERSION,
-      '.', 'x', [rfReplaceAll]), false, true);
-   cleanupSend;
+    end;
+    cleanupSend;
   end;
 end;
 
 end.
+

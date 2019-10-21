@@ -3,8 +3,8 @@ program HODLER_Wallet_Mobile;
 {$R *.dres}
 
 uses
-  FontService,
   System.StartUpCopy,
+  FontService,
   FMX.Forms,
   FMX.Styles,
   IOUtils,
@@ -146,7 +146,8 @@ uses
   HistoryPanelData in 'components\HistoryPanelData.pas',
   SyncThr in 'additionalUnits\SyncThr.pas',
   ComponentPoolData in 'additionalUnits\additionalClass\ComponentPoolData.pas',
-  TNewCryptoVertScrollBoxData in 'components\TNewCryptoVertScrollBoxData.pas';
+  TNewCryptoVertScrollBoxData in 'components\TNewCryptoVertScrollBoxData.pas',
+  electrumHandler in 'additionalUnits\electrumHandler.pas';
 
 {$R *.res}
 

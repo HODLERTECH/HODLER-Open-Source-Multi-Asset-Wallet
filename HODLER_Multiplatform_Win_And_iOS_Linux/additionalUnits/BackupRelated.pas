@@ -59,14 +59,34 @@ procedure Claim(CoinID: Integer);
 procedure createClaimCoinList(id: Integer);
 function createExportPrivateKeyList(ExportCoinID: Integer): Integer;
 function isEQRGenerated: Boolean;
-
+procedure keypoolTrigger;
 implementation
 
 uses uHome, misc, AccountData, base58, bech32, CurrencyConverter, SyncThr, WIF,
   Bitcoin, coinData, cryptoCurrencyData, Ethereum, secp256k1, tokenData,
   transactions, AccountRelated, walletViewRelated, KeypoolRelated,
   TImageTextButtonData;
+procedure keypoolTrigger;
+var
+  MasterSeed, tced: AnsiString;
+begin
+  with frmhome do
+  begin
 
+    tced := TCA(passwordForDecrypt.Text);
+
+    MasterSeed := SpeckDecrypt(tced, CurrentAccount.EncryptedMasterSeed);
+    if not isHex(MasterSeed) then
+    begin
+      popupWindow.create(dictionary('FailedToDecrypt'));
+      passwordForDecrypt.Text := '';
+      exit;
+    end;
+    startFullfillingKeypool(MasterSeed);
+    popupWindow.create('Recalculating in progress, please wait few minutes');
+          passwordForDecrypt.Text := '';
+  end;
+end;
 function createExportPrivateKeyList(ExportCoinID: Integer): Integer;
 { var
   i: Integer;

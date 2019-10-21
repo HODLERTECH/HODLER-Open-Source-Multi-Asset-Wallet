@@ -157,7 +157,8 @@ uses
   ComponentPoolData in 'additionalUnits\additionalClass\ComponentPoolData.pas',
   HistoryPanelData in 'components\HistoryPanelData.pas',
   CoinPanelData in 'components\CoinPanelData.pas',
-  Spendable in 'coinCode\Spendable.pas';
+  Spendable in 'coinCode\Spendable.pas',
+  electrumHandler in 'additionalUnits\electrumHandler.pas';
 
 {$R *.res}
 

@@ -8,7 +8,7 @@
         android:installLocation="%installLocation%">
 
     <!-- This is the platform API where NativeActivity was introduced. -->
-    <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="26" />
+    <uses-sdk android:minSdkVersion="19" android:targetSdkVersion="26"/>
     <uses-permission-sdk-23 android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.CAMERA" android:maxSdkVersion="22" />
 	 

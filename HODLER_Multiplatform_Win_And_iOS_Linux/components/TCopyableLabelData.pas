@@ -59,7 +59,7 @@ var
 begin
 
   inherited;
-
+if  CurrentStyle='' then CurrentStyle:='RT_DARK';
   image := Timage.Create(self);
   Stream := TResourceStream.Create(HInstance,
     'COPY_IMG_' + RightStr(CurrentStyle, length(CurrentStyle) - 3), RT_RCDATA);

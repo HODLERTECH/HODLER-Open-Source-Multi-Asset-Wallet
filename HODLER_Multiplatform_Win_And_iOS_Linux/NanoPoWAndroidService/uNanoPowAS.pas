@@ -909,11 +909,14 @@ begin
       if not isCorrupted then
       begin
         logd('Title change nano_mineBuilt64 (909) ' + miningOwner);
+        if displayNotifications then
+        begin
         DM.JavaService.stopForeground(true);
         LBuilder.setContentTitle(StrToJCharSequence((miningOwner)));
         LBuilder.setContentText(StrToJCharSequence('Working on nano blocks, ' +
           inttostr(Length(cc.pendingChain)) + ' left'));
         DM.JavaService.StartForeground(1995, LBuilder.build);
+        end;
         logd('Post 909');
         miningStep := 1;
         nano_getWork(Block);
@@ -935,10 +938,13 @@ begin
         if cc.BlockByPrev(lastHash).account = '' then
           if lastHash <> '' then
           begin
+          if displayNotifications then
+          begin
             DM.JavaService.stopForeground(true);
             LBuilder.setContentText
               (StrToJCharSequence('Working on next block hash'));
             DM.JavaService.StartForeground(1995, LBuilder.build);
+          end;
             miningStep := 2;
             findwork(lastHash);
             Result := true;
@@ -977,12 +983,15 @@ begin
       if pows[i].work = '' then
       begin
         logd('Title change mineAll (977)');
+        if displayNotifications then
+        begin
         DM.JavaService.stopForeground(true);
         LBuilder.setContentTitle
           (StrToJCharSequence('HODLER - Nano PoW Worker'));
         LBuilder.setContentText
           (StrToJCharSequence('Working on next block hash'));
         DM.JavaService.StartForeground(1995, LBuilder.build);
+        end;
         logd('Post 977');
         miningOwner := pows[i].Hash;
         miningStep := 3;
@@ -995,9 +1004,12 @@ begin
       saveMiningState(0);
       workdone := false;
       logd('Title change (995)');
+      if displayNotifications then
+      begin
       DM.JavaService.stopForeground(true);
       LBuilder.setContentText(StrToJCharSequence('Ready to work nano blocks'));
       DM.JavaService.StartForeground(1995, LBuilder.build);
+      end;
       logd('Post 995');
     end;
 

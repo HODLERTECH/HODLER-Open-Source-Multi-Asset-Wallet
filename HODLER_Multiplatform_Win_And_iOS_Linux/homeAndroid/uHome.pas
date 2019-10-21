@@ -24,11 +24,11 @@ uses
   FMX.Layouts, FMX.ExtCtrls, Velthuis.BigIntegers, FMX.ScrollBox, FMX.Memo,
   FMX.Platform, System.Threading, Math, DelphiZXingQRCode,
   FMX.TabControl, System.Sensors, System.Sensors.Components, FMX.Edit,
-  FMX.Clipboard, bech32, cryptoCurrencyData, FMX.VirtualKeyBoard, JSON,
+  FMX.Clipboard, bech32, cryptoCurrencyData, FMX.VirtualKeyBoard, JSON, idTCPClient, idSSLOpenSSL, IdSSLOpenSSLHeaders,
   languages, WIF, AccountData, WalletStructureData,
   System.Net.HttpClientComponent, System.Net.urlclient, System.Net.HttpClient,
   popupWindowData, TCopyableAddressPanelData, TNewCryptoVertScrollBoxData,
-  TaddressLabelData, System.UIConsts, HTTPApp,
+  TaddressLabelData, System.UIConsts, HTTPApp,electrumHandler,
 
   FMX.Media, FMX.Objects, CurrencyConverter, uEncryptedZipFile, System.Zip,
   TRotateImageData
@@ -54,7 +54,7 @@ uses
   ZXing.ScanManager, FMX.EditBox, FMX.SpinBox, FMX.Gestures, FMX.Effects,
   FMX.Filter.Effects, System.Actions, FMX.ActnList, System.Math.Vectors,
   FMX.Controls3D, FMX.Layers3D, FMX.StdActns, FMX.MediaLibrary.Actions,
-  FMX.ComboEdit, NotificationLayoutData;
+  FMX.ComboEdit, NotificationLayoutData, FMX.ListBox;
 
 type
 
@@ -846,6 +846,22 @@ type
     nanoReport: TButton;
     Label1: TLabel;
     pendingBlockList: TMemo;
+    NetTab: TTabItem;
+    NetworkingHeader: TToolBar;
+    lblNetHeader: TLabel;
+    btnNetBack: TButton;
+    ServAddrPanel: TPanel;
+    eNetServer: TEdit;
+    eNetPort: TEdit;
+    lblNetServer: TLabel;
+    lblNetPort: TLabel;
+    lblNetStatus: TLabel;
+    lblNetPeers: TLabel;
+    cbAutoConnect: TCheckBox;
+    btnNetConnect: TButton;
+    gridPeers: TListBox;
+    btnOpenNetwork: TButton;
+    KeypoolButton: TButton;
 
     procedure btnOptionsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1099,6 +1115,14 @@ type
     procedure freeotpiconTap(Sender: TObject; const Point: TPointF);
     procedure andNanoStateTimer(Sender: TObject);
     procedure nanoReportClick(Sender: TObject);
+    procedure cbAutoConnectChange(Sender: TObject);
+    procedure btnNetConnectClick(Sender: TObject);
+    procedure btnOpenNetworkClick(Sender: TObject);
+    procedure KeypoolButtonClick(Sender: TObject);
+    procedure btnOpenNetworkTap(Sender: TObject; const Point: TPointF);
+    procedure cbAutoConnectTap(Sender: TObject; const Point: TPointF);
+    procedure btnNetConnectTap(Sender: TObject; const Point: TPointF);
+    procedure KeypoolButtonTap(Sender: TObject; const Point: TPointF);
     // procedure DayNightModeSwitchClick(Sender: TObject);
 
   private
@@ -1114,6 +1138,7 @@ type
 {$IFDEF ANDROID}
     procedure RegisterDelphiNativeMethods();
 {$ENDIF}
+    procedure keypoolTrigger(Sender: TObject);
     procedure ExportPrivKeyListButtonClick(Sender: TObject); overload;
     procedure ExportPrivKeyListButtonClick(Sender: TObject;
       const Point: TPointF); overload;
@@ -2813,6 +2838,55 @@ begin
   BackupRelated.checkSeed(Sender);
 end;
 
+procedure TfrmHome.btnOpenNetworkClick(Sender: TObject);
+var curTcp:TidTCPClient;
+noEx:boolean;
+
+begin
+if CurrentCoin.coin in [4,5,6,8] then begin
+  PopupWindow.Create('This asset is connected to Hodler servers');
+end else begin
+ PageControl.ActiveTab:=NetTab;
+ NoEx:=false;
+ try
+ curTcp:=GetTCPForCoin(CurrentCoin.coin,0);
+ except on E:Exception do begin
+  NoEx:=true;
+  lblNetStatus.Text:='Servers not found, please add one';
+  exit;
+ end;
+ end;
+ if curTcp<>nil then
+ begin
+   lblNetStatus.Text:='Connected to '+curTcp.Host+':'+IntToStr(curTcp.Port);
+   eNetServer.Text:=curTcp.Host;
+   eNetPort.Text:=IntToStr(curTcp.Port);
+ end;
+ gridPeers.Enabled:= userPeers[CurrentCoin.coin]<>nil;
+ cbAutoConnect.isChecked:=userPeers[CurrentCoin.coin]=nil;
+ enetserver.enabled:=userPeers[CurrentCoin.coin]<>nil;
+ enetport.enabled:=userPeers[CurrentCoin.coin]<>nil;
+ btnNetConnect.enabled:=userPeers[CurrentCoin.coin]<>nil;
+  gridPeers.Items.Clear;
+  if NoEx then exit;
+
+ Tthread.CreateAnonymousThread(procedure  begin
+ TThread.Synchronize(nil,procedure var i:integer; begin
+
+ gridPeers.BeginUpdate;
+ for i := 0 to tcpConnections[CurrentCoin.coin]-1 do
+ if tcpConnection[CurrentCoin.coin,i]<>nil then
+ gridPeers.Items.Add( tcpConnection[CurrentCoin.coin,i].Host+':'+IntToStr(tcpConnection[CurrentCoin.coin,i].Port));
+ gridPeers.EndUpdate;   end);
+  end).Start;
+end;
+end;
+
+procedure TfrmHome.btnOpenNetworkTap(Sender: TObject; const Point: TPointF);
+begin
+       btnOpenNetworkClick(Sender);
+end;
+
 procedure TfrmHome.btnOptionsClick(Sender: TObject);
 begin
   switchTab(PageControl, Settings);
@@ -3142,6 +3216,22 @@ procedure TfrmHome.IPKCLBackButtonClick(Sender: TObject);
 begin
   switchTab(PageControl, Settings);
 end;
+procedure TfrmHome.keypoolTrigger(Sender: TObject);
+begin
+  BackupRelated.keypoolTrigger;
+end;
+procedure TfrmHome.KeypoolButtonClick(Sender: TObject);
+begin
+   btnDecryptSeed.onclick := keypoolTrigger;
+  decryptSeedBackTabItem := PageControl.ActiveTab;
+  PageControl.ActiveTab := descryptSeed;
+  btnDSBack.onclick := backBtnDecryptSeed;
+end;
+
+procedure TfrmHome.KeypoolButtonTap(Sender: TObject; const Point: TPointF);
+begin
+   KeypoolButtonClick(Sender);
+end;
 
 procedure TfrmHome.btnACBackClick(Sender: TObject);
 begin
@@ -3284,6 +3374,25 @@ begin
   switchTab(PageControl, ChoseToken);
 end;
 
+procedure TfrmHome.btnNetConnectClick(Sender: TObject);
+begin
+ userPeers[CurrentCoin.coin]:=createTcpConnection(eNetServer.Text,StrToIntDef(eNetPort.Text,50002));
+ if userPeers[CurrentCoin.coin]<>nil then begin
+ tcpConnection[CurrentCoin.coin,0]:=userPeers[CurrentCoin.coin];
+ PopupWindow.Create('Connected');
+ end else
+ PopupWindow.Create('Failed to connect');
+
+ saveUserPeers;
+ btnOpenNetworkClick(Sender);
+
+end;
+
+procedure TfrmHome.btnNetConnectTap(Sender: TObject; const Point: TPointF);
+begin
+   btnNetConnectClick(Sender);
+end;
+
 procedure TfrmHome.btnSyncClick(Sender: TObject);
 begin
   WalletViewRelated.Synchro;
@@ -3409,6 +3518,28 @@ const ATime: TMediaTime);
 begin
   TThread.Synchronize(TThread.CurrentThread, GetImage);
 end;
+procedure TfrmHome.cbAutoConnectChange(Sender: TObject);
+var ts:TStringList;
+begin
+ eNetServer.Enabled:= cbAutoConnect.isChecked;
+ eNetPort.Enabled:= cbAutoConnect.isChecked;
+ btnNetConnect.Enabled:= cbAutoConnect.isChecked;
+ gridPeers.Enabled:= cbAutoConnect.isChecked;
+ if not cbAutoConnect.isChecked then begin
+ userPeers[CurrentCoin.coin].DisposeOf;
+ userPeers[CurrentCoin.coin]:=nil;
+ saveUserPeers;
+ ts:=SplitString(gridPeers.Items[0],':');
+ tcpConnection[CurrentCoin.coin,0]:=createTcpConnection(ts.Strings[0],StrToIntDef(ts.Strings[1],50002));
+ btnOpenNetworkClick(Sender);
+end;
+end;
+procedure TfrmHome.cbAutoConnectTap(Sender: TObject; const Point: TPointF);
+begin
+ cbAutoConnectChange(Sender);
+end;
+
+
 {$IFDEF VANDROID}
 
 function FindQRRect(Bitmap: TImage): TRectF;
@@ -3486,6 +3617,7 @@ end;
 
 procedure TfrmHome.FormCreate(Sender: TObject);
 begin
+//showmessage(tcpTest);
   WVPow.visible := false;
   try
     AccountRelated.InitializeHodler;

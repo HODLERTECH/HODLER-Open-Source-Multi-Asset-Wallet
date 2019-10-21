@@ -6,6 +6,7 @@ interface
 uses
   System.IOUtils, sysutils, StrUtils, System.classes, FMX.Graphics, base58, FMX.Dialogs,
   WalletStructureData, Nano;
+function getURLToExploreAddr(id:integer;addr:ansistring):AnsiString;
 
 function CreateCoin(id, x, y: Integer; MasterSeed: AnsiString; description: AnsiString = ''): TWalletInfo;
 
@@ -161,7 +162,35 @@ implementation
 
 uses
   Bitcoin, Ethereum, misc, UHome;
+function getURLToExploreAddr(id:integer;addr:ansistring):AnsiString;
+var
+  URL: AnsiString;
+begin
 
+  case id of
+    0:
+      URL := 'https://blockchair.com/bitcoin/address/';
+    1:
+      URL := 'https://blockchair.com/litecoin/address/';
+    2:
+      URL := 'https://blockchair.com/dash/address/';
+    3:
+      URL := 'https://blockchair.com/bitcoin-cash/address/';
+    4:
+      //URL := 'https://blockchair.com/ethereum/transaction/';
+      URL := 'https://etherscan.io/tx/';
+    5:
+      URL := 'https://ravencoin.network/address/';
+    6:
+      URL := 'https://digiexplorer.info/address/';
+    7:
+      URL := 'https://bsvexplorer.info//#/address/';
+    8:
+      URL := 'https://www.nanode.co/account/';
+  end;
+
+  result := URL + addr;
+end;
 function getURLToExplorer(id: Integer; hash: AnsiString): AnsiString;
 var
   URL: AnsiString;

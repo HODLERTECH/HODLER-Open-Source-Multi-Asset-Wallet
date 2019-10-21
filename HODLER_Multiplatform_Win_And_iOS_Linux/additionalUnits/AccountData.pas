@@ -5,7 +5,22 @@ interface
 uses tokenData, WalletStructureData, cryptoCurrencyData, System.IOUtils,
   FMX.Graphics, System.types, FMX.types, FMX.Controls, FMX.StdCtrls,
   Sysutils, Classes, FMX.Dialogs, Json, Velthuis.BigIntegers, math,
-  System.Generics.Collections, System.SyncObjs, THreadKindergartenData;
+  System.Generics.Collections, System.SyncObjs, THreadKindergartenData
+  {$IFDEF MSWINDOWS},Windows,URLMon, FMX.Platform.Win,Winapi.ShellAPI{$ENDIF}{$IFDEF ANDROID},
+  FMX.VirtualKeyBoard.Android,
+  Androidapi.JNI,
+  Androidapi.JNI.GraphicsContentViewText,
+  Androidapi.JNI.App,
+  Androidapi.JNI.JavaTypes,
+  Androidapi.Helpers,
+  FMX.Platform.Android,
+  Androidapi.JNI.Provider,
+  Androidapi.JNI.Net,
+  Androidapi.JNI.WebKit,
+  Androidapi.JNI.Os,
+  Androidapi.NativeActivity,
+  Androidapi.JNIBridge, SystemApp
+{$ENDIF};
 
 procedure loadCryptoCurrencyJSONData(data: TJSONValue; cc: cryptoCurrency);
 function getCryptoCurrencyJsonData(cc: cryptoCurrency): TJSONObject;
@@ -81,7 +96,7 @@ type
     procedure verifyKeypool();
     procedure asyncVerifyKeyPool();
     procedure refreshGUI();
-
+    procedure openExplorerForRecv(Sender:TObject);
   private
 
   var
@@ -115,8 +130,39 @@ implementation
 
 uses
   misc, uHome, coinData, nano, languages, SyncThr, Bitcoin, walletViewRelated,
-  CurrencyConverter;
+  CurrencyConverter{$IFDEF LINUX64},Posix.StdLib{$ENDIF};
+procedure Account.openExplorerForRecv(Sender:TObject);
+var
+  myURI: AnsiString;
 
+  URL: WideString;
+{$IFDEF ANDROID}
+var
+  Intent: JIntent;
+{$ENDIF}
+{$IFDEF LINUX}
+  psxString: System.AnsiString;
+{$ENDIF}
+begin
+//ShowMessage('x');
+  myURI := TfmxObject(Sender).TagString;
+
+  URL := myURI;
+
+{$IFDEF ANDROID}
+  Intent := TJIntent.create;
+  Intent.setAction(TJIntent.JavaClass.ACTION_VIEW);
+  Intent.setData(StrToJURI(myURI));
+  SharedActivity.startActivity(Intent);
+{$ENDIF}
+{$IFDEF MSWINDOWS}
+  ShellExecute(0, 'OPEN', PWideChar(URL), '', '', { SW_SHOWNORMAL } 1);
+{$ENDIF}
+{$IFDEF LINUX}
+  psxString := 'xdg-open ' + myURI;
+  _system(@psxString[1]);
+{$ENDIF}
+end;
 procedure Account.refreshGUI();
 begin
   if self = currentAccount then
@@ -182,7 +228,7 @@ var
   batched: string;
 
 begin
-
+  exit;
   for i in [0, 1, 2, 3, 4, 5, 6, 7] do
   begin
     if TThread.CurrentThread.CheckTerminated then
@@ -308,6 +354,7 @@ begin
     synchronizeThread := TThread.CreateAnonymousThread(self.Synchronize);
     synchronizeThread.FreeOnTerminate := false;
     synchronizeThread.Start();
+
     // synchronizeThread.
   end;
 
@@ -326,6 +373,8 @@ begin
   begin
     frmhome.refreshGlobalImage.Start;
   end;
+     // do not need anymore dataTemp := getDataOverHTTP(HODLER_URL + 'states.php',false,false);
+    //synchronizeStates(dataTemp);
     dataTemp := getDataOverHTTP(HODLER_URL + 'fiat.php');
     synchronizeCurrencyValue(dataTemp);
     dataTemp := getDataOverHTTP(HODLER_URL + 'fees.php');
@@ -352,18 +401,23 @@ begin
 
         semaphore.WaitFor();
         try
-          if id in [4, 8] then
+          if id in [0,1,2,3,4,7, 8] then
           begin
 
+          if id in [4,8] then
+            begin
             for wi in myCoins do
             begin
 
               // if TThread.CurrentThread.CheckTerminated then
               // exit();
 
-              if wi.coin in [4, 8] then
+              if wi.coin =id then
                 SynchronizeCryptoCurrency(self, wi);
             end;
+           end else begin
+           syncWithENetwork(self, id);
+           end;
 
           end
           else
@@ -691,6 +745,15 @@ begin
 
 end;
 
+function notInUTXO(arr:TUTXOS;txid:string;n:integer):boolean;
+var utxo:tbitcoinoutput;
+begin
+result:=true;
+for utxo in arr do
+  if utxo.txid = txid then
+  if utxo.n=n then
+   exit(false);
+end;
 function Account.aggregateUTXO(wi: TWalletInfo): TUTXOS;
 var
   twi: cryptoCurrency;
@@ -704,8 +767,11 @@ begin
 
     for i := 0 to Length(TWalletInfo(wi).utxo) - 1 do
     begin
+    if notInUTXO(result, TWalletInfo(wi).utxo[i].txid,TWalletInfo(wi).utxo[i].n) then
+     begin
       SetLength(result, Length(result) + 1);
       result[high(result)] := TWalletInfo(wi).utxo[i];
+     end;
     end;
     exit();
 

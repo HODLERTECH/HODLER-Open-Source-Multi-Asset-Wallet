@@ -90,7 +90,7 @@ begin
   if nonce = 0 then
     preImage := preImage + '80'
   else
-    preImage := preImage + inttoeth(nonce);
+    preImage := preImage + inttoeth(nonce,true);
   tmp := inttoeth(gasPrice.AsInt64);
   preImage := preImage + inttohex($80 + (length(tmp) div 2), 2);
   preImage := preImage + tmp;

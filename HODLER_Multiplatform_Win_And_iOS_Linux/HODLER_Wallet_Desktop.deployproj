@@ -2559,6 +2559,15 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="token_icons\error.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>error.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="token_icons\trueusd_28.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>trueusd_28.png</RemoteName>
@@ -2571,6 +2580,24 @@
         <DeployFile Include="token_icons\paxos_28_2.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>paxos_28_2.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OpenSSLStaticLibs\libcrypto.so" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>libcrypto.so</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="token_icons\red.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>red.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -2599,6 +2626,33 @@
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>Encrypted_512_White.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="token_icons\warning.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>warning.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OpenSSLStaticLibs\libssl.so.1.0.2" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>libssl.so.1.0.2</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OpenSSLStaticLibs\libcrypto.so" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>libcrypto.so</RemoteName>
+            <DeployClass>File</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -2667,6 +2721,15 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="token_icons\ETHTokenTreeShort.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>ETHTokenTreeShort.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="Languages\SPA.lang" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>SPA.lang</RemoteName>
@@ -2715,6 +2778,15 @@
         <DeployFile Include="token_icons\downArrow.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>downArrow.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="token_icons\green.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>green.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -2802,15 +2874,6 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="OKSterling.style" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
-            <RemoteName>OKSterling.style</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
         <DeployFile Include="token_icons\Encrypted_seed_White.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>Encrypted_seed_White.png</RemoteName>
@@ -2833,6 +2896,15 @@
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>red.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OpenSSLStaticLibs\libcrypto.so.1.0.2" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>libcrypto.so.1.0.2</RemoteName>
+            <DeployClass>File</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -2869,6 +2941,15 @@
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>OMG.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OpenSSLStaticLibs\libcrypto.so.1.0.2" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>libcrypto.so.1.0.2</RemoteName>
+            <DeployClass>File</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -3046,15 +3127,6 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="Win10ModernDark.Style" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
-            <RemoteName>Win10ModernDark.Style</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
         <DeployFile Include="coin_icons\1831.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>1831.png</RemoteName>
@@ -3086,6 +3158,15 @@
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>search_dark.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OpenSSLStaticLibs\libssl.so" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>libssl.so</RemoteName>
+            <DeployClass>File</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -3136,6 +3217,15 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="token_icons\CharocalExpressive.style" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>CharocalExpressive.style</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="token_icons\trueusd_28.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>trueusd_28.png</RemoteName>
@@ -3145,9 +3235,27 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="token_icons\downArrow.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>downArrow.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="token_icons\1908.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>1908.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="token_icons\upArrow.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>upArrow.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -3194,6 +3302,33 @@
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>Refresh-PNG-Transparent-Image.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="gfx\insidetx.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>insidetx.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="token_icons\Info.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>Info.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OpenSSLStaticLibs\libssl.so" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>libssl.so</RemoteName>
+            <DeployClass>File</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -3371,6 +3506,24 @@
             <Overwrite>True</Overwrite>
             <Required>True</Required>
         </DeployFile>
+        <DeployFile Include="token_icons\ETHTokenTree.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>ETHTokenTree.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="token_icons\Check.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>Check.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="token_icons\more_black.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>more_black.png</RemoteName>
@@ -3470,6 +3623,15 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="gfx\Icon144x144.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>Icon144x144.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="token_icons\copy-content.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>copy-content.png</RemoteName>
@@ -3492,6 +3654,15 @@
             <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
             <RemoteName>DEU.lang</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="OpenSSLStaticLibs\libssl.so.1.0.2" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Desktop\</RemoteDir>
+            <RemoteName>libssl.so.1.0.2</RemoteName>
+            <DeployClass>File</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -3582,6 +3753,24 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="Android\Release\styles-v21.xml" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Desktop\res\values-v21\</RemoteDir>
+            <RemoteName>styles.xml</RemoteName>
+            <DeployClass>AndroidSplashStylesV21</DeployClass>
+            <Operation>1</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="token_icons\1954.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\assets\internal\</RemoteDir>
+            <RemoteName>1954.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="gfx\splash960x720.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Desktop\res\drawable-xlarge\</RemoteDir>
             <RemoteName>splash_image.png</RemoteName>
@@ -3609,29 +3798,11 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="token_icons\1954.png" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>HODLER_Wallet_Desktop\assets\internal\</RemoteDir>
-            <RemoteName>1954.png</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
         <DeployFile Include="token_icons\Encrypted_512_Dark.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Desktop\assets\internal\</RemoteDir>
             <RemoteName>Encrypted_512_Dark.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
-        <DeployFile Include="Android\Release\styles-v21.xml" Condition="'$(Config)'=='Release'">
-            <RemoteDir>HODLER_Wallet_Desktop\res\values-v21\</RemoteDir>
-            <RemoteName>styles.xml</RemoteName>
-            <DeployClass>AndroidSplashStylesV21</DeployClass>
-            <Operation>1</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
@@ -3951,15 +4122,6 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="token_icons\copy-content_white.png" Condition="'$(Config)'=='Debug'">
-            <RemoteDir>HODLER_Wallet_Desktop\assets\internal\</RemoteDir>
-            <RemoteName>copy-content_white.png</RemoteName>
-            <DeployClass>ProjectFile</DeployClass>
-            <Operation>0</Operation>
-            <LocalCommand/>
-            <RemoteCommand/>
-            <Overwrite>True</Overwrite>
-        </DeployFile>
         <DeployFile Include="token_icons\1776.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Desktop\assets\internal\</RemoteDir>
             <RemoteName>1776.png</RemoteName>
@@ -3972,6 +4134,15 @@
         <DeployFile Include="token_icons\Refresh-PNG-Transparent-Image.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Desktop\assets\internal\</RemoteDir>
             <RemoteName>Refresh-PNG-Transparent-Image.png</RemoteName>
+            <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="token_icons\copy-content_white.png" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Desktop\assets\internal\</RemoteDir>
+            <RemoteName>copy-content_white.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>

@@ -2422,18 +2422,18 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="token_icons\1715.png" Condition="'$(Config)'=='Release'">
+        <DeployFile Include="token_icons\Encrypted_512_White.png" Condition="'$(Config)'=='Debug'">
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
-            <RemoteName>1715.png</RemoteName>
+            <RemoteName>Encrypted_512_White.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
-        <DeployFile Include="token_icons\Encrypted_512_White.png" Condition="'$(Config)'=='Debug'">
+        <DeployFile Include="token_icons\1715.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
-            <RemoteName>Encrypted_512_White.png</RemoteName>
+            <RemoteName>1715.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
@@ -2701,6 +2701,15 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="opensslAndroid\libcrypto.so" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
+            <RemoteName>libcrypto.so</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="token_icons\2918.png" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
             <RemoteName>2918.png</RemoteName>
@@ -2908,6 +2917,15 @@
             <RemoteCommand/>
             <Overwrite>True</Overwrite>
         </DeployFile>
+        <DeployFile Include="opensslAndroid\libcrypto.so" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
+            <RemoteName>libcrypto.so</RemoteName>
+            <DeployClass>File</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
         <DeployFile Include="Android\Release\splash_image_def.xml" Condition="'$(Config)'=='Release'">
             <RemoteDir>HODLER_Wallet_Mobile\res\drawable\</RemoteDir>
             <RemoteName>splash_image_def.xml</RemoteName>
@@ -2930,6 +2948,15 @@
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
             <RemoteName>latoken.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="opensslAndroid\libssl.so" Condition="'$(Config)'=='Debug'">
+            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
+            <RemoteName>libssl.so</RemoteName>
+            <DeployClass>File</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
@@ -3481,6 +3508,15 @@
             <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
             <RemoteName>131.png</RemoteName>
             <DeployClass>ProjectFile</DeployClass>
+            <Operation>0</Operation>
+            <LocalCommand/>
+            <RemoteCommand/>
+            <Overwrite>True</Overwrite>
+        </DeployFile>
+        <DeployFile Include="opensslAndroid\libssl.so" Condition="'$(Config)'=='Release'">
+            <RemoteDir>HODLER_Wallet_Mobile\assets\internal\</RemoteDir>
+            <RemoteName>libssl.so</RemoteName>
+            <DeployClass>File</DeployClass>
             <Operation>0</Operation>
             <LocalCommand/>
             <RemoteCommand/>
