@@ -379,7 +379,7 @@ begin
     synchronizeCurrencyValue(dataTemp);
     dataTemp := getDataOverHTTP(HODLER_URL + 'fees.php');
     synchronizeDefaultFees(dataTemp);
-  for i in [0, 1, 2, 3, 4, 5, 6, 7] do
+  for i in [0..8] do
   begin
     // if TThread.CurrentThread.CheckTerminated then
     // exit();

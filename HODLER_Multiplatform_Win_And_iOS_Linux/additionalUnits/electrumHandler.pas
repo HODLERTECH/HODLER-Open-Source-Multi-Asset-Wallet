@@ -7,7 +7,7 @@ uses
   System.classes, System.sysutils, StrUtils, WalletStructureData,
   CryptoCurrencyData, tokenData, JSON, System.TimeSpan, System.Diagnostics,
   idTCPClient, idSSLOpenSSL, IdSSLOpenSSLHeaders, System.IOUtils, misc, math,
-  IdException;
+  IdException,SystemApp;
 
 type
   TSSLClientHandler = class(TIdSSLIOHandlerSocketOpenSSL)
@@ -37,7 +37,7 @@ function getTCPForCoin(coinid: integer; tries: integer): TidTCPClient;
 function createTCPConnection(host: string; port: integer): TidTCPClient;
 procedure saveUserPeers;
 implementation
-
+uses uHome;
 function TSSLClientHandler.Ctx: Pointer;
 begin
   if Assigned(fSSLContext) then
@@ -116,12 +116,19 @@ var
   JSON: TJSONObject;
   res: string;
 begin
+
+  try
   JSON := TJSONObject.ParseJSONValue(s) as TJSONObject;
   res := JSON.GetValue('result').AsType<string>;
   if isHex(res) then
     Result := 'Transaction sent: ' + res
   else
     Result := 'Transaction failed ' + JSON.GetValue('error').AsType<string>;
+    except on E:Exception do begin
+    if JSON<>nil then JSON.Free;    
+      raise Exception.Create('Invalid response from electrum server, please connect to another one');
+    end;
+    end;
   JSON.Free;
 end;
 
@@ -228,10 +235,10 @@ procedure setupHandler;
 begin
   loadUserPeers;
   tcpConnection[0, tcpConnections[0]] :=
-    createTCPConnection('electrum.be', 50002);
+    createTCPConnection('e8.keff.org', 50002);
   inc(tcpConnections[0]);
   tcpConnection[0, tcpConnections[0]] :=
-    createTCPConnection('us.electrum.be', 50002);
+    createTCPConnection('e5.keff.org', 50002);
   inc(tcpConnections[0]);
   tcpConnection[1, tcpConnections[1]] :=
     createTCPConnection('backup.electrum-ltc.org', 443);
@@ -240,7 +247,7 @@ begin
     createTCPConnection('drk.p2pay.com', 50002);
   inc(tcpConnections[2]);
   tcpConnection[3, tcpConnections[3]] :=
-    createTCPConnection('bch0.kister.net', 50002);
+    createTCPConnection('electroncash.de', 50002);
   inc(tcpConnections[3]);
   tcpConnection[7, tcpConnections[7]] :=
     createTCPConnection('satoshi.vision.cash', 50002);
@@ -434,16 +441,37 @@ end;
 
 procedure enetSetup;
 begin
-  setupHandler;
+if not SYSTEM_APP then
+begin
+     setupHandler;
   TThread.CreateAnonymousThread(
     procedure
     begin
+
       setupPeers(0);
       setupPeers(1);
       setupPeers(2);
       setupPeers(3);
       setupPeers(7);
     end).Start;
+end else begin
+{$IFDEF ANDROID}
+  TThread.CreateAnonymousThread(
+    procedure
+    begin
+      repeat
+        sleep(2500);
+      until isScreenOn;
+      setupHandler;
+      setupPeers(0);
+      setupPeers(1);
+      setupPeers(2);
+      setupPeers(3);
+      setupPeers(7);
+    end).Start;
+{$ENDIF}
+end;
+
 end;
 
 initialization
@@ -456,7 +484,9 @@ initialization
  IdSSLOpenSSLHeaders.IdOpenSSLSetLibPath(ExtractFileDir(ParamStr(0)));
 {$ENDIF}
 {$IFDEF ANDROID}
-IdSSLOpenSSLHeaders.IdOpenSSLSetLibPath(TPath.GetDocumentsPath);
+if not SYSTEM_APP then
+IdSSLOpenSSLHeaders.IdOpenSSLSetLibPath(TPath.GetDocumentsPath) else
+IdSSLOpenSSLHeaders.IdOpenSSLSetLibPath('/vendor/lib/');
 {$ENDIF}
 IdSSLOpenSSLHeaders.Load;
 WhichFailedToLoad();

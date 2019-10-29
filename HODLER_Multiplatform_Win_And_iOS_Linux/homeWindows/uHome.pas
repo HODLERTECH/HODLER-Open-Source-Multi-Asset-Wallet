@@ -1156,6 +1156,9 @@ type
     procedure btnOpenNetworkClick(Sender: TObject);
     procedure btnNetConnectClick(Sender: TObject);
     procedure cbAutoConnectChange(Sender: TObject);
+    procedure gridPeersItemClick(const Sender: TCustomListBox;
+      const Item: TListBoxItem);
+    procedure btnNetBackClick(Sender: TObject);
     // procedure UserReportSendLogsSwitchClick(Sender: TObject);
 
   private
@@ -3591,6 +3594,11 @@ begin
   switchTab(PageControl, AddWalletList);
 end;
 
+procedure TfrmHome.btnNetBackClick(Sender: TObject);
+begin
+ switchTab(PageControl, walletView);
+end;
+
 procedure TfrmHome.btnNetConnectClick(Sender: TObject);
 begin
  userPeers[CurrentCoin.coin]:=createTcpConnection(eNetServer.Text,StrToIntDef(eNetPort.Text,50002));
@@ -3773,6 +3781,18 @@ end;
 procedure TfrmHome.GetImage;
 begin
   QRRelated.parseCamera;
+end;
+
+procedure TfrmHome.gridPeersItemClick(const Sender: TCustomListBox;
+  const Item: TListBoxItem);
+  var ts:TStringList;
+begin
+ if Item<>nil then
+ begin
+   ts:=SplitString(Item.Text,':');
+   enetServer.Text:=ts[0];
+   enetPort.Text:=ts[1];
+ end;
 end;
 
 procedure TfrmHome.RestoreFromEncryptedQR(Sender: TObject);

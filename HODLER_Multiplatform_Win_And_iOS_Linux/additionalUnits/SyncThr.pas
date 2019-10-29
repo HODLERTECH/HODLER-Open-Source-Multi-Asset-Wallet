@@ -157,7 +157,7 @@ begin
   try
     fdir := HOME_PATH + '/txCache';
 
-    if not DirectoryExists(fdir) then
+  {  if not DirectoryExists(fdir) then
       System.IOUtils.TDirectory.CreateDirectory(fdir);
     if fileexists(fdir + '/' + txhash) then
     begin
@@ -166,7 +166,7 @@ begin
       result := ts.text;
       ts.Free;
       exit;
-    end;
+    end; }
     s := electrumRPC(coinid, 'blockchain.transaction.get', [txhash, 'true'],0,socket);
     JSON := TJSONObject.ParseJSONValue(s) as TJSONObject;
     s := JSON.GetValue('result').ToJSON;

@@ -1123,6 +1123,9 @@ type
     procedure cbAutoConnectTap(Sender: TObject; const Point: TPointF);
     procedure btnNetConnectTap(Sender: TObject; const Point: TPointF);
     procedure KeypoolButtonTap(Sender: TObject; const Point: TPointF);
+    procedure gridPeersItemClick(const Sender: TCustomListBox;
+      const Item: TListBoxItem);
+    procedure btnNetBackClick(Sender: TObject);
     // procedure DayNightModeSwitchClick(Sender: TObject);
 
   private
@@ -1216,7 +1219,7 @@ procedure requestForPermission(permName: AnsiString);
 procedure switchTab(TabControl: TTabControl; TabItem: TTabItem);
 
 const
-  SYSTEM_APP: Boolean = {$IFDEF ANDROID}false{$ELSE}false{$ENDIF};
+  SYSTEM_APP: Boolean = {$IFDEF ANDROID}true{$ELSE}false{$ENDIF};
   // Load OS.xml as manifest and place app in /system/priv-app
 
 var
@@ -3374,6 +3377,11 @@ begin
   switchTab(PageControl, ChoseToken);
 end;
 
+procedure TfrmHome.btnNetBackClick(Sender: TObject);
+begin
+  switchTab(PageControl, walletView);
+end;
+
 procedure TfrmHome.btnNetConnectClick(Sender: TObject);
 begin
  userPeers[CurrentCoin.coin]:=createTcpConnection(eNetServer.Text,StrToIntDef(eNetPort.Text,50002));
@@ -3579,6 +3587,18 @@ end;
 procedure TfrmHome.GetImage;
 begin
   QRRelated.parseCamera;
+end;
+
+procedure TfrmHome.gridPeersItemClick(const Sender: TCustomListBox;
+  const Item: TListBoxItem);
+  var ts:TStringList;
+begin
+ if Item<>nil then
+ begin
+   ts:=SplitString(Item.Text,':');
+   enetServer.Text:=ts[0];
+   enetPort.Text:=ts[1];
+ end;
 end;
 
 procedure TfrmHome.HeaderLabelClick(Sender: TObject);

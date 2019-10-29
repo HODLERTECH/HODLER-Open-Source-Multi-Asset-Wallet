@@ -353,7 +353,7 @@ const
   API_PRIV = {$I 'private_key.key' };
 
 resourcestring
-  CURRENT_VERSION = '0.4.5';
+  CURRENT_VERSION = '0.4.6';
 
 var
 coinRates:TCoinRates;
@@ -1687,7 +1687,8 @@ begin
           on E: Exception do
           begin
             name := '';
-            showmessage('Load Token Name Error ' + E.message);
+
+           // showmessage('Load Token Name Error ' + E.message);
           end;
         end;
 
@@ -1697,7 +1698,7 @@ begin
           on E: Exception do
           begin
             symbol := '';
-            showmessage('Load Token Symbol Error ' + E.message);
+            //showmessage('Load Token Symbol Error ' + E.message);
           end;
         end;
         // balance
@@ -1707,7 +1708,7 @@ begin
           on E: Exception do
           begin
             balance := '0';
-            showmessage('Load Token Balance Error ' + E.message);
+           // showmessage('Load Token Balance Error ' + E.message);
           end;
         end;
 
@@ -5190,3 +5191,4 @@ begin
 end;
 
 end.
+

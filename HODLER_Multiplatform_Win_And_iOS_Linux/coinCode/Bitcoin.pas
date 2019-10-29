@@ -4,7 +4,7 @@ interface
 
 uses
   SysUtils, secp256k1, HashObj, base58, coinData, Velthuis.BigIntegers,
-  WalletStructureData, System.classes, electrumHandler;
+  WalletStructureData, System.classes, electrumHandler, PopupWindowData;
 
 function reedemFromPub(pub: AnsiString): AnsiString;
 
@@ -322,10 +322,24 @@ begin
 
     if coin <> 'ethereum' then
     begin
-      if CurrentCoin.coin in [0,1,2,3,7] then
+      if CurrentCoin.coin in [0, 1, 2, 3, 7] then
       begin
-        result := sendTXHandler
-          (electrumRPC(CurrentCoin.coin, 'blockchain.transaction.broadcast', [TX]))
+        try
+          result := sendTXHandler(electrumRPC(CurrentCoin.coin,
+            'blockchain.transaction.broadcast', [TX]))
+        except
+          on E: Exception do
+          begin
+
+            TThread.Synchronize(nil,
+              procedure
+              begin
+                frmHome.PageControl.ActiveTab := frmHome.NetTab;
+                PopupWindow.Create(E.Message);
+              end);
+
+          end;
+        end;
       end
       else
       begin

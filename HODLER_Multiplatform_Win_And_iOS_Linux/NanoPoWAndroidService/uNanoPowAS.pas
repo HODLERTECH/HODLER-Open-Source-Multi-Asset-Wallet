@@ -1046,8 +1046,8 @@ displayNotifications:=false;
     try
       // /system/lib/libsodium.so for HPRO
       // TPath.GetDocumentsPath + '/nacl2/libsodium.so'; for normal app
-     // err := '/system/lib/libsodium.so';
-     err:= TPath.GetDocumentsPath + '/nacl2/libsodium.so';
+      err := '/system/lib/libsodium.so';
+    // err:= TPath.GetDocumentsPath + '/nacl2/libsodium.so';
       if FileExists(err) then
         ex := 'isthere'
       else
